@@ -1,0 +1,1150 @@
+;; Trans SubL File : "CynD"
+;; Location        : "doom3.lisp"
+
+;; Referenced Globals :
+*GAMEEVAL* 
+*GAMEINSTANCE* 
+*GAMEPROPERTY* 
+*RETVAL* 
+*STREAM* 
+
+;; Referenced Functions :
+= 
+BQ-CONS 
+C-BACKEND-OUTPUT-FILE-AND-HEADER-FILE 
+CAR 
+CLOSE 
+CONSP 
+CYC-ASSERT 
+CYC-GAME-EVAL-STUB 
+EQL 
+FIND-CONSTANT 
+FIND-OR-CREATE-CONSTANT 
+FIRST 
+FORCE-OUTPUT 
+INFERENCE-REMOVAL-MODULE 
+LIST 
+LIST* 
+MEAKQL 
+NUMBERP 
+OPEN-TCP-STREAM 
+OPEN-TEXT 
+PRIN1 
+READ 
+READER-MAKE-CONSTANT-SHELL 
+REGISTER-SOLELY-SPECIFIC-REMOVAL-MODULE-PREDICATE 
+REMOVAL-GAMEAPI-UNIFY-GENERATE 
+REMOVAL-GAMEINSTANCE-UNIFY-GENERATE 
+REMOVAL-GAMEPROPERTY-UNIFY-GENERATE 
+SECOND 
+SHOW-TRANS-SUBL-FILE 
+STRING-EQUAL 
+STRINGP 
+TERPRI 
+TRANSLATE-FILE 
+WEAKQL 
+
+;; Internal Constants :
+0 : "doom:gameEval"
+1 : "doom:gameProperty"
+2 : "doom:gameInstance"
+3 : "gameProperty"
+4 : "gameInstance"
+5 : "10.1.1.104"
+6 : 3699
+7 : #$isa
+8 : (#$AsymmetricBinaryPredicate)
+9 : #$UniversalVocabularyMt
+10 : (#$IntangibleObjectPredicate)
+11 : #$comment
+12 : ("(,*gameEval* (#$TheList .....) ?Result)")
+13 : (#$RemovalModuleSupportedPredicate-Specific)
+14 : #$CycAPIMt
+15 : #$arity
+16 : (2)
+17 : #$arg1Isa
+18 : (#$Thing)
+19 : #$arg2Isa
+20 : ("(,*gameProperty* ?Instance ?Result)")
+21 : ("(,*gameInstance* ?Instance ?Result)")
+22 : :REMOVAL-GAMEAPI-DOOM-BOUND-UNBOUND
+23 : :SENSE
+24 : :POS
+25 : :PREDICATE
+26 : :REQUIRED-PATTERN
+27 : (:FULLY-BOUND :NOT-FULLY-BOUND)
+28 : :COST-EXPRESSION
+29 : :COMPLETENESS
+30 : :COMPLETE
+31 : :INPUT-EXTRACT-PATTERN
+32 : :TEMPLATE
+33 : ((:BIND THE-VALUE) :ANYTHING)
+34 : ((:VALUE THE-VALUE))
+35 : :INPUT-VERIFY-PATTERN
+36 : :ANYTHING
+37 : :OUTPUT-GENERATE-PATTERN
+38 : (:CALL REMOVAL-GAMEAPI-UNIFY-GENERATE :INPUT)
+39 : :OUTPUT-CONSTRUCT-PATTERN
+40 : ((:VALUE THE-VALUE) :INPUT)
+41 : (:DOCUMENTATION "(,*gameEval* <fully-bound> <not-fully-bound>)" :EXAMPLE "(,*gameEval* -1 ?WHAT)")
+42 : :REMOVAL-GAMEAPI-DOOM-BOUND-BOUND
+43 : :CHECK
+44 : (:FULLY-BOUND :FULLY-BOUND)
+45 : ((:BIND VALUE-1) (:BIND VALUE-2))
+46 : (((:VALUE VALUE-1) (:VALUE VALUE-2)))
+47 : (:INPUT-VERIFY-PATTERN (:ANYTHING :ANYTHING) :OUTPUT-CHECK-PATTERN (:CALL REMOVAL-GAMEAPI-POS-CHECK (:TUPLE (VALUE-1 VALUE-2) ((:VALUE VALUE-1) (:VALUE VALUE-2)))) :DOCUMENTATION "(,*gameEval* <fully-bound> <fully-bound>)" :EXAMPLE "(,*gameEval* 1 -1)")
+48 : :REMOVAL-GAMEPROPERTY-DOOM-BOUND-UNBOUND
+49 : (:CALL REMOVAL-GAMEPROPERTY-UNIFY-GENERATE :INPUT)
+50 : (:DOCUMENTATION "(,*gameProperty* <fully-bound> <not-fully-bound>)" :EXAMPLE "(,*gameProperty* #doom:cyc_bot_1 ?WHAT)")
+51 : :REMOVAL-GAMEPROPERTY-DOOM-BOUND-BOUND
+52 : (:INPUT-VERIFY-PATTERN (:ANYTHING :ANYTHING) :OUTPUT-CHECK-PATTERN (:CALL REMOVAL-GAMEPROPERTY-POS-CHECK (:TUPLE (VALUE-1 VALUE-2) ((:VALUE VALUE-1) (:VALUE VALUE-2)))) :DOCUMENTATION "(,*gameProperty* <fully-bound> <fully-bound>)" :EXAMPLE "(,*gameProperty* 1 -1)")
+53 : :REMOVAL-GAMEINSTANCE-DOOM-BOUND-UNBOUND
+54 : (:CALL REMOVAL-GAMEINSTANCE-UNIFY-GENERATE :INPUT)
+55 : (:DOCUMENTATION "(,*gameInstance* <fully-bound> <not-fully-bound>)" :EXAMPLE "(,*gameInstance* #doom:cyc_bot_1 ?WHAT)")
+56 : :REMOVAL-GAMEINSTANCE-DOOM-UNBOUND-UNBOUND
+57 : (:NOT-FULLY-BOUND :NOT-FULLY-BOUND)
+58 : (:ANYTHING :ANYTHING)
+59 : (:CALL REMOVAL-GAMEINSTANCE-UNIFY-UNBOUND :INPUT)
+60 : ((:CALL PRINT :INPUT) (:CALL PRINT :INPUT))
+61 : (:DOCUMENTATION "(,*gameInstance* <not-fully-bound> <not-fully-bound>)" :EXAMPLE "(,*gameInstance* #doom:cyc_bot_1 ?WHAT)")
+62 : :REMOVAL-GAMEINSTANCE-DOOM-BOUND-BOUND
+63 : (:INPUT-VERIFY-PATTERN (:ANYTHING :ANYTHING) :OUTPUT-CHECK-PATTERN (:CALL REMOVAL-GAMEINSTANCE-POS-CHECK (:TUPLE (VALUE-1 VALUE-2) ((:VALUE VALUE-1) (:VALUE VALUE-2)))) :DOCUMENTATION "(,*gameInstance* <fully-bound> <fully-bound>)" :EXAMPLE "(,*gameInstance* 1 -1)")
+64 : :NEG
+65 : (:INPUT-VERIFY-PATTERN (:ANYTHING :ANYTHING) :OUTPUT-CHECK-PATTERN (:CALL REMOVAL-GAMEAPI-NEG-CHECK (:TUPLE (VALUE-1 VALUE-2) ((:VALUE VALUE-1) (:VALUE VALUE-2)))) :DOCUMENTATION "(,*gameEval* <fully-bound> <fully-bound>)" :EXAMPLE "(#$not (,*gameEval* 1 -1))")
+66 : :REMOVAL-GAMEAPI-DOOM-UNBOUND-BOUND
+67 : (:NOT-FULLY-BOUND :FULLY-BOUND)
+68 : (:ANYTHING (:BIND THE-VALUE))
+69 : (:INPUT (:VALUE THE-VALUE))
+70 : (:DOCUMENTATION "(,*gameEval* <not-fully-bound> <fully-bound>)" :EXAMPLE "(,*gameEval* ?WHAT -1)")
+71 : "CynD"
+72 : "doom3.lisp"
+73 : "doom3.trans"
+74 : :OUTPUT
+75 : "doom3.c"
+
+;; Definitions :
+(DEFVAR *GAMEEVAL* 
+  (FIND-OR-CREATE-CONSTANT 
+    (|%IC| 0 "doom:gameEval")))
+(DEFVAR *GAMEPROPERTY* 
+  (FIND-OR-CREATE-CONSTANT 
+    (|%IC| 1 "doom:gameProperty")))
+(DEFVAR *GAMEINSTANCE* 
+  (FIND-OR-CREATE-CONSTANT 
+    (|%IC| 2 "doom:gameInstance")))
+(DEFINE WEAKQL 
+  (V1 V2) 
+  (RET 
+    (|%BTD| 
+      (|%OR| 
+        (|%DTB| 
+          (EQL V1 V2)) 
+        (|%AND| 
+          (|%DTB| 
+            (NUMBERP V1)) 
+          (|%DTB| 
+            (NUMBERP V2)) 
+          (|%DTB| 
+            (= V1 V2))) 
+        (|%AND| 
+          (|%DTB| 
+            (STRINGP V1)) 
+          (|%OR| 
+            (|%AND| 
+              (|%DTB| 
+                (STRINGP V2)) 
+              (|%DTB| 
+                (STRING-EQUAL V1 V2))) 
+            (|%AND| 
+              (|%DTB| V2) 
+              (|%DTB| 
+                (EQL 
+                  (FIND-CONSTANT V1) V2))))) 
+        (|%AND| 
+          (|%DTB| 
+            (STRINGP V2)) 
+          (|%DTB| V1) 
+          (|%DTB| 
+            (EQL 
+              (FIND-CONSTANT V2) V1)))))))
+(DEFINE MEAKQL 
+  (V1 V2) 
+  (RET 
+    (|%BTD| 
+      (|%OR| 
+        (|%DTB| 
+          (WEAKQL V1 V2)) 
+        (|%AND| 
+          (|%DTB| 
+            (CONSP V2)) 
+          (|%DTB| 
+            (WEAKQL V1 
+              (CAR V2)))) 
+        (|%AND| 
+          (|%DTB| 
+            (CONSP V1)) 
+          (|%DTB| 
+            (WEAKQL V2 
+              (CAR V1))))))))
+(DEFINE REMOVAL-GAMEAPI-POS-CHECK 
+  (VALUES) 
+  (RET 
+    (MEAKQL 
+      (REMOVAL-GAMEAPI-UNIFY-GENERATE 
+        (FIRST VALUES)) 
+      (SECOND VALUES))))
+(DEFINE REMOVAL-GAMEAPI-NEG-CHECK 
+  (VALUES) 
+  (RET 
+    (|%BTD| 
+      (|%NOT| 
+        (|%DTB| 
+          (MEAKQL 
+            (REMOVAL-GAMEAPI-UNIFY-GENERATE 
+              (FIRST VALUES)) 
+            (SECOND VALUES)))))))
+(DEFINE REMOVAL-GAMEAPI-UNIFY-GENERATE 
+  (VALUE) 
+  (RET 
+    (CYC-GAME-EVAL-STUB VALUE)))
+(DEFINE REMOVAL-GAMEPROPERTY-UNIFY-GENERATE 
+  (VALUE) 
+  (RET 
+    (CYC-GAME-EVAL-STUB 
+      (LIST 
+        (|%IC| 3 "gameProperty") VALUE))))
+(DEFINE REMOVAL-GAMEPROPERTY-POS-CHECK 
+  (VALUES) 
+  (RET 
+    (MEAKQL 
+      (REMOVAL-GAMEPROPERTY-UNIFY-GENERATE 
+        (FIRST VALUES)) 
+      (SECOND VALUES))))
+(DEFINE REMOVAL-GAMEINSTANCE-UNIFY-GENERATE 
+  (VALUE) 
+  (RET 
+    (CYC-GAME-EVAL-STUB 
+      (LIST 
+        (|%IC| 4 "gameInstance") VALUE))))
+(DEFINE REMOVAL-GAMEINSTANCE-POS-CHECK 
+  (VALUES) 
+  (RET 
+    (MEAKQL 
+      (REMOVAL-GAMEINSTANCE-UNIFY-GENERATE 
+        (FIRST VALUES)) 
+      (SECOND VALUES))))
+(DEFINE REMOVAL-GAMEINSTANCE-UNIFY-UNBOUND 
+  (VALUES) 
+  (RET 
+    (CYC-GAME-EVAL-STUB 
+      (LIST 
+        (|%IC| 4 "gameInstance") VALUES))))
+(DEFINE CYC-GAME-EVAL-STUB 
+  (OUTVAL) 
+  (RET 
+    (CLET-BIND 
+      ((*RETVAL* (|%PC| NIL)) 
+        (*STREAM* 
+          (OPEN-TCP-STREAM 
+            (|%IC| 5 "10.1.1.104") 
+            (|%IC| 6 3699)))) 
+      (PRIN1 OUTVAL 
+        (|%DYN| *STREAM*)) 
+      (TERPRI 
+        (|%DYN| *STREAM*)) 
+      (FORCE-OUTPUT 
+        (|%DYN| *STREAM*)) 
+      (CSETQ *RETVAL* 
+        (READ 
+          (|%DYN| *STREAM*))) 
+      (CLOSE 
+        (|%DYN| *STREAM*)) 
+      (|%DYN| *RETVAL*))))
+(DEFINE SETUP-DOOM3-KE NIL 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 8 
+        (#$AsymmetricBinaryPredicate))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 10 
+        (#$IntangibleObjectPredicate))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 11 #$comment) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 12 
+        ("(,*gameEval* (#$TheList .....) ?Result)"))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 13 
+        (#$RemovalModuleSupportedPredicate-Specific))) 
+    (|%IC| 14 #$CycAPIMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 15 #$arity) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 16 
+        (2))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 17 #$arg1Isa) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 18 
+        (#$Thing))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 19 #$arg2Isa) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 18 
+        (#$Thing))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 8 
+        (#$AsymmetricBinaryPredicate))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 10 
+        (#$IntangibleObjectPredicate))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 11 #$comment) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 20 
+        ("(,*gameProperty* ?Instance ?Result)"))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 13 
+        (#$RemovalModuleSupportedPredicate-Specific))) 
+    (|%IC| 14 #$CycAPIMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 15 #$arity) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 16 
+        (2))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 17 #$arg1Isa) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 18 
+        (#$Thing))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 19 #$arg2Isa) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 18 
+        (#$Thing))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 8 
+        (#$AsymmetricBinaryPredicate))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 10 
+        (#$IntangibleObjectPredicate))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 11 #$comment) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 21 
+        ("(,*gameInstance* ?Instance ?Result)"))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 7 #$isa) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 13 
+        (#$RemovalModuleSupportedPredicate-Specific))) 
+    (|%IC| 14 #$CycAPIMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 15 #$arity) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 16 
+        (2))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 17 #$arg1Isa) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 18 
+        (#$Thing))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (CYC-ASSERT 
+    (LIST* 
+      (|%IC| 19 #$arg2Isa) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 18 
+        (#$Thing))) 
+    (|%IC| 9 #$UniversalVocabularyMt)) 
+  (RET 
+    (|%PC| NIL)))
+(DEFINE SETUP-DOOM3-REMOVALS NIL 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 22 :REMOVAL-GAMEAPI-DOOM-BOUND-UNBOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 24 :POS) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEEVAL*) 
+        (|%IC| 27 
+          (:FULLY-BOUND :NOT-FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEEVAL*) 
+          (|%IC| 33 
+            ((:BIND THE-VALUE) :ANYTHING))) 
+        (|%IC| 34 
+          ((:VALUE THE-VALUE)))) 
+      (|%IC| 35 :INPUT-VERIFY-PATTERN) 
+      (|%IC| 36 :ANYTHING) 
+      (|%IC| 37 :OUTPUT-GENERATE-PATTERN) 
+      (|%IC| 38 
+        (:CALL REMOVAL-GAMEAPI-UNIFY-GENERATE :INPUT)) 
+      (|%IC| 39 :OUTPUT-CONSTRUCT-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEEVAL*) 
+        (|%IC| 40 
+          ((:VALUE THE-VALUE) :INPUT))) 
+      (|%IC| 41 
+        (:DOCUMENTATION "(,*gameEval* <fully-bound> <not-fully-bound>)" :EXAMPLE "(,*gameEval* -1 ?WHAT)")))) 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 42 :REMOVAL-GAMEAPI-DOOM-BOUND-BOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 24 :POS) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 43 :CHECK) 
+      (|%PC| T) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEEVAL*) 
+        (|%IC| 44 
+          (:FULLY-BOUND :FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEEVAL*) 
+          (|%IC| 45 
+            ((:BIND VALUE-1) 
+              (:BIND VALUE-2)))) 
+        (|%IC| 46 
+          (((:VALUE VALUE-1) (:VALUE VALUE-2))))) 
+      (|%IC| 47 
+        (:INPUT-VERIFY-PATTERN 
+          (:ANYTHING :ANYTHING) :OUTPUT-CHECK-PATTERN 
+          (:CALL REMOVAL-GAMEAPI-POS-CHECK 
+            (:TUPLE 
+              (VALUE-1 VALUE-2) 
+              ((:VALUE VALUE-1) 
+                (:VALUE VALUE-2)))) :DOCUMENTATION "(,*gameEval* <fully-bound> <fully-bound>)" :EXAMPLE "(,*gameEval* 1 -1)")))) 
+  (REGISTER-SOLELY-SPECIFIC-REMOVAL-MODULE-PREDICATE 
+    (|%DYN| *GAMEEVAL*)) 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 48 :REMOVAL-GAMEPROPERTY-DOOM-BOUND-UNBOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 24 :POS) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEPROPERTY*) 
+        (|%IC| 27 
+          (:FULLY-BOUND :NOT-FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEPROPERTY*) 
+          (|%IC| 33 
+            ((:BIND THE-VALUE) :ANYTHING))) 
+        (|%IC| 34 
+          ((:VALUE THE-VALUE)))) 
+      (|%IC| 35 :INPUT-VERIFY-PATTERN) 
+      (|%IC| 36 :ANYTHING) 
+      (|%IC| 37 :OUTPUT-GENERATE-PATTERN) 
+      (|%IC| 49 
+        (:CALL REMOVAL-GAMEPROPERTY-UNIFY-GENERATE :INPUT)) 
+      (|%IC| 39 :OUTPUT-CONSTRUCT-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEPROPERTY*) 
+        (|%IC| 40 
+          ((:VALUE THE-VALUE) :INPUT))) 
+      (|%IC| 50 
+        (:DOCUMENTATION "(,*gameProperty* <fully-bound> <not-fully-bound>)" :EXAMPLE "(,*gameProperty* #doom:cyc_bot_1 ?WHAT)")))) 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 51 :REMOVAL-GAMEPROPERTY-DOOM-BOUND-BOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 24 :POS) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEPROPERTY*) 
+      (|%IC| 43 :CHECK) 
+      (|%PC| T) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEPROPERTY*) 
+        (|%IC| 44 
+          (:FULLY-BOUND :FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEPROPERTY*) 
+          (|%IC| 45 
+            ((:BIND VALUE-1) 
+              (:BIND VALUE-2)))) 
+        (|%IC| 46 
+          (((:VALUE VALUE-1) (:VALUE VALUE-2))))) 
+      (|%IC| 52 
+        (:INPUT-VERIFY-PATTERN 
+          (:ANYTHING :ANYTHING) :OUTPUT-CHECK-PATTERN 
+          (:CALL REMOVAL-GAMEPROPERTY-POS-CHECK 
+            (:TUPLE 
+              (VALUE-1 VALUE-2) 
+              ((:VALUE VALUE-1) 
+                (:VALUE VALUE-2)))) :DOCUMENTATION "(,*gameProperty* <fully-bound> <fully-bound>)" :EXAMPLE "(,*gameProperty* 1 -1)")))) 
+  (REGISTER-SOLELY-SPECIFIC-REMOVAL-MODULE-PREDICATE 
+    (|%DYN| *GAMEPROPERTY*)) 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 53 :REMOVAL-GAMEINSTANCE-DOOM-BOUND-UNBOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 24 :POS) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEINSTANCE*) 
+        (|%IC| 27 
+          (:FULLY-BOUND :NOT-FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEINSTANCE*) 
+          (|%IC| 33 
+            ((:BIND THE-VALUE) :ANYTHING))) 
+        (|%IC| 34 
+          ((:VALUE THE-VALUE)))) 
+      (|%IC| 35 :INPUT-VERIFY-PATTERN) 
+      (|%IC| 36 :ANYTHING) 
+      (|%IC| 37 :OUTPUT-GENERATE-PATTERN) 
+      (|%IC| 54 
+        (:CALL REMOVAL-GAMEINSTANCE-UNIFY-GENERATE :INPUT)) 
+      (|%IC| 39 :OUTPUT-CONSTRUCT-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEINSTANCE*) 
+        (|%IC| 40 
+          ((:VALUE THE-VALUE) :INPUT))) 
+      (|%IC| 55 
+        (:DOCUMENTATION "(,*gameInstance* <fully-bound> <not-fully-bound>)" :EXAMPLE "(,*gameInstance* #doom:cyc_bot_1 ?WHAT)")))) 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 56 :REMOVAL-GAMEINSTANCE-DOOM-UNBOUND-UNBOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 24 :POS) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEINSTANCE*) 
+        (|%IC| 57 
+          (:NOT-FULLY-BOUND :NOT-FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEINSTANCE*) 
+          (|%IC| 45 
+            ((:BIND VALUE-1) 
+              (:BIND VALUE-2)))) 
+        (|%IC| 46 
+          (((:VALUE VALUE-1) (:VALUE VALUE-2))))) 
+      (|%IC| 35 :INPUT-VERIFY-PATTERN) 
+      (|%IC| 58 
+        (:ANYTHING :ANYTHING)) 
+      (|%IC| 37 :OUTPUT-GENERATE-PATTERN) 
+      (|%IC| 59 
+        (:CALL REMOVAL-GAMEINSTANCE-UNIFY-UNBOUND :INPUT)) 
+      (|%IC| 39 :OUTPUT-CONSTRUCT-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEINSTANCE*) 
+        (|%IC| 60 
+          ((:CALL PRINT :INPUT) 
+            (:CALL PRINT :INPUT)))) 
+      (|%IC| 61 
+        (:DOCUMENTATION "(,*gameInstance* <not-fully-bound> <not-fully-bound>)" :EXAMPLE "(,*gameInstance* #doom:cyc_bot_1 ?WHAT)")))) 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 62 :REMOVAL-GAMEINSTANCE-DOOM-BOUND-BOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 24 :POS) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEINSTANCE*) 
+      (|%IC| 43 :CHECK) 
+      (|%PC| T) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEINSTANCE*) 
+        (|%IC| 44 
+          (:FULLY-BOUND :FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEINSTANCE*) 
+          (|%IC| 45 
+            ((:BIND VALUE-1) 
+              (:BIND VALUE-2)))) 
+        (|%IC| 46 
+          (((:VALUE VALUE-1) (:VALUE VALUE-2))))) 
+      (|%IC| 63 
+        (:INPUT-VERIFY-PATTERN 
+          (:ANYTHING :ANYTHING) :OUTPUT-CHECK-PATTERN 
+          (:CALL REMOVAL-GAMEINSTANCE-POS-CHECK 
+            (:TUPLE 
+              (VALUE-1 VALUE-2) 
+              ((:VALUE VALUE-1) 
+                (:VALUE VALUE-2)))) :DOCUMENTATION "(,*gameInstance* <fully-bound> <fully-bound>)" :EXAMPLE "(,*gameInstance* 1 -1)")))) 
+  (REGISTER-SOLELY-SPECIFIC-REMOVAL-MODULE-PREDICATE 
+    (|%DYN| *GAMEINSTANCE*)) 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 42 :REMOVAL-GAMEAPI-DOOM-BOUND-BOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 64 :NEG) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 43 :CHECK) 
+      (|%PC| T) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEEVAL*) 
+        (|%IC| 44 
+          (:FULLY-BOUND :FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEEVAL*) 
+          (|%IC| 45 
+            ((:BIND VALUE-1) 
+              (:BIND VALUE-2)))) 
+        (|%IC| 46 
+          (((:VALUE VALUE-1) (:VALUE VALUE-2))))) 
+      (|%IC| 65 
+        (:INPUT-VERIFY-PATTERN 
+          (:ANYTHING :ANYTHING) :OUTPUT-CHECK-PATTERN 
+          (:CALL REMOVAL-GAMEAPI-NEG-CHECK 
+            (:TUPLE 
+              (VALUE-1 VALUE-2) 
+              ((:VALUE VALUE-1) 
+                (:VALUE VALUE-2)))) :DOCUMENTATION "(,*gameEval* <fully-bound> <fully-bound>)" :EXAMPLE "(#$not (,*gameEval* 1 -1))")))) 
+  (INFERENCE-REMOVAL-MODULE 
+    (|%IC| 66 :REMOVAL-GAMEAPI-DOOM-UNBOUND-BOUND) 
+    (LIST* 
+      (|%IC| 23 :SENSE) 
+      (|%IC| 24 :POS) 
+      (|%IC| 25 :PREDICATE) 
+      (|%DYN| *GAMEEVAL*) 
+      (|%IC| 26 :REQUIRED-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEEVAL*) 
+        (|%IC| 67 
+          (:NOT-FULLY-BOUND :FULLY-BOUND))) 
+      (|%IC| 28 :COST-EXPRESSION) 
+      (|%PC| 0) 
+      (|%IC| 29 :COMPLETENESS) 
+      (|%IC| 30 :COMPLETE) 
+      (|%IC| 31 :INPUT-EXTRACT-PATTERN) 
+      (LIST* 
+        (|%IC| 32 :TEMPLATE) 
+        (BQ-CONS 
+          (|%DYN| *GAMEEVAL*) 
+          (|%IC| 68 
+            (:ANYTHING 
+              (:BIND THE-VALUE)))) 
+        (|%IC| 34 
+          ((:VALUE THE-VALUE)))) 
+      (|%IC| 35 :INPUT-VERIFY-PATTERN) 
+      (|%IC| 36 :ANYTHING) 
+      (|%IC| 37 :OUTPUT-GENERATE-PATTERN) 
+      (|%IC| 38 
+        (:CALL REMOVAL-GAMEAPI-UNIFY-GENERATE :INPUT)) 
+      (|%IC| 39 :OUTPUT-CONSTRUCT-PATTERN) 
+      (BQ-CONS 
+        (|%DYN| *GAMEEVAL*) 
+        (|%IC| 69 
+          (:INPUT 
+            (:VALUE THE-VALUE)))) 
+      (|%IC| 70 
+        (:DOCUMENTATION "(,*gameEval* <not-fully-bound> <fully-bound>)" :EXAMPLE "(,*gameEval* ?WHAT -1)")))) 
+  (RET 
+    (|%PC| NIL)))
+(DEFINE TRANSD3 NIL 
+  (CLET-LOCAL 
+    ((TS-FILE (TRANSLATE-FILE (|%IC| 71 "CynD") (|%IC| 72 "doom3.lisp"))) 
+      (FOUT 
+        (OPEN-TEXT 
+          (|%IC| 73 "doom3.trans") 
+          (|%IC| 74 :OUTPUT)))) 
+    (SHOW-TRANS-SUBL-FILE TS-FILE FOUT) 
+    (CLOSE FOUT) 
+    (C-BACKEND-OUTPUT-FILE-AND-HEADER-FILE TS-FILE 
+      (|%IC| 75 "doom3.c")) 
+    (RET TS-FILE)) 
+  (RET 
+    (|%PC| NIL)))
+(DEFINE |DECLARE-CynD-FILE| NIL 
+  (|%REGISTER-FUNCTION| WEAKQL "WEAKQL" 2 0 NIL) 
+  (|%REGISTER-FUNCTION| MEAKQL "MEAKQL" 2 0 NIL) 
+  (|%REGISTER-FUNCTION| REMOVAL-GAMEAPI-POS-CHECK "REMOVAL-GAMEAPI-POS-CHECK" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| REMOVAL-GAMEAPI-NEG-CHECK "REMOVAL-GAMEAPI-NEG-CHECK" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| REMOVAL-GAMEAPI-UNIFY-GENERATE "REMOVAL-GAMEAPI-UNIFY-GENERATE" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| REMOVAL-GAMEPROPERTY-UNIFY-GENERATE "REMOVAL-GAMEPROPERTY-UNIFY-GENERATE" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| REMOVAL-GAMEPROPERTY-POS-CHECK "REMOVAL-GAMEPROPERTY-POS-CHECK" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| REMOVAL-GAMEINSTANCE-UNIFY-GENERATE "REMOVAL-GAMEINSTANCE-UNIFY-GENERATE" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| REMOVAL-GAMEINSTANCE-POS-CHECK "REMOVAL-GAMEINSTANCE-POS-CHECK" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| REMOVAL-GAMEINSTANCE-UNIFY-UNBOUND "REMOVAL-GAMEINSTANCE-UNIFY-UNBOUND" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| CYC-GAME-EVAL-STUB "CYC-GAME-EVAL-STUB" 1 0 NIL) 
+  (|%REGISTER-FUNCTION| SETUP-DOOM3-KE "SETUP-DOOM3-KE" 0 0 NIL) 
+  (|%REGISTER-FUNCTION| SETUP-DOOM3-REMOVALS "SETUP-DOOM3-REMOVALS" 0 0 NIL) 
+  (|%REGISTER-FUNCTION| TRANSD3 "TRANSD3" 0 0 NIL) 
+  (RET 
+    (|%PC| NIL)))
+(DEFINE |INIT-CynD-FILE| NIL 
+  (|%INTERNAL-CONSTANT| 0 
+    (|%LF| "doom:gameEval")) 
+  (|%INTERNAL-CONSTANT| 1 
+    (|%LF| "doom:gameProperty")) 
+  (|%INTERNAL-CONSTANT| 2 
+    (|%LF| "doom:gameInstance")) 
+  (|%INTERNAL-CONSTANT| 3 
+    (|%LF| "gameProperty")) 
+  (|%INTERNAL-CONSTANT| 4 
+    (|%LF| "gameInstance")) 
+  (|%INTERNAL-CONSTANT| 5 
+    (|%LF| "10.1.1.104")) 
+  (|%INTERNAL-CONSTANT| 6 
+    (|%LF| 3699)) 
+  (|%INTERNAL-CONSTANT| 7 
+    (READER-MAKE-CONSTANT-SHELL 
+      (|%LF| "isa"))) 
+  (|%INTERNAL-CONSTANT| 8 
+    (LIST 
+      (READER-MAKE-CONSTANT-SHELL 
+        (|%LF| "AsymmetricBinaryPredicate")))) 
+  (|%INTERNAL-CONSTANT| 9 
+    (READER-MAKE-CONSTANT-SHELL 
+      (|%LF| "UniversalVocabularyMt"))) 
+  (|%INTERNAL-CONSTANT| 10 
+    (LIST 
+      (READER-MAKE-CONSTANT-SHELL 
+        (|%LF| "IntangibleObjectPredicate")))) 
+  (|%INTERNAL-CONSTANT| 11 
+    (READER-MAKE-CONSTANT-SHELL 
+      (|%LF| "comment"))) 
+  (|%INTERNAL-CONSTANT| 12 
+    (LIST 
+      (|%LF| "(,*gameEval* (#$TheList .....) ?Result)"))) 
+  (|%INTERNAL-CONSTANT| 13 
+    (LIST 
+      (READER-MAKE-CONSTANT-SHELL 
+        (|%LF| "RemovalModuleSupportedPredicate-Specific")))) 
+  (|%INTERNAL-CONSTANT| 14 
+    (READER-MAKE-CONSTANT-SHELL 
+      (|%LF| "CycAPIMt"))) 
+  (|%INTERNAL-CONSTANT| 15 
+    (READER-MAKE-CONSTANT-SHELL 
+      (|%LF| "arity"))) 
+  (|%INTERNAL-CONSTANT| 16 
+    (LIST 
+      (|%PC| 2))) 
+  (|%INTERNAL-CONSTANT| 17 
+    (READER-MAKE-CONSTANT-SHELL 
+      (|%LF| "arg1Isa"))) 
+  (|%INTERNAL-CONSTANT| 18 
+    (LIST 
+      (READER-MAKE-CONSTANT-SHELL 
+        (|%LF| "Thing")))) 
+  (|%INTERNAL-CONSTANT| 19 
+    (READER-MAKE-CONSTANT-SHELL 
+      (|%LF| "arg2Isa"))) 
+  (|%INTERNAL-CONSTANT| 20 
+    (LIST 
+      (|%LF| "(,*gameProperty* ?Instance ?Result)"))) 
+  (|%INTERNAL-CONSTANT| 21 
+    (LIST 
+      (|%LF| "(,*gameInstance* ?Instance ?Result)"))) 
+  (|%INTERNAL-CONSTANT| 22 
+    (|%LF| :REMOVAL-GAMEAPI-DOOM-BOUND-UNBOUND)) 
+  (|%INTERNAL-CONSTANT| 23 
+    (|%LF| :SENSE)) 
+  (|%INTERNAL-CONSTANT| 24 
+    (|%LF| :POS)) 
+  (|%INTERNAL-CONSTANT| 25 
+    (|%LF| :PREDICATE)) 
+  (|%INTERNAL-CONSTANT| 26 
+    (|%LF| :REQUIRED-PATTERN)) 
+  (|%INTERNAL-CONSTANT| 27 
+    (LIST 
+      (|%LF| :FULLY-BOUND) 
+      (|%LF| :NOT-FULLY-BOUND))) 
+  (|%INTERNAL-CONSTANT| 28 
+    (|%LF| :COST-EXPRESSION)) 
+  (|%INTERNAL-CONSTANT| 29 
+    (|%LF| :COMPLETENESS)) 
+  (|%INTERNAL-CONSTANT| 30 
+    (|%LF| :COMPLETE)) 
+  (|%INTERNAL-CONSTANT| 31 
+    (|%LF| :INPUT-EXTRACT-PATTERN)) 
+  (|%INTERNAL-CONSTANT| 32 
+    (|%LF| :TEMPLATE)) 
+  (|%INTERNAL-CONSTANT| 33 
+    (LIST 
+      (LIST 
+        (|%LF| :BIND) 
+        (|%LF| THE-VALUE)) 
+      (|%LF| :ANYTHING))) 
+  (|%INTERNAL-CONSTANT| 34 
+    (LIST 
+      (LIST 
+        (|%LF| :VALUE) 
+        (|%LF| THE-VALUE)))) 
+  (|%INTERNAL-CONSTANT| 35 
+    (|%LF| :INPUT-VERIFY-PATTERN)) 
+  (|%INTERNAL-CONSTANT| 36 
+    (|%LF| :ANYTHING)) 
+  (|%INTERNAL-CONSTANT| 37 
+    (|%LF| :OUTPUT-GENERATE-PATTERN)) 
+  (|%INTERNAL-CONSTANT| 38 
+    (LIST 
+      (|%LF| :CALL) 
+      (|%LF| REMOVAL-GAMEAPI-UNIFY-GENERATE) 
+      (|%LF| :INPUT))) 
+  (|%INTERNAL-CONSTANT| 39 
+    (|%LF| :OUTPUT-CONSTRUCT-PATTERN)) 
+  (|%INTERNAL-CONSTANT| 40 
+    (LIST 
+      (LIST 
+        (|%LF| :VALUE) 
+        (|%LF| THE-VALUE)) 
+      (|%LF| :INPUT))) 
+  (|%INTERNAL-CONSTANT| 41 
+    (LIST 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameEval* <fully-bound> <not-fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(,*gameEval* -1 ?WHAT)"))) 
+  (|%INTERNAL-CONSTANT| 42 
+    (|%LF| :REMOVAL-GAMEAPI-DOOM-BOUND-BOUND)) 
+  (|%INTERNAL-CONSTANT| 43 
+    (|%LF| :CHECK)) 
+  (|%INTERNAL-CONSTANT| 44 
+    (LIST 
+      (|%LF| :FULLY-BOUND) 
+      (|%LF| :FULLY-BOUND))) 
+  (|%INTERNAL-CONSTANT| 45 
+    (LIST 
+      (LIST 
+        (|%LF| :BIND) 
+        (|%LF| VALUE-1)) 
+      (LIST 
+        (|%LF| :BIND) 
+        (|%LF| VALUE-2)))) 
+  (|%INTERNAL-CONSTANT| 46 
+    (LIST 
+      (LIST 
+        (LIST 
+          (|%LF| :VALUE) 
+          (|%LF| VALUE-1)) 
+        (LIST 
+          (|%LF| :VALUE) 
+          (|%LF| VALUE-2))))) 
+  (|%INTERNAL-CONSTANT| 47 
+    (LIST 
+      (|%LF| :INPUT-VERIFY-PATTERN) 
+      (LIST 
+        (|%LF| :ANYTHING) 
+        (|%LF| :ANYTHING)) 
+      (|%LF| :OUTPUT-CHECK-PATTERN) 
+      (LIST 
+        (|%LF| :CALL) 
+        (|%LF| REMOVAL-GAMEAPI-POS-CHECK) 
+        (LIST 
+          (|%LF| :TUPLE) 
+          (LIST 
+            (|%LF| VALUE-1) 
+            (|%LF| VALUE-2)) 
+          (LIST 
+            (LIST 
+              (|%LF| :VALUE) 
+              (|%LF| VALUE-1)) 
+            (LIST 
+              (|%LF| :VALUE) 
+              (|%LF| VALUE-2))))) 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameEval* <fully-bound> <fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(,*gameEval* 1 -1)"))) 
+  (|%INTERNAL-CONSTANT| 48 
+    (|%LF| :REMOVAL-GAMEPROPERTY-DOOM-BOUND-UNBOUND)) 
+  (|%INTERNAL-CONSTANT| 49 
+    (LIST 
+      (|%LF| :CALL) 
+      (|%LF| REMOVAL-GAMEPROPERTY-UNIFY-GENERATE) 
+      (|%LF| :INPUT))) 
+  (|%INTERNAL-CONSTANT| 50 
+    (LIST 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameProperty* <fully-bound> <not-fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(,*gameProperty* #doom:cyc_bot_1 ?WHAT)"))) 
+  (|%INTERNAL-CONSTANT| 51 
+    (|%LF| :REMOVAL-GAMEPROPERTY-DOOM-BOUND-BOUND)) 
+  (|%INTERNAL-CONSTANT| 52 
+    (LIST 
+      (|%LF| :INPUT-VERIFY-PATTERN) 
+      (LIST 
+        (|%LF| :ANYTHING) 
+        (|%LF| :ANYTHING)) 
+      (|%LF| :OUTPUT-CHECK-PATTERN) 
+      (LIST 
+        (|%LF| :CALL) 
+        (|%LF| REMOVAL-GAMEPROPERTY-POS-CHECK) 
+        (LIST 
+          (|%LF| :TUPLE) 
+          (LIST 
+            (|%LF| VALUE-1) 
+            (|%LF| VALUE-2)) 
+          (LIST 
+            (LIST 
+              (|%LF| :VALUE) 
+              (|%LF| VALUE-1)) 
+            (LIST 
+              (|%LF| :VALUE) 
+              (|%LF| VALUE-2))))) 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameProperty* <fully-bound> <fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(,*gameProperty* 1 -1)"))) 
+  (|%INTERNAL-CONSTANT| 53 
+    (|%LF| :REMOVAL-GAMEINSTANCE-DOOM-BOUND-UNBOUND)) 
+  (|%INTERNAL-CONSTANT| 54 
+    (LIST 
+      (|%LF| :CALL) 
+      (|%LF| REMOVAL-GAMEINSTANCE-UNIFY-GENERATE) 
+      (|%LF| :INPUT))) 
+  (|%INTERNAL-CONSTANT| 55 
+    (LIST 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameInstance* <fully-bound> <not-fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(,*gameInstance* #doom:cyc_bot_1 ?WHAT)"))) 
+  (|%INTERNAL-CONSTANT| 56 
+    (|%LF| :REMOVAL-GAMEINSTANCE-DOOM-UNBOUND-UNBOUND)) 
+  (|%INTERNAL-CONSTANT| 57 
+    (LIST 
+      (|%LF| :NOT-FULLY-BOUND) 
+      (|%LF| :NOT-FULLY-BOUND))) 
+  (|%INTERNAL-CONSTANT| 58 
+    (LIST 
+      (|%LF| :ANYTHING) 
+      (|%LF| :ANYTHING))) 
+  (|%INTERNAL-CONSTANT| 59 
+    (LIST 
+      (|%LF| :CALL) 
+      (|%LF| REMOVAL-GAMEINSTANCE-UNIFY-UNBOUND) 
+      (|%LF| :INPUT))) 
+  (|%INTERNAL-CONSTANT| 60 
+    (LIST 
+      (LIST 
+        (|%LF| :CALL) 
+        (|%LF| PRINT) 
+        (|%LF| :INPUT)) 
+      (LIST 
+        (|%LF| :CALL) 
+        (|%LF| PRINT) 
+        (|%LF| :INPUT)))) 
+  (|%INTERNAL-CONSTANT| 61 
+    (LIST 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameInstance* <not-fully-bound> <not-fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(,*gameInstance* #doom:cyc_bot_1 ?WHAT)"))) 
+  (|%INTERNAL-CONSTANT| 62 
+    (|%LF| :REMOVAL-GAMEINSTANCE-DOOM-BOUND-BOUND)) 
+  (|%INTERNAL-CONSTANT| 63 
+    (LIST 
+      (|%LF| :INPUT-VERIFY-PATTERN) 
+      (LIST 
+        (|%LF| :ANYTHING) 
+        (|%LF| :ANYTHING)) 
+      (|%LF| :OUTPUT-CHECK-PATTERN) 
+      (LIST 
+        (|%LF| :CALL) 
+        (|%LF| REMOVAL-GAMEINSTANCE-POS-CHECK) 
+        (LIST 
+          (|%LF| :TUPLE) 
+          (LIST 
+            (|%LF| VALUE-1) 
+            (|%LF| VALUE-2)) 
+          (LIST 
+            (LIST 
+              (|%LF| :VALUE) 
+              (|%LF| VALUE-1)) 
+            (LIST 
+              (|%LF| :VALUE) 
+              (|%LF| VALUE-2))))) 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameInstance* <fully-bound> <fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(,*gameInstance* 1 -1)"))) 
+  (|%INTERNAL-CONSTANT| 64 
+    (|%LF| :NEG)) 
+  (|%INTERNAL-CONSTANT| 65 
+    (LIST 
+      (|%LF| :INPUT-VERIFY-PATTERN) 
+      (LIST 
+        (|%LF| :ANYTHING) 
+        (|%LF| :ANYTHING)) 
+      (|%LF| :OUTPUT-CHECK-PATTERN) 
+      (LIST 
+        (|%LF| :CALL) 
+        (|%LF| REMOVAL-GAMEAPI-NEG-CHECK) 
+        (LIST 
+          (|%LF| :TUPLE) 
+          (LIST 
+            (|%LF| VALUE-1) 
+            (|%LF| VALUE-2)) 
+          (LIST 
+            (LIST 
+              (|%LF| :VALUE) 
+              (|%LF| VALUE-1)) 
+            (LIST 
+              (|%LF| :VALUE) 
+              (|%LF| VALUE-2))))) 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameEval* <fully-bound> <fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(#$not (,*gameEval* 1 -1))"))) 
+  (|%INTERNAL-CONSTANT| 66 
+    (|%LF| :REMOVAL-GAMEAPI-DOOM-UNBOUND-BOUND)) 
+  (|%INTERNAL-CONSTANT| 67 
+    (LIST 
+      (|%LF| :NOT-FULLY-BOUND) 
+      (|%LF| :FULLY-BOUND))) 
+  (|%INTERNAL-CONSTANT| 68 
+    (LIST 
+      (|%LF| :ANYTHING) 
+      (LIST 
+        (|%LF| :BIND) 
+        (|%LF| THE-VALUE)))) 
+  (|%INTERNAL-CONSTANT| 69 
+    (LIST 
+      (|%LF| :INPUT) 
+      (LIST 
+        (|%LF| :VALUE) 
+        (|%LF| THE-VALUE)))) 
+  (|%INTERNAL-CONSTANT| 70 
+    (LIST 
+      (|%LF| :DOCUMENTATION) 
+      (|%LF| "(,*gameEval* <not-fully-bound> <fully-bound>)") 
+      (|%LF| :EXAMPLE) 
+      (|%LF| "(,*gameEval* ?WHAT -1)"))) 
+  (|%INTERNAL-CONSTANT| 71 
+    (|%LF| "CynD")) 
+  (|%INTERNAL-CONSTANT| 72 
+    (|%LF| "doom3.lisp")) 
+  (|%INTERNAL-CONSTANT| 73 
+    (|%LF| "doom3.trans")) 
+  (|%INTERNAL-CONSTANT| 74 
+    (|%LF| :OUTPUT)) 
+  (|%INTERNAL-CONSTANT| 75 
+    (|%LF| "doom3.c")) 
+  (|%REGISTER-GLOBAL| DEFVAR *GAMEEVAL* "*GAMEEVAL*" 
+    (FIND-OR-CREATE-CONSTANT 
+      (|%IC| 0 "doom:gameEval"))) 
+  (|%REGISTER-GLOBAL| DEFVAR *GAMEPROPERTY* "*GAMEPROPERTY*" 
+    (FIND-OR-CREATE-CONSTANT 
+      (|%IC| 1 "doom:gameProperty"))) 
+  (|%REGISTER-GLOBAL| DEFVAR *GAMEINSTANCE* "*GAMEINSTANCE*" 
+    (FIND-OR-CREATE-CONSTANT 
+      (|%IC| 2 "doom:gameInstance"))) 
+  (RET 
+    (|%PC| NIL)))
+(DEFINE |SETUP-CynD-FILE| NIL 
+  (RET 
+    (|%PC| NIL)))

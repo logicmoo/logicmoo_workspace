@@ -1,0 +1,36 @@
+Constant: VPTemplateRTP.
+
+In Mt: UniversalVocabularyMt.
+
+Truth Value: :default.
+Direction: :forward.
+isa: KBDependentCollection.
+
+Truth Value: :monotonic.
+Direction: :forward.
+f: (not 
+     (isa VPTemplateRTP CycKBSubsetCollection)).
+Direction: :forward.
+isa: LinguisticObjectType.
+
+Truth Value: :default.
+Direction: :forward.
+quotedIsa: CycNLTemplateParsingConstant.
+
+In Mt: BookkeepingMt.
+
+Truth Value: :default.
+Direction: :forward.
+quotedIsa: ResearchCycConstant-NotFullyReviewed.
+
+Truth Value: :default.
+Direction: :forward.
+quotedIsa: CycSecureFORT.
+
+In Mt : UniversalVocabularyMt.
+genls :  ParsingTemplateCategory.  
+
+In Mt : TemplateParsingMt.
+;; f: (posForTemplateCategory Verb VPTemplate).
+;; f: (nlPhraseTypeForTemplateCategory VerbPhrase VPTemplate).
+;; f: (posPredForTemplateCategory verbStrings VPTemplate).

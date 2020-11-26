@@ -1,0 +1,26 @@
+Leopard::[Animal : x]-isA->[Leopard] :-
+   Mammal::[Animal : x]-isA->[Mammal],
+   Carnivorous::[Animal : x]-isA->[Carnivorous],
+   Fact::[Animal : x]-colorOf->[Color]-attr->[Wild],
+   Fact::[Animal : x]-partOf->[Component]-attr->[Dark].
+
+Mammal::[Animal : x]-isA->[Mammal] :-
+   	Fact::[Animal : x]-poss->[Hair].
+
+
+Carnivorous::[Animal : x]-isA->[Carnivorous] :-
+   Fact::[Animal : x]<-agnt-[Eat]-obj->[Meat].
+
+Carnivorous::[Animal : x]-isA->[Carnivorous] :-
+   Fact::[Animal : x]-poss->[Teeth]-attr->[Sharp],
+   Fact::[Animal : x]-poss->[Claw],
+   Fact::[Animal : x]-has->[Eyes]-attr->[Forward].
+
+
+Fact::[Animal : Yala]-
+            <-pat-[BelongTo]-bnfcre->[Man : Robert],
+            -colorOf->[Color]-attr->[Wild],
+            -poss->[Teeth]-attr->[Sharp],
+            -has->[Eyes]-attr->[Forward].
+
+Fact::[Animal : Yala]-poss->[Claw].

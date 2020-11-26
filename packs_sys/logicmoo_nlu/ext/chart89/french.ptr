@@ -1,0 +1,62 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% french.ptr [Chapter  7] A Prolog PATR grammar for a French fragment
+R ule S ---> [NP, VP]  :-
+       S  : cat === s,
+       NP : cat === np,
+       VP : cat === vp,
+       NP : per === VP : per,
+       NP : num === VP : num.
+
+W ord je :-
+        W : cat === np,
+        W : per === 1,
+        W : num === sing.
+W ord tu :-
+  	W : cat === np,
+     	W : per === 2,
+     	W : num === sing.
+W ord elle :-
+	W : cat === np,
+	W : per === 3,
+	W : num === sing.
+W ord nous :-
+	W : cat === np,
+	W : per === 1,
+	W : num === plur.
+W ord vous :-
+	W : cat === np,
+	W : per === 2,
+	W : num === plur.
+W ord ils :-
+	W : cat === np,
+	W : per === 3,
+	W : num === plur.
+W ord tombe :-
+	W : cat === vp,
+	W : per === 1,
+	W : num === sing.
+W ord tombe :-
+	W : cat === vp,
+	W : per === 3,
+	W : num === sing.
+W ord tombes :-
+	W : cat === vp,
+	W : per === 2,
+	W : num === sing.
+W ord tombons :-
+	W : cat === vp,
+	W : per === 1,
+	W : num === plur.
+W ord tombez :-
+	W : cat === vp,
+	W : per === 2,
+	W : num === plur.
+W ord tombent :-
+	W : cat === vp,
+	W : per === 3,
+	W : num === plur.

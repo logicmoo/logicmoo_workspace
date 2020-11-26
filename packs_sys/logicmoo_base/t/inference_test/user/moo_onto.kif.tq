@@ -1,0 +1,114 @@
+
+(note "MOO Ontology")
+
+(subclass-of At State)
+
+(subclass-of Doing State)
+; Do --> Can ; Doing ; Will
+
+(subclass-of Has State)
+(nth-domain-set Has Thing State)
+
+(subclass-of Want State)
+(subclass-of Want-To Want)
+(subclass-of Want-Be Want)
+(subclass-of Want-Thing Want)
+ 
+(subclass-of Doing State)
+
+(Situation At At Thing Location)
+(Situation Can Can Avatar Action)
+(Situation Will Will Avatar Action)
+(Situation Doing Doing Avatar Action)
+(Situation Thing-Part-P Thing-Part Avatar Thing)
+(Situation Know Know Avatar Mtransable)
+(Situation Thing-Prop Thing-Prop Avatar Attribute)
+(Situation Want-To Want-To Avatar Action)
+(Situation Want-Be Want-Be Avatar Attribute)
+(Situation Want-Thing Want-Thing Avatar Thing)
+
+(subrelation-of resultsIn Act-State ) 
+(subrelation-of Enables Act-State ) 
+(subrelation-of Disables Act-State ) 
+(subrelation-of Initiates Act-State ) 
+(subrelation-of Reasons Act-State ) 
+
+(nth-domain-set resultsIn Action State)
+(nth-domain-set Enables State Action)
+(nth-domain-set Initiates State Mental)
+(nth-domain-set Initiates Action Mental)
+(nth-domain-set Reasons Mental Action)
+(nth-domain-set Disable State Action)
+
+(Implies (Actprototype ?PRIM ?Arg1 ?Arg2 ) (and ( nth-domain-set  ?Arg1 ?Arg2 ) (instance ?PRIM Conceptual-Primitive)))
+(Implies (Actprototype ?PRIM ?Arg1 ?Arg2 ?Arg3) (and ( nth-domain-set  ?Arg1 ?Arg2 ?Arg3) (instance ?PRIM Conceptual-Primitive)))
+(Implies (Actprototype ?PRIM ?Arg1 ?Arg2 ?Arg3 ?Arg4) (and ( nth-domain-set  ?Arg1 ?Arg2 ?Arg3 ?Arg4) (instance ?PRIM Conceptual-Primitive)))
+
+( Actprototype Ptrans Avatar Thing Location)
+( Actprototype Atrans Avatar Thing Location)
+( Actprototype Propel Avatar Thing Location Force)
+( Actprototype Move Avatar Bpart)
+( Actprototype Grasp Avatar Bpart Thing) 
+( Actprototype Injest Avatar Thing) 
+( Actprototype Expel Avatar Thing Location) 
+( Actprototype Speak Avatar Words) 
+( Actprototype Attend Avatar Senseorgan Location) 
+( Actprototype Mtrans Avatar Mtransable Avatar) 
+( Actprototype Forget Avatar Mtransable)
+( Actprototype Mbuild Avatar Mtransable)
+
+(subclass-of Ptrans Phys-Conceptual-Primitive )
+(subclass-of Atrans Phys-Conceptual-Primitive )
+(subclass-of Propel Phys-Conceptual-Primitive )
+(subclass-of Move Phys-Conceptual-Primitive )
+(subclass-of Grasp Phys-Conceptual-Primitive )
+(subclass-of Ungrasp Phys-Conceptual-Primitive )
+(subclass-of Ingest Phys-Conceptual-Primitive )
+(subclass-of Speak Phys-Conceptual-Primitive )
+(subclass-of Attend Phys-Conceptual-Primitive )
+
+(subclass-of Notice Mental-Conceptual-Primitive )
+(subclass-of Mtrans Mental-Conceptual-Primitive )
+(subclass-of Mbuild Mental-Conceptual-Primitive )
+(subclass-of Forget Mental-Conceptual-Primitive )
+
+(subclass-of Mental-Conceptual-Primitive  Conceptual-Primitive)
+(subclass-of Phys-Conceptual-Primitive  Conceptual-Primitive)
+
+(subclass-of Conceptual-Primitive  Action)
+
+
+(subclass-of Pthing Thing)
+(subclass-of Athing Thing)
+
+(subclass-of Person Avatar)
+(subclass-of Bot Avatar)
+(subclass-of Avatar Actor )
+(subclass-of StateMachine Actor )
+(subclass-of Actor Agent )
+
+(instance-of Nephrael  Person)
+(instance-of PrologBot  Bot)
+
+(subclass-of Avatar Pthing)
+(subclass-of Bpart Pthing)
+(subclass-of Senseorgan Bpart)
+(subclass-of Limbus Bpart)
+(subclass-of Grasper Bpart)
+(subclass-of Organs Bpart)
+
+(Implies (And (Isa ?Avatar Avatar ) (Part-Of ?Avatar ?Thing )  ) (Isa ?Thing Bpart ) )
+
+(subclass-of Room Location)
+(subclass-of Pthing Location)
+
+(subclass-of Goal Mtransable )
+(subclass-of Words Mtransable )
+(subclass-of Text Words )
+(subclass-of Action Goal)
+
+(query (instance ?X ?Y))
+
+
+(end_of_file)
+

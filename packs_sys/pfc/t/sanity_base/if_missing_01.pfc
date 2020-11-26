@@ -1,0 +1,56 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+%  was_module(sanity_if_missong_01,[]).
+
+:- include(test_header).
+
+:- dynamic(foob/1).
+
+
+:- debug_logicmoo(logicmoo(_)).
+ % :- mpred_trace_exec.
+
+:- begin_pfc.
+
+% this should have been ok
+% (if_missing(Missing,Create) ==> ((\+ Missing/(Missing\==Create), \+ Create , \+ ~(Create)) ==> Create)).
+
+if_missing(Missing,Create) ==>  
+   ( ( \+ Missing/(
+                  %  nonvar(Missing),nonvar(Create),
+  Missing\=@=Create))
+ ==> Create).
+
+   % prevents segfaults
+:- set_prolog_flag(gc,true).
+
+% :- rtrace.
+if_missing(foob(_),foob(a)).
+:- nortrace.
+
+
+:- mpred_test(foob(a)).
+
+:- set_prolog_flag(gc,false).
+
+:- ain(foob(b)).
+
+:- mpred_test(\+foob(a)).
+
+:- mpred_test(foob(b)).
+
+:- ain(~foob(b)).
+
+:- mpred_test(\+foob(b)).
+
+:- mpred_test(foob(a)).
+
+if_missing(fooc(_),fooc(a)).
+
+:- mpred_test(fooc(a)).
+

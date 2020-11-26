@@ -1,0 +1,8 @@
+Relevant to translation applications. Specifies the list of Nuance
+parameters that will be used when carrying out recognition for the
+TRANSLATE\_\-SPEECH\_\-CORPUS command. These parameters must at a minimum
+specify the recognition package and the top-level Nuance grammar, for
+example
+\begin{verbatim}
+[package=med_runtime(recogniser), grammar='.MAIN']
+\end{verbatim}

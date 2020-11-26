@@ -1,0 +1,179 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: c0360494
+ *  Institution: University of Huddersfield
+ *  Date created: Mon Dec 18 12:48:09 GMT 2006
+ *  Date last modified: 2006/12/18 at 01:39:45 PM GMT
+ *  Description:
+ *    
+ *    Object Life History : tea
+ * Object Life History : tea
+ */
+
+domain_name(makingTea).
+
+% Sorts
+sorts(primitive_sorts,[cup,kettle]).
+
+% Objects
+objects(cup,[cup1,cup2,cup3,cup4,cup5,bigMug]).
+objects(kettle,[electricKettle]).
+
+% Predicates
+predicates([
+    dirty(cup),
+    clean(cup),
+    withTea(cup),
+    withWater(cup),
+    blackTea(cup),
+    milkyTea(cup),
+    blackTeaSugar(cup),
+    milkyTeaSugar(cup),
+    empty(kettle),
+    full(kettle),
+    boiled(kettle)]).
+
+% Object Class Definitions
+substate_classes(cup,Cup,[
+    [dirty(Cup)],
+    [clean(Cup)],
+    [withTea(Cup)],
+    [withWater(Cup)],
+    [blackTea(Cup)],
+    [milkyTea(Cup)],
+    [blackTeaSugar(Cup)],
+    [milkyTeaSugar(Cup)]]).
+substate_classes(kettle,Kettle,[
+    [empty(Kettle)],
+    [full(Kettle)],
+    [boiled(Kettle)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(fillUp(Kettle),
+    % prevail
+    [],
+    % necessary
+    [     sc(kettle,Kettle,[empty(Kettle)]=>[full(Kettle)])],
+    % conditional
+    []).
+operator(boil(Kettle),
+    % prevail
+    [],
+    % necessary
+    [     sc(kettle,Kettle,[full(Kettle)]=>[boiled(Kettle)])],
+    % conditional
+    []).
+operator(wash(Cup),
+    % prevail
+    [],
+    % necessary
+    [     sc(cup,Cup,[dirty(Cup)]=>[clean(Cup)])],
+    % conditional
+    []).
+operator(addBag(Cup),
+    % prevail
+    [],
+    % necessary
+    [     sc(cup,Cup,[clean(Cup)]=>[withTea(Cup)])],
+    % conditional
+    []).
+operator(addWater(Kettle,Cup),
+    % prevail
+    [     se(kettle,Kettle,[boiled(Kettle)])],
+    % necessary
+    [     sc(cup,Cup,[withTea(Cup)]=>[withWater(Cup)])],
+    % conditional
+    []).
+operator(brew(Cup),
+    % prevail
+    [],
+    % necessary
+    [     sc(cup,Cup,[withWater(Cup)]=>[blackTea(Cup)])],
+    % conditional
+    []).
+operator(addMilk(Cup),
+    % prevail
+    [],
+    % necessary
+    [     sc(cup,Cup,[blackTea(Cup)]=>[milkyTea(Cup)])],
+    % conditional
+    []).
+operator(addSugar(Cup),
+    % prevail
+    [],
+    % necessary
+    [     sc(cup,Cup,[blackTea(Cup)]=>[blackTeaSugar(Cup)])],
+    % conditional
+    []).
+operator(addSugarMilk(Cup),
+    % prevail
+    [],
+    % necessary
+    [     sc(cup,Cup,[milkyTea(Cup)]=>[milkyTeaSugar(Cup)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(cup,cup1,[blackTea(cup1)])],
+    % INIT States
+    [
+     ss(cup,cup1,[clean(cup1)]),
+     ss(kettle,electricKettle,[boiled(electricKettle)])]).
+planner_task(2,
+    % Goals
+    [
+     se(cup,cup2,[milkyTea(cup2)])],
+    % INIT States
+    [
+     ss(cup,cup2,[dirty(cup2)]),
+     ss(kettle,electricKettle,[full(electricKettle)])]).
+planner_task(3,
+    % Goals
+    [
+     se(cup,cup1,[milkyTea(cup1)]),
+     se(cup,cup2,[milkyTea(cup2)]),
+     se(cup,cup3,[milkyTea(cup3)]),
+     se(cup,cup4,[milkyTeaSugar(cup4)])],
+    % INIT States
+    [
+     ss(cup,cup1,[clean(cup1)]),
+     ss(cup,cup2,[clean(cup2)]),
+     ss(cup,cup3,[clean(cup3)]),
+     ss(cup,cup4,[clean(cup4)]),
+     ss(kettle,electricKettle,[empty(electricKettle)])]).
+planner_task(4,
+    % Goals
+    [
+     se(cup,cup1,[blackTea(cup1)]),
+     se(cup,cup2,[milkyTea(cup2)]),
+     se(cup,cup3,[milkyTea(cup3)]),
+     se(cup,cup4,[blackTeaSugar(cup4)]),
+     se(cup,cup5,[milkyTea(cup5)]),
+     se(cup,bigMug,[milkyTeaSugar(bigMug)])],
+    % INIT States
+    [
+     ss(cup,cup1,[dirty(cup1)]),
+     ss(cup,cup2,[clean(cup2)]),
+     ss(cup,cup3,[dirty(cup3)]),
+     ss(cup,cup4,[clean(cup4)]),
+     ss(cup,cup5,[dirty(cup5)]),
+     ss(cup,bigMug,[dirty(bigMug)]),
+     ss(kettle,electricKettle,[empty(electricKettle)])]).

@@ -1,0 +1,25 @@
+(note TQD112)
+
+(implies 
+ (and 
+ (internationalAcceptabilityOf ?ACTIONTYPE ?ATTRIB) 
+ (behaviorCapable ?AGENT ?ACTIONTYPE agent)) 
+ (viabilityOfAsForeignPolicyTool ?AGENT ?ACTIONTYPE ?ATTRIB)) 
+
+(internationalAcceptabilityOf ChemicalAttack VeryLow) 
+
+(behaviorCapable Iran ChemicalAttack agent) 
+
+
+(implies 
+ (subclass ?ATTACK WeaponOfMassDestructionAttack) 
+ (internationalAcceptabilityOf ?ATTACK VeryLow)) 
+
+(subclass ChemicalAttack WeaponOfMassDestructionAttack) 
+
+
+( query  (findall ?LEVEL
+(viabilityOfAsForeignPolicyTool Iran ChemicalAttack ?LEVEL)  
+))
+
+(answer VeryLow)

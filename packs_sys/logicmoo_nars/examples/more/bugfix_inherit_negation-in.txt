@@ -1,0 +1,4 @@
+* inherit + negation
+<a --> b>.
+<a --> (--,b)>.
+50

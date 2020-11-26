@@ -1,0 +1,12 @@
+Relevant to bidirectional translation applications: switches on a mode where input can be passed to either side of the bidirectional system. Commands for the ``question'' side are prefaced with ``Q:'', e.g.
+\begin{verbatim}
+Q: LOAD_TRANSLATE
+
+Q: where is the pain
+\end{verbatim}
+while commands for the `answer'' side are prefaced with ``A:'', e.g.
+\begin{verbatim}
+A: EBL_LOAD
+
+Q: en la cabeza
+\end{verbatim}

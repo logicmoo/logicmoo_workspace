@@ -1,0 +1,158 @@
+lexicon("push", verb, [Push]-
+		-agnt->[Human],
+		-obj->[Object],
+		-on->[Object]).
+lexicon("create", verb, [Create]-obj->[Object]-colorOf->[Color]).
+
+lexicon("pyramid", noun, Pyramid).
+lexicon("cube", noun, Cube).
+lexicon("sphere", noun, Sphere).
+lexicon("man", noun, Man).
+lexicon("woman", noun, Woman).
+
+lexicon("small", adj, sizeOf, Size, small).
+lexicon("big", adj, sizeOf, Size, big).
+lexicon("red", adj, colorOf, Color, red).
+lexicon("blue", adj, colorOf, Color, blue).
+
+lexicon("on", prep, on).
+lexicon("under", prep, under).
+lexicon("left", prep, left).
+lexicon("right", prep, right).
+
+lexicon("the", art, x).
+lexicon("a", art, x).
+
+Verb(v, G) :- lexicon(v, verb, G).
+
+Prep([v|P], P, T) :- lexicon(v, prep, T).
+
+Art([v|P], P, T) :- lexicon(v, art, T), !.
+Art(P, P, undefined).
+
+Noun([v|P], P, T) :- lexicon(v, noun, T).
+
+Adj(A, R, T, V) :- lexicon(A, adj, R, T, V).
+
+Shrdlu :-
+  writeln("**** Welcome to the SHRDLU_PCG Program *******"),
+  //new(aShrdlu_Canvas3D, "PrologPlusCG.Shrdlu_Canvas3D", ()),
+  readSentence(_sentence),
+  ShrdluDialog(_sentence), !.
+
+ShrdluDialog(["end", "."]) :- !.
+ShrdluDialog(_sentence) :-
+  Semantic_Analysis(_sentence, _CG),
+  writeln(_CG),	
+  _CG,
+  readSentence(_s),
+  ShrdluDialog(_s), !.
+
+Semantic_Analysis(_sentence, _CG) :- 
+   imperative_sentence(_sentence, _CG).
+
+nlp :-
+   readSentence(P),
+   analyze_sentence(P, G),
+   writeln(G), !.
+
+analyze_sentence(P, G) :-
+   imperative_sentence(P, G), !.
+analyze_sentence(P, G) :-
+   declarative_sentence(P, G).
+
+declarative_sentence(P, [Proposition = G]-modalityOf->[Modality = declarative]) :-
+   NP(P, P1, E_SUBJ, G_SUBJ),
+   VP(P1, G),
+   branchOfCG(B_Branch, [Action]-agnt->[X], G),
+   E_G_SUBJ is B_Branch:getTargetConcept(),
+   G:specialize(E_G_SUBJ, G_SUBJ, E_SUBJ).
+
+imperative_sentence(P, 
+                   [Proposition = G]-modalityOf->[Modality = imperative]) :- 
+   VP(P, G).
+
+VP([V|P1], G) :-
+   Verb(V, G_lexicon),
+   G is G_lexicon:copy(),
+   NP(P1, P2, E_NP1, G_COD),
+   branchOfCG(B_Branch, [T_Verb]-obj->[X], G),
+   E_GV_COD is B_Branch:getTargetConcept(),
+   G:specialize(E_GV_COD, G_COD, E_NP1),
+   complement(P2, T_Verb, G).
+
+complement(["."], _, G) :- !.
+complement(P2, T_Verb, G) :-
+   Prep(P2, P3, s_prep),
+   NP(P3, ["."], E_G_NP, G_NP),
+   branchOfCG(B_Branch, [T_Verb]-s_prep->[X], G),
+   E_COD is B_Branch:getTargetConcept(),
+   G:specialize(E_COD, G_NP, E_G_NP).
+
+NP(P, P1, E, G) :-
+   Art(P, P2, A1),
+   AdjsSynt(P2, P3, L_Adjs),
+   Noun(P3, P4, N),
+   suiteNP(P4, P1, N, A1, L_Adjs, E, G), !.
+
+suiteNP([N1|P1], P1, N, A1, L_Adjs, E, G) :-
+   not(lexicon(N1, _, _)),
+   not(lexicon(N1, _, _, _, _)),
+   SemAdjs(L_Adjs, N, N1, G, E), !.
+suiteNP(P4, P1, N, A1, L_Adjs, E, G) :-
+   SemAdjs(L_Adjs, N, A1, S, E1),
+   AdjsSynt(P4, P1, L_Adjs2),
+   SemAdjs(L_Adjs2, N, A1, S1, E11),
+   maximalJoin(S, E1, S1, E11, G, E).
+
+maximalJoin(G1, E1, G2, E2, G3, E3) :-
+   _resMatchCG is G1:maximalJoin(E1, G2, E2),
+   G3 is _resMatchCG:getCG(),
+   E3 is _resMatchCG:getConcept().
+
+
+AdjsSynt([A|P], P1, [A|L_Adjs]) :-
+  lexicon(A, adj, _, _, _),
+  AdjsSynt(P, P1, L_Adjs), !.
+AdjsSynt(P, P, []).
+
+SemAdjs([A|P], N, A1, S, E_N_S) :-
+   Adj(A, R1, T1, V1),
+   eq(G, [N : A1]-R1->[T1 = V1]), 
+   branchOfCG(B, [N : A1]-R1->[T1 = V1], G),
+   E_N is B:getSourceConcept(),
+   SemAdjs2(P, G, E_N, N, A1, S, E_N_S), !.
+SemAdjs([], N, A1, G, E) :-
+   eq(C, [N : A1]),
+   concOfCG(E, [N : A1], G).
+
+SemAdjs2([A|P], G, E_N, N, A1, S, E_S) :-
+   Adj(A, R, T, V),
+   eq(G1, [N : A1]-R->[T = V]),
+   branchOfCG(B, [N : A1]-R->[T = V], G1),
+   E_N1 is B:getSourceConcept(),
+   maximalJoin(G, E_N, G1, E_N1, G2, E_N2), 
+   SemAdjs2(P, G2, E_N2, N, A1, S, E_S), !.
+SemAdjs2([], G, E, _, _, G, E).
+
+// **** Interpretation of the semantic: it can be action or goals to perform, like the following :
+[Create]-obj->[T_Obj : _IdObj]-colorOf->[Color = C] :-
+   asserta(object([T_Obj : _IdObj]-colorOf->[Color = C]), []),
+   writeln([T_Obj, _IdObj, C]),
+   //execMethod(void, "PrologPlusCG.Shrdlu_Canvas3D", T_Obj, (_IdObj, C)),
+   !.
+
+[Push] -
+       -obj->[_Object],
+       -on->[_On] :-  
+     writeln(""),
+     write("My goal now is to push "), write(_Object), write(" on "), write(_On), writeln(".") .
+
+[Proposition = G]-modalityOf->[Modality = imperative] :- G.
+
+
+// *******   utilities
+not(p) :- p, !, fail.
+not(p).
+
+eq(x, x).

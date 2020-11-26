@@ -1,0 +1,22 @@
+#	gSOAP 2 Makefile for Linux by Robert van Engelen, Florida State Univerity
+#	Requires Flex/Lex and Bison/Yacc
+CC=gcc
+CPP=g++
+LIBS=-lfl
+COFLAGS=-O2
+CWFLAGS=
+CIFLAGS=
+CMFLAGS=
+CFLAGS= $(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
+soapcpp2:	soapcpp2.h soapcpp2.tab.o symbol2.o error2.o lex.yy.o init2.o soapcpp2.o
+		$(CC) -s symbol2.o error2.o soapcpp2.tab.o lex.yy.o init2.o soapcpp2.o -static $(LIBS) -o $@
+soapcpp2.tab.c:	soapcpp2.y soapcpp2.h error2.h
+		bison -d -v soapcpp2.y
+lex.yy.c:	soapcpp2.tab.c soapcpp2.tab.h soapcpp2.l
+		flex -l soapcpp2.l
+.c.o:		soapcpp2.h soapcpp2.tab.h error2.h
+		$(CC) $(CFLAGS) -DWITH_BISON -c $<
+clean:		
+		rm -f *.o
+distclean:		
+		rm -f soapcpp2 *.o lex.yy.* soapcpp2.tab.* y.tab.* *.output

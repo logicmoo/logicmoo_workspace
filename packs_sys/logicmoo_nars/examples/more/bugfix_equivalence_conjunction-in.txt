@@ -1,0 +1,16 @@
+<(*,m1,P1) --> sender>.
+<(*,m2,P2) --> sender>.
+<(*,m3,P1) --> sender>.
+
+<(*,mu1,U) --> sender>.
+<(*,mu2,U) --> sender>.
+<(*,mu1,m1) --> replyTo>.
+<(*,mu2,m4) --> replyTo>.
+
+<(*,m5,P1) --> sender>.
+
+// define the concept of "a mail to which U has responded"
+< (&&,<(*,#manswer,#m) --> replyTo>, <(*,#manswer,U) --> sender>) <=> <#m --> uResponse> >.
+// ask for conditions entailing uResponse
+<$possibleResponse ==> <#m --> uResponse>> ?
+300

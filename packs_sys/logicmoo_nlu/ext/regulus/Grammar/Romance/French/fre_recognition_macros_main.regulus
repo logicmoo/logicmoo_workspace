@@ -1,0 +1,27 @@
+
+macro(recognition_only(Body), Body).
+macro(generation_only(Body), (dummy_cat:[] --> dummy)).
+
+hyphen:[] --> @surface_realisation_of_hyphen.
+hyphen:[] --> t.
+
+macro(de_or_d, de).
+macro(de_or_d, d).
+
+macro(passive_pp_prep, par).
+macro(passive_pp_prep, de).
+macro(passive_pp_prep, d).
+
+macro(se_or_s, se).
+macro(se_or_s, s).
+
+macro(que_or_qu, que).
+macro(que_or_qu, qu).
+
+macro(agreement_for_vous, (pol/\(masc\/fem)/\sg)).
+macro(agreement_for_vous, (2/\(masc\/fem)/\pl)).
+%%macro(agreement_for_vous, (2/\(masc\/fem))).
+
+% Hack ((c) David Carter, 1994) to let us deal with the fact that "huit" is an exception to the elision rules
+% See french_generation_new.pl and orthography.pl for other half of hack
+%%@number(huit, 8, pl).

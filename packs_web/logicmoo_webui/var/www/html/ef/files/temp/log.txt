@@ -1,0 +1,822 @@
+[Sat, 11 Jul 2020 05:06:24 +0300] MKFILE: array (
+  'added' => 
+  array (
+    0 => 
+    array (
+      'iid' => '1TfZMUuguHS45MOeIQt8qu1weeQ5rRHg2',
+      'name' => 'Uplaoded.txt',
+      'ts' => 1594433182,
+      'mime' => 'text/plain',
+      'size' => 0,
+      'tmb' => '',
+      'url' => '1',
+      'hash' => 'gdnm1_LzBCMFFBMTlVWDBlaGxOM1JrVXkxTlpEa3RZMmMvMEIwUUExOVVYMGVobGQyMW9RV2N3T1ZVd1RYYy8wQjBRQTE5VVgwZWhsVUhVdE9YZGpRbHBUUVRBLzFUZlpNVXVndUhTNDVNT2VJUXQ4cXUxd2VlUTVyUkhnMg',
+      'phash' => 'gdnm1_LzBCMFFBMTlVWDBlaGxOM1JrVXkxTlpEa3RZMmMvMEIwUUExOVVYMGVobGQyMW9RV2N3T1ZVd1RYYy8wQjBRQTE5VVgwZWhsVUhVdE9YZGpRbHBUUVRB',
+      'read' => 1,
+      'write' => 1,
+    ),
+  ),
+  'changed' => 
+  array (
+    0 => 
+    array (
+      'iid' => '0B0QA19UX0ehlUHUtOXdjQlpTQTA',
+      'name' => 'private',
+      'ts' => 1498704397,
+      'mime' => 'directory',
+      'size' => 0,
+      'hash' => 'gdnm1_LzBCMFFBMTlVWDBlaGxOM1JrVXkxTlpEa3RZMmMvMEIwUUExOVVYMGVobGQyMW9RV2N3T1ZVd1RYYy8wQjBRQTE5VVgwZWhsVUhVdE9YZGpRbHBUUVRB',
+      'phash' => 'gdnm1_LzBCMFFBMTlVWDBlaGxOM1JrVXkxTlpEa3RZMmMvMEIwUUExOVVYMGVobGQyMW9RV2N3T1ZVd1RYYw',
+      'volumeid' => 'gdnm1_',
+      'read' => 1,
+      'write' => 1,
+      'url' => '#elf_gdnm1_LzBCMFFBMTlVWDBlaGxOM1JrVXkxTlpEa3RZMmMvMEIwUUExOVVYMGVobGQyMW9RV2N3T1ZVd1RYYy8wQjBRQTE5VVgwZWhsVUhVdE9YZGpRbHBUUVRB',
+    ),
+  ),
+) 
+[Mon, 13 Jul 2020 20:28:57 +0300] MKFILE: array (
+  'added' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594661337,
+      'mime' => 'text/plain',
+      'read' => 1,
+      'write' => 1,
+      'size' => '0',
+      'hash' => 'l1_ZXhhbXBsZXMvbHBzX2Nvcm5lci9leHRlcm5hbF9pbnRlcmZhY2VzL05ld0ZpbGUudHh0',
+      'name' => 'NewFile.txt',
+      'phash' => 'l1_ZXhhbXBsZXMvbHBzX2Nvcm5lci9leHRlcm5hbF9pbnRlcmZhY2Vz',
+    ),
+  ),
+  'changed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594661337,
+      'mime' => 'directory',
+      'read' => 1,
+      'write' => 1,
+      'size' => 0,
+      'hash' => 'l1_ZXhhbXBsZXMvbHBzX2Nvcm5lci9leHRlcm5hbF9pbnRlcmZhY2Vz',
+      'name' => 'external_interfaces',
+      'phash' => 'l1_ZXhhbXBsZXMvbHBzX2Nvcm5lcg',
+      'volumeid' => 'l1_',
+    ),
+  ),
+) 
+[Mon, 13 Jul 2020 22:14:44 +0300] MKFILE: array (
+  'added' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594667684,
+      'mime' => 'image/png',
+      'read' => 1,
+      'write' => 1,
+      'size' => '0',
+      'hash' => 'l1_TmV3RmlsZS5wbmc',
+      'name' => 'NewFile.png',
+      'phash' => 'l1_Lw',
+      'tmb' => 1,
+    ),
+  ),
+  'changed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594666643,
+      'mime' => 'directory',
+      'read' => 1,
+      'write' => 1,
+      'size' => 0,
+      'hash' => 'l1_Lw',
+      'name' => 'files',
+      'rootRev' => '',
+      'options' => 
+      array (
+        'path' => '',
+        'url' => '/ef/php/../files/',
+        'tmbUrl' => '/ef/php/../files/.tmb/',
+        'disabled' => 
+        array (
+          0 => 'chmod',
+        ),
+        'separator' => '/',
+        'copyOverwrite' => 1,
+        'uploadOverwrite' => 1,
+        'uploadMaxSize' => 9223372036854775807,
+        'uploadMaxConn' => 3,
+        'uploadMime' => 
+        array (
+          'firstOrder' => 'deny',
+          'allow' => 
+          array (
+            0 => 'image',
+            1 => 'text/plain',
+          ),
+          'deny' => 
+          array (
+            0 => 'all',
+          ),
+        ),
+        'dispInlineRegex' => '^(?:(?:image|video|audio)|(?:text/plain|application/pdf)$)',
+        'jpgQuality' => 100,
+        'archivers' => 
+        array (
+          'create' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'extract' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'createext' => 
+          array (
+            'application/x-tar' => 'tar',
+            'application/x-gzip' => 'tgz',
+            'application/x-bzip2' => 'tbz',
+            'application/x-xz' => 'xz',
+            'application/zip' => 'zip',
+          ),
+        ),
+        'uiCmdMap' => 
+        array (
+        ),
+        'syncChkAsTs' => 1,
+        'syncMinMs' => 10000,
+        'i18nFolderName' => 0,
+        'tmbCrop' => 0,
+        'trashHash' => 't1_Lw',
+        'csscls' => 'elfinder-navbar-root-local',
+      ),
+      'volumeid' => 'l1_',
+      'locked' => 1,
+      'dirs' => 1,
+      'isroot' => 1,
+      'phash' => '',
+    ),
+  ),
+) 
+[Mon, 13 Jul 2020 22:15:28 +0300] RENAME: array (
+  'added' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594667684,
+      'mime' => 'text/plain',
+      'read' => 1,
+      'write' => 1,
+      'size' => '0',
+      'hash' => 'l1_TmV3RmlsZS50ZXh0',
+      'name' => 'NewFile.text',
+      'phash' => 'l1_Lw',
+    ),
+  ),
+  'removed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594667684,
+      'mime' => 'image/png',
+      'read' => 1,
+      'write' => 1,
+      'size' => '0',
+      'hash' => 'l1_TmV3RmlsZS5wbmc',
+      'name' => 'NewFile.png',
+      'phash' => 'l1_Lw',
+      'tmb' => 1,
+      'realpath' => '/opt/logicmoo_workspace/html/ef/files/NewFile.png',
+    ),
+  ),
+) 
+[Mon, 13 Jul 2020 22:15:44 +0300] RENAME: array (
+  'error' => 
+  array (
+    0 => 'errRename',
+    1 => 'NewFile.text',
+    2 => 'errUploadMime',
+    3 => 'NewFile.html',
+  ),
+) 
+[Mon, 13 Jul 2020 22:15:50 +0300] RENAME: array (
+  'error' => 
+  array (
+    0 => 'errRename',
+    1 => 'NewFile.text',
+    2 => 'errUploadMime',
+    3 => 'NewFile.html',
+  ),
+) 
+[Mon, 13 Jul 2020 22:15:56 +0300] RENAME: array (
+  'error' => 
+  array (
+    0 => 'errRename',
+    1 => 'NewFile.text',
+    2 => 'errUploadMime',
+    3 => 'NewFile.htm',
+  ),
+) 
+[Mon, 13 Jul 2020 22:16:00 +0300] MKDIR: array (
+  'added' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594665641,
+      'mime' => 'directory',
+      'read' => 0,
+      'write' => 0,
+      'size' => 0,
+      'hash' => 't1_Lw',
+      'name' => 'Trash',
+      'rootRev' => '',
+      'options' => 
+      array (
+        'path' => '',
+        'url' => '',
+        'tmbUrl' => '',
+        'disabled' => 
+        array (
+          0 => 'archive',
+          1 => 'duplicate',
+          2 => 'edit',
+          3 => 'extract',
+          4 => 'mkfile',
+          5 => 'places',
+          6 => 'put',
+          7 => 'rename',
+          8 => 'resize',
+          9 => 'upload',
+          10 => 'chmod',
+        ),
+        'separator' => '/',
+        'copyOverwrite' => 0,
+        'uploadOverwrite' => 1,
+        'uploadMaxSize' => 9223372036854775807,
+        'uploadMaxConn' => 3,
+        'uploadMime' => 
+        array (
+          'firstOrder' => 'deny',
+          'allow' => 
+          array (
+            0 => 'image',
+            1 => 'text/plain',
+          ),
+          'deny' => 
+          array (
+            0 => 'all',
+          ),
+        ),
+        'dispInlineRegex' => '^(?:(?:image|video|audio)|(?:text/plain|application/pdf)$)',
+        'jpgQuality' => 100,
+        'archivers' => 
+        array (
+          'create' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'extract' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'createext' => 
+          array (
+            'application/x-tar' => 'tar',
+            'application/x-gzip' => 'tgz',
+            'application/x-bzip2' => 'tbz',
+            'application/x-xz' => 'xz',
+            'application/zip' => 'zip',
+          ),
+        ),
+        'uiCmdMap' => 
+        array (
+          'paste' => 'hidden',
+          'mkdir' => 'hidden',
+          'copy' => 'restore',
+        ),
+        'syncChkAsTs' => 1,
+        'syncMinMs' => 10000,
+        'i18nFolderName' => 0,
+        'tmbCrop' => 1,
+        'csscls' => 'elfinder-navbar-root-trash',
+      ),
+      'volumeid' => 't1_',
+      'locked' => 1,
+      'isroot' => 1,
+      'phash' => '',
+    ),
+  ),
+  'hashes' => 
+  array (
+    '/' => 't1_Lw',
+  ),
+  'changed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594665641,
+      'mime' => 'directory',
+      'read' => 0,
+      'write' => 0,
+      'size' => 0,
+      'hash' => 't1_Lw',
+      'name' => 'Trash',
+      'rootRev' => '',
+      'options' => 
+      array (
+        'path' => '',
+        'url' => '',
+        'tmbUrl' => '',
+        'disabled' => 
+        array (
+          0 => 'archive',
+          1 => 'duplicate',
+          2 => 'edit',
+          3 => 'extract',
+          4 => 'mkfile',
+          5 => 'places',
+          6 => 'put',
+          7 => 'rename',
+          8 => 'resize',
+          9 => 'upload',
+          10 => 'chmod',
+        ),
+        'separator' => '/',
+        'copyOverwrite' => 0,
+        'uploadOverwrite' => 1,
+        'uploadMaxSize' => 9223372036854775807,
+        'uploadMaxConn' => 3,
+        'uploadMime' => 
+        array (
+          'firstOrder' => 'deny',
+          'allow' => 
+          array (
+            0 => 'image',
+            1 => 'text/plain',
+          ),
+          'deny' => 
+          array (
+            0 => 'all',
+          ),
+        ),
+        'dispInlineRegex' => '^(?:(?:image|video|audio)|(?:text/plain|application/pdf)$)',
+        'jpgQuality' => 100,
+        'archivers' => 
+        array (
+          'create' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'extract' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'createext' => 
+          array (
+            'application/x-tar' => 'tar',
+            'application/x-gzip' => 'tgz',
+            'application/x-bzip2' => 'tbz',
+            'application/x-xz' => 'xz',
+            'application/zip' => 'zip',
+          ),
+        ),
+        'uiCmdMap' => 
+        array (
+          'paste' => 'hidden',
+          'mkdir' => 'hidden',
+          'copy' => 'restore',
+        ),
+        'syncChkAsTs' => 1,
+        'syncMinMs' => 10000,
+        'i18nFolderName' => 0,
+        'tmbCrop' => 1,
+        'csscls' => 'elfinder-navbar-root-trash',
+      ),
+      'volumeid' => 't1_',
+      'locked' => 1,
+      'isroot' => 1,
+      'phash' => '',
+    ),
+  ),
+) 
+[Mon, 13 Jul 2020 22:16:00 +0300] PASTE: array (
+  'changed' => 
+  array (
+  ),
+  'added' => 
+  array (
+  ),
+  'removed' => 
+  array (
+  ),
+  'warning' => 
+  array (
+    0 => 'errMove',
+    1 => 'files/NewFile.text',
+    2 => 'errPerm',
+  ),
+) 
+[Mon, 13 Jul 2020 22:16:02 +0300] RM: array (
+  'removed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594667684,
+      'mime' => 'text/plain',
+      'read' => 1,
+      'write' => 1,
+      'size' => '0',
+      'hash' => 'l1_TmV3RmlsZS50ZXh0',
+      'name' => 'NewFile.text',
+      'phash' => 'l1_Lw',
+      'realpath' => '/opt/logicmoo_workspace/html/ef/files/NewFile.text',
+    ),
+  ),
+  'changed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594667684,
+      'mime' => 'directory',
+      'read' => 1,
+      'write' => 1,
+      'size' => 0,
+      'hash' => 'l1_Lw',
+      'name' => 'files',
+      'rootRev' => '',
+      'options' => 
+      array (
+        'path' => '',
+        'url' => '/ef/php/../files/',
+        'tmbUrl' => '/ef/php/../files/.tmb/',
+        'disabled' => 
+        array (
+          0 => 'chmod',
+        ),
+        'separator' => '/',
+        'copyOverwrite' => 1,
+        'uploadOverwrite' => 1,
+        'uploadMaxSize' => 9223372036854775807,
+        'uploadMaxConn' => 3,
+        'uploadMime' => 
+        array (
+          'firstOrder' => 'deny',
+          'allow' => 
+          array (
+            0 => 'image',
+            1 => 'text/plain',
+          ),
+          'deny' => 
+          array (
+            0 => 'all',
+          ),
+        ),
+        'dispInlineRegex' => '^(?:(?:image|video|audio)|(?:text/plain|application/pdf)$)',
+        'jpgQuality' => 100,
+        'archivers' => 
+        array (
+          'create' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'extract' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'createext' => 
+          array (
+            'application/x-tar' => 'tar',
+            'application/x-gzip' => 'tgz',
+            'application/x-bzip2' => 'tbz',
+            'application/x-xz' => 'xz',
+            'application/zip' => 'zip',
+          ),
+        ),
+        'uiCmdMap' => 
+        array (
+        ),
+        'syncChkAsTs' => 1,
+        'syncMinMs' => 10000,
+        'i18nFolderName' => 0,
+        'tmbCrop' => 0,
+        'trashHash' => 't1_Lw',
+        'csscls' => 'elfinder-navbar-root-local',
+      ),
+      'volumeid' => 'l1_',
+      'locked' => 1,
+      'dirs' => 1,
+      'isroot' => 1,
+      'phash' => '',
+    ),
+  ),
+) 
+[Mon, 13 Jul 2020 22:16:10 +0300] MKFILE: array (
+  'error' => 
+  array (
+    0 => 'errMkfile',
+    1 => 'NewFile.sketch',
+    2 => 'errUploadMime',
+    3 => 'NewFile.sketch',
+  ),
+) 
+[Mon, 13 Jul 2020 22:16:22 +0300] MKFILE: array (
+  'error' => 
+  array (
+    0 => 'errMkfile',
+    1 => 'ANewFile.sketch.pl',
+    2 => 'errUploadMime',
+    3 => 'ANewFile.sketch.pl',
+  ),
+) 
+[Mon, 13 Jul 2020 22:16:30 +0300] MKFILE: array (
+  'error' => 
+  array (
+    0 => 'errMkfile',
+    1 => 'ANewFile.sketch.P',
+    2 => 'errUploadMime',
+    3 => 'ANewFile.sketch.P',
+  ),
+) 
+[Mon, 13 Jul 2020 22:16:39 +0300] MKFILE: array (
+  'added' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594667799,
+      'mime' => 'text/plain',
+      'read' => 1,
+      'write' => 1,
+      'size' => '0',
+      'hash' => 'l1_TmV3RmlsZSAxLnR4dA',
+      'name' => 'NewFile 1.txt',
+      'phash' => 'l1_Lw',
+    ),
+  ),
+  'changed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594667762,
+      'mime' => 'directory',
+      'read' => 1,
+      'write' => 1,
+      'size' => 0,
+      'hash' => 'l1_Lw',
+      'name' => 'files',
+      'rootRev' => '',
+      'options' => 
+      array (
+        'path' => '',
+        'url' => '/ef/php/../files/',
+        'tmbUrl' => '/ef/php/../files/.tmb/',
+        'disabled' => 
+        array (
+          0 => 'chmod',
+        ),
+        'separator' => '/',
+        'copyOverwrite' => 1,
+        'uploadOverwrite' => 1,
+        'uploadMaxSize' => 9223372036854775807,
+        'uploadMaxConn' => 3,
+        'uploadMime' => 
+        array (
+          'firstOrder' => 'deny',
+          'allow' => 
+          array (
+            0 => 'image',
+            1 => 'text/plain',
+          ),
+          'deny' => 
+          array (
+            0 => 'all',
+          ),
+        ),
+        'dispInlineRegex' => '^(?:(?:image|video|audio)|(?:text/plain|application/pdf)$)',
+        'jpgQuality' => 100,
+        'archivers' => 
+        array (
+          'create' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'extract' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'createext' => 
+          array (
+            'application/x-tar' => 'tar',
+            'application/x-gzip' => 'tgz',
+            'application/x-bzip2' => 'tbz',
+            'application/x-xz' => 'xz',
+            'application/zip' => 'zip',
+          ),
+        ),
+        'uiCmdMap' => 
+        array (
+        ),
+        'syncChkAsTs' => 1,
+        'syncMinMs' => 10000,
+        'i18nFolderName' => 0,
+        'tmbCrop' => 0,
+        'trashHash' => 't1_Lw',
+        'csscls' => 'elfinder-navbar-root-local',
+      ),
+      'volumeid' => 'l1_',
+      'locked' => 1,
+      'dirs' => 1,
+      'isroot' => 1,
+      'phash' => '',
+    ),
+  ),
+) 
+[Mon, 13 Jul 2020 22:36:33 +0300] RM: array (
+  'removed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594668964,
+      'mime' => 'application/x-tar',
+      'read' => 1,
+      'write' => 1,
+      'size' => '10240',
+      'hash' => 'l1_Zm9vLnBsLnRhcg',
+      'name' => 'foo.pl.tar',
+      'phash' => 'l1_Lw',
+      'realpath' => '/opt/logicmoo_workspace/html/ef/files/foo.pl.tar',
+    ),
+  ),
+  'changed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594667843,
+      'mime' => 'directory',
+      'read' => 1,
+      'write' => 1,
+      'size' => 0,
+      'hash' => 'l1_Lw',
+      'name' => 'files',
+      'rootRev' => '',
+      'options' => 
+      array (
+        'path' => '',
+        'url' => '/ef/php/../files/',
+        'tmbUrl' => '/ef/php/../files/.tmb/',
+        'disabled' => 
+        array (
+          0 => 'chmod',
+        ),
+        'separator' => '/',
+        'copyOverwrite' => 1,
+        'uploadOverwrite' => 1,
+        'uploadMaxSize' => 9223372036854775807,
+        'uploadMaxConn' => 3,
+        'uploadMime' => 
+        array (
+          'firstOrder' => 'deny',
+          'allow' => 
+          array (
+            0 => 'image',
+            1 => 'text/plain',
+          ),
+          'deny' => 
+          array (
+            0 => 'all',
+          ),
+        ),
+        'dispInlineRegex' => '^(?:(?:image|video|audio)|(?:text/plain|application/pdf)$)',
+        'jpgQuality' => 100,
+        'archivers' => 
+        array (
+          'create' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'extract' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'createext' => 
+          array (
+            'application/x-tar' => 'tar',
+            'application/x-gzip' => 'tgz',
+            'application/x-bzip2' => 'tbz',
+            'application/x-xz' => 'xz',
+            'application/zip' => 'zip',
+          ),
+        ),
+        'uiCmdMap' => 
+        array (
+        ),
+        'syncChkAsTs' => 1,
+        'syncMinMs' => 10000,
+        'i18nFolderName' => 0,
+        'tmbCrop' => 0,
+        'trashHash' => 't1_Lw',
+        'csscls' => 'elfinder-navbar-root-local',
+      ),
+      'volumeid' => 'l1_',
+      'locked' => 1,
+      'dirs' => 1,
+      'isroot' => 1,
+      'phash' => '',
+    ),
+  ),
+) 
+[Mon, 13 Jul 2020 22:36:52 +0300] RENAME: array (
+  'added' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594669000,
+      'mime' => 'text/plain',
+      'read' => 1,
+      'write' => 1,
+      'size' => '10240',
+      'hash' => 'l1_TmV3RmlsZS50eHQudGFyLnR4dA',
+      'name' => 'NewFile.txt.tar.txt',
+      'phash' => 'l1_Lw',
+    ),
+  ),
+  'removed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1594669000,
+      'mime' => 'application/x-tar',
+      'read' => 1,
+      'write' => 1,
+      'size' => '10240',
+      'hash' => 'l1_TmV3RmlsZS50eHQudGFy',
+      'name' => 'NewFile.txt.tar',
+      'phash' => 'l1_Lw',
+      'realpath' => '/opt/logicmoo_workspace/html/ef/files/NewFile.txt.tar',
+    ),
+  ),
+) 

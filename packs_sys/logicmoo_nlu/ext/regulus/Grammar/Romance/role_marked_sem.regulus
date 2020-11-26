@@ -1,0 +1,377 @@
+
+macro(utt_ynq_sem(Sem),
+      concat([[utterance_type, sentence]], Sem)).
+
+macro(utt_pp_ynq_sem(Postmods, Sem),
+      concat([[utterance_type, sentence]], Postmods, Sem)).
+
+macro(utt_whq_sem(Sem),
+      concat([[utterance_type, wh]], Sem)).
+
+macro(utt_dcl_sem(Interj, Sem),
+      concat([[utterance_type, dcl]], Interj, Sem)).
+
+macro(utt_sem(Interj, Sem),
+      concat(Interj, Sem)).
+
+macro(utt_pp_dcl_sem(Interj, Postmods, Sem),
+      concat([[utterance_type, dcl]], Interj, Postmods, Sem)).
+
+macro(utt_elliptical_sem(Sem),
+      concat([[utterance_type, phrase]], Sem)).
+
+macro(elliptical_interj_x_sem(Sem, Interj),
+      concat(Sem, Interj)).
+
+macro(elliptical_interj_x_sem(Sem, Interj,PP),
+      concat(Sem, Interj,PP)).
+
+
+macro(elliptical_adj_douleur_sem(Adj),
+      concat([[symptom, douleur]], Adj)).
+
+macro(elliptical_spec(N, Interj),
+      concat(N, Interj)).
+
+macro(ynq_np_vp_sem(Np, Vp),
+      concat([[role, subj, Np]], Vp)).
+
+macro(implicit_subj_value(you), [[pronoun, @french_catalan_or_spanish(vous, vostè, usted)]]).
+macro(implicit_subj_value(they), [[pronoun, implicit_3_pl]]).
+macro(implicit_subj_value(i), [[pronoun, yo]]).
+macro(implicit_subj_value(he), [[pronoun, el]]).
+macro(implicit_subj_value(it), [[pronoun, implicit_3_sg]]).
+
+macro(whq_np_vp_sem(NP, Vp),
+      concat([[role, subj, NP]], Vp)).
+
+macro(whq_np_s_sem(NP, S),
+      concat([[role, obj, NP]], S)).
+
+
+macro(embedded(Sem),
+      [[role, question,[[clause, Sem]]]]).
+
+
+macro(whq_pp_s_sem(PP, S),
+      concat(PP, S)).
+
+macro(fronting_sem(Fronted, S),
+      [apply, [lambda, x, S], Fronted]).
+
+%macro(fronting_sem(Fronted, S),
+%      concat(Fronted, S)).
+
+macro(que_est_ce_qui_sem,
+      [[pronoun, @french_catalan_or_spanish(que, que, qué)]]).
+
+macro(np_vp_subject_sem(Np, Vp),
+      concat([[role, subj, Np]], Vp)).
+
+macro(np_vp_object_sem(Np, Vp),
+      concat([[role, obj, Np]], Vp)).
+
+macro(vbar_v_advp_sem(V, Advp),
+      concat([[voice, active]], V, Advp)).
+
+macro(vbar_v_advp_sem_inf(V, Advp),
+      concat(V, Advp)).
+
+macro(vbar_v_advp_passive_sem(V, Advp),
+      concat([[voice, passive]], V, Advp)).
+
+macro(vbar_clitic_v_subject_sem(Pron, V),
+      concat([[role, subj, Pron]], V)).
+
+macro(vbar_clitic_v_object_sem(Pron, V),
+      concat([[role, obj, Pron]], V)).
+
+macro(vbar_clitic_v_indobj_sem(Pron, V),
+      concat([[role, indobj, Pron]], V)).
+
+macro(vbar_clitic_v_obj_sem(Pron, V),
+      concat([[role, obj, Pron]], V)).
+
+macro(aux_clitic_aux_subject_sem(Pron, AuxV),
+      concat([[role, subj, Pron]], AuxV)).
+
+macro(aux_aux_advp_sem(AuxV, Advp),
+      concat(AuxV, Advp)).
+
+macro(vbar_v_np_advp_advp_sem(V, Np, Advp, Advp2),
+      concat([[voice, active], [role, subj, Np]], V, Advp2, Advp)).
+
+macro(vbar_aux_v_sem(AuxV, V),
+      concat(AuxV, V)).
+
+macro(vp_v_comps_postmods_sem(V, Comps, Postmods),
+      concat(V, Comps, Postmods)).
+
+
+macro(vp_v_comps_sem(V, Comps),
+      concat(V, Comps)).
+
+macro(postmods_advp_postmods_sem(Advp,Postmods),
+      concat(Advp, Postmods)).
+
+macro(comps_adjp_sem(Adj),
+      [[role, subj, Adj]]).
+
+macro(comps_np_sem(Np),
+      [[role, obj, Np]]).
+
+macro(comps_np_ditrans_with_clitic_sem(Np),
+      [[role, obj, Np]]).
+
+macro(comps_for_intrans_sem,
+      []).
+
+macro(comps_for_trans_with_clitic_sem,
+      []).
+
+macro(comps_for_ind_obj_with_clitic_sem,
+      []).
+
+macro(comps_pp_sem(Pp),
+      Pp).
+
+macro(comps_de_pp_sem(Pp),
+      [[role, obj, Pp]]).
+
+%%%infinitive as a clause parce que sinon deux traits voice
+macro(comps_vp_sem(Vp),
+      Vp).
+
+%% macro(comps_vp_sem(Vp),
+%%       [[clause_type, nested_infinitive],
+%%        [clause, Vp]]).
+
+
+macro(comps_for_passivised_trans_sem,
+      []).
+
+macro(comps_passivise_pp_sem(Np),
+      [[role, par, Np]]).
+
+macro(advp_adv_adv_sem(Sem1, Sem2),
+      concat(Sem1, Sem2)).
+
+macro(pp_advp_pp_sem(Sem1, Sem2),
+      concat(Sem1, Sem2)).
+
+%macro(np_infinitive_vp_sem(Vp),
+%      [[clause_type, nested_infinitive],
+%       [clause, Vp]]).
+macro(np_infinitive_vp_sem(Vp),
+      [[clause, Vp]]).
+
+macro(infinitive_vp_v_sem(V),
+      concat([[tense, unspecified], [pronoun, unspecified]], V)).
+
+macro(np_np_rel_sem(Np, Rel),
+      concat(Np, Rel)).
+
+macro(np_np_de_pp_sem(Np, Pp),
+      concat(Np, Pp)).
+
+macro(np_spec_nbar_sem(Spec, Nbar),
+      concat(Spec, Nbar)).
+
+macro(np_pron_sem(Pron),
+      Pron).
+
+macro(np_advp_nbar_sem(Spec, Nbar),
+      concat(Spec, Nbar)).
+
+macro(np_nbar_sem(Nbar),
+      Nbar).
+
+macro(nbar_n_adjp_sem(N, Adjp),
+      concat(N, Adjp)).
+
+macro(nbar_n_sem(N),
+      N).
+
+macro(spec_number_sem(N),
+      [[number, N]]).
+
+macro(spec_number_range_sem(N1, N2),
+      [[number_range, [N1, N2]]]).
+
+macro(spec_comparative_n_sem(Comparative, N),
+      concat(Comparative, [[number, N]])).
+
+macro(de_pp_np_sem(Np),
+      [[role, de, Np]]).
+
+macro(pp_temporal_np_sem(Np),
+      [[role, duration, Np]]).
+
+macro(pp_np_pp_frequency_sem(Np, Freq),
+      concat([[role, pendant, Np]], Freq)).
+
+macro(pp_pp_pp_sem(PP1, PP2),
+      concat(PP1, PP2)).
+
+macro(pp_p_np_sem(P, Np),
+      [[role, P, Np]]).
+
+
+macro(pp_p_number_sem(P, Np),
+      [[role, P, [[number,Np]]]]).
+
+macro(pp_p_np_sem_number(P, N, Np),
+    [[role, P, concat(Np,[[plus,[N, 0]]])]]).
+
+%%np heure
+%%macro(np_sem_number(N, Np),
+%%    [[concat(Np,[[plus,[N, 0]]])]]).
+macro(np_sem_number(N, Np),
+    concat(Np,[[plus,[N, 0]]])).
+
+macro(np_sem_number(N, Np, Adj),
+    concat(Adj, Np,[[plus,[N, 0]]])).
+
+macro(pp_number_n_number(N, N2, Np),
+    [[role, date, concat(Np,[[jour, N]], [[année,N2]])]]).
+
+macro(pp_number(N2),
+    [[role, date, [[année,N2]]]]).
+
+macro(pp_p_np_sem_number(P, Np),
+    [[role, P, concat([[temporal,heure]],[[plus,[Np, 0]]])]]).
+
+%%macro(pp_p_np_sem_number(P, Np),
+%%    [[role, P, Np]]).
+
+
+%%macro(np_sem_number(Np),
+%%    [[concat([[temporal,heure]],[[plus,[Np, 0]]])]]).
+macro(np_sem_number(Np),
+    concat([[temporal,heure]],[[plus,[Np, 0]]])).
+
+
+%%macro(np_sem_number(Np),
+%%    [[role,subj,[concat([[temporal,heure]],[[plus,[Np, 0]]])]]).
+
+
+macro(pp_p_np_sem_number_et(P, N1, Np,N2),
+    [[role, P, concat(Np,[[plus, [N1, N2]]])]]).
+
+%%macro(np_sem_number_et(N1, Np,N2),
+%%    [[concat(Np,[[plus, [N1, N2]]])]]).
+
+macro(np_sem_number_et(N1, Np,N2),
+    concat(Np,[[plus, [N1, N2]]])).
+
+macro(pp_p_np_sem_number_et(P, N1,N2),
+    [[role, P, concat([[temporal,heure]],[[plus, [N1, N2]]])]]).
+
+%%macro(np_sem_number_et(N1,N2),
+%%    [[concat([[temporal,heure]],[[plus, [N1, N2]]])]]).
+
+macro(np_sem_number_et(N1,N2),
+    concat([[temporal,heure]],[[plus, [N1, N2]]])).
+
+
+
+%%macro(pp_p_np_sem_number_moins(P, N, Np,MT),
+%%    [[role, P, concat(Np,[[moins, [N, MT]]])]]).
+
+macro(pp_p_np_sem_number_moins(P, N, Np,MT),
+    [[role, P, concat(Np,[[moins, [N, MT]]])]]).
+
+%%macro(np_sem_number_moins(N, Np,MT),
+%%    [[concat(Np,[[moins, [N, MT]]])]]).
+
+macro(np_sem_number_moins(N, Np,MT),
+    concat(Np,[[moins, [N, MT]]])).
+
+macro(pp_p_np_sem_number_moins(P, Np,MT),
+    [[role, P, concat([[temporal,heure]],[[moins, [Np, MT]]])]]).
+
+%%macro(np_sem_number_moins(Np,MT),
+%%    [[concat([[temporal,heure]],[[moins, [Np, MT]]])]]).
+
+macro(np_sem_number_moins(Np,MT),
+    concat([[temporal,heure]],[[moins, [Np, MT]]])).
+
+
+macro(pp_de_np_duration_sem(Np),
+      [[role, pendant, Np]]).
+
+macro(pp_sc_s_sem(Sc, S),
+      [[role, Sc, [[clause, S]]]]).
+
+macro(adjp_de_typ_adjp_sem(Adjp),
+      Adjp).
+
+macro(adjp_deg_adjp_sem(Deg, Adjp),
+      concat(Deg, Adjp)).
+
+macro(adjp_adjp_de_pp_sem(Adjp, Pp),
+      concat(Adjp, Pp)).
+
+%%macro(rel_pron_vp_sem(Pron, Vp),
+%%      concat([Pron, [[clause, Vp]])).
+
+macro(rel_pron_vp_sem(Pron, Vp),
+      [[clause, concat(Pron, Vp)]]).
+
+
+macro(s_vp_sem(Vp),
+      Vp).
+
+macro(np_gap,
+      [x]).
+
+macro(pp_gap,
+      [x]).
+
+macro(de_pp_gap,
+      [x]).
+
+macro(p_sem([PType, P]),
+      P).
+
+macro(sc_sem(Sc),
+      Sc).
+
+macro(n_sem([Type, Const]),
+      [[Type, Const]]).
+
+macro(comparative_sem([Type, Const]),
+      [[Type, Const]]).
+
+macro(pron_sem([Type, Const]),
+      [[Type, Const]]).
+
+macro(verb_sem([Type, Const]),
+      [Type, Const]).
+
+macro(article_sem(Article),
+      []).
+
+macro(spec_sem(Spec),
+      [[spec, Spec]]).
+
+macro(lexical_pp_sem([Role, Constant]),
+      [[role, Role, [[Role, Constant]]]]).
+
+macro(complex_lexical_pp_sem([PrepType, Prep], [Role, Constant]),
+      [[role, Prep, [[Role, Constant]]]]).
+
+macro(lexical_wh_pp_sem([Role, Constant]),
+      [[role, Role, [[Role, Constant]]]]).
+
+macro(complex_lexical_wh_pp_sem([PrepType, Prep], [Role, Constant]),
+      [[role, Prep, [[Role, Constant]]]]).
+
+macro(wh_np_sem([Type, Const]),
+      [[Type, Const]]).
+
+macro(wh_np_de_pp_sem([Type, Const], [DeType, DeConst]),
+      [[Type, Const], [DeType, DeConst]]).
+
+macro(wh_spec_np_sem([SpecType, SpecConst], [Type, Const]),
+      [[SpecType, SpecConst], [Type, Const]]).

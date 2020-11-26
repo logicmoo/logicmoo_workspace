@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\Amine8_Release\aminePlatform8\aminePlatform8Release\classes\aminePlatform\samples\ontology\CatMouse5.xml</Name>
+  <Ontologies2Import />
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>english</Language>
+  </Languages>
+  <MainLanguage>english</MainLanguage>
+  <RelationRoot>relation</RelationRoot>
+  <Root>
+    <Key>universal</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>universal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>universal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>relation</Key>
+        </Child>
+        <Child>
+          <Key>Action</Key>
+        </Child>
+        <Child>
+          <Key>Mammal</Key>
+        </Child>
+        <Child>
+          <Key>Attribute</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Attribute</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Attribute</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Age</Key>
+        </Child>
+        <Child>
+          <Key>Date</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Date</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Date</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>BirthDate</Key>
+        </Child>
+        <Child>
+          <Key>CurrentDate</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>CurrentDate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>CurrentDate</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Date</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>BirthDate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>BirthDate</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Date</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Age</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Age</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Mammal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Mammal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Cat</Key>
+        </Child>
+        <Child>
+          <Key>Mouse</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Mouse</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Mouse</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>DisneyMouse</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.CSRule@233b8d</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.CSRule@1b35b1e</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Mammal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <CSRule>
+      <Key>aminePlatform.kernel.ontology.CSRule@1b35b1e</Key>
+      <Content>
+        <Antecedent>[Eat : *p1 ] -
+          -obj-&gt;[Mouse],
+          -agnt-&gt;[Cat :c ]</Antecedent>
+        <Consequence>[Eat : *p1 ] -
+          -obj-&gt;[DisneyMouse],
+          -agnt-&gt;[Cat :c ]</Consequence>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Mouse</Key>
+        </Father>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.CSRule@93dd81</Key>
+        </Father>
+      </Fathers>
+    </CSRule>
+    <CSRule>
+      <Key>aminePlatform.kernel.ontology.CSRule@233b8d</Key>
+      <Content>
+        <Antecedent>[Mouse :m ]&lt;-agnt-[Eat]</Antecedent>
+        <Consequence>[Eat : *p1 ] -
+          -obj-&gt;[Mammal],
+          -agnt-&gt;[Mouse :m ]</Consequence>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Mouse</Key>
+        </Father>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@117b1b4</Key>
+        </Father>
+      </Fathers>
+    </CSRule>
+    <Type>
+      <Key>DisneyMouse</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>DisneyMouse</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Mouse</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Cat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Cat</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.CSRule@93dd81</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Mammal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <CSRule>
+      <Key>aminePlatform.kernel.ontology.CSRule@93dd81</Key>
+      <Content>
+        <Antecedent>[Cat :c ] -
+       -attr-&gt;[Age ;  $1],
+       &lt;-agnt-[Eat]</Antecedent>
+        <Consequence>[Eat : *p1 ] -
+          -obj-&gt;[Mammal],
+          -agnt-&gt;[Cat :c ]</Consequence>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.CSRule@1b35b1e</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Cat</Key>
+        </Father>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@117b1b4</Key>
+        </Father>
+      </Fathers>
+    </CSRule>
+    <Type>
+      <Key>Action</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Action</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Eat</Key>
+        </Child>
+        <Child>
+          <Key>Hunt</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Hunt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Hunt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Eat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>Eat</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@117b1b4</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@117b1b4</Key>
+      <Content>
+        <Description>[Eat]-agnt-&gt;[Mammal]</Description>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.CSRule@93dd81</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.CSRule@233b8d</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Eat</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <RelationType>
+      <Key>relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>agnt</Key>
+        </Child>
+        <Child>
+          <Key>obj</Key>
+        </Child>
+        <Child>
+          <Key>attr</Key>
+        </Child>
+        <Child>
+          <Key>has</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universal</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>has</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>has</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>attr</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>attr</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>obj</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>obj</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>agnt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>english</Language>
+          <Synonyms>
+            <Synonym>agnt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

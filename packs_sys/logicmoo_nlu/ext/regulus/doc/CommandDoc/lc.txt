@@ -1,0 +1,3 @@
+
+Sets the current parser back to the default left-corner parser. This is normally
+used after invoking the {\tt DCG} or {\tt NUANCE\_\-PARSER} commands.

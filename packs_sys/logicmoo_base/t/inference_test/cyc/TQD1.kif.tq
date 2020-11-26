@@ -1,0 +1,94 @@
+(note TQD1)
+
+
+(inRegion CityOfBenghaziLibya Libya) 
+
+(instance CityOfBenghaziLibya PortCity) 
+
+
+
+
+(inRegion CityOfTripoliLibya Libya) 
+
+(instance CityOfTripoliLibya PortCity) 
+
+
+
+
+(geopoliticalSubdivision Libya CityOfRasLanufLibya) 
+
+
+
+(instance CityOfRasLanufLibya PortCity) 
+
+
+
+
+(geopoliticalSubdivision Libya CityOfTobrukLibya) 
+
+
+
+(instance CityOfTobrukLibya PortCity) 
+
+
+
+
+(inRegion CityOfMisratahLibya Libya) 
+
+(instance CityOfMisratahLibya PortCity) 
+
+
+
+
+(inRegion CityOfMarsaAlBurayqahLibya Libya) 
+
+(instance CityOfMarsaAlBurayqahLibya PortCity) 
+
+
+
+
+(geopoliticalSubdivision Libya CityOfBenghaziLibya) 
+
+
+
+
+
+
+(capitalCity Libya CityOfTripoliLibya) 
+
+(inverse capitalCity inRegion) 
+
+
+
+
+(geopoliticalSubdivision Libya CityOfMisratahLibya) 
+
+
+
+
+
+
+(geopoliticalSubdivision Libya CityOfMarsaAlBurayqahLibya) 
+
+
+
+
+(inverse geopoliticalSubdivision inRegion) 
+
+
+
+( query (findall ?X (and 
+ (instance ?X PortCity) 
+ (inRegion ?X Libya))  
+))
+
+(answer CityOfBenghaziLibya)
+(answer CityOfTripoliLibya)
+(answer CityOfRasLanufLibya)
+(answer CityOfMarsaAlBurayqahLibya)
+(answer CityOfMisratahLibya)
+(answer CityOfTobrukLibya)
+
+
+(end_of_file)
+

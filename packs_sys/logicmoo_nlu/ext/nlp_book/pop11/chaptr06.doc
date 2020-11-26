@@ -1,0 +1,277 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in POP-11"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+The fundamental rule of chart parsing
+
+We can easily implement a chart parser in POP-11 by using the database
+to store the active and inactive edges of the chart (the complete code
+is in lib chart).  We will represent each edge by a list of the
+following form:
+
+    [?start ?finish ?label ?found ?tofind]
+
+where:
+
+    start (a number) is the position in the chart where the edge starts
+    finish (a number) is the position where the edge ends
+    label (a category) is the type of phrase that the edge is involved with
+    found (a list) is the list of constituents that have already been found
+    tofind (a list) is the list of constituents that remain to be found.
+
+For a chart recognizer, the found and tofind lists need only be lists
+of categories.  Thus, the following edge represents an edge that is
+trying to find an NP starting at position 0 (the beginning of the
+string).  So far, a Det has already been found between the start and
+finish points.  However, before a complete NP has been found, an Adj
+and an N must be found (starting at the current finish point):
+
+      start finish label found   tofind
+
+    [ 0     3      [NP]  [[Det]] [[Adj] [N]] ]
+
+For a chart parser, we will require that the edges remember more about
+what they have already found.  So, we will require the found list to
+be a list of parse trees.  We will come back to this case shortly, but
+let us initially consider the recognizer case.  In this case, a first
+attempt to formulate the fundamental rule of chart parsing might look
+like the following:
+
+    foreach [?i ?j ?A ?W1 [?B ??W2]] do
+       foreach [^j ?k ^B ?W3 []] do
+          add([^i ^k ^A [^^W1 ^B] ^W2])
+       endforeach
+    endforeach;
+
+That is, we need to look for pairs of entries in the database, such
+that the first (the active edge) ends where the second (the inactive
+edge) starts (position j), the second has no tofind categories and the
+label of the second is the same as the first tofind category of the
+first.
+
+This piece of code for applying the fundamental rule in all possible
+ways, although suggestive, is unfortunately not quite what we need.
+First of all, the additions to the database are taking place during
+two nested foreach iterations.  In each of these loops, the POP-11
+system is keeping track of how far through the database it has
+searched so far.  When we add new items, the database changes and
+POP-11 will almost certainly get confused, so that we will either
+check pairs of edges several times or fail to check some combinations.
+A second problem is that we have no control over which new edges are
+added when - it just depends on the order in which foreach happens to
+find things.  Finally, we can make the checking of the fundamental
+rule more efficient by doing it only when we add a new edge.  So,
+instead of having to check for all combinations of edges in the
+database, we simply check, whenever an edge is added to the chart,
+whether there is something that combines with that edge:
+
+    if edge matches [?substart ?subfinish ?subgoal ?subfound []] then
+       ;;; inactive edge
+       foreach [?start ^substart ?label ?found [^subgoal ??rest]] do
+          add([^start ^subfinish ^label [^^found ^subfound] ^rest])
+       endforeach;
+    elseif edge matches [?start ?finish ?label ?found [?subgoal ??rest]] then
+       ;;; active edge
+       foreach [^finish ?subfinish ^subgoal ?subfound []] do
+          add([^start ^subfinish ^label [^^found ^subfound] ^rest])
+       endforeach;
+
+Here now is the core of our chart parser program, the procedure that
+adds a new edge to the chart, checking for applications of the
+fundamental rule:
+
+    define add_edge(edge);
+       vars substart subfinish subgoal subfound
+            start finish label found rest;
+       add(edge);
+       if edge matches [?substart ?subfinish ?subgoal ?subfound []] then
+          ;;; inactive edge
+          foreach
+             [?start ^substart ?label ?found [^subgoal ??rest]] do
+             agenda_add([^start ^subfinish ^label
+                         [^^found ^(tree(subgoal, subfound))] ^rest])
+          endforeach;                     
+          inactive_edge_procedure(edge)
+       elseif edge matches [?start ?finish ?label ?found [?subgoal ??rest]] then
+          ;;; active edge
+          foreach [^finish ?subfinish ^subgoal ?subfound []] do
+             agenda_add([^start ^subfinish ^label
+                         [^^found ^(tree(subgoal, subfound))] ^rest])
+          endforeach;
+          active_edge_procedure(edge)
+       else
+          ;;; malformed edge
+          mishap('adding malformed edge', [^edge])
+       endif
+    enddefine;
+
+This procedure incorporates a number of changes.  First of all, it
+calls the procedure agenda_add, instead of the previous add, to add an
+edge to the chart.  agenda_add does not, in fact, directly add the
+edge to the chart, but as we will see makes a note that the edge may
+need to be added later.  This allows us more control over which new
+edges to consider first.  Secondly, add_edge calls procedures
+inactive_edge_procedure and active_edge_procedure according to whether
+the edge added is inactive or active.  We will appropriately define
+these procedures later to obtain bottom-up or top-down parsing as
+required.  Finally, we have now produced the core of a parser by
+having the found elements of edges, lists of parse trees.  The
+procedure tree constructs a parse tree for a phrase, given the
+category of the phrase and the list of the parse trees of the
+constituents.
+
+Initialization
+
+We have now covered most of the content of the top-level procedure
+chart_parse for the parser.  chart_parse expects a goal (a category)
+and a string (list of words).  It returns all the possible parse trees
+in a list.  Before going into its main loop, chart_parse must perform
+initialization, and for this, it calls the procedure initialize_chart.
+This, when the chart is run using a bottom-up strategy, simply
+produces inactive edges for all the words in the string:
+
+    define initialize_chart(goal, string);
+       vars pos strlen;
+       length(string) -> strlen;
+       for pos from 1 to strlen do
+          agenda_add([^(pos-1) ^pos ^(string(pos)) [] []])
+       endfor;
+    enddefine;
+
+When all applications of the edge-adding rules have been made in the
+main loop, the program then looks for complete parses by looking for
+edges of the form:
+
+       [0 ^strlen ^goal ?found []]
+
+where strlen is the number of words in the string.  In any edge of
+this form, found will be the sequence of parse trees for the immediate
+constituents of the goal category - for example, [[NP Dr. Chan] [VP [V
+employed][NP nurses]]].  These can be easily combined with the goal
+category - for example[S] - to produce a parse tree of the string:
+
+    define chart_parse(goal, string);
+       vars edge strlen found;
+       [] -> agenda;
+       [] -> database;
+       length(string) -> strlen;
+       initialize_chart(goal, string);
+       ...main loop...
+       [% foreach [0 ^strlen ^goal ?found []] do
+          tree(goal, found)
+       endforeach %]
+    enddefine;
+
+Rule invocation
+
+Top-down and bottom-up styles of parsing are implemented in our
+program by the procedures active_edge_procedure and
+inactive_edge_procedure, which are called whenever an active, or
+inactive, edge is added to the chart.  Any parsing strategy will need
+to refer to the rules of the grammar - we will assume that these are
+available in the global variable RULES, as in Chapter 4.  We will not,
+for the present, deal with general feature specifications, but will
+confine ourselves to monadic categories like [S].  Here are the
+procedures for bottom-up parsing:
+
+    define inactive_edge_procedure(edge);
+       vars start label head goals r;
+       edge --> [?start = ?label = []];
+       for r in rules do
+          if r matches [?head ^label ??goals] then
+             agenda_add([^start ^start ^head [] [^label ^^goals]])
+          endif
+       endfor
+    enddefine;
+
+    define active_edge_procedure(x); enddefine;
+
+Search strategy      
+
+The main loop of the parser is entirely concerned with manipulating
+the agenda:
+
+    until agenda = [] do
+       agenda --> [?edge ??agenda];
+       add_edge(edge)
+    enduntil;
+
+agenda, a global variable, holds the list of edges waiting to be added
+to the chart.  This list holds the edges in priority order, because
+the loop deals with the edges in the order they appear in the list.
+In general, of course, add_edge will cause new edges to be added to
+the agenda, so that agenda may grow between iterations.
+
+So far, our parser is fairly neutral about the search strategy to be
+adopted. However, by providing appropriate definitions for the
+remaining procedures, we can force it to work in a number of ways.  As
+we have seen, the search strategy is determined by how new edges are
+to be added to the agenda.  The following definition of agenda_add
+causes new edges to be added at the beginning, by being given highest
+priority, which gives rise to a kind of depth-first search strategy:
+
+    define agenda_add(edge);
+        [^edge ^^agenda] -> agenda
+    enddefine;
+
+Housekeeping      
+
+We can readily deal with the necessary housekeeping by minor additions
+to the code already shown. The following will ensure that agenda_add
+checks for duplicate edges:
+
+    vars already_in;
+
+    define agenda_add(edge);
+       unless already_in(edge, agenda) or
+              already_in(edge, database) then
+          [^edge ^^agenda] -> agenda
+       endunless
+    enddefine;
+
+    member -> already_in;
+
+Add_edge already calls tree so as to put trees rather than categories
+in the found list.  This procedure to build a tree from a category and
+a list of subtrees is as follows:
+
+    define tree(cat, subtrees);
+       vars sym;
+       if cat matches [?sym] then
+          [^sym ^^subtrees]
+       else
+          cat
+       endif
+    enddefine;
+
+Alternative rule invocation strategies
+
+The procedures initialize_chart, active_edge_procedure and
+inactive_edge_procedure are easily redefined for top-down parsing.
+Top-down parsing has to be started by the addition of an initial
+active edge which is looking for the goal category.  Also, in bottom-
+up parsing, no special actions are performed when active edges are
+added.  For top-down parsing, this situation is reversed:
+
+    define initialize_chart(goal, string);
+       vars pos strlen;
+       length(string) -> strlen;
+       for pos from 1 to strlen do
+          agenda_add([^(pos-1) ^pos ^(string(pos)) [] []])
+       endfor;
+       agenda_add([0 0 dummy [] [^goal]])
+    enddefine;
+
+    define inactive_edge_procedure(x); enddefine;
+
+    define active_edge_procedure(edge);
+       vars finish subgoal r subsubgoals;
+       edge --> [= ?finish = = [?subgoal ==]];
+       for r in rules do
+          if r matches [^subgoal ??subsubgoals] then
+             agenda_add([^finish ^finish ^subgoal [] ^subsubgoals])
+          endif
+       endfor
+    enddefine;

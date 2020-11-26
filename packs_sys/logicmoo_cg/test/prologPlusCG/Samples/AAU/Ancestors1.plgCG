@@ -1,0 +1,7 @@
+father(Terah, Abraham).
+father(Abraham, Isaac).
+father(Isaac, Jacob).
+father(Jacob, Judah).
+
+ancestor(A,D) :- father(A,D).
+ancestor(A,D) :- father(F,D), ancestor(A,F).

@@ -1,0 +1,63 @@
+(note "Kalish & Montague, Theorem 242")
+
+(not (forall ?X (implies (F ?X) (G ?X))))
+
+(queryyn (exists ?X (and (F ?X) (not (G ?X)))))
+
+(answer Yes)
+
+(end_of_file)
+
+;;|| ?- test_surface_to_pure_prolog(non(all(X,implies(f(X), g(X)))),F).
+
+;;Compiling:
+
+;;Negation normal form:
+;;and(f(sk3(_h46)),non(g(sk3(_h46))))
+
+;;Prenex normal form:
+;;and(f(sk3(_h46)),non(g(sk3(_h46))))
+
+;;Removed any initial universal quantifiers:
+;;and(f(sk3(_h46)),non(g(sk3(_h46))))
+
+;;Conjunctive normal form:
+;;and(f(sk3(_h46)),non(g(sk3(_h46))))
+
+;;Negation normal form:
+;;or(non(f(sk3(_h46))),g(sk3(_h46)))
+
+;;Prenex normal form:
+;;or(non(f(sk3(_h46))),g(sk3(_h46)))
+
+;;Removed any initial universal quantifiers:
+;;or(non(f(sk3(_h46))),g(sk3(_h46)))
+
+;;Conjunctive normal form:
+;;or(non(f(sk3(_h46))),g(sk3(_h46)))
+
+;;Clausal form(s):
+;;[[g(sk3(_h46)),non(f(sk3(_h46)))]]
+
+;;Compiled form(s):
+
+;;Clausal form(s):
+;;[[f(sk3(_h46))],[non(g(sk3(_h46)))]]
+
+;;Compiled form(s):
+
+;;f(sk3(_h46)).
+
+;;non(g(sk3(_h46))).
+
+
+;;X = _h46
+;;F = [[f(sk3(_h805)),.],[non(g(sk3(_h817))),.]]
+
+;;yes
+
+;;| ?- exists(X,and(f(X),non(g(X)))).
+
+;;X = sk3(_h172)
+
+;;yes

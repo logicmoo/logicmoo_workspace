@@ -1,0 +1,233 @@
+<div class="notebook">
+
+<div class="nb-cell html">
+<script type="text/javascript">
+$.getScript("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"+
+             "?config=TeX-MML-AM_CHTML",function() {MathJax.Hub.Queue(["Typeset",MathJax.Hub]);});
+</script>
+<h2>Simpon's Paradox</h2>
+
+<p>From 
+"Pearl, Judea. Causality. Cambridge university press, 2009"
+</p><blockquote style="font-size: inherit;" cite="Pearl, Judea. Causality. Cambridge university press, 2009">
+<p>
+Simpson's paradox ... refers to the phenomenon whereby an event \(C\) increases the probability
+of \(E\) in a given population \(p\) and, at the same time, decreases the probability of \(E\) in
+every subpopulation of \(p\). In other words, if \(F\) and \(\neg F\) are two complementary properties
+describing two subpopulations, we might well encounter the inequalities
+\[P(E|C)&gt;P(E|\neg C)\]
+\[P(E|C,F)\lt P(E|\neg C,F)\]
+\[P(E|C,\neg F)\lt P(E|\neg C,\neg F)\]
+...
+For example, if we associate \(C\) (connoting cause)
+with taking a certain drug, \(E\) (connoting effect) with recovery, and \(F\) with being a female,
+then ... the drug seems to be harmful
+to both males and females yet beneficial to the population as a whole.
+</p></blockquote>
+<p></p>
+<p>For example, consider the situation exemplified by the following tables from [1]
+\[\begin{array}{llll}
+\mathrm{Combined}&amp;E&amp;\neg E&amp;&amp;\mathrm{Recovery Rate}\\
+\hline
+\mathrm{Drug} (C)&amp; 20&amp;20&amp;40 &amp;50\%\\
+\mathrm{No drug} (\neg C)&amp; 16&amp;24&amp;40 &amp;40\%\\
+\hline
+&amp;36&amp;44&amp;80
+\end{array}\]
+\[\begin{array}{llll}
+\mathrm{Females}&amp;E&amp;\neg E&amp;&amp;\mathrm{Recovery Rate}\\
+\hline
+\mathrm{Drug} (C)&amp; 2&amp;8&amp;10 &amp;20\%\\
+\mathrm{No drug} (\neg C)&amp; 9&amp;21&amp;30 &amp;30\%\\
+\hline
+&amp;11&amp;29&amp;40
+\end{array}\]
+\[\begin{array}{llll}
+\mathrm{Males}&amp;E&amp;\neg E&amp;&amp;\mathrm{Recovery Rate}\\
+\hline
+\mathrm{Drug} (C)&amp; 18&amp;12&amp;30 &amp;60\%\\
+\mathrm{No drug} (\neg C)&amp; 7&amp;3&amp;10 &amp;70\%\\
+\hline
+&amp;25&amp;15&amp;40
+\end{array}\]
+</p>
+<p> As you can see taking the drug seems to be beneficial overall even if it
+is not for females and males.
+</p>
+<p> The paradox derives because we must distinguish seeing from doing:
+</p><blockquote style="font-size: inherit;" cite="Pearl, Judea. Causality. Cambridge university press, 2009">
+The conditioning operator
+in probability calculus stands for the evidential conditional "given that we see,"
+ whereas
+the do(.) operator was devised to represent the causal conditional "given that we do."
+Accordingly, the inequality
+\[P(E|C)&gt;P(E|\neg C)\]
+is not a statement about \(C\) being a positive causal factor for \(E\), properly written
+\[P(E|do(C))&gt;P(E|do(\neg C))\]
+but rather about \(C\) being positive evidence for \(E\)
+</blockquote>
+<p>The \(do\) operator must be used to infer the effect of actions. To compute the effect of action \(do(C)\) on a variable \(E\), i.e., compute \(P(E|do(C))\) when the model is represented as a causal Bayesian
+network, we must 
+</p><ol>
+<li>
+remove all arcs incoming on \(C\)
+</li>
+<li>
+modify the conditional probability table of \(C\) so that all the probability
+mass is assigned to the true value
+</li>
+<li>
+query \(P(E)\) on the mutilated network
+</li>
+</ol>
+<p></p>
+<p> For example, if the causal Bayesian network of our example is:</p>
+</div>
+
+<div class="nb-cell query">
+Network = dot(digraph(['Drug C'-&gt;'Recovery E','Gender F'-&gt;'Drug C','Gender F'-&gt;'Recovery E'])).
+</div>
+
+<div class="nb-cell html">
+<p> then to compute \(P(E|do(C))\), we must remove the incoming arcs of \(C\)
+obtaining
+</p>
+</div>
+
+<div class="nb-cell query">
+MutilatedNetwork = dot(digraph(['Drug C'-&gt;'Recovery E','Gender F'-&gt;'Recovery E'])).
+</div>
+
+<div class="nb-cell html">
+<script type="text/javascript">
+$.getScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML",function() {MathJax.Hub.Queue(["Typeset",MathJax.Hub]);});
+</script>
+
+<p> and set the conditional probability table of \(C\) to
+\[\begin{array}{lll}
+C&amp;\mathrm{true}&amp;\mathrm{false}\\
+\hline
+&amp;1&amp;0
+\end{array}\]
+Then we query \(P(E)\) on this network.</p>
+<p> If we want to compute \(P(E|do(\neg C))\) we must set the conditional probability table of \(C\) to
+\[\begin{array}{lll}
+C&amp;\mathrm{true}&amp;\mathrm{false}\\
+\hline
+&amp;0&amp;1
+\end{array}\]
+and  query \(P(E)\) on this network.
+</p>
+<p> The network for our example can be represented with the following program
+</p>
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(pita)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(graphviz).
+:- endif.
+
+:- pita.
+
+:- begin_lpad.
+:- action drug/0.
+
+female:0.5.
+
+recovery:0.6:- drug,\+ female.
+recovery:0.7:- \+ drug,\+ female.
+
+recovery:0.2:- drug,female.
+recovery:0.3:- \+ drug,female.
+
+drug:30/40:- \+ female.
+drug:10/40:-female.
+
+
+:-end_lpad.
+</div>
+
+<div class="nb-cell html">
+<p> where
+</p><pre><code>:- action drug/0.
+</code></pre>
+means that <code>drug/0</code> is a predicate that can be used to specify
+actions.<p></p>
+<p>
+If we query for the conditional probabilities of recovery given treatment on
+the whole population and on the two subpopulations, we get the results 
+in the tables above:
+</p>
+</div>
+
+<div class="nb-cell query">
+prob(recovery,drug,P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,\+ drug,P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,(drug,female),P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,(\+drug,female),P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,(drug,\+female),P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,(\+ drug,\+female),P).
+</div>
+
+<div class="nb-cell html">
+<p>If instead we want to know the probability of recovery given the <em>action</em> treatment (taking a drug), we must ask
+</p>
+</div>
+
+<div class="nb-cell query">
+prob(recovery,do(drug),P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,do(\+ drug),P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,(do(drug),female),P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,(do(\+drug),female),P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,(do(drug),\+ female),P).
+</div>
+
+<div class="nb-cell query">
+prob(recovery,(do(\+ drug),\+ female),P).
+</div>
+
+<div class="nb-cell html">
+<p> As you can see, the probability of recovery on the whole population is now
+in accordance with that in the subpopulations, in particular it is the 
+weighted average of the probability of recovery in the subpopulations.
+</p>
+<p>
+The probability of recovery in the two subpopulations is the same as that for
+the case of seeing rather than doing, as the observation of the sex makes
+the arc from sex to drug irrelevant.
+</p>
+<h3>References</h3>
+[1] Pearl, Judea. Causality. Cambridge university press, 2009.
+</div>
+
+</div>
+

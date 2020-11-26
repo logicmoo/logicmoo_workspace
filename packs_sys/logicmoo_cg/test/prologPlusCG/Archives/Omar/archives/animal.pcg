@@ -1,0 +1,121 @@
+////////////////////////////////////////////////////////////////////////-------------description of the rule trajectory----------------///////////////////////////////////////////////
+Animal( x, Procedure ) ::[Animal : x] <-actor- [Trajectory]-
+				-id-> [Name = "Final"],
+				-locatedIn-> [CurrentPosition = _CurrentPosition], 
+				-to-> [TargetPosition = _NextPosition]:-
+	UpDateAgentCurrentPosition( x, _NextPosition ).
+
+Animal( x, Procedure ) ::[Animal : x] <-actor- [Trajectory]-
+				-trajectoryId-> [Name = _NameTrajectory],
+				-locatedIn-> [CurrentPosition = _CurrentPosition], 
+				-to-> [TargetPosition = _NextPosition]:-
+	getAnimalPosition( x, _CurrentPosition ),
+	getTrajectory( _Object, _Trajectory, _NameTrajectory  ),
+	NextAgentPosition( x, _NameTrajectory, _NextPosition ),
+	UpDateAgentCurrentPosition( x, _NextPosition ), !.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Theme Hungry 
+//Algorithm :
+//1.	Add the theme Theme_Hungry ,
+//2.	If the current agent is lasy and cuning then call plan Plan3_SatisfyHungry, 
+//	else call the plan Plan1_SatisfyHungry or Plan2_SatisfyHungry or Plan3_SatisfyHungry.
+
+Animal( x, StateEvent ):: [Animal : x] <-actor- [Hungry] :- 
+	Asserta(Animal( x, State):: [Animal : x] <-actor- [Theme_Hungry], []), 
+	Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry].
+Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry]:-
+	Animal( x, Personality):: [Character] -has-> [List = L],
+	member( Lasy, L ),
+	Animal( x, Plan ):: [Animal : x] <-actor- [Plan3_SatisfyHungry], !.  // Plan3_SatisfaireFaim must be defined
+Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry]:-
+	Animal( x, Plan ):: [Animal : x] <-actor- [Plan1_SatisfyHungry], !.   // Plan1_SatisfaireFaim must be defined
+Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry]:-
+	Animal( x, Plan ):: [Animal : x] <-actor- [Plan2_SatisfyHungry],!.   // Plan2_SatisfaireFaim must be defined
+Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry]:-
+	Animal( x, Goal ):: [Animal : x] <-actor- [Plan3_SatisfyHungry],!.   // Plan3_SatisfaireFaim must be defined
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// the definition of the plans
+
+//	Plan Pl3_SatisfyHungry :
+// this plan is handeled by an angent lazy.
+// he agent moves from a place to anpther till he percept one possible aliment 
+// the plan success when the agent while the agent handels the mentioned aliment et he eat it.
+
+//Algorithm :
+//	- add the plan Plan3_SatisfyHungry in the plan list of the curent agent.
+//	- call the procedure trajectory 
+//	- call the action Move to the target position
+//	- call the procedure PerceptionOf a possible aliment of the current agent
+//	- if the agent knows that he owns the mentioned aliment
+//	-	then
+//	-	call the action Eat (achived Goal)
+//	-	remove the Goal
+
+//Formulation in Prolog+CG :
+////////////////////////////////////////////////////////////----------description of the plan SatisfyHungry------------///////////////////////////////////////////////////////////////
+// 1) in the case that the food is in the visual neigberhood of the agent, 
+Animal( x, Plan ):: [Animal : x] <-actor-[Plan3_SatisfyHungry] -intensityOf-> [Hungry = _Level]:-
+	Animal( x, Procedure ):: [Animal : x] <-actor- [PerceptionOf]-
+					-id-> [Name = "Neigberhood"],
+					-obj-> [Food = _Food], 
+					-locatedIn-> [Position = _FoodPosition],
+	Animal( x, Procedure ):: [Animal : x] <-actor- [Trajectory]-
+					-id-> [Name = "Final"],
+					-locatedIn-> [CurrentPosition = _CurrentPosition], 
+					-to-> [TargetPosition = _FoodPosition],
+	getQuantityOfFoodForAnimal( x, _Food, _Level, _Quantity ),
+	Animal( x,PrimitiveAction ):: [Animal : x] <-actor- [Eat] -
+				-obj-> [Food =  _Food]
+				-numberOf-> [Quantity = _Quantity],
+				-locatedIn-> [Position = _FoodPosition], !.
+
+// otherwise, concerning the previous case, the animal will look for it otherwhere
+Animal( x, Plan ):: [Animal : x] <-actor-[Plan3_SatisfyHungry] -intensityOf-> [Hungry = _Level]:-
+	getAnimalPosition( x, _CurrentPosition ),
+	getTrajectory( _Object, _Trajectory, _NameTrajectory  ),
+	ReturnFirstElementOf( _Trajectory, _CurrentPosition),
+	memberFood( x, _Object ),
+	Animal( x, Procedure ):: [Animal : x] <-actor- [Trajectory]-
+					-trajectoryId-> [Name = _NameTrajectory],
+					-locatedIn-> [CurrentPosition = _CurrentPosition], 
+					-to-> [TargetPosition = _NextPosition],
+	moveToEndOfTraject( x, _NameTrajectory, _Level ).
+
+moveToEndOfTraject( x, _NameTrajectory, _Level ) :- 
+	Animal( x, Procedure ):: [Animal : x] <-actor- [PerceptionOf]-
+					-id-> [Name = "Neigberhood"],
+					-obj-> [Food = _Food], 
+					-locatedIn-> [Position = _FoodPosition],
+	Animal( x, Procedure ):: [Animal : x] <-actor- [Trajectory]-
+					-id-> [Name = "Final"],
+					-locatedIn-> [CurrentPosition = _CurrentPosition], 
+					-to-> [TargetPosition = _FoodPosition],
+	getQuantityOfFoodForAnimal( x, _Food, _Level, _Quantity ),
+	Animal( x,PrimitiveAction ):: [Animal : x] <-actor- [Eat] -
+				-obj-> [Food =  _Food]
+				-numberOf-> [Quantity = _Quantity],
+				-locatedIn-> [Position = _FoodPosition], !.
+
+moveToEndOfTraject( x, _NameTrajectory, _Level ) :- 
+	Animal( x, Procedure ) ::[Animal : x] <-actor- [Trajectory]-
+					-trajectoryId-> [Name = _NameTrajectory],
+					-locatedIn-> [CurrentPosition = _CurrentPosition], 
+					-to-> [TargetPosition = _NextPosition],
+	moveToEndOfTraject( x, _NameTrajectory, _Level ).
+
+//myRetract2(B) :-
+  // myRetract(B).
+//myRetract2(B) :-
+  // assertz(B, []).
+////////////////////////////////////////////////////////////////-----------------description of the perception rule------------------/////////////////////////////////////////////
+// the case below is used if a possible food of an agent is his neigberhood
+// the perception of an animal
+Animal( x, Procedure ):: [Animal :x] <-actor- [PerceptionOf]-
+				-id-> [Name = "Neigberhood"],
+				-obj-> [Food = _Food], 
+				-LocatedIn-> [Position = _FoodPosition] :-
+	getAnimalPerception( x, _Ray ),
+	getPossibleFoodInNeiberhood( x, _Ray, _AgentPosition, _Food, _FoodPosition ),
+	fullfilAnimalKnowledge( x, Knowledge)::  [Object = _Food] -locatedIn-> [Position = _FoodPosition],!.

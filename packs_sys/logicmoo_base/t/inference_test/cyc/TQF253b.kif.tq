@@ -1,0 +1,30 @@
+(note TQF253b)
+
+(subclass MissileAttack MilitaryAttack) 
+(nearestIsa IranianAttackOnTanker-1987 MissileAttack) 
+(damages IranianAttackOnTanker-1987 SeaIslandCity) 
+(instance SeaIslandCity OilTanker) 
+(subrelation damages objectActedOn)
+
+(query (findall (?WAY-TO-ATTACK-TANKER)
+  (exists 
+    (?ACTION) 
+    (exists 
+      (?TANKER-GROUP) 
+      (exists 
+        (?TANKER) 
+        (and 
+          (nearestIsa ?ACTION ?WAY-TO-ATTACK-TANKER) 
+          (subclass ?WAY-TO-ATTACK-TANKER MilitaryAttack) 
+          (or 
+            (and 
+              (objectActedOn ?ACTION ?TANKER-GROUP) 
+              (instance ?TANKER-GROUP (GroupFn OilTanker)))
+            (and 
+              (objectActedOn ?ACTION ?TANKER) 
+              (instance ?TANKER OilTanker)))))))))
+
+(answer MissileAttack)
+
+(end_of_file)
+

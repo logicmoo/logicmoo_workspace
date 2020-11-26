@@ -1,0 +1,21 @@
+(note TQB9)
+
+(exportRevenueFractionDuring Qatar PetroleumProduct 
+ (YearFn 1995) 
+ (Percent 80)) 
+
+(query (findall ?FRACTION  (findall ?TIME
+ (thereExists ?NR 
+ (and 
+ (exportRevenueFractionDuring Qatar PetroleumProduct ?TIME ?NR) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (DifferenceFn 1 ?NR))))))))
+ 
+
+(answer 20.0000 1995)
+
+
+(end_of_file)
+
+

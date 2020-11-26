@@ -1,0 +1,708 @@
+%==============================================================================
+%----This module holds the clauses for reading input sets in TPTP 
+%----format. 
+
+%----Written by Geoff Sutcliffe, July, 1992.
+%----Updated by Geoff Sutcliffe, March, 1994.
+%----Revised by Geoff Sutcliffe, May 1994, with ideas from Gerd Neugebauer
+%----Updated by Geoff Sutcliffe, January 2002, to allow selective includes
+%==============================================================================
+%------------------------------------------------------------------------------
+get_environment_variable(Name,Value):-
+    prolog_dialect(swi),
+    getenv(Name,Value),
+    !.
+
+get_environment_variable(Name,Value):-
+    prolog_dialect(gnu),
+    environ(Name,Value),
+    !.
+
+get_environment_variable(Name,Value):-
+    prolog_dialect(yap),
+    environ(Name,Value),
+    !.
+
+get_environment_variable(Name,Value):-
+    prolog_dialect(sicstus),
+    environ(Name,Value),
+    !.
+
+get_environment_variable(Name,Value):-
+    prolog_dialect(eclipse),
+    getenv(Name,Value),
+    !.
+
+%----Quintus does not seen to have environment access
+%------------------------------------------------------------------------------
+tptp_file_exists(FileName):-
+    prolog_dialect(yap),
+    !,
+    exists(FileName).
+
+tptp_file_exists(FileName):-
+    prolog_dialect(swi),
+    !,
+    exists_file(FileName).
+
+tptp_file_exists(FileName):-
+    prolog_dialect(gnu),
+    !,
+    file_exists(FileName).
+
+tptp_file_exists(FileName):-
+    prolog_dialect(sicstus),
+    !,
+    file_exists(FileName).
+
+tptp_file_exists(FileName):-
+    prolog_dialect(quintus),
+    !,
+    file_exists(FileName).
+
+tptp_file_exists(FileName):-
+    prolog_dialect(eclipse),
+    !,
+    exists(FileName).
+
+%----Default is to pray "yes"
+tptp_file_exists(_FileName).
+%------------------------------------------------------------------------------
+get_tptp_directory(Directory):-
+    get_environment_variable('TPTP',Directory),
+    !.
+
+get_tptp_directory(Directory):-
+    tptp_directory(Directory).
+%------------------------------------------------------------------------------
+%----Make a completed path name from the TPTP directory and the
+%----supplied file name
+%----If the pathname is user, then do nothing
+tptp_path_name(user,user):-
+    !.
+
+%----If there is a leading /,~ or ., then do nothing.
+tptp_path_name(TPTPFileName,TPTPFileName):-
+    name(TPTPFileName,[FirstAscii|_]),
+    tptp2X_member(FirstAscii,"./~"),
+    !.
+
+%----If no leading /, then put the TPTP directory on front. Note this
+%----is used to generate as well as search for files, hence the split
+%----with tptp_find_file.
+tptp_path_name(TPTPFileName,PathName):-
+    get_tptp_directory(Directory),
+%DEBUG write('reading from '),write(Directory),nl,
+    concatenate_atoms([Directory,'/',TPTPFileName],PathName).
+
+%------------------------------------------------------------------------------
+%----If absolute, then use that
+%----If it starts with /, nothing
+tptp_find_file(TPTPFileName,_,TPTPFileName):-
+    name(TPTPFileName,[47|_]),
+    !.
+
+%----If starts with ~/ then put $HOME on front
+tptp_find_file(TPTPFileName,_,PathName):-
+    name(TPTPFileName,[126,47|RestOfPathASCII]),
+    !,
+    get_environment_variable('HOME',HomeDirectory),
+    name(RestOfPath,RestOfPathASCII),
+    concatenate_atoms([HomeDirectory,'/',RestOfPath],PathName).
+
+%----Otherwise we have to search
+%----First if we know the current file
+tptp_find_file(TPTPFileName,CurrentFileName,PathName):-
+    nonvar(CurrentFileName),
+    tptp2X_dirname(CurrentFileName,Directory),
+    concatenate_atoms([Directory,'/',TPTPFileName],PathName),
+    tptp_file_exists(PathName),
+    !.
+
+%----If no current file (user case is done here) use CWD
+%----This doesn't work for tptp2X because the script puts stdin in a file
+tptp_find_file(TPTPFileName,CurrentFileName,PathName):-
+    var(CurrentFileName),
+    tptp2X_cwd(Directory),
+    concatenate_atoms([Directory,'/',TPTPFileName],PathName),
+    tptp_file_exists(PathName),
+    !.
+
+%----Look in the TPTP
+tptp_find_file(TPTPFileName,_,PathName):-
+    tptp_path_name(TPTPFileName,PathName),
+    tptp_file_exists(PathName),
+    !.
+
+tptp_find_file(TPTPFileName,_,_):-
+    write('%% ERROR: Cannot find '),
+    write(TPTPFileName),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+%----Convert infix equality to prefix for internal processing
+convert_prolog_operators([],[]):-
+    !.
+
+convert_prolog_operators([FirstLiteral|RestOfLiterals],
+[FirstPrefixEqualLiteral|RestOfPrefixEqualLiterals]):-
+    !,
+    FirstLiteral =.. [Sign,Atom],
+    convert_prolog_operators(Atom,PrefixEqualAtom),
+    FirstPrefixEqualLiteral =.. [Sign,PrefixEqualAtom],
+    convert_prolog_operators(RestOfLiterals,RestOfPrefixEqualLiterals).
+
+convert_prolog_operators(QuantifiedFormula,QuantifiedPrefixEqualFormula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula),
+    !,
+    convert_prolog_operators(Formula,PrefixEqualFormula),
+    Quantification =.. [Quantifier,Variables],
+    QuantifiedPrefixEqualFormula =.. [:,Quantification,PrefixEqualFormula].
+
+convert_prolog_operators(BinaryFormula,BinaryPrefixEqualFormula):-
+    tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS),
+    !,
+    convert_prolog_operators(LHS,PrefixEqualLHS),
+    convert_prolog_operators(RHS,PrefixEqualRHS),
+    BinaryPrefixEqualFormula =.. [BinaryConnective,PrefixEqualLHS,
+PrefixEqualRHS].
+
+convert_prolog_operators(UnaryFormula,UnaryPrefixEqualFormula):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula),
+    !,
+    convert_prolog_operators(Formula,PrefixEqualFormula),
+    UnaryPrefixEqualFormula =.. [UnaryConnective,PrefixEqualFormula].
+
+%----Still interpret equal as =
+convert_prolog_operators(equal(LHS,RHS),'$tptp_equal'(LHS,RHS)):-
+    !.
+
+%----Special hack for !=, with ! as a postfix operator
+convert_prolog_operators(LHS = RHS,~ '$tptp_equal'(RealLHS,RHS)):-
+    nonvar(LHS),
+    LHS = !(RealLHS),
+    !.
+
+convert_prolog_operators(LHS = RHS,'$tptp_equal'(LHS,RHS)):-
+    !.
+
+%----This only does reserved predicates. Need to drill in for functions
+%----if any are ever defined in the syntax.
+convert_prolog_operators($(Reserved),ReservedAtom):-
+    !,
+    name(Reserved,ReservedASCII),
+    name(ReservedAtom,[36|ReservedASCII]).
+
+convert_prolog_operators(Atom,Atom):-
+    tptp_atomic_formula(Atom).
+%------------------------------------------------------------------------------
+%----Determine what to do with the term read.
+%----Input clauses are returned in a list. Note the dictionary is 
+%----embedded in another list to align with the list of lists that can
+%----return from an include.
+
+%----TSTP format (current discards source and useful info)
+normalize_and_include(cnf(Name,Status,CNFFormula,_),Dictionary,CurrentFileName,
+Clauses,NewDictionary):-
+    !,
+    normalize_and_include(cnf(Name,Status,CNFFormula),Dictionary,
+CurrentFileName,Clauses,NewDictionary).
+
+normalize_and_include(cnf(Name,Status,CNFFormula,_,_),Dictionary,
+CurrentFileName,Clauses,NewDictionary):-
+    !,
+    normalize_and_include(cnf(Name,Status,CNFFormula),Dictionary,
+CurrentFileName,Clauses,NewDictionary).
+
+normalize_and_include(cnf(Name,Status,CNFFormula),Dictionary,
+CurrentFileName,Clauses,NewDictionary):-
+    convert_prolog_operators(CNFFormula,PrefixEqualLiterals),
+    convert_tptp_to_literals(PrefixEqualLiterals,Literals),
+    !,
+    normalize_and_include(input_clause(Name,Status,Literals),Dictionary,
+CurrentFileName,Clauses,NewDictionary).
+
+%----Extended fof format currently reduced to short format
+normalize_and_include(fof(Name,Status,Formula,_),Dictionary,CurrentFileName,
+Formulae,NewDictionary):-
+    !,
+    normalize_and_include(fof(Name,Status,Formula),Dictionary,CurrentFileName,
+Formulae,NewDictionary).
+
+normalize_and_include(fof(Name,Status,Formula,_,_),Dictionary,CurrentFileName,
+Formulae,NewDictionary):-
+    !,
+    normalize_and_include(fof(Name,Status,Formula),Dictionary,CurrentFileName,
+Formulae,NewDictionary).
+
+%----thf format currently reduced to short format
+normalize_and_include(thf(Name,Status,Formula,_),Dictionary,CurrentFileName,
+Formulae,NewDictionary):-
+    !,
+    normalize_and_include(thf(Name,Status,Formula),Dictionary,CurrentFileName,
+Formulae,NewDictionary).
+
+normalize_and_include(thf(Name,Status,Formula,_,_),Dictionary,CurrentFileName,
+Formulae,NewDictionary):-
+    !,
+    normalize_and_include(thf(Name,Status,Formula),Dictionary,CurrentFileName,
+Formulae,NewDictionary).
+
+%----Old tptp input_formula format gets converted to fof
+normalize_and_include(input_formula(Name,Status,Formula),Dictionary,
+CurrentFileName,Formulae,NewDictionary):-
+    !,
+    normalize_and_include(fof(Name,Status,Formula),Dictionary,CurrentFileName,
+Formulae,NewDictionary).
+
+%----Convert to prefix equality
+normalize_and_include(input_clause(Name,Status,Literals),Dictionary,_,
+[input_clause(Name,Status,PrefixEqualLiterals)],[Dictionary]):-
+    !,
+    convert_prolog_operators(Literals,PrefixEqualLiterals).
+
+normalize_and_include(fof(Name,Status,Formula),Dictionary,_,
+[fof(Name,Status,PrefixEqualFormula)],[Dictionary]):-
+    !,
+    convert_prolog_operators(Formula,PrefixEqualFormula).
+
+normalize_and_include(thf(Name,Status,Formula),Dictionary,_,
+[thf(Name,Status,PrefixEqualFormula)],[Dictionary]):-
+    !,
+    convert_prolog_operators(Formula,PrefixEqualFormula).
+
+%----Include directive causes recursive call to the top level to read
+%----the included file.
+normalize_and_include(include(TPTPFileName),_,CurrentFileName,Formulae,
+Dictionary):-
+    !,
+    read_formulae_from_file(TPTPFileName,CurrentFileName,all,Formulae,
+Dictionary).
+    
+normalize_and_include(include(TPTPFileName,Selection),_,CurrentFileName,
+Formulae,Dictionary):-
+    !,
+    read_formulae_from_file(TPTPFileName,CurrentFileName,Selection,Formulae,
+Dictionary).
+
+%----Something I don't recognize
+normalize_and_include(Term,_,_,[],[]):-
+    write('% ERROR: Input term '),
+    write(Term),
+    write(' ignored'),
+    nl.
+%------------------------------------------------------------------------------
+%----This pulls apart the dictionary and instantiates the variables
+%----with their names.
+instantiate_variables_in_clause([]):-
+    !.
+
+%----Instantiate this node if possible with itself
+instantiate_variables_in_clause([Name=Name|RestOfList]):-
+    !,
+    instantiate_variables_in_clause(RestOfList).
+
+%----Otherwise accept the name it has
+instantiate_variables_in_clause([_|RestOfList]):-
+    instantiate_variables_in_clause(RestOfList).
+%------------------------------------------------------------------------------
+%----This pulls apart the dictionary and instantiates the variables
+%----with their names.
+instantiate_variables_from_dictionary([]):-
+    !.
+
+%----Special case of numbervars, simply call it
+instantiate_variables_from_dictionary([[numbervars=Term]|RestOfList]):-
+    !,
+    numbervars(Term,0,_),
+    instantiate_variables_from_dictionary(RestOfList).
+
+%----If it's a list, then it's the list for a clause. Do recursively
+instantiate_variables_from_dictionary([ClauseList|RestOfList]):-
+    !,
+    instantiate_variables_in_clause(ClauseList),
+    instantiate_variables_from_dictionary(RestOfList).
+%------------------------------------------------------------------------------
+%----Convert Eclipse's dictionary to standard dictionary. Supplied by
+%----Max Moser of TUM.
+make_dictionary_from_Eclipse_dictionary([],[]).
+
+make_dictionary_from_Eclipse_dictionary([[Name|Variable]|Rest],
+[Name=Variable|RestConverted]):-
+    make_dictionary_from_Eclipse_dictionary(Rest,RestConverted).
+%------------------------------------------------------------------------------
+%----This is the entry point for reading
+%----Generic version (does not preserve variable names)
+real_read_for_dialect(generic,Term,Dictionary):-
+    read(Term),
+%----Set the dictionary to a special flag for later instantiating.
+    Dictionary = [numbervars=Term].
+
+%----BinProlog version
+real_read_for_dialect(binprolog,Term,Dictionary):-
+    real_read_for_dialect(generic,Term,Dictionary).
+
+%----YAP prolog
+real_read_for_dialect(yap,Term,Dictionary):-
+    read_term(Term,[variable_names(Dictionary)]).
+
+%----SWI prolog
+real_read_for_dialect(swi,Term,Dictionary):-
+    read_term(Term,[variable_names(Dictionary)]).
+
+%----GNU prolog
+real_read_for_dialect(gnu,Term,Dictionary):-
+    read_term(Term,[variable_names(Dictionary)]).
+
+%----Eclipse version (supplied by Max Moser of TUM)
+real_read_for_dialect(eclipse,Term,Dictionary):-
+    readvar(input,Term,EclipseDictionary),
+    (Term == end_of_file -> 
+        EclipseDictionary=[]
+    ;   true),
+    make_dictionary_from_Eclipse_dictionary(EclipseDictionary,Dictionary).
+
+%----Quintus version
+real_read_for_dialect(quintus,Term,Dictionary):-
+    read_term([variable_names(Dictionary)],Term),!.
+
+%----SICStus 2.1 version
+real_read_for_dialect(sicstus,Term,Dictionary):-
+    current_input(InputStream),
+    read_term(InputStream,Term,[variable_names(Dictionary)]).
+
+%----Redirect reading to the code for the current dialect
+real_read(Term,Dictionary):-
+    prolog_dialect(Dialect),
+%----Cut to know there is a dialect
+    !,
+    real_read_for_dialect(Dialect,Term,Dictionary),
+%----Cut to prevent back tracking over reading for any dialect (need for YAP)
+    !.
+
+real_read(_,_):-
+    write('No Prolog dialect installed, reading aborted'),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+%----Read in clauses from current input device, until eof
+read_formulae(Selection,CurrentFileName,Formulae,Dictionary):-
+%----Need to deal with skolem_functor facts here, if and when I add
+%----the equality stuff again
+    real_read(PrologTerm,TermDictionary),
+write('%% '),write(PrologTerm),nl,
+    PrologTerm \== end_of_file,
+    !,
+%----Check if an include, and return all clauses resulting
+    normalize_and_include(PrologTerm,TermDictionary,CurrentFileName,
+FirstFormulae,FirstDictionary),
+write('%% #### '),write(FirstFormulae),nl,
+    read_formulae(Selection,CurrentFileName,RestOfFormulae,RestOfDictionary),
+    tptp2X_append(FirstFormulae,RestOfFormulae,Formulae),
+    tptp2X_append(FirstDictionary,RestOfDictionary,Dictionary).
+
+read_formulae(_,_,[],[]).
+%------------------------------------------------------------------------------
+%----Check that the name meets the selection
+filter_selection(_,all,all):-
+    !.
+
+%----Non-list option removed now
+%filter_selection(Name,Name):-
+%    !.
+
+filter_selection(Name,Selection,RemainingSelection):-
+    tptp2X_select(Name,Selection,RemainingSelection).
+%------------------------------------------------------------------------------
+check_for_duplicate_name(Name,Formulae):-
+    tptp2X_member(DuplicateNamed,Formulae),
+    DuplicateNamed =.. [_,Name|_],
+    !,
+    write('% ERROR: Ambiguous include selection - '),
+    write(Name),
+    nl,
+    fail.
+
+check_for_duplicate_name(_,_).
+%------------------------------------------------------------------------------
+filter_formulae(all,Formulae,Dictionary,Formulae,Dictionary):-
+    !.
+
+%----If there is a selection, they must all be found
+filter_formulae([],[],[],[],[]):-
+    !.
+
+filter_formulae([OneNotFound|RestNotFound],[],[],[],[]):-
+    !,
+    write('% ERROR: Could not find '),
+    write([OneNotFound|RestNotFound]),
+    nl,
+    fail.
+
+filter_formulae(Selection,[FirstFormula|RestOfFormulae],[FirstDictionary|
+RestOfDictionary],[FirstFormula|RestOfFilteredFormulae],[FirstDictionary|
+RestOfFilteredDictionary]):-
+    FirstFormula =.. [_,Name|_],
+    filter_selection(Name,Selection,RemainingSelection),
+    !,
+    check_for_duplicate_name(Name,RestOfFormulae),
+    filter_formulae(RemainingSelection,RestOfFormulae,RestOfDictionary,
+RestOfFilteredFormulae,RestOfFilteredDictionary).
+
+filter_formulae(Selection,[_|RestOfFormulae],[_|RestOfDictionary],Formulae,
+Dictionary):-
+    filter_formulae(Selection,RestOfFormulae,RestOfDictionary,
+Formulae,Dictionary).
+%------------------------------------------------------------------------------
+%----Read input clauses from a file, doing includes too
+read_formulae_from_file(TPTPFileName,CurrentFileName,Selection,Formulae,
+Dictionary):-
+%----Do syntax fixes for Prolog reading
+%    replace_syntax(PathName,OutputFileName),
+    (PathName \== user -> (
+%----Make full path name
+        tptp_find_file(TPTPFileName,CurrentFileName,PathName),
+        current_input(CurrentInput),
+        open(PathName,read,InputStream),
+        set_input(InputStream))
+    ;   true),
+%----Read in the clauses, doing includes
+    read_formulae(Selection,PathName,UnfilteredFormulae,UnfilteredDictionary),
+%DEBUG write('%==='),write(UnfilteredFormulae),nl,
+%----Cut, so that later errors do not try to read more input clauses
+    !,
+%----Restore output direction
+    (PathName \== user -> (
+        close(InputStream),
+        set_input(CurrentInput))
+    ;   true),
+%----Filter out those that are wanted
+    filter_formulae(Selection,UnfilteredFormulae,UnfilteredDictionary,
+Formulae,Dictionary).
+
+%----If the read dies, then the file is not closed. Do so
+read_formulae_from_file(_,_,_,_,_):-
+    current_input(Stream),
+    close(Stream),
+    !,
+    fail.
+%------------------------------------------------------------------------------
+%----Entry point to read all formulae, with no enclosing file
+read_formulae_from_file(TPTPFileName,Formulae,Dictionary):-
+    read_formulae_from_file(TPTPFileName,_,all,Formulae,Dictionary).
+%------------------------------------------------------------------------------
+%----Read characters until eoln or eof
+read_line_as_list(-1,"end_of_file"):-
+    !.
+
+%----End of line on UNIX
+read_line_as_list(10,[]):-
+    !.
+
+%----Ignore CR = 13, used in DOS eoln
+read_line_as_list(13,RestOfLine):-
+    !,
+    get_code(NextCharacter),
+    read_line_as_list(NextCharacter,RestOfLine).
+
+read_line_as_list(LastCharacter,[LastCharacter|RestOfLine]):-
+    get_code(NextCharacter),
+    read_line_as_list(NextCharacter,RestOfLine).
+%------------------------------------------------------------------------------
+%----Read a line of characters and convert to an atom
+tptp2X_read_line(Line):-
+    get_code(FirstCharacter),
+    read_line_as_list(FirstCharacter,LineAsList),
+    name(Line,LineAsList).
+%------------------------------------------------------------------------------
+%----Check if this is a comment line
+separator_line(Line):-
+    name(Line,[37,45,45,45,45,45,45,45,45|_]).
+%------------------------------------------------------------------------------
+%----Extract the field name (if possible) from the line. Check format.
+field_name(Line,FieldName,FieldLine):-
+    name(Line,[37,32|LineASCII]),
+%----Delete trailing blanks
+    tptp2X_append(NonBlanks,[32|_],LineASCII),
+    name(FieldName,NonBlanks),
+    tptp2X_member(FieldName,['File','Domain','Problem','Axioms','Version',
+'English','Refs','Source','Names','Status','Rating','Syntax','Comments',
+'Bugfixes',
+%----For TSTP
+'File','Problem','Transform','Format','Command','Computer','Model','CPU',
+'Memory','OS','CPULimit','Result','Output','Statistics','Verified',
+'Comments']),
+    !,
+    name(FieldLine,[32|LineASCII]).
+
+field_name('','Blank','').
+%------------------------------------------------------------------------------
+%----Read all the rest of the lines of a field. Field lines are
+%----identified by 10 leading spaces.
+read_field_lines(TPTPLine,[Line|RestOfFieldLines],NextFieldLine):-
+    name(TPTPLine,[37,32,32,32,32,32,32,32,32,32,32|RestOfASCII]),
+    !,
+    name(Line,[32,32,32,32,32,32,32,32,32,32|RestOfASCII]),
+    tptp2X_read_line(NextLine),
+    read_field_lines(NextLine,RestOfFieldLines,NextFieldLine).
+
+read_field_lines(Line,[],Line).
+%------------------------------------------------------------------------------
+%----Read in header fields until a comment line
+read_header_fields(FirstLine,[]):-
+    separator_line(FirstLine),
+    !.
+
+read_header_fields(FirstLine,[FieldName-[FieldLine|RestOfFieldLines]|
+RestOfHeader]):-
+    field_name(FirstLine,FieldName,FieldLine),
+    tptp2X_read_line(SecondLine),
+    read_field_lines(SecondLine,RestOfFieldLines,NextFieldLine),
+    read_header_fields(NextFieldLine,RestOfHeader).
+
+read_header_fields(Header):-
+    tptp2X_read_line(FirstLine),
+    read_header_fields(FirstLine,Header),
+    !.
+%------------------------------------------------------------------------------
+%----If empty header read them provide all dummy fields
+complete_header([],BaseInputName,[
+'File'-[FileLine],
+'Domain'-[' Domain   :'],
+'Problem'-[' Problem  :'],
+'Version'-[' Version  :'],
+'English'-[' English  :'],
+'Blank'-[''],
+'Refs'-[' Refs     :'],
+'Source'-[' Source   :'],
+'Names'-[' Names    :'],
+'Blank'-[''],
+'Status'-[' Status   : unknown'],
+'Rating'-[' Rating   : ?'],
+'Syntax'-[' Syntax   :'],
+%----Not useful now FOF has arrived. Kept in case.
+%'            Number of clauses           :    0 (   0 non-Horn)(   0 unit)',
+%'            Number of literals          :    0 (   0 equality)',
+%'            Maximal clause size         :    0',
+%'            Number of predicate symbols :    0 (   0 propositional)',
+%'            Number of function symbols  :    0 (   0 constant)',
+%'            Number of variables         :    0 (   0 singleton)',
+%'            Maximal term depth          :    0'],
+'Blank'-[''],
+'Comments'-[' Comments : '] ]):-
+    !,
+    name(BaseInputName,BaseInputNameASCII),
+    tptp2X_append(" File     : ",BaseInputNameASCII,FileLineASCII1),
+    tptp2X_append(FileLineASCII1," : TPTP v0.0.0. Released v0.0.0.",
+FileLineASCII2),
+    name(FileLine,FileLineASCII2).
+
+complete_header(Header,_,Header).
+%------------------------------------------------------------------------------
+%----Read TPTP file header, in fields
+read_header_from_file(TPTPFileName,BaseInputName,Header):-
+%----Make full path name
+    (PathName \== user -> (
+        tptp_find_file(TPTPFileName,_,PathName),
+        current_input(CurrentInput),
+        open(PathName,read,InputStream),
+        set_input(InputStream))
+    ;   true
+    ),
+%----Get the first line and check it is a comment line
+    tptp2X_read_line(FirstHeaderLine),
+%----Have to use this horrible if-else construct so files are closed in both
+%----cases and input restored
+    (   (   separator_line(FirstHeaderLine),
+%----Read in the header fields
+            read_header_fields(HeaderFromFile)) -> 
+%----If an empty header is read, i.e., two separator lines, then fill in
+%----dummy fields. If any fields are read, keep just them.
+        complete_header(HeaderFromFile,BaseInputName,Header)
+%----If no header, or a single separator line, then return no header
+    ;   Header = []
+    ),
+%----Cut, so that later errors do not try to read more fields
+    !,
+%----Restore output direction
+    (PathName \== user -> (
+        close(InputStream),
+        set_input(CurrentInput))
+    ;   true
+    ).
+
+%----If the read dies, then the file is not closed. Do so
+read_header_from_file(_,_,_):-
+    current_input(Stream),
+    close(Stream),
+    !,
+    fail.
+%------------------------------------------------------------------------------
+%----Fix quantification so it's parsable
+%----Replace | and ~| in input lines and also ensure space after ~
+replace_syntax_in_each_non_comment_line(end_of_file):-
+    !.
+
+%----If a comment line, then echo
+replace_syntax_in_each_non_comment_line(LastLine):-
+    name(LastLine,[37|_]),
+    !,
+    write(LastLine),
+    nl,
+    tptp2X_read_line(NextLine),
+    replace_syntax_in_each_non_comment_line(NextLine).
+
+%----If a quantified line, make list of variable and bracket quantification
+replace_syntax_in_each_non_comment_line(Line):-
+    name(Line,LineASCII),
+%----Look for ! or ?
+    tptp2X_append(StartASCII,[QuantifierASCII|VariablesAndColonASCII],
+LineASCII),
+    tptp2X_member(QuantifierASCII,"!?"),
+%----Look for the : = 58
+    tptp2X_append(VariablesASCII,[58|RestOfLineASCII],VariablesAndColonASCII),
+    !,
+%----Add the ( = 40 and [ = 91
+    tptp2X_append(StartASCII,[40,QuantifierASCII,32,91|VariablesASCII],
+QuantifierBracketVariablesASCII),
+%----Add the ] = 93 and ) = 41
+    tptp2X_append(QuantifierBracketVariablesASCII,[93,41,58,32],NewLineASCII),
+    name(NewLine,NewLineASCII),
+    write(NewLine),
+%----Do all again on the rest of the line
+    name(RestOfLine,RestOfLineASCII),
+    replace_syntax_in_each_non_comment_line(RestOfLine),
+    tptp2X_read_line(NextLine),
+    replace_syntax_in_each_non_comment_line(NextLine).
+
+%----Otherwise do replacement
+replace_syntax_in_each_non_comment_line(Line):-
+%----Must replace ~| first, so | replacement does not affect it.
+    replace_in_atoms(['~'-'~ ','~|'-'\\~/','|'-'\\/'],[Line],[NewLine]),
+    write(NewLine),
+    nl,
+    tptp2X_read_line(NextLine),
+    replace_syntax_in_each_non_comment_line(NextLine).
+%------------------------------------------------------------------------------
+%-----Replace | in input files before reading
+replace_syntax(PathName,OutputFileName):-
+    temporary_file_name('ReplaceBar',ReplacedPathName),
+    make_output_file_name('/tmp',ReplacedPathName,'',OutputFileName),
+%----No need to open and close here - it's been done above
+    current_input(CurrentInput),
+    open(PathName,read,InputStream),
+    set_input(InputStream),
+%----Open and close in case of aborts
+    current_output(CurrentOutput),
+    open(OutputFileName,write,DummyStream),
+    close(DummyStream),
+    open(OutputFileName,write,OutputStream),
+    set_output(OutputStream),
+%----Read first line of file
+    tptp2X_read_line(FirstLine),
+    replace_syntax_in_each_non_comment_line(FirstLine),
+    close(OutputStream),
+    set_output(CurrentOutput),
+    close(InputStream),
+    set_input(CurrentInput).
+%------------------------------------------------------------------------------

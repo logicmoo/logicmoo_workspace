@@ -1,0 +1,50 @@
+yes
+| ?- showFacts.
+male(tom)
+parent(_1177,_1178),male(_1177)<=>father(_1177,_1178)
+parent(_1033,_1034)<=>child(_1034,_1033)
+father(_1271,_1272),parent(_1272,_1275)=>grandFather(_1271,_1275)
+parent(tim,clare)
+parent(tom,tim)
+yes
+| ?- showState.
+
+pt(father(A,B),pt(parent(B,C),rhs([grandFather(A,C)]))).
+pt(parent(A,B),pt(male(A),rhs([father(A,B)]))).
+pt(father(A,B),rhs([parent(A,B),male(A)])).
+pt(parent(A,B),rhs([child(B,A)])).
+pt(child(A,B),rhs([parent(B,A)])).
+pt(male(tom),rhs([father(tom,tim)])).
+pt(parent(tim,A),rhs([grandFather(tom,A)])).
+pt(male(tim),rhs([father(tim,clare)])).
+
+father(A,B)',' parent(B,C)=>grandFather(A,C).
+
+parent(A,B)',' male(A)<=>father(A,B).
+parent(A,B)<=>child(B,A).
+
+fcSupport((user ',' user),(father(A,B)',' parent(B,C)=>grandFather(A,C))).
+fcSupport(((father(A,B)',' parent(B,C)=>grandFather(A,C))',' user),pt(father(A,B),pt(parent(B,C),rhs([grandFather(A,C)])))).
+fcSupport((user ',' user),(parent(A,B)',' male(A)<=>father(A,B))).
+fcSupport(((parent(A,B)',' male(A)<=>father(A,B))',' user),pt(parent(A,B),pt(male(A),rhs([father(A,B)])))).
+fcSupport(((parent(A,B)',' male(A)<=>father(A,B))',' user),pt(father(A,B),rhs([parent(A,B),male(A)]))).
+fcSupport((user ',' user),(parent(A,B)<=>child(B,A))).
+fcSupport(((parent(A,B)<=>child(B,A))',' user),pt(parent(A,B),rhs([child(B,A)]))).
+fcSupport(((parent(A,B)<=>child(B,A))',' user),pt(child(B,A),rhs([parent(A,B)]))).
+fcSupport((user ',' user),male(tom)).
+fcSupport((user ',' user),parent(tom,tim)).
+fcSupport((parent(tom,tim)',' pt(parent(tom,tim),pt(male(tom),rhs([father(tom,tim)])))),pt(male(tom),rhs([father(tom,tim)]))).
+fcSupport((male(tom)',' pt(male(tom),rhs([father(tom,tim)]))),father(tom,tim)).
+fcSupport((father(tom,tim)',' pt(father(tom,tim),pt(parent(tim,A),rhs([grandFather(tom,A)])))),pt(parent(tim,A),rhs([grandFather(tom,A)]))).
+fcSupport((father(tom,tim)',' pt(father(tom,tim),rhs([parent(tom,tim),male(tom)]))),parent(tom,tim)).
+fcSupport((father(tom,tim)',' pt(father(tom,tim),rhs([parent(tom,tim),male(tom)]))),male(tom)).
+fcSupport((parent(tom,tim)',' pt(parent(tom,tim),rhs([child(tim,tom)]))),child(tim,tom)).
+fcSupport((child(tim,tom)',' pt(child(tim,tom),rhs([parent(tom,tim)]))),parent(tom,tim)).
+fcSupport((user ',' user),parent(tim,clare)).
+fcSupport((parent(tim,clare)',' pt(parent(tim,clare),pt(male(tim),rhs([father(tim,clare)])))),pt(male(tim),rhs([father(tim,clare)]))).
+fcSupport((parent(tim,clare)',' pt(parent(tim,clare),rhs([child(clare,tim)]))),child(clare,tim)).
+fcSupport((child(clare,tim)',' pt(child(clare,tim),rhs([parent(tim,clare)]))),parent(tim,clare)).
+fcSupport((parent(tim,clare)',' pt(parent(tim,clare),rhs([grandFather(tom,clare)]))),grandFather(tom,clare)).
+
+yes
+| ?- 

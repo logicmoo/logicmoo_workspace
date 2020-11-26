@@ -1,0 +1,79 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Tests Forward chaining of assertable attributed variables
+
+%  was_module(attvar_02,[]).
+
+:- if(autoload([verbose(false)])).
+:- endif.
+:- include(test_header).
+
+:- ensure_loaded(library(dictoo)).
+:- ensure_loaded(library(attvar_reader)).
+
+%:- dynamic(sk2_out/1).
+%:- dynamic(sk2_in/1).
+
+
+% :- process_this_script.
+
+:- autoload([verbose(false)]).
+
+
+:- debug_logicmoo(_).
+:- nodebug_logicmoo(http(_)).
+:- debug_logicmoo(logicmoo(_)).
+
+:- read_attvars(false).
+:- set_prolog_flag(assert_attvars,true).
+:- set_prolog_flag(expand_attvars,false).
+%:- set_prolog_flag(expand_attvars,false).
+:- flag_call(runtime_debug=true).
+
+sk2:attr_unify_hook(_,_).
+ 
+:- mpred_trace_exec.
+
+% :-  call((rtrace)).
+:- assert_mu(sk2_in(avar([vn='Ex',sk2='SKF-6667']))).
+% :- listing_u(sk2_in/1).
+
+:- listing(sk2_in/1).
+
+:- must((sk2_in(Ex),get_attr(Ex,sk2,What),What=='SKF-6667')).
+
+:- read_attvars(true).
+:- must(clause_asserted_i(sk2_in(avar([vn='Ex',sk2='SKF-6667'])))).       
+:- read_attvars(false).
+:- must( \+ clause_asserted_i(sk2_in(avar([vn='Ex',sk2='SKF-6667'])))).       
+
+
+:- set_prolog_flag(assert_attvars,false).
+:- set_prolog_flag(expand_attvars,false).
+:- read_attvars(false).
+ca:- clause_asserted_i(sk2_in(avar([vn='Ex',sk2='SKF-6667']))).
+
+:- listing(ca).
+
+:- abolish(sk2_in/1).
+
+:- with_fc_mode(zdirect,must((get_fc_mode(xx,(xxxf,ax),DMode),DMode=zdirect))).
+
+sk2_in(avar([vn='Ex',sk2='SKF-666'])).
+:- listing(sk2_in/1).
+
+:- set_prolog_flag(expand_attvars,true).
+:- set_prolog_flag(assert_attvars,false).
+sk2_in(Ex)==>sk2_out(Ex).
+
+:- listing(sk2_out/1).
+
+% :- set_prolog_flag(read_attvars,true).
+% :- trace,((sk2_out(Ex),oo_get_attr(Ex,sk2,What),What='SKF-666')).
+
+

@@ -1,0 +1,37 @@
+(note TQA111)
+
+(agent Stage1-SAVowsToIncreaseProduction SaudiArabia) 
+
+(subProcess HPKBScenarioConflict Stage1-SAVowsToIncreaseProduction) 
+
+(instance Stage1-SAVowsToIncreaseProduction Communicating) 
+
+(topicOfInfoTransfer Stage1-SAVowsToIncreaseProduction 
+ (thereExists ?ACTION 
+ (and 
+ (instance ?ACTION Process) 
+ (increasesCausally ?ACTION SaudiArabia 
+ (Kappa 
+ (?PRODUCER ?PRODUCTION-RATE) 
+ (productionRate ?PRODUCER PetroleumProduct ?PRODUCTION-RATE)))))) 
+
+
+(query (findall ?ACTOR (thereExists ?ACT 
+   (and 
+       (subProcess HPKBScenarioConflict ?ACT) 
+       (instance ?ACT Communicating) 
+       (agent ?ACT ?ACTOR) 
+       (topicOfInfoTransfer ?ACT 
+           (thereExists ?ACT2 
+               (and 
+                   (instance ?ACT2 Process) 
+                   (increasesCausally ?ACT2 ?ACTOR 
+                       (Kappa 
+                           (?PRODUCER ?PRODUCTION-RATE) 
+                           (productionRate ?PRODUCER PetroleumProduct ?PRODUCTION-RATE)))))))) ) )
+
+(answer SaudiArabia )
+
+(end_of_file)
+
+

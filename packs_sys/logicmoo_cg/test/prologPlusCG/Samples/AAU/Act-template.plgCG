@@ -1,0 +1,48 @@
+// Act-template example
+//
+// Available in the AAU directory as Act-template.plgCG
+//
+// Ulrik Petersen
+// Created: mid-September 2003
+// Last update: September 18, 2003
+//
+
+
+// Type hierarchy
+Entity > Physical, Abstract.
+Abstract > Attribute, Manner.
+Attribute > Animate, Inanimate.
+Manner > Violently.
+Physical > Process, Object.
+Process > Act.
+Object > Person, Animal, Book, Behind.
+Animate > Person, Animal.
+Inanimate > Book, Behind.
+
+// Catalog of instances
+Act = Give, Take, Kick.
+Person = John, Mary.
+Animal = Garfield, Odie.
+Behind = Odies_behind.
+
+
+// Template examples
+
+// John gives the book to Mary
+graph(act1, [Act : Give]-                    
+              -AGNT->[Person : John],
+              -RCPT->[Person : Mary],
+              -THME->[Book]).
+
+// Mary takes the book from John
+graph(act2, [Act : Take]-                  
+              -AGNT->[Person : Mary],
+              -ORGN->[Person: John],
+              -THME->[Book]).
+
+// Garfield kicks Odie violently in the behind
+graph(act3, [Act: Kick]-                   
+              -AGNT->[Cat : Garfield],  
+              -PTNT->[Dog : Odie],
+              -MANR->[Violently],
+              -LOC->[Behind: Odies_behind]).

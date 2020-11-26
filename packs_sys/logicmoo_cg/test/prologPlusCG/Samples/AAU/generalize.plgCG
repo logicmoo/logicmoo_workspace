@@ -1,0 +1,55 @@
+//
+// generalize/3 example
+//
+// Available in the AAU directory as generalize.plgCG
+//
+// Ulrik Petersen
+// Created: September 20, 2003
+// Last update: September 20, 2003
+//
+
+// type-hierarchy
+Entity > Physical, Abstract.
+Abstract > Property.
+Property > Color, Manner.
+Manner > Fast.
+Physical > Process, Object.
+Process > Act.
+Act > Drive, Sell.
+Object > Vehicle, Person.
+Vehicle > Truck, Car.
+Car > Porsche.
+Person > Man, Woman.
+
+// Catalog of instances
+Woman = Elizabeth, Charlotte.
+Man = Frank, Joe.
+Color = Red, Blue.
+
+// Graphs
+
+// Frank drives a blue car.
+graph(Frank, [Drive]-
+         -AGNT->[Man: Frank],
+         -PTNT->[Car],
+         -CHRC->[Color: Blue]).
+
+// Elizabeth drives a red truck fast.
+graph(Elizabeth, [Drive]-
+         -AGNT->[Woman: Elizabeth],
+         -PTNT->[Truck],
+         -MANR->[Fast],
+         -CHRC->[Color: Red]).
+
+// Joe sells a red Porsche to Charlotte.
+graph(Joe, [Sell]-
+        -AGNT->[Man: Joe],
+        -PTNT->[Porsche],
+        -CHRC->[Color: Red],
+        -RCPT->[Woman: Charlotte]).
+
+General(L1, L2, g3) :-
+        graph(L1, g1),
+        graph(L2, g2),
+        generalize(g1, g2, g3).
+  

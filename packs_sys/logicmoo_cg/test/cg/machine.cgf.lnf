@@ -1,0 +1,2 @@
+// ontology required (to load first): aminePlatform/samples/ontology/ManOntology2.xml
+[Machine & 160 102]<-agnt(268 120)(351 128)(214 111)-[Work & 351 119]

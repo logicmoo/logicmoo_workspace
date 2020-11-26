@@ -1,0 +1,742 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<title>swicli.pl</title>
+
+<link rel="stylesheet" type="text/css" href="api_files/pldoc.css">
+<script type="text/javascript" src="api_files/pldoc.js">
+</script>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+<div class="navhdr">
+<div class="jump">
+<div>
+
+<form action="/directory">
+<input value="Go" type="submit">
+<select name="dir">
+<option onclick="document.location='/doc/c:/development/opensim4opencog/current/bin/examples/hillpeople/index.html';">c:/development/opensim4opencog/current/bin/examples/hillpeople</option>
+<option onclick="document.location='/doc/c:/development/opensim4opencog/current/bin/prolog/simulator/index.html';">c:/development/opensim4opencog/current/bin/prolog/simulator</option>
+<option onclick="document.location='/doc/c:/development/opensim4opencog/current/test/index.html';">c:/development/opensim4opencog/current/test</option>
+<option onclick="document.location='/doc/swi/index.html';">c:/program files/pl</option>
+<option onclick="document.location='/doc/swi/boot/index.html';">c:/program files/pl/boot</option>
+<option onclick="document.location='/doc/swi/library/index.html';" selected="selected">c:/program files/pl/library</option>
+<option onclick="document.location='/doc/swi/library/dialect/swi/index.html';">c:/program files/pl/library/dialect/swi</option>
+<option onclick="document.location='/doc/swi/library/http/index.html';">c:/program files/pl/library/http</option>
+<option onclick="document.location='/doc/swi/library/pldoc/index.html';">c:/program files/pl/library/pldoc</option>
+<option onclick="document.location='/doc/swi/xpce/prolog/boot/index.html';">c:/program files/pl/xpce/prolog/boot</option>
+<option onclick="document.location='/doc/swi/xpce/prolog/lib/index.html';">c:/program files/pl/xpce/prolog/lib</option>
+<option onclick="document.location='/doc/swi/xpce/prolog/lib/emacs/index.html';">c:/program files/pl/xpce/prolog/lib/emacs</option>
+<option onclick="document.location='/doc/swi/xpce/prolog/lib/english/index.html';">c:/program files/pl/xpce/prolog/lib/english</option>
+</select>
+</form>
+
+<a class="prolog_version" href="http://www.swi-prolog.org/"> SWI-Prolog 6.1.6</a></div>
+</div>
+<div class="search">
+
+<form action="/search">
+<div><input name="for" size="36"><input value="Search" type="submit"></div>
+<div class="search-options"><span class="search-in"><input name="in" value="all" checked="checked" type="radio">All<input name="in" value="app" type="radio">Application<input name="in" value="man" type="radio">Manual</span><span class="search-match"><input name="match" value="name" type="radio">Name<input name="match" value="summary" checked="checked" type="radio">Summary</span><span class="search-help"><a href="http://logicmoo.dyndns.org:57007/package/pldoc.html#sec:browser">Help</a></span></div>
+</form>
+
+</div>
+<br clear="right">
+</div>
+
+<h1 class="file"><span style="float:right"><a href="http://logicmoo.dyndns.org:57007/doc/swi/library/swicli.pl?public_only=false"><img class="action" alt="Public" title="Click to include private" src="api_files/public.png"></a><a href="http://logicmoo.dyndns.org:57007/doc/swi/library/swicli.pl?show=src"><img class="action" alt="Show source" title="Show source" src="api_files/source.png"></a></span>swicli.pl -- SWI-Prolog 2-Way interface to .NET/Mono</h1>
+
+<p>
+<b>Introduction</b>
+
+</p><p>
+This is an overview of an interface which allows SWI-Prolog programs to dynamically create and manipulate .NET objects.
+
+</p><p>
+Here are some significant features of the interface and its implementation:
+</p><ul>
+<li>API is similar to that of XPCE: the four main interface calls are 
+cli_new, cli_call, cli_set and cli_get (there is a single cli_free, 
+though .NET's garbage collection is extended transparently into Prolog)</li>
+<li>Uses <span class="undef">@/1</span> to construct representations of certain .NET values; if <span class="undef">@/1</span>
+ is defined as a prefix operator (as used by XPCE), then you can write 
+@false, @true, @null etc. in your source code; otherwise (and for 
+portability) you'll have to write e.g. @(true) etc.</li>
+<li><a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_call/4">cli_call/4</a> (modeled from JPL's <span class="undef">jpl_call/4</span>)
+ resolves overloaded methods automatically and dynamically, inferring 
+the types of the call's actual parameters, and identifying the most 
+specific of the applicable method implementations (similarly, cli_new 
+resolves overloaded constructors)</li>
+<li>Completely dynamic: no precompilation is required to manipulate any 
+.NET classes which can be found at run time, and any objects which can 
+be instantiated from them</li>
+<li>Interoperable with SwiPlCS's .NET API (which has evolved from Uwe Lesta's SwiPlCS)</li>
+<li>Exploits the Invocation API of the .NET P/Invoke Interface: this is a mandatory feature of any compliant .NET</li>
+<li>Implemented with a fair amount of C# code and Prolog code in one module (<a class="file" href="http://logicmoo.dyndns.org:57007/doc/swi/library/swicli.pl">swicli.pl</a>)
+ (which I believe to be ISO Standard Prolog compliant and portable) and a
+ SWI-Prolog-specific foreign library (swicli[32].dll for Windows and 
+swicli[32].so *nix), implemented in ANSI C but making a lot of use of 
+the SWI-Prolog Foreign Language Interface Then uses Swicli.Library.dll 
+(Managed binary) that runs on both Mono and .NET runtimes.</li>
+<li>the Prolog-calls-CLI (mine) and CLI-calls-Prolog (Ewe's) parts of 
+SWICLI are largely independent; mine concentrates on representing all 
+.NET data values and objects within Prolog, and supporting manipulation 
+of objects; Ewe's concentrates on representing any Prolog term within 
+.NET, and supporting the calling of goals within Prolog and the 
+retrieving of results back into .NET</li>
+<li>@(terms) are canonical (two references are <a class="builtin" href="http://logicmoo.dyndns.org:57007/man?predicate=%3D%3D/2">==/2</a> equal if-and-only-if they refer to the same object within the .NET)</li>
+<li>are represented as structures containing a distinctive atom so as to
+ exploit SWI-Prolog's atom garbage collection: when an object reference 
+is garbage-collected in Prolog, the .NET garbage collector is informed, 
+so there is sound and complete overall garbage collection of .NET 
+objects within the combined Prolog+.NET system</li>
+<li>.NET class methods can be called by name: SWICLI invisibly fetches 
+(and caches) essential details of method invocation, exploiting .NET 
+Reflection facilities</li>
+<li>Reason about the types of .NET data values, object references, 
+fields and methods: SWICLI supports a canonical representation of all 
+.NET types as structured terms (e.g. array(array(byte))) and also as 
+atomic .NET signatures</li>
+<li>when called from Prolog, void methods return a @(void) value (which is distinct from all other SWICLI values and references)</li>
+<li>Tested on Windows XP, Windows7 and Fedora Linux, but is believed to 
+be readily portable to SWI-Prolog on other platforms as far as is 
+feasible, .NET data values and object references are represented within 
+Prolog canonically and without loss of information (minor exceptions: 
+.NET float and double values are both converted to Prolog float values; 
+.NET byte, char, short, int and long values are all converted to Prolog 
+integer values; the type distinctions which are lost are normally of no 
+significance)</li>
+<li>Requires .NET 2.0 and class libraries (although it doesn't depend on
+ any .NET 2-specific facilities, and originally was developed for use 
+with both 1.0 thru 4.0 .NETs, I haven't tested it with 1.0 recently, and
+ don't support this)
+
+<pre class="code">
+?- use_module(library(swicli)).
+
+?- cli_call('System.Threading.ThreadPool','GetAvailableThreads'(X,Y),_).
+
+X=499, Y=1000
+
+</pre>
+
+<p>
+?- cli_call('System.Environment','Version',X),cli_writeln(X).
+"2.0.50727.5448"
+X = @'C#499252128'.
+
+</p><p>
+==
+
+</p><p>
+Doc root and Download will be findable from <a href="http://code.google.com/p/opensim4opencog/wiki/SwiCLI">http://code.google.com/p/opensim4opencog/wiki/SwiCLI</a>
+
+</p><p>
+@see <code class="nofile">CSharp.txt</code></p></li>
+</ul>
+
+<dl class="tags">
+<dt class="keyword-author">author</dt><dd class="keyword-author">- Douglas Miles
+</dd></dl>
+
+<dl>
+<dt class="pubdef"><span style="float:right"></span><a name="cli_load_lib/4"><b class="pred">cli_load_lib</b><var class="arglist">(+AppDomainName, +AssemblyPartialName, +FullClassName, +StaticMethodName)</var></a></dt><dd class="defbody">Loads an assembly into <var>AppDomainName</var>
+
+<p>
+<a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_load_lib/4">cli_load_lib/4</a> is what was used to bootstrap SWICLI
+(it defined the next stage where <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_load_assembly/1">cli_load_assembly/1</a>) became present
+
+</p><p>
+remember to: export LD_LIBRARY_PATH=/development/opensim4opencog/bin:$LD_LIBRARY_PATH
+
+</p><p>
+in <a class="file" href="http://logicmoo.dyndns.org:57007/doc/swi/library/swicli.pl">swicli.pl</a> we called:
+
+</p><pre class="code">:- cli_load_lib('SWIProlog','Swicli.Library','Swicli.Library.Embedded','install').
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_lib_type/1"><b class="pred">cli_lib_type</b><var class="arglist">(-LibTypeName)</var></a></dt><dd class="defbody"><var>LibTypeName</var> is an atom that denotes the implementation class SWICLI uses
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_load_assembly/1"><b class="pred">cli_load_assembly</b><var class="arglist">(+AssemblyPartialNameOrPath)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_load_assembly_uncaught/1"><b class="pred">cli_load_assembly_uncaught</b><var class="arglist">(+AssemblyPartialNameOrPath)</var></a></dt><dd class="defbody">the cli_&lt;Predicates&gt; came because we had:
+
+<pre class="code">?- cli_load_assembly('Swicli.Library').
+</pre>
+
+<p>
+The uncaught version allows exception to come from .NET
+</p></dd><dt class="pubdef"><span style="float:right"></span><a name="cli_load_assembly_methods/3"><b class="pred">cli_load_assembly_methods</b><var class="arglist">(+AssemblyPartialNameOrPath, +OnlyPrologVisible, +StringPrefixOrNull)</var></a></dt><dd class="defbody">Loads foriegn predicates from Assembly
+
+<pre class="code">?- cli_load_assembly_methods('Swicli.Library', @false, "cli_").
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_add_foreign_methods/3"><b class="pred">cli_add_foreign_methods</b><var class="arglist">(+Type, +OnlyPrologVisible, +StringPrefixOrNull)</var></a></dt><dd class="defbody">Loads foriegn predicates from <var>Type</var> 
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_add_assembly_search_path/1"><b class="pred">cli_add_assembly_search_path</b><var class="arglist">(+Path)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_remove_assembly_search_path/1"><b class="pred">cli_remove_assembly_search_path</b><var class="arglist">(+Path)</var></a></dt><dd class="defbody">Add or remove directories to the search path
+
+<pre class="code">?- cli_add_assembly_search_path('c:/myproj/bin').
+
+?- cli_remove_assembly_search_path('c:/myproj/bin').
+</pre>
+
+<p>
+This now makes the System assembly resolver see Assemblies in that directory
+
+</p><p>
+Simular to
+<i>Windows</i>: adding to %PATH%
+<i>Linux</i>: adding to $MONO_PATH
+</p></dd><dt class="pubdef"><span style="float:right"></span><a name="cli_non_obj/1"><b class="pred">cli_non_obj</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">is null or void or var
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_non_null/1"><b class="pred">cli_non_null</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">is not null or void
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_null/1"><b class="pred">cli_is_null</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">equiv to <var>Obj</var> == @(null)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_null/1"><b class="pred">cli_null</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">construct a null
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_true/1"><b class="pred">cli_is_true</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">equiv to <var>Obj</var> == @(true)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_true/1"><b class="pred">cli_true</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">construct a @(true)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_false/1"><b class="pred">cli_is_false</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">equiv to <var>Obj</var> == @(false)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_false/1"><b class="pred">cli_false</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">construct a @(false)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_void/1"><b class="pred">cli_is_void</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">equiv to <var>Obj</var> == @(void)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_void/1"><b class="pred">cli_void</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">construct a @(void)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_type/1"><b class="pred">cli_is_type</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">equiv to cli_is_type(<var>Obj</var>,'System.Type')
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_object/1"><b class="pred">cli_is_object</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">is Object a CLR object and not null or void (includes struct,enum,object,event)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_tagged_object/1"><b class="pred">cli_is_tagged_object</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">is Object a ref object (maybe null or void) (excludes struct,enum,object/N,event refernces)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_ref/1"><b class="pred">cli_is_ref</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">is Object a ref object and not null or void (excludes struct,enum,object/N,event refernces)
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_member_doc/3"><b class="pred">cli_member_doc</b><var class="arglist">(+Memb, +Doc, +Xml)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_members/2"><b class="pred">cli_members</b><var class="arglist">(+ClazzOrInstance, -Members)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_memb/2"><b class="pred">cli_memb</b><var class="arglist">(O, X)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_memb/3"><b class="pred">cli_memb</b><var class="arglist">(O, F, X)</var></a></dt><dd class="defbody">
+
+<pre class="code">cli_memb(O,X):-cli_members(O,Y),member(X,Y).
+cli_memb(O,F,X):-cli_memb(O,X),member(F,[f,p, c,m ,e]),functor(X,F,_).
+</pre>
+
+<p>
+Object to the member infos of it
+
+</p><pre class="code">   3 ?- cli_new('System.Collections.Generic.List'(string),[int],[10],O),cli_members(O,M),!,member(E,M),writeq(E),nl,fail.
+   f(0,'_items'(arrayOf('String')))
+   f(1,'_size'('Int32'))
+   f(2,'_version'('Int32'))
+   f(3,'_syncRoot'('Object'))
+   f(4,'_emptyArray'(arrayOf('String')))
+   f(5,'_defaultCapacity'('Int32'))
+   p(0,'Capacity'('Int32'))
+   p(1,'Count'('Int32'))
+   p(2,'System.Collections.IList.IsFixedSize'('Boolean'))
+   p(3,'System.Collections.Generic.ICollection&lt;T&gt;.IsReadOnly'('Boolean'))
+   p(4,'System.Collections.IList.IsReadOnly'('Boolean'))
+   p(5,'System.Collections.ICollection.IsSynchronized'('Boolean'))
+   p(6,'System.Collections.ICollection.SyncRoot'('Object'))
+   p(7,'Item'('String'))
+   p(8,'System.Collections.IList.Item'('Object'))
+   m(0,'ConvertAll'('Converter'('String',&lt;)))
+   m(1,get_Capacity)
+   m(2,set_Capacity('Int32'))
+   m(3,get_Count)
+   m(4,'System.Collections.IList.get_is_FixedSize')
+   m(5,'System.Collections.Generic.ICollection&lt;T&gt;.get_is_ReadOnly')
+   m(6,'System.Collections.IList.get_is_ReadOnly')
+   m(7,'System.Collections.ICollection.get_is_Synchronized')
+   m(8,'System.Collections.ICollection.get_SyncRoot')
+   m(9,get_item('Int32'))
+   m(10,set_item('Int32','String'))
+   m(11,'IsCompatibleObject'('Object'))
+   m(12,'VerifyValueType'('Object'))
+   m(13,'System.Collections.IList.get_item'('Int32'))
+   m(14,'System.Collections.IList.set_item'('Int32','Object'))
+   m(15,'Add'('String'))
+   m(16,'System.Collections.IList.Add'('Object'))
+   m(17,'AddRange'('System.Collections.Generic.IEnumerable'('String')))
+   m(18,'AsReadOnly')
+   m(19,'BinarySearch'('Int32','Int32','String','System.Collections.Generic.IComparer'('String')))
+   m(20,'BinarySearch'('String'))
+   m(21,'BinarySearch'('String','System.Collections.Generic.IComparer'('String')))
+   m(22,'Clear')
+   m(23,'Contains'('String'))
+   m(24,'System.Collections.IList.Contains'('Object'))
+   m(25,'CopyTo'(arrayOf('String')))
+   m(26,'System.Collections.ICollection.CopyTo'('Array','Int32'))
+   m(27,'CopyTo'('Int32',arrayOf('String'),'Int32','Int32'))
+   m(28,'CopyTo'(arrayOf('String'),'Int32'))
+   m(29,'EnsureCapacity'('Int32'))
+   m(30,'Exists'('System.Predicate'('String')))
+   m(31,'Find'('System.Predicate'('String')))
+   m(32,'FindAll'('System.Predicate'('String')))
+   m(33,'FindIndex'('System.Predicate'('String')))
+   m(34,'FindIndex'('Int32','System.Predicate'('String')))
+   m(35,'FindIndex'('Int32','Int32','System.Predicate'('String')))
+   m(36,'FindLast'('System.Predicate'('String')))
+   m(37,'FindLastIndex'('System.Predicate'('String')))
+   m(38,'FindLastIndex'('Int32','System.Predicate'('String')))
+   m(39,'FindLastIndex'('Int32','Int32','System.Predicate'('String')))
+   m(40,'ForEach'('System.Action'('String')))
+   m(41,'GetEnumerator')
+   m(42,'System.Collections.Generic.IEnumerable&lt;T&gt;.GetEnumerator')
+   m(43,'System.Collections.IEnumerable.GetEnumerator')
+   m(44,'GetRange'('Int32','Int32'))
+   m(45,'IndexOf'('String'))
+   m(46,'System.Collections.IList.IndexOf'('Object'))
+   m(47,'IndexOf'('String','Int32'))
+   m(48,'IndexOf'('String','Int32','Int32'))
+   m(49,'Insert'('Int32','String'))
+   m(50,'System.Collections.IList.Insert'('Int32','Object'))
+   m(51,'InsertRange'('Int32','System.Collections.Generic.IEnumerable'('String')))
+   m(52,'LastIndexOf'('String'))
+   m(53,'LastIndexOf'('String','Int32'))
+   m(54,'LastIndexOf'('String','Int32','Int32'))
+   m(55,'Remove'('String'))
+   m(56,'System.Collections.IList.Remove'('Object'))
+   m(57,'RemoveAll'('System.Predicate'('String')))
+   m(58,'RemoveAt'('Int32'))
+   m(59,'RemoveRange'('Int32','Int32'))
+   m(60,'Reverse')
+   m(61,'Reverse'('Int32','Int32'))
+   m(62,'Sort')
+   m(63,'Sort'('System.Collections.Generic.IComparer'('String')))
+   m(64,'Sort'('Int32','Int32','System.Collections.Generic.IComparer'('String')))
+   m(65,'Sort'('System.Comparison'('String')))
+   m(66,'ToArray')
+   m(67,'TrimExcess')
+   m(68,'TrueForAll'('System.Predicate'('String')))
+   m(69,'ToString')
+   m(70,'Equals'('Object'))
+   m(71,'GetHashCode')
+   m(72,'GetType')
+   m(73,'Finalize')
+   m(74,'MemberwiseClone')
+   c(0,'List`1')
+   c(1,'List`1'('Int32'))
+   c(2,'List`1'('System.Collections.Generic.IEnumerable'('String')))
+   c(3,'List`1')
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_type/2"><b class="pred">cli_is_type</b><var class="arglist">(+Impl, ?Type)</var></a></dt><dd class="defbody">tests to see if the <var>Impl</var> Object is assignable to <var>Type</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_subclass/2"><b class="pred">cli_subclass</b><var class="arglist">(+Subclass, +Superclass)</var></a></dt><dd class="defbody">tests to see if the <var>Subclass</var> is assignable to <var>Superclass</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_get_typespec/2"><b class="pred">cli_get_typespec</b><var class="arglist">(+Obj, ?TypeSpec)</var></a></dt><dd class="defbody">gets or checks the <var>TypeSpec</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_get_typeref/2"><b class="pred">cli_get_typeref</b><var class="arglist">(+Obj, ?TypeRef)</var></a></dt><dd class="defbody">gets or checks the <var>TypeRef</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_get_typename/2"><b class="pred">cli_get_typename</b><var class="arglist">(+Obj, ?TypeName)</var></a></dt><dd class="defbody">gets or checks the <var>TypeName</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_type_to_typespec/2"><b class="pred">cli_type_to_typespec</b><var class="arglist">(+ClazzSpec, -Value)</var></a></dt><dd class="defbody">coerces a <var>ClazzSpec</var> to a <var>Value</var> representing a TypeSpec term
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_add_tag/2"><b class="pred">cli_add_tag</b><var class="arglist">(+RefObj, +TagString)</var></a></dt><dd class="defbody">lowlevel access to create a tag name
+
+<pre class="code">?- cli_new(array(string),[int],[32],O),cli_add_tag(O,'string32').
+
+?- cli_get_type(@(string32),T),cli_writeln(T).
+
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_remove_tag/1"><b class="pred">cli_remove_tag</b><var class="arglist">(+TagString)</var></a></dt><dd class="defbody">lowlevel access to remove a tag name
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_to_ref/2"><b class="pred">cli_to_ref</b><var class="arglist">(+Obj, +Ref)</var></a></dt><dd class="defbody">return a @(<var>Ref</var>) version of the object (even if a enum)
+
+<pre class="code">15 ?- cli_to_ref(sbyte(127),O),cli_get_type(O,T),cli_writeln(O is T).
+"127"is"System.SByte"
+O = @'C#283319280',
+T = @'C#283324332'.
+
+16 ?- cli_to_ref(long(127),O),cli_get_type(O,T),cli_writeln(O is T).
+"127"is"System.Int64"
+O = @'C#283345876',
+T = @'C#283345868'.
+
+17 ?- cli_to_ref(ulong(127),O),cli_get_type(O,T),cli_writeln(O is T).
+"127"is"System.UInt64"
+O = @'C#283346772',
+T = @'C#283346760'.
+
+15 ?- cli_to_ref(sbyte(127),O),cli_get_type(O,T),cli_writeln(O is T).
+"127"is"System.SByte"
+O = @'C#283319280',
+T = @'C#283324332'.
+
+16 ?- cli_to_ref(long(127),O),cli_get_type(O,T),cli_writeln(O is T).
+"127"is"System.Int64"
+O = @'C#283345876',
+T = @'C#283345868'.
+
+18 ?- cli_to_ref(343434127,O),cli_get_type(O,T),cli_writeln(O is T).
+"343434127"is"System.Int32"
+O = @'C#281925284',
+T = @'C#281925280'.
+
+19 ?- cli_to_ref(3434341271,O),cli_get_type(O,T),cli_writeln(O is T).
+"3434341271"is"System.UInt64"
+O = @'C#281926616',
+T = @'C#283346760'.
+
+21 ?- cli_to_ref(343434127111,O),cli_get_type(O,T),cli_writeln(O is T).
+"343434127111"is"System.UInt64"
+O = @'C#281930092',
+T = @'C#283346760'.
+
+28 ?- cli_to_ref(34343412711111111111111111111111111111,O),cli_get_type(O,T),cli_writeln(O is T).
+"34343412711111111111111111111111111111"is"java.math.BigInteger"
+O = @'C#281813796',
+T = @'C#281810860'.
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_to_immediate/2"><b class="pred">cli_to_immediate</b><var class="arglist">(+Ref, -Immediate)</var></a></dt><dd class="defbody">return an <var>Immediate</var> value of <var>Ref</var> to just REf if no immediate type exists
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_cast/3"><b class="pred">cli_cast</b><var class="arglist">(+Value, +ClazzSpec, -Ref)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_cast_immediate/3"><b class="pred">cli_cast_immediate</b><var class="arglist">(+Value, +ClazzSpec, -Immediate)</var></a></dt><dd class="defbody">Convert the type of <var>Value</var> to <var>ClazzSpec</var> returning eigther a <var>Ref</var> or <var>Immediate</var> value.
+
+<pre class="code">?- cli_cast(1,'double',X).
+X = @'C#568261440'.
+
+?- cli_cast(1,'System.DayOfWeek',X).
+X = @'C#568269000'.
+
+?- cli_cast_immediate(1,'System.DayOfWeek',X).
+X = enum('DayOfWeek', 'Monday').
+
+?- cli_cast_immediate(1.0,'System.DayOfWeek',X).
+X = enum('DayOfWeek', 'Monday').
+
+?- cli_cast_immediate(1.01,'System.DayOfWeek',X).
+ERROR: Having time of it convcerting 1.01 to System.DayOfWeek why System.ArgumentException: Requested value '1.01' was not found.
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_tracker_begin/1"><b class="pred">cli_tracker_begin</b><var class="arglist">(-Tracker)</var></a></dt><dd class="defbody">Return a <var>Tracker</var> ref and all objects created from this point can be released via <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_tracker_free/1">cli_tracker_free/1</a>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_tracker_free/1"><b class="pred">cli_tracker_free</b><var class="arglist">(+Tracker)</var></a></dt><dd class="defbody">
+
+<dl class="tags">
+<dt class="keyword-see">See also</dt><dd class="keyword-see">- <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_tracker_begin/1">cli_tracker_begin/1</a>
+</dd></dl>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_free/1"><b class="pred">cli_free</b><var class="arglist">(+RefObject)</var></a></dt><dd class="defbody">remove a <var>RefObject</var> from the heap
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_heap/1"><b class="pred">cli_heap</b><var class="arglist">(+RefObject)</var></a></dt><dd class="defbody">Pin a <var>RefObject</var> onto the heap
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_with_gc/1"><b class="pred">cli_with_gc</b><var class="arglist">(+Call)</var></a></dt><dd class="defbody">as ref objects are created they are tracked .. when the call is complete any new object tags are released
+uses Forienly defined <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_tracker_begin/1">cli_tracker_begin/1</a> and <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_tracker_free/1">cli_tracker_free/1</a>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_with_lock/2"><b class="pred">cli_with_lock</b><var class="arglist">(+Lock, +Call)</var></a></dt><dd class="defbody"><var>Lock</var> the first arg while calling <var>Call</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_lock_enter/1"><b class="pred">cli_lock_enter</b><var class="arglist">(+LockObj)</var></a></dt><dd class="defbody">Does a Monitor.Enter on <var>LockObj</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_lock_exit/1"><b class="pred">cli_lock_exit</b><var class="arglist">(+LockObj)</var></a></dt><dd class="defbody">Does a Monitor.Exit on <var>LockObj</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_write/1"><b class="pred">cli_write</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">writes an object out
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_writeln/1"><b class="pred">cli_writeln</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">writes an object out with a new line
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_fmt/2"><b class="pred">cli_fmt</b><var class="arglist">(+String, +Args)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_fmt/3"><b class="pred">cli_fmt</b><var class="arglist">(+Obj, +String, +Args)</var></a></dt><dd class="defbody">use .NET system string.Format(<var>String</var>,<var>Args</var>)
+<var>Obj</var> is WriteLineDelegate
+</dd><dt class="pubdef"><span style="float:right"></span><a name="to_string/2"><b class="pred">to_string</b><var class="arglist">(+Obj, -String)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_to_str/2"><b class="pred">cli_to_str</b><var class="arglist">(+Obj, -String)</var></a></dt><dd class="defbody">Resolves inner @(<var>Obj</var>)s to strings
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_to_str_raw/2"><b class="pred">cli_to_str_raw</b><var class="arglist">(+Obj, -String)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_java_to_string/2"><b class="pred">cli_java_to_string</b><var class="arglist">(+Obj, -Value)</var></a></dt><dd class="defbody">Resolves @(<var>Obj</var>) to string
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_halt/0"><b class="pred">cli_halt</b></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_halt/1"><b class="pred">cli_halt</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_throw/1"><b class="pred">cli_throw</b><var class="arglist">(+Ex)</var></a></dt><dd class="defbody">throw an exception to .NET
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_break/1"><b class="pred">cli_break</b><var class="arglist">(+Ex)</var></a></dt><dd class="defbody">
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_debug/1"><b class="pred">cli_debug</b><var class="arglist">(+Obj)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_debug/2"><b class="pred">cli_debug</b><var class="arglist">(+Fmt, Args)</var></a></dt><dd class="defbody">writes to user_error
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_col/2"><b class="pred">cli_col</b><var class="arglist">(+Col, -Elem)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_enumerator_element/2"><b class="pred">cli_enumerator_element</b><var class="arglist">(+Enumer, -Elem)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_iterator_element/2"><b class="pred">cli_iterator_element</b><var class="arglist">(+Iter, -Elem)</var></a></dt><dd class="defbody">Iterates out <var>Elem</var> for <var>Col</var>/<var>Iter</var>/<var>Enumer</var>
+
+<pre class="code">
+   ?- cli_new('System.Collections.Generic.List'('System.String'),[int],[10],Obj).
+   Obj = @'C#516939544'.
+
+
+   ?- cli_get($Obj,'Count',Out).
+   Out = 0.
+
+
+   ?- cli_call($Obj,'Add'("foo"),Out).
+   Out = @void.
+
+
+   ?- cli_call($Obj,'Add'("bar"),Out).
+   Out = @void.
+
+
+   ?- cli_get($Out,'Count',Out).
+   Out = 2.
+
+
+   ?- cli_col($Obj,E).
+   E = "foo" ;
+   E = "bar" ;
+   false.
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_col_add/2"><b class="pred">cli_col_add</b><var class="arglist">(+Col, +Item)</var></a></dt><dd class="defbody">add an <var>Item</var> to <var>Col</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_col_contains/2"><b class="pred">cli_col_contains</b><var class="arglist">(+Col, +Item)</var></a></dt><dd class="defbody">Test an <var>Item</var> in <var>Col</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_col_remove/2"><b class="pred">cli_col_remove</b><var class="arglist">(+Col, +Item)</var></a></dt><dd class="defbody">Remove an <var>Item</var> in <var>Col</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_col_removeall/1"><b class="pred">cli_col_removeall</b><var class="arglist">(+Col)</var></a></dt><dd class="defbody">Clears a <var>Col</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_col_size/2"><b class="pred">cli_col_size</b><var class="arglist">(+Col, ?Count)</var></a></dt><dd class="defbody">Returns the <var>Count</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_set_element/3"><b class="pred">cli_set_element</b><var class="arglist">(+Obj, +IndexParams, +Item)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_add_element/2"><b class="pred">cli_add_element</b><var class="arglist">(+Obj, +Item)</var></a></dt><dd class="defbody">todo
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_make_list/3"><b class="pred">cli_make_list</b><var class="arglist">(+Obj, +Arg2, +Arg3)</var></a></dt><dd class="defbody">
+
+<dl class="tags">
+<dt class="keyword-see">See also</dt><dd class="keyword-see">- <span class="undef">cli_new_list_1/2</span>
+</dd></dl>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_new_list_1/3"><b class="pred">cli_new_list_1</b><var class="arglist">(+Obj, +Arg2, +Arg3)</var></a></dt><dd class="defbody">
+
+<dl class="tags">
+<dt class="keyword-see">See also</dt><dd class="keyword-see">- <span class="undef">cli_make_list/2</span>
+</dd></dl>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_sublist/2"><b class="pred">cli_sublist</b><var class="arglist">(+Mask, +List)</var></a></dt><dd class="defbody">Test to see if <var>Mask</var> appears in <var>List</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_new_array/3"><b class="pred">cli_new_array</b><var class="arglist">(+ClazzSpec, +Rank, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_array_fill/2"><b class="pred">cli_array_fill</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_array_fill_values/2"><b class="pred">cli_array_fill_values</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_array_to_length/2"><b class="pred">cli_array_to_length</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_array_to_list/2"><b class="pred">cli_array_to_list</b><var class="arglist">(+Obj, +Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_array_to_term/2"><b class="pred">cli_array_to_term</b><var class="arglist">(+ArrayValue, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_array_to_termlist/2"><b class="pred">cli_array_to_termlist</b><var class="arglist">(+ArrayValue, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_term_to_array/2"><b class="pred">cli_term_to_array</b><var class="arglist">(+ArrayValue, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_array_to_term_args/2"><b class="pred">cli_array_to_term_args</b><var class="arglist">(+Array, -Term)</var></a></dt><dd class="defbody">todo
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_map/3"><b class="pred">cli_map</b><var class="arglist">(Map, ?Key, ?Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_map_add/3"><b class="pred">cli_map_add</b><var class="arglist">(+Map, +Key, +Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_map_set/3"><b class="pred">cli_map_set</b><var class="arglist">(+Map, +Key, +Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_map_remove/2"><b class="pred">cli_map_remove</b><var class="arglist">(+Map, +Key)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_map_remove/3"><b class="pred">cli_map_remove</b><var class="arglist">(+Map, ?Key, ?Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_map_removeall/1"><b class="pred">cli_map_removeall</b><var class="arglist">(+Map)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_map_size/2"><b class="pred">cli_map_size</b><var class="arglist">(+Map, -Count)</var></a></dt><dd class="defbody"><var>Map</var> calls
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_preserve/2"><b class="pred">cli_preserve</b><var class="arglist">(TF, :Call)</var></a></dt><dd class="defbody">make <var>Call</var> with PreserveObjectType set to <var>TF</var>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="member_elipse/2"><b class="pred">member_elipse</b><var class="arglist">(Ele, Elipse)</var></a></dt><dd class="defbody">
+
+<pre class="code">?- member_elipse(E,{a,b,c}).
+E = a ;
+E = b ;
+E = c.
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_to_data/2"><b class="pred">cli_to_data</b><var class="arglist">(+Ref, -Term)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_to_data/3"><b class="pred">cli_to_data</b><var class="arglist">(+ValueCol, +Ref, -Term)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_getterm/3"><b class="pred">cli_getterm</b><var class="arglist">(+ValueCol, +Ref, -Term)</var></a></dt><dd class="defbody">converts a <var>Ref</var> to prolog <var>Term</var>
+ValCol is a .NET List used to break cyclic loops
+
+<pre class="code">?- cli_cast("Yellow",'System.Drawing.Color',C),cli_to_data(C,D),writeq(D).
+["R"=255,"G"=255,"B"=0,"A"=255,"IsKnownColor"= @true,"IsEmpty"= @false,"IsNamedColor"= @true,"IsSystemColor"= @false,"Name"="Yellow"]
+C = @'C#802963000',
+D = ["R"=255, "G"=255, "B"=0, "A"=255, "IsKnownColor"= @true, "IsEmpty"= @false, "IsNamedColor"= @true, "IsSystemColor"= @ ..., ... = ...].
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_unify/2"><b class="pred">cli_unify</b><var class="arglist">(OE, PE)</var></a></dt><dd class="defbody">
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_make_default/2"><b class="pred">cli_make_default</b><var class="arglist">(+ClazzSpec, -Result)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_new/2"><b class="pred">cli_new</b><var class="arglist">(+ClassNameWithParams, -Result)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_new/3"><b class="pred">cli_new</b><var class="arglist">(+ClazzSpec, +Params, -Result)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_new/4"><b class="pred">cli_new</b><var class="arglist">(+ClazzSpec, +MemberSpec, +Params, -Result)</var></a></dt><dd class="defbody">
+
+<pre class="code">?- cli_load_assembly('IKVM.OpenJDK.Core')
+?- cli_new('java.lang.Long'(long),[44],Out),cli_to_str(Out,Str).
+</pre>
+
+<p>
+same as..
+
+</p><pre class="code">?- cli_new('java.lang.Long',[long],[44],Out),cli_to_str(Out,Str).
+</pre>
+
+<p>
+arity 4 exists to specify generic types
+
+</p><pre class="code">?- cli_new('System.Int64',[int],[44],Out),cli_to_str(Out,Str).
+?- cli_new('System.Text.StringBuilder',[string],["hi there"],Out),cli_to_str(Out,Str).
+?- cli_new('System.Int32'(int),[44],Out),cli_to_str(Out,Str).
+</pre>
+
+<p>
+<var>ClazzSpec</var> can be:
+</p><ul>
+<li>an atomic classname
+e.g. 'java.lang.String'</li>
+<li>an atomic descriptor
+e.g. '[I' or 'Ljava.lang.String;'</li>
+<li>a suitable type
+i.e. any class(_,_) or array(_)</li>
+</ul>
+
+<p>
+if <var>ClazzSpec</var> is an object (non-array) type or descriptor and <var>Params</var> is a
+list of values or references, then <var>Result</var> is the result of an invocation
+of that type's most specifically-typed constructor to whose
+respective formal parameters the actual <var>Params</var> are assignable (and
+assigned)
+
+</p><p>
+if <var>ClazzSpec</var> is an array type or descriptor and <var>Params</var> is a list of values
+or references, each of which is (independently) assignable to the
+array element type, then <var>Result</var> is a new array of as many elements as
+<var>Params</var> has members, initialised with the respective members of
+<var>Params</var>;
+
+</p><p>
+if <var>ClazzSpec</var> is an array type or descriptor and <var>Params</var> is a non-negative
+integer N, then <var>Result</var> is a new array of that type, with N elements, each
+initialised to CLR's appropriate default value for the type;
+
+</p><p>
+If <var>Result</var> is {Term} then we attempt to convert a new PlTerm instance to
+a corresponding term; this is of little obvious use here, but is
+consistent with <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_call/4">cli_call/4</a> and <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_get/3">cli_get/3</a>
+
+</p><p>
+Make a "new string[32]" and get it's length.
+
+</p><pre class="code"> ?- cli_new(array(string),[int],[32],O),cli_get(O,'Length',L).
+</pre>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_call/3"><b class="pred">cli_call</b><var class="arglist">(+ClazzOrInstance, +CallTerm, -Result)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_call/4"><b class="pred">cli_call</b><var class="arglist">(+ClazzOrInstance, +MethodSpec, +Params, -Result)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_call_raw/4"><b class="pred">cli_call_raw</b><var class="arglist">(+ClazzOrInstance, +MethodSpec, +Params, -Result)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_raise_event_handler/4"><b class="pred">cli_raise_event_handler</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, +Params, -Result)</var></a></dt><dd class="defbody"><var>ClazzOrInstance</var> should be:
+<ul>
+<li>an object reference
+(for static or instance methods)</li>
+<li>a classname, descriptor or type
+(for static methods of the denoted class)</li>
+</ul>
+
+<p>
+<var>MethodSpec</var> should be:
+</p><ul>
+<li>a method name (as an atom)
+(may involve dynamic overload resolution based on inferred types of params)</li>
+</ul>
+
+<p>
+<var>Params</var> should be:
+</p><ul>
+<li>a proper list (perhaps empty) of suitable actual parameters for the named method</li>
+</ul>
+
+<p>
+<var>CallTerm</var> should be:
+</p><ul>
+<li>a method name with parameters
+(may involve dynamic overload resolution based on inferred types of params)</li>
+</ul>
+
+<p>
+finally, an attempt will be made to unify <var>Result</var> with the returned result
+</p></dd><dt class="pubdef"><span style="float:right"></span><a name="cli_lib_call/2"><b class="pred">cli_lib_call</b><var class="arglist">(+CallTerm, -Result)</var></a></dt><dd class="defbody"><var>CallTerm</var> should be:
+<ul>
+<li>a method name with parameters
+(may involve dynamic overload resolution based on inferred types of params)</li>
+</ul>
+
+<p>
+finally, an attempt will be made to unify <var>Result</var> with the returned result
+</p></dd><dt class="pubdef"><span style="float:right"></span><a name="cli_set/2"><b class="pred">cli_set</b><var class="arglist">(+Obj, +NameValueParis:list)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get/2"><b class="pred">cli_get</b><var class="arglist">(+Obj, +NameValueParis:list)</var></a></dt><dd class="defbody">gets or set multiple values
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_get/3"><b class="pred">cli_get</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_set/3"><b class="pred">cli_set</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, +Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get_raw/3"><b class="pred">cli_get_raw</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_set_raw/3"><b class="pred">cli_set_raw</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, +Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get_field/3"><b class="pred">cli_get_field</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_set_field/3"><b class="pred">cli_set_field</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, +Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_set_property/4"><b class="pred">cli_set_property</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, +IndexValues, +Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get_property/4"><b class="pred">cli_get_property</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, +IndexValues, -Value)</var></a></dt><dd class="defbody">_get/_set (the first two)
+Attempts to find the "best" member
+<ul>
+<li>Public properties, fields and bean-ifications (happy, is_happy, GetHappy, get_Happy, etc)</li>
+<li>Nonpublic properties, fields and bean-ifications (is_happy, GetHappy, get_Happy, etc)</li>
+<li>Case insensive public and non-public</li>
+</ul>
+
+<p>
+_raw is the foreing impls of the first two (Actually the above search impl is done from this _raw)
+_field will only try to set fields
+_property will only try to set fields
+
+</p><p>
+<var>ClazzOrInstance</var> can be:
+</p><ul>
+<li>a classname, a descriptor, or an (object or array) type
+(for static fields);</li>
+<li>a non-array object
+(for static and non-static fields)</li>
+<li>an array
+(for 'length' pseudo field, or indexed element retrieval),
+but not:</li>
+<li>a String
+(clashes with class name; anyway, String has no fields to retrieve)</li>
+</ul>
+
+<p>
+<var>MemberSpec</var> can be:
+</p><ul>
+<li>an atomic field name,</li>
+<li>or an integral array index (to get an element from an array,</li>
+<li>or a pair I-J of integers (to get a subrange (slice?) of an
+array)</li>
+<li>A list of [a,b(1),c] to denoate cli getting X.a.b(1).c</li>
+<li>[#f(fieldname),#p(propertyname),#p(propertyname,indexer)] when you want to avoid the search</li>
+</ul>
+
+<p>
+<var>IndexValues</var> can be:
+</p><ul>
+<li>Property index params ["foo",1] or []</li>
+</ul>
+
+<p>
+<var>Value</var>:
+</p><ul>
+<li>Getting, an attempt will be made to unify <var>Value</var> with the retrieved value</li>
+<li>Setting, put <var>Value</var></li>
+</ul>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_new_event_waiter/3"><b class="pred">cli_new_event_waiter</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, -WaitOn)</var></a></dt><dd class="defbody">Creates a new ManualResetEvent (<var>WaitOn</var>) that when an Event is called <var>WaitOn</var> in pulsed so that <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_block_until_event/3">cli_block_until_event/3</a> will unblock 
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_add_event_waiter/4"><b class="pred">cli_add_event_waiter</b><var class="arglist">(+WaitOn, +ClazzOrInstance, +MemberSpec, -NewWaitOn)</var></a></dt><dd class="defbody">Adds a new Event to the ManualResetEvent (<var>WaitOn</var>) created by <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_new_event_waiter/3">cli_new_event_waiter/3</a>
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_block_until_event/3"><b class="pred">cli_block_until_event</b><var class="arglist">(+WaitOn, +Time, +Lambda)</var></a></dt><dd class="defbody">Calls (foriegnly defined) <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_block_until_event/4">cli_block_until_event/4</a> and then cleansup the .NET objects.
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_block_until_event/4"><b class="pred">cli_block_until_event</b><var class="arglist">(+WaitOn, +MaxTime, +TestVarsCode, -ExitCode)</var></a></dt><dd class="defbody">foriegnly defined tododocs
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_new_delegate/3"><b class="pred">cli_new_delegate</b><var class="arglist">(+DelegateClass, +PrologPred, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_new_delegate_term/4"><b class="pred">cli_new_delegate_term</b><var class="arglist">(+TypeFi, +PrologPred, +BooleanSaveKey, -Delegate)</var></a></dt><dd class="defbody">todo
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_add_event_handler/4"><b class="pred">cli_add_event_handler</b><var class="arglist">(+Term1, +Arity, +IntPtrControl, Pred)</var></a></dt><dd class="defbody">
+
+<dl class="tags">
+<dt class="keyword-see">See also</dt><dd class="keyword-see">- <a href="http://logicmoo.dyndns.org:57007/doc_for?object=swicli:cli_add_event_handler/4">cli_add_event_handler/4</a>
+</dd></dl>
+
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_add_event_handler/3"><b class="pred">cli_add_event_handler</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, +PrologPred)</var></a></dt><dd class="defbody">Create a .NET Delegate that calls <var>PrologPred</var> when <var>MemberSpec</var> is called
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_remove_event_handler/3"><b class="pred">cli_remove_event_handler</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, +PrologPred)</var></a></dt><dd class="defbody">
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_new_prolog_collection/3"><b class="pred">cli_new_prolog_collection</b><var class="arglist">(+PredImpl, +ElementType, -PBD)</var></a></dt><dd class="defbody">Prolog Backed Collection
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_new_prolog_dictionary/4"><b class="pred">cli_new_prolog_dictionary</b><var class="arglist">(+PredImpl, +KeyType, +ValueType, -PBD)</var></a></dt><dd class="defbody">Prolog Backed Dictionaries
+</dd><dt class="pubdef"><span style="float:right"></span><a name="module_functor/4"><b class="pred">module_functor</b><var class="arglist">(+Obj, Arg2, Arg3, Arg4)</var></a></dt><dd class="defbody">
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_hide/1"><b class="pred">cli_hide</b><var class="arglist">(+Pred)</var></a></dt><dd class="defbody">hide <var>Pred</var> from tracing
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_notrace/1"><b class="pred">cli_notrace</b><var class="arglist">(+Call)</var></a> is <b class="det">nondet</b></dt><dd class="defbody">use <a class="builtin" href="http://logicmoo.dyndns.org:57007/man?predicate=call/1">call/1</a> with trace turned off
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_class_from_type/2"><b class="pred">cli_class_from_type</b><var class="arglist">(+Value, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_find_class/2"><b class="pred">cli_find_class</b><var class="arglist">(+ClazzName, -ClazzObject)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_find_type/2"><b class="pred">cli_find_type</b><var class="arglist">(+ClazzSpec, +ClassRef)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get_class/2"><b class="pred">cli_get_class</b><var class="arglist">(+Value, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get_classname/2"><b class="pred">cli_get_classname</b><var class="arglist">(+Value, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get_type/2"><b class="pred">cli_get_type</b><var class="arglist">(+Value, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_type_to_fullname/2"><b class="pred">cli_type_to_fullname</b><var class="arglist">(+Value, -Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_type_from_class/2"><b class="pred">cli_type_from_class</b><var class="arglist">(+Value, -Value)</var></a></dt><dd class="defbody">todo
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_is_layout/1"><b class="pred">cli_is_layout</b><var class="arglist">(+MemberSpec)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_add_layout/2"><b class="pred">cli_add_layout</b><var class="arglist">(+ClazzSpec, +MemberSpec)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_add_layout/3"><b class="pred">cli_add_layout</b><var class="arglist">(+ClazzSpec, +MemberSpec, +ToSpec)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_add_recomposer/4"><b class="pred">cli_add_recomposer</b><var class="arglist">(+ClazzSpec, +MemberSpec, +Obj2r, +R2obj)</var></a></dt><dd class="defbody">need doc!
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_find_constructor/3"><b class="pred">cli_find_constructor</b><var class="arglist">(+ClazzSpec, +MemberSpec, -Method)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_find_method/3"><b class="pred">cli_find_method</b><var class="arglist">(+ClazzOrInstance, +MemberSpec, -Method)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_add_shorttype/2"><b class="pred">cli_add_shorttype</b><var class="arglist">(+Short, +Long)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_props_for_type/2"><b class="pred">cli_props_for_type</b><var class="arglist">(+ClazzSpec, +MemberSpecs)</var></a></dt><dd class="defbody">need doc
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_special_unify/2"><b class="pred">cli_special_unify</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_expand/2"><b class="pred">cli_expand</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_expanded/2"><b class="pred">cli_expanded</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_eval/3"><b class="pred">cli_eval</b><var class="arglist">(+Obj, Arg2, Arg3)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_eval_hook/3"><b class="pred">cli_eval_hook</b><var class="arglist">(+Obj, Arg2, Arg3)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_set_hook/3"><b class="pred">cli_set_hook</b><var class="arglist">(+Obj, Arg2, Arg3)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get_hook/3"><b class="pred">cli_get_hook</b><var class="arglist">(+Obj, Arg2, Arg3)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_subproperty/2"><b class="pred">cli_subproperty</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_link_swiplcs/1"><b class="pred">cli_link_swiplcs</b><var class="arglist">(+Obj)</var></a></dt><dd class="defbody">
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_demo/2"><b class="pred">cli_demo</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_is_defined/2"><b class="pred">cli_is_defined</b><var class="arglist">(+Obj, Arg2)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_interned/3"><b class="pred">cli_interned</b><var class="arglist">(+Obj, Arg2, Arg3)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_intern/3"><b class="pred">cli_intern</b><var class="arglist">(+Obj, Arg2, Arg3)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_get_symbol/3"><b class="pred">cli_get_symbol</b><var class="arglist">(+Obj, Arg2, Arg3)</var></a></dt><dd class="defbody">need docs!
+</dd><dt class="pubdef"><span style="float:right"></span><a name="cli_test_array_to_term1/1"><b class="pred">cli_test_array_to_term1</b><var class="arglist">(-Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_array_to_term2/1"><b class="pred">cli_test_array_to_term2</b><var class="arglist">(-Value)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_opt/2"><b class="pred">cli_test_opt</b><var class="arglist">(+Incoming, ?REFInt32Outbound)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_opt/3"><b class="pred">cli_test_opt</b><var class="arglist">(+Incoming, +StringOptionalstr, ?REFInt32Outbound)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_out/2"><b class="pred">cli_test_out</b><var class="arglist">(+Incoming, ?REFInt32Outbound)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_pbc/2"><b class="pred">cli_test_pbc</b><var class="arglist">(+Pred, +Counted)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_pbct/2"><b class="pred">cli_test_pbct</b><var class="arglist">(+Pred, +Counted)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_pbd/2"><b class="pred">cli_test_pbd</b><var class="arglist">(+Pred, +Counted)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_pbdt/2"><b class="pred">cli_test_pbdt</b><var class="arglist">(+Pred, +Counted)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_ref/2"><b class="pred">cli_test_ref</b><var class="arglist">(+Incoming, ?REFInt32Outbound)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_ref/3"><b class="pred">cli_test_ref</b><var class="arglist">(+Incoming, ?REFStringOptionalstr, ?REFInt32Outbound)</var></a>
+</dt><dt class="pubdef"><span style="float:right"></span><a name="cli_test_var_arg/2"><b class="pred">cli_test_var_arg</b><var class="arglist">(?REFInt32Outbound, +ArrayOfInt32Incoming)</var></a></dt><dd class="defbody">Assembly definition test preds for Examples
+</dd></dl>
+
+
+
+</body></html>

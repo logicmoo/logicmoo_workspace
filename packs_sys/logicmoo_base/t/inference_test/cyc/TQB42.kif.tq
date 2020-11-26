@@ -1,0 +1,71 @@
+(note TQB42)
+
+(implies 
+  (and 
+    (instance ?ATTACK TerroristAct) 
+    (instance ?AREA GeographicalAgent) 
+    (damages ?ATTACK 
+      (IndustryOfRegionFn ?INDUSTRY ?AREA))) 
+  (maleficiary ?ATTACK ?AREA)) 
+
+(instance HYP-TerroristAttack-9555667 TerroristAttack) 
+
+(instance HYP-TerroristAttack-9555667 TerroristAct) 
+(instance Kuwait GeographicalAgent) 
+(damages HYP-TerroristAttack-9555667 
+ (IndustryOfRegionFn AgriculturalEconomicSector Kuwait)) 
+
+(subclass TerroristAttack TerroristAct) 
+(subclass TerroristAttack AttackOnTangible) 
+
+(termOfUnit 
+ (IndustryOfRegionFn AgriculturalEconomicSector Kuwait) 
+ (IndustryOfRegionFn AgriculturalEconomicSector Kuwait)) 
+
+(instance Kuwait GeopoliticalEntity) 
+(desires Iran (politicalStability Kuwait Low)) 
+
+(implies 
+  (and 
+    (instance ?TERR TerroristAct) 
+    (maleficiary ?TERR ?GEOPOL) 
+    (instance ?GEOPOL GeopoliticalEntity)) 
+  (increasesCausally ?TERR 
+    (politicalStability ?GEOPOL Low) likelihood)) 
+
+(desires Iran (economicStability (EconomicSystemFn Kuwait) Low)) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (instance ?AREA GeographicalAgent) 
+    (damages ?ATTACK 
+      (IndustryOfRegionFn ?INDUSTRY ?AREA))) 
+  (increasesCausally ?ATTACK 
+    (economicStability 
+      (EconomicSystemFn ?AREA) Low) likelihood)) 
+
+(subclass TerroristAttack AttackOnTangible) 
+
+(query (findall ?PROP
+  (implies 
+    (and 
+      (agent ?ACT Iran) 
+      (instance ?ACT TerroristAttack) 
+      (damages ?ACT 
+        (IndustryOfRegionFn AgriculturalEconomicSector Kuwait)) 
+      (startsAfterStartingOf ?ACT 
+        (DateInSituationFn CalendarDay 20 HPKBScenarioConflict))) 
+          (or 
+            (and 
+              (desires Iran ?PROP) 
+              (increasesCausally ?ACT ?PROP likelihood)) 
+            (and 
+              (desires Iran (not ?PROP)) 
+              (decreasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (politicalStability Kuwait Low))
+(answer (economicStability (EconomicSystemFn Kuwait) Low) 
+
+(end_of_file)
+

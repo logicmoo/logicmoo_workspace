@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<title>SCIFF Developer's Manual</title>
+</head>
+<body>
+
+<h1><i>S</i>CIFF Developer's Manual</h1>
+<hr>
+
+<a name="debugger"></a><h2>SCIFF debugger</h2>
+<p>During the trace (not the CHR trace), it is possible to visualise the quantification of the variables.
+<p>If SICStus is trying to invoke a goal, e.g.:
+<p>Call: module:predicate(A,B,C)
+<p>to visualise the quantification of the variables, act as follows.
+<ul>
+<li>hit 'b' (break level)</li>
+<li>invoke the goal: <code>print_quant(module).</code><br>where 'module' is the name of the module of the predicate
+SICStus was going to Call.<br>
+If the module is not present, simply call print_quant.</li>
+<li>exit from break level (^D in Linux, ^Z in Windows)
+</ul>
+<p>Moreover, the output of SCIFF during debugging can be saved in SVG format, and
+visualised in a browser. The trace of SICStus has been extended to support the
+command 'svg', that saves the output in the file debug.svg 
+<hr>
+
+<a name="graphviz"></a><h2>graphviz</h2>
+<p>Represents the sciff derivation tree in form of a graph, using the <a href="http://www.graphviz.org/">graphviz</a> software.
+<p>The file should be opened with <code>init_graph(FileName,Stream)</code>, and, after the execution of the proof, it should be closed with <code>close_graph</code>.
+The produced file can be opened with <a href="http://www.graphviz.org/">DOT</a> and converted in PostScript or other formats.
+<p>Default value is off.</p>
+<hr>
+
+<a name="ics"></a><h2>ics</h2>
+<p>From a low-level point of view, the integrity constraints are represented as CHR constraints.
+If you want to add an IC which is not allowed by the parser, you have to:
+<ul>
+<li>state the quantification of all the variables that occur in the IC
+<li>invoke the IC.
+</ul>
+<p>in order to set the quantification of a variable X in an integrity constraint, invoke the goal <code>forall(X)</code> or <code>exists(X)</code>.
+<p>The ic is represented as <code>psic(Body,Head)</code>, where
+<ul>
+<li>Body is a list [H,NotH,E,NotE,En,NotEn,Abd,A], where
+ H is a list of atoms h(Event,T),
+ NotH is a list of noth(Event,T),
+ E is a list of e(Event,T), 
+ NotE is a list of note(Event,T),
+ En is a list of en(Event,T), 
+ NotEn is a list of noten(Event,T), 
+ Abd is a list of abd(Event,T),
+ and A is a list of atoms. 
+<li>Head is a list of lists. The list of lists represents a disjunction of conjunctions 
+</ul>
+<p>remember that all the atoms have a Prolog syntax, i.e., they are lowercase (e.g., happened events are represented as h(Event,T))
+<p>For example, if you want to add the following IC:
+<p><center><strong>H</strong>(p,Tp) &rarr; <strong>EN</strong>(q,Tq) &and; <strong>E</strong>(r,Tr) &or; <strong>E</strong>(s,Ts)</center></p>
+<p>where for some reason you want Tq quantified existentially and Tr universally, you can invoke the goal:
+<p><code>forall(Tp), forall(Tr), exists(Tq), exists(Ts), psic([[h(p,Tp)],[],[],[],[],[],[],[]],[[en(q,Tq),e(r,Tr)],[e(s,Ts)]]).</code>
+<p>Example:
+<p><code>?- forall(Tp), forall(Tr), exists(Tq), exists(Ts), psic([[h(p,Tp)],[],[],[],[],[],[],[]],[[en(q,Tq),e(r,Tr)],[e(s,Ts)]]), h(p,1).<br>
+pending(en(q,_A)),<br>
+pending(e(r,_B)),<br>
+psic([[h(p,Tp)],[],[],[],[],[],[],[]],[[en(q,Tq),e(r,Tr)],[e(s,Ts)]]),<br>
+h(p,1),<br>
+en(q,_A),<br>
+e(r,_B) ? ;<br>
+pending(e(s,_A)),<br>
+psic([[h(p,Tp)],[],[],[],[],[],[],[]],[[en(q,Tq),e(r,Tr)],[e(s,Ts)]]),<br>
+h(p,1),<br>
+e(s,_A) ? ;<br>
+no
+</code>
+<hr>
+<a name="ruleml"></a><h2>RuleML</h2>
+<p>SCIFF can use as ICs files also files represented in 
+<a href="http://www.ruleml.org/0.9/glossary/">RuleML 0.9</a>.
+<p>Moreover, SCIFF can convert ICs from the internal representation into RuleML,
+using the predicate <code>save_ics_ruleml(FileName)</code> in the module
+<code>ruleml_parser</code>.
+<p>For example, after opening a project (e.g., project(auction)), use the command
+<center><code>ruleml_parser:save_ics_ruleml('ic.ruleml').</code></center>
+<p>to save the ICs in the project to a file ic.ruleml in RuleML format.
+
+<hr>
+<a name="download_ics"></a><h2>download_ics</h2>
+<p>The predicate <code>download_ics/1</code> lets you download an ICS file
+from the web. The only parameter is the URL of the ICS file, given as string
+(i.e., with double quotes &quot;&quot;)
+The ICS file
+can be either in the ICS syntax, or in RuleML. The ICS are then imposed
+(i.e., they are invoked).
+
+<hr>
+<a name="indexing"></a><h2>indexing</h2>
+<p>SCIFF uses indexing on the main functor of events. For example, the main
+functor of 
+<center>
+<code>
+H(tell(S,R,ask(Quote)),T)
+</code>
+</center>
+is <code>tell</code>. SCIFF selects the atoms (in the set of happened events)
+by means of the main functor. Thus, it is more efficient if the main functor
+is <i>informative</i>. For instance, the following history:  
+<center>
+<code>
+h(ask(anne,bob),1).<br>
+h(reply(bob,anne),2).
+</code>
+</center>
+is dealt with more efficiently than
+<center>
+<code>
+h(tell(anne,bob,ask),1).<br>
+h(tell(bob,anne,reply),2).
+</code>
+</center>
+because the expectation <code>e(ask(S,R),T)</code> is checked only against the first atom,
+while <code>e(tell(S,R,ask),T)</code> is checked with both (and in the second, the check
+fails).
+<p>The same holds for <code>e</code>, <code>en</code>, <code>abd</code>. 
+
+<hr>
+
+<a name="linda"></a><h2>Linda</h2>
+<p>SCIFF can communicate through the 
+<a href="http://www.sics.se/sicstus/docs/3.12.0/html/sicstus.html/Linda-Library.html">Linda</a> library. Currently, two uses are envisaged:
+<ul>
+<li>unidirectional acquisition of the history through Linda
+<li>Communication between SCIFF processes
+</ul>
+
+<h3>Unidirectional acquisition of the history</h3>
+<p>In this modality, SCIFF reads the history of events through Linda.
+<p>To use it, you should
+<ol>
+<li>Start a Linda Server, with the commands:
+<pre><code>:- use_module(library('linda/server')).
+:- linda.
+</code></pre>
+Linda should output the address and port of the server.
+<li>In a separate process, load SCIFF and <code>linda_his</code>. Connect to the server with
+<pre><code>:- linda_client(address:port).
+</code></pre>
+<li>In the file project.pl, redefine the <code>run(_)</code> predicate (and, possibly, <code>run_open</code> and <code>run_closed</code>) as follows:
+<pre><code>
+run(_):- run_dyn(nonblocking).
+</code></pre>
+<li>Now, you can start another Linda client, and use:
+<ul>
+<li><code>out(h(Event,Time))</code> to send an event
+<li><code>out(close_history)</code> to close the history
+</ul>
+</ol>
+
+<h3>Communication between SCIFF processes</h3>
+<p>In this case, two (or more) processes (e.g., SCIFF agents) communicate through Linda.
+<p>To use it, you should
+<ol>
+<li>Start a Linda Server, with the commands:
+<pre><code>:- use_module(library('linda/server')).
+:- linda.
+</code></pre>
+Linda outputs the address and port of the server.
+<li>In separate processes, load SCIFF and <code>linda_his</code> (one for each SCIFF process). Connect to the server with
+<pre><code>:- linda_client(address:port).
+</code></pre>
+<li>In the file project.pl, redefine the run predicates as follows:
+<pre><code>   run_open(_):- run_dyn_argument_directional(nonblocking).
+   run_closed(_):- run_dyn_argument_directional_closed(nonblocking).
+</code></pre>
+and define <code>run(_)</code> either as <code>run_open(_)</code> or as <code>run_closed(_)</code>.
+</ol>
+<p>In the SOKB of the SCIFF agents you should define the predicate <code>me/1</code>, containing the unique name of the agent.
+<p>You can use the following primitives:
+<ul>
+<li><code>send_message(+Sender,+Receiver,+Content,-Time)</code>. Sends a message from <i>Sender</i> to <i>Receiver</i>. <i>Time</i> is bound to the
+time in which the message is actually sent (it is a global counter in Linda).
+The message will be received by the <i>Receiver</i> in the form
+<pre><code>h(tell(Sender,Receiver,Content),Time)</code></pre>
+<li><code>ABD(finished_reasoning,_)</code>. It is an abducible abduced when SCIFF reaches the quiescence. Useful if you want to send messages only when the state of the proof is stable. E.g.: 
+<pre><code>ABD(finished_reasoning,_) /\ (...) ---> send_message(...)</code></pre>
+</ul>
+<p>The agents will process all the events, and then suspend waiting for further events. They will terminate with success when they receive the message
+<pre><code>leave_dialogue.</code></pre>
+(i.e., <code>out(leave_dialogue)</code>).
+
+<hr>
+<a name="solvers"></a><h2>Solvers</h2>
+<p>SCIFF can use different constraint solvers. The default constraint solver is CLP(FD),
+on finite domains.
+
+<p>To change the solver used by SCIFF, you can edit the file <code>solver.pl</code>. 
+Such file loads the solver that will be used by SCIFF; by default it contains
+
+<center><code>:- ensure_loaded(fd_solver).</code></center>
+
+<p>Available solvers are currently:
+<ul>
+<li><code>fd_solver</code>: solver on finite domains, based on local consistency. 
+<li><code>r_solver</code>: solver on the reals, based on the CLPQR solver of SICStus (see also SICStus documentation).
+</ul>  
+
+<p>To use the <code>r_solver</code> you have to pay attention in the SOKB at the syntax of constraints and
+constant numbers. Concerning constraints, instead of <code>A #&lt; B</code> you should write either
+<code>{A &lt; B}</code> (note the curly braces) or the (advised) <code>lt(A,B)</code>. 
+Note that you can use <code>lt(A,B)</code> also for the FD solver, so using this syntax
+lets you run your application with either of the two solvers withour rewriting your SOKB.
+In ICs, all translations are dealt with automatically, so you need not to change your ICs.
+The available constraints are currently <code>neq/2, lt/2, eq/2, gt/2, leq/2, geq/2</code>;
+all accept expressions as arguments (e.g., <code>neq(A+1,B)</code> is a valid constraint).
+
+<p>Concerning numbers, the <code>r_solver</code> is a solver on reals.
+Note that in SICStus the real 10.0 does not unify with the integer 10.
+However, the forementioned constraints deal with both, so you can indifferently write
+<code>eq(A,10)</code> or <code>eq(A,10.0)</code>: in both cases A will get the real value 10.0. 
+
+<p>In general, you cannot unify a constrained variable with an integer.
+For example, the goal
+<center><samp>eq(A,10), A=10.</samp></center>
+fails. Even worse, the following goal raises an error:
+<pre><samp>| ?- leq(A,10), A=10.
+! Type error in argument 2 of = /2
+! 'a real number' expected, but 10 found
+! goal:  _135=10</samp></pre>
+To avoid such situations, use the <code>eq</code> constraint instead of unification.
+E.g., do not write:
+<pre><code>p:- geq(A,0), q(A).
+q(1).
+q(2).
+</code></pre>
+but:
+<pre><code>p:- geq(A,0), q(A).
+q(X):- eq(X,1).
+q(X):- eq(X,2).
+</code></pre>
+
+<hr>
+<a name="memory"></a><h2>Memory considerations</h2>
+<p>Currently SCIFF does not reuse common sub-structures when copying a term
+(which happens quite often in the derivation), because this would take slightly more time.
+<p>However, if in your application you need to save as much memory as possible, you can try the following:
+<ul>
+<li>open file <code>ccopy.pl</code>
+<li>in the definition of predicate <code>ccopy/4</code>, uncomment the clause
+<pre><code>
+ccopy(X,Y,Old,New):- ground(X),!,X=Y,Old=New.
+</code></pre>
+</ul>
+
+<hr>
+<a name="help"></a><h2>help</h2>
+<p>A help file is an html file. Each of the topics is indexed with an anchor
+<p><center>&lt;a name="topics name"&gt;&lt;/a&gt;</center>
+<p>The end of the topics is recognised when there is the next topics, i.e., another anchor
+&lt;a name="next topic"&gt;&lt;/a&gt;
+You can link to such anchors, e.g. with
+&lt;a href="#topics name"&gt;topics name&lt;/a&gt;
+<p>Please, in links use as text the same name as the anchor, as it is used by the
+help system of SCIFF.
+<hr> 
+</body>
+</html>

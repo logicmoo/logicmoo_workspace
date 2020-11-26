@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+     Structure of a disease database
+
+     NOTE: It isn't clear to me how namespace declaration
+     and schema location attributes ought to be defined
+     in the DTD. The approach I'm using comes from the
+     http://www.w3.org/XML/1998/06/xmlspec-v21.dtd spec
+     for the 'xmlns:xlink' attribute.
+  -->
+<!ELEMENT disease-query
+    (#PCDATA|symptoms|disease|synonyms)*
+>
+<!ATTLIST disease-query
+    xmlns:xsi CDATA #REQUIRED
+    xsi:noNamespaceSchemaLocation CDATA #REQUIRED
+>
+<!--
+     disease=()
+  -->
+<!ELEMENT disease
+   EMPTY
+>
+<!ATTLIST disease
+    name CDATA #REQUIRED
+>
+<!ELEMENT synonyms
+   EMPTY
+>
+<!--
+     A disease's symptoms
+  -->
+<!ELEMENT symptoms
+    (#PCDATA|symptom)*
+>
+<!ELEMENT symptom
+   EMPTY
+>
+<!ATTLIST symptom
+    name CDATA #REQUIRED
+    present CDATA #REQUIRED
+>

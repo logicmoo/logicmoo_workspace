@@ -1,0 +1,57 @@
+(define (problem flp1)
+
+ (:domain flp)
+
+ (:includes)
+
+ (:timing
+  (start-date TZID=America/Chicago:20170315T090000)
+  (units 0000-00-00_01:00:00)
+  )
+
+ (:objects
+  andrewDougherty meredithMcGhan - person
+  townhomeOfEleanorAndAndrewAndMeredith - residence
+  andrewDoughertysHypotheticalCar meredithMcGhansCar - vehicle
+  bluetoothKeyboard - tool
+  auroraIllinois flintMichigan - physicalLocation
+  driving walking -  modeOfTransportation
+  )
+
+ (:init
+  (travel-path driving flintMichigan auroraIllinois)
+  (= (travel-distance driving flintMichigan auroraIllinois) 500)
+  (= (travel-duration driving flintMichigan auroraIllinois) 6)
+
+  (travel-path driving auroraIllinois townhomeOfEleanorAndAndrewAndMeredith)
+  (= (travel-distance driving auroraIllinois townhomeOfEleanorAndAndrewAndMeredith) 5)
+  (= (travel-duration driving auroraIllinois townhomeOfEleanorAndAndrewAndMeredith) 0.15)
+
+  (location andrewDougherty townhomeOfEleanorAndAndrewAndMeredith)
+  (location bluetoothKeyboard townhomeOfEleanorAndAndrewAndMeredith)
+  (location meredithMcGhan flintMichigan)
+  (location meredithMcGhansCar flintMichigan)
+  (location andrewDoughertysHypotheticalCar auroraIllinois)
+
+  (autonomous meredithMcGhan)
+  (autonomous andrewDougherty)
+
+  (mobile meredithMcGhansCar)
+  (mobile andrewDoughertysHypotheticalCar)
+  (mobile bluetoothKeyboard)
+  )
+
+ (:goal 
+  (and
+   ;; (location meredithMcGhan auroraIllinois)
+   ;; (directly-holding meredithMcGhan bluetoothKeyboard)
+   (directly-holding andrewDougherty bluetoothKeyboard)
+   ;; (contains andrewDoughertysHypotheticalCar bluetoothKeyboard)
+   ;; (contains meredithMcGhansCar bluetoothKeyboard)
+   ;; (location meredithMcGhansCar auroraIllinois)
+   )
+  )
+
+ (:metric minimize (total-time)) 
+
+ )

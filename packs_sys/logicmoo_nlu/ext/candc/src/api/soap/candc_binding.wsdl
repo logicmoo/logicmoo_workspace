@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="candc_binding"
+ targetNamespace="urn:candc"
+ xmlns:tns="urn:candc"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:ns1="urn:candc"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="urn:candc"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns1="urn:candc"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <!-- operation request element -->
+  <element name="parse_string">
+   <complexType>
+    <sequence>
+     <element name="text" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREstring::_text -->
+     <element name="start" type="xsd:boolean" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREstring::_start -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="parse_stringResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREstring::_result -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="parse_sentence">
+   <complexType>
+    <sequence>
+     <element name="text" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREsentence::_text -->
+     <element name="printer" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREsentence::_printer -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="parse_sentenceResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREsentence::_result -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="parse_oracle">
+   <complexType>
+    <sequence>
+     <element name="text" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREoracle::_text -->
+     <element name="constraints" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREoracle::_constraints -->
+     <element name="printer" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREoracle::_printer -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="parse_oracleResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREoracle::_result -->
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+
+</types>
+
+<message name="parse_stringRequest">
+ <part name="parameters" element="ns1:parse_string"/><!-- ns1__parse_USCOREstring::ns1__parse_USCOREstring -->
+</message>
+
+<message name="parse_stringResponse">
+ <part name="parameters" element="ns1:parse_stringResponse"/>
+</message>
+
+<message name="parse_sentenceRequest">
+ <part name="parameters" element="ns1:parse_sentence"/><!-- ns1__parse_USCOREsentence::ns1__parse_USCOREsentence -->
+</message>
+
+<message name="parse_sentenceResponse">
+ <part name="parameters" element="ns1:parse_sentenceResponse"/>
+</message>
+
+<message name="parse_oracleRequest">
+ <part name="parameters" element="ns1:parse_oracle"/><!-- ns1__parse_USCOREoracle::ns1__parse_USCOREoracle -->
+</message>
+
+<message name="parse_oracleResponse">
+ <part name="parameters" element="ns1:parse_oracleResponse"/>
+</message>
+
+<portType name="candc.port_type">
+ <operation name="parse_string">
+  <documentation>Service definition of function ns1__parse_USCOREstring</documentation>
+  <input message="tns:parse_stringRequest"/>
+  <output message="tns:parse_stringResponse"/>
+ </operation>
+ <operation name="parse_sentence">
+  <documentation>Service definition of function ns1__parse_USCOREsentence</documentation>
+  <input message="tns:parse_sentenceRequest"/>
+  <output message="tns:parse_sentenceResponse"/>
+ </operation>
+ <operation name="parse_oracle">
+  <documentation>Service definition of function ns1__parse_USCOREoracle</documentation>
+  <input message="tns:parse_oracleRequest"/>
+  <output message="tns:parse_oracleResponse"/>
+ </operation>
+</portType>
+
+<binding name="candc_binding" type="tns:candc.port_type">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="parse_string">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="parse_sentence">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="parse_oracle">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="candc_binding">
+ <documentation>gSOAP 2.8.12 generated service definition</documentation>
+ <port name="candc_binding" binding="tns:candc_binding">
+  <SOAP:address location="http://localhost:9004"/>
+ </port>
+</service>
+
+</definitions>

@@ -1,0 +1,14 @@
+(note TQD71)
+
+(agreeingAgents NuclearNon-ProliferationTreaty Iraq) 
+
+
+
+(queryyn (agreeingAgents NuclearNon-ProliferationTreaty Iraq) 
+
+)
+
+(answer Yes
+)
+
+(end_of_file)

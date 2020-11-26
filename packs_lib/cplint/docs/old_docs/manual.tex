@@ -1,0 +1,131 @@
+%\ifnum\pdfoutput>0 % pdflatex compilation
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[pdftex]{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\RequirePackage[hyperindex]{hyperref}
+%\else % htlatex compilation
+%\documentclass{article}
+%\usepackage{graphicx}
+%\DeclareGraphicsExtensions{.png, .gif, .jpg}
+%\newcommand{\href}[2]{\Link[#1]{}{} #2 \EndLink}
+%\newcommand{\hypertarget}[2]{\Link[]{}{#1} #2 \EndLink}
+%\newcommand{\hyperlink}[2]{\Link[]{#1}{} #2 \EndLink}
+%\newcommand{\url}[1]{\Link[#1]{}{} #1 \EndLink}
+%\fi
+\usepackage{amssymb}
+
+
+\begin{document}
+\title{\texttt{cplint} Manual}
+
+\subtitle{SWI-Prolog Version}
+
+\author{Fabrizio Riguzzi\\
+fabrizio.riguzzi@unife.it}
+
+\maketitle
+
+
+\section{Introduction}
+
+
+\texttt{cplint} is a suite of programs for reasoning with LPADs/CP-logic programs  \cite{VenVer03-TR}, \cite{VenVer04-ICLP04-IC},
+\cite{VenDenBru-JELIA06},
+\cite{DBLP:journals/tplp/VennekensDB09}. It contains modules for both inference and learning.
+
+\texttt{cplint} is available in two versions, one for Yap Prolog and one for SWI-Prolog. They differ slightly in the features offered.
+This manual is about the SWI-Prolog version. You can find the manual for the Yap version at \url{http://ds.ing.unife.it/~friguzzi/software/cplint/manual.html}.
+
+\section{Installation}
+\texttt{cplint} is distributed as a \href{http://www.swi-prolog.org/pack/list?p=cplint}{pack} of \href{http://www.swi-prolog.org/}{SWI-Prolog}. To install it, use
+\begin{verbatim}
+?- pack_install(cplint).
+\end{verbatim}
+Moreover, in order to make sure you have a foreign library that matches your architecture, run
+\begin{verbatim}
+?- pack_rebuild(cplint). 
+\end{verbatim}
+
+
+\input{syntax}
+\input{semantics}
+\input{inference}
+
+
+To run a query, you can simply load the Prolog file, for example \href{http://cplint.eu/e/coin.pl}{\texttt{coin.pl}}, as
+\begin{verbatim}
+?- [coin].
+\end{verbatim}
+Note that supplying \href{http://cplint.eu/e/coin.pl}{\texttt{coin.pl}} as an argument to the \verb|swipl| command currently returns errors due to bad interaction between \verb|pita| and the top-level.
+The program is loaded correctly anyway but it is recommended to load it from the top-level to avoid these errors.
+
+\input{inf_goals}
+
+\input{graphics}
+
+\input{parameters}
+
+\input{tabling}
+
+\input{learning}
+
+\input{learning_par}
+
+\subsection{Files}
+The \texttt{pack/cplint/prolog/examples} folder in SWI-Prolog home contains some example programs. The subfolder \texttt{learning} contains some learning examples.
+The \texttt{pack/cplint/doc} folder in SWI-Prolog home contains this manual in latex, html and pdf.
+
+
+\section{License}
+\label{license}
+
+
+
+\texttt{cplint} follows the Artistic License 2.0 that you can find in \texttt{cplint} root folder. The copyright is by Fabrizio Riguzzi.
+\vspace{3mm}
+
+
+The library \href{http://vlsi.colorado.edu/\string ~fabio/}{CUDD} for manipulating BDDs has the following license:
+
+\vspace{3mm}
+
+Copyright (c) 1995-2004, Regents of the University of Colorado
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+\begin{itemize}
+\item
+Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+\item
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+\item
+Neither the name of the University of Colorado nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+\end{itemize}
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRAN\-TIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAU-SED
+\\ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+
+\bibliographystyle{plain}
+\bibliography{bib}
+
+\end{document}

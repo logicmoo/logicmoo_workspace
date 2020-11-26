@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="bootstrapContribution" name="Bootstrap Contribution" schema="schema/bootstrapContribution.exsd"/>
+     <extension-point id="hooks" name="LifeCycle Hooks" schema="schema/hooks.exsd"/>
+   <extension-point id="prologLibrary" name="Prolog Library" schema="schema/prologLibrary.exsd"/>
+   <extension-point id="prologContextTracker" name="Prolog Context Tracker" schema="schema/prologContextTracker.exsd"/>
+	<extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.cs3.pdt.connector.internal.preferences.PreferenceInitializer">
+    </initializer>
+ </extension>
+    <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          category="org.cs3.pdt.common.internal.preferences.PDTCommonPreferencePage"
+          class="org.cs3.pdt.connector.internal.preferences.PreferencePage"
+          id="org.cs3.prolog.connector.preferences.PreferencePage"
+          name="Prolog Processes">
+    </page>
+ </extension>
+  <extension
+        point="org.cs3.pdt.connector.hooks">
+     <registryHook
+           class="org.cs3.pdt.connector.internal.PDTRegistryHook">
+     </registryHook>
+     <registryHook
+           class="org.cs3.pdt.connector.internal.service.ServiceRegistryHook">
+     </registryHook>
+  </extension> 
+     <extension
+             point="org.cs3.pdt.connector.bootstrapContribution">
+          <fileContribution
+                id="prolog.connector.fileContribution"
+                path="pl/load.pl">
+          </fileContribution>
+          <fileSearchPathContribution
+                alias="prolog_connector_pl"
+                id="org.cs3.prolog.connector.pl.path"
+                path="pl/">
+          </fileSearchPathContribution>
+       </extension>
+</plugin>

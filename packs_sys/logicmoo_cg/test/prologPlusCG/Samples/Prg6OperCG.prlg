@@ -1,0 +1,60 @@
+Universal > Person, Animal, Action, Situation, Object, AbstractEntity, Attribute.
+Person > Man, Woman, Employee.
+Man > Boy.
+Woman > Girl.
+Employee > Supervisor.
+Action > Drive, Love, Break, Rent, Begin, Press, Look.
+Object > Vehicle, Machine, Key, Keyboard, Finger.
+AbstractEntity > Society, Session, Years, Proposition.
+Vehicle > Car, Truck.
+Attribute > Fast, Color, Expensive, Big.
+
+Boy = John, Bob.
+Girl = Sue, Mary.
+Color = red.
+Machine = res23.
+Years = four.
+Key = enter.
+
+// cg(cg12, g1, g2), maximalJoin(g1, g2, g3).
+cg(cg12, [Person]<-agnt-[Drive]-obj->[Car], 
+         [Boy : John]<-agnt-[Drive]-manr->[Fast]).
+
+// cg(cg34, g1, g2), generalize(g1, g2, g3).
+cg(cg34, [Boy : John]<-agnt-[Drive]-obj->[Car]-chrc->[Color : red], 
+         [Girl : Sue]<-agnt-[Drive]-
+		                                -obj->[Truck],
+		                                -manr->[Fast]).
+
+// cg(cg56, g1, g2), subsume(g2, g1).
+// cg(cg56, g1, g2), subsume(g2, g1, g3).
+cg(cg56, [Man : John]-child->[Boy : Bob]<-agnt-[Love]-obj->[Girl : Mary],
+         [Person]-child->[Person]).
+ 
+cg(cg78, [Break]-
+             -agnt->[Employee],
+             -obj->[Machine]-attr->[Expensive],
+         [Situation]-mainActOf->[Break]-
+		                                     -agnt->[Supervisor],
+		                                     -obj->[Machine : res23]-qlte->[Big]).
+
+// cg(cg910, g1, g2), maximalJoin(g1, g2, g3).
+cg(cg910, 
+     [Person : John]<-agnt-[Begin]-
+		                               -obj->[Session],
+		                               -srce->[Proposition = 
+                                         [Person : John]<-agnt-[Press]-obj->
+                                                            [Key : enter]-part->[Keyboard] ],
+               
+          [Man]<-agnt-[Begin]-srce->[Proposition = [Person]<-agnt-[Press]-
+				          	                                                           -obj->[Key],
+				                                                                     -manr->[Fast] ]).
+
+// cg(cg1011, g1, g2), maximalJoin(g1, g2, g3).
+cg(cg1011, 
+     [Person]<-agnt-[Begin]-
+		                        -obj->[Session],  
+		                        -srce->[Proposition = 
+                                   [Person]<-agnt-[Press]-obj->
+                                                      [Key : enter]-part->[Keyboard] ],
+     [Man]<-agnt-[Begin]-srce->[Proposition = [Person]<-pat-[Look]-dest->[Person] ]).

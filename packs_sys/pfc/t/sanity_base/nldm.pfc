@@ -1,0 +1,38 @@
+
+:- use_module(library(pfc)).
+
+:- statistics(cputime,X),assert(load_time(X)).
+
+adj(1,2).
+adj(2,3).
+adj(3,4).
+adj(4,5).
+adj(5,6).
+adj(6,7).
+adj(7,8).
+adj(8,9).
+adj(9,10).
+adj(10,11).
+adj(11,12).
+adj(12,13).
+adj(13,14).
+adj(14,15).
+adj(15,16).
+adj(16,17).
+adj(17,18).
+adj(18,19).
+adj(19,20).
+adj(20,1).
+
+adj(X,Y)==>tc(X,Y).
+
+(tc(X,Y), tc(Y,Z))==> tc(X,Z).
+
+:- statistics.
+
+:- listing(tc/2).
+
+:- mpred_why(tc(_,_)).
+
+
+

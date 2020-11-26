@@ -1,0 +1,7 @@
+ERROR: Invalid ACE text:
+The word "retailer" is unknown.
+The word "retailer" is unknown.
+The word "retailer" is unknown.
+The word "retailer" is unknown.
+"If a message is from a <> retailer then the message is not important.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+

@@ -1,0 +1,38 @@
+(note TQE125a)
+(nearestCommonIsa AIOC CaspianPipelineConsortium PublicPrivateConsortium) 
+
+(actsInCapacity AIOC agent 
+ (PlanningFn 
+   (MakingFn OilPipeline)) MainFunction) 
+
+(actsInCapacity CaspianPipelineConsortium agent 
+ (PlanningFn 
+   (MakingFn OilPipeline)) MainFunction) 
+
+(implies 
+  (and 
+    (different standsInRelationship ?PRED) 
+    (?PRED ?OBJ ?VAL1 ?VAL2 ?VAL3)) 
+  (standsInRelationship ?OBJ ?PRED 1 
+    (TheSet ?VAL1 ?VAL2 ?VAL3))) 
+
+(query (findall (?INSTANCE-OF ?RELATION-ARG1 ?RELATION-TO)
+(or 
+  (and 
+    (nearestCommonIsa AIOC CaspianPipelineConsortium ?INSTANCE-OF) 
+    (not 
+      (quotedCollection ?INSTANCE-OF))) 
+  (and 
+    (standsInRelationship AIOC ?RELATION-ARG1 1 ?RELATION-TO) 
+    (standsInRelationship CaspianPipelineConsortium ?RELATION-ARG1 1 ?RELATION-TO) 
+    (different ?RELATION-ARG1 instance)) 
+  (and 
+    (standsInRelationship AIOC ?RELATION-ARG2 2 ?RELATION-TO) 
+    (standsInRelationship CaspianPipelineConsortium ?RELATION-ARG2 2 ?RELATION-TO)))))
+
+(answer PublicPrivateConsortium ?? ??)
+(answer ??  (actsInCapacity CaspianPipelineConsortium agent 
+ (PlanningFn 
+ (MakingFn OilPipeline))))
+ 
+(end_of_file)

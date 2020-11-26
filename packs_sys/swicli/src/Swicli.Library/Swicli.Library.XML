@@ -1,0 +1,2630 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Swicli.Library</name>
+    </assembly>
+    <members>
+        <member name="M:Swicli.Library.PrologCLR.SomeConversionStaticMethod(System.Type,System.Type,System.Type,System.Collections.Generic.ICollection{System.Func{System.Object,System.Object}},System.Boolean)">
+            <summary>
+            This finds things like op_Implicit/op_Explicition to
+            </summary>
+            <param name="to"></param>
+            <param name="srch"></param>
+            <param name="from"></param>
+            <param name="allMethods"></param>
+            <param name="onlyConverionAttribute"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliNewArray(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            ?- cliNewArray(long,10,Out),cliToString(Out,Str).
+            </summary>
+            <param name="ElementType"></param>
+            <param name="indexes">10 or [10] or [10,2]</param>
+            <param name="valueOut">Tagged ref to the array</param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.CreateArrayOfType(SbsSW.SwiPlCs.PlTerm[],System.Type)">
+            <summary>
+            Construct an array of some type
+            </summary>
+            <param name="arrayValue"></param>
+            <param name="arrayType">The parent array type .. not the Element type</param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.GetTypeFromInstance(System.Object,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Returns the Type when denoated by a 'namespace.type' (usefull for static instance specification)
+               if a @C#234234  the type of the object unless its a a class
+               c(a) => System.Char   "sdfsdf" =>  System.String   uint(5) => System.UInt32
+            
+               instanceMaybe maybe Null.. it is passed in so the method code doesn't have to call GetInstance again
+                  on classOrInstance
+            </summary>
+            <param name="instanceMaybe"></param>
+            <param name="classOrInstance"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliAddEventHandler(SbsSW.SwiPlCs.PlTerm,System.Int32,System.IntPtr)">
+            <summary>
+            ?- current_bot(Obj),cli_add_event_handler(Obj,'EachSimEvent',c(A,format(user_error,'EV = ~q.~n',[A])),Out).
+            </summary>
+            <param name="clazzOrInstance"></param>
+            <param name="memberSpec"></param>
+            <param name="closureTerm"></param>
+            <param name="blockOn"></param>
+            <param name="control"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Swicli.Library.PrologCLR.MissingMI">
+            <summary>
+            this is just stuffed with a random MethodInfo
+            </summary>
+        </member>
+        <member name="F:Swicli.Library.PrologCLR.reflectCachesForTypes">
+            <summary>
+            0 = SetValue
+            1 = Count
+            2 = add/append
+            3 = GetValue
+            4 = removeValue
+            5 = removeAll
+            6 = cliAddElementGeneric
+            7 = cliSetElementGeneric
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliNewEventWaiter(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Create a Event Handler with a ResetEvent
+            </summary>
+            <param name="clazzOrInstance"></param>
+            <param name="memberSpec"></param>
+            <param name="blockOn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliAddEventWaiter(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Add another event to be waited on
+            </summary>
+            <param name="clazzOrInstance"></param>
+            <param name="memberSpec"></param>
+            <param name="blockOn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliBlockUntilEvent(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Block until ResetEvent occures and run the prolog code.. if it fails.. wait again for the reset event
+             if over maxTime return time_limit_exceeded
+            </summary>
+            <param name="blockOn"></param>
+            <param name="maxTime"></param>
+            <param name="testVarsCode"></param>
+            <param name="exitCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliToStrRaw(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            1 ?- cliToString(-1,X).
+            X = "4294967295".
+            </summary>
+            <param name="obj"></param>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Swicli.Library.PrologCLR.AlwaysUsePerThreadObjectTracker">
+            <summary>
+            This is no longer needed since we use atom GC (maybe)
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliNew(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            ?- cliNew('java.lang.Long',[long],[44],Out),cliToString(Out,Str).
+            </summary>
+            <param name="memberSpec"></param>
+            <param name="paramIn"></param>
+            <param name="valueOut"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.SetupProlog1">
+            <summary>
+            This after the SwiPrologDir and IKVMHome is set up will update the environment
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliNewDelegate(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            
+            </summary>
+            <param name="delegateClass"></param>
+            <param name="prologPred"></param>
+            <param name="valueOut"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliLoadAssembly(SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            cliLoadAssembly('SwiPlCs.dll').
+            cliLoadAssembly('Cogbot.exe').
+            </summary>
+            <param name="term1"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliAddAssemblySearchPath(SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            ?- cliAddAssemblySearchPath('.').
+            </summary>
+            <param name="term1"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliRemoveAssemblySearchPath(SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            cliRemoveAssemblySearchPath('.').
+            </summary>
+            <param name="term1"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliPropsForType(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Retreves the ClazzSpec Fields and Properties into a MemberSpecList
+            </summary>
+            <param name="clazzSpec"></param>
+            <param name="memberSpecs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliMembers(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Retreves the clazzOrInstance Members into MemberSpec List
+            
+            used by cli_memb/2
+            </summary>
+            <param name="clazzOrInstance"></param>
+            <param name="membersSpecListOut"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliMemberDoc(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            =Attempt to find assembly doc of member
+            </summary>
+            <param name="memb"></param>
+            <param name="doc"></param>
+            <param name="xml"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.Dispose">
+            <summary>
+            </summary>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.RegisterThread12Many(System.Threading.Thread)">
+            <summary>
+            FIX ME!!
+            </summary>
+            <param name="thread"></param>
+        </member>
+        <member name="M:Swicli.Library.PrologCLR.cliGetProperty(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            
+            </summary>
+            <param name="clazzOrInstance"></param>
+            <param name="memberSpec">[] = 'Item'</param>
+            <param name="indexValues"></param>
+            <param name="valueOut"></param>
+            <returns></returns>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.libpl.m_hLibrary">
+             libpl
+            
+        </member>
+        <member name="M:SbsSW.SwiPlCs.libpl.PL_is_initialised(System.Int32@,System.String[]@)">
+            <summary>
+            Does NOT work correct if engine is_initialised
+            int PL_is_initialised(int *argc, char ***argv) 
+            </summary>
+            <param name="argc"></param>
+            <param name="argv"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.libpl.Snew">
+            <summary>
+            
+            </summary>
+            <returns> a SWI-PROLOG IOSTREAM defined in spl-stream.h</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.libpl.PL_foreign_control(System.IntPtr)">
+            <summary>
+             int PL_foreign_control(control_t)
+              Extracts the type of call from the control argument. 
+             The return values are described above. 
+             Note: that the function should be prepared to handle the PL_CUTTED case and 
+             Note: should be aware that the other arguments are not valid in this case.
+            </summary>
+            <param name="control"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.libpl.PL_foreign_context(System.IntPtr)">
+            <summary>
+             long PL_foreign_context(control_t)
+              Extracts the context from the context argument. 
+             In the call type is PL_FIRST_CALL the context value is 0L. 
+             Otherwise it is the value returned by the last PL_retry() associated 
+             with this goal (both if the call type is PL_REDO as PL_CUTTED).
+            </summary>
+            <param name="control"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.libpl.PL_foreign_context_address(System.IntPtr)">
+            <summary>
+             void * PL_foreign_context_address(control_t)
+                Extracts an address as passed in by PL_retry_address(). 
+            </summary>
+            <param name="control"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.libpl.PL_retry(System.Int32)">
+            <summary>
+             void PL_retry(long)
+             The foreign function succeeds while leaving a choice point. 
+             On backtracking over this goal the foreign function will be called again, 
+             but the control argument now indicates it is a `Redo' call and the macro 
+             PL_foreign_context() will return the handle passed via PL_retry(). 
+             This handle is a 30 bits signed value (two bits are used for status indication).
+            </summary>
+            <param name="control"></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.libpl.PL_retry_address(System.IntPtr)">
+            <summary>
+             void PL_retry_address(void *)
+             As PL_retry(), but ensures an address as returned by malloc() 
+             is correctly recovered by PL_foreign_context_address().
+            </summary>
+            <param name="control"></param>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.libpl.StreamsFunction">
+            <summary>
+            The standard SWI-Prolog streams ( inout output error )
+            </summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.libpl.StreamsFunction.Read">
+            <summary>0 - Sread_function.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.libpl.StreamsFunction.Write">
+            <summary>1 - Swrite_function.</summary>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlQuerySwitch">
+            <summary>
+            Flags that control  for the foreign predicate parameters 
+            <para><see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_query()">SWI-Prolog Manual - 9.6.16 Querying Prolog</see>.</para>
+            </summary>
+            <seealso cref="M:SbsSW.SwiPlCs.PlQuery.Query(SbsSW.SwiPlCs.PlQuerySwitch)"/>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.None">
+            <summary>The default value.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.Argc">
+            <summary>Return an integer holding the number of arguments given to Prolog from Unix.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.Argv">
+            <summary>Return a char ** holding the argument vector given to Prolog from Unix.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.GetChar">
+            <summary>Read character from terminal.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.MaxInteger">
+            <summary>Return a long, representing the maximal integer value represented by a Prolog integer.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.MinInteger">
+            <summary>Return a long, representing the minimal integer value.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.Version">
+            <summary> 	Return a long, representing the version as 10,000 × M + 100 × m + p, where M is the major, m the minor version number and p the patch-level. For example, 20717 means 2.7.17</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.MaxThreads">
+            <summary>Return the maximum number of threads that can be created in this version. Return values of PL_thread_self() are between 0 and this number.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.Encoding">
+            <summary>Return the default stream encoding of Prolog (of type IOENC).</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuerySwitch.UserCpu">
+            <summary>Get amount of user CPU time of the process in milliseconds.</summary>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlQueryVar">
+            <summary>
+            Represents one variable of a Query result.
+            </summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQueryVar.Name">
+            <summary>The name of a variable in a Query</summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQueryVar.Value">
+            <summary>The ManagedObject (PlTerm) of a variable in a Query</summary>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlQueryVariables">
+            <summary>
+            <para>Represents the set variables of a Query if it was created from a string.</para>
+            <para>This class is also used to represent the results of a PlQuery after <see cref="M:SbsSW.SwiPlCs.PlQuery.ToList"/> or <see cref="P:SbsSW.SwiPlCs.PlQuery.SolutionVariables"/> was called.</para>
+            </summary>
+            <example>
+                <para>This sample shows both <see cref="P:SbsSW.SwiPlCs.PlQuery.Variables"/> is used to unify the variables of two nested queries
+                and the result </para>
+                <code source="..\..\TestSwiPl\LinqSwiPl.cs" region="compound_nested_query_with_variables_3_doc"/>
+            </example>
+            <seealso cref="P:SbsSW.SwiPlCs.PlQuery.Variables"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQueryVariables.Count">
+            <summary>
+            Returns the number of elements in the sequence. (Defined by Enumerable of List&lt;PlQueryVar&gt;.)
+            </summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQueryVariables.Item(System.String)">
+            <summary>
+            Gets the <see cref="T:SbsSW.SwiPlCs.PlTerm"/> of the given variable name or throw an ArgumentException.
+            </summary>
+            <param name="name">The name of the variable</param>
+            <returns>The PlTerm (value) of the variable </returns>
+            <exception cref="T:System.ArgumentException">Is thrown if the name is not the name of a variable.</exception> 
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlQuery">
+             <summary>
+             <para>This class allows queries to prolog.</para>
+             <para>A query can be created by a string or by constructing compound terms see <see href="Overload_SbsSW_SwiPlCs_PlQuery__ctor.htm">Constructors</see> for details.</para>
+            
+             <para>All resources an terms created by a query are reclaimed by <see cref="M:SbsSW.SwiPlCs.PlQuery.Dispose"/>. It is recommended to build a query in a <see langword="using"/> scope.</para>
+            
+             <para>There are four possible opportunities to query Prolog</para>
+             <list type="table">  
+             <listheader><term>Query type</term><description>Description </description></listheader>  
+             <item><term>A <see href="Overload_SbsSW_SwiPlCs_PlQuery_PlCall.htm">static call</see></term><description>To ask prolog for a proof. Return only true or false.</description></item>  
+             <item><term>A <see cref="M:SbsSW.SwiPlCs.PlQuery.PlCallQuery(System.String)"/></term><description>To get the first result of a goal</description></item>  
+             <item><term><see href="Overload_SbsSW_SwiPlCs_PlQuery__ctor.htm">Construct</see> a PlQuery object by a string.</term><description>The most convenient way.</description></item>  
+             <item><term><see href="Overload_SbsSW_SwiPlCs_PlQuery__ctor.htm">Construct</see> a PlQuery object by compound terms.</term><description>The most flexible and fast (runtime) way.</description></item>  
+             </list>   
+            
+             <para>For examples see <see cref="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String)"/> and <see cref="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String,SbsSW.SwiPlCs.PlTermV)"/></para>
+             </summary>
+             <remarks>
+             <para>The query will be opened by <see cref="M:SbsSW.SwiPlCs.PlQuery.NextSolution"/> and will be closed if NextSolution() return false.</para>
+             </remarks>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlQuery._records">
+            <summary>the list of prolog record's (the copies to store the variable bindings over backtracking)</summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.Dispose(System.Boolean)">
+            <summary>
+            Release all resources from the query
+            </summary>
+            <param name="disposing">if true all is deleted</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.Finalize">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.Free(System.Boolean)">
+            <summary>
+            Discards the query, but does not delete any of the data created by the query if discardData is false. 
+            It just invalidate qid, allowing for a new PlQuery object in this context.
+            </summary>
+            <remarks>see <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_cut_query()"/></remarks>
+            <param name="discardData">if true all bindings of the query are destroyed</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String)">
+            <overloads>
+            <para>With these constructors a Prolog query can be created but not opened. To get the results see <see cref="M:SbsSW.SwiPlCs.PlQuery.NextSolution"/></para>
+            <para>A Query can be created from a string or by a name and PlTermV. The later is a native way and available for compatibility.</para>
+            <para>If a Query is created from a string representing arbitrary prolog text 
+            the helper classes <see cref="T:SbsSW.SwiPlCs.PlQueryVar"/> and <see cref="T:SbsSW.SwiPlCs.PlQueryVariables"/> comes into the game.
+            In this case the most convenient way to get the results is to use <see cref="P:SbsSW.SwiPlCs.PlQuery.SolutionVariables"/> or <see cref="M:SbsSW.SwiPlCs.PlQuery.ToList"/>.
+            </para>
+            <para>For examples see <see cref="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String)"/>.</para>
+            
+            </overloads>
+            <summary>
+            <para>With this constructor a query is created from a string.</para>
+            <para>Uppercase parameters are interpreted a variables but can't be nested in sub terms.
+            If you need a variable in a nested term use <see cref="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String,SbsSW.SwiPlCs.PlTermV)"/>.
+            See the examples for details.</para>
+            </summary>
+            <remarks>Muddy Waters sang:"I'am build for comfort, I ain't build for speed"</remarks>
+            <example>
+                <code source="..\..\TestSwiPl\PlQuery.cs" region="queryStringForeach_doc"/>
+                <para>This sample shows a query with two variables.</para>
+                <code source="..\..\TestSwiPl\PlQuery.cs" region="queryString2_doc"/>
+                <para>And the same with named variables.</para>
+                <code source="..\..\TestSwiPl\PlQuery.cs" region="queryStringNamed_doc"/>
+                <para>This sample shows what happens if the argument vector is used with compound terms.</para>
+                <code source="..\..\TestSwiPl\PlQuery.cs" region="PlCallQueryCompound_string_doc"/>
+                <para>And here how to get the results with named variables with compound terms.</para>
+                <code source="..\..\TestSwiPl\PlQuery.cs" region="PlCallQueryCompoundNamed_string_doc"/>
+             </example>
+            <param name="goal">A string for a prolog query</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String,System.String)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String)"/>
+            <summary>locating the predicate in the named module.</summary>
+            <param name="module">locating the predicate in the named module.</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String,SbsSW.SwiPlCs.PlTermV)">
+            <summary>
+            Create a query where name defines the name of the predicate and av the argument vector. 
+            The arity is deduced from av. The predicate is located in the Prolog module user.
+            </summary>
+            <example>
+                <para>This sample shows a query with a compound term as an argument.</para>
+                <code source="..\..\TestSwiPl\PlQuery.cs" region="PlCallQueryCompound_termv_doc" />
+             </example>
+            <param name="name">the name of the predicate</param>
+            <param name="termV">the argument vector containing the parameters</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String,System.String,SbsSW.SwiPlCs.PlTermV)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String,SbsSW.SwiPlCs.PlTermV)"/>
+            <summary>locating the predicate in the named module.</summary>
+            <param name="module">locating the predicate in the named module.</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.NextSolution">
+            <summary>
+            Provide the next solution to the query. Prolog exceptions are mapped to C# exceptions.
+            </summary>
+            <returns>return true if successful and false if there are no (more) solutions.</returns>
+            <remarks>
+            <para>If the query is closed it will be opened. If the last solution was generated the query will be closed.</para>
+            <para>If an exception is thrown while parsing (open) the query the _qid is set to zero.</para>
+            </remarks>
+            <exception cref="T:SbsSW.SwiPlCs.Exceptions.PlException">Is thrown if <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_next_solution()">SWI-Prolog Manual PL_next_solution()</see> returns false </exception>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.ToList">
+            <summary>
+            <para>Create a <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1"/> of <see cref="T:SbsSW.SwiPlCs.PlQueryVariables"/>.</para>
+            <para>If calling ToList() all solutions of the query are generated and stored in the Collection.</para>
+            </summary>
+            <returns>A ReadOnlyCollection of PlQueryVariables containing all solutions of the query.</returns>
+            <example>
+                <code source="..\..\TestSwiPl\LinqSwiPl.cs" region="Test_multi_goal_ToList_doc"/>
+            </example>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.Query(SbsSW.SwiPlCs.PlQuerySwitch)">
+            <summary>
+            <para>Obtain status information on the Prolog system. The actual argument type depends on the information required. 
+            The parameter queryType describes what information is wanted.</para>
+            <para>Returning pointers and integers as a long is bad style. The signature of this function should be changed.</para>
+            <see>PlQuerySwitch</see>
+            </summary>
+            <example>
+                <para>This sample shows how to get SWI-Prologs version number</para>
+                <code source="..\..\TestSwiPl\PlQuery.cs" region="get_prolog_version_number_doc" />
+            </example>
+            <param name="queryType">A <see>PlQuerySwitch</see>.</param>
+            <returns>A int depending on the given queryType</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.PlCall(System.String,SbsSW.SwiPlCs.PlTermV)">
+            <overloads>
+            The main purpose of the static PlCall methods is to call a prolog prove or to do some site effects.
+            <example>
+            <code>
+                 Assert.IsTrue(PlQuery.PlCall("is_list", new PlTerm("[a,b,c,d]")));
+            </code>
+            <code>
+                 Assert.IsTrue(PlQuery.PlCall("consult", new PlTerm("some_file_name")));
+                 // or
+                 Assert.IsTrue(PlQuery.PlCall("consult('some_file_name')"));
+            </code>
+            </example>
+            </overloads>
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String,SbsSW.SwiPlCs.PlTermV)"/>
+            <remarks>
+            <para>Create a PlQuery from the arguments, generates the first solution by NextSolution() and destroys the query.</para>
+            </remarks>
+            <param name="predicate">defines the name of the predicate</param>
+            <param name="args">Is a <see cref="T:SbsSW.SwiPlCs.PlTermV"/> of arguments for the predicate</param>
+            <returns>Return true or false as the result of NextSolution() or throw an exception.</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.PlCall(System.String,System.String,SbsSW.SwiPlCs.PlTermV)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlQuery.PlCall(System.String,SbsSW.SwiPlCs.PlTermV)"/>
+            <summary>As <see cref="M:SbsSW.SwiPlCs.PlQuery.PlCall(System.String,SbsSW.SwiPlCs.PlTermV)"/> but locating the predicate in the named module.</summary>
+            <param name="module">locating the predicate in the named module.</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.PlCall(System.String)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlQuery.PlCall(System.String,SbsSW.SwiPlCs.PlTermV)"/>
+            <summary>Call a goal once.</summary>
+            <example>
+            <code>
+                 Assert.IsTrue(PlQuery.PlCall("is_list([a,b,c,d])"));
+            </code>
+            <code>
+                 Assert.IsTrue(PlQuery.PlCall("consult('some_file_name')"));
+            </code>
+            </example>
+            <param name="goal">The complete goal as a string</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlQuery.PlCallQuery(System.String)">
+            <summary>
+            <para>NOTE:will be changed in the near future.</para>
+            return the solution of a query which is called once by call
+            Throw an ArgumentException if there is no or more than one variable in the goal
+            </summary>
+            <param name="goal">a goal with *one* variable</param>
+            <returns>the bound variable of the first solution</returns>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQuery.Variables">
+            <summary>
+            The List of <see cref="T:SbsSW.SwiPlCs.PlQueryVariables"/> of this PlQuery.
+            </summary>
+            <example>
+                <para>In the following example you see how the query Variables can be used to set a variable.</para>
+                <code source="..\..\TestSwiPl\LinqSwiPl.cs" region="compound_query_with_variables_doc"/>
+                <para>Here is a more complex sample where the variables of two queries are connected.</para>
+                <code source="..\..\TestSwiPl\LinqSwiPl.cs" region="compound_nested_query_with_variables_doc"/>
+            </example>
+            <seealso cref="T:SbsSW.SwiPlCs.PlQueryVariables"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQuery.VariableNames">
+            <summary>
+            Gets a <see cref="T:System.Collections.ObjectModel.Collection`1"/> of the variable names if the query was built by a string.
+            </summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQuery.Args">
+            <summary>Provide access to the Argument vector for the query</summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQuery.Solutions">
+            <summary>
+            <para>Enumerate the solutions.</para>
+            <para>For examples see <see cref="M:SbsSW.SwiPlCs.PlQuery.#ctor(System.String)"/></para>
+            </summary>
+            <seealso cref="M:SbsSW.SwiPlCs.PlQuery.NextSolution"/>
+            <seealso href="Overload_SbsSW_SwiPlCs_PlQuery__ctor.htm">Constructors</seealso>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlQuery.SolutionVariables">
+            <summary>
+            <para>Enumerate the <see cref="T:SbsSW.SwiPlCs.PlQueryVariables"/> of one solution.</para>
+            </summary>
+            <example>
+                <code source="..\..\TestSwiPl\LinqSwiPl.cs" region="compound_query_SolutionVariables_doc"/>
+            </example>
+            <seealso cref="M:SbsSW.SwiPlCs.PlQuery.NextSolution"/>
+        </member>
+        <member name="M:Swicli.Library.ArrayIndexEnumerator.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.ArrayIndexEnumerator.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the collection.
+            </summary>
+            <returns>
+            true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. 
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.ArrayIndexEnumerator.Reset">
+            <summary>
+            Sets the enumerator to its initial position, which is before the first element in the collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. 
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="P:Swicli.Library.ArrayIndexEnumerator.Current">
+            <summary>
+            Gets the element in the collection at the current position of the enumerator.
+            </summary>
+            <returns>
+            The element in the collection at the current position of the enumerator.
+            </returns>
+        </member>
+        <member name="P:Swicli.Library.ArrayIndexEnumerator.System#Collections#IEnumerator#Current">
+            <summary>
+            Gets the current element in the collection.
+            </summary>
+            <returns>
+            The current element in the collection.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element.
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.SafeNativeMethods.PL_initialise(System.Int32,System.String[])">
+             libpl
+            
+        </member>
+        <member name="M:SbsSW.SwiPlCs.SafeNativeMethods.S__getiob">
+            <summary>
+            0 -> Sinput
+            1 -> Soutput
+            2 -> Serror
+            </summary>
+            <returns>a array of IOSTREAM * pointers</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.SafeNativeMethods.Snew(System.IntPtr,System.Int32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="handle"></param>
+            <param name="flags">defined in pl-stream.h all with prefix SIO_</param>
+            <param name="functions">A set of function pointers see IOFUNCTIONS in pl-stream.h</param>
+            <returns> a SWI-PROLOG IOSTREAM defined in pl-stream.h</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.SafeNativeMethods.PL_unify_stream(System.UInt32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="t"></param>
+            <param name="iostream">the return value from Snew</param>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.Embedded.Is64BitRuntime">
+            <summary>
+            the .Net process (Not OS)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Swicli.Library.Embedded.Is64BitComputer">
+            <summary>
+            The OS and not the .Net process
+             therefore "Program Files" are either for 64bit or 32bit apps
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:Swicli.Library.PrologGenericDelegate.PrologArity">
+            <summary>
+            prolog predicate arity (invokeMethod.IsStatic ? 0 : 1) + ParamArity + (IsVoid ? 0 : 1);
+            </summary>       
+        </member>
+        <member name="M:Swicli.Library.ClosureDelegate.#ctor(System.Reflection.EventInfo,System.Object,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+             ?- closure(v(V1,V2),format('I was called with ~q ~q ...',[V1,V2]).
+            </summary>
+            <param name="info"></param>
+            <param name="instance"></param>
+            <param name="closureTerm"></param>
+        </member>
+        <member name="M:Swicli.Library.ClosureDelegate.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="T:Swicli.Library.BlockingQueue`1">
+            <summary>
+            Same as Queue except Dequeue function blocks until there is an object to return.
+            Note: This class does not need to be synchronized
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Create new BlockingQueue.
+            </summary>
+            <param name="col">The System.Collections.ICollection to copy elements from</param>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.#ctor(System.Int32)">
+            <summary>
+            Create new BlockingQueue.
+            </summary>
+            <param name="capacity">The initial number of elements that the queue can contain</param>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.#ctor">
+            <summary>
+            Create new BlockingQueue.
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.Finalize">
+            <summary>
+            BlockingQueue Destructor (Close queue, resume any waiting thread).
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.Clear">
+            <summary>
+            Remove all objects from the Queue.
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.Close">
+            <summary>
+            Remove all objects from the Queue, resume all dequeue threads.
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.Dequeue">
+            <summary>
+            Removes and returns the object at the beginning of the Queue.
+            </summary>
+            <returns>Object in queue.</returns>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.Dequeue(System.TimeSpan)">
+            <summary>
+            Removes and returns the object at the beginning of the Queue.
+            </summary>
+            <param name="timeout">time to wait before returning</param>
+            <returns>Object in queue.</returns>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.Dequeue(System.Int32)">
+            <summary>
+            Removes and returns the object at the beginning of the Queue.
+            </summary>
+            <param name="timeout">time to wait before returning (in milliseconds)</param>
+            <returns>Object in queue.</returns>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.Enqueue(System.String,`0)">
+            <summary>
+            Adds an object to the end of the Queue
+            </summary>
+            <param name="obj">Object to put in queue</param>
+        </member>
+        <member name="M:Swicli.Library.BlockingQueue`1.Open">
+            <summary>
+            Open Queue.
+            </summary>
+        </member>
+        <member name="P:Swicli.Library.BlockingQueue`1.Closed">
+            <summary>
+            Gets flag indicating if queue has been closed.
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.WaitUntilDelegate.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Exceptions.NamespaceDoc">
+            <summary>
+            <para>These are the namespace comments for <b>SbsSW.SwiPlCs.Exceptions</b>.</para>
+            <para>The namespace SbsSW.SwiPlCs.Exceptions provides the Exception classes to catch a prolog exception 
+            see <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/exception.html">SWI-Prolog Manual - 4.9 ISO compliant Exception handling</see>
+            </para>
+            <para>Prolog exceptions are mapped to C# exceptions using the subclass PlException of <see cref="T:System.Exception"/>
+            to represent the Prolog exception term.</para>
+            <para>All type-conversion functions of the interface raise Prolog-compliant exceptions, 
+            providing decent error-handling support at no extra work for the programmer.</para>
+            <para>For some commonly used exceptions, subclasses of PlException have been created to exploit 
+            both their constructors for easy creation of these exceptions as well as selective trapping in C#.</para>
+            <para>Currently, these are <see cref="T:SbsSW.SwiPlCs.Exceptions.PlTypeException"/> and <see cref="T:SbsSW.SwiPlCs.Exceptions.PlDomainException"/>.</para>
+            </summary>
+            <remarks>
+            </remarks>
+            <todo>To throw an exception, create an instance of PlException and use throw() or cppThrow(). The latter refines the C# exception class according to the represented Prolog exception before calling throw(). 
+            </todo>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Exceptions.PlLibException">
+            <summary>This exception is thrown if something in the interface went wrong.</summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlLibException.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlLibException.#ctor(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlLibException.#ctor(System.String,System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlLibException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlLibException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Exceptions.PlException">
+            <inheritdoc/>
+            <summary>
+            <para>This class is the base class to catch exceptions thrown by prolog in C#.</para>
+            </summary>
+            <example>
+                <code source="..\..\TestSwiPl\PlException.cs" region="prolog_exception_sample_doc"/>
+            </example>
+            <seealso cref="T:SbsSW.SwiPlCs.Exceptions.PlTypeException"/>
+            <seealso href="http://gollem.science.uva.nl/SWI-Prolog/Manual/exception.html">SWI-Prolog Manual - 4.9 ISO compliant Exception handling</seealso>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.#ctor(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.#ctor(System.String,System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.#ctor(SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            <para>To catch a exception thrown by prolog</para>
+            <para>For a example see <see cref="T:SbsSW.SwiPlCs.Exceptions.PlException"/>.</para>
+            </summary>
+            <param name="term">A PlTerm containing the Prolog exception</param>
+            <see cref="T:SbsSW.SwiPlCs.Exceptions.PlException"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.ToString">
+            <inheritdoc />
+            <summary>
+            The exception is translated into a message as produced by print_message/2. The character data is stored in a ring.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.PlThrow">
+            <summary>
+            TODO
+            </summary>
+            <remarks>Used in the PREDICATE() wrapper to pass the exception to Prolog. See PL_raise_exeption().</remarks>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlException.Throw">
+            <summary>
+            TODO
+            </summary>
+            <remarks>see <see href="http://www.swi-prolog.org/packages/pl2cpp.html#cppThrow()"/></remarks>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.Exceptions.PlException.MessagePl">
+            <summary>provide somtimes some additional information about the exceptions reason.</summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.Exceptions.PlException.Term">
+            <summary>
+            Get the <see cref="T:SbsSW.SwiPlCs.PlTerm"/> of this exception.
+            </summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.Exceptions.PlException.Message">
+            <inheritdoc />
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Exceptions.PlTypeException">
+            <inheritdoc />
+            <summary>
+            A type error expresses that a term does not satisfy the expected basic Prolog type.
+            </summary>
+            <example>
+            This sample demonstrate how to catch a PlTypeException in C# that is thrown somewhere int the prolog code.
+                <code source="..\..\TestSwiPl\PlException.cs" region="prolog_type_exception_sample_doc" />
+            </example>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlTypeException.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlTypeException.#ctor(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlTypeException.#ctor(System.String,System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlTypeException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlTypeException.#ctor(SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlTypeException.#ctor(System.String,SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Creates an ISO standard Prolog error term expressing the expected type and actual term that does not satisfy this type.
+            </summary>
+            <param name="expected">The type which was expected</param>
+            <param name="actual">The actual term</param>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Exceptions.PlDomainException">
+            <summary>
+            A domain exception expresses that a term satisfies the basic Prolog type expected, but is unacceptable
+            to the restricted domain expected by some operation. 
+            </summary>
+            <example>
+            For example, the standard Prolog open/3 call expect an IO-Mode (read, write, append, ...).
+            If an integer is provided, this is a type error, if an atom other than one of the defined IO-modes is provided it is a domain error.
+                <code source="..\..\TestSwiPl\PlException.cs" region="prolog_domain_exception_sample_doc" />
+            </example>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlDomainException.#ctor">
+            <inheritdoc cref="T:SbsSW.SwiPlCs.Exceptions.PlException"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlDomainException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc cref="T:SbsSW.SwiPlCs.Exceptions.PlException"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.Exceptions.PlDomainException.#ctor(SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="T:SbsSW.SwiPlCs.Exceptions.PlException"/>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+            <filterpriority>1</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.Add(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+            </summary>
+            <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+                            </param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+                            </exception>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.Clear">
+            <summary>
+            Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+            </summary>
+            <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only. 
+                            </exception>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.Contains(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"/> contains a specific value.
+            </summary>
+            <returns>
+            true if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false.
+            </returns>
+            <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+                            </param>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)">
+            <summary>
+            Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.
+                            </param><param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.
+                            </param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.
+                            </exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.
+                            </exception><exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.
+                                -or-
+                            <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+                                -or-
+                                The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.
+                                -or-
+                                Type <paramref name="T"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.
+                            </exception>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.Remove(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Removes the first occurrence of a specific object from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+            </summary>
+            <returns>
+            true if <paramref name="item"/> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false. This method also returns false if <paramref name="item"/> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"/>.
+            </returns>
+            <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+                            </param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+                            </exception>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.ContainsKey(`0)">
+            <summary>
+            Determines whether the <see cref="T:System.Collections.Generic.IDictionary`2"/> contains an element with the specified key.
+            </summary>
+            <returns>
+            true if the <see cref="T:System.Collections.Generic.IDictionary`2"/> contains an element with the key; otherwise, false.
+            </returns>
+            <param name="key">The key to locate in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+                            </param><exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.
+                            </exception>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.Add(`0,`1)">
+            <summary>
+            Adds an element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </summary>
+            <param name="key">The object to use as the key of the element to add.
+                            </param><param name="value">The object to use as the value of the element to add.
+                            </param><exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.
+                            </exception><exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+                            </exception><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IDictionary`2"/> is read-only.
+                            </exception>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.Remove(`0)">
+            <summary>
+            Removes the element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </summary>
+            <returns>
+            true if the element is successfully removed; otherwise, false.  This method also returns false if <paramref name="key"/> was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </returns>
+            <param name="key">The key of the element to remove.
+                            </param><exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.
+                            </exception><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IDictionary`2"/> is read-only.
+                            </exception>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.TryGetValue(`0,`1@)">
+            <summary>
+            Gets the value associated with the specified key.
+            </summary>
+            <returns>
+            true if the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/> contains an element with the specified key; otherwise, false.
+            </returns>
+            <param name="key">The key whose value to get.
+                            </param><param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the <paramref name="value"/> parameter. This parameter is passed uninitialized.
+                            </param><exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.
+                            </exception>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedDictionary`2.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+            </summary>
+            <returns>
+            The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+            </returns>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedDictionary`2.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+            </summary>
+            <returns>
+            true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
+            </returns>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedDictionary`2.Item(`0)">
+            <summary>
+            Gets or sets the element with the specified key.
+            </summary>
+            <returns>
+            The element with the specified key.
+            </returns>
+            <param name="key">The key of the element to get or set.
+                            </param><exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.
+                            </exception><exception cref="T:System.Collections.Generic.KeyNotFoundException">The property is retrieved and <paramref name="key"/> is not found.
+                            </exception><exception cref="T:System.NotSupportedException">The property is set and the <see cref="T:System.Collections.Generic.IDictionary`2"/> is read-only.
+                            </exception>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedDictionary`2.Keys">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </returns>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedDictionary`2.Values">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </returns>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.PrologBackedDictionaryEnumerator.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.PrologBackedDictionaryEnumerator.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the collection.
+            </summary>
+            <returns>
+            true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. 
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedDictionary`2.PrologBackedDictionaryEnumerator.Reset">
+            <summary>
+            Sets the enumerator to its initial position, which is before the first element in the collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. 
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedDictionary`2.PrologBackedDictionaryEnumerator.Current">
+            <summary>
+            Gets the element in the collection at the current position of the enumerator.
+            </summary>
+            <returns>
+            The element in the collection at the current position of the enumerator.
+            </returns>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedDictionary`2.PrologBackedDictionaryEnumerator.System#Collections#IEnumerator#Current">
+            <summary>
+            Gets the current element in the collection.
+            </summary>
+            <returns>
+            The current element in the collection.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element.
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedCollection`1.CopyTo(System.Array,System.Int32)">
+            <summary>
+            Copies the elements of the <see cref="T:System.Collections.ICollection"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.ICollection"/>. The <see cref="T:System.Array"/> must have zero-based indexing. 
+                            </param><param name="index">The zero-based index in <paramref name="array"/> at which copying begins. 
+                            </param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null. 
+                            </exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. 
+                            </exception><exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.
+                                -or- 
+                            <paramref name="index"/> is equal to or greater than the length of <paramref name="array"/>.
+                                -or- 
+                                The number of elements in the source <see cref="T:System.Collections.ICollection"/> is greater than the available space from <paramref name="index"/> to the end of the destination <paramref name="array"/>. 
+                            </exception><exception cref="T:System.ArgumentException">The type of the source <see cref="T:System.Collections.ICollection"/> cannot be cast automatically to the type of the destination <paramref name="array"/>. 
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedCollection`1.SyncRoot">
+            <summary>
+            Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"/>.
+            </summary>
+            <returns>
+            An object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"/>.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedCollection`1.IsSynchronized">
+            <summary>
+            Gets a value indicating whether access to the <see cref="T:System.Collections.ICollection"/> is synchronized (thread safe).
+            </summary>
+            <returns>
+            true if access to the <see cref="T:System.Collections.ICollection"/> is synchronized (thread safe); otherwise, false.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedCollection`1.PrologBackedCollectionEnumerator.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedCollection`1.PrologBackedCollectionEnumerator.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the collection.
+            </summary>
+            <returns>
+            true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. 
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Swicli.Library.PrologBackedCollection`1.PrologBackedCollectionEnumerator.Reset">
+            <summary>
+            Sets the enumerator to its initial position, which is before the first element in the collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. 
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedCollection`1.PrologBackedCollectionEnumerator.Current">
+            <summary>
+            Gets the element in the collection at the current position of the enumerator.
+            </summary>
+            <returns>
+            The element in the collection at the current position of the enumerator.
+            </returns>
+        </member>
+        <member name="P:Swicli.Library.PrologBackedCollection`1.PrologBackedCollectionEnumerator.System#Collections#IEnumerator#Current">
+            <summary>
+            Gets the current element in the collection.
+            </summary>
+            <returns>
+            The current element in the collection.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element.
+                            </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="T:SbsSW.DesignByContract.Check">
+             <summary>
+             Design By Contract Checks.
+             
+             Each method generates an exception or
+             a trace assertion statement if the contract is broken.
+             </summary>
+             <remarks>
+             This example shows how to call the Require method.
+             <code>
+             public void Test(int x)
+             {
+             	try
+             	{
+            			Check.Require(x > 1, "x must be > 1");
+            		}
+            		catch (System.Exception ex)
+            		{
+            			PrologCLR.ConsoleTrace(ex.ToString());
+            		}
+            	}
+             </code>
+            
+             You can direct output to a Trace listener. For example, you could insert
+             <code>
+             Trace.Cogbot.Clear();
+             Trace.Cogbot.Add(new TextWriterTraceListener(Console.Out));
+             </code>
+             
+             or direct output to a file or the Event Log.
+             
+             (Note: For ASP.NET clients use the Cogbot collection
+             of the Debug, not the Trace, object and, for a Release build, only exception-handling
+             is possible.)
+             </remarks>
+             
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Require(System.Boolean,System.String)">
+            <summary>
+            Precondition check - should run regardless of preprocessor directives.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Require(System.Boolean,System.String,System.Exception)">
+            <summary>
+            Precondition check - should run regardless of preprocessor directives.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Require(System.Boolean)">
+            <summary>
+            Precondition check - should run regardless of preprocessor directives.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Ensure(System.Boolean,System.String)">
+            <summary>
+            Postcondition check.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Ensure(System.Boolean,System.String,System.Exception)">
+            <summary>
+            Postcondition check.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Ensure(System.Boolean)">
+            <summary>
+            Postcondition check.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Invariant(System.Boolean,System.String)">
+            <summary>
+            Invariant check.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Invariant(System.Boolean,System.String,System.Exception)">
+            <summary>
+            Invariant check.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Invariant(System.Boolean)">
+            <summary>
+            Invariant check.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Assert(System.Boolean,System.String)">
+            <summary>
+            Assertion check.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Assert(System.Boolean,System.String,System.Exception)">
+            <summary>
+            Assertion check.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.Check.Assert(System.Boolean)">
+            <summary>
+            Assertion check.
+            </summary>
+        </member>
+        <member name="P:SbsSW.DesignByContract.Check.UseAssertions">
+            <summary>
+            Set this if you wish to use Trace Assert statements 
+            instead of exception handling. 
+            (The Check class uses exception handling by default.)
+            </summary>
+        </member>
+        <member name="P:SbsSW.DesignByContract.Check.UseExceptions">
+            <summary>
+            Is exception handling being used?
+            </summary>
+        </member>
+        <member name="T:SbsSW.DesignByContract.DesignByContractException">
+            <summary>
+            Exception raised when a contract is broken.
+            Catch this exception type if you wish to differentiate between 
+            any DesignByContract exception and other runtime exceptions.
+             
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.DesignByContractException.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.DesignByContract.DesignByContractException.#ctor(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.DesignByContract.DesignByContractException.#ctor(System.String,System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.DesignByContract.DesignByContractException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.DesignByContract.DesignByContractException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:SbsSW.DesignByContract.PreconditionException">
+            <summary>
+            Exception raised when a precondition fails.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.PreconditionException.#ctor">
+            <summary>
+            Precondition Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.PreconditionException.#ctor(System.String)">
+            <summary>
+            Precondition Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.PreconditionException.#ctor(System.String,System.Exception)">
+            <summary>
+            Precondition Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.PreconditionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.DesignByContract.PreconditionException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:SbsSW.DesignByContract.PostConditionException">
+            <summary>
+            Exception raised when a postcondition fails.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.PostConditionException.#ctor">
+            <summary>
+            Postcondition Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.PostConditionException.#ctor(System.String)">
+            <summary>
+            Postcondition Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.PostConditionException.#ctor(System.String,System.Exception)">
+            <summary>
+            Postcondition Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.PostConditionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.DesignByContract.PostConditionException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:SbsSW.DesignByContract.InvariantException">
+            <summary>
+            Exception raised when an invariant fails.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.InvariantException.#ctor">
+            <summary>
+            Invariant Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.InvariantException.#ctor(System.String)">
+            <summary>
+            Invariant Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.InvariantException.#ctor(System.String,System.Exception)">
+            <summary>
+            Invariant Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.InvariantException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.DesignByContract.InvariantException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:SbsSW.DesignByContract.AssertionException">
+            <summary>
+            Exception raised when an assertion fails.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.AssertionException.#ctor">
+            <summary>
+            Assertion Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.AssertionException.#ctor(System.String)">
+            <summary>
+            Assertion Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.AssertionException.#ctor(System.String,System.Exception)">
+            <summary>
+            Assertion Exception.
+            </summary>
+        </member>
+        <member name="M:SbsSW.DesignByContract.AssertionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.DesignByContract.AssertionException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.NamespaceDoc">
+            <summary>
+            <para>The namespace SbsSW.SwiPlCs.Callback provides the delegates to register .NET methods to be 
+            called from <a href="http://www.swi-prolog.org">SWI-Prolog</a>
+            </para>
+            </summary>
+            <remarks>
+            <note>It is only possible to call <see langword="static"/> methods</note>
+            </remarks>
+            <seealso cref="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.String,System.Delegate)"/>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.PlForeignSwitches">
+            <summary>
+            Flags that are responsible for the foreign predicate parameters 
+            </summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Callback.PlForeignSwitches.None">
+            <summary>0 - PL_FA_NOTHING: no flags. </summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Callback.PlForeignSwitches.NoTrace">
+            <summary>1 - PL_FA_NOTRACE: Predicate cannot be seen in the tracer. </summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Callback.PlForeignSwitches.Transparent">
+            <summary>2 - PL_FA_TRANSPARENT: Predicate is module transparent.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Callback.PlForeignSwitches.Nondeterministic">
+            <summary>4 - PL_FA_NONDETERMINISTIC: Predicate is non-deterministic. See also PL_retry().</summary>
+            <seealso href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_retry()">PL_retry()</seealso>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Callback.PlForeignSwitches.VarArgs">
+            <summary>8 - PL_FA_VARARGS: (Default) Use alternative calling convention.   call using t0, ac, ctx </summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Callback.PlForeignSwitches.CRef">
+            <summary>16 - PL_FA_CREF:  /* call using t0, ac, ctx */.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Callback.PlForeignSwitches.ISO">
+            <summary>
+            /* Internal: ISO core predicate */
+            </summary>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.SwiOnHalt">
+            <summary>
+            PL_EXPORT(void) PL_on_halt(void (*)(int, void *), void *);
+            </summary>
+            <param name="t_atom"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.PL_abort_hook_t">
+            <summary>
+            typedef void (*PL_abort_hook_t)(void);
+            </summary>
+            <param name="t_atom"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.DelegateParameter0">
+            <inheritdoc cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/>
+            
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.DelegateParameter1">
+            <inheritdoc cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/>
+            <example>
+            <para>See also the example in <see cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/>.</para>
+                <code source="..\..\TestSwiPl\CallbackForeigenPredicate.cs" region="t_creating_a_list_doc"/>
+            </example>
+            <param name="term"></param>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.DelegateParameter2">
+            <summary>
+            <para>Provide a predefined Delegate to register a C# method to be called from SWI-Prolog</para>
+            </summary>
+            <example>
+            <para>This example is for <see cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/> and shows how o call a C# method with two parameter.</para>
+            <para>For other samples see the source file CallbackForeigenPredicate.cs in the TestSwiPl VS2008 test project.</para>
+                <code source="..\..\TestSwiPl\CallbackForeigenPredicate.cs" region="t_in_out_doc"/>
+            </example>
+            <param name="term1"></param>
+            <param name="term2"></param>
+            <returns>true for succeeding otherwise false for fail</returns>
+            <seealso cref="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.Delegate)"/>
+            <seealso cref="M:SbsSW.SwiPlCs.PlEngine"/>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.DelegateParameter3">
+            <inheritdoc cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/>
+            <param name="term1"></param>
+            <param name="term2"></param>
+            <param name="term3"></param>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.DelegateParameter4">
+            <inheritdoc cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/>
+            <param name="term1"></param>
+            <param name="term2"></param>
+            <param name="term3"></param>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.DelegateParameter5">
+            <inheritdoc cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/>
+            <param name="term1"></param>
+            <param name="term2"></param>
+            <param name="term3"></param>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.DelegateParameterVarArgs">
+            <summary>
+            <para>With this delegate you can build a call-back predicate with a variable amount of parameters.</para>
+            </summary>
+            <example>
+                <code source="..\..\TestSwiPl\CallbackForeigenPredicate.cs" region="t_varargs_doc"/>
+            </example>
+            <param name="termVector">The termVector representing the arguments which can be accessed by the 
+            indexer of PlTermV see <see cref="T:SbsSW.SwiPlCs.PlTermV"/>. The amount of parameters is in <see cref="P:SbsSW.SwiPlCs.PlTermV.Size"/>
+            </param>
+            <returns>True for succeeding otherwise false for fail</returns>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Callback.DelegateParameterBacktrack1">
+            <summary>
+            <para><b>NOT IMPLEMENTED YET</b></para>
+            <para>For details to implement see <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_register_foreign_in_module()">9.6.17 Registering Foreign Predicates</see></para>
+            see also <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_foreign_control()">PL_foreign_control</see>
+            </summary>
+            <param name="term1">TODO</param>
+            <param name="term2">TODO</param>
+            <param name="control">TODO</param>
+            <returns>TODO</returns>
+            <example>TODO
+            <para>See "t_backtrack" in TestSwiPl.CallbackForeigenPredicate.cs</para>
+            </example>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Streams.NamespaceDoc">
+            <summary>
+            <para>The namespace SbsSW.SwiPlCs.Streams provides the delegates to redirect the read 
+            and write functions of the <a href="http://www.swi-prolog.org">SWI-Prolog</a> IO Streams.</para>
+            <para>When <see cref="M:SbsSW.SwiPlCs.PlEngine.Initialize(System.String[])"/> is called the *Sinput-&gt;functions.read is 
+            replaced by the .NET method 'Sread_function' and *Sinput-&gt;functions.write by 'Swrite_funktion'.</para>
+            <para>For further examples see the methods <see cref="M:SbsSW.SwiPlCs.PlEngine.SetStreamFunctionWrite(SbsSW.SwiPlCs.Streams.PlStreamType,SbsSW.SwiPlCs.Streams.DelegateStreamWriteFunction)"/> and <see cref="M:SbsSW.SwiPlCs.PlEngine.SetStreamFunctionRead(SbsSW.SwiPlCs.Streams.PlStreamType,SbsSW.SwiPlCs.Streams.DelegateStreamReadFunction)"/></para>
+            </summary>
+            <remarks>
+            <note>The reason for this is debugging.</note>
+            </remarks>
+            <example>
+            <code source="..\swi-cs.cs" region="default_io_doc"/>
+            </example>
+            <seealso cref="M:SbsSW.SwiPlCs.PlEngine.SetStreamFunctionRead(SbsSW.SwiPlCs.Streams.PlStreamType,SbsSW.SwiPlCs.Streams.DelegateStreamReadFunction)"/>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Streams.PlStreamType">
+            <summary>
+            The standard SWI-Prolog streams ( input output error )
+            </summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Streams.PlStreamType.Input">
+            <summary>0 - The standard input stream.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Streams.PlStreamType.Output">
+            <summary>1 - The standard input stream.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.Streams.PlStreamType.Error">
+            <summary>1 - The standard error stream.</summary>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Streams.DelegateStreamReadFunction">
+            <summary>
+            See <see cref="M:SbsSW.SwiPlCs.PlEngine.SetStreamFunctionRead(SbsSW.SwiPlCs.Streams.PlStreamType,SbsSW.SwiPlCs.Streams.DelegateStreamReadFunction)"/>
+            </summary>
+            <param name="handle">A C stream handle. simple ignore it.</param>
+            <param name="buffer">A pointer to a string buffer</param>
+            <param name="bufferSize">The size of the string buffer</param>
+            <returns>A <see cref="T:System.Delegate"/></returns>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.Streams.DelegateStreamWriteFunction">
+            <summary>
+            See <see cref="M:SbsSW.SwiPlCs.PlEngine.SetStreamFunctionWrite(SbsSW.SwiPlCs.Streams.PlStreamType,SbsSW.SwiPlCs.Streams.DelegateStreamWriteFunction)"/>
+            </summary>
+            <param name="handle">A C stream handle. simple ignore it.</param>
+            <param name="buffer">A pointer to a string buffer</param>
+            <param name="bufferSize">The size of the string buffer</param>
+            <returns>A <see cref="T:System.Delegate"/></returns>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.NamespaceDoc">
+            <summary>
+            <para>The online documentation home is <a href="http://www.lesta.de/prolog/swiplcs/Generated/Index.aspx">here</a>.</para>
+            <para>This namespace SbsSW.SwiPlCs provides an .NET interface to <a href="http://www.swi-prolog.org">SWI-Prolog</a></para>
+            
+            
+            <para><h4>Overview</h4></para>
+            <para>Prolog variables are dynamically typed and all information is passed around using the 
+            C-interface type term_t witch is an int. In C#, term_t is embedded in the lightweight struct <see cref="T:SbsSW.SwiPlCs.PlTerm"/>. 
+            Constructors and operator definitions provide flexible operations and integration with important C#-types (<c>string, int and double</c>).
+            </para>
+            
+            <para>The list below summarises the important classes / struct defined in the C# interface.</para>
+            <list type="table">  
+            <listheader><term>class / struct</term><description>Short description </description></listheader>  
+            <item><term><see cref="T:SbsSW.SwiPlCs.PlEngine"/></term><description>A static class represents the prolog engine.</description></item>  
+            <item><term><see cref="T:SbsSW.SwiPlCs.PlTerm"/></term><description>A struct representing prolog data.</description></item>  
+            <item><term><see cref="T:SbsSW.SwiPlCs.PlTermV"/></term><description>A vector of <see cref="T:SbsSW.SwiPlCs.PlTerm"/>.</description></item>  
+            <item><term><see cref="T:SbsSW.SwiPlCs.PlQuery"/></term><description>A class to query Prolog.</description></item>  
+            </list>   
+            </summary>
+            
+            <example>
+            <para>Before going into a detailed description of the CSharp classes let me present a few examples 
+            illustrating the `feel' of the interface. The Assert class in the sample is from the test framework 
+            and has nothing to do with the interface. It shows only which return values are expected.
+            </para>
+            <h4>Creating terms</h4>
+            <para>This very simple example shows the basic creation of a Prolog term and how a Prolog term is converted to C#-data:</para>
+            <code>
+                PlTerm t1 = new PlTerm("x(A)"); 
+                PlTerm t2 = new PlTerm("x(1)"); 
+                Assert.IsTrue(t1.Unify(t2));
+                Assert.AreEqual("x(1)", t1.ToString());
+            </code>
+            
+            <h4>Calling Prolog</h4>
+            <para>This example shows how to make a simple call to prolog.</para>
+            <code>
+                PlTerm l1 = new PlTerm("[a,b,c,d]");
+                Assert.IsTrue(PlQuery.PlCall("is_list", l1));
+            </code>
+            
+            <h4>Getting the solutions of a query</h4>
+            <para>This example shows how to obtain all solutions of a prolog query.</para>
+            <para><see cref="T:SbsSW.SwiPlCs.PlQuery"/> takes the name of a predicate and the goal-argument vector as arguments.
+            From this information it deduces the arity and locates the predicate. the member-function 
+            NextSolution() yields true if there was a solution and false otherwise. 
+            If the goal yielded a Prolog exception it is mapped into a C# exception.</para>
+            <code>
+                PlQuery q = new PlQuery("member", new PlTermV(new PlTerm("A"), new PlTerm("[a,b,c]")));
+                while (q.NextSolution())
+                    PrologCLR.ConsoleTrace(s[0].ToString());
+            </code>
+            <para>There is an other constructor of <see cref="T:SbsSW.SwiPlCs.PlQuery"/> which simplify the sample above.</para>
+            <code>
+                PlQuery q = new PlQuery("member(A, [a,b,c])");
+                foreach (PlTermV s in q.Solutions)
+                    PrologCLR.ConsoleTrace(s[0].ToString());
+            </code>
+            <para>An other way to get the results is to use <see cref="P:SbsSW.SwiPlCs.PlQuery.SolutionVariables"/> to iterate over <see cref="T:SbsSW.SwiPlCs.PlQueryVariables"/>.</para>
+            <code>
+                PlQuery q = new PlQuery("member(A, [a,b,c])");
+                foreach (PlQueryVariables vars in q.SolutionVariables)
+                    PrologCLR.ConsoleTrace(vars["A"].ToString());
+            </code>
+            <para>It is also possible to get all solutions in a list by <see cref="M:SbsSW.SwiPlCs.PlQuery.ToList"/>. 
+            This could be used to work with LinQ to objects which is really nice. <see cref="T:SbsSW.SwiPlCs.PlQuery"/> and <see cref="M:SbsSW.SwiPlCs.PlQuery.ToList"/> for further samples.</para>
+            <code>
+                var results = from n in new PlQuery("member(A, [a,b,c])").ToList() select new {A = n["A"].ToString()};
+                foreach (var s in results)
+                    PrologCLR.ConsoleTrace(s.A);
+            </code>
+            </example>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlType">
+            <summary>
+            Obtain the type of a term, which should be a term returned by one of the other 
+            interface predicates or passed as an argument. The function returns the type of 
+            the Prolog term. The type identifiers are listed below. 
+            </summary>
+            <remarks>see <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_term_type()">PL_term_type(term_t)</see> in the SWI-Prolog Manual.</remarks>
+            <seealso cref="P:SbsSW.SwiPlCs.PlTerm.PlType"/>
+            <example>
+            In this sample a Prolog variable is created in <see cref="F:SbsSW.SwiPlCs.PlType.PlTerm">PlTerm t</see> and the <see cref="P:SbsSW.SwiPlCs.PlTerm.PlType"/> 
+            is checked by his integer representation and his name.
+            <code>
+                PlTerm t = PlTerm.PlVar();
+                Assert.AreEqual(1, (int)t.PlType);
+                Assert.AreEqual(PlType.PlVariable, t.PlType);
+            </code>
+            </example>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlType.PlUnknown">
+            <summary>0 - PL_UNKNOWN: Undefined </summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlType.PlVariable">
+            <summary>1 - PL_VARIABLE: An unbound variable. The value of term as such is a unique identifier for the variable.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlType.PlAtom">
+            <summary>2 - PL_ATOM: A Prolog atom.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlType.PlInteger">
+            <summary>3 - PL_INTEGER: A Prolog integer.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlType.PlFloat">
+            <summary>4 - PL_FLOAT: A Prolog floating point number.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlType.PlString">
+            <summary>5 - PL_STRING: A Prolog string.</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlType.PlTerm">
+            <summary>6 - PL_TERM: A compound term. Note that a list is a compound term ./2.</summary>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlTerm">
+            <summary>
+             <para>The PlTerm <see langword="struct"/> plays a central role in conversion and operating on Prolog data.</para>
+             <para>PlTerm implements <see cref="T:System.IComparable"/> to support ordering in <see cref="N:System.Linq"/> queries if PlTerm is a List.</para>
+             <para>Creating a PlTerm can be done by the <see href="Overload_SbsSW_SwiPlCs_PlTerm__ctor.htm">Constructors</see> or by the following static methods:</para>
+             <para>PlVar(), PlTail(), PlCompound, PlString(), PlCodeList(), PlCharList() (see remarks)</para>
+            </summary>
+            <remarks>
+            <list type="table">  
+            <listheader><term>static method</term><description>Description </description></listheader>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlVar"/></term><description>Creates a new initialised term (holding a Prolog variable).</description></item>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlTail(SbsSW.SwiPlCs.PlTerm)"/></term><description>PlTail is for analysing and constructing lists.</description></item>  
+            <item><term><see href="Overload_SbsSW_SwiPlCs_PlTerm_PlCompound.htm">PlCompound(string)</see></term><description>Create compound terms. E.g. by parsing (as read/1) the given text.</description></item>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlString(System.String)"/></term><description>Create a SWI-Prolog string.</description></item>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlCodeList(System.String)"/></term><description>Create a Prolog list of ASCII codes from a 0-terminated C-string.</description></item>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlCharList(System.String)"/></term><description>Create a Prolog list of one-character atoms from a 0-terminated C-string.</description></item>  
+            </list>   
+            </remarks>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlTerm._termRef">
+            <summary>
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.CompareTo(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.#ctor(System.UInt32)">
+            <summary>
+            Create a PlTerm but *no* new term_ref it only copies the term_ref into the new object
+            Used Intern by
+            - PlException constructor
+            - PlQueryQ.GetSolutions()
+            - PlTermV this[int index] indexer
+            </summary>
+            <param name="termRef"></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.#ctor(System.String)">
+            <overloads>
+            <summary>
+            A new PlTerm can be also created by the static methods:
+            <list type="table">  
+            <listheader><term>static method</term><description>Description </description></listheader>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlVar"/></term><description>Creates a new initialised term (holding a Prolog variable).</description></item>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlTail(SbsSW.SwiPlCs.PlTerm)"/></term><description>PlTail is for analysing and constructing lists.</description></item>  
+            <item><term><see href="Overload_SbsSW_SwiPlCs_PlTerm_PlCompound.htm">PlCompound(string)</see></term><description>Create compound terms. E.g. by parsing (as read/1) the given text.</description></item>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlString(System.String)"/></term><description>Create a SWI-Prolog string.</description></item>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlCodeList(System.String)"/></term><description>Create a Prolog list of ASCII codes from a 0-terminated C-string.</description></item>  
+            <item><term><see cref="M:SbsSW.SwiPlCs.PlTerm.PlCharList(System.String)"/></term><description>Create a Prolog list of one-character atoms from a 0-terminated C-string.</description></item>  
+            </list>   
+            </summary>
+            </overloads>
+            <summary>
+            Creates a term-references holding a Prolog term representing text.
+            </summary>
+            <param name="text">the text</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.#ctor(System.Int32)">
+            <summary>
+            Creates a term-references holding a Prolog integer representing value.
+            </summary>
+            <param name="value">a integer value</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.#ctor(System.Double)">
+            <summary>
+            Creates a term-references holding a Prolog float representing value.
+            </summary>
+            <param name="value">a double value</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlVar">
+            <summary>
+            Creates a new initialised term (holding a Prolog variable).
+            </summary>
+            <returns>a PlTerm</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlTail(SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            <para>
+            PlTail is for analysing and constructing lists. 
+            It is called PlTail as enumeration-steps make the term-reference follow the `tail' of the list.
+            </para>
+            <para>
+            A PlTail is created by making a new term-reference pointing to the same object. 
+            As PlTail is used to enumerate or build a Prolog list, the initial list 
+            term-reference keeps pointing to the head of the list.
+            </para>
+            </summary>
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.Append(SbsSW.SwiPlCs.PlTerm)" select="example"/>
+            <param name="list">The initial PlTerm</param>
+            <returns>A PlTerm for which is_list/1 succeed.</returns>
+            <seealso cref="M:SbsSW.SwiPlCs.PlTerm.Append(SbsSW.SwiPlCs.PlTerm)"/>
+            <seealso cref="M:SbsSW.SwiPlCs.PlTerm.Add(SbsSW.SwiPlCs.PlTerm)"/>
+            <seealso cref="M:SbsSW.SwiPlCs.PlTerm.AddList(SbsSW.SwiPlCs.PlTerm)"/>
+            <seealso cref="M:SbsSW.SwiPlCs.PlTerm.Close"/>
+            <seealso cref="M:SbsSW.SwiPlCs.PlTerm.NextValue"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlCompound(System.String)">
+            <overloads>
+            <summary>
+            <para>These static methods creates a new compound <see cref="T:SbsSW.SwiPlCs.PlTerm"/>.</para>
+            <para>For an example <see cref="M:SbsSW.SwiPlCs.PlTerm.PlCompound(System.String,SbsSW.SwiPlCs.PlTermV)"/></para>
+            </summary>
+            </overloads>
+            <summary>
+            Create a term by parsing (as read/1) the text.
+            </summary>
+            <exception cref="T:SbsSW.SwiPlCs.Exceptions.PlException">If the text is not valid Prolog syntax, a syntax error exception is raised.
+            <para>Otherwise a new term-reference holding the parsed text is created.</para>
+            </exception>
+            <param name="text">The string representing the compound term  parsed by read/1.</param>
+            <returns>a new <see cref="T:SbsSW.SwiPlCs.PlTerm"/></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlCompound(System.String,SbsSW.SwiPlCs.PlTermV)">
+            <summary>
+            <para>Create a compound term with the given name from the given vector of arguments. See <see cref="T:SbsSW.SwiPlCs.PlTermV"/> for details.</para>
+            </summary>
+            <example>
+            <para>The example below creates the Prolog term hello(world).</para>
+            <code>
+             PlTerm t = PlTerm.PlCompound("hello", new PlTermv("world"));
+            </code>
+            </example>
+            <param name="functor">The functor (name) of the compound term</param>
+            <param name="args">the arguments as a <see cref="T:SbsSW.SwiPlCs.PlTermV"/></param>
+            <returns>a new <see cref="T:SbsSW.SwiPlCs.PlTerm"/></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlCompound(System.String,SbsSW.SwiPlCs.PlTerm[])">
+            <summary>
+            <para>Create a compound term with the given name ant the arguments</para>
+            </summary>
+            <param name="functor">The functor (name) of the compound term</param>
+            <param name="arg1">The first Argument as a <see cref="T:SbsSW.SwiPlCs.PlTerm"/></param>
+            <returns>a new <see cref="T:SbsSW.SwiPlCs.PlTerm"/></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlCompound(System.String,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="!:PlCompound(string, PlTerm)"/>
+             <param name="arg2">The second Argument as a <see cref="T:SbsSW.SwiPlCs.PlTerm"/></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlCompound(System.String,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.PlCompound(System.String,SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)"/>
+             <param name="arg3">The third Argument as a <see cref="T:SbsSW.SwiPlCs.PlTerm"/></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlString(System.String)">
+             <overloads>
+             <para>
+             A SWI-Prolog string represents a byte-string on the global stack.
+             It's lifetime is the same as for compound terms and other data living on the global stack.
+             Strings are not only a compound representation of text that is garbage-collected,
+             but as they can contain 0-bytes, they can be used to contain arbitrary C-data structures.
+             </para>
+            </overloads>
+             <param name="text">the string</param>
+             <returns>a new PlTerm</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlString(System.String,System.Int32)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.PlString(System.String)"/>
+            <param name="len">the length of the string</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlCodeList(System.String)">
+            <summary>
+            Create a Prolog list of ASCII codes from a 0-terminated C-string.
+            </summary>
+            <param name="text">The text</param>
+            <returns>a new <see cref="T:SbsSW.SwiPlCs.PlTerm"/></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.PlCharList(System.String)">
+            <overloads>
+            <summary>
+            <para>These static methods creates a new PlCharList TODO TODO <see cref="T:SbsSW.SwiPlCs.PlTerm"/>.</para>
+            </summary>
+            </overloads>
+            <summary>Create a Prolog list of one-character atoms from a C#-string.</summary>
+            <remarks>Character lists are compliant to Prolog's <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/manipatom.html#atom_chars/2">atom_chars/2</see> predicate.</remarks>
+            <param name="text">a string</param>
+            <returns>A new PlTerm containing a prolog list of character</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Append(SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Appends element to the list and make the PlTail reference point to the new variable tail. 
+            If A is a variable, and this method is called on it using the argument "gnat", 
+            a list of the form [gnat|B] is created and the PlTail object now points to the new variable B.
+            
+            This method returns TRUE if the unification succeeded and FALSE otherwise. No exceptions are generated.
+            </summary>
+            <example>
+                <code source="..\..\TestSwiPl\PlLTail.cs" region="List_Append_from_doc" />
+            </example>
+            <param name="term">The PlTerm to append on the list.</param>
+            <returns>true if successful otherwise false</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Add(SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Appends an element to a list by creating a new one and copy all elements
+            Note This is a slow version
+            see my mail from Jan from 2007.11.06 14:44
+            </summary>
+            <param name="term">a closed list</param>
+            <returns>True if Succeed</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.AddList(SbsSW.SwiPlCs.PlTerm)">
+            <summary>
+            Appends a list ( PlTail ) to a list by creating a new one and copy all elements
+            </summary>
+            <example>
+            <code source="..\..\TestSwiPl\PlLTail.cs" region="List_Add_list_doc" />
+            </example>
+            <param name="listToAppend">a closed list</param>
+            <returns>True if Succeed</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Close">
+            <summary>
+            Unifies the term with [] and returns the result of the unification.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.NextValue">
+            <summary>
+            return a PlTerm bound to the next element of the list PlTail and advance PlTail. 
+            Returns the element on success or a free PlTerm (Variable) if PlTail represents the empty list. 
+            If PlTail is neither a list nor the empty list, a PlTypeException (type_error) is thrown. 
+            </summary>
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.AddList(SbsSW.SwiPlCs.PlTerm)" select="example"/>
+            <returns>The Next element in the list as a PlTerm which is a variable for the last element or an empty list</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.ToList">
+            <summary>
+            Converts to a strongly typed ReadOnlyCollection of PlTerm objects that can be accessed by index
+            </summary>
+            <returns>A strongly typed ReadOnlyCollection of PlTerm objects</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.ToListString">
+            <summary>
+            Converts to a strongly typed Collection of strings that can be accessed by index
+            </summary>
+            <returns>A strongly typed string Collection</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>A System.Collections.Generic.IEnumerator&lt;T that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An System.Collections.IEnumerator object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Next(SbsSW.SwiPlCs.PlTerm@)">
+            <summary>
+            Bind termRef to the next element of the list PlTail and advance PlTail. 
+            Returns TRUE on success and FALSE if PlTail represents the empty list. 
+            If PlTail is neither a list nor the empty list, a type_error is thrown. 
+            </summary>
+            <param name="termRef"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.ToString">
+            <inheritdoc />
+            <summary>
+            <para>If PlTerm is a list the string is build by calling ToString() for each element in the list 
+            separated by ',' and put the brackets around '[' ']'.</para>
+            <para></para>
+            </summary>
+            <seealso cref="O:string"/>
+            <returns>A string representing the PlTerm.</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.ToStringCanonical">
+            <summary>
+            Convert a PlTerm to a string by <see href="http://www.swi-prolog.org/pldoc/man?predicate=write_canonical%2f1">write_canonical/1</see>
+            <para>This Method use <see cref="T:SbsSW.SwiPlCs.Streams.DelegateStreamWriteFunction"/> and is slow.</para>
+            </summary>
+            <returns>return the string of a PlTerm</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Put(SbsSW.SwiPlCs.PlTerm)">
+            <overloads>
+            This methods performs Prolog unification and returns true if successful and false otherwise.
+            It is equal to the prolog =/2 operator.
+            <para>See <see cref="M:SbsSW.SwiPlCs.PlTerm.Put(SbsSW.SwiPlCs.PlTerm)"/> for an example.</para>
+            <remarks>
+            This methods are introduced for clear separation between the destructive assignment in C# using =
+            and prolog unification.
+            </remarks>
+            </overloads>
+            <summary>Put a PlTerm with a PlTerm</summary>
+            <example>
+            <code source="..\..\TestSwiPl\PlTerm.cs" region="UnifyTermVar_doc"/>
+            </example>
+            <param name="term">the second term for unification</param>
+            <returns>true or false</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Put(System.String)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.Put(SbsSW.SwiPlCs.PlTerm)"/>
+            <param name="atom">A string to Put with</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Unify(SbsSW.SwiPlCs.PlTerm)">
+            <overloads>
+            This methods performs Prolog unification and returns true if successful and false otherwise.
+            It is equal to the prolog =/2 operator.
+            <para>See <see cref="M:SbsSW.SwiPlCs.PlTerm.Unify(SbsSW.SwiPlCs.PlTerm)"/> for an example.</para>
+            <remarks>
+            This methods are introduced for clear separation between the destructive assignment in C# using =
+            and prolog unification.
+            </remarks>
+            </overloads>
+            <summary>Unify a PlTerm with a PlTerm</summary>
+            <example>
+            <code source="..\..\TestSwiPl\PlTerm.cs" region="UnifyTermVar_doc"/>
+            </example>
+            <param name="term">the second term for unification</param>
+            <returns>true or false</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Unify(System.String)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.Unify(SbsSW.SwiPlCs.PlTerm)"/>
+            <param name="atom">A string to unify with</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Copy">
+            <summary>
+            Useful e.g. for lists list.Copy().ToList(); list.ToString();
+            </summary>
+            <returns>Return a unifies PlTerm.PlVar of this term</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Explicit(SbsSW.SwiPlCs.PlTerm)~System.String">
+            <summary>
+            Converts the Prolog argument into a string which implies Prolog atoms and strings
+            are converted to the represented text or throw a PlTypeException. 
+            </summary>
+            <remarks>
+            <para>Converts the Prolog argument using PL_get_chars() using the 
+            flags CVT_ALL|CVT_WRITE|BUF_RING, which implies Prolog atoms and strings
+            are converted to the represented text or throw a PlTypeException. 
+            </para>
+            <para>If the above call return 0 <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_get_chars()">PL_get_chars</see> is called a second time with the flags CVT_ALL|CVT_WRITE|BUF_RING|REP_UTF8.</para>
+            <para>All other data is handed to write/1.</para>
+            </remarks>
+            <param name="term">A PlTerm that can be converted to a string</param>
+            <returns>A C# string</returns>
+            <exception cref="T:SbsSW.SwiPlCs.Exceptions.PlTypeException">Throws a PlTypeException exception</exception>
+            <exception cref="T:SbsSW.DesignByContract.PreconditionException">Is thrown if the operator is used on an uninitialized PlTerm</exception>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Explicit(SbsSW.SwiPlCs.PlTerm)~System.Int32">
+            <summary>
+            Yields a int if the PlTerm is a Prolog integer or float that can be converted 
+            without loss to a int. Throws a PlTypeException exception otherwise
+            </summary>
+            <param name="term">A PlTerm is a Prolog integer or float that can be converted without loss to a int.</param>
+            <returns>A C# int</returns>
+            <exception cref="T:SbsSW.SwiPlCs.Exceptions.PlTypeException">Throws a PlTypeException exception if <see cref="P:SbsSW.SwiPlCs.PlTerm.PlType"/> 
+            is not a <see langword="PlType.PlInteger"/> or a <see langword="PlType.PlFloat"/>.</exception>
+            <exception cref="T:SbsSW.DesignByContract.PreconditionException">Is thrown if the operator is used on an uninitialized PlTerm</exception>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Explicit(SbsSW.SwiPlCs.PlTerm)~System.Int64">
+            <summary>
+            Yields a long if the PlTerm is a Prolog integer or float that can be converted 
+            without loss to a long. Throws a PlTypeException exception otherwise
+            </summary>
+            <param name="term">A PlTerm is a Prolog integer or float that can be converted without loss to a long.</param>
+            <returns>A C# long</returns>
+            <exception cref="T:SbsSW.SwiPlCs.Exceptions.PlTypeException">Throws a PlTypeException exception if <see cref="P:SbsSW.SwiPlCs.PlTerm.PlType"/> 
+            is not a <see langword="PlType.PlInteger"/> or a <see langword="PlType.PlFloat"/>.</exception>
+            <exception cref="T:SbsSW.DesignByContract.PreconditionException">Is thrown if the operator is used on an uninitialized PlTerm</exception>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Explicit(SbsSW.SwiPlCs.PlTerm)~System.Double">
+            <summary>
+            Yields the value as a C# double if PlTerm represents a Prolog integer or float. 
+            Throws a PlTypeException exception otherwise. 
+            </summary>
+            <param name="term">A PlTerm represents a Prolog integer or float</param>
+            <returns>A C# double</returns>
+            <exception cref="T:SbsSW.SwiPlCs.Exceptions.PlTypeException">Throws a PlTypeException exception if <see cref="P:SbsSW.SwiPlCs.PlTerm.PlType"/> 
+            is not a <see langword="PlType.PlInteger"/> or a <see langword="PlType.PlFloat"/>.</exception>
+            <exception cref="T:SbsSW.DesignByContract.PreconditionException">Is thrown if the operator is used on an uninitialized PlTerm</exception>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <overload>Compare the instance term1 with term2 and return the result according to the Prolog defined standard order of terms.</overload>
+            <summary>
+            Yields TRUE if the PlTerm is an atom or string representing the same text as the argument, 
+            FALSE if the conversion was successful, but the strings are not equal and an 
+            type_error exception if the conversion failed.
+            </summary>
+            <param name="term1">a PlTerm</param>
+            <param name="term2">a PlTerm</param>
+            <returns>true or false</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Inequality(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_LessThan(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_GreaterThan(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_LessThanOrEqual(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_GreaterThanOrEqual(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,System.Int32)">
+            <overload>test overload</overload>
+            <inheritdoc />
+            <param name="term">a PlTerm</param>
+            <param name="lng">a int</param>
+            <returns>A bool</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Equality(System.Int32,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Equality(System.String,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Inequality(SbsSW.SwiPlCs.PlTerm,System.Int32)">
+            <overloads>
+            <summary>
+            <para>Inequality Method overload</para>
+            <see cref="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,SbsSW.SwiPlCs.PlTerm)"/>
+            a
+            <see cref="M:SbsSW.SwiPlCs.PlTerm.op_Equality(SbsSW.SwiPlCs.PlTerm,System.Int32)"/>
+            </summary>
+            </overloads>
+            
+            <summary>
+            summary
+            </summary>
+            <param name="term"></param>
+            <param name="lng"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Inequality(System.Int32,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.op_Inequality(SbsSW.SwiPlCs.PlTerm,System.Int32)"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Inequality(SbsSW.SwiPlCs.PlTerm,System.String)">
+            <summary>
+            test
+            </summary>
+            <param name="term"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.op_Inequality(System.String,SbsSW.SwiPlCs.PlTerm)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlTerm.op_Inequality(SbsSW.SwiPlCs.PlTerm,System.String)"/>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.Arg(System.Int32)">
+            <summary>
+            Zero Based 
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTerm.ArgItem(System.Int32)">
+            <summary>
+            Zero Based 
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.TermRefIntern">
+            <summary>
+            This one should be for checks only e.g.
+            Check.Require(arg1.TermRefIntern != 0);
+            </summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.Item(System.Int32)">
+            <summary>
+            <para>If PlTerm is compound and index is between 0 and Arity (including), the nth PlTerm is returned.</para>
+            <para>If pos is 0 the functor of the term is returned (For a list '.').</para>
+            <para>See: <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual//foreigninclude.html#PL_get_arg()">PL_get_arg/3</see></para>
+            </summary>
+            <param name="pos">To Get the nth PlTerm</param>
+            <returns>a PlTerm</returns>
+            <example>
+                <code source="..\..\TestSwiPl\PlTerm.cs" region="PlTerm_indexer_doc"/>
+            </example>
+            <exception cref="T:System.NotSupportedException">Is thrown if PlTerm is not of Type PlCompound see <see cref="P:SbsSW.SwiPlCs.PlTerm.IsCompound"/></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Is thrown if (pos &lt;  0 || pos &gt;= Arity)</exception>
+            <exception cref="T:System.InvalidOperationException">Is thrown if PL_get_arg returns 0.</exception>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.PlType">
+            <summary>Get the <see cref="T:SbsSW.SwiPlCs.PlType"/> of a <see cref="T:SbsSW.SwiPlCs.PlTerm"/>.</summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsVar">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a variable</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsGround">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a ground term. See also ground/1. This function is cycle-safe.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsAtom">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is an atom.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsBlob">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is an atom.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsAttVar">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is an atom.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsAtomOrNil">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is an atom.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsAtomOrString">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is an atom.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsString">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a string.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsInteger">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is an integer.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsFloat">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a float.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsCompound">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a compound term. Note that a list is a compound term ./2</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsList">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a compound term with functor ./2 or the atom [].</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsNewList">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a compound term with functor ./2 or the atom [].</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsAtomic">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is atomic (not variable or compound).</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsNumber">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is an integer or float.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.IsNil">
+            <summary>Return true if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is an empty list or nil.</summary>
+            <seealso cref="T:SbsSW.SwiPlCs.PlType"/>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.Arity">
+            <summary><para>Get the arity of the functor if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a compound term.</para></summary>
+            <remarks><para><see cref="P:SbsSW.SwiPlCs.PlTerm.Arity"/> and <see cref="P:SbsSW.SwiPlCs.PlTerm.Name"/> are for compound terms only</para></remarks>
+            <exception cref="T:System.NotSupportedException">Is thrown if the term isn't compound</exception>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTerm.Name">
+            <summary>
+            <para>Get a holding the name of the functor if <see cref="T:SbsSW.SwiPlCs.PlTerm"/> is a compound term.</para>
+            </summary>
+            <inheritdoc cref="P:SbsSW.SwiPlCs.PlTerm.Arity"/>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlTermV">
+            <summary>
+            <preliminary>The struct PlTermv represents an array of term-references.</preliminary>
+            <para>This type is used to pass the arguments to a foreign defined predicate (see <see cref="T:SbsSW.SwiPlCs.Callback.DelegateParameterVarArgs"/>), 
+            construct compound terms (see <see cref="M:SbsSW.SwiPlCs.PlTerm.PlCompound(System.String,SbsSW.SwiPlCs.PlTermV)"/> 
+            and to create queries (see <see cref="T:SbsSW.SwiPlCs.PlQuery"/>).
+            </para>
+            <para>The only useful member function is the overloading of [], providing (0-based) access to the elements. <see cref="P:SbsSW.SwiPlCs.PlTermV.Item(System.Int32)"/> 
+            Range checking is performed and raises a ArgumentOutOfRangeException exception.</para> 
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTermV.#ctor(System.Int32)">
+            <overloads>Create a PlTermV vector from the given PlTerm parameters
+            <summary>
+            <para>Create a new vector with PlTerm as elements</para>
+            <para>It can be created with <paramref name="size"/> elements</para>
+            <para>or</para>
+            <para>automatically for 1, 2 or 3 plTerms</para>
+            </summary>
+            </overloads>
+            
+            <summary>
+            Create a vector of PlTerms with <paramref name="size"/> elements
+            </summary>
+            <param name="size">The amount of PlTerms in the vector</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTermV.#ctor(SbsSW.SwiPlCs.PlTerm[])">
+            <inheritdoc cref="!:PlTermV(PlTerm)"/>
+            <param name="term1">The second <see cref="T:SbsSW.SwiPlCs.PlTerm"/> in the vector.</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTermV.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTermV.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTermV.Equals(SbsSW.SwiPlCs.PlTermV)">
+            <inheritdoc />
+            <remarks>// TODO compare each PlTerm in PlTermV not only the refereces in A0</remarks>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTermV.op_Equality(SbsSW.SwiPlCs.PlTermV,SbsSW.SwiPlCs.PlTermV)">
+            <summary>
+            
+            </summary>
+            <param name="tv1"></param>
+            <param name="tv2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlTermV.op_Inequality(SbsSW.SwiPlCs.PlTermV,SbsSW.SwiPlCs.PlTermV)">
+            <summary>
+            
+            </summary>
+            <param name="tv1"></param>
+            <param name="tv2"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTermV.A0">
+            <summary>
+            the first term_t reference of the array
+            </summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTermV.Size">
+            <summary>Get the size of a PlTermV</summary>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlTermV.Item(System.Int32)">
+            <summary>
+            A zero based list
+            </summary>
+            <param name="index"></param>
+            <returns>The PlTerm for the given index</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Is thrown if (index &lt;  0 || index &gt;= Size)</exception>
+            <exception cref="T:SbsSW.DesignByContract.PreconditionException">Is thrown if the operator is used on an uninitialized PlTerm</exception>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlFrame">
+            <summary>
+            <para>The class PlFrame provides an interface to discard unused term-references as well as rewinding unifications (data-backtracking). 
+            Reclaiming unused term-references is automatically performed after a call to a C#-defined predicate has finished and 
+            returns control to Prolog. In this scenario PlFrame is rarely of any use.</para>
+            <para>This class comes into play if the top level program is defined in C# and calls Prolog multiple times. 
+            Setting up arguments to a query requires term-references and using PlFrame is the only way to reclaim them.</para>
+            </summary>
+            <remarks>see <see href="http://www.swi-prolog.org/packages/pl2cpp.html#sec:8.1"/></remarks>
+            <example>
+            A typical use for PlFrame is the definition of C# methods that call Prolog and may be called repeatedly from C#.
+            Consider the definition of assertWord(), adding a fact to word/1:
+                <code source="..\..\TestSwiPl\PlFrame.cs" region="AssertWord2_doc" />
+            alternatively you can use
+                <code source="..\..\TestSwiPl\PlFrame.cs" region="AssertWord_doc" />
+            <b><note type="caution"> NOTE: in any case you have to destroy any query object used inside a PlFrame</note></b>
+            </example>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlFrame.Dispose">
+            <summary>Implement IDisposable.</summary>
+            <remarks>
+            <para>Do not make this method virtual.</para>
+            <para>A derived class should not be able to override this method.</para>
+            </remarks>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlFrame.#ctor">
+            <summary>
+            Creating an instance of this class marks all term-references created afterwards to be valid only in the scope of this instance.
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlFrame.Finalize">
+            <summary>
+            Reclaims all term-references created after constructing the instance.
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlFrame.Rewind">
+            <summary>
+            Discards all term-references and global-stack data created as well as undoing all unifications after the instance was created.
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlFrame.Free">
+            <summary>called by Dispose</summary>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlEngine">
+            <summary>
+            This static class represents the prolog engine.
+            </summary>
+            <example>
+            A sample
+            <code>
+               if (!PlEngine.IsInitialized)
+               {
+                   String[] empty_param = { "" };
+                   PlEngine.Initialize(empty_param);
+                   // do some funny things ...
+                   PlEngine.PlCleanup();
+               } 
+               // program ends here
+            </code>
+            The following sample show how a file is consult via comand-line options.
+            <code source="..\..\TestSwiPl\PlEngine.cs" region="demo_consult_pl_file_by_param" />
+            </example>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlEngine.SavedRegisterForeign">
+            <summary>
+            Dictionary to pin foriegn method delegates so that are not GC'd
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.Delegate)">
+            <overloads>
+            <summary>
+            <para>Register a C-function to implement a Prolog predicate.</para>
+            <para>After this call returns successfully a predicate with name <paramref name="name"/>(a string) and arity arity (a C# int) is created in module module.</para>
+            <para>If module is NULL, the predicate is created in the module of the calling context or if no context is present in the module user.</para>
+            </summary>
+            <remarks>
+            <para>Add a additional namespace by <code>using SbsSW.SwiPlCs.Callback;</code></para>
+            </remarks>
+            <example>For an example see <see cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/> and <see cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter1"/>.</example>
+            <seealso cref="N:SbsSW.SwiPlCs.Callback"/>
+            </overloads>
+            
+            <summary>
+            <para>Register a C# callback method</para>
+            </summary>
+            <example>For an example see <see cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter2"/> and <see cref="T:SbsSW.SwiPlCs.Callback.DelegateParameter1"/>.</example>
+            <param name="method">a delegate to a c# method <see cref="N:SbsSW.SwiPlCs.Callback"/></param>
+            <returns>true if registration succeed otherwise false</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.String,System.Delegate)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.Delegate)"/>
+             <param name="module">the name of a prolog module <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/modules.html">Using Modules</see></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.String,System.Int32,System.Delegate)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.String,System.Delegate)"/>
+            <param name="arity">The amount of parameters</param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.String,System.String,System.Int32,System.Delegate)">
+            <inheritdoc cref="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.String,System.Int32,System.Delegate)"/>
+            <param name="name">The name of the method </param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.RegisterForeign(System.String,System.String,System.Int32,System.Delegate,SbsSW.SwiPlCs.Callback.PlForeignSwitches)">
+            <summary>
+            <see href="http://gollem.science.uva.nl/SWI-Prolog/Manual/foreigninclude.html#PL_register_foreign_in_module()"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.Initialize(System.String[])">
+            <summary>
+            <para>Initialise SWI-Prolog</para>
+            <para>The write method of the output stream is redirected to <see cref="N:SbsSW.SwiPlCs.Streams"/> 
+            before Initialize. The read method of the input stream just after Initialize.</para>
+            </summary>
+            <remarks>
+            <para>A known bug: Initialize work *not* as expected if there are e.g. German umlauts in the parameters
+            See marshalling in the sorce NativeMethods.cs</para>
+            </remarks>
+            <param name="argv">
+            <para>For a complete parameter description see the <a href="http://gollem.science.uva.nl/SWI-Prolog/Manual/cmdline.html" target="_new">SWI-Prolog reference manual section 2.4 Command-line options</a>.</para>
+            <para>sample parameter: <code>String[] param = { "-q", "-f", @"some\filename" };</code>
+            At the first position a parameter "" is added in this method. <see href="http://www.swi-prolog.org/pldoc/doc_for?object=section(3%2C%20%279.6.20%27%2C%20swi(%27%2Fdoc%2FManual%2Fforeigninclude.html%27))">PL_initialise</see>
+            </para>
+            </param>
+            <example>For an example see <see cref="T:SbsSW.SwiPlCs.PlEngine"/> </example>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.PlCleanup">
+            <summary>
+            Try a clean up but it is buggy
+            search the web for "possible regression from pl-5.4.7 to pl-5.6.27" to see reasons
+            </summary>
+            <remarks>Use this method only at the last call before run program ends</remarks>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.PlHalt">
+            <summary>Stops the PlEngine and <b>the program</b></summary>
+            <remarks>SWI-Prolog calls internally pl_cleanup and than exit(0)</remarks>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlEngine._function_write">
+            <summary>To Avoid callbackOnCollectedDelegate MDA</summary>
+        </member>
+        <member name="F:SbsSW.SwiPlCs.PlEngine._function_read">
+            <summary>To Avoid callbackOnCollectedDelegate MDA</summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.SetStreamFunctionWrite(SbsSW.SwiPlCs.Streams.PlStreamType,SbsSW.SwiPlCs.Streams.DelegateStreamWriteFunction)">
+            <summary>
+            This is a primitive approach to enter the output from a stream.
+            </summary>
+            <example>
+            <code source="..\..\TestSwiPl\StreamIO.cs" region="StreamWrite_doc"/>
+            </example>
+            <param name="streamType">Determine which stream to use <see cref="T:SbsSW.SwiPlCs.Streams.PlStreamType"/></param>
+            <param name="function">A <see cref="T:SbsSW.SwiPlCs.Streams.DelegateStreamWriteFunction"/></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.SetStreamFunctionRead(SbsSW.SwiPlCs.Streams.PlStreamType,SbsSW.SwiPlCs.Streams.DelegateStreamReadFunction)">
+            <summary>
+            TODO
+            </summary>
+            <example>
+            <code source="..\..\TestSwiPl\StreamIO.cs" region="StreamRead_doc"/>
+            </example>
+            <param name="streamType">Determine which stream to use <see cref="T:SbsSW.SwiPlCs.Streams.PlStreamType"/></param>
+            <param name="function">A <see cref="T:SbsSW.SwiPlCs.Streams.DelegateStreamReadFunction"/></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.PlThreadAttachEngine">
+            <summary>
+            <para>return : reference count of the engine</para>
+            <para>		If an error occurs, -1 is returned.</para>
+            <para>		If this Prolog is not compiled for multi-threading, -2 is returned.</para>
+            </summary>
+            <returns>A reference count of the engine</returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.PlThreadSelf">
+            <summary>
+            Returns the integer Prolog identifier of the engine or 
+            -1 if the calling thread has no Prolog engine. 
+            This method is also provided in the single-threaded version of SWI-Prolog, where it returns -2. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlEngine.PlThreadDestroyEngine">
+            <summary>
+            Returns TRUE on success and FALSE if the calling thread has no 
+            engine or this Prolog does not support threads. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:SbsSW.SwiPlCs.PlEngine.IsInitialized">
+            <summary>To test if the prolog engine is up.</summary>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PrologServer">
+            <summary>
+            Experimental
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PrologServer.IsInitialized(System.Int32,System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="argc"></param>
+            <param name="argv"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PrologServer.#ctor(System.Int32,System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="argc"></param>
+            <param name="argv"></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PrologServer.PLHalt">
+            <summary>Stops the PlEngine and <b>the program</b></summary>
+            <remarks>SWI-Prolog calls internally exit(0)</remarks>
+        </member>
+        <member name="T:SbsSW.SwiPlCs.PlMtEngine">
+            <summary>
+            This class is experimental
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlMtEngine.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlMtEngine.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlMtEngine.Free">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlMtEngine.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlMtEngine.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlMtEngine.PlSetEngine">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlMtEngine.PlDetachEngine">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SbsSW.SwiPlCs.PlMtEngine.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Swicli.Library.ClassBuilder">
+            <summary>
+            THIS IS ALL @TODO
+            </summary>
+        </member>
+        <member name="M:Swicli.Library.ClassBuilder.CreatePassThroughConstuctors(System.Reflection.Emit.TypeBuilder,System.Type)">
+            <summary>Creates one constructor for each public constructor in the base class. Each constructor simply
+            forwards its arguments to the base constructor, and matches the base constructor's signature.
+            Supports optional values, and custom attributes on constructors and parameters.
+            Does not support n-ary (variadic) constructors</summary>
+        </member>
+    </members>
+</doc>

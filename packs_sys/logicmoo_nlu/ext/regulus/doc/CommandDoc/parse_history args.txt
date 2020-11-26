@@ -1,0 +1,19 @@
+Search the parsing history file created by the {\tt EBL\_\-MAKE\_\-TREEBANK}
+command to find matching example. The argument is treated as a list of
+words, which may optionally contain wildcards, and matching is performed
+at the word (opposed to character) level. Each matching example is printed 
+together with a date-stamp showing when it last produced a parse.
+Here is a typical invocation:
+\begin{verbatim}
+>> PARSE_HISTORY i would * cheese
+(Show parse history for examples matching specified string)
+
+--- Read parsing history file (394 records) 
+d:/call-slt/eng/generatedfiles/callslt_parsing_history.pl
+
+Found 2 records matching pattern
+
+2010-06-01_15-41-03 1 i would like the cheese plate
+2010-06-01_15-41-06 1 i would like the macaroni cheese
+
+\end{verbatim}

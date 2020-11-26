@@ -1,0 +1,91 @@
+(note TQE202b)
+
+(intermediateGoals Iran 
+  (not 
+    (thereExists ?PIPELINE 
+      (and 
+        (instance ?PIPELINE OilPipeline) 
+        (spatiallyIntersects Georgia-TheNation ?PIPELINE) 
+        (between ?PIPELINE CityOfBakuAzerbaijan CityOfCeyhanTurkey) 
+        (importanceOfThingInSet ?PIPELINE 
+          (TheSetOf ?PIPE 
+            (and 
+              (instance ?PIPE OilPipeline) 
+              (pathTerminus ?PIPE AIOCsCaspianOilFields))) VeryHigh)))) 
+  (not 
+    (thereExists ?UNDERMINING 
+      (and 
+        (directingAgent ?UNDERMINING SaudiArabia) 
+        (decreases-Generic ?UNDERMINING Iran 
+          (Kappa 
+            (?AGENT ?AMOUNT) 
+            (powerInRegion-Geopolitical ?AGENT PersianGulfRegion ?AMOUNT)))))))
+
+(purposeInEvent Iran Y2Stage1-IranMakesAPlan 
+  (not 
+    (thereExists ?PIPELINE 
+      (and 
+        (instance ?PIPELINE OilPipeline) 
+        (spatiallyIntersects Georgia-TheNation ?PIPELINE) 
+        (between ?PIPELINE CityOfBakuAzerbaijan CityOfCeyhanTurkey) 
+        (importanceOfThingInSet ?PIPELINE 
+          (TheSetOf ?PIPE 
+            (and 
+              (instance ?PIPE OilPipeline) 
+              (pathTerminus ?PIPE AIOCsCaspianOilFields))) VeryHigh)))))
+
+(reasonForAction Y2Stage1-IranMakesAPlan desires Iran 
+  (not 
+    (thereExists ?PIPELINE 
+      (and 
+        (instance ?PIPELINE OilPipeline) 
+        (between ?PIPELINE CityOfBakuAzerbaijan CityOfCeyhanTurkey) 
+        (importanceOfThingInSet ?PIPELINE 
+          (TheSetOf ?PIPE 
+            (instance ?PIPE OilPipeline)) VeryHigh)))))
+
+(subOrganizations 
+ (GovernmentFn ?COUNTRY) 
+ (NavyFn ?COUNTRY)) 
+
+(officialArmedForces 
+ (GovernmentFn ?COUNTRY) 
+ (NavyFn ?COUNTRY)) 
+
+(implies 
+  (and 
+    (agent ?ACT ?AGENT) 
+    (subOrganizations 
+      (GovernmentFn ?COUNTRY) ?AGENT)) 
+  (agent ?ACT ?COUNTRY)) 
+ 
+(agent Y2Scenario-IranianNavalExercise 
+ (NavyFn Iran)) 
+
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Scenario-IranianNavalExercise) 
+
+(existant Y2Stage4-AgreementToHoldJointExercises 
+ (DateInSituationFn CalendarDay 49 Y2ScenarioConflict)) 
+
+(agent Y2Stage4-AgreementToHoldJointExercises GulfCooperationCouncil) 
+(agent Y2Scenario-IranianNavalExercise Iran) 
+(eventOccursAt Y2Scenario-IranianNavalExercise PersianGulf) 
+(instance Y2Scenario-IranianNavalExercise MilitaryExercise) 
+(agent Y2Stage1-IranMakesAPlan Iran) 
+(agent Y2Stage1-IranMakesAPlan Iran) 
+
+(query (findall ?GCC-RESPONSE 
+  (exists 
+    (?NAVAL-EXERCISE) 
+    (and 
+      (instance ?NAVAL-EXERCISE MilitaryExercise) 
+      (existant?GCC-RESPONSE 
+        (DateInSituationFn CalendarDay 49 Y2ScenarioConflict)) 
+      (agent ?NAVAL-EXERCISE (NavyFn Iran)) 
+      (eventOccursAt ?NAVAL-EXERCISE PersianGulf) 
+      (doneBy ?GCC-RESPONSE GulfCooperationCouncil) 
+      (agent ?NAVAL-EXERCISE Iran) 
+      (inReactionTo ?GCC-RESPONSE ?NAVAL-EXERCISE)))))
+
+(answer Y2Stage4-AgreementToHoldJointExercises)
+(end_of_file)

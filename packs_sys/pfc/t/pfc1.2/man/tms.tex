@@ -1,0 +1,27 @@
+\subsection{The TMS}
+
+The following predicates are used to access the tms information
+associated with \pfc\ facts.
+
+\gloss{justification(+P,-J)\\
+	justification(+P,-Js)}
+
+\prolog{justification(P,J)} is true if one of the justifications for
+fact P is J, where J is a list of \pfc\ facts and rules which taken
+together deduce P.  Backtracking into this predicate can produce
+additional justifications.  If the fact was added by the user, then
+one of the justifications will be the list \prolog{[user]}.
+\prolog{justifications(P,Js)} is provided for convenience.  It binds
+\prolog{Js} to a list of all justifications returned by
+\prolog(justification/2).  
+
+\gloss{base(+P,-Ps)}
+
+\gloss{assumptions(+P,-Ps)}
+
+\gloss{pfcChild(+P,-Q)\\
+	pfcChildren(+P,-Qs)}
+
+\gloss{pfcDescendant(+P,-Q)\\
+	pfcDescendants(+P,-Qs)}
+

@@ -1,0 +1,242 @@
+% Tyre world 
+% OCL V1.1 April 2000
+
+ 
+sorts(primitive_sorts, [container,nuts,hub,pump,wheel, wrench,jack]).
+
+objects(container, [boot]) .
+objects(nuts,      [nuts_1]) .
+objects(hub,       [hub0]) .
+objects(pump,      [pump0]) .
+objects(wheel,     [wheel1,wheel2]) .
+objects(wrench,    [wrench0]) .
+objects(jack,      [jack0]) .
+
+predicates([
+      closed(container),
+      open(container),
+      tight(nuts,hub),
+      loose(nuts,hub),
+      have_nuts(nuts),
+      on_ground(hub),
+      fastened(hub),
+      jacked_up(hub,jack),
+      free(hub),
+      unfastened(hub),
+      have_pump(pump),
+      pump_in(pump,container),
+      have_wheel(wheel),
+      wheel_in(wheel,container),
+      wheel_on(wheel,hub),
+      have_wrench(wrench),
+      wrench_in(wrench,container),
+      have_jack(jack),
+      jack_in_use(jack,hub),
+      jack_in(jack,container)]).
+
+implied_invariant([],[]).
+
+atomic_invariants( [ ] ).
+
+substate_classes(container,C,
+        [
+        [closed(C)],
+        [open(C)]
+        ]) .
+substate_classes(nuts,N,
+        [
+        [tight(N,H)],
+        [loose(N,H)],
+        [have_nuts(N)]
+        ]) .
+substate_classes(hub,H,
+        [
+        [on_ground(H), fastened(H)],
+        [jacked_up(H,J), fastened(H)] ,
+        [free(H),jacked_up(H,J),unfastened(H)] ,
+        [unfastened(H),jacked_up(H,J)]
+        ]) .
+substate_classes(pump,P,
+        [
+        [have_pump(P)] ,
+        [pump_in(P,C)]
+        ]) .
+substate_classes(wheel,W,
+        [
+        [have_wheel(W)] ,
+        [wheel_in(W,C)] ,
+        [wheel_on(W,H)] 
+        ]) .
+substate_classes(wrench,W,
+        [
+        [have_wrench(W)] ,
+        [wrench_in(W,C)]
+        ]) .
+substate_classes(jack,J,
+        [
+        [have_jack(J)] ,
+        [jack_in_use(J,H)],
+        [jack_in(J,C)]
+        ]) .
+ 
+
+inconsistent_constraint([have_nuts(X),tight(X,_)]).
+inconsistent_constraint([have_nuts(X),loose(X,_)]).
+inconsistent_constraint([loose(_,H),tight(_,H)]).
+
+inconsistent_constraint([unfastened(H),tight(_,H)]).
+inconsistent_constraint([unfastened(H),loose(_,H)]).
+inconsistent_constraint([wheel_in(W,_),wheel_on(W,_)]).
+inconsistent_constraint([wheel_in(W,_),have_wheel(W)]).
+inconsistent_constraint([jack_in(J,_),have_jack(J)]).
+inconsistent_constraint([pump_in(P,_),have_pump(P)]).
+inconsistent_constraint([wrench_in(W,_),have_wrench(W)]).
+% inconsistent_constraint([open(C),locked(C)]).
+inconsistent_constraint([open(C),closed(C)]).
+inconsistent_constraint([deflated(W),inflated(W)]).
+% inconsistent_constraint([intact(W),inflated(W)]).
+inconsistent_constraint([fastened(H),unfastened(H)]).
+inconsistent_constraint([jacked_up(H,J),on_ground(H)]).
+ 
+inconsistent_constraint([free(H),wheel_on(_,H)]).
+inconsistent_constraint([free(X),fastened(X)]).
+inconsistent_constraint([free(X),tight(Nuts,X)]).
+inconsistent_constraint([free(X),loose(Nuts,X)]).
+ 
+inconsistent_constraint([wheel_on(W1,X),wheel_on(W2,X),ne(W1,W2)]).
+inconsistent_constraint([wheel_on(W,H1),wheel_on(W,H2),ne(H1,H2)]).
+inconsistent_constraint([wheel_on(W,H1),have_wheel(W)]).
+inconsistent_constraint([jacked_up(H,J),jack_in(J,_)]).
+inconsistent_constraint([jacked_up(H,J),have_jack(J)]).
+inconsistent_constraint([fastened(H),have_nuts(N)]).
+
+inconsistent_constraint([jack_in_use(J,_),jack_in(J,_)]).
+inconsistent_constraint([jack_in_use(J,_),have_jack(J)]).
+inconsistent_constraint([jack_in_use(J,H),on_ground(H)]).
+ 
+% (1)
+operator(open_container(C),
+     [],
+     % necessary
+     [sc(container,C,[closed(C)]=>[open(C)])],
+     []) .
+% (2)
+operator(close_container(C), 
+     [],
+     % necessary
+     [sc(container,C,[open(C)]=>[closed(C)])],
+     []) .
+% (3)
+operator(fetch_jack(J,C), 
+     [se(container,C,[open(C)])],
+     % necessary
+     [sc(jack,J,[jack_in(J,C)]=>[have_jack(J)])],
+     []) .
+% (4)
+operator(fetch_wheel(W,C), 
+     [se(container,C,[open(C)])],
+     % necessary
+     [sc(wheel,W,[wheel_in(W,C)]=>[have_wheel(W)])],
+     []) .
+% (5)
+operator(fetch_wrench(W,C), 
+     [se(container,C,[open(C)])],
+     % necessary
+     [sc(wrench,W,[wrench_in(W,C)]=>[have_wrench(W)])],
+     []) .
+% (6)
+operator(fetch_pump(P,C), 
+     [se(container,C,[open(C)])],
+     % necessary
+     [sc(pump,P,[pump_in(P,C)]=>[have_pump(P)])],
+     []) .
+% (7)
+operator(putaway_wheel(W,C), 
+     [se(container,C,[open(C)])],
+     % necessary
+     [sc(wheel,W,[have_wheel(W)]=>[wheel_in(W,C)])],
+     []) .
+% (8)
+operator(putaway_wrench(W,C), 
+     [se(container,C,[open(C)])],
+     % necessary
+     [sc(wrench,W,[have_wrench(W)]=>[wrench_in(W,C)])],
+     []) .
+% (9)
+operator(putaway_jack(J,C), 
+     [se(container,C,[open(C)])],
+     % necessary
+     [sc(jack,J,[have_jack(J)]=>[jack_in(J,C)])],
+     []) .
+% (10)
+operator(putaway_pump(P,C), 
+     [se(container,C,[open(C)])],
+     % necessary
+     [sc(pump,P,[have_pump(P)]=>[pump_in(P,C)])],
+     []) .
+% (11)
+operator(loosen(N,H,W), 
+     [se(wrench,W,[have_wrench(W)]),
+      se(hub,H,[on_ground(H),fastened(H)])],
+     % necessary
+     [sc(nuts,N,[tight(N,H)]=>[loose(N,H)])],
+     []) .
+% (12)
+operator(tighten(N,H,W), 
+     [se(wrench,W,[have_wrench(W)]),
+      se(hub,H,[on_ground(H),fastened(H)])],
+     % necessary
+     [sc(nuts,N,[loose(N,H)]=>[tight(N,H)])],
+     []) .
+% (13)
+operator(jack_up(H,J), 
+     [],
+     % necessary
+     [sc(hub,H,[on_ground(H), fastened(H)]=>
+                   [jacked_up(H,J), fastened(H)]),
+      sc(jack,J,[have_jack(J)]=>[jack_in_use(J,H)])],
+     []) .
+% (14)
+operator(jack_down(H,J), 
+     [],
+     % necessary
+     [sc(hub,H,[jacked_up(H,J), fastened(H)]=>
+                   [on_ground(H), fastened(H)]), 
+      sc(jack,J,[jack_in_use(J,H)]=>
+                   [have_jack(J)])],
+     []) .
+% (15)
+operator(do_up(N,H,W,J),
+     [se(wrench,W,[have_wrench(W)])],
+     % necessary
+     [sc(hub,H,[unfastened(H),jacked_up(H,J)]=>
+                 [jacked_up(H,J), fastened(H)]),
+      sc(nuts,N,[have_nuts(N)]=>[loose(N,H)])],
+     []) .
+% (16)
+operator(remove_wheel(W,H,J), 
+     [],
+     % necessary
+     [sc(wheel,W,[wheel_on(W,H)]=>[have_wheel(W)]),
+      sc(hub,H,[unfastened(H),jacked_up(H,J)]=>
+                 [free(H),jacked_up(H,J),unfastened(H)])],
+     []) .
+
+% (17)
+operator(put_on_wheel(W,H,J), 
+     [],
+     % necessary
+     [sc(wheel,W,[have_wheel(W)]=>[wheel_on(W,H)]),
+      sc(hub,H,[free(H),jacked_up(H,J),unfastened(H)]=>
+                    [unfastened(H),jacked_up(H,J)])],
+     []) .
+% (18)
+operator(undo(N,H,W,J),
+     [se(wrench,W,[have_wrench(W)])],
+     % necessary
+     [sc(hub,H,[jacked_up(H,J), fastened(H)]=>
+                 [ unfastened(H),jacked_up(H,J)]),
+      sc(nuts,N,[loose(N,H)]=>[have_nuts(N)])],
+     []) .
+
+

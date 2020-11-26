@@ -1,0 +1,8 @@
+created(1496678545.3456242).
+assert(user(admin,[realname('Administrator'),password('$1$vUXiHMJy$eNFgLwUpZI/olU1T1A9LB1'),allow([read(_,_),write(_,_),admin(_)])])).
+assert(user(anonymous,[realname('Define rights for not-logged in users'),allow([read(_,_)])])).
+retractall(user(anonymous,_),1).
+assert(user(anonymous,[allow([read(_,_),write(_,_),admin(_)]),realname('Define rights for not-logged in users')])).
+assert(grant_openid_server('http://openid.stackexchange.com/',[description('StackExchange'),allow([read(_,_),write(_,_)])])).
+retractall(grant_openid_server('http://openid.stackexchange.com/',_),1).
+assert(grant_openid_server('http://openid.stackexchange.com/',[allow([read(_,_),write(_,_),admin(_)]),description('StackExchange')])).

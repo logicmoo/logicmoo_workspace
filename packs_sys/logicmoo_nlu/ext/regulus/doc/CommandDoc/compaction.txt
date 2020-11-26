@@ -1,0 +1,1 @@
+Thie command is mostly included for historical reasons. You should not want to switch off compaction under normal circumstances.

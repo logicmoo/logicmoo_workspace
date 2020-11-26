@@ -1,0 +1,160 @@
+(note TQF238b)
+
+(evaluate 
+ (powerInGroup 
+ (The Agent) 
+ (CriminalSectorFn HYP-GeographicalArea-46979104) VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TransnationalCriminalOrganization-5109197 
+ (powerInGroup HYP-TransnationalCriminalOrganization-5109197 
+ (CriminalSectorFn HYP-GeographicalArea-46979104) VeryHigh))) 
+
+(unknownFormula 
+ (desires HYP-TerroristGroup-24474319 
+ (powerInGroup HYP-TerroristGroup-24474319 
+ (CriminalSectorFn HYP-GeographicalArea-46979104) VeryHigh))) 
+
+(evaluate 
+ (powerInGroup HYP-TerroristGroup-24474319 
+ (CriminalSectorFn HYP-GeographicalArea-46979104) VeryHigh) 
+ (SubstituteFormulaFn HYP-TerroristGroup-24474319 HYP-TransnationalCriminalOrganization-5109197 
+ (powerInGroup HYP-TransnationalCriminalOrganization-5109197 
+ (CriminalSectorFn HYP-GeographicalArea-46979104) VeryHigh))) 
+
+(operatesInRegion HYP-TransnationalCriminalOrganization-5109197 HYP-GeographicalArea-46979104) 
+
+(instance HYP-TransnationalCriminalOrganization-5109197 TransnationalCriminalOrganization) 
+
+(implies 
+ (and 
+ (instance ?CRIME-ORG TransnationalCriminalOrganization) 
+ (operatesInRegion ?CRIME-ORG ?GEO-AREA)) 
+ (intermediateGoals ?CRIME-ORG 
+ (statusWithAgent-Gradient ?CRIME-ORG 
+ (CriminalSectorFn ?GEO-AREA) Prestige VeryHigh) 
+ (powerInGroup ?CRIME-ORG 
+ (CriminalSectorFn ?GEO-AREA) VeryHigh))) 
+
+(implies 
+ (intermediateGoals ?AGT ?X ?Y) 
+ (desires ?AGT ?Y)) 
+
+(evaluate 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TransnationalCriminalOrganization-5109197 
+ (secrecyOfOperations HYP-TransnationalCriminalOrganization-5109197 VeryHigh))) 
+
+(instance HYP-TransnationalCriminalOrganization-5109197 CovertAgent) 
+
+(unknownFormula 
+ (desires HYP-TerroristGroup-24474319 
+ (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh))) 
+
+(evaluate 
+ (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh) 
+ (SubstituteFormulaFn HYP-TerroristGroup-24474319 HYP-TransnationalCriminalOrganization-5109197 
+ (secrecyOfOperations HYP-TransnationalCriminalOrganization-5109197 VeryHigh))) 
+
+(implies 
+ (instance ?AGENT CovertAgent) 
+ (goalCategoryForAgent ?AGENT 
+ (secrecyOfOperations ?AGENT VeryHigh) SelfPreservationGoal)) 
+
+(implies 
+ (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+ (desires ?AGT ?FORM)) 
+
+(evaluate 
+ (thereExists ?INCREASE 
+ (increases-Generic ?INCREASE 
+ (TheSetOf ?CRIMINAL-ACT 
+ (performsInsAtLocation 
+ (The Agent) CriminalAct HYP-GeographicalArea-46979104)) entityCardinality)) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TransnationalCriminalOrganization-5109197 
+ (thereExists ?INCREASE 
+ (increases-Generic ?INCREASE 
+ (TheSetOf ?CRIMINAL-ACT 
+ (performsInsAtLocation HYP-TransnationalCriminalOrganization-5109197 CriminalAct HYP-GeographicalArea-46979104)) entityCardinality)))) 
+
+(unknownFormula 
+ (desires HYP-TerroristGroup-24474319 
+ (thereExists ?INCREASE 
+ (increases-Generic ?INCREASE 
+ (TheSetOf ?CRIMINAL-ACT 
+ (performsInsAtLocation HYP-TerroristGroup-24474319 CriminalAct HYP-GeographicalArea-46979104)) entityCardinality)))) 
+
+(evaluate 
+ (thereExists ?INCREASE 
+ (increases-Generic ?INCREASE 
+ (TheSetOf ?CRIMINAL-ACT 
+ (performsInsAtLocation HYP-TerroristGroup-24474319 CriminalAct HYP-GeographicalArea-46979104)) entityCardinality)) 
+ (SubstituteFormulaFn HYP-TerroristGroup-24474319 HYP-TransnationalCriminalOrganization-5109197 
+ (thereExists ?INCREASE 
+ (increases-Generic ?INCREASE 
+ (TheSetOf ?CRIMINAL-ACT 
+ (performsInsAtLocation HYP-TransnationalCriminalOrganization-5109197 CriminalAct HYP-GeographicalArea-46979104)) entityCardinality)))) 
+
+(operatesInRegion HYP-TransnationalCriminalOrganization-5109197 HYP-GeographicalArea-46979104) 
+
+(instance HYP-TransnationalCriminalOrganization-5109197 TransnationalCriminalOrganization) 
+
+(implies 
+ (and 
+ (instance ?CRIME-ORG TransnationalCriminalOrganization) 
+ (operatesInRegion ?CRIME-ORG ?GEO-AREA)) 
+ (intermediateGoals ?CRIME-ORG 
+ (statusWithAgent-Gradient ?CRIME-ORG 
+ (CriminalSectorFn ?GEO-AREA) Prestige VeryHigh) 
+ (thereExists ?INCREASE 
+ (increases-Generic ?INCREASE 
+ (TheSetOf ?CRIMINAL-ACT 
+ (performsInsAtLocation ?CRIME-ORG CriminalAct ?GEO-AREA)) entityCardinality) ))) 
+
+(implies 
+ (intermediateGoals ?AGT ?X ?Y) 
+ (desires ?AGT ?Y)) 
+
+(query (findall (?JUST-CRIMINAL-GENERIC-GOAL)
+
+(=> 
+(and 
+(instance ?TERROR-GROUP TerroristGroup) 
+(sponsors ?AGENT ?TERROR-GROUP) 
+(instance ?CRIMINAL-ORG TransnationalCriminalOrganization) 
+(operatesInRegion ?CRIMINAL-ORG ?REGION)) 
+(exists 
+(?TERROR-GOAL-VERSION) 
+(exists 
+(?JUST-CRIMINAL-GOAL) 
+(and 
+(desires ?CRIMINAL-ORG ?JUST-CRIMINAL-GOAL) 
+(evaluate ?TERROR-GOAL-VERSION 
+(SubstituteFormulaFn ?TERROR-GROUP ?CRIMINAL-ORG ?JUST-CRIMINAL-GOAL)) 
+(evaluate ?JUST-CRIMINAL-GENERIC-GOAL 
+(SubstituteFormulaFn 
+(The Agent) ?CRIMINAL-ORG ?JUST-CRIMINAL-GOAL)) 
+(unknownFormula 
+(desires ?TERROR-GROUP ?TERROR-GOAL-VERSION))))))
+
+))
+
+(answer (list 
+(thereExists ?INCREASE 
+ (increases-Generic ?INCREASE 
+ (TheSetOf ?CRIMINAL-ACT 
+ (performsInsAtLocation HYP-TerroristGroup-24474319 CriminalAct HYP-GeographicalArea-46979104)) entityCardinality))
+))
+
+(answer (list (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh)
+))
+
+(answer (list
+ (powerInGroup HYP-TerroristGroup-24474319 
+ (CriminalSectorFn HYP-GeographicalArea-46979104) VeryHigh))
+))
+
+(end_of_file)
+

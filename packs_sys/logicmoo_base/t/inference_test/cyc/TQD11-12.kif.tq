@@ -1,0 +1,50 @@
+(note TQD11-12)
+
+
+
+(instance 
+ (MillionBarrelsPerDay 74.1000) FlowRate) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 74.1000)) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct SuezCanal 
+ (YearFn 1997) 
+ (BarrelsPerDay 700000)) 
+
+
+
+
+(instance 
+ (MillionBarrelsPerDay 69.8600) FlowRate) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 69.8600)) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct SuezCanal 
+ (YearFn 1995) 
+ (BarrelsPerDay 800000)) 
+
+
+
+
+
+
+( query (findall (?FRACTION ?THROUGH-1 ?TIME) (thereExists ?MEASURE-2 
+ (and 
+ (productionAmountDuring PlanetEarth PetroleumProduct ?TIME ?MEASURE-2) 
+ (instance ?MEASURE-2 FlowRate) 
+ (supplyThroughAmountDuring PlanetEarth PetroleumProduct SuezCanal ?TIME ?THROUGH-1) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?THROUGH-1 ?MEASURE-2)))))  
+))
+
+(answer  0.944669 700000 1997  )
+(answer 1.14515 800000 1995  )
+
+(end_of_file)
+
+

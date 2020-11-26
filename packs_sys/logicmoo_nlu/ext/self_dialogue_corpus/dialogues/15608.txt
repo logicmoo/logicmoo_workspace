@@ -1,0 +1,20 @@
+That's ok. in music transformation is just changing a given set of notes by a rule. A set rule
+An example of which is an inverssion? which is what?
+let's say you have made a set of note forming a harmony, let's say c, c#, g#.
+Yes.
+if I were to invert that, I woudl take the first c in c, c#, g# triad and make it an octave higher if I wanted an octave inversion.
+Wait,. so there are more than on kind of inversions?
+There are. but note this is atonal music now and the postulate is that the interval; preserving tranformation are allowed.
+I am so confused
+You can change the pitch of a note in the harmony, which is the inversion, but it still perserves the interval.
+ok, go on. What's retrograde?
+That's just playing the notes backwards.
+Easy enough. And I guess a retrograde inversion is just an inversion done on notes being played backwards.
+Yes.
+Ok now what?
+So you got the postulate 3?
+I think so. Intervals in a row can be operatd on by interval preserving transformations. Yes I got that
+Now the postulate 4 says, the row in the postualtes 3, may begin with any note on the chromatic scale, ie., it can be transposed into any of the 12 notes.
+Whoosh again.
+In pother words, let's say you have a row, and now you want to start a new row, then you can transform it and then start the new row with any note you would like
+As long as no single note is repeated.

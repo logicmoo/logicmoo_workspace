@@ -1,0 +1,65 @@
+(note TQF219b)
+
+(agent Y2Stage6-AIOCAnnouncement AIOC) 
+(subrelation agent agent) 
+(beneficiary Y2Stage6-AIOCAnnouncement Iran) 
+(agent Y2Stage6-AIOCAnnouncement AIOC) 
+
+(behaviorCapable Iran 
+  (CollectionSubsetFn HelpingAnAgent 
+    (TheSetOf ?OBJ 
+      (beneficiary ?OBJ AIOC))) agent) 
+
+(intendedBeneficiary Y2Stage6-AIOCAnnouncement Iran) 
+
+(implies 
+  (and 
+    (different ?AGENT ?FRIEND) 
+    (beneficiary ?ACT ?AGENT) 
+    (intendedBeneficiary ?ACT ?AGENT) 
+    (agent ?ACT ?FRIEND) 
+    (behaviorCapable ?AGENT 
+      (CollectionSubsetFn HelpingAnAgent 
+        (TheSetOf ?RESPONSE 
+          (beneficiary ?RESPONSE ?FRIEND))) agent))
+  (optionAvailableToAgent-SitType ?AGENT 
+    (CollectionSubsetFn 
+      (AttemptingFn HelpingAnAgent) 
+      (TheSetOf ?HELPING 
+        (and 
+          (intendedBeneficiary ?HELPING ?FRIEND) 
+          (purposeInEvent ?AGENT ?HELPING 
+            (thereExists ?ANOTRACT 
+              (and 
+                (instance ?ANOTRACT PurposefulAction) 
+                (beneficiary ?ANOTRACT ?AGENT) 
+                (startsAfterEndingOf ?ANOTRACT ?ACT) 
+                (agent ?ANOTRACT ?FRIEND))))))) agent))
+
+(query (findall ( ?WHAT  ?ROLE )
+  (implies
+    (and 
+      (beneficiary Y2Stage6-AIOCAnnouncement Iran) 
+      (intendedBeneficiary Y2Stage6-AIOCAnnouncement Iran) 
+      (behaviorCapable Iran 
+        (CollectionSubsetFn HelpingAnAgent 
+          (TheSetOf ?OBJ 
+            (beneficiary ?OBJ AIOC))) agent))
+    (optionAvailableToAgent-SitType Iran ?WHAT ?ROLE))))
+
+(answer  (list 
+  (CollectionSubsetFn 
+    (AttemptingFn HelpingAnAgent) 
+    (TheSetOf ?HELPING 
+      (and 
+        (intendedBeneficiary ?HELPING AIOC) 
+        (purposeInEvent Iran ?HELPING 
+          (thereExists ?ANOTRACT 
+            (and 
+              (instance ?ANOTRACT PurposefulAction) 
+              (beneficiary ?ANOTRACT Iran) 
+              (startsAfterEndingOf ?ANOTRACT Y2Stage6-AIOCAnnouncement) 
+              (agent ?ANOTRACT AIOC)))))))) agent)
+
+(end_of_file)
+

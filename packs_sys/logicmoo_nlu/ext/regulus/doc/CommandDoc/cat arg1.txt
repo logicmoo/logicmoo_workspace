@@ -1,0 +1,10 @@
+When doing grammar development, this command lets you display the list of features associated with a given syntactic category. It requires a grammar to be loaded. Here is an example with the English grammar:
+\begin{verbatim}
+>> CAT np
+(Display information for specified category)
+
+Features for category "np": [agr,case,conj,def,gapsin,gapsout,
+nform,pronoun,sem,sem_n_type,takes_attrib_pp,takes_frequency_pp,
+takes_loc_pp,takes_partitive,takes_post_mods,takes_to_pp,
+takes_with_pp,wh]
+\end{verbatim}

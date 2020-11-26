@@ -1,0 +1,13 @@
+(note "disjunctive syllogism1")
+
+(or (FF a) (GG a))
+ 
+(not (FF a))
+
+(queryyn (GG a))
+
+(answer Yes)
+
+(end_of_file)
+
+

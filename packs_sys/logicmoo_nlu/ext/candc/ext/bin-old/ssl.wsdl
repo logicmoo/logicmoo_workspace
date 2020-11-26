@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="ssl"
+ targetNamespace="urn:ssl"
+ xmlns:tns="urn:ssl"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:ns="urn:ssl"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="urn:ssl"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns="urn:ssl"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <!-- operation request element -->
+  <element name="add">
+   <complexType>
+    <sequence>
+     <element name="a" type="xsd:double" minOccurs="1" maxOccurs="1"/><!-- ns__add::a -->
+     <element name="b" type="xsd:double" minOccurs="1" maxOccurs="1"/><!-- ns__add::b -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="addResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:double" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__add::result -->
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+
+</types>
+
+<message name="addRequest">
+ <part name="parameters" element="ns:add"/><!-- ns__add::ns__add -->
+</message>
+
+<message name="addResponse">
+ <part name="parameters" element="ns:addResponse"/>
+</message>
+
+<portType name="sslPortType">
+ <operation name="add">
+  <documentation>Service definition of function ns__add</documentation>
+  <input message="tns:addRequest"/>
+  <output message="tns:addResponse"/>
+ </operation>
+</portType>
+
+<binding name="ssl" type="tns:sslPortType">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="add">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="ssl">
+ <documentation>gSOAP 2.8.12 generated service definition</documentation>
+ <port name="ssl" binding="tns:ssl">
+  <SOAP:address location="https://linprog1.cs.fsu.edu:18081"/>
+ </port>
+</service>
+
+</definitions>

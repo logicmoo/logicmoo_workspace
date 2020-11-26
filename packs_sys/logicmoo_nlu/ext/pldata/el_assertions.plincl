@@ -1,0 +1,92 @@
+
+:-module(el_assertions,[]).
+
+
+:- style_check(-discontiguous).
+:- style_check(-singleton).
+% :- style_check(-atom).
+
+:- dynamic el_holds_pred/1.
+
+el_holds_pred_impl(el_holds_implies_plist_upred).
+el_holds_pred_impl(el_holds_unary_implies_plist_upred).
+el_holds_pred_impl(el_holds_unary_implies_upred).
+el_holds_pred_impl(el_holds_implies_plist_varg).
+el_holds_pred_impl(el_holds_implies_upred).
+el_holds_pred_impl(el_holds_implies_varg).
+el_holds_pred_impl(el_holds_implies_plist).
+el_holds_pred_impl(el_holds_implies).
+
+el_holds_pred_isa(el_holds_isa_varg).
+el_holds_pred_isa(el_holds_isa).
+
+el_holds_pred(el_holds_varg).
+el_holds_pred(el_holds).
+
+exportAll(Pred):- forall(between(4,16,X),
+  (dynamic(Pred/X),
+   export(Pred/X))).
+
+:-  exportAll(el_holds_t),
+    exportAll(el_holds_implies_t),
+    forall(el_holds_pred_impl(Pred),exportAll(Pred)),
+    forall(el_holds_pred_isa(Pred),exportAll(Pred)),
+    forall(el_holds_pred(Pred),exportAll(Pred)),!.
+
+
+:- ignore(((between(4,16,X),
+       el_holds_pred_impl(Pred),length(PLIST,X),
+       A =.. [el_holds_implies_t|PLIST],
+       B =.. [Pred|PLIST],
+       asserta((A:-B))),fail)).
+
+:- ignore(((between(4,16,X),
+       el_holds_pred(Pred),length(PLIST,X),
+       A =.. [el_holds_t|PLIST],
+       B =.. [Pred|PLIST],
+       asserta((A:-B))),fail)).
+
+
+el_holds_t(isa,E,C,MT,PROPS):-el_holds_isa_var(C,E,MT,PROPS).
+el_holds(isa,E,C,MT,PROPS):-el_holds_isa(C,E,MT,PROPS).
+
+:- include(el_holds).
+
+end_of_file.
+
+el_holds_functor(el_holds_implies_upred, 10).
+el_holds_functor(el_holds_implies, 4).
+el_holds_functor(el_holds_implies, 12).
+el_holds_functor(el_holds_implies_plist_upred, 4).
+el_holds_functor(el_holds_unary_implies_plist_upred, 4).
+el_holds_functor(el_holds_implies_upred, 4).
+el_holds_functor(el_holds_unary_implies_upred, 4).
+el_holds_functor(el_holds_implies_upred, 7).
+el_holds_functor(el_holds_implies_upred, 8).
+el_holds_functor(el_holds_implies_plist, 4).
+el_holds_functor(el_holds_implies_plist_varg, 5).
+el_holds_functor(el_holds_implies_upred, 9).
+el_holds_functor(el_holds_implies, 11).
+el_holds_functor(el_holds_implies_upred, 6).
+el_holds_functor(el_holds_implies, 10).
+el_holds_functor(el_holds_implies, 8).
+el_holds_functor(el_holds_implies, 9).
+el_holds_functor(el_holds_implies_varg, 5).
+el_holds_functor(el_holds_implies, 7).
+el_holds_functor(el_holds_implies, 5).
+el_holds_functor(el_holds_implies_plist, 8).
+el_holds_functor(el_holds_implies_plist, 6).
+el_holds_functor(el_holds_implies_plist, 7).
+el_holds_functor(el_holds_implies, 6).
+el_holds_functor(el_holds_isa_varg, 4).
+el_holds_functor(el_holds_isa, 4).
+el_holds_functor(el_holds, 10).
+el_holds_functor(el_holds, 13).
+el_holds_functor(el_holds, 7).
+el_holds_functor(el_holds, 9).
+el_holds_functor(el_holds, 8).
+el_holds_functor(el_holds_varg, 6).
+el_holds_functor(el_holds, 4).
+el_holds_functor(el_holds_varg, 5).
+el_holds_functor(el_holds, 6).
+el_holds_functor(el_holds, 5).

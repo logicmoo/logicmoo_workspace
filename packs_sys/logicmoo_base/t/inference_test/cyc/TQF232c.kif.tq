@@ -1,0 +1,41 @@
+(note TQF232c)
+
+(instance HYP-TerroristGroup-59167025 TerroristGroup) 
+(subclass HYP-Collection-35561616 TerroristAct) 
+
+(implies 
+  (instance ?GROUP TerroristGroup) 
+  (behaviorCapable ?GROUP TerroristAct agent)) 
+
+(implies 
+  (and 
+    (subrelation ?PRED ?GENL) 
+    (behaviorCapable ?OBJ ?ACT ?PRED)) 
+  (behaviorCapable ?OBJ ?ACT ?GENL)) 
+
+(implies 
+  (and 
+    (subclass ?SPEC ?GEN) 
+    (behaviorCapable ?OBJ ?GEN ?ROLE)) 
+  (behaviorCapable ?OBJ ?SPEC ?ROLE)) 
+
+(subrelation agent agent)
+
+(queryyn
+  (implies 
+    (and 
+      (instance ?GROUP TerroristGroup) 
+      (instance ?WEAPON BiologicalWeapon) 
+      (instance ?DELIVERY DeliveryOfWeaponToTarget) 
+      (subclass ?EVENTTYPE 
+        (CollectionSubsetFn TerroristAct 
+          (TheSetOf ?OBJ 
+            (and 
+              (= ?OBJ ?DELIVERY) 
+              (objectMoving ?OBJ ?WEAPON)))))) 
+  (behaviorCapable ?GROUP ?EVENTTYPE agent)))
+
+(answer Yes)
+
+(end_of_file)
+

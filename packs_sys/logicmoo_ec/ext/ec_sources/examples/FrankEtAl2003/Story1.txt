@@ -1,0 +1,146 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/FrankEtAl2003/Story1.e
+loading foundations/Root.e
+loading foundations/EC.e
+loading examples/FrankEtAl2003/FrankEtAl.e
+56 variables and 123 clauses
+relsat solver
+10 models
+---
+model 1:
+0
+Outside(Bob).
+Outside(Jilly).
+PlaySoccer(Bob).
+PlaySoccer(Jilly).
+1
++Win(Jilly).
+P
+ReleasedAt(Outside(Bob), 0).
+ReleasedAt(Outside(Bob), 1).
+ReleasedAt(Outside(Jilly), 0).
+ReleasedAt(Outside(Jilly), 1).
+ReleasedAt(PlayComputerGame(Bob), 0).
+ReleasedAt(PlayComputerGame(Bob), 1).
+ReleasedAt(PlayComputerGame(Jilly), 0).
+ReleasedAt(PlayComputerGame(Jilly), 1).
+ReleasedAt(PlayHideAndSeek(Bob), 0).
+ReleasedAt(PlayHideAndSeek(Bob), 1).
+ReleasedAt(PlayHideAndSeek(Jilly), 0).
+ReleasedAt(PlayHideAndSeek(Jilly), 1).
+ReleasedAt(PlaySoccer(Bob), 0).
+ReleasedAt(PlaySoccer(Bob), 1).
+ReleasedAt(PlaySoccer(Jilly), 0).
+ReleasedAt(PlaySoccer(Jilly), 1).
+ReleasedAt(PlayWithDog(Bob), 0).
+ReleasedAt(PlayWithDog(Bob), 1).
+ReleasedAt(PlayWithDog(Jilly), 0).
+ReleasedAt(PlayWithDog(Jilly), 1).
+ReleasedAt(Win(Bob), 0).
+ReleasedAt(Win(Bob), 1).
+ReleasedAt(Win(Jilly), 0).
+ReleasedAt(Win(Jilly), 1).
+!ReleasedAt(Raining(), 0).
+!ReleasedAt(Raining(), 1).
+!ReleasedAt(SunShining(), 0).
+!ReleasedAt(SunShining(), 1).
+---
+model 2 diff:7c7
+< +Win(Jilly).
+---
+> +Win(Bob).
+
+---
+model 3 diff:5a6
+> Win(Bob).
+7c8,13
+< +Win(Bob).
+---
+> -Outside(Bob).
+> -Outside(Jilly).
+> -PlaySoccer(Bob).
+> -PlaySoccer(Jilly).
+> +PlayComputerGame(Bob).
+> +PlayComputerGame(Jilly).
+
+---
+model 4 diff:6c6
+< Win(Bob).
+---
+> Win(Jilly).
+11a12
+> -Win(Jilly).
+13a15
+> +Win(Bob).
+
+---
+model 5 diff:6d5
+< Win(Jilly).
+12d10
+< -Win(Jilly).
+
+---
+model 6 diff:5a6
+> Win(Jilly).
+13d13
+< +Win(Bob).
+
+---
+model 7 diff:6d5
+< Win(Jilly).
+13a13
+> +Win(Jilly).
+
+---
+model 8 diff:5a6
+> Win(Bob).
+10a12
+> -Win(Bob).
+
+---
+model 9 diff:6c6
+< Win(Bob).
+---
+> Win(Jilly).
+8,9d7
+< -Outside(Bob).
+< -Outside(Jilly).
+12,15c10,13
+< -Win(Bob).
+< +PlayComputerGame(Bob).
+< +PlayComputerGame(Jilly).
+< +Win(Jilly).
+---
+> -Win(Jilly).
+> +PlayHideAndSeek(Bob).
+> +PlayHideAndSeek(Jilly).
+> +Win(Bob).
+
+---
+model 10 diff:6c6
+< Win(Jilly).
+---
+> Win(Bob).
+10d9
+< -Win(Jilly).
+13d11
+< +Win(Bob).
+
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+FrankEtAl: 0 predicates, 0 functions, 8 fluents, 0 events, 13 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Story1: 0 predicates, 0 functions, 0 fluents, 0 events, 4 axioms
+encoding 0.0s
+solution 0.0s
+total 0.5s
+Discrete Event Calculus Reasoner 1.0

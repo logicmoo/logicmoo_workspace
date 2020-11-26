@@ -1,0 +1,12 @@
+Parameterised version of
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH\_\-CSV. Update the
+translation judgements file, defined by the
+translation\_\-corpus\_\-judgements config file entry, from the output
+of the speech translation corpus output file, defined by the
+translation\_\-speech\_\-corpus\_\-results($\langle$Arg$\rangle$)
+config file entry. This command should be used after editing the CSV
+version of the output file produced by the
+TRANSLATE\_\-SPEECH\_\-CORPUS $\langle$Arg$\rangle$ or
+TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN $\langle$Arg$\rangle$
+command. Editing should replace question marks in the first column by
+valid judgements, currently 'good', 'ok' or 'bad'.

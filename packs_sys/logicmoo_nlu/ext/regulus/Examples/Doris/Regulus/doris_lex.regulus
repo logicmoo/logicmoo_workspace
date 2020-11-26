@@ -1,0 +1,537 @@
+
+feature_value_space(n_type, [[physical_object, part, abstract, substance]]). 
+feature_value_space(p_type, [[up, down, off, over, back, away, out]]).
+feature_value_space(adv_types, [[spatial, manner, aleatoric, focus]]).
+
+macro(takes_all_non_degree_advs,
+      takes_adv_type=aleatoric\/manner\/politeness\/spatial\/temporal\/focus).
+
+% VERBS
+
+% TRANSITIVE, AGENT/PHYSICAL_OBJECT
+
+% grab, collect, fetch
+% e.g. "grab the briefcase"
+% transitive verb; subj=agent, obj=physical_object
+
+macro(verb_like_grab(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, physical_object],
+		    [takes_time_pp=y, takes_from_pp=y,
+		     @takes_all_non_degree_advs, can_be_postmod=n])).
+
+@verb_like_grab([collect, collects, collected, collected, collecting], collect).
+@verb_like_grab([enter, enters, entered, entered, entering], enter).
+@verb_like_grab([grab, grabs, grabbed, grabbed, grabbing], grab).
+@verb_like_grab([retrieve, retrieves, retrieved, retrieved, retrieving], retrieve).
+
+macro(verb_like_carry(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, physical_object],
+		    [takes_time_pp=y, takes_to_pp=y, takes_from_pp=y,
+		     @takes_all_non_degree_advs, can_be_postmod=n])).
+
+@verb_like_carry([carry, carries, carried, carried, carrying], carry).
+@verb_like_carry([move, moves, moved, moved, moving], move_transitive).
+@verb_like_carry([return, returns, returned, returned, returning], return_transitive).
+
+macro(verb_like_click(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, physical_object],
+		    [takes_time_pp=y,
+		     @takes_all_non_degree_advs, can_be_postmod=n])).
+
+@verb_like_grab([click, clicks, clicked, clicked, clicking], click).
+@verb_like_grab([close, closes, closed, closed, closing], close).
+@verb_like_grab([disconnect, disconnects, disconnected, disconnected, disconnecting], disconnect).
+@verb_like_grab([eject, ejects, ejected, ejected, ejecting], eject).
+@verb_like_grab([display, displays, displayed, displayed, displaying], display).
+@verb_like_grab([find, finds, found, found, finding], find).
+@verb_like_grab([forget, forgets, forgot, forgotten, forgetting], forget).
+@verb_like_grab([hold, holds, held, held, holding], hold).
+@verb_like_grab([locate, locates, located, located, locating], locate).
+@verb_like_grab([(look, at), (looks, at), (looked, at), (looked, at), (looking, at)], look_at).
+@verb_like_grab([notice, notices, noticed, noticed, noticing], notice).
+@verb_like_grab([open, opens, opened, opened, opening], open).
+@verb_like_grab([need, needs, needed, needed, needing], need).
+@verb_like_grab([print, prints, printed, printed, printing], print).
+@verb_like_grab([push, pushes, pushed, pushed, pushing], push).
+@verb_like_grab([unplug, unplugs, unplugged, unplugged, unplugging], unplug).
+
+% PARTICLE
+
+% pick up, put down, etc
+% e.g. "pick up the book"
+% particle verb; subj=agent, particle_obj=object
+
+@v_object_particle([pick, picks, picked, picked, picking],
+                   [action, pick_up], [agent, physical_object, up],
+		   [takes_time_pp=y, @takes_all_non_degree_advs, can_be_postmod=n]).
+@v_object_particle([put, puts, put, put, putting],
+                   [action, put_down], [agent, physical_object, down],
+		   [takes_time_pp=y, @takes_all_non_degree_advs, can_be_postmod=n]).
+@v_object_particle([put, puts, put, put, putting],
+                   [action, put_back], [agent, physical_object, back],
+		   [takes_time_pp=y, @takes_all_non_degree_advs, can_be_postmod=n]).
+@v_object_particle([bring, brings, brought, brought, bringing],
+                   [action, bring_back], [agent, physical_object, back],
+		   [takes_time_pp=y, takes_to_pp=y, takes_from_pp=y, @takes_all_non_degree_advs, can_be_postmod=n]).
+@v_object_particle([take, takes, took, taken, taking],
+                   [action, take_out], [agent, physical_object, out],
+		   [takes_time_pp=y, takes_from_pp=y, @takes_all_non_degree_advs, can_be_postmod=n]).
+
+% INTRANSITIVE
+
+% sit
+% e.g. "the lamp is sitting on the table"
+% intransitive verb; subj=physical_object. Also requires a loc/destination PP
+
+macro(verb_like_sit(Forms, Sem),
+      @v_intransitive(Forms, [state, Sem], [physical_object],
+		    [takes_time_pp=y, takes_loc_pp=y,
+		     @takes_all_non_degree_advs,
+		     can_be_postmod=n])).
+
+@verb_like_sit([sit, sits, sat, sat, sitting], sit).
+
+% walk
+% e.g. "walk into the room"
+% intransitive verb; subj=agent.
+
+macro(verb_like_walk(Forms, Sem),
+      @v_intransitive(Forms, [action, Sem], [agent],
+		    [takes_time_pp=y, takes_loc_pp=y, takes_to_pp=y,
+		     @takes_all_non_degree_advs,
+		     can_be_postmod=n])).
+
+@verb_like_walk([come, comes, came, come, coming], come).
+@verb_like_walk([go, goes, went, gone, going], go).
+@verb_like_walk([hurry, hurries, hurried, hurried, hurrying], hurry).
+@verb_like_walk([look, looks, looked, looked, looking], look).
+@verb_like_walk([move, moves, moved, moved, moving], move_intransitive).
+@verb_like_walk([proceed, proceeds, proceeded, proceeded, proceeding], proceed).
+@verb_like_walk([return, returns, returned, returned, returning], return).
+@verb_like_walk([turn, turns, turned, turned, turning], turn).
+@verb_like_walk([walk, walks, walked, walked, walking], walk).
+
+% stand
+% intransitive verb; subj=agent.
+
+macro(verb_like_stand(Forms, Sem),
+      @v_intransitive(Forms, [state, Sem], [agent],
+		    [takes_time_pp=y, takes_loc_pp=y,
+		     @takes_all_non_degree_advs,
+		     can_be_postmod=n])).
+
+@verb_like_stand([stand, stands, stood, stood, standing], stand).
+
+% DITRANS
+
+% give
+% e.g. "give me the book"
+
+% ditransitive verbs
+macro(verb_like_give(Forms, Sem),
+      @v_ditransitive(Forms,
+		      [action, Sem], [agent, physical_object, agent],
+		      [takes_time_pp=y, takes_from_pp=y,
+		       @takes_all_non_degree_advs, can_be_postmod=n])).
+macro(verb_like_give(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, physical_object],
+		    [takes_time_pp=y, takes_from_pp=y, takes_to_pp=y,
+		     @takes_all_non_degree_advs, can_be_postmod=n])).
+
+@verb_like_give([bring, brings, brought, brought, bringing], bring).
+@verb_like_give([give, gives, gave, given, giving], give).
+@verb_like_give([fetch, fetches, fetched, fetched, fetching], fetch).
+@verb_like_give([find, finds, found, found, finding], find).
+@verb_like_give([get, gets, got, got, getting], get).
+@verb_like_give([take, takes, took, taken, taking], take).
+
+% BE-VERB
+
+% be + loc
+@be_pp([state, be], [physical_object, loc], [takes_time_pp=y, takes_adv_type=aleatoric\/temporal\/focus]).
+
+% physical_object is physical_object
+@be_np([state, be], [physical_object, physical_object], [takes_time_pp=y, takes_adv_type=aleatoric\/temporal\/focus]).
+
+% physical_object is abstract (e.g. color)
+@be_np([state, be], [physical_object, abstract], [takes_time_pp=y, takes_adv_type=aleatoric\/temporal\/focus]).
+
+% Copular be for adjectival predicates
+@be_adj([verb, be], 
+	[_AnySubjType], [takes_time_pp=y, takes_adv_type=aleatoric\/temporal\/focus]).
+
+% NOUNS
+
+% PHYSICAL OBJECTS
+
+% adapter, address-book, bag, ...
+% sort=physical_object
+
+macro(object_noun(Words, Sem),
+      @noun(Words, [object, Sem], [physical_object],
+	    [takes_det_type=def\/indef\/quant\/numeric\/null, n_pre_mod_type=part, takes_loc_pp=y])).
+
+@object_noun([adapter, adapters], adapter).
+@object_noun([(address, book), (address, books)], address_book).
+@object_noun([bag, bags], bag).
+@object_noun([binder, binders], binder).
+@object_noun([book, books], book).
+@object_noun([bookcase, bookcases], bookcase).
+@object_noun([bookshelf, bookshelves], bookshelf).
+@object_noun([bottle, bottles], bottle).
+@object_noun([bowl, bowls], bowl).
+@object_noun([briefcase, briefcases], briefcase).
+@object_noun([briefing, briefings], briefing).
+@object_noun([cabinet, cabinets], cabinet).
+@object_noun([cable, cables], cable).
+@object_noun([calendar, calendars], calendar).
+@object_noun([cardigan, cardigans], cardigan).
+@object_noun([case, cases], case).
+@object_noun([chair, chairs], chair).
+@object_noun([chicken, chickens], chicken).
+@object_noun([coat, coats], coat).
+@object_noun([(coffee, cup), (coffee, cups)], coffee_cup).
+@object_noun([computer, computers], computer).
+@object_noun([copy, copies], copy).
+@object_noun([crossword, crosswords], crossword).
+@object_noun([cup, cups], cup).
+@object_noun([cupboard, cupboards], cupboard).
+@object_noun([davenport, davenports], davenport).
+@object_noun([desk, desks], desk).
+@object_noun([diary, diaries], diary).
+@object_noun([(personal, directory), (personal, directories)], personal_directory).
+@object_noun([disc, discs], disc).
+@object_noun([document, documents], document).
+@object_noun([file, files], file).
+@object_noun([floor, floors], floor).
+@object_noun([folder, folders], folder).
+@object_noun([glasses, (pairs, of, glasses)], glasses).
+@object_noun([gun, guns], gun).
+@object_noun([hook, hooks], hook).
+@object_noun([item, items], item).
+@object_noun([jacket, jackets], jacket).
+@object_noun([keyboard, keyboards], keyboard).
+@object_noun([(car, key), (car, keys)], car_key).
+@object_noun([key, keys], key).
+@object_noun([lamp, lamps], lamp).
+@object_noun([laptop, laptops], laptop).
+@object_noun([link, links], link).
+@object_noun([(meeting, room), (meeting, rooms)], meeting_room).
+@object_noun([memo, memos], memo).
+@object_noun([monitor, monitors], monitor).
+@object_noun([mouse, mice], mouse).
+@object_noun([mug, mugs], mug).
+@object_noun([(notice, board), (notice, boards)], notice_board).
+@object_noun([notebook, notebooks], notebook).
+@object_noun([notepad, notepads], notepad).
+@object_noun([office, offices], office).
+@object_noun([(personal, organizer), (personal, organizers)], personal_organizer).
+@object_noun([outlet, outlets], outlet).
+@object_noun([oven, ovens], oven).
+@object_noun([paper, papers], paper).
+@object_noun([pen, pen], pen).
+@object_noun([phone, phones], phone).
+@object_noun([picture, pictures], picture).
+@object_noun([pocket, pockets], pocket).
+@object_noun([printer, printers], printer).
+@object_noun([printout, printouts], printout).
+@object_noun([record, records], record).
+@object_noun([room, rooms], room).
+@object_noun([scotch, scotches], scotch).
+@object_noun([screen, screens], screen).
+@object_noun([seat, seats], seat).
+@object_noun([shelf, shelves], shelf).
+@object_noun([stand, stands], stand).
+@object_noun([study, studies], study).
+@object_noun([suitcase, suitcases], suitcase).
+@object_noun([table, tables], table).
+@object_noun([telephone, telephones], telephone).
+@object_noun([terminal, terminals], terminal).
+@object_noun([tray, trays], tray).
+@object_noun([(pickup, tray), (pickup, trays)], tray).
+@object_noun([wall, walls], wall).
+@object_noun([wallet, wallets], wallet).
+@object_noun([window, windows], window).
+@object_noun([windowsill, windowsills], windowsill).
+
+% drawer, handle
+% e.g. "the top drawer of my desk", "the second drawer"
+% sort=physical_object
+
+macro(object_part_noun(Words, Sem),
+      @noun(Words,
+	    [object_part, Sem], [physical_object], 
+	    [takes_det_type=def\/indef\/quant\/ordinal\/numeric\/null,
+	     n_pre_mod_type=part, n_of_mod_type=physical_object, takes_loc_pp=y])).
+
+@object_part_noun([drawer, drawers], drawer).
+@object_part_noun([handle, handles], handle).
+@object_part_noun([content, contents], content).
+
+% door
+% e.g. "the door to the office"
+% sort=physical_object
+
+macro(aperture_noun(Words, Sem),
+      @noun(Words,
+	    [object, Sem], [physical_object], 
+	    [takes_det_type=def\/indef\/quant\/ordinal\/numeric\/null,
+	     n_pre_mod_type=part, n_of_mod_type=physical_object,
+	     takes_to_pp=y, takes_loc_pp=y])).
+
+@aperture_noun([door, doors], door).
+
+% LOCATION OBJECTS
+
+% top, bottom
+% e.g. "the top drawer", "the left of the desk"
+% sort=physical_object
+
+macro(object_spatial_part_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[object_spatial_part, Sem], [physical_object\/part], sing,
+			[takes_det_type=def\/null,
+			 n_pre_mod_type=part, n_of_mod_type=physical_object,
+			 takes_loc_pp=y])).
+
+@object_spatial_part_noun(back, back).
+@object_spatial_part_noun(bottom, bottom).
+@object_spatial_part_noun(centre, centre).
+@object_spatial_part_noun(corner, corner).
+@object_spatial_part_noun(front, front).
+@object_spatial_part_noun(left, left).
+@object_spatial_part_noun(rear, rear).
+@object_spatial_part_noun(right, right).
+@object_spatial_part_noun(side, side).
+@object_spatial_part_noun(top, top).
+
+% ABSTRACT OBJECTS
+%command
+%contents
+%eyes
+%time
+%turn
+
+% COMPOSITE OBJECTS
+
+% pile, stack
+% sort=physical_object
+
+macro(composite_object_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[composite_object, Sem], [physical_object], sing,
+			[takes_det_type=def\/indef\/quant\/numeric, n_of_mod_type=physical_object, takes_loc_pp=y])).
+
+@composite_object_noun(pile, pile).
+@composite_object_noun(stack, stack).
+
+% UNITS
+%meter
+
+% SUBSTANCES
+%glass
+%glass-pewter
+%scotch
+%soup
+
+% TEMPORAL OBJECTS
+
+macro(singular_time_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[time, Sem], [time], sing, [takes_det_type=null])).
+
+@singular_time_noun(now, now).
+@singular_time_noun(today, today).
+
+% ADJECTIVES
+
+% COLOURS
+
+% red, blue, green
+% sort=physical_object
+
+macro(color_adj(Word, Sem),
+      @adjective(Word, [color, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@color_adj(beige, beige).
+@color_adj(black, black).
+@color_adj(blue, blue).
+@color_adj(brown, brown).
+@color_adj(green, green).
+@color_adj(grey, grey).
+@color_adj(red, red).
+@color_adj(white, white).
+@color_adj(yellow, yellow).
+
+% SIZES
+
+% big, large, small, little, short
+% sort=physical_object
+
+macro(size_adj(Word, Sem),
+      @adjective(Word, [size, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@size_adj(big, big).
+@size_adj(large, large).
+@size_adj(small, small).
+@size_adj(little, little).
+@size_adj(short, short).
+@size_adj(tall, tall).
+@size_adj(long, long).
+@size_adj(narrow, narrow).
+@size_adj(thick, thick).
+
+% taller, bigger, shorter, smaller
+% sort=physical_object
+
+@size_adj(bigger, bigger).
+@size_adj(larger, larger).
+@size_adj(smaller, smaller).
+@size_adj(shorter, shorter).
+@size_adj(taller, taller).
+@size_adj(longer, longer).
+@size_adj(narrower, narrower).
+@size_adj(thicker, thicker).
+
+% tallest, biggest, shortest, smallest
+% sort=physical_object
+
+@size_adj(biggest, biggest).
+@size_adj(largest, largest).
+@size_adj(smallest, smallest).
+@size_adj(shortest, shortest).
+@size_adj(tallest, tallest).
+@size_adj(longest, longest).
+@size_adj(narrowest, narrowest).
+@size_adj(thickest, thickest).
+
+% SPATIAL
+
+% near, close
+% sort=physical_object
+
+macro(spatial_adj(Word, Sem),
+      @adjective(Word, [spatial, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@spatial_adj(near, near).
+@spatial_adj(close, close).
+% Do "left" and "right" as NN mods
+%@spatial_adj(left, left).
+%@spatial_adj(right, right).
+
+@spatial_adj(nearer, nearer).
+@spatial_adj(closer, closer).
+
+@spatial_adj(nearest, nearest).
+@spatial_adj(closest, closest).
+@spatial_adj(leftmost, leftmost).
+@spatial_adj(rightmost, rightmost).
+
+% PROPERTIES
+
+% empty
+% sort=physical_object
+
+macro(property_adj(Word, Sem),
+      @adjective(Word, [property, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@property_adj(depressing, depressing).
+@property_adj(important, important).
+@property_adj(locked, locked).
+@property_adj(main, main).
+@property_adj(open, open).
+@property_adj(unlocked, unlocked).
+
+% PROPER NOUNS
+
+@name(anna, [anna], [agent], sing, []).
+
+% PREPOSITIONS
+
+% on, in, on top of, to the left of, to the right of, behind, in front of
+% loc_pp, sort=physical_object or sometimes physical_object\/agent
+
+@preposition((in, front, of), in_front_of_loc, [loc\/to, physical_object\/agent], []).
+@preposition((next, to), next_to_loc, [loc\/to, physical_object\/agent], []).
+@preposition((on, the, left, of), on_the_left_of_loc, [loc\/to, physical_object\/agent], []).
+@preposition((on, the, right, of), on_the_right_of_loc, [loc\/to, physical_object\/agent], []).
+@preposition((on, top, of), on_top_of_loc, [loc\/to, physical_object], []).
+@preposition((to, the, left, of), to_the_left_of_loc, [loc\/to, physical_object\/agent], []).
+@preposition((to, the, right, of), to_the_right_of_loc, [loc\/to, physical_object\/agent], []).
+@preposition(against, against_loc, [loc\/to, physical_object], []).
+@preposition(along, along_loc, [loc\/to, physical_object], []).
+@preposition(at, at_loc, [loc\/to, physical_object], []).
+@preposition(behind, behind_loc, [loc\/to, physical_object\/agent], []).
+@preposition(beneath, beneath_loc, [loc\/to, physical_object], []).
+@preposition(between, between_loc, [loc\/to, physical_object], []).
+@preposition(by, by_loc, [loc\/to, physical_object\/agent], []).
+@preposition(in, in_loc, [loc\/to, physical_object], []).
+@preposition(inside, inside_loc, [loc\/to, physical_object], []).
+@preposition(on, on_loc, [loc\/to, physical_object], []).
+@preposition(opposite, opposite_loc, [loc\/to, physical_object\/agent], []).
+@preposition(over, over_loc, [loc\/to, physical_object], []).
+@preposition(under, under_loc, [loc\/to, physical_object], []).
+@preposition(underneath, underneath_loc, [loc\/to, physical_object], []).
+
+@preposition(near, near_loc, [loc\/to, physical_object\/agent], []).
+@preposition(nearer, nearer_loc, [loc\/to, physical_object\/agent], []).
+@preposition(nearest, nearest_loc, [loc\/to, physical_object\/agent], []).
+
+@preposition((close, to), close_to_loc, [loc\/to, physical_object], []).
+@preposition((closer, to), closer_to_loc, [loc\/to, physical_object], []).
+@preposition((closest, to), closest_to_loc, [loc\/to, physical_object], []).
+
+% from, out of
+
+@preposition(from, from_loc, [from, physical_object], []).
+@preposition((out, of), out_of_loc, [from, physical_object], []).
+
+% into, onto
+% to_pp, sort=physical_object
+
+@preposition(into, into_loc, [to, physical_object], []).
+@preposition(to, to_loc, [to, physical_object], []).
+@preposition(towards, towards_loc, [to, physical_object], []).
+
+@preposition(to, to_person, [to, agent], []).
+@preposition(for, for_person, [to, agent], []).
+
+% PARTICLES
+
+@preposition(up, up, [none, physical_object], [sem_p_type=up]).
+@preposition(down, down, [none, physical_object], [sem_p_type=down]).
+@preposition(off, off, [none, physical_object], [sem_p_type=off]).
+@preposition(over, over, [none, physical_object], [sem_p_type=over]).
+@preposition(back, back, [none, physical_object], [sem_p_type=back]).
+@preposition(out, out, [none, physical_object], [sem_p_type=out]).
+@preposition(away, away, [none, physical_object], [sem_p_type=away]).
+
+% ADVERB
+
+@adverb(directly, [spatial, directly], [spatial], [advpos=prev\/postv\/postvp]).
+@adverb(left, [spatial, left], [spatial], [advpos=prev\/postv\/postvp]).
+@adverb(right, [spatial, right], [spatial], [advpos=prev\/postv\/postvp]).
+@adverb(straight, [spatial, straight], [spatial], [advpos=prev\/postv\/postvp]).
+
+@adverb(probably, [probability, probably], [aleatoric], [advpos=prev\/postv]).
+
+@adverb(just, [focus, just], [focus], [advpos=fronted\/prev\/postv]).
+@adverb(only, [focus, only], [focus], [advpos=fronted\/prev\/postv]).
+@adverb(also, [focus, also], [focus], [advpos=fronted\/prev\/postv]).
+
+@adverb(gently, [manner, gently], [manner], [advpos=fronted\/prev\/postv]).
+@adverb(quickly, [manner, quickly], [manner], [advpos=fronted\/prev\/postv]).
+
+%inwards
+%just
+%only
+
+% PP
+
+@lexical_pp(here, [loc, here], [loc], []).
+@lexical_pp(there, [loc, there], [loc], []).
+
+@lexical_pp((to, the, right), [loc, to_the_right], [loc], []).
+@lexical_pp((to, the, left), [loc, to_the_left], [loc], []).
+
+@lexical_pp(then, [temporal, then], [time], []).

@@ -1,0 +1,836 @@
+(abort)
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?FOUNDING 
+ (thereExists ?COALITION 
+ (and 
+ (instance ?COALITION Coalition-International) 
+ (instance ?FOUNDING FoundingAnOrganization) 
+ (agent ?FOUNDING UnitedStatesOfAmerica) 
+ (considersAsEnemy ?COALITION Iran) 
+ (outputsCreated ?FOUNDING ?COALITION))))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?FOUNDING 
+ (thereExists ?COALITION 
+ (and 
+ (instance ?COALITION Coalition-International) 
+ (instance ?FOUNDING FoundingAnOrganization) 
+ (agent ?FOUNDING UnitedStatesOfAmerica) 
+ (considersAsEnemy ?COALITION Iran) 
+ (outputsCreated ?FOUNDING ?COALITION))))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?WMD 
+ (and 
+ (instance ?WMD BallisticMissile) 
+ (owns Iran ?WMD))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?WMD 
+ (and 
+ (instance ?WMD BallisticMissile) 
+ (owns Iran ?WMD))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?STRIKE 
+ (and 
+ (instance ?STRIKE AttackOnTangible) 
+ (agent ?STRIKE Israel) 
+ (eventOccursAt ?STRIKE Iran) 
+ (decreasesImmediatelyCausally ?STRIKE Iran power-Military)))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?STRIKE 
+ (and 
+ (instance ?STRIKE AttackOnTangible) 
+ (agent ?STRIKE Israel) 
+ (eventOccursAt ?STRIKE Iran) 
+ (decreasesImmediatelyCausally ?STRIKE Iran power-Military)))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?WMD 
+ (and 
+ (instance ?WMD WeaponOfMassDestruction) 
+ (possesses Iran ?WMD))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?WMD 
+ (and 
+ (instance ?WMD WeaponOfMassDestruction) 
+ (possesses Iran ?WMD))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (directingAgent ?ATTACK Israel) 
+ (objectActedOn ?ATTACK 
+ (IndustryOfRegionFn 
+ (IndustryFn WeaponOfMassDestruction) Iran))))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (directingAgent ?ATTACK Israel) 
+ (objectActedOn ?ATTACK 
+ (IndustryOfRegionFn 
+ (IndustryFn WeaponOfMassDestruction) Iran))))) VitalNationalInterest) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?FACTIONAL-CONFLICT 
+ (and 
+ (instance ?FACTIONAL-CONFLICT FactionalConflict) 
+ (targetOfContention ?FACTIONAL-CONFLICT 
+ (GovernmentFn Iran))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (contains 
+ (CentralRegionFn ContinentOfAsia) ?STATE) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(contains 
+ (CentralRegionFn ContinentOfAsia) 
+ (CentralRegionFn ContinentOfAsia)) 
+
+(contains 
+ (CentralRegionFn ContinentOfAsia) 
+ (CentralRegionFn ContinentOfAsia)) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE 
+ (CentralRegionFn ContinentOfAsia)) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (forAll ?SHIA 
+ (forAll ?IRAN-NEIGHBOR 
+ (implies 
+ (and 
+ (instance ?IRAN-NEIGHBOR Country) 
+ (hasBeliefSystems ?SHIA ShiiteIslam) 
+ (meetsSpatially Iran ?IRAN-NEIGHBOR) 
+ (residesInRegion ?SHIA ?IRAN-NEIGHBOR)) 
+ (not 
+ (relationExistsInstance maleficiary Persecution ?SHIA))))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (forAll ?SHIA 
+ (forAll ?IRAN-NEIGHBOR 
+ (implies 
+ (and 
+ (instance ?IRAN-NEIGHBOR Country) 
+ (hasBeliefSystems ?SHIA ShiiteIslam) 
+ (meetsSpatially Iran ?IRAN-NEIGHBOR) 
+ (residesInRegion ?SHIA ?IRAN-NEIGHBOR)) 
+ (not 
+ (relationExistsInstance maleficiary Persecution ?SHIA))))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?EVT 
+ (increases-Generic ?EVT Iran 
+ (Kappa 
+ (?OWNER ?COUNT) 
+ (relationInstanceExistsCount possesses ?OWNER BallisticMissile ?COUNT)))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?EVT 
+ (increases-Generic ?EVT Iran 
+ (Kappa 
+ (?OWNER ?COUNT) 
+ (relationInstanceExistsCount possesses ?OWNER BallisticMissile ?COUNT)))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?COOPERATION 
+ (and 
+ (instance ?COOPERATION MilitaryEvent) 
+ (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION)))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?COOPERATION 
+ (and 
+ (instance ?COOPERATION MilitaryEvent) 
+ (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION)))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (forAll ?DISPUTE 
+ (forAll ?AGENT 
+ (implies 
+ (and 
+ (instance ?DISPUTE TerritorialDispute) 
+ (opponentsInConflict Iran ?AGENT ?DISPUTE)) 
+ (endingDate ?DISPUTE Now)))) TerritorialIntegrityGoal) 
+
+(goalCategoryForAgent Iran 
+ (forAll ?DISPUTE 
+ (forAll ?AGENT 
+ (implies 
+ (and 
+ (instance ?DISPUTE TerritorialDispute) 
+ (opponentsInConflict Iran ?AGENT ?DISPUTE)) 
+ (endingDate ?DISPUTE Now)))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?FOUNDING 
+ (thereExists ?COALITION 
+ (and 
+ (instance ?COALITION Coalition-International) 
+ (instance ?FOUNDING FoundingAnOrganization) 
+ (considersAsEnemy ?COALITION Iran) 
+ (outputsCreated ?FOUNDING ?COALITION))))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?FOUNDING 
+ (thereExists ?COALITION 
+ (and 
+ (instance ?COALITION Coalition-International) 
+ (instance ?FOUNDING FoundingAnOrganization) 
+ (considersAsEnemy ?COALITION Iran) 
+ (outputsCreated ?FOUNDING ?COALITION))))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE PersianGulfCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Bahrain PersianGulfCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Bahrain) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE PersianGulfCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Kuwait PersianGulfCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Kuwait) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE PersianGulfCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance SaudiArabia PersianGulfCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE SaudiArabia) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE CaucasusCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Azerbaijan CaucasusCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Azerbaijan) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE CaucasusCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Georgia-TheNation CaucasusCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Georgia-TheNation) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE CaucasusCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Armenia CaucasusCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Armenia) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE CaucasusCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Russia CaucasusCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Russia) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE PersianGulfCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Qatar PersianGulfCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Qatar) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE CaucasusCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Turkey CaucasusCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Turkey) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE PersianGulfCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Oman PersianGulfCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Oman) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?CITIZEN 
+ (and 
+ (citizens Iran ?CITIZEN) 
+ (relationExistsInstance maleficiary ViolentAction ?CITIZEN)))) CitizenSafetyGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE PersianGulfCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance Iraq PersianGulfCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Iraq) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (different Iran ?STATE) 
+ (instance ?STATE PersianGulfCountry)) 
+ (goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (agent ?TAKING-REFUGE ?REFUGEE) 
+ (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal)) 
+
+(instance UnitedArabEmirates PersianGulfCountry) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE UnitedArabEmirates) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (relationInstanceExistsMany owns Iran BiologicalWeapon) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (relationInstanceExistsMany owns Iran BiologicalWeapon) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (relationInstanceExistsMany owns Iran BallisticMissile) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (relationInstanceExistsMany owns Iran BallisticMissile) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?WMD 
+ (and 
+ (instance ?WMD WeaponOfMassDestruction) 
+ (owns Iran ?WMD))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?WMD 
+ (and 
+ (instance ?WMD WeaponOfMassDestruction) 
+ (owns Iran ?WMD))) VitalNationalInterest) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Afghanistan) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical Iraq PersianGulfRegion Low) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical Iraq PersianGulfRegion Low) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?EVT 
+ (increases-Generic ?EVT Iran 
+ (Kappa 
+ (?OWNER ?COUNT) 
+ (relationInstanceExistsCount possesses ?OWNER WeaponOfMassDestruction ?COUNT)))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (thereExists ?EVT 
+ (increases-Generic ?EVT Iran 
+ (Kappa 
+ (?OWNER ?COUNT) 
+ (relationInstanceExistsCount possesses ?OWNER WeaponOfMassDestruction ?COUNT)))) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?COOPERATION 
+ (and 
+ (instance ?COOPERATION PoliticalEvent) 
+ (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION)))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (not 
+ (thereExists ?COOPERATION 
+ (and 
+ (instance ?COOPERATION PoliticalEvent) 
+ (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION)))) VitalNationalInterest) 
+
+
+

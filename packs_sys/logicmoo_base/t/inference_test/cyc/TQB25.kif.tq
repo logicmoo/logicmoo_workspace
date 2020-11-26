@@ -1,0 +1,44 @@
+(note TQB25)
+
+(pathTerminus Abqaiq-YanbuPipeline RedSea) 
+
+(implies 
+ (and 
+ (instance ?TRAN Pipeline) 
+ (pathTerminus ?TRAN ?DEST) 
+ (instance ?DEST PortCity) 
+ (meetsSpatially ?WATER ?DEST)) 
+ (pathTerminus ?TRAN ?WATER)) 
+
+(instance Abqaiq-YanbuPipeline Pipeline) 
+
+(pathTerminus Abqaiq-YanbuPipeline CityOfYanbuAlBahrSaudiArabia) 
+
+(meetsSpatially RedSea CityOfYanbuAlBahrSaudiArabia) 
+
+(primaryFunction Abqaiq-YanbuPipeline 
+ (TransportFn NaturalGas) conveyor-Stationary) 
+
+(implies 
+ (instance ?X GasPipeline) 
+ (primaryFunction ?X 
+ (TransportFn NaturalGas) conveyor-Stationary)) 
+
+(instance Abqaiq-YanbuPipeline GasPipeline) 
+
+
+
+(query (findall ?PROD
+
+ (thereExists ?TRAN 
+ (thereExists ?DEST 
+ (and 
+ (pathTerminus ?TRAN RedSea) 
+ (primaryFunction ?TRAN 
+ (TransportFn ?PROD) conveyor-Stationary))))))
+
+(answer NaturalGas)
+
+
+(end_of_file)
+

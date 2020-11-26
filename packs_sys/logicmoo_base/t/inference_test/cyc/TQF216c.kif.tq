@@ -1,0 +1,74 @@
+(note TQF216c)
+
+(goalCategoryForAgent SaudiArabia 
+  (not 
+    (thereExists ?EVENT 
+    (decreases-Generic ?EVENT SaudiArabia oilRevenue))) NationalEconomyGoal)
+
+(goalCategoryForAgent SaudiArabia 
+  (thereExists ?DECREASE 
+    (decreases-Generic ?DECREASE 
+      (CitizensFn SaudiArabia) 
+      (Kappa 
+        (?POPULATION ?RATE) 
+        (portionOf ?POPULATION UnemployedPerson ?RATE)))) NationalEconomyGoal)
+
+(goalCategoryForAgent SaudiArabia 
+  (changesQuantityInDirection 
+    (YearFn 1999) SaudiArabia 
+      (Kappa 
+        (?REGION ?FRACTION) 
+        (industryFractionOfGDP ?REGION OilIndustry 
+          (YearFn 1999) ?FRACTION)) Negative) EconomicDiversificationGoal)
+
+(goalCategoryForAgent SaudiArabia 
+  (thereExists ?PRIVATIZING 
+    (and 
+      (instance ?PRIVATIZING PrivatizingAnIndustry) 
+      (fromPossessor ?PRIVATIZING SaudiArabia))) DomesticIndustryGoal) 
+
+(implies 
+  (and 
+    (subAttribute ?SPEC ?GEN) 
+    (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+  (goalCategoryForAgent ?AGT ?GOAL ?GEN))
+
+(goalCategoryForAgent SaudiArabia 
+  (hasMembers WorldTradeOrganization SaudiArabia) TradeGoal)
+
+(query (findall (?ECONOMIC-GOAL ?ECONOMIC-GOAL-CATEGORY)
+   (and 
+       (goalCategoryForAgent SaudiArabia ?ECONOMIC-GOAL ?ECONOMIC-GOAL-CATEGORY) 
+       (subAttribute ?ECONOMIC-GOAL-CATEGORY EconomicGoal))))
+
+(answer  (list 
+  (not 
+    (thereExists ?EVENT 
+    (decreases-Generic ?EVENT SaudiArabia oilRevenue))) NationalEconomyGoal))
+
+(answer   (list  
+  (thereExists ?DECREASE 
+    (decreases-Generic ?DECREASE 
+      (CitizensFn SaudiArabia) 
+      (Kappa 
+        (?POPULATION ?RATE) 
+        (portionOf ?POPULATION UnemployedPerson ?RATE)))) NationalEconomyGoal))
+
+(answer  (list  
+  (hasMembers WorldTradeOrganization SaudiArabia) TradeGoal))
+
+(answer  (list  
+  (changesQuantityInDirection 
+    (YearFn 1999) SaudiArabia 
+    (Kappa 
+      (?REGION ?FRACTION) 
+      (industryFractionOfGDP ?REGION OilIndustry 
+        (YearFn 1999) ?FRACTION)) Negative) EconomicDiversificationGoal))
+
+(answer  (list  
+  (thereExists ?PRIVATIZING 
+    (and 
+      (instance ?PRIVATIZING PrivatizingAnIndustry) 
+      (fromPossessor ?PRIVATIZING SaudiArabia))) DomesticIndustryGoal)) 
+
+(end_of_file)		 

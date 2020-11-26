@@ -1,0 +1,448 @@
+
+
+
+			*** GoDiS TODO LIST ***
+
+
+---------------------------------------------------------------------
+
+This is a list of things to do with GoDiS, both generally and for
+specific versions (basic, grounding, iod, aod) and applications.
+
+Contents:
+
+1. Theory/DME
+2. Modules
+3. Resources
+4. Applications
+5. Misc. features
+6. Bugs
+7. Other
+
+It would be nice if someone made this into an HTML document, provided
+we can have it both in the CVS tree and accessible from the web.
+
+---------------------------------------------------------------------
+
+Explanation of symbols:
+*, -	    todo
+x	    done to some extent
+X	    completely done
+?	    should we do it?
+#	    abandoned
+[...]	    new item information, e.g. author and date
+{...}	    done item information, e.g. author and date
+(...)	    comment on item, e.g. author and date
+
+---------------------------------------------------------------------
+
+When adding items, please specify you intials and the date in square
+brackets at the end of the item, e.g. [SL 030521]. When commenting on
+items, do likewise but with ordinary brackets, e.g. (SL 030731).
+
+When an item is completely done and added to the CVS tree, mark it
+with "X" and put it at the end of the respective list. Mark it with
+your intials and the date in curly brackets, e.g. {SL 030521}. This
+should go after the new item information.
+
+When an item is abandoned, put it at the end of the respective list.
+
+---------------------------------------------------------------------
+
+
+
+*** 1. Theory/DME ***
+ 
+* stuff is deleted from NIM by irrelevantFollowup if clarification
+  question was just asked - why? (This is not explained in thesis.)
+  [SL031104] 
+
+  $S> Hello 
+  $U> chills
+  $S> chills. I dont quite understand.  Do you want  to confirm by
+      interview or to ask about diagnosis?
+  $U> malaria
+  $U> interview
+  $S> Okay.  Lets see.  What disease??
+
+* Use 'icm:acc*neg:action(A)' instead of 'request(up)' ? [DH030905]
+  Can user dialogue move 'request(up) be seen as 'icm:acc*neg:action(A)' where
+  A is the current action? When system performs icm:acc*neg:action(A) it has
+  the meaning "I can not perform A" (at least in VCR domain). In this case it 
+  would mean "I do not want A to be performed". Or does it not qualify as ICM? 
+  Anyway, it would be nice to be able to reject issues and actions explicitly,
+  by saing e.g. "do not add a program"/"stop adding a program" etc.
+
+* limitations for information-sharing (example domain: TA) [SL/DH 030818]
+  1. if the database returns more than one answer (e.g. "paris" and
+  "london" as answers to X^dest-city(X), the first one
+  (dest-city(paris)) will be taken as the answer to the destination
+  issue in the visa-plan; need to be able to represent disjunction +
+  decide what "dest-city" means in this case - desired or potential
+  destination?
+  2. using forget_all in plans will make it impossible to do
+  information sharing, since all info is wiped out after doing the
+  second simultaneous dialogue; is a solution to do forget_all only
+  when returning to top?
+
+* limitation: GoDiS can not handle polysemy. Interpretation module always
+  translates input to the first no of matching moves and system can not
+  backtrack. This causes a big problem when scaling up
+  applications and implementing large lexica. Consider e.g. TV
+  programs where 'Nyheter' can be a title as well as a category. Two
+  surface forms may also (possibly) map to objects of the same sort
+  but with different semantic meaning. No idea of how to solve
+  this. [DH030730]
+  - This should be solved by enabling clarification
+  alternative-questions as feedback to polysemous input. This would be
+  interrogative feedback on the semantic understanding level
+  (formally, icm:sem*int:Q}. This will probably require that each
+  polysemous input phrase corresponds to two (or more, depending on
+  the number of meanings) non-polysemous output forms to be used when
+  generating the clarification question.  (SL 030731)
+  
+* remove ACTIONS field in AOD? ISSUES could be used for both questions
+  and actions. This corresponds to ordinary use of "issue", e.g. "the
+  issue of adding a program to the vcr". Perhaps define semantic class
+  "issue" which includes both actions and questions. [SL030731]
+
+* combining user-initiative-db-search with current GoDiS dialogue
+  plans
+  - 1st strategy is the one used in many NL database search systems;
+  "one-shot" dialogues with some use of context for narrowing the
+  search; presupposes that user takes intiative and adds further
+  restrictions when needed; several results can be returned (so do
+  this in connection with ND dialogue?)
+  - 2nd strategy relies on dialogue plans to drive dialogue when user
+  does not take intitiative [SL030702]
+
+* y/n presupposing wh [SL 030521]
+  - "Do you want something to drink?" is a y/n question (?Ex.drink(X))
+  but "presupposes" a wh-question "what do you want to drink"; both
+  should be put on QUD to enable interpretation of the answer "A
+  soda." to the y/n-question. Answering "no" will also answer the
+  wh-question ("nothing"). Need semantics to handle this.
+  - "(You want to drink) A soda." as feedback adds a y/n question to
+  QUD, but also the wh-question "What do you want to drink"; this
+  enables corrections not preceded by "no", e.g. "juice!"
+
+* "bind(Q)" action [SL 030520]
+  x opposite of protect; makes Q available for accommodation but will
+  not result in asking Q 
+  - "real" questions have priority when interpreting short answers? if
+  not, include "bind" in selection of clarification q
+
+* Perhaps this is bit odd: ask-moves are seen
+  as irrelevant followups to action-question ("What can I do for
+  you?"). Note: if this is changed, make sure that issues actually
+  resolve the action-question. [SL 030727]
+
+* get basic, grounding, IOD and AOD running with OAA and Nuance
+
+* implement Negotiative Dialogue as specified in Larsson (2002) thesis
+
+* improved & simplified grounding model (grounding, IOD, AOD)
+  - one field for each action level, moves are queued through and
+  gradually incremented with new information (move, semantics etc)
+  - increased coverage of feedback
+    * alt-q about different percieved strings
+
+* look at score for individual words instead of score of the
+  whole utterance when doing grounding. [DH030606]
+ 
+* system confirmation question for the whole latest user utterance
+  instead of one question per user answer move. Assumes grounding
+  model as in thesis [DH030606]
+
+* examine appropriate forms of feedback, e.g. "let's see" etc.
+
+* libraries of rules to be reused by grounding, IOD, AOD
+  - accommodation
+  - grounding
+  - ...
+  - use macros to enable different infostates?
+  - load libraries non-monotonically, so that one library's definition
+  of a rule may override that of an earler library. This requires that
+  there are never more than one rule with the same name. (SL 030731)
+
+* asynchrounous feedback
+  - continue where Alex left it
+  - use Nuance?
+
+* semantics
+  - inidividuals as lambda-abstracts, apply answer to question (X^X@paris)
+
+* terminology
+  - speaker -> dp?
+  - relevant -> about
+  - shared divided into dgb and other things?
+  ? actions (as part of plans) and actions (as performed by devices, with a 
+    corresponding plan) can be easily confused. terminology check? [DH 030717] 
+
+* improve move selection
+  - if answer can be found immediately, no need to confirm ("ok" can be skipped)
+* improve generation
+  - need different output forms for altq's depending on what it's
+  about
+
+* limitation: can't handle several instances of same task-type simultaneously
+
+B If two questions or requests appear in sequence, the latter is
+  always dealt with first. This is due to the use of stacks for ISSUES
+  and ACTIONS. If order is indicated, e.g. "do A1 and then do A2",
+  things should be dealt with in the order they appear. [Staffan
+  Larsson 2003-05-06]
+
+B Use semantics more similar to notation in thesis. In particular use
+  '?' for all questions. Prolog variables should probably be used though 
+  instead of e.g. x1, x2, x3. Also, '.' will not work as an infix operator, so 
+  '^' could be used as before. (This is not top priority) [DH030902] 
+  - Alternatively, use a representation more
+  like that in Blackburn & Bos book on computational
+  semantics. Questions are represented as que(P) for y/n and que(X,PX)
+  for wh. Also, it would be nice to do proper lambda calculus,
+  including full beta-reduction and alpha-conversion, as specified in
+  the book. [added by SL 030915] 
+
+  Examples: y/n-q: ?dest_city(paris), wh-q: ?X^dest_city(X)
+	  alt-q: ?set([?dest_city(paris),?dest_city(london)])
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Example code for combining questions and answers (not exhaustive):
+  :-op(800, fx, '?'). %possibly not right priority...
+  :-use_module(library(lists)).
+
+  %combine(+Question, +Answer, ?Proposition)
+
+  combine(?X^P,P,P):- %wh-q + prop
+	P=..[_,X],
+	sort_restr(P).
+  
+  combine(?X^PX,Ind,P):- %wh-q + shortans
+	PX =..[Pred,X],
+	P =.. [Pred, Ind],
+	sort_restr(P).
+
+  combine(?P,P,P):- %y/n-q + prop
+	sort_restr(P).
+
+  combine(?P,P,P):-  %y/n-q + yes
+	sort_restr(P).
+
+  combine(?set(YNQs),P,P):-  %alt-q + prop
+	member(?P,YNQs),
+	sort_restr(P).
+
+  sort_restr(dest_city(paris)). %example propositions
+  sort_restr(dest_city(london)).
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+... loads more of GoDiS things todo, need to check which problems are
+still there [Staffan] ...
+
+
+---------------------------------------------------------------------
+
+*** 2. Modules ***
+
+* Nuance modules: get them to work with GoDiS-AOD and IOD [SL030730 -
+  URGENT!] 
+
+* Thresholds for Nuance score should be variables, e.g. "low_thres"
+  och "high_thres" [SL030814]
+
+* output_nuance
+  - record promts to speed up / bypass synthesis [SL030522]
+
+* input_nuance: Fixa barge-in när man ringer upp (via telefon eller
+  telefonsimulator), behöver ej vara sofistikerat men vi skulle kunna
+  korta av pauserna efter positiv feedback [030518]
+
+* update and include ViaVoice modules [SL 030521]
+
+* update and include Festival output module [SL 030521]
+
+* update and include Leif's L&H output module (but maybe outdated) [SL 030521]
+
+
+---------------------------------------------------------------------
+
+*** 3. Resources *** 
+
+* AOD and IOD to use same resource_interfaces.pl [SL031104]
+
+* "domain" should not be a flag but a variable; same for language
+  [SL031013] OR user_flags should scan for all godis domains
+
+* clean up lexicons, domain, database and device interface resources
+
+* general OAA UPNP device interface which routs calls through OAA to the real
+  device. Java interface (se.gu.ling.godis.oaa.common.OaaUpnpDevice.java?)
+
+* lexicon: is altlist2altstr_and/or used at all? [030513]
+
+* use general lexicon for input/output forms common to all instances of the 
+  same godis version and language (lexicon_aod_english, lexicon_aod_svenska,..)
+
+B enable runtime plugin of resources (e.g. a "load_resource" operation) [SL 030731]
+  
+---------------------------------------------------------------------
+
+*** 4. Applications *** 
+
+* mindstorms:
+  * deal with fact that actions may not be performable, that robot may
+  be non-contactable, that actions may fail
+
+* clean up start-files and godis-files; need consistent naming
+  convention [SL030814]
+  * start-APP-{nuance/text}-Platform.pl
+  * godis-APP-{nuance/text}-Platform.pl
+
+* separate applications from godis [DH&SL 030521]
+  * do it to all working applications
+  x need GODIS environment variable
+  x applications should not be under godis library
+  x application spec file should be in same directory as application
+  x godis_search_paths must be loaded by application search_paths.pl;
+  this will load the general godis search paths specified in godis
+    * BUT different paths depending on AOD, IOD etc
+    * possible to look at flag?
+  ? macros.pl should be in godis_library [DH 030718]
+  x selected_resources should be defined in start file, not in system
+  spec file (godis_aod.pl etc.); perhaps also other things.
+  x the start file should have a more appropriate name, indicating the
+  application domain
+  x move run-commands and flag settings to godis-....pl
+  # combine search_paths and godis_...
+  x remove doubled predicates from godis_search_paths?
+  x solve problem of loading wrong set of rules etc;
+    # update_rules_aod?
+    # retract library_directory(godis('godis-aod'))) if IOD chosen, etc?
+
+* user_flags.pl now in general - implement way of adding possible
+    flagValues in app spec file [DH 030718]
+
+
+* build meta-application which can load any application [SL 031106]
+  - and keep several applications active at once?
+
+* upgrade IMDiS application to work with aod
+
+* upgrade autoroute application to work with iod
+
+* GoDiS Mindstorms [SL 030730]
+  - write Nuance grammars
+  - and more...
+
+---------------------------------------------------------------------
+
+*** 5. Misc. features *** 
+
+
+---------------------------------------------------------------------
+
+*** 6. Bugs *** 
+
+B Files for running GoDiS with Nuance have disappeared from the
+  distribution. There should also be a comprehensive instruction for how
+  to start the system with Nuance, and preferably a script that does
+  everything for you. [SL031013]
+
+* not really a bug per se, but in update rules icm:accommodate has an
+  argument which is not used by the lexicon and could be removed. [SL 030731]
+
+* make sure that all accommodation rules work, esp. those using
+  "proposition". For example, number(7) and channel(7) are classified as 
+  propositions, even though they are not full answers. Perhaps need
+  "full_answer" condition?
+
+x issues2qud accommodation doesn't work for vcr  
+  - the reason is that the rules requires that the answer is not a
+  proposition. However, number(7) and channel(7) are classified as 
+  propositions, even though they are not full answers. Not sure how to
+  solve this...
+  [SL030724] {SL030724; NOTE! IOD not fixed or checked!}
+
+* when reraising an closed issue, all answers to questions dominated
+  by that issue must be removed! The same goes for requests. 
+  (integrateUsrAsk, integrateUsrRequest) [SL 030724]
+
+* noFollowUp should integrate actions as well as issues [DH 030717] 
+
+* accommodatedependetissue, accommodateDependentFunction:
+  - must work with raise, bind as well [030520]
+
+* (aod) when changing language, sometimes a confirmation subdialogue in the
+  previous language is needed before switching; the best thing would
+  be to do the confirmation in the new language, and if the switch is
+  not confirmed, go back to the original language.
+
+* (aod) exec_forget_all rensar inte agendan! kan finnas icm kvar
+  "add a program from five oclock" 0.8; "top"
+   - vid integrate language change: rensa bara bort icm som angår
+  language change, ej annat (kanske ok med all icm?)
+   - this will be solved when reimplementing grounding 
+
+* (aod) reraising comes one turn too late after revision (?)
+
+X rejectProp rule produces pos*und feedback
+  - this leads to strange behaviour if the response to the pos*und
+feedback is other than positive or nothing. The motivation for
+producing pos*und is the general principle to produce positive FB on
+level n-1 when producing negative fb on level n; however in this case
+it does not work so well and does not seem necessary, since the
+negative acc-feedback usually contains the rejected material. [SL
+030822] {SL030822}
+
+x init_shift done once too many, so one "#" is kept in list
+  - this should not be a problem, but there is a bug in the
+  implementation of init_shift in trindikit. This bug has been
+  submitted to the SF site. [SL 030724] {SL030724; GoDiS should perhaps
+  still avoid doing init twice...}
+
+X U: add a program twelve thirty 0.61
+  _
+  no
+  -> returns to top! [030515] {SL 030724; this did not replicate}
+
+x the input_simpletext module does not set score, which leads to
+  errors when checking conditions in update rules [030513]
+
+X build script crashes if $TRINDIKIT/classes is not in $CLASSPATH [DH0306005]
+  {DH030511}
+
+X (aod) Accommodation plan2issues does not work if answer to first
+  question in plan for A is given in the same utterance as the request
+  for A. For example, "Add a program channel five" in the VCR
+  domain. [Staffan Larsson 2003-05-06]
+
+---------------------------------------------------------------------
+
+*** 7. Other ***
+
+* comment the code, esp. rules and algorithms... [SL030724]
+
+* describe undocumented features, including... [SL030724]
+  - "up" action
+  - plan constructors:
+    * if_then_else
+    * bind
+    * protect
+    * forget
+    * forget_except
+    * change_domain
+    * do_action
+
+* webpage
+
+* web demo
+
+* GoDiS application writer's manual
+
+* GoDiS tutorial 
+
+---------------------------------------------------------------------
+
+

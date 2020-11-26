@@ -1,0 +1,172 @@
+%==============================================================================
+%---- This outputs TPTP problems in Isabelle/HOL format.
+%----
+%---- Written by Marc Bezem, 2008.
+%==============================================================================
+
+%==============================================================================
+%---- For handling FOF 
+%==============================================================================
+
+
+% Takes a list of FOF and creates a list of HOL formulae
+
+hol_theory( [ fof( Name, Status, FOF ) | R_FOF ], 
+% the 2nd argument doesn't play a role for the moment:
+            [ hol( Name, Status, HOL ) | R_HOL ] ) :-
+ (\+ Status=conjecture -> 
+  quotes(hol_formula( FOF , HOL )),nl,nl,hol_theory( R_FOF, R_HOL )
+ ;hol_theory( R_FOF, R_HOL ),w1('shows '),quotes(hol_formula( FOF , HOL )),nl,nl).
+
+hol_theory( [], [] ).
+
+
+%==============================================================================
+%---- For handling CNF
+%==============================================================================
+
+% Takes a list of CNF and creates a list of HOL formulae
+
+hol_cnfs( [ input_clause( Name, Status, Lits ) | R_CLS ], 
+% the 2nd argument doesn't play a role for the moment:
+          [ hol( Name, Status, HOL ) |R_HOL ] ) :- 
+        variables( Lits , [] , Varset ),
+        (Varset=[] -> hol_clause(Lits , Clause),quotes(hol_formula(Clause, HOL))
+        ;hol_clause(Lits , Clause),quotes(hol_formula(! Varset : Clause, HOL))),
+        nl,nl,hol_cnfs( R_CLS, R_HOL ).
+
+hol_cnfs( [], [] ):- write('shows False'),nl,nl.
+
+hol_clause( [--(H)|T], cls([H|Neg],Pos) ) :-!,hol_clause( T, cls(Neg,Pos) ).
+hol_clause( [++(H)|T], cls(Neg,[H|Pos]) ) :-!,hol_clause( T, cls(Neg,Pos) ).
+hol_clause( [] , cls( [] , [] ) ) :- !.
+
+
+
+
+%==============================================================================
+%---- For handling TPTP formulas
+%==============================================================================
+ 
+hol_formula( ~X, neg(A) ) :-!,
+        w1('\\<not> '),rndbra(hol_formula( X, A )).
+
+hol_formula( X '|' Y, or(A,B) ) :-!,
+	rndbra((hol_formula( X, A ),w1('\\<or> '),hol_formula( Y, B ))).
+
+hol_formula( '|'(X, Y), A ) :-!,
+	hol_formula( (X ; Y), A ).
+
+hol_formula( X & Y, and(A,B) ) :-!,
+	rndbra((hol_formula( X, A ),w1('\\<and> '),hol_formula( Y, B ))).
+
+hol_formula( X <=> Y, eqv(A,B) ) :-!,
+	rndbra((hol_formula( X, A ),w1('= '),hol_formula( Y, B ))).
+
+hol_formula( X => Y, imp(A,B) ) :-!,
+	rndbra((hol_formula( X, A ),w1('--> '),hol_formula( Y, B ))).
+
+hol_formula( X <= Y, A ) :-!,
+	hol_formula( (Y => X), A ).
+
+hol_formula( X <~> Y, A ) :-!,
+	hol_formula( ~(X <=> Y), A ).
+
+hol_formula( X '~|' Y, A ) :-!,
+	hol_formula( ~(X '|' Y), A ).
+
+hol_formula( X ~& Y, A ) :-!,
+	hol_formula( ~(X & Y), A ).
+
+hol_formula( ! X : Y, forall( X, A ) ) :-!,
+	rndbra((w1('\\<forall> '),w_list(X,w1,' ','. '),hol_formula( Y, A ))).
+
+hol_formula( ? X : Y, exists( X, A ) ) :-!,
+	rndbra((w1('\\<exists> '),w_list(X,w1,' ','. '),hol_formula( Y, A ))).
+
+%hol_formula( [H|T], A ) :-!,
+%        (H='++'X -> hol_formula( X, B ),
+%             (T=[] -> A=B ; w1('\\<or> '),hol_formula( T, T1 ),A=or(B,T1))
+%        ;H='--'X -> w1('\\<not> '),hol_formula(X, B ),
+%             (T=[] -> A=not(B) ; w1('\\<or> '),hol_formula( T, T1 ),A=or(B,T1))).%
+
+hol_formula( cls(Neg,Pos),cls(Neg,Pos)) :- !,
+          w_list(Neg,wcurry,'\\<and>','True'),
+          w1('--> '),
+          w_list(Pos,wcurry,'\\<or>','False').
+
+hol_formula( X, X ):- wcurry(X).
+
+
+
+%==============================================================================
+%---- General stuff
+%==============================================================================
+
+
+variables(V,Vars,[V|Vars]):- looks_like_a_variable(V),!.
+variables(T,Vars,Vars):- T=..[_],!.
+variables(T,Vars0,Vars1):- T=..[_,A1],!,variables(A1,Vars0,Vars1).
+variables(T,Vars0,Vars3):- T=..[_,A1,A2|Args],
+        variables(A1,Vars0,Vars1),
+        variables(A2,Vars1,Vars2),
+        variables(Args,Vars2,Vars3).
+
+
+w1(X):-write_term(X,[numbervars(true)]).
+w2(X,Y):-w1(X),w1(Y). 
+w3(X,Y,Z):-w1(X),w2(Y,Z).
+
+% polymorphic write for lists: predicate, separator, terminal 
+w_list([],W,_,Nil):-
+    Q1 =.. [W,Nil],
+    call(Q1).
+w_list([H|T],W,Cons,Nil):-
+    Q1 =.. [W,H],
+    call(Q1),
+    Q2 =.. [W,Cons],
+    call(Q2),
+    w_list(T,W,Cons,Nil).
+
+rndbra(X):-write('('),call(X),write(')'). % enclosing the writes of X by (,)
+quotes(X):-w1('"'),call(X),w1('"'). % enclosing the writes of X by ","
+
+wcurry(X):- X=..[H|T],(T=[]->w2(H,' ');rndbra((w2(H,' '),mymaplist(wcurry,T)))).
+
+mymaplist(_,[]).
+
+mymaplist(Predicate,[H|T]):-
+    Q1 =.. [Predicate,H],
+    call(Q1),
+    mymaplist(Predicate,T).
+
+%==============================================================================
+%---- General stuff
+%==============================================================================
+
+% Entry point for FOF input
+%
+hol( hol, FO_Formulae, _ ) :- 
+	tptp_formulae( FO_Formulae ),
+	!,
+	hol_theory( FO_Formulae, _ ).
+
+
+% Entry point for CNF input
+%
+hol( hol, Clauses, _ ):-
+	tptp_clauses( Clauses ),
+	!,
+	hol_cnfs( Clauses, _ ).
+	
+ 
+% Provide information about the HOL format
+
+hol_format_information( '%', '.thy' ).
+
+hol_file_information( format, hol, 'hol format etc' ).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+

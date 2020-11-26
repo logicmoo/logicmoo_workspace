@@ -1,0 +1,11 @@
+# Sample set of transcribed wavfiles
+
+# Comments marked with hash, like this one, are ignored. Also lines containing only whitespace chars.
+# Note that file-names can be specified using environment variables
+$REGULUS/Examples/Toy1/corpora/wavfiles/utt01.wav switch on the light
+$REGULUS/Examples/Toy1/corpora/wavfiles/utt02.wav switch on the light in the kitchen
+$REGULUS/Examples/Toy1/corpora/wavfiles/utt03.wav switch off the light
+$REGULUS/Examples/Toy1/corpora/wavfiles/utt04.wav is the light switched on in the living room
+$REGULUS/Examples/Toy1/corpora/wavfiles/utt05.wav dim the light
+						  
+  

@@ -1,0 +1,246 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md18">
+Printer Diagnosis Model
+===============================
+
+In this notebook we translate into Probabilistic Logic Programming the Figaro example from Section 5.3 of [A. Pfeffer, Practical Probabilistic Programming](https://www.manning.com/books/practical-probabilistic-programming), pages 145-155. 
+
+
+</div>
+
+<div class="nb-cell html" name="htm1">
+<p>Author: <a href="mailto:damiano.azzolini@student.unife.it">Damiano Azzolini</a></p>
+</div>
+
+<div class="nb-cell markdown" name="md19">
+Suppose you work in a technical support center and you want to predict what is the cause of a malfunction given certain evidences. To give a quickly answer you could create a probabilistic program and feed the evidence to it to obtain an accurate answer, given the probability of each state that a component can be into. In this example we analyze how probabilistic programming can help us to understand, for instance, why a printer doesn't work. This is how the full network for the computer system diagnosis looks like:
+</div>
+
+<div class="nb-cell program" name="p6">
+:- use_rendering(graphviz).
+</div>
+
+<div class="nb-cell query" name="q12">
+X = dot("digraph G { 
+         PaperFlow-&gt;PaperJamIndicatorOn;
+         PaperFlow-&gt;PrinterState;
+         TonerLevel-&gt;TonerLowIndicatorOn;
+         TonerLevel-&gt;PrinterState;
+         PrinterPowerButtonOn-&gt;PrinterState;
+         UserCommandCorrect-&gt;NumberPrintedPages;
+         NetworkState-&gt;NumberPrintedPages;
+         NetworkState-&gt;PrintsQuality;
+         SoftwareState-&gt;NumberPrintedPages;
+         SoftwareState-&gt;PrintsQuality;
+         PrinterState-&gt;NumberPrintedPages;
+         PrinterState-&gt;GoodPrintQuality;
+         NumberPrintedPages-&gt;PrintResultSummary;
+         PrintsQuality-&gt;PrintResultSummary;
+         GoodPrintQuality-&gt;PrintResultSummary         
+         }").
+</div>
+
+<div class="nb-cell markdown" name="md1">
+Code Description
+----------------
+Some events  can happen randomly. First of all we can think that the printer could prints perfectly, not quite right or doesn't print at all. Then we can start thinking about what is the cause of the problem, how is the printing process and which elements of the systems might influence the printing process: is the printer power button on? How many pages does the printer print? Does the printer prints quickly? In this example we consider facts like: =softwareState/1=, which could be =correct=, =glitchy= or =crashed=; =networkState/1=, which could be =up=, =intermittent= or =down=; =userCommandCorrect/1=, which could be =true= or =false=.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p1">
+:- use_module(library(pita)).
+
+:- pita.
+
+:- begin_lpad.
+
+softwareState(correct):0.8; softwareState(glitchy):0.15; softwareState(crashed):0.05.
+networkState(up):0.7; networkState(intermittent):0.2; networkState(down):0.1.
+userCommandCorrect:0.65.
+</div>
+
+<div class="nb-cell markdown" name="md2">
+=userCommandCorrect/0=, =networkState/1= and =softwareState/1= might influence the number of printed pages and the print speed. We can express this with:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p2">
+numPrintedPages(zero):- printerState(out).
+numPrintedPages(zero):- softwareState(crashed).
+numPrintedPages(zero):- networkState(down).
+numPrintedPages(zero):0.3; numPrintedPages(some):0.6; numPrintedPages(all):0.1:- 
+    \+(userCommandCorrect), \+ printerState(out),\+ softwareState(crashed),
+    \+ networkState(down).
+numPrintedPages(zero):0.01; numPrintedPages(some):0.01; numPrintedPages(all):0.98:- 
+    userCommandCorrect,
+    \+ printerState(out),\+ softwareState(crashed),
+    \+ networkState(down).
+
+printsQuickly:0.5 :- 
+    networkState(intermittent),softwareState(correct).
+printsQuickly:0.5 :- 
+    networkState(intermittent),softwareState(glitchy).
+printsQuickly:0.5 :- 
+    networkState(up),softwareState(glitchy).
+printsQuickly:0.9 :- 
+    networkState(up), softwareState(correct).
+</div>
+
+<div class="nb-cell markdown" name="md3">
+If the printerState(out) or the softwareState(crashed) or the networkState(down) no pages will be printed. If the users uses the wrong command then the we can think the printer will print with more probability only some pages than all the pages, or no pages at all. Instead if the users uses the correct command we can imagine that the printer will print, almost surely, all the pages. Now we can take in consideration other facts like: =printerPowerButtonOn/0= which could be =true= or =false=; =tonerLevel/1= which could be =high=, =low= or =out= and =paperFlow= which could be =smooth=, =uneven= or =jammed=.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p3">
+printerPowerButtonOn:0.95.
+tonerLevel(high):0.7; tonerLevel(low):0.2; tonerLevel(out):0.1.
+paperFlow(smooth):0.6; paperFlow(uneven):0.2; paperFlow(jammed):0.2.
+</div>
+
+<div class="nb-cell markdown" name="md4">
+The introduction of this new variables allow us to express the probability for more facts like =printResultSummary/1=, =tonerLowIndicator/1=, =paperJamIndicator/1=, =printerState/1= and =goodPrintQuality/1=.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p4">
+printResultSummary(none):- 
+    numPrintedPages(zero).
+printResultSummary(poor):- 
+    numPrintedPages(some).
+printResultSummary(poor):- 
+    \+(numPrintedPages(zero)),\+ goodPrintQuality.
+printResultSummary(poor):- 
+    \+(numPrintedPages(zero)),\+ printsQuickly.
+printResultSummary(excellent):- 
+    \+(numPrintedPages(some)),\+(numPrintedPages(zero)),printsQuickly,goodPrintQuality.
+
+
+tonerLowIndicatorOn:0.2 :- printerPowerButtonOn, tonerLevel(high).
+tonerLowIndicatorOn:0.6 :- printerPowerButtonOn, tonerLevel(low).
+tonerLowIndicatorOn:0.99 :- printerPowerButtonOn, tonerLevel(out).
+
+paperJamIndicatorOn:0.1 :- printerPowerButtonOn, paperFlow(smooth).
+paperJamIndicatorOn:0.3 :- printerPowerButtonOn, paperFlow(uneven).
+paperJamIndicatorOn:0.99 :- printerPowerButtonOn, paperFlow(jammed).
+
+printerState(good):- printerPowerButtonOn, tonerLevel(high), paperFlow(smooth).
+printerState(out):- 
+    printerPowerButtonOn, tonerLevel(out).
+printerState(poor):- 
+    printerPowerButtonOn, \+(tonerLevel(high)), 
+    \+(tonerLevel(out)), \+ paperFlow(smooth).
+printerState(out):- \+(printerPowerButtonOn).
+
+goodPrintQuality:0.95 :- printerState(good).
+goodPrintQuality:0.3 :- printerState(poor).
+</div>
+
+<div class="nb-cell markdown" name="md5">
+printResultSummary(excellent) means that the printer printed all the pages, quickly and with a good print quality. Instead if it didn't print all the pages quickly and with a good quality the result is =poor=, or =none= if no pages were printed. =tonerLowIndicatorOn/0= and =paperJamIndicatorOn/0= depends respectively on =tonerLevel/1= and the =paperFlow/1= and on the state of the printer power button (if it's off, the toner low indicator and the paper jam indicator must be off because the printer is off). =paperFlow/1= and =tonerLevel/1=, together with =printerPowerButtonOn/0=, influence =printerState/1= that could be =good=, =poor= or =out=. Finally =printerState/1= determines the print quality. 
+
+To observe more than a fact we can include some evidences like:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p5">
+evidence_printerState_out_printResultSummary_none:-printerState(out),printResultSummary(none).
+evidence_not_printsQuickly_networkState_up:- \+(printsQuickly),networkState(up).
+:- end_lpad.
+</div>
+
+<div class="nb-cell markdown" name="md6">
+Results
+-------
+First of all we can query the probability that the printer button is on, without any evidence.
+</div>
+
+<div class="nb-cell query" name="q1">
+prob(printerPowerButtonOn,Prob).
+</div>
+
+<div class="nb-cell markdown" name="md7">
+As expected the result is 0.95 because we define this probability into the program. Now we can insert the evidence, for instance, printResultSummary(poor).
+</div>
+
+<div class="nb-cell query" name="q2">
+prob(printerPowerButtonOn,printResultSummary(poor),Prob).
+</div>
+
+<div class="nb-cell markdown" name="md8">
+We can see that the probability now is 1, meaning that if the printer result is =poor= (or =excellent=) the printer must be on, as we can imagine. Instead if no pages were printed, we obtain a lower probability.
+</div>
+
+<div class="nb-cell query" name="q3">
+prob(printerPowerButtonOn,printResultSummary(none),Prob).
+</div>
+
+<div class="nb-cell markdown" name="md9">
+Now let's compute the probability that the printer power button is on given that the printerState(out)
+</div>
+
+<div class="nb-cell query" name="q4">
+prob(printerPowerButtonOn,printerState(out),Prob).
+</div>
+
+<div class="nb-cell markdown" name="md10">
+and the probability that the printer power button is on given that printerState(out) and printResultSummary(none). To include multiple evidences into the query previously we have defined a simple predicate, called =evidence_printerState_out_printResultSummary_none=.
+</div>
+
+<div class="nb-cell query" name="q5">
+prob(printerPowerButtonOn,evidence_printerState_out_printResultSummary_none,Prob).
+</div>
+
+<div class="nb-cell markdown" name="md11">
+We can see that the probability is exactly the same; learning that printResult(none) doesn't change the probability that the printer power button is on if you already know that that the printerState(out). This mean that =printResultSummary/1= is conditionally independent from =printerPowerButtonOn= given =printerState/1=. 
+
+Now we can focus on the =printerState/1= queries. Let's first compute the probability that printerState(good).
+</div>
+
+<div class="nb-cell query" name="q6">
+prob(printerState(good),Prob).
+</div>
+
+<div class="nb-cell markdown" name="md12">
+and the probability printerState(good) given that =tonerLowIndicatorOn=
+</div>
+
+<div class="nb-cell query" name="q7">
+prob(printerState(good),tonerLowIndicatorOn,Prob).
+</div>
+
+<div class="nb-cell markdown" name="md13">
+We can see that the probability decrease, as expected, if the toner low indicator is on.
+
+We can do further probability evaluation. Let's see how the probability that softwareState(correct) changes given different observation. First of all probability that softwareState(correct)
+</div>
+
+<div class="nb-cell query" name="q8">
+prob(softwareState(correct),Prob).
+</div>
+
+<div class="nb-cell markdown" name="md14">
+then we observe the fact networkState(up)
+</div>
+
+<div class="nb-cell query" name="q9">
+prob(softwareState(correct),networkState(up),Prob).
+</div>
+
+<div class="nb-cell markdown" name="md15">
+As we can see the probability is still the same and also in this case there is conditionally independence. Now we observe that the printer doesn't prints quickly
+</div>
+
+<div class="nb-cell query" name="q10">
+prob(softwareState(correct),\+(printsQuickly),Prob).
+</div>
+
+<div class="nb-cell markdown" name="md16">
+and networkState(up)
+</div>
+
+<div class="nb-cell query" name="q11">
+prob(softwareState(correct),evidence_not_printsQuickly_networkState_up,Prob).
+</div>
+
+<div class="nb-cell markdown" name="md17">
+Learning networkState(up) reduces the probability that the software is correct. We can also see that =softwareState/1= and =networkState/1= are independent but they aren't conditionally independent given =printsQuickly=.
+</div>
+
+</div>
+

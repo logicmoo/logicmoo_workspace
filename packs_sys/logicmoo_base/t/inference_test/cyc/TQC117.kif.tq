@@ -1,0 +1,11 @@
+(note TQC117)
+
+(typeBehaviorCapable ChemicalWeapon BombingMission deviceUsed) 
+
+(queryyn
+
+ (typeBehaviorCapable ChemicalWeapon BombingMission deviceUsed))
+
+(answer Yes)  
+
+(end_of_file)

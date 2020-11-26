@@ -1,0 +1,66 @@
+(note TQC101b)
+
+(topicOfInfoTransfer Stage1-IranianCommentOnHolySites 
+ (thereExists ?SITE 
+ (holySite Islam ?SITE))) 
+
+(existant Stage1-IranianCommentOnHolySites 
+ (DateInSituationFn CalendarDay 18 HPKBScenarioConflict)) 
+
+(instance Stage1-IranianCommentOnHolySites Communicating) 
+
+(senderOfInfo Stage1-IranianCommentOnHolySites Iran) 
+
+
+(temporallySubsumes ?EVENT 
+ (DateInSituationFn ?DATE-TYPE ?NUM ?EVENT)) 
+
+
+
+(implies 
+ (and 
+ (temporallySubsumes ?BIG-T ?SMALL-T) 
+ (temporallySubsumes ?BIG-T ?PROP)) 
+ (temporallySubsumes ?SMALL-T ?PROP)) 
+
+(temporallySubsumes HPKBScenarioConflict 
+ (DateInSituationFn CalendarDay 18 HPKBScenarioConflict)) 
+
+(temporallySubsumes HPKBScenarioConflict 
+ (desires SaudiArabia 
+ (forAll ?SITE 
+ (implies 
+ (holySite Islam ?SITE) 
+ (controls SaudiArabia ?SITE))))) 
+
+
+(temporallySubsumes (DateInSituationFn CalendarDay 18 HPKBScenarioConflict) 
+ (desires SaudiArabia 
+ (forAll ?SITE 
+ (implies 
+ (holySite Islam ?SITE) 
+ (controls SaudiArabia ?SITE))))) 
+ 
+(query (findall ?ACTOR
+ (thereExists ?SITE 
+ (thereExists ?COMM 
+ (or 
+ (temporallySubsumes (DateInSituationFn CalendarDay 18 HPKBScenarioConflict) 
+ (desires ?ACTOR 
+ (forAll ?SITE 
+ (implies 
+ (holySite Islam ?SITE) 
+ (controls ?ACTOR ?SITE))))) 
+ (and 
+ (instance ?COMM Communicating) 
+ (existant?COMM 
+ (DateInSituationFn CalendarDay 18 HPKBScenarioConflict)) 
+ (senderOfInfo ?COMM ?ACTOR) 
+ (topicOfInfoTransfer ?COMM 
+ (thereExists ?SITE 
+ (holySite Islam ?SITE)))))))))
+
+(answer  Iran)
+(answer  SaudiArabia)  
+
+(end_of_file)

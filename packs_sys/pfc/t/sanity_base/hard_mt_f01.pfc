@@ -1,0 +1,39 @@
+/* <module>
+%
+%  PFC is a language extension for prolog.
+%
+%  It adds a new type of module inheritance
+%
+% Dec 13, 2035
+% Douglas Miles
+*/
+%  was_module(mt_01a,[]).
+
+:- include(test_header).
+
+:- begin_pfc.
+
+baseKB:mtHybrid(socialOneMt).
+baseKB:mtHybrid(socialTwoMt).
+
+:- set_defaultAssertMt(myMt).
+
+:- begin_pfc.
+
+
+mt1:predicateConventionMt(loves,socialOneMt).
+
+mt2:predicateConventionMt(loves,socialTwoMt).
+                                                             
+:- must((mt1:fix_mp(clause(_,_),loves(x,y),M,P),M:P==socialOneMt:loves(x,y))).
+:- must((mt2:fix_mp(clause(_,_),loves(x,y),M,P),M:P==socialTwoMt:loves(x,y))).
+
+loves(sally,joe).
+
+:- mpred_test(clause_u(socialOneMt:loves(_,_);clause_u(socialTwoMt:loves(_,_)))).
+
+accessable:- clause_u(myMt:loves(_,_),_,Ref), \+ clause_property(Ref,module(myMt)),!.
+:- mpred_test(clause_u(myMt:loves(_,_),_,Ref)).
+
+
+

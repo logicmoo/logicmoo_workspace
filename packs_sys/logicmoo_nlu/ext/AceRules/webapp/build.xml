@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="AceRules" default="createwar" basedir=".">
+
+    <target name="compile" description="Compile the Java files">
+        <mkdir dir="war/WEB-INF/classes"/>
+        <javac
+            encoding="utf-8"
+            includeantruntime="false"
+            debug="true"
+            debuglevel="lines,vars,source"
+            srcdir="src/"
+            excludes="**/test/**"
+            classpath="war/WEB-INF/lib/Echo2_App.jar;war/WEB-INF/lib/Echo2_Extras_App.jar;war/WEB-INF/lib/Echo2_Extras_WebContainer.jar;war/WEB-INF/lib/Echo2_WebContainer.jar;war/WEB-INF/lib/Echo2_WebRender.jar;war/WEB-INF/lib/echopointng-2.2.0rc2.jar;war/WEB-INF/lib/javax.servlet.jar;war/WEB-INF/lib/jdom.jar"
+            destdir="war/WEB-INF/classes/">
+          <compilerarg value="-Xlint"/>
+        </javac>
+        <copy todir="war/WEB-INF/classes/ch/uzh/ifi/attempto/acerules/style">
+            <fileset dir="src/ch/uzh/ifi/attempto/acerules/style"/>
+        </copy>
+        <copy todir="war/WEB-INF/classes/ch/uzh/ifi/attempto/acerules/resource">
+            <fileset dir="src/ch/uzh/ifi/attempto/acerules/resource"/>
+        </copy>
+    </target>
+    
+    <target name="createwar" description="Create WAR file" depends="compile">
+        <jar
+            destfile="acerules.war"
+            basedir="war/"
+            includes="**"
+        />
+    </target>
+
+</project>

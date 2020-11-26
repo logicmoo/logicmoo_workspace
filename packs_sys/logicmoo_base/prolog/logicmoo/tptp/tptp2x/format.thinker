@@ -1,0 +1,429 @@
+%======================================================================
+%----Procedures for writing out clauses in thinker format
+%----
+%----Written by Julian Fogel, June 1997
+%----Based on format.oscar
+%======================================================================
+%----------------------------------------------------------------------
+
+%----Construct predicate table
+thinker_predicate_table([],_,[]).
+
+thinker_predicate_table([Predicate/Arity|RestOfStructure],
+[NewPredicate|RestOfPredicateNames],[[Predicate,NewPredicate-Arity]|
+RestOfPredicateTable]):-
+    thinker_predicate_table(RestOfStructure,RestOfPredicateNames,
+RestOfPredicateTable).
+
+%----Print the predicate and constant tables
+write_thinker_symbol_table([]):-
+    write('#       =------------------------------------------------='),
+    nl,
+    nl.
+
+write_thinker_symbol_table([[Symbol, NewSymbol]|RestOfTable]):-
+    write('#            '),
+    write(NewSymbol),
+    write('   '),
+    write(Symbol),
+    nl,
+    write_thinker_symbol_table(RestOfTable).
+
+%----Construct constant table
+thinker_constant_table([],_,[]).
+
+thinker_constant_table([Constant/0|RestOfStructure],
+[NewConstant|RestOfConstantNames],[[Constant,NewConstant]|
+RestOfConstantTable]):-
+    thinker_constant_table(RestOfStructure,RestOfConstantNames,
+RestOfConstantTable).
+
+%----Rename each variable for thinker which want unique variable names
+%----and disallows V. At this stage the variables are Prolog ones so
+%----it can be done by instantiation.
+rename_thinker_variables_in_formulae([],[]).
+
+rename_thinker_variables_in_formulae([fof(Name,Status,Formula)|RestOfFormulae],
+[fof(Name,Status,UniqueFormula)|RestOfRenamedFormulae]):-
+    single_variable_quantification(Formula,SingleVariablesFormula),
+    unique_quantification(SingleVariablesFormula,UniqueFormula),
+    numbervars(UniqueFormula,26,_),
+%    nl, writeq(UniqueFormula), nl,
+    rename_thinker_variables_in_formulae(RestOfFormulae,RestOfRenamedFormulae).
+%----------------------------------------------------------------------
+%----Rename each variable for thinker which want unique variable names
+%----and disallows V.  
+rename_thinker_variables_in_fof(Formulae,RenamedFormulae):-
+    reload_formulae(Formulae,[],ReloadedFormulae,_),
+    rename_thinker_variables_in_formulae(ReloadedFormulae,RenamedFormulae).
+%----------------------------------------------------------------------
+%----Recognise and split up quantified formulae
+thinker_quantified_formula(QuantifiedFormula,ThinkerQuantifier,Variables,
+Formula):-
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    !,
+    Quantification =.. [Quantifier,Variables],
+    tptp2X_member((Quantifier)-(ThinkerQuantifier),[('!')-('A'),('?')-('E')]).
+%----------------------------------------------------------------------
+%----Recognise and split up binary formulae
+thinker_binary_formula(BinaryFormula,ThinkerConnective,LHS,RHS):-
+    BinaryFormula =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(ThinkerConnective),
+                                              [('<=>')-('='),
+                                              ('=>')-('>'),
+                                              ('&')-('&'),
+                                              (';')-('+'),
+%----|;BUG
+                                              ('|')-('+'),
+                                              ('<~>')-('*'),
+                                              ('~|')-('|'),
+                                              ('~&'),-(';')]).
+%----------------------------------------------------------------------
+%----Recognise and split up unary formulae
+thinker_unary_formula(UnaryFormula,ThinkerConnective,Formula):-
+    UnaryFormula =.. [Connective,Formula],
+%----Had to use ()s due to some Prolog confusion about -
+    tptp2X_member((Connective)-(ThinkerConnective),[('~')-('~')]).
+%----------------------------------------------------------------------
+%----The format for outputing quantified formulae in thinker format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+thinker_quantified_format('(',' ','',')','').
+
+%----PrefixBracket,ConnectivePrefix,ConnectiveSuffix,SuffixBracket
+thinker_binary_format('(','',' ',')').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+thinker_unary_format('','','').
+%----------------------------------------------------------------------
+%----Output predicates and terms in prefix brackets
+output_thinker_term([OneTerm],PredicateTable,ConstantTable,VariableTable):-
+    !,
+    output_thinker_term(OneTerm,PredicateTable,ConstantTable,VariableTable).
+
+output_thinker_term([FirstTerm|RestOfTerms],PredicateTable,ConstantTable,
+VariableTable):-
+    !,
+    output_thinker_term(FirstTerm,PredicateTable,ConstantTable,VariableTable),
+    write(','),
+    output_thinker_term(RestOfTerms,PredicateTable,ConstantTable,
+VariableTable).
+
+%----Numbervarsed variables
+output_thinker_term(Term,_,_,VariableTable):-
+    tptp2X_member([Term,Variable],VariableTable),
+    !,
+%    write(VariableTable),
+%    write(Term), write('-'),
+    write(Variable).
+
+%----constants
+output_thinker_term(Term,_,ConstantTable,_):-
+    atomic(Term),
+    tptp2X_member([Term,NewTerm],ConstantTable),
+    !,
+    write(NewTerm).
+   
+%----atoms
+output_thinker_term(Term,PredicateTable,_,_):-
+    atomic(Term),
+    tptp2X_member([Term,NewTerm-0],PredicateTable),
+    !,
+    write(NewTerm),
+    write('''0()').
+
+%----Complex terms
+output_thinker_term(Complex,PredicateTable,ConstantTable,VariableTable):-
+    Complex =.. [Symbol|Arguments],
+    tptp2X_member([Symbol,NewSymbol-Arity],PredicateTable),
+    write(NewSymbol),
+    write(''''),
+    write(Arity),
+    write('('),
+    output_thinker_term(Arguments,PredicateTable,ConstantTable,VariableTable),
+    write(')').
+%----------------------------------------------------------------------
+%----Simplify quantified formulae
+output_thinker_formula(Format,QuantifiedQuantifiedFormula,Indent,
+AlreadyIndented,LastConnective,PredicateTable,ConstantTable,VariableTable,
+VariablesList,NewVariablesList):-
+%----Check if this format wants merged variables
+    tptp2X_member(Format,[]),
+%----Check if there is a nested quantifier the same
+    quantified_formula(tptp,QuantifiedQuantifiedFormula,Quantifier,
+Variables1,QuantifiedFormula,_,_,_,_,_),
+    quantified_formula(tptp,QuantifiedFormula,Quantifier,
+Variables2,Formula,_,_,_,_,_),
+    !,
+%   nl, write('Simplifying formula: '), write(QuantifiedQuantifiedFormula), nl,
+%----Merge the variables into one list
+    merge_quantified_variables(Variables1,Variables2,Variables),
+    NewQuantification =.. [Quantifier,Variables],
+    NewQuantifiedFormula =.. [:,NewQuantification,Formula],
+%----Try agains with the new formula
+    output_thinker_formula(Format,NewQuantifiedFormula,Indent,AlreadyIndented,
+LastConnective,PredicateTable,ConstantTable,VariableTable,VariablesList,
+NewVariablesList).
+
+%----Unsimplify quantified formulae
+output_thinker_formula(Format,QuantifiedFormula,Indent,AlreadyIndented,
+LastConnective,PredicateTable,ConstantTable,VariableTable,VariablesList,
+NewVariablesList):-
+%----Check if this format wants separated variables
+    tptp2X_member(Format,[thinker]),
+%----Check if there are several quantified variables
+    quantified_formula(tptp,QuantifiedFormula,Quantifier,[V1,V2|
+RestOfVariables],Formula,_,_,_,_,_),
+    !,
+%    nl, write('Unsimplifying Formula: '), write(QuantifiedFormula), nl,
+%----Separate the variables
+    InnerQuantification =.. [Quantifier,[V2|RestOfVariables]],
+    InnerQuantifiedFormula =.. [:,InnerQuantification,Formula],
+    NewQuantification =.. [Quantifier,[V1]],
+    NewQuantifiedFormula =.. [:,NewQuantification,InnerQuantifiedFormula],
+%----Try agains with the new formula
+    output_thinker_formula(Format,NewQuantifiedFormula,Indent,AlreadyIndented,
+LastConnective,PredicateTable,ConstantTable,VariableTable,VariablesList,
+NewVariablesList).
+
+%----Write a quantified formula
+output_thinker_formula(Format,QuantifiedFormula,Indent,AlreadyIndented,_,
+PredicateTable,ConstantTable,VariableTable,
+[NewVariable|RestOfVariablesList],NewVariablesList):-
+    quantified_formula(Format,QuantifiedFormula,Quantifier,[Variable],
+Formula,FormulaPrefix,VariablesPrefix,_,VariablesSuffix,
+FormulaSuffix),
+    !,
+%    nl, write('Quantified Formula: '), write(Formula),
+%    nl, write('NewVariable: '), write(NewVariable), nl,
+    tptp2X_append([[Variable,NewVariable]],VariableTable,NewVariableTable),
+%    nl, write('NewVariableTable: '), write(NewVariableTable), nl,
+    output_indent(Indent,AlreadyIndented),
+    write(FormulaPrefix),
+    write(Quantifier),
+    write(VariablesPrefix),
+    write(NewVariable),
+    write(VariablesSuffix),
+%----If a literal formula then no nl, just output it HMMMM, not so nice
+    (tptp_literal_formula(Formula,_) ->
+%        write('Will Output: '), write(Formula), nl,
+        output_thinker_formula(Format,Formula,Indent,Indent,Quantifier,
+PredicateTable,ConstantTable,NewVariableTable,RestOfVariablesList,
+NewVariablesList);
+        (   write('/'),
+            nl,
+%----If a quantified formula then no extra indent
+            (quantified_formula(Format,Formula,_,_,_,_,_,_,_,_) ->
+                (NewIndent is Indent);
+                NewIndent is Indent + 2),
+%----Output the (non-literal) formula
+%            write('Will Output1: '), write(Formula), nl,
+            output_thinker_formula(Format,Formula,NewIndent,0,Quantifier,
+PredicateTable,ConstantTable,NewVariableTable,RestOfVariablesList,
+NewVariablesList))),
+    write(FormulaSuffix).
+
+%----Write a binary formula
+output_thinker_formula(Format,BinaryFormula,Indent,AlreadyIndented,_,
+PredicateTable,ConstantTable,VariableTable,VariablesList,NewVariablesList):-
+%DEBUG write('% BINARY '),write(BinaryFormula),nl,
+    binary_formula(Format,BinaryFormula,Connective,LHS,RHS,PrefixBracket,
+ConnectivePrefix,ConnectiveSuffix,SuffixBracket),
+%DEBUG write('% LHS    '),write(LHS),nl,
+%DEBUG write('% RHS    '),write(RHS),nl,
+    !,
+%    write('Binary Formula: '), write(BinaryFormula), nl,
+    output_indent(Indent,AlreadyIndented),
+    (Connective == '*' -> (write('~'));
+    (Connective == '|' -> (write('~'));
+    (Connective == ';' -> (write('~'));
+                          (write(''))))),
+    write(PrefixBracket),
+%    nl, write('LHS: '), write(LHS), nl,
+    output_thinker_formula(Format,LHS,Indent,Indent,none,PredicateTable,
+ConstantTable,VariableTable,VariablesList,NextVariablesList),
+    write(ConnectivePrefix),
+%----No connective prefix now, do by length
+    name(Connective,ConnectiveASCII),
+    tptp2X_length(ConnectiveASCII,ConnectiveLength),
+    (ConnectiveLength == 3 ->
+        (   ConnectivePreSpace = 0,
+            ConnectivePostSpace = 0);
+        (ConnectiveLength == 2 ->
+            (   ConnectivePreSpace = 0,
+                ConnectivePostSpace = 1);
+            (   ConnectivePreSpace = 1,
+                ConnectivePostSpace = 1))),
+    tptp2X_tab(ConnectivePreSpace),
+    (Connective == '*' -> (write('='));
+    (Connective == '|' -> (write('+'));
+    (Connective == ';' -> (write('&'));
+                          (write(Connective))))),
+    tptp2X_tab(ConnectivePostSpace),
+%----No suffix at the moment
+    write(ConnectiveSuffix),
+    write('/'),
+    nl,
+%DEBUG write('% LHS--- '),write(LHS),nl,
+    NewIndent is Indent + 4,
+    output_thinker_formula(Format,RHS,NewIndent,0,Connective,PredicateTable,
+ConstantTable,VariableTable,NextVariablesList,NewVariablesList),
+    write(SuffixBracket).
+
+%----Write a unary formula
+output_thinker_formula(Format,UnaryFormula,Indent,AlreadyIndented,_,
+PredicateTable,ConstantTable,VariableTable,VariablesList,NewVariablesList):-
+    unary_formula(Format,UnaryFormula,Connective,Formula,FormulaPrefix,
+ConnectiveSuffix,FormulaSuffix),
+    !,
+%    nl, write('Unary Formula: '), write(UnaryFormula), nl,
+    output_indent(Indent,AlreadyIndented),
+    write(FormulaPrefix),
+    write(Connective),
+    write(ConnectiveSuffix),
+    NewIndent is Indent + 4,
+    output_thinker_formula(Format,Formula,NewIndent,NewIndent,Connective,
+PredicateTable,ConstantTable,VariableTable,VariablesList,NewVariablesList),
+    write(FormulaSuffix).
+
+%----Write an equality atomic formula
+output_thinker_formula(_Format,Formula,Indent,AlreadyIndented,_,
+PredicateTable,ConstantTable,VariableTable,VariablesList,VariablesList):- 
+    Formula =.. ['$tptp_equal',LeftTerm,RightTerm],
+    !,
+    output_indent(Indent,AlreadyIndented),
+    output_thinker_term(LeftTerm,PredicateTable,ConstantTable,VariableTable),
+    write(' - '),
+    output_thinker_term(RightTerm,PredicateTable,ConstantTable,VariableTable).
+
+%----Write an atomic formula
+output_thinker_formula(_Format,Formula,Indent,AlreadyIndented,_,
+PredicateTable,ConstantTable,VariableTable,VariablesList,VariablesList):-
+%    nl, write('Atomic Formula: '), write(Formula), nl,
+    output_indent(Indent,AlreadyIndented),
+    output_thinker_term(Formula,PredicateTable,ConstantTable,VariableTable).
+%----------------------------------------------------------------------
+%----Output a formula in the generic thinker form, paramterized for actual
+%----format
+output_thinker_generic_formula(Format,Formula,PredicateTable,ConstantTable,
+VariablesList,NewVariablesList):-
+    output_thinker_formula(Format,Formula,4,0,outermost,PredicateTable,
+ConstantTable,[],VariablesList,NewVariablesList).
+%----------------------------------------------------------------------
+%----Write a thinker formula in fof form
+%output_thinker_formula(_,fof(Name,Status,_),_,_,
+%VariablesList,VariablesList):-
+%%----Don't output equality axioms
+%    (Status == axiom,
+%     (Name == reflexivity;
+%      Name == symmetry;
+%      Name == transitivity)),
+%    !.
+
+output_thinker_formula(Type,fof(Name,Status,Formula),
+PredicateTable,ConstantTable,VariablesList,NewVariablesList):-
+    write('#----'),
+    write(Name),
+    write(','),
+    write(Status),
+    nl,
+    write(Type),
+    write('/'),
+    nl,
+    output_thinker_generic_formula(thinker,Formula,PredicateTable,
+ConstantTable,VariablesList,NewVariablesList),
+    nl.
+%----------------------------------------------------------------------
+%----Write out each formula in thinker format
+output_thinker_formulae(_,[],_,_,VariablesList,VariablesList).
+
+output_thinker_formulae(Type,[OneFormula],PredicateTable,ConstantTable,
+VariablesList,NewVariablesList):-
+    !,
+    output_thinker_formula(Type,OneFormula,PredicateTable,ConstantTable,
+VariablesList,NewVariablesList).
+
+output_thinker_formulae(Type,[FirstFormula|RestOfFormulae],PredicateTable,
+ConstantTable,VariablesList,NewVariablesList):-
+    output_thinker_formula(Type,FirstFormula,PredicateTable,ConstantTable,
+VariablesList,NextVariablesList),
+    nl,
+    output_thinker_formulae(Type,RestOfFormulae,PredicateTable,
+ConstantTable,NextVariablesList,NewVariablesList).
+%----------------------------------------------------------------------
+%----This writes out thinker format formulae
+thinker(thinker,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    write('ERROR: No CNF format available in THINKER'),
+    nl.
+
+%----This checks for functors
+thinker(thinker,Formulae,_):-
+    tptp_formulae(Formulae),
+    examine_formulae_for_functors(Formulae,FunctorStructures,_),
+    tptp2X_length(FunctorStructures,NumberOfFunctors),
+    count_structures_of_arity(FunctorStructures,0,NumberOfConstants),
+    NumberOfFunctors \== NumberOfConstants,
+    !,
+    write('ERROR: Thinker cannot handle functors.'),
+    nl.
+
+thinker(thinker,Formulae,_):-
+    tptp_formulae(Formulae),
+%----Check there is a conjecture
+    tptp2X_member(fof(_,conjecture,_),Formulae),
+    !,
+%----Rename variables for thinker restrictions
+    reload_formulae(Formulae,[],ReloadedFormulae,_),
+    rename_thinker_variables_in_fof(ReloadedFormulae,
+RenamedFormulae),
+%----Extract predicate symbols
+    examine_formulae_for_predicates(ReloadedFormulae,_,
+UnsignedPredicateStructures,_),
+%----Make Predicate Symbol Table
+    thinker_predicate_table(UnsignedPredicateStructures,
+['B1','C1','D1','F1','G1','H1','I1','J1','K1','L1','M1','N1','O1','P1','Q1',
+'R1','S1','T1','U1','V1','W1','X1','Y1','Z1',
+'B2','C2','D2','F2','G2','H2','I2','J2','K2','L2','M2','N2','O2','P2','Q2',
+'R2','S2','T2','U2','V2','W2','X2','Y2','Z2',
+'B3','C3','D3','F3','G3','H3','I3','J3','K3','L3','M3','N3','O3','P3','Q3',
+'R3','S3','T3','U3','V3','W3','X3','Y3','Z3'],
+PredicateTable),
+    write('#           Predicate Table'),
+    nl,
+    write_thinker_symbol_table(PredicateTable),
+    nl,
+    nl,
+%----Extract constant symbols
+    examine_formulae_for_functors(ReloadedFormulae,FunctorStructures,_),
+%----Make constant symbol table
+    thinker_constant_table(FunctorStructures,
+['a1','a2','a3','a4','a5','a6','a7','a8','a9','a0','b1','b2','b3','b4','b5','b6','b7','b8','b9','b0','c1','c2','c3','c4','c5','c6','c7','c8','c9','c0','d1','d2','d3','d4','d5','d6','d7','d8','d9','d0'],
+%['a1','b1','c1','d1','a2','b2','c2','d2','a3','b3','c3','d3','a4','b4','c4','d4','a5','b5','c5','d5','a6','b6','c6','d6','a7','b7','c7','d7','a8','b8','c8','d8','a9','b9','c9','d9','a0','b0','c0','d0'],
+ConstantTable),
+    write('#           Constant Table'),
+    nl,
+    write_thinker_symbol_table(ConstantTable),
+    nl,
+    write('#--------------------------------------------------------------------------'),
+    nl,
+%----Take out the conjecture
+    tptp2X_select(fof(Name,conjecture,Formula),RenamedFormulae,
+Premises),
+    output_thinker_formulae('premise',Premises,PredicateTable,ConstantTable,
+['x1','x2','x3','x4','x5','x6','x7','x8','x9','x0','y1','y2','y3','y4','y5','y6','y7','y8','y9','y0','z1','z2','z3','z4','z5','z6','z7','z8','z9','z0','w1','w2','w3','w4','w5','w6','w7','w8','w9','w0','u1','u2','u3','u4','u5','u6','u7','u8','u9','u0','v1','v2','v3','v4','v5','v6','v7','v8','v9','v0','e1','e2','e3','e4','e5','e6','e7','e8','e9','e0','f1','f2','f3','f4','f5','f6','f7','f8','f9','f0','g1','g2','g3','g4','g5','g6','g7','g8','g9','g0','h1','h2','h3','h4','h5','h6','h7','h8','h9','h0','i1','i2','i3','i4','i5','i6','i7','i8','i9','i0','j1','j2','j3','j4','j5','j6','j7','j8','j9','j0','k1','k2','k3','k4','k5','k6','k7','k8','k9','k0','l1','l2','l3','l4','l5','l6','l7','l8','l9','l0','m1','m2','m3','m4','m5','m6','m7','m8','m9','m0','n1','n2','n3','n4','n5','n6','n7','n8','n9','n0','o1','o2','o3','o4','o5','o6','o7','o8','o9','o0','p1','p2','p3','p4','p5','p6','p7','p8','p9','p0','q1','q2','q3','q4','q5','q6','q7','q8','q9','q0','r1','r2','r3','r4','r5','r6','r7','r8','r9','r0','s1','s2','s3','s4','s5','s6','s7','s8','s9','s0','t1','t2','t3','t4','t5','t6','t7','t8','t9','t0'],
+%['x1','y1','z1','w1','u1','v1','e1','f1','g1','h1','i1','j1','k1','l1','m1','n1','o1','p1','q1','r1','s1','t1','x2','y2','z2','w2','u2','v2','e2','f2','g2','h2','i2','j2','k2','l2','m2','n2','o2','p2','q2','r2','s2','t2','x3','y3','z3','w3','u3','v3','e3','f3','g3','h3','i3','j3','k3','l3','m3','n3','o3','p3','q3','r3','s3','t3','x4','y4','z4','w4','u4','v4','e4','f4','g4','h4','i4','j4','k4','l4','m4','n4','o4','p4','q4','r4','s4','t4','x5','y5','z5','w5','u5','v5','e5','f5','g5','h5','i5','j5','k5','l5','m5','n5','o5','p5','q5','r5','s5','t5','x6','y6','z6','w6','u6','v6','e6','f6','g6','h6','i6','j6','k6','l6','m6','n6','o6','p6','q6','r6','s6','t6','x7','y7','z7','w7','u7','v7','e7','f7','g7','h7','i7','j7','k7','l7','m7','n7','o7','p7','q7','r7','s7','t7','x8','y8','z8','w8','u8','v8','e8','f8','g8','h8','i8','j8','k8','l8','m8','n8','o8','p8','q8','r8','s8','t8','x9','y9','z9','w9','u9','v9','e9','f9','g9','h9','i9','j9','k9','l9','m9','n9','o9','p9','q9','r9','s9','t9','x0','y0','z0','w0','u0','v0','e0','f0','g0','h0','i0','j0','k0','l0','m0','n0','o0','p0','q0','r0','s0','t0'],
+NewVariablesList),
+    nl,
+%----Output the conjecture formulae
+    output_thinker_formulae('prove',[fof(Name,conjecture,Formula)],
+PredicateTable,ConstantTable,NewVariablesList,_),
+    nl.
+%----------------------------------------------------------------------
+%----Provide information about the thinker format
+thinker_format_information('#','.thinker').
+%----------------------------------------------------------------------
+%----Provide information about the thinker file
+thinker_file_information(format,thinker,'THINKER format').
+%----------------------------------------------------------------------

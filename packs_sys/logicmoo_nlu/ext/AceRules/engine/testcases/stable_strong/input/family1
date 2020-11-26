@@ -1,0 +1,20 @@
+If someone X is a relative of someone Y then Y is a relative of X.
+If someone X is a child of someone Y then Y is a parent of X.
+If someone X is a parent of someone Y then Y is a child of X.
+If someone X is a parent of someone Y then X is a relative of Y.
+If someone X is a male child of someone Y then X is a son of Y.
+If someone X is a female child of someone Y then X is a daughter of Y.
+If someone X is a male parent of someone Y then X is the father of Y.
+If someone X is a female parent of someone Y then X is the mother of Y.
+
+John is male.
+Mary is female.
+Bill is male.
+Tom is male.
+Bob is male.
+Sue is female.
+
+John is a child of Mary.
+Bill is a parent of John.
+Sue is a child of Tom.
+Bob is a parent of Mary.

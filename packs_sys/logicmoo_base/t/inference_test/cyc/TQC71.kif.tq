@@ -1,0 +1,10 @@
+(note TQC71)
+(agreeingAgents NuclearNon-ProliferationTreaty Iran) 
+
+
+
+
+(queryyn
+ (agreeingAgents NuclearNon-ProliferationTreaty Iran))
+
+(answer Yes)  

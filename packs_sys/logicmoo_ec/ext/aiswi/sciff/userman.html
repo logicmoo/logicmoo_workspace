@@ -1,0 +1,591 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<title>SCIFF User's Manual</title>
+</head>
+<body>
+
+<a name="index"></a><h1>SCIFF User's Manual</h1>
+<p>This version of SCIFF runs on SICStus 4 and following and on SWI 5.
+Not all the features are available for both systems.
+<p>To get help, type help(topic) at the SICStus prompt. To get <a href="#help">help</a> on help,
+type help(help).
+<p>Help available on the following topics:
+<ul>
+<li><a href="#howto">howto</a> Getting started
+<li><a href="#projects">projects</a>
+<li><a href="#options">options</a>
+<li>Syntax of the <a href="#history">history</a>
+<li>Syntax of <a href="#ics">ics</a>
+<li>Syntax of <a href="#sokb">sokb</a>
+<li><a href="#fdet">fdet</a>: improving performance
+<li><a href="#allows">allows</a>: a framework for testing conformance of web services
+</ul>
+
+<hr>
+<a name="howto"></a><h2>Getting Started</h2>
+<p>Load SICStus or SWI, then consult or compile sciff.pl.
+For maximum performance, in SWI use
+<center><code>set_prolog_flag(optimise,true).</code></center>
+and then
+<center><code>compile(sciff).</code></center>
+In SICStus, use
+<center><code>compile(sciff).</code></center>
+<p>Create a project, following the indications in <a href="#projects">projects</a>.
+
+<!--
+<p>To run SCIFF, you can either use <a href="#projects">projects</a>
+(preferred) or use low-level interface, explained in the following.
+<p>Create a directory with a name (say 'name') containing the following files:
+<ul>
+<li>'name_sokb.pl' containing your SOKB (i.e., your program)
+<li>'name_ics.txt' containing the integrity constraints
+<li>'name_history.txt' containing the history
+</ul>
+<p>call the goal: 'build(name)'
+<p>recompile SCIFF
+<p>call either 'run.' or 'run_no_close.' -->
+
+<hr>
+<a name="projects"></a><h2>Using Projects</h2>
+<p>In order to create a new project:
+<ul>
+<li>Create a directory with the name of the project
+in the path specified in the file defaults.pl 
+(it is the father of the directory where is SCIFF, by default).
+<br>E.g., suppose the project is myprj, from SCIFF directory:
+<code>mkdir ..\myprj</code> (Windows syntax)
+<li>Copy the file project.pl in the created directory.
+<br>E.g., <code>copy project.pl ..\myprj</code>
+<li>Edit the file ..\myprj\project.pl with a text editor
+<br>Insert the appropriate names in the facts <code>ics_file/1,
+history_file/1, sokb_file/1</code>. 
+The facts <code>ics_file/1,
+history_file/1, sokb_file/1</code> can contain either the path to a file,
+or the URL of the file; in the second case, SCIFF will download the file from
+the web. The URL should be given as an atomic term, i.e., with single quotes &rsquo;,
+and should begin with &rsquo;http:&rsquo;. E.g., 
+<center><code>ics_file(&rsquo;http://lia.deis.unibo.it/Research/sciff/ic.ruleml&rsquo;).</code></center>
+
+You may also add required options
+adding facts <code>required_option/2</code> 
+(see <a href="#options">options</a>). 
+<li>Create in directory ..\myprj the <a href="#history">history</a> file, the sokb file, and the ics file.
+</ul>
+<p>Now you can build the project, calling the goal
+<br><code>project(myprj).</code>
+<br>and run it with <code>run(X)</code>, or <code>run_close(X)</code>.
+<p>See also <a href="#project">project</a>, <a href="#run">run</a>, <a href="#run_open">run_open</a>, <a href="#run_close">run_close</a>
+
+
+<a name="run"></a><h2>run</h2>
+<p>run/1 is the predicate that runs a project.
+<p>The argument is currently not bound by default. By default, this predicate
+runs SCIFF in a closed derivation (see <a href="#run_closed">run_closed</a>).
+The developer of the project can redefine this predicate in the project file
+(see <a href="#projects">projects</a>) and use the parameter for input or output.
+
+<a name="run_closed"></a><h2>run_closed</h2>
+<p>run_closed/1 runs a project with a closed derivation.
+<p>The argument is currently not bound by default.
+The developer of the project can redefine this predicate in the project file
+(see <a href="#projects">projects</a>) and use the parameter for input or output.
+
+<p>SCIFF can be run either with a closed or with an open derivation.
+<ul>
+<li>In a closed derivation, after processing the input <a href="#history">history</a>, SCIFF makes a
+closed world assumption on the set of happened events. Thus, it assumes that no
+more events will happen. This assumption allows SCIFF to detect violation of
+E expectations. If another event happens after the closed world assumption, the
+derivation fails.
+<li>In an open derivation, no such assumption is made. Thus, SCIFF does not
+detect violation of E expectations (unless a deadline has passed). More events
+can happen without causing a failure.
+</ul>
+<p>To run SCIFF with an open derivation, use <a href="#run_open">run_open</a>
+
+<a name="run_open"></a><h2>run_open</h2>
+<p>run_open/1 runs a project with an open derivation.
+<p>The argument is currently not bound by default.
+The developer of the project can redefine this predicate in the project file
+(see <a href="#projects">projects</a>) and use the parameter for input or output.
+
+<p>SCIFF can be run either with a closed or with an open derivation.
+<ul>
+<li>In a closed derivation, after processing the input <a href="#history">history</a>, SCIFF makes a
+closed world assumption on the set of happened events. Thus, it assumes that no
+more events will happen. This assumption allows SCIFF to detect violation of
+E expectations. If another event happens after the closed world assumption, the
+derivation fails.
+<li>In an open derivation, no such assumption is made. Thus, SCIFF does not
+detect violation of E expectations (unless a deadline has passed). More events
+can happen without causing a failure.
+</ul>
+<p>To run SCIFF with a closed derivation, use <a href="#run_closed">run_closed</a>
+
+<a name="min_viol_closed"></a><h2>min_viol_closed</h2>
+<p>min_viol_closed(Num,CHRList),
+<p>amongst the various branches selects the one with the minimal
+number of violations. Returns the number of violations and the List of CHR
+constraints (containing expectations, etc.) in the best node.
+Note that this predicate does not print the CHR store, so the only way to get
+the output is to use CHRList (if you invoke min_viol_closed(_,_) you get no
+output).
+Useful when used in conjunction with the option
+<code>violation_causes_failure &rarr; no.</code> 
+<p><strong>Known bug</strong>: the number of violations is not precise: often
+the reported number of violations should be increased by 1.
+
+<a name="min_viol_open"></a><h2>min_viol_open</h2>
+<p>min_viol_open(Num,CHRList),
+<p>amongst the various branches selects the one with the minimal
+number of violations. Returns the number of violations and the List of CHR
+constraints (containing expectations, etc.) in the best node.
+Note that this predicate does not print the CHR store, so the only way to get
+the output is to use CHRList (if you invoke min_viol_closed(_,_) you get no
+output).
+Useful when used in conjunction with the option
+<code>violation_causes_failure &rarr; no.</code> 
+<p><strong>Known bug</strong>: the number of violations is not precise: often
+the reported number of violations should be increased by 1.
+
+<a name="project"></a><h3>project/1</h3>
+<p>The predicate <code>project(name)</code> builds a project called 'name'.
+<p>There must exist a corresponding directory called 'name', as a subdirectory of the
+<a href="#default_dir">default_dir</a> and it must contain a file called project.pl
+<p>Such file should be created as explained in section <a href="#projects">projects</a>
+
+<a name="default_dir"></a><h3>default_dir</h3>
+<p>The default directory where SCIFF looks for projects is declared in the file
+<code>defaults.pl</code>
+This file contains a fact <code>default_dir</code> that contains the path
+of the directory containing projects. By defult, it is the father of the
+directory containing SCIFF; i.e., by default defaults.pl
+contains <code>default_dir('../').</code>
+
+<hr>
+
+
+<a name="options"></a><h2>Options</h2>
+<p>The following options are recognised by the SCIFF proof-procedure:
+<ul>
+<li><a href="#fulfiller">fulfiller</a>
+<li><a href="#seq_act">seq_act</a>
+<li><a href="#factoring">factoring</a>
+<li><a href="#sciff_debug">sciff_debug</a>
+<li><a href="#violation_causes_failure">violation_causes_failure</a>
+<li><a href="#graphviz">graphviz</a>
+<li><a href="#allow_events_not_expected">allow_events_not_expected</a>
+<li><a href="#min_viol_closed">min_viol_closed</a>
+<li><a href="#min_viol_open">min_viol_open</a>
+<li><a href="#coloring">coloring</a>
+</ul>
+<p>Options can be stated in <a href="#projects">projects</a> by adding to the file project.pl a
+fact <code>required_option/2</code>. For example, if your project requires
+the option <code>seq_act</code>, add to the corresponding project.pl the fact:
+<center><code>required_option(seq_act,on).</code></center>  
+<p>To set an option, use <a href="#set_option">set_option</a>
+<p>To read the state of an option, use <a href="#get_option">get_option</a> or 
+<a href="#show_options">show_options</a>.
+<p>
+<hr>
+
+<a name="fulfiller"></a><h3>fulfiller</h3>
+<p>The fulfiller option enables the generative version of SCIFF (called g-SCIFF,
+see [Alberti et al.
+<a href="http://www.springerlink.com/content/b6418542t7749648/?p=305c947d387c49c6b6d4bb20457316de&pi=6">Security protocols verification in abductive logic programming: a case study</a>,
+ESAW 2005]).
+Operationally, after <code>close_history</code>, for each positive expectation
+that is still pending <code>e(X,T)</code> the corresponding atom  <code>h(X,T)</code>
+is abduced, fulfilling the expectation.
+
+<a name="seq_act"></a><h3>seq_act</h3>
+<p>seq_act option imposes that two events cannot happen at the same time.</p>
+<p>If seq_act is on, two events cannot happen at the same time.</p>
+<p>If seq_act is off, more events can happen at the same time.</p>
+<p>This option is primarily used in the Abductive Event Calculus.</p>
+<p>Usually is off.</p>
+<p><b>Note:</b> this option is not necessary (from a declarative viewpoint),
+because you can easily add an integrity constraint stating that two events
+should not happen at the same time.
+The option is provided here because it has a possibly more efficient
+behaviour with the CLP(FD) solver. However, it does nothing when using the
+CLP(R) solver. 
+
+<a name="factoring"></a><h3>factoring</h3>
+<p>The factoring option enables or disables the factoring transition.
+The factoring transition tries and unifies two abduced atoms. On backtracking,
+the two abducibles are dis-unified.
+The factoring transition is useful for obtaining minimal answers.
+It is important for the Abductive Event Calculus.
+<p>The factoring option is off by default.
+
+<a name="sciff_debug"></a><h3>sciff_debug</h3>
+<p>Print on screen debug messages.</p>
+<p>Usually is off.</p>
+
+<a name="violation_causes_failure"></a><h3>violation_causes_failure</h3>
+<p>The option violation_causes_failure Decides if a violation of the protocol should induce a failure 
+(and backtracking where possible) of the proof.
+Allowed values are yes/no.
+Default value is yes.</p>
+	
+<a name="graphviz"></a><h3>graphviz</h3>
+<p>Represents the SCIFF derivation tree in form of a graph, using the <a href="http://www.graphviz.org/">graphviz</a> software.
+<p>The file should be opened with <code>init_graph(FileName,Stream)</code>, 
+and, after the execution of the proof, it should be closed with <code>close_graph</code>.
+The produced file can be opened with <a href="http://www.graphviz.org/">DOT</a> and converted in PostScript or other formats.
+<p>Default value is off.</p>
+
+<a name="allow_events_not_expected"></a><h3>allow_events_not_expected</h3>
+<p>By default, SCIFF allows events to happen even if they are not expected.
+By setting the <code>allow_events_not_expected</code> option to <code>no</code>, SCIFF detects as violation if an
+happened event does not have a corresponding expectation.
+<p>Useful, in particular, to prove Strong Conformance in the <a href="#allows">allows</a>
+framework.
+<p>Default value is <i>yes</i>.
+
+<a name="coloring"></a><h3>coloring</h3>
+<p>When this option is <code>on</code>, the output of SCIFF uses colors and text styles 
+(underlined, bold, ...) to improve readability.
+In particular, the special SCIFF atoms are colored (E, H, EN, ...).
+<p>In SWI, variables are also colored; Universal variables are Magenta, while existential are blue;
+flagged variables are underlined.
+<p>Coloring uses the ANSI codes, so it is available only on those systems that use ANSI codes.
+It works correctly in Linux and in MacOS, while it does not work in Windows XP.
+For this reason, by default coloring is enabled in Unix and MacOS, while it is disabled in Windows.
+However, it can be enabled or disabled with <a href="#set_option">set_option</a>.
+
+<a name="portray_ic"></a><h3>portray_ic</h3>
+The output of SCIFF includes the implications that remain at the end of the derivation.
+Some of these implications are the original Integrity Constraints (IC),
+others are partially solved integrity constraints (PSIC).
+The integrity constraints have an internal representation as atoms ic(Body,Head),
+and they will be shown as such whenever the <code>portray_ic</code> option is <code>off</code>.
+When the <code>portray_ic</code> is <code>on</code>, the IC are shown with
+the same syntax of <a href="#ics">ics</a>.
+In the same way, PSIC are shown with their internal representation when
+<code>portray_ic</code> is <code>off</code>, and with the syntax of IC when it is <code>on</code>.
+If option <a href="#coloring">coloring</a> is on, IC are represented with a red implication symbol,
+while in PSIC the implication symbol is cyan.
+<p>By default, <code>portray_ic</code> is <code>on</code>.
+
+<a name="set_option"></a><h3>set_option(Option,Value)</h3>
+<p>Each option can be set using the predicate:</p>
+<p>set_option(Option,Value)</p>
+<p>where Option is the name of the option you want to modify,
+and Value is the new value you want to assign to it.</p>
+<p>See also <a href="#get_option">get_option</a></p>
+
+<a name="get_option"></a><h3>get_option(Option,State)</h3>
+<p>You can inspect the state of an option using the predicate:
+sciff_option(?Option, ?State).</p>
+<p>See also <a href="#set_option">set_option</a></p>
+
+<a name="show_options"></a><h3>show_options</h3>
+<p>The predicate show_options shows all the <a href="#options">options</a> available and their state</p>
+<p>See also <a href="#get_option">get_option</a>, <a href="#set_option">set_option</a></p>
+
+
+<hr>
+<a name="history"></a><h2>Syntax of the history</h2>
+<p>The history is a file containing Prolog facts, given with one of the following syntaxes:
+<ul>
+<li>either as <code>hap/2</code> facts (the first argument being a term, the second is the time,
+i.e., an integer number)
+<li>or as <a href="#apache">Apache</a> Combined Log Format
+<li>or as follows.
+</ul>
+
+In the last syntax, events are terms with a Functor and the following arguments:
+<ul>
+<li>A list containing a constant
+<li>Dialog Identifier (constant)
+<li>Sender (constant)
+<li>Receiver (constant)
+<li>Performative (constant)
+<li>Arguments of the performative (List of Terms)
+<li>Time (integer)
+</ul>
+<p>The term should be terminated with full stop.
+<p>It will be converted into an atom
+<p><center><strong>H</strong>(Functor(Sender,Receiver,Performative(Arguments),DialogID),Time).</center>
+
+<a name="apache"></a><h3>Apache Combined Log Format</h3>
+<p>SCIFF is able to parse the access_log file of the Apache web server.
+The intended use is to verify if the access policies are respected.
+The recognized format is the
+<a href="http://httpd.apache.org/docs/2.0/logs.html#combined">Combined Log Format</a>.
+
+<p>In order to read the history from the access log, the file should be loaded in
+the project file, with the usual history_file declaration. SCIFF recognizes that the
+history is an access log from the <i>name of the file</i> in the file declaration.
+If the filename terminates with <code>access_log</code>, then the parser of
+the access log is activated. E.g., the project file could have a fact:
+
+<center><code>history_file(monday.access_log).</code></center>
+
+<p>The <b>H</b> events that SCIFF receives have the following format:
+
+<center><b>H</b>(log(IP,Ident,UserID,ReadableTime,Request,Status,Size,Referer,Browser),T)</center>
+
+<p>where
+<ul>
+<li><b>IP</b>: the IP address of the requesting machine. It is a 32-bit integer number (e.g., 3232235770, not 192.168.0.250)
+<li><b>Ident</b>: the identity of the client (highly unreliable, as stated in Apache documentation)
+<li><b>UserID</b>: User ID. Currently not implemented
+<li><b>ReadableTime</b>: Time in human-readable format: a term <code>time(Day/Month/Year,Hour/Min/Sec,TimeZone)</code>  
+<li><b>Request</b>: The request to the server. It is a term get/1 or put/1, containing a list of atomic constants. E.g.,
+"GET /Info1/dummy.gif HTTP/1.1" is provided as <code>get(['Info1',dummy,gif])</code>. 
+The protocol version is currently discarded
+<li><b>Status</b>: the status code that the server sends back to the client (integer)
+<li><b>Size</b>: size of the object returned to the client
+<li><b>Referer</b>: a list of atomic constants. E.g.: http://linuxsrv.lab2007.ing.man/Info1/consegna.php?Action=upload
+is provided as [http,linuxsrv,lab2007,ing,man,'Info1',consegna,php,'Action',upload].
+<li><b>Browser</b>: the identifying information that the client browser reports about itself.
+It is provided as a code-list in SICStus syntax (i.e., an unparsed string).
+<li><b>T</b> is the time, in integer format
+</ul>
+
+<hr>
+<a name="ics"></a><h2>Syntax of ICs</h2>
+<p>The ICs are the Integrity Constraints of the SCIFF proof-procedure.
+They are written in one (or more) text files that should be declared
+in the file project.pl (see <a href="projects">projects</a>) with a fact <code>ics_file(Filename).</code> 
+<p>ICs are in the form of implications:
+<center><code>Body ---> Head</code></center> 
+where Body is a conjunction of
+<ul>
+<li>literals H (happened events) and their negation !H
+<li>expectations E (expected to happen), EN (expected not to happen) and
+their default negation !E and !EN
+<li>abducibles ABD
+<li><a href="#clp">clp</a> constraints
+<li>atoms defined in the SOKB.
+</ul>
+<!--<p>Currently, the first literal in the Body must be of type H, E, EN, or ABD.-->
+<p>Head is a disjunction of conjunctions. Disjunctions are represented wih the 
+symbol <code>\/</code> , and conjunctions with <code>/\</code> .
+<p>Each conjunct can be
+<ul>
+<li>an expectation E (expected to happen), EN (expected not to happen) or
+their default negation !E and !EN
+<li>an abducible ABD
+<li>a <a href="#clp">clp</a> constraint
+<li>a literal defined in the SOKB.
+</ul>
+<p>For example, the following is a valid IC:
+<code><pre>
+    % happened events
+    H(tell(A,B,openauction(Item,TEnd,TDeadline),AuctionId),TOpen)
+    /\ H(tell(B,A,bid(Item,Quote),AuctionId),TBid)
+	/\ deadline(X) % Literal defined in SOKB
+	/\ TOpen < TBid % CLP constraints
+	/\ TOpen <= TEnd
+	/\ TEnd < TDeadline+X
+--->
+	E(tell(A,B,answer(win,Item,Quote),AuctionId),TWin)
+	/\ TWin <= TDeadline
+	/\ TEnd < TWin
+\/
+	E(tell(A,B,answer(lose,Item,Quote),AuctionId),TLose)
+	/\ TLose <= TDeadline
+	/\ TEnd < TLose.
+</pre></code>
+<p>Comments are represented with the ampersand symbol (%) and terminate
+at the end of the line (as in Prolog). The IC terminates with a full stop.
+
+<p>As an alternative, ICs can also be defined in <a href="#ruleml">ruleml</a>.
+
+<a name="ruleml"></a><h3>RuleML</h3>
+<p>As an alternative to the syntax of <a href="#ics">ics</a>, it is possible to
+define the ICs with the syntax in RuleML 0.9.
+<p>RuleML files are declared in the project file with the same syntax of normal
+ICs files: using the <code>ics_file/1</code> predicate. 
+The user should load the <code>ruleml_parser</code> library before loading the <code>project</code>, i.e.:
+
+<code><pre>?- use_module(library(ruleml_parser)).
+?-project(...).
+</pre><code>
+ 
+<p>SCIFF will try to parse
+the file first as a RuleML file. In case of failure, it will use the normal
+ICs parser.
+
+<hr>
+<a name="sokb"></a><h2>Syntax of SOKB</h2>
+<p>The SOKB is a set of clauses, a la logic programming. Each clause is
+an implication
+<center><code>head :- body.</code></center>
+where <code>head</code> is an atom and <code>body</code> is a conjunction
+of literals, that can contain abducibles and <a href="#clp">clp</a> constraints.
+
+<p>The abducibles can be expectations or general abducibles.
+The syntax of abducibles is different from that of <a href="#ics">ics</a>, and
+is the following:
+
+<ul>
+<li><code>e(Event,Time)</code> is a positive expectation
+<li><code>note(Event,Time)</code> is a negated positive expectation (i.e., the default
+negation of a positive expectation)
+<li><code>en(Event,Time)</code> is a negative expectation
+<li><code>noten(Event,Time)</code> is a negated negative expectation (the default
+negation of en)
+<li><code>abd(Term,Time)</code> is a general abductive atom
+</ul>
+
+<p>The funcor symbols <code>e, note, en, noten, abd</code> and <code>h</code>
+are reserved: if you define a predicate <code>e/4<code> you will not be able to
+use it in the ICs.
+
+<p>The SOKB can be defined in one or more files.
+Each sokb file should be declared in the <code>project.pl</code> in a fact
+<center>sokb_file(Name_Of_SOKB_File).</center>
+
+<p>Exactly one of the SOKB files should define the predicate <code>society_goal/0</code>.
+The predicate <code>society_goal</code> contains the goal of the society,
+that is the starting point of SCIFF derivation.
+<code>society_goal</code>
+is invoked by the <a href="#run">run</a>, <a href="#run_open">run_open</a> and
+<a href="#run_closed">run_closed</a> 
+predicates that start the derivation.
+
+<hr>
+<a name="clp"></a><h2>CLP Constraints</h2>
+<p>Currently, the set of CLP constraints that are interpreted in the
+<a href="#ics">ics</a> is the following:
+<ul> 
+<li> == (equality)
+<li> &lt;&gt; (disequality)
+<li> &gt;= (greater than or equal to)
+<li> &gt; (greater than)
+<li> =&lt; (less than or equal to)
+<li> &lt; (less than)
+<li> &lt;&gt; (different from)
+<li>:: (membership; the second argument should be a ground list)
+</ul>
+<p>as well as unification = and dis-unification !=. 
+&lt;&gt; and != have the same declarative semantics; however &lt;&gt; is
+intended as disequal amongst integers, while != is better suited for disunification
+between terms. 
+
+<hr>
+<a name="fdet"></a><h2>fdet declarations</h2>
+<p>In order to test if an <strong>E</strong> expectation is fulfilled by a
+<strong>H</strong> event, SCIFF generates two alternative hypotheses:
+in one it tries to prove that the two will unify, while in the second it tries
+and prove that they will not unify.
+<p>In some cases, the protocol specification might implicitly impose that
+all expectations of type <center><strong>E</strong>(message(S,R,type),T)</center> can be fulfilled at most by <i>one</i> event. 
+For instance, if in a protocol we have that
+<center><strong>E</strong>(message(S1,R1,type),T1) &and; <strong>E</strong>(message(S2,R2,type),T2) &rarr; S1=S2 &and; R1=R2 &and; T1=T2</center> 
+then we know that only one event can fulfill an <strong>E</strong> expectation matching with
+<center><strong>E</strong>(message(S,R,type),T).</center>
+<p>In such cases, the performance can be improved by declaring such event as
+having <i>deterministic fulfilment</i>. 
+This can be accomplished by adding to the SOKB a predicate <code>fdet/1</code>.
+In the example, add to the SOKB the definition:
+<br><code>fdet(e(message(S,R,type),T)).</code> 
+<p>Of course, if one <strong>E</strong> expectation can be matched by
+more than one <b>H</b> event, declaring it as <code>fdet</code> undermines <i>completeness</i>,
+i.e., some solutions may be lost. 
+<hr>
+<a name="allows"></a><h2>AlLoWS</h2>
+
+<p>A<sup>l</sup>LoWS (Abductive Logic Web-service Specification)
+is a framework for testing conformance of web services to choreographies
+(see publication PPDP 2006).
+<p>In order to use A<sup>l</sup>LoWS, you have to
+<ul>
+<li>Define the interface behaviour of the web service under test. This is done by
+defining SOKB and <a href="#ics">ics</a>. 
+The name of the web service under test must be declared in the SOKB in a
+fact <code>testing/1</code>. E.g., add to the SOKB <code>testing(ws).</code>
+<li>Define the choreography, again by defining a SOKB and <a href="#ics">ics</a>
+</ul>
+<p>In A<sup>l</sup>LoWS, expectations are only positive (<strong>E</strong>)
+and have the following syntax:
+<center><strong>E</strong>(do(Expecter,Sender,Receiver,Message,DialogID),Time)</center>
+<p>where Expecter can be either <code>chor</code> (i.e., this is an expectation of the
+choreography), or the name of the web service under test (in the example, <code>ws</code>)
+<p>The <code>society_goal</code> should be defined only once (in either of the 
+two SOKBs), and should contain the expectation, both from the choreography
+and from the web service's viewpoint, of the message that initiates 
+the interaction. For example:
+<p><code>society_goal:-<br>
+&nbsp;e(do(ws,  peer,ws,m1,d1),1),<br>
+&nbsp;e(do(chor,peer,ws,m1,d1),1).</code>
+<p>Build the project, with the predicate <a href="#project">project</a>
+<p>Finally, you can execute the goal <code>allows(Succeed)</code>, or redefine, in the
+file <code>project.pl</code> (see <a href="#projects">projects</a>) the
+predicate <a href="#run">run</a> as follows:
+<center><code>run(Succeed) :- allows(Succeed).</code></center>
+<p>If the web service is not conformant, A<sup>l</sup>LoWS provides, 
+as counterexample, a possible
+history that does not satisfy either the web service's or the choreography's
+specifications.
+<p>The parameter <i>Succeed</i> is useful to drive the behaviour of the predicate 
+<code>allows/1</code>.
+<ul>
+<li>If Succeed=false, predicate <code>allows/1</code> will fail in case
+the web service is not conformant
+<li>if Succeed=true, predicate <code>allows/1</code> will succeed
+in all cases, useful to inspect the constraint store and have more information
+about the history that proves non compliance
+<li>if Succeed = verbose, <code>allows/1</code> prints all the possible histories.
+</ul>  
+<p>A<sup>l</sup>LoWS can prove two types of conformance, named <i>Feeble</i> and
+<i>Strong</i> conformance (see publication PPDP 2006). The two types of proof
+are distinguished by means of the option (see <a href="#options">options</a>) 
+<a href="#allow_events_not_expected">allow_events_not_expected</a> 
+<ul>
+<li><a href="#allow_events_not_expected">allow_events_not_expected</a> = yes
+(default) &rarr; Feeble conformance
+<li><a href="#allow_events_not_expected">allow_events_not_expected</a> = no
+&rarr; Strong conformance.
+</ul>
+
+<hr>
+<a name="pretty_print"></a><h2>pretty_print</h2>
+<p>The module pretty_print is not loaded by default. 
+If it is, it makes the output of SCIFF more readable.
+It is not loaded by default because some external programs capture the output
+of SCIFF, so we recommend using it only if you run SCIFF as a stand-alone
+procedure (not with SOCS-SI or SCIFF Editor).
+To use pretty_print, simply consult it with<br>
+<center><code>[pretty_print].</code></center><br>
+and the output of SCIFF will be more readable.
+
+<hr>
+<a name="svg"></a><h2>svg</h2>
+<p>The output of SCIFF can be saved in SVG format, readable with modern
+browsers, such as Opera or Firefox, or with the Adobe plugin for other browsers.
+<p>To use SVG output, invoke the goal<br>
+<center><code>run_predicate, svg(OutFile,Anim,Options)</code></center><br>
+where run_predicate is one of <a href="#run">run</a>, <a href="#run_open">run_open</a> 
+or <a href="#run_close">run_close</a>.
+<ul>
+<li>OutFile is the name of the output file, e.g., 'result.svg'
+<li>Anim can be either 'no' or 'anim(Sec)'. Two different types of graphs are
+visualised. In the second, there is an animation lasting Sec seconds. Note that
+currently Firefox does not support SVG animations, Opera does.
+<li>Options is a list that can contain zero or more of the following constants:
+<ul>
+<li>grid: visualise a grid
+<li>history: visualise the history
+<li>exp: visualise expectations (only E expectations currently shown)
+</ul>
+</ul>
+
+<hr>
+
+<a name="help"></a><h2>help</h2>
+<p>To get help, type help(topic) at the SICStus prompt.
+The available topics (links) are represented between stars,
+as in the following example:
+<p><a href="#options">options</a>
+<p>Note that topics names are case-sensitive.
+
+<p>To access the developer's manual, type either <code>devman.</code> or <code>devman(topics).</code> at the SCIFF prompt,
+or read <a href="devman.html">devman.html</a> from the documentation. 
+</body>
+</html>

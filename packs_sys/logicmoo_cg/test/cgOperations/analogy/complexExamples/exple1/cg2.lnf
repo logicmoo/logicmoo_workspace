@@ -1,0 +1,7 @@
+[State = [Star : sun]-
+	         -Mass->[Mass]-greatherThan->[Mass]<-Mass-[Planet : p]-Temperature->[Temperature]<-greatherThan-[Temperature #1],
+	         -Temperature->[Temperature #1] 
+	]-cause->
+     [Event = [Star : sun]<-pat-[Attract]-obj->[Planet : p]
+	]-cause->
+     [Event = [Planet: p]<-pat-[RevolveAround]-obj->[Star : sun] ]

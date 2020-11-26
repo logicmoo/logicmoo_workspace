@@ -1,0 +1,20 @@
+Um. ok, then I don't know what I was thinking. no wait, I do know what I was thinking. I mean do that for all the teams,
+Oh. So you have 32 data points on 3 axes? Well, then what? Even then, it's not any more informative than just looking at the numbers.
+It will the comparison easier. You can sort the teams by run efficiency, and then reception efficiency and maybe scoring efficiency.
+What on earth is a scoring efficiency?
+I don't know... maybe TDs per drive distance?
+That is not a scoring efficiency, that's more like... Ok I have no idea what that is, but it's not how efficient the scoring was.
+it shows you TDs per distrance, that's efficiency... I think...
+Uh... no... it shows you that the punt was good, and the drive was long, and that the team was able to score. How is that scoring efficiency?
+Hm, ok so that's more like will to succeed, so I the TDs per distance of drive is small, that means the drive was long. Which also means the team was determined to score.
+That's just score divided by the total yardage. The NFL keeps track of that as well.
+So make a graph of it.
+No. It's too much work.
+Please, I wanna see, it might be informative.
+It won't be any more informative than what is already compiled by the NFL, ESPN, etc, besides, total offense stats like that are meaningless unless you compare it the total defense of the opposing team, which is also curated on the websites.
+Woo, that gices me an idea.
+Oh God. Don't tell me
+If we divide the two, then we get a ratio. So divide the offense's run efficiency by the defense's run defense efficiency
+How on earth are you going to get the defense's run defense efficiency?
+Runs allowed per game, and yardage allowed, the same way as offense's efficiency. But looked at as a loss as opposed to gain
+Huh. and the ratio offense/defense is greater 1 if the offense has better run efficiency that the defense? You know what, let's do this for and pats and cowboys.

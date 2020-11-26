@@ -1,0 +1,158 @@
+/* @(#)CHAT.DOC	26.1 5/13/88 */
+
+  CHAT.DOC
+
+  Quintus Computer Systems, Inc.
+  May 1988
+
+  ------------------------------------------------------------
+
+Background
+----------
+
+This directory contains a classic Prolog program developed as part of a
+research project at the University of Edinburgh by Fernando C.N. Pereira
+and David H.D. Warren.  The program, Chat, was developed between 1978
+and 1981, with only a few modifications since that time.  Chat has the
+disadvantage of being a research program and is not well documented and
+easily usable as a tutorial on Natural Language processing in Prolog.
+If you are interested in taking more than a cursory look at Chat, then
+you should obtain the following papers on the original work:
+
+	Logic for Natural Language Analysis
+	Fernando Pereira, January 1983
+	    SRI Technical Note 275 ($15)
+	    from: Technical Notes (Dori Arceo, mail stop EJ257)
+		  Artificial Intelligence Center
+		  SRI International
+		  333 Ravenswood Avenue
+		  Menlo Park, California 94025, USA
+
+	An Efficient Easily Adaptable System
+	  for Interpreting Natural Language Queries
+	David H.D. Warren & Fernando C.N. Pereira,
+	    IJCAI-81, Vancouver, Canada, 1981
+
+	Efficient Processing of Interactive Relational Database Queries
+	  Expressed in Logic
+	David H.D. Warren
+	    Seventh International Conference on Very Large Data Bases
+	    Cannes, France, September 1981
+
+Fernando Pereira has also written a more recent text on the general
+topic of using Prolog for Natural Language processing:
+
+	Prolog and Natural-Language Analysis
+	Fernando C.N. Pereira & Stuart M. Shieber
+	    CLSI Lecture Notes No. 10, Stanford 1987
+	    distributed by: University of Chicago Press
+
+
+Quintus uses, and supplies, Chat as a good medium-size Prolog program that
+does something interesting and can be used for demonstrations and
+performance measurements.  Quintus does not warrant the programs suitability
+for any purpose and does not support the program.  Chat can be used and
+modified for training and research purposes, but is not supplied for use as
+a basis of commercial products.  The copyright of this program remains with
+the authors, Warren and Pereira.  If you make any research use of Chat you
+should reference the authors appropriately.
+
+
+Running Chat under Quintus Prolog
+---------------------------------
+
+To compile Chat type:
+
+	% prolog
+
+	| ?- compile(chat).
+
+
+The following predicates can be called to run parts of Chat:
+
+	| ?- hi.		    % prompts for questions
+	| ?- demo(mini).	    % Runs a small set of demo questions
+	| ?- demo(main).	    % Runs a larger set of demo questions
+	| ?- test_chat.		    % Runs the large set of demo questions
+				    %	and produces a table of statistics
+
+You should examine the demonstration questions to get an idea of Chat's
+capabilities. These are in the file 'demo' and also in 'chattop.pl'.
+The hi/0 predicate prompts for questions as follows:
+
+	Question:
+
+Chat is now expecting a question, which should be terminated with a period
+or question mark. So for example:
+
+	Question: Which countries bordering mexico border the pacific?
+
+Capital letters are not distinguished from lower case.  If Chat does not
+understand a word it prompts you to re-type it (or a synonym for it).  This
+word must be terminated with a period.
+
+Apart from questions, the following directives are accepted by Chat:
+
+	Question: bye.			(exits back to the Prolog top level)
+
+	Question: trace.		(turns on Chat's tracing mechanism)
+	Question: do not trace.		(turns off the tracing mechanism)
+	Question: do mini demo.		(calls demo(mini))
+	Question: do main demo.		(calls demo(main))
+	Question: test chat.		(calls test_chat)
+
+The tracing mechanism shows all the intermediate datastructures, which are:
+
+	* the syntactic parse tree of the question
+		(a large Prolog term which is pretty-printed)
+
+	* the semantic interpretation of the parse tree
+		(a Prolog-like clause)
+
+	* a query-optimized version of the semantic interpretation
+		(a Prolog-like clause which is a reordering of the
+		 previous one, alhtough it can sometimes be identical)
+
+The various statistics show the times for each stage in milliseconds. You
+will see that Chat is very fast at analyzing and answering questions!
+
+
+Compiling Chat into a Runtime Application
+-----------------------------------------
+
+Chat can also be compiled into a runtime application if you have the
+Quintus Runtime Generator product. The chat.pl file contains all the
+necessary information. To "PAC" Chat into a runtime application type:
+
+	% qpc -vsoi chat chatops chat
+
+This compiles chat.pl (specified by the final 'chat').  The rest of the
+command specifies verbose (-v) mode so that all the compiling and
+linking steps will be shown; the resulting executable will be stripped
+(-s) and will be called 'chat' (-o chat); the file chatops.pl will be
+included in the compilation of every Prolog file (-i chatops) - this is
+neccesary because chatops.pl contains essential operators definitions.
+The resulting program can then be run by typing:
+
+	% chat
+
+The program will then prompt with "Question:", since when Chat is run as
+a runtime application, runtime_entry/1 always calls hi/0.  The special
+directives listed above can be used to call the demonstration predicates
+if desired.
+
+
+Using Chat for Benchmarking
+---------------------------
+
+Also supplied is an AWK script which might prove useful when comparing
+two sets of data from Chat - maybe from Chat running on two different
+machines.  On a Unix system this would be used as follows:
+
+            % awk -f chat.awk  data_a  data_b
+
+where data_a and data_b are files which just contain the data lines
+printed by Chat for the 23 questions (no headings or blank lines).  The
+awk script prints out a RATIO table with the same form as the data_a and
+data_b tables which shows the speed increase from data_a to data_b.
+

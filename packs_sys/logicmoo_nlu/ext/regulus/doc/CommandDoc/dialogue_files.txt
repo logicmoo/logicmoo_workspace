@@ -1,0 +1,2 @@
+Relevant to dialogue applications. Points to a list of files defining
+dialogue processing behaviour.

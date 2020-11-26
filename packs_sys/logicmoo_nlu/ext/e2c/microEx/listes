@@ -1,0 +1,39 @@
+
+$ tconc :- conc(X,Y,[a,b,c,d,e,f,g,h]), write(X), wf(Y).
+
+$ nrev([],[]).
+$ nrev([T|Q],R) :- nrev(Q,R1), conc(R1,[T],R).
+$ bench :- 
+   cputime(X),
+   nrev([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,a,b,c,d,e,f,g,h,i,j,k,l,m,o,p,q,r],R),
+   cputime(Y),
+   minus(Y,X,Z),
+   write('1 Klips en '), write(Z), nl.
+
+$ rev(L,R) :- rev_it(L,[],R).
+$ rev_it([],R,R).
+$ rev_it([T|Q],R0,R) :- rev_it(Q,[T|R0],R).
+$ trev :- rev([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,
+                u,v,w,x,y,z,a,b,c,d],X), write(X), nl.
+
+
+   $ sous_liste(S,L) :- conc(L1,L2,L), conc(S,L3,L2).
+   $ tsous_liste :- sous_liste(X,[a,b,c,d,e]), wf(X).
+
+
+   $ perm1([],[]).
+   $ perm1(L,[X|P]) :- del(X,L,L1), perm1(L1,P).
+   $ tperm1 :- perm1([a,b,c,d],X), wf(X).
+
+   $ perm2([],[]).
+   $ perm2(L,[T|Q]) :- conc(Deb,[T|Reste],L),
+                       conc(Deb,Reste,Lt),
+                       perm2(Lt,Q).
+   $ tperm2 :- perm2([a,b,c,d],X), wf(X).
+
+   $ perm3([],[]).
+   $ perm3([T|Q],R) :- perm3(Q,Qr), insert(T,Qr,R).
+   $ insert(X,L,[X|L]).
+   $ insert(X,[T|Q],[T|R]) :- insert(X,Q,R).
+   $ tperm3 :- perm3([a,b,c,d],X), wf(X).
+

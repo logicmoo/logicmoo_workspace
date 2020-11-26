@@ -1,0 +1,64 @@
+macro(utt_ynq_sem(Sem),
+      concat([[utterance_type, sentence]], Sem)).
+
+macro(utt_whq_sem(Sem),
+      concat([[utterance_type, sentence]], Sem)).
+
+macro(utt_dcl_sem(Interj, Sem),
+      concat([[utterance_type, dcl]], concat(Interj,Sem))).
+      
+macro(np_vp_subject_sem(NP, Vp),
+      concat(NP, Vp)).
+     
+macro(vbar_v_advp_sem(V, Advp),
+      concat([[voice, active]], concat(V, Advp))).
+
+macro(vbar_v_advp_passive_sem(V),
+      concat([[voice, passive]], V)).
+
+% modif of vbar_v_np_advp_advp_sem
+macro(vbar_v_np_advp_sem(V, Np, Advp),
+      concat([[voice, active]], concat(V, concat(Np,Advp)))).
+ 
+% 4 modifs of vp_v_comps_postmods_sem    
+macro(vp_v_adjp_sem(V, Adjp),
+      concat(V, Adjp)).
+macro(vp_v_pp_adjp_sem(V, Pp, Adjp),
+      concat(V, Pp, Adjp)).
+macro(vp_v_pp_sem(V, Pp),
+      concat(V, Pp)).   
+macro(vp_v_np_sem(V, Np),
+      concat(V, Np)).  
+macro(vp_v_mod_sem(V, Mod),
+      concat(V, Mod)).
+      
+macro(vp_aux_v_sem(AuxV, V),
+      concat(AuxV, V)).
+      
+% modif of np_np_de_pp_sem      
+macro(np_np_mod_sem(Np, Mod),
+      concat(Np, Mod)).
+      
+macro(nbar_n_adjp_sem(N, Adjp),
+      concat(N, Adjp)).
+      
+macro(pp_p_np_sem(P, Np),
+      concat(P, Np)).
+
+macro(pp_p_adv(P,Adv),
+       concat(P, Adv)).
+      
+macro(pp_np_pp_frequency_sem(Np, Freq),
+      concat(Np, Freq)).
+      
+macro(of_pp_np_sem(Np),
+      Np).
+
+macro(comps_passivise_pp_sem(Np),
+      Np).
+      
+macro(nbar_n_sem(N),
+      N).
+      
+macro(sc_sem(Sc),
+      Sc).

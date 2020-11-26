@@ -1,0 +1,47 @@
+(note TQA59)
+
+(startsAfterEndingOf MEKTerrorismSinceTheMidEighties 
+ (YearFn 1980)) 
+
+(implies 
+ (and 
+ (instance ?N PositiveInteger) 
+ (greaterThan ?M ?N) 
+ (startsAfterStartingOf ?EVT 
+ (YearFn ?M))) 
+ (startsAfterEndingOf ?EVT 
+ (YearFn ?N))) 
+
+(instance 1980 PositiveInteger) 
+
+(greaterThan 1982 1980) 
+
+(startsAfterStartingOf MEKTerrorismSinceTheMidEighties 
+ (YearFn 1982)) 
+
+(eventOccursAt MEKTerrorismSinceTheMidEighties Iran) 
+
+(instance MEKTerrorismSinceTheMidEighties TerroristAct) 
+
+(instance MEK-MKO TerroristAgent) 
+
+(different Iraq MEK-MKO) 
+
+(sponsorsAgentInAction Iraq MEK-MKO MEKTerrorismSinceTheMidEighties) 
+
+
+(queryyn (thereExists ?ACT 
+   (thereExists ?AGENT 
+       (and 
+           (different Iraq ?AGENT) 
+           (instance ?AGENT TerroristAgent) 
+           (instance ?ACT TerroristAct) 
+           (eventOccursAt ?ACT Iran) 
+           (startsAfterEndingOf ?ACT 
+               (YearFn 1980)) 
+           (sponsorsAgentInAction Iraq ?AGENT ?ACT)))) )
+
+(answer Yes )
+
+(end_of_file)
+

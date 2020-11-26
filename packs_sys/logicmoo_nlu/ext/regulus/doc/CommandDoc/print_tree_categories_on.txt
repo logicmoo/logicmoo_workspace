@@ -1,0 +1,53 @@
+When printing parse trees at top level, also show all the categories
+in the tree. \ref{Figure:PRINT-TREE-CATEGORIES-example} shows an
+example using the Toy1 grammar.
+\begin{figure}
+\begin{verbatim}
+>> PRINT_TREE_CATEGORIES_ON
+(Print categories in parse trees)
+
+--- Performed command PRINT_TREE_CATEGORIES_ON, time = 0.02 seconds
+
+>> switch on the light     
+(Parsing with left-corner parser)
+
+Analysis time: 0.00 seconds
+
+Return value: [[action,switch],[device,light],
+               [onoff,on],[utterance_type,command]]
+
+Global value: []
+
+Syn features: []
+
+Parse tree:
+
+.MAIN [TOY1_RULES:1-4]
+   utterance [TOY1_RULES:5-9]
+      command [TOY1_RULES:10-14]
+      /  verb lex(switch) [TOY1_LEXICON:8-10]
+      |  onoff null lex(on) [TOY1_LEXICON:24-25]
+      |  np [TOY1_RULES:25-29]
+      |  /  lex(the)
+      |  |  noun lex(light) [TOY1_LEXICON:16-17]
+      \  \  null
+
+------------------------------- FILES -------------------------------
+
+TOY1_LEXICON: d:/regulus/examples/toy1/regulus/toy1_lexicon.regulus
+TOY1_RULES:   d:/regulus/examples/toy1/regulus/toy1_rules.regulus
+
+Categories:
+
+[('.MAIN':[]), 
+ (command:[]), 
+ (noun:[sem_np_type=switchable,singplur=sing]), 
+ (np:[sem_np_type=switchable,singplur=sing]), 
+ (onoff:[]), 
+ (utterance:[]), 
+ (verb:[obj_sem_np_type=switchable,singplur=sing,
+        vform=imperative,vtype=switch])]
+\end{verbatim} 
+\caption{Example showing use of {\tt PRINT\_TREE\_CATEGORIES\_ON}}
+\label{Figure:PRINT-TREE-CATEGORIES-example}
+\end{figure}

@@ -1,0 +1,138 @@
+{
+  "comment":
+
+  "This file populates the example menu of SWISH.  The 'menu' list
+   defines the groups inside the menu and their order.  Each group is
+   separated with a divider.  The 'files' section describes the example
+   files and their properties.  Only files that are assigned a group
+   appear in the menu.
+  ",
+
+ "menu":[
+   { "group": "cplint",  "rank":  9000 },
+	{ "group": "trill",    "rank":   9100 },
+   { "group": "examples",  "rank":  10000 },
+	{ "group": "tutorials","rank":  20000 },
+	{ "group": "logicmoo", "rank":  30000 },
+	{ "group": "lps",      "rank":  30001 },
+	{ "group": "admin",    "rank": 100000 }
+  ],
+  "files":
+  [
+  "# Prolog Tutorials",
+     
+    { "file":"examples.swinb",
+      "title":"Example programs",
+      "group":"examples"
+    },
+    { "file":"prolog_tutorials.swinb",
+      "title":"Prolog tutorials",
+      "group":"tutorials"
+    },
+  { "file":"rdf_examples.swinb", "title":"Using SWISH with ClioPatria and RDF queries/examples", "group":"tutorials" },
+  { "file":"dict.swinb",		 "title":"Dict tutorial" , "group":"tutorials" },
+
+"## Trill",	
+    
+  { "file":"examples_trill.swinb",
+      "title":"TRILL example programs",
+      "group":"trill"
+    },
+    
+"## LPS",	
+	{ "file":"FirstStepswithLPS.swinb",
+	"title":"First Steps with LPS",
+	"group":"lps"
+	},
+	{ "file":"lpsExamples.swinb",
+	"title":"LPS examples",
+	"group":"lps"
+	},
+	{ "file":"fintechExamples.swinb",
+	"title":"Fintech examples",
+	"group":"lps"
+	},
+	
+"## CPLINT",
+
+  { "file":"inference/inference_examples.swinb", 
+     "title":"cplint inference example programs",
+     "group":"cplint"},
+   { "file":"inference/inference_examples_R.swinb", 
+     "title":"cplint examples with graphics in R",
+     "group":"cplint"},
+   { "file":"learning/learning_examples.swinb", "title":"SLIPCOVER learning example programs",
+     "group":"cplint"},
+   { "file":"phil/phil_examples.swinb", "title":"PHIL learning example programs",
+     "group":"cplint"},
+   { "file":"lemur/lemur_examples.swinb", "title":"LEMUR learning example programs",
+     "group":"cplint"},
+   { "file":"aleph/aleph_examples.swinb","title":"ALEPH learning example programs",
+     "group":"cplint"},
+   { "file":"learning/exauc.swinb", "title":"AUC calculator",
+     "group":"cplint"},
+   { "file":"member.swinb", "title":"SLDNF tree drawing",
+     "group":"cplint"},
+     
+"# LOGICMOO",
+     
+   { "file":"logicmoo/logicmoo_examples.swinb", "title":"LogicMOO/CLIF Examples & Tutorials", "group":"logicmoo"},
+   { "file":"pfc/pfc_examples.swinb", "title":"Prolog Forward Chaining Examples & Tutorials", "group":"logicmoo" },
+   { "file":"prologmud/prologmud_examples.swinb", "title":"PrologMUD Examples & Tutorials", "group":"logicmoo" },
+  
+  
+"# SWISH",
+
+    { "file":"swish_tutorials.swinb",
+      "title":"SWISH tutorials",
+      "group":"tutorials"
+    },
+    { "file":"stats.swinb",
+      "title":"Usage statistics",
+      "group":"admin"
+    },
+
+   { "file":"chat80.swinb",
+      "title":"CHAT80: demo __hiding__ all SWISH UI elements",
+      "group":"tutorial"
+    },
+    
+"# SWISH UI",
+
+    { "file":"rendering.swinb",
+      "title":"Rendering answers __graphically__ (graphs, charts, mathjax, etc.)",
+      "group":"tutorial"
+    },
+    
+    { "file":"data_source.swinb",
+      "title":"Accessing __external data__ (CSV, SPARQL, etc.)",
+      "group":"tutorial"
+    },
+
+    { "file":"htmlcell.swinb",
+      "title":"Adding __HTML cells__ to notebooks",
+      "group":"tutorial"
+    },
+    { "file":"slider.swinb",
+      "title":"Adding __widgets__ to notebook HTML cells",
+      "group":"tutorial"
+    },
+    { "file":"jquery.swinb",
+      "title":"Control and access the SWISH interface from Prolog",
+      "group":"tutorial"
+    },
+
+    "## R tutorials",
+    { "file":"Rserve.swinb",
+      "title":"Embedding __R__ (graphs, statistics and machine learning)",
+      "group":"tutorial",
+      "requires":"plugin(r_serve)"
+    },
+
+    { "file":"Rdataframe.swinb",
+      "title":"Exchanging R data frames",
+      "group":"R",
+      "requires":"plugin(r_serve)"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+[BirthDate = 1950]<-has-[Cat]-
+		-attr->[Age],
+		<-agnt-[Eat]
+

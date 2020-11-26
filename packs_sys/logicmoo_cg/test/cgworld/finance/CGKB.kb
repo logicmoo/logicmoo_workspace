@@ -1,0 +1,1353 @@
+:-multifile(cg/4).
+:-multifile(cgc/5).
+:-multifile(isa/2).
+%:-multifile(typedef/3).
+
+:- dynamic cg/4 .
+:- dynamic cgc/5 .
+
+
+cgc(1,simple,'market',[fs(num,sing),fs(quant,lambda)],[]).
+cgc(16,simple,'financial_market',[fs(num,sing),fs(quant,lambda)],[]).
+cgc(31,simple,'financial_instrument',[fs(num,sing),fs(quant,lambda)],[]).
+cgc(50,simple,'security',[fs(num,sing),fs(quant,lambda)],[]).
+cgc(51,simple,'bond',[fs(num,sing),fs(quant,lambda)],[]).
+cgc(63,simple,'municipal_bond',[fs(num,sing),fs(quant,lambda)],[]).
+cgc(74,simple,'stock',[fs(num,sing),fs(quant,lambda)],[]).
+cgc(80,simple,'organization',[fs(num,sing),fs(quant,lambda)],[]).
+
+cgc(14,complex,_,[109],'situation: Primary market raise capital').
+cgc(19,complex,situation_liquidity,[120],'situation liquidity: converting securities into cash').
+cgc(29,complex,situation_liquidity,[132],'situation liquidity: converting money market investment into cash').
+%promjana
+cgc(22,complex,_,[122],'proposition: secondary market supports new investments').
+cgc(54,complex,_,[155],'situation: Bond is converted to common stock').
+%cgc(85,situation,_,[176],'situation: Issuing authority trades newly issued securities and loans on the primary market').
+
+cgc(2,simple,'financial_instrument',[fs(num,plur)],[]).
+cgc(3,simple,'buyer',[fs(num,plur)],[]).
+cgc(4,simple,'seller',[fs(num,plur)],[]).
+cgc(5,simple,'trade',[fs(num,sing)],[]).
+
+%$graph$102&C&5&61&57&-20561&-65536&C&3&39&21&-20561&-65536&R&47&37&-16776961&-16738666&C&4&75&22&-20561&-65536&R&71&38&-16776961&-16738666&C&1&20&34&-20561&-65536&R&39&49&-16776961&-16738666&C&2&99&31&-20561&-65536&R&84&49&-16776961&-16738666&
+cg(102,[cgr(agnt, [5, 3], _),
+        cgr(agnt, [5, 4], _),cgr(loc, [5, 1], _),
+        cgr(thm, [5, 2], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Financial market is market where buyers and sellers trade financial instruments')]).
+
+cgc(3000,complex,lambdaexpression,[102],[]).
+cgc(3001,simple,'financial_market',[fs(num,sing)],[]).
+cg(101,[cgr(def, [3001, 3000], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Financial market is market where buyers and sellers trade financial instruments')]).
+%typedef(101,'financial_market',lambda([x],102)).
+
+cgc(6,simple,'security',[fs(num,plur)],[]).
+cgc(7,simple,'primary_market',[fs(num,sing)],[]).
+cgc(8,simple,'newly_issued',[fs(num,sing)],[]).
+cgc(9,simple,'loan',[fs(num,plur)],[]).
+cgc(10,simple,'investment',[fs(num,plur)],[]).
+cgc(11,simple,'new',[fs(num,sing)],[]).
+%promjana
+cgc(12,simple,'corporate_bond',[fs(num,plur)],[]).
+cgc(13,simple,'stock',[fs(num,plur)],[]).
+cgc(15,simple,'capital',[fs(num,sing)],[]).
+cgc(17,simple,'already_issued',[fs(num,sing)],[]).
+cgc(18,simple,'secondary_market',[fs(num,sing)],[]).
+cgc(20,simple,'investor',[fs(num,plur)],[]).
+cgc(21,simple,'cash',[fs(num,sing)],[]).
+cgc(23,simple,'buyer',[fs(num,sing)],[]).
+cgc(24,simple,'seller',[fs(num,sing)],[]).
+cgc(25,simple,'access',[fs(num,sing)],[]).
+cgc(26,simple,'free',[fs(num,sing)],[]).
+cgc(27,simple,'short_term',[fs(num,sing)],[]).
+cgc(28,simple,'money_market',[fs(num,sing)],[]).
+cgc(30,simple,'money_market_investment',[fs(num,sing)],[]).
+cgc(32,simple,'lender',[fs(num,sing)],[]).
+cgc(33,simple,'borrower',[fs(num,sing)],[]).
+cgc(34,simple,'maturity',[fs(num,sing)],[]).
+cgc(35,simple,'long_term',[fs(num,sing)],[]).
+cgc(36,simple,'size',[fs(num,sing)],[]).
+cgc(37,simple,'broad',[fs(num,sing)],[]).
+cgc(38,simple,'negotiated_market',[fs(num,sing)],[]).
+cgc(39,simple,'bargain',[fs(num,sing)],[]).
+cgc(40,simple,'direct',[fs(num,sing)],[]).
+cgc(41,simple,'commodity',[fs(num,plur)],[]).
+cgc(42,simple,'deliver',[fs(num,sing)],[]).
+cgc(43,simple,'instant',[fs(num,sing)],[]).
+cgc(44,simple,'future_market',[fs(num,sing)],[]).
+cgc(45,simple,'future',[fs(num,sing)],[]).
+cgc(46,simple,'future_contract',[fs(num,plur)],[]).
+cgc(47,simple,'debt',[fs(num,sing)],[]).
+cgc(48,simple,'ownership',[fs(num,sing)],[]).
+cgc(49,simple,'corporation',[fs(num,sing)],[]).
+cgc(52,simple,'company',[fs(num,sing)],[]).
+cgc(53,simple,'common_stock',[fs(num,sing)],[]).
+cgc(55,simple,'bond',[fs(num,sing)],[]).
+cgc(56,simple,'municipal_bond',[fs(num,sing)],[]).
+cgc(57,simple,'municipal_authority',[fs(num,sing)],[]).
+cgc(58,simple,'project',[fs(num,plur)],[]).
+cgc(59,simple,'infrastructural',[fs(num,sing)],[]).
+cgc(60,simple,'mortgage',[fs(num,sing)],[]).
+cgc(61,simple,'house',[fs(num,sing)],[]).
+cgc(62,simple,'authority',[fs(num,sing)],[]).
+cgc(86,simple,'coupon',[fs(num,sing)],[]).
+cgc(64,simple,'represent',[fs(num,sing)],[]).
+cgc(65,simple,'interest',[fs(num,sing)],[]).
+cgc(66,simple,'semiannual',[fs(num,sing)],[]).
+cgc(67,simple,'industry',[fs(num,sing)],[]).
+cgc(68,simple,'defensive_stock',[fs(num,sing)],[]).
+cgc(69,simple,'recession',[fs(num,sing)],[]).
+cgc(70,simple,'price',[fs(num,sing)],[]).
+cgc(71,simple,'low',[fs(num,sing)],[]).
+cgc(72,simple,'penny_stock',[fs(num,sing)],[]).
+cgc(73,simple,'over_the_counter',[fs(num,sing)],[]).
+cgc(75,simple,'divident',[fs(num,plur)],[]).
+cgc(76,simple,'fixed',[fs(num,plur)],[]).
+cgc(77,simple,'voting_right',[fs(num,plur)],[]).
+cgc(78,simple,'floating',[fs(num,plur)],[]).
+cgc(79,simple,'private_individual',[fs(num,plur)],[]).
+cgc(81,simple,'total_worth',[fs(num,sing)],[]).
+cgc(82,simple,'market',[fs(num,sing)],[]).
+cgc(83,simple,'credit',[fs(num,sing)],[]).
+cgc(84,simple,'issuing_authority',[fs(num,sing)],[]).
+cgc(87,simple,'money_value',[fs(num,sing)],[]).
+cgc(88,simple,'buyer',[fs(num,sing)],[]).
+cgc(89,simple,'security',[fs(num,plur)],[]).
+cgc(90,simple,'loan',[fs(num,plur)],[]).
+cgc(91,simple,'access',[fs(num,sing)],[]).
+cgc(92,simple,'free',[fs(num,sing)],[]).
+cgc(93,simple,'short_term',[fs(num,sing)],[]).
+cgc(94,simple,'range',[fs(num,sing)],[]).
+cgc(95,simple,'supply',[fs(num,sing)],[]).
+cgc(96,simple,'primary_market',[fs(num,sing)],[]).
+%$graph$103&C&7&15&24&-20561&-65536&C&6&63&24&-20561&-65536&R&39&24&-16776961&-16738666&C&8&107&24&-20561&-65536&R&85&24&-16776961&-16738666&
+cg(103,[cgr(trade, [7, 6], _),
+        cgr(attr, [6, 8], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Primary market trades newly issued securities')]).
+
+%$graph$104&C&7&11&24&-20561&-65536&C&9&63&24&-20561&-65536&R&39&24&-16776961&-16738666&C&8&114&24&-20561&-65536&R&85&24&-16776961&-16738666&
+cg(104,[cgr(trade, [7, 9], _),
+        cgr(attr, [9, 8], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Primary market trades newly issued loans')]).
+
+%$graph$105&C&7&16&20&-20561&-65536&C&10&64&20&-20561&-65536&R&41&20&-16776961&-16738666&C&11&112&20&-20561&-65536&R&89&20&-16776961&-16738666&
+cg(105,[cgr(provide, [7, 10], _),
+        cgr(attr, [10, 11], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Primary market provides new investments')]).
+
+%$graph$106&C&7&12&21&-20561&-65536&C&12&69&21&-20561&-65536&R&39&21&-16776961&-16738666&C&8&115&21&-20561&-65536&R&93&21&-16776961&-16738666&
+
+
+cg(106,[cgr(trade, [7, 12], _),
+        cgr(attr, [12, 8], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Primary market trades newly issued corporate bonds')]).
+
+%$graph$107&C&7&69&52&-20561&-65536&C&10&15&52&-20561&-65536&R&42&52&-16776961&-16738666&C&11&15&15&-20561&-65536&R&15&32&-16776961&-16738666&C&6&113&52&-20561&-65536&R&92&52&-16776961&-16738666&C&8&113&15&-20561&-65536&R&113&30&-16776961&-16738666&
+
+cg(107,[cgr(provide, [7, 10], _),
+        cgr(attr, [10, 11], _),cgr(trade, [7, 6], _),
+        cgr(attr, [6, 8], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Primary market trades newly issued securities and provides new investments')]).
+
+%$graph$100&C&7&66&42&-20561&-65536&C&10&111&42&-20561&-65536&R&88&42&-16776961&-16738666&C&11&111&12&-20561&-65536&R&111&26&-16776961&-16738666&C&13&14&42&-20561&-65536&R&38&42&-16776961&-16738666&C&8&14&10&-20561&-65536&R&14&26&-16776961&-16738666&
+
+cg(100,[cgr(provide, [7, 10], _),
+        cgr(attr, [10, 11], _),cgr(operate_with, [7, 13], _),
+        cgr(attr, [13, 8], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Primary market operates with newly issued stocks and provides new investments')]).
+
+
+%$graph$108&X&14&61&23&50&10&-16777216&-3618561&C&96&28&57&-20561&-65536&C&7&24&23&-20561&-65536&C&87&64&23&-20561&-65536&R&43&23&-16776961&-16738666&C&15&101&23&-20561&-65536&R&82&23&-16776961&-16738666&R&52&50&-16776961&-16738666&
+cg(108,[cgr(goal, [96, 14], _)], 
+        [],
+        [fs(kind,context),
+        fs(comment,'The goal of primary market is to raise capital')]).
+%*The goal of primary market is to raise money value of capital.???
+
+%$graph$109&C&7&16&18&-20561&-65536&C&87&68&18&-20561&-65536&R&45&18&-16776961&-16738666&C&15&114&18&-20561&-65536&R&92&18&-16776961&-16738666&
+cg(109,[cgr(raise, [7, 87], _),
+        cgr(of, [87, 15], _)], [],
+        
+        [fs(kind,body_of_context),
+        fs(comment,'Primary market raise money value of capital')]).
+
+%$graph$110&C&7&9&26&-20561&-65536&C&15&47&26&-20561&-65536&R&28&26&-16776961&-16738666&C&10&83&26&-20561&-65536&R&66&26&-16776961&-16738666&C&11&121&26&-20561&-65536&R&105&26&-16776961&-16738666&
+cg(110,[cgr(provide, [7, 15], _),
+        cgr(rcpt, [15, 10], _),cgr(attr, [10, 11], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Primary market provides capital for new investments')]).
+
+%$graph$111&C&16&15&33&-20561&-65536&C&2&73&33&-20561&-65536&R&45&33&-16776961&-16738666&C&8&118&33&-20561&-65536&R&98&33&-16776961&-16738666&
+cg(111,[cgr(trade, [16, 2], _),
+        cgr(attr, [2, 8], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Primary market is a financial market which trades newly issued financial instruments')]).
+
+cgc(3002,complex,lambdaexpression,[111],[]).
+cgc(3003,simple,'primary_market',[fs(num,sing)],[]).
+cg(112,[cgr(def, [3003, 3002], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Primary market is a financial market which trades newly issued financial instruments')]).
+%typedef(112,'primary_market',lambda([x],111)).
+
+%$graph$113&C&16&15&21&-20561&-65536&C&6&68&21&-20561&-65536&R&45&21&-16776961&-16738666&C&17&116&21&-20561&-65536&R&91&21&-16776961&-16738666&
+cg(113,[cgr(operate_with, [16, 6], _),
+        cgr(attr, [6, 17], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Secondary market is a financial market which operates with already issued securities')]).
+
+cgc(3004,complex,lambdaexpression,[113],[]).
+cgc(3005,simple,'primary_market',[fs(num,sing)],[]).
+cg(114,[cgr(def, [3005, 3004], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Primary market is a financial market which trades newly issued financial instruments')]).
+%typedef(114,'secondary_market',lambda([x],113)).
+
+%$graph$115&C&16&17&19&-20561&-65536&C&9&69&19&-20561&-65536&R&47&19&-16776961&-16738666&C&17&114&19&-20561&-65536&R&91&19&-16776961&-16738666&
+cg(115,[cgr(operate_with, [16, 9], _),
+        cgr(attr, [9, 17], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Secondary market is a financial market which operates with already issued loans')]).
+
+cgc(3006,complex,lambdaexpression,[115],[]).
+cgc(3007,simple,'primary_market',[fs(num,sing)],[]).
+cg(116,[cgr(def, [3007, 3006], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Secondary market is a financial market which operates with already issued loans')]).
+%typedef(116,'secondary_market',lambda([x],115)).
+
+%$graph$117&C&18&14&25&-20561&-65536&C&6&63&25&-20561&-65536&R&39&25&-16776961&-16738666&C&17&116&25&-20561&-65536&R&89&25&-16776961&-16738666&
+cg(117,[cgr(trade, [18, 6], _),
+        cgr(attr, [6, 17], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Secondary market trades already issued securities')]).
+
+%$graph$118&C&18&14&18&-20561&-65536&C&9&59&18&-20561&-65536&R&39&18&-16776961&-16738666&C&17&102&18&-20561&-65536&R&79&18&-16776961&-16738666&
+cg(118,[cgr(trade, [18, 9], _),
+        cgr(attr, [9, 17], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Secondary market trades already issued loans')]).
+
+%$graph$119&X&19&54&22&30&10&-16777216&-3618561&C&18&16&60&-20561&-65536&C&6&35&22&-20561&-65536&C&21&74&22&-20561&-65536&R&54&22&-16776961&-16738666&R&34&42&-16776961&-16738666&C&20&91&59&-20561&-65536&R&75&43&-16776961&-16738666&
+cg(119,[cgr(provide, [18, 19], _),
+        cgr(rcpt, [19, 20], _)], [],
+        
+        [fs(kind,context),fs(comment,'Secondary market provides investors with liquidity')]).
+
+%$graph$120&C&6&24&28&-20561&-65536&C&21&79&28&-20561&-65536&R&48&28&-16776961&-16738666&
+cg(120,[cgr(convert_into, [6, 21], _)], 
+        [],
+        [fs(kind,body_of_context),
+        fs(comment,'situation liquidity : converting securities into cash.')]).
+
+
+% cg(21,[cgr(not,[22],_)],[],[fs(kind,neg_context),fs(comment,'Secondary market does not support new investment')]).
+%
+%
+%cg(121,[cgr(not, [22, -1], _)],
+%        [],
+%        [fs(kind,neg_context),
+%        fs(comment,'Secondary market does not support new investment')]).
+
+%$graph$122&C&18&20&19&-20561&-65536&C&10&67&19&-20561&-65536&R&44&19&-16776961&-16738666&C&11&112&19&-20561&-65536&R&90&19&-16776961&-16738666&
+cg(122,[cgr(support, [18, 10], _),
+        cgr(attr, [10, 11], _)], [],
+        
+        [fs(kind,body_of_context),
+        fs(comment,'Secondary market  supports new investment')]).
+
+%$graph$123&C&16&18&12&-20561&-65536&C&6&89&12&-20561&-65536&R&58&12&-16776961&-16738666&C&24&51&34&-20561&-65536&R&35&25&-16776961&-16738666&C&25&89&42&-20561&-65536&R&66&42&-16776961&-16738666&C&26&128&42&-20561&-65536&R&110&42&-16776961&-16738666&C&23&18&48&-20561&-65536&R&18&28&-16776961&-16738666&C&91&36&65&-20561&-65536&R&18&65&-16776961&-16738666&C&92&73&65&-20561&-65536&R&53&65&-16776961&-16738666&
+cg(123,[cgr(trade, [16, 6], _),
+        cgr(agnt, [16, 24], _),cgr(poss, [24, 25], _),
+        cgr(attr, [25, 26], _),cgr(rcpt, [16, 23], _),
+        cgr(poss, [23, 91], _),cgr(attr, [91, 92], _)], 
+        [],
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Open market is a financial market which trades securities and where buyer and seller have free access')]).
+cgc(3008,complex,lambdaexpression,[123],[]).
+cgc(3009,simple,'open_market',[fs(num,sing)],[]).
+cg(124,[cgr(def, [3009, 3008], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Open market is a financial market which trades securities and where buyer and seller have free access')]).
+%typedef(124,'open_market',lambda([x],123)).
+
+%$graph$125&C&16&16&13&-20561&-65536&C&9&72&13&-20561&-65536&R&51&13&-16776961&-16738666&C&24&58&38&-20561&-65536&R&39&28&-16776961&-16738666&C&25&97&38&-20561&-65536&R&79&38&-16776961&-16738666&C&26&136&38&-20561&-65536&R&115&38&-16776961&-16738666&C&23&16&45&-20561&-65536&R&16&29&-16776961&-16738666&C&91&41&62&-20561&-65536&R&16&62&-16776961&-16738666&C&92&89&62&-20561&-65536&R&67&62&-16776961&-16738666&
+cg(125,[cgr(trade, [16, 9], _),
+        cgr(agnt, [16, 24], _),cgr(poss, [24, 25], _),
+        cgr(attr, [25, 26], _),cgr(rcpt, [16, 23], _),
+        cgr(poss, [23, 91], _),cgr(attr, [91, 92], _)], 
+        [],
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Open market is a financial market which trades loans and where buyer and seller have free access')]).
+
+cgc(3010,complex,lambdaexpression,[125],[]).
+cgc(3011,simple,'open_market',[fs(num,sing)],[]).
+cg(126,[cgr(def, [3011, 3010], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Open market is a financial market which trades loans and where buyer and seller have free access')]).
+%typedef(126,'open_market',lambda([x],125)).
+
+%$graph$127&C&16&18&18&-20561&-65536&C&6&82&18&-20561&-65536&R&57&18&-16776961&-16738666&C&27&130&18&-20561&-65536&R&108&18&-16776961&-16738666&C&9&18&64&-20561&-65536&R&18&41&-16776961&-16738666&C&93&92&64&-20561&-65536&R&59&64&-16776961&-16738666&
+%promjana
+cg(127,[cgr(operate_with, [16, 6], _),
+        cgr(attr, [6, 27], _),cgr(operate_with, [16, 9], _),
+        cgr(attr, [9, 93], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Money market is a financial market which operates with short term securities and loans')]).
+
+cgc(3012,complex,lambdaexpression,[127],[]).
+cgc(3013,simple,'money_market',[fs(num,sing)],[]).
+cg(128,[cgr(def, [3013, 3012], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Money market is a financial market which operates with short term securities and loans')]).
+%typedef(128,'money_market',lambda([x],127)).
+
+%$graph$129&C&28&18&17&-20561&-65536&C&6&68&17&-20561&-65536&R&42&17&-16776961&-16738666&C&27&111&17&-20561&-65536&R&90&17&-16776961&-16738666&
+cg(129,[cgr(trade, [28, 6], _),
+        cgr(attr, [6, 27], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Money market trades with short term securities')]).
+
+%$graph$130&C&28&19&22&-20561&-65536&C&9&68&22&-20561&-65536&R&41&22&-16776961&-16738666&C&27&113&22&-20561&-65536&R&92&22&-16776961&-16738666&
+cg(130,[cgr(trade, [28, 9], _),
+        cgr(attr, [9, 27], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Money market trades with short term loans')]).
+
+%$graph$131&X&29&54&21&38&10&-16777216&-3618561&C&28&25&49&-20561&-65536&C&30&34&21&-20561&-65536&C&21&82&21&-20561&-65536&R&63&21&-16776961&-16738666&R&54&49&-16776961&-16738666&
+cg(131,[cgr(provide, [28, 29], _)], 
+        [],
+        [fs(kind,context),
+        fs(comment,'Money market provides liquidity')]).
+
+%$graph$132&C&30&86&20&-20561&-65536&C&21&31&20&-20561&-65536&R&55&20&-16776961&-16738666&
+cg(132,[cgr(convert_into, [30, 21], _)], 
+        [],
+        [fs(kind,body_of_context),
+        fs(comment,'situation liquidity : converting money market instrument into cash.')]).
+
+%$graph$133&C&28&18&12&-20561&-65536&C&6&18&57&-20561&-65536&R&18&36&-16776961&-16738666&C&27&76&57&-20561&-65536&R&51&57&-16776961&-16738666&C&24&63&42&-20561&-65536&R&44&29&-16776961&-16738666&C&23&73&12&-20561&-65536&R&49&12&-16776961&-16738666&
+cg(133,[cgr(obj, [28, 6], _),
+        cgr(attr, [6, 27], _),cgr(agnt, [28, 24], _),
+        cgr(rcpt, [28, 23], _)], [],
+        
+        [fs(kind,normal),fs(comment,'On the money market buyer and seller trades short term securities')]).
+
+%$graph$134&C&31&20&14&-20561&-65536&C&34&82&14&-20561&-65536&R&58&14&-16776961&-16738666&C&27&82&50&-20561&-65536&R&82&33&-16776961&-16738666&C&32&62&41&-20561&-65536&R&45&30&-16776961&-16738666&C&33&20&50&-20561&-65536&R&20&34&-16776961&-16738666&
+
+%promenen!!!;relacii sell&buy
+cg(134,[cgr(char, [31, 34], _),
+        cgr(attr, [34, 27], _),cgr(sell, [32, 31], _),
+        cgr(buy, [33, 31], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Money market instrument is a financial instrument which with short term maturity sold by lender and brought by borrower')]).
+
+cgc(3014,complex,lambdaexpression,[134],[]).
+cgc(3015,simple,'money_market_instrument',[fs(num,sing)],[]).
+cg(135,[cgr(def, [3015, 3014], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Money market instrument is a financial instrument which with short term maturity sold by lender and brought by borrower')]).
+%typedef(135,'money_market_instrument',lambda([x],134)).
+
+%$graph$136&C&16&15&8&-20561&-65536&C&10&15&69&-20561&-65536&R&15&35&-16776961&-16738666&C&35&90&69&-20561&-65536&R&56&69&-16776961&-16738666&C&94&62&55&-20561&-65536&R&38&55&-16776961&-16738666&C&37&120&34&-20561&-65536&R&93&34&-16776961&-16738666&C&36&113&55&-20561&-65536&R&85&55&-16776961&-16738666&
+cg(136,[cgr(trade, [16, 10], _),
+        cgr(attr, [10, 35], _),cgr(agnt, [94, 10], _),
+        cgr(manr, [94, 37], _),cgr(dim, [94, 36], _)], 
+        [],
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,' Capital market is a financial market which trades long term investments which range broadly in size')]).
+
+cgc(3016,complex,lambdaexpression,[136],[]).
+cgc(3017,simple,'capital_market',[fs(num,sing)],[]).
+cg(137,[cgr(def, [3017, 3016], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,' Capital market is a financial market which trades long term investments which range broadly in size')]).
+%typedef(137,'capital_market',lambda([x],136)).
+
+%$graph$138&C&38&19&11&-20561&-65536&C&6&19&63&-20561&-65536&R&19&32&-16776961&-16738666&C&39&76&11&-20561&-65536&R&48&11&-16776961&-16738666&C&24&56&51&-20561&-65536&R&56&32&-16776961&-16738666&C&23&93&51&-20561&-65536&R&93&32&-16776961&-16738666&C&40&123&11&-20561&-65536&R&97&11&-16776961&-16738666&
+
+%promenen!!!;relacii agnt&rcpt
+cg(138,[cgr(trade, [38, 6], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Negotiated market trades securities with direct bargaining between buyer and seller')]).
+
+%$graph$139&C&38&23&12&-20561&-65536&C&9&23&53&-20561&-65536&R&23&32&-16776961&-16738666&C&39&80&12&-20561&-65536&R&49&12&-16776961&-16738666&C&24&64&46&-20561&-65536&R&64&28&-16776961&-16738666&C&23&96&47&-20561&-65536&R&96&28&-16776961&-16738666&C&40&122&12&-20561&-65536&R&102&12&-16776961&-16738666&
+
+%promenen!!!;relacii agnt&rcpt
+cg(139,[cgr(trade, [38, 9], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Negotiated market trades loans with direct bargaining between buyer and seller')]).
+
+%$graph$140&C&16&20&15&-20561&-65536&C&24&20&58&-20561&-65536&R&20&39&-16776961&-16738666&C&23&65&45&-20561&-65536&R&47&34&-16776961&-16738666&C&41&76&15&-20561&-65536&R&52&15&-16776961&-16738666&C&42&126&15&-20561&-65536&R&99&15&-16776961&-16738666&C&43&126&63&-20561&-65536&R&126&42&-16776961&-16738666&
+%promjana
+cg(140,[cgr(agnt, [16, 24], _),
+        cgr(rcpt, [16, 23], _),cgr(obj, [16, 41], _),
+        cgr(method, [41, 42], _),cgr(attr, [42, 43], _)], 
+        [],
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Spot market is a financial market where people buy and sell commodities for instant delivery')]).
+
+cgc(3018,complex,lambdaexpression,[140],[]).
+cgc(3019,simple,'spot_market',[fs(num,sing)],[]).
+cg(141,[cgr(def, [3019, 3018], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Spot market is a financial market where people buy and sell commodities for instant delivery')]).
+%typedef(141,'spot_market',lambda([x],140)).
+
+%$graph$142&C&16&15&15&-20561&-65536&C&24&60&46&-20561&-65536&R&39&33&-16776961&-16738666&C&23&86&15&-20561&-65536&R&55&15&-16776961&-16738666&C&2&15&65&-20561&-65536&R&15&38&-16776961&-16738666&C&42&78&65&-20561&-65536&R&50&65&-16776961&-16738666&C&43&123&65&-20561&-65536&R&101&65&-16776961&-16738666&
+
+%promjana
+cg(142,[cgr(agnt, [16, 24], _),
+        cgr(rcpt, [16, 23], _),cgr(obj, [16, 2], _),
+        cgr(method, [2, 42], _),cgr(attr, [42, 43], _)], 
+        [],
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Spot market is a financial market where people buy and sell financial instruments for instant delivery')]).
+
+cgc(3020,complex,lambdaexpression,[142],[]).
+cgc(3021,simple,'spot_market',[fs(num,sing)],[]).
+cg(143,[cgr(def, [3021, 3020], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Spot market is a financial market where people buy and sell financial instruments for instant delivery')]).
+%typedef(143,'spot_market',lambda([x],142)).
+
+%$graph$144&C&44&22&11&-20561&-65536&C&24&57&49&-20561&-65536&R&38&30&-16776961&-16738666&C&23&22&58&-20561&-65536&R&22&34&-16776961&-16738666&C&2&81&11&-20561&-65536&R&53&11&-16776961&-16738666&C&42&112&35&-20561&-65536&R&112&11&-16776961&-16738666&C&45&90&58&-20561&-65536&R&112&58&-16776961&-16738666&
+cg(144,[cgr(agnt, [44, 24], _),
+        cgr(rcpt, [44, 23], _),cgr(obj, [44, 2], _),
+        cgr(method, [2, 42], _),cgr(attr, [42, 45], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'On the future market people buy and sell financial instruments for future delivery')]).
+
+%$graph$145&C&44&28&20&-20561&-65536&C&41&109&20&-20561&-65536&R&71&20&-16776961&-16738666&
+cg(145,[cgr(trade, [44, 41], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Future market trades commodities')]).
+
+%$graph$146&C&44&24&17&-20561&-65536&C&46&100&17&-20561&-65536&R&60&17&-16776961&-16738666&
+cg(146,[cgr(trade, [44, 46], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Future market trades future contracts')]).
+
+%$graph$147&C&31&27&20&-20561&-65536&C&47&86&20&-20561&-65536&R&61&20&-16776961&-16738666&C&49&130&20&-20561&-65536&R&108&20&-16776961&-16738666&
+%promjana
+cg(147,[cgr(represent, [31, 47], _),
+        cgr(of, [47, 49], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Security is a financial instrument which represents debt of corporation')]).
+
+cgc(3022,complex,lambdaexpression,[147],[]).
+cgc(3023,simple,'security',[fs(num,sing)],[]).
+cg(148,[cgr(def, [3023, 3022], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Security is a financial instrument which represents debt of corporation')]).
+
+%typedef(148,'security',lambda([x],147)).
+
+%$graph$149&C&31&21&22&-20561&-65536&C&48&83&22&-20561&-65536&R&58&22&-16776961&-16738666&C&49&131&22&-20561&-65536&R&109&22&-16776961&-16738666&
+%promjana
+cg(149,[cgr(represent, [31, 48], _),
+        cgr(in, [48, 49], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Stock is a financial instrument which represents ownership in corporation')]).
+
+cgc(3024,complex,lambdaexpression,[149],[]).
+cgc(3025,simple,'stock',[fs(num,sing)],[]).
+cg(150,[cgr(def, [3025, 3024], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Stock is a financial instrument which represents ownership in corporation')]).
+%typedef(150,'stock',lambda([x],149)).
+
+%$graph$151&C&50&25&21&-20561&-65536&C&47&76&21&-20561&-65536&R&55&21&-16776961&-16738666&C&49&127&21&-20561&-65536&R&100&21&-16776961&-16738666&
+cg(151,[cgr(represent, [50, 47], _),
+        cgr(of, [47, 49], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Bond is a security which represents debt of corporation')]).
+
+cgc(3026,complex,lambdaexpression,[151],[]).
+cgc(3027,simple,'bond',[fs(num,sing)],[]).
+cg(152,[cgr(def, [3027, 3026], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Bond is a security which represents debt of corporation')]).
+%typedef(152,'bond',lambda([x],151)).
+
+%$graph$153&C&51&24&20&-20561&-65536&C&53&78&20&-20561&-65536&R&51&20&-16776961&-16738666&C&52&127&20&-20561&-65536&R&106&20&-16776961&-16738666&
+
+%promenen!!!;comentara
+cg(153,[cgr(convert_into, [51, 53], _),
+        cgr(of, [53, 52], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Convertible bond is a bond converted into common stock of company')]).
+
+cgc(3028,complex,lambdaexpression,[153],[]).
+cgc(3029,simple,'convertible_bond',[fs(num,sing)],[]).
+cg(154,[cgr(reduce, [54, 47], _),
+        cgr(of, [47, 49], _)], [],
+        
+        [fs(kind,context),fs(comment,'When a bond is converted to common stock, the corporate debt is reduced')]).
+%typedef(154,'convertible_bond',lambda([x],153)).
+
+%$graph$154&X&54&61&20&34&10&-16777216&-3618561&C&55&37&20&-20561&-65536&C&53&81&20&-20561&-65536&R&56&20&-16776961&-16738666&C&47&84&43&-20561&-65536&R&61&43&-16776961&-16738666&C&49&129&43&-20561&-65536&R&107&43&-16776961&-16738666&
+cg(154,[cgr(reduce, [54, 47], _),
+        cgr(of, [47, 49], _)], [],
+        
+        [fs(kind,context),fs(comment,'When a bond is converted to common stock, the corporate debt is reduced')]).
+
+%$graph$155&C&55&32&18&-20561&-65536&C&53&84&18&-20561&-65536&R&55&18&-16776961&-16738666&
+cg(155,[cgr(convert_into, [55, 53], _)], 
+        [],
+        [fs(kind,'body_of_context'),
+        fs(comment,'Bond convert into common stock')]).
+
+
+%$graph$156&C&56&25&18&-20561&-65536&C&57&25&65&-20561&-65536&R&25&40&-16776961&-16738666&C&58&95&18&-20561&-65536&R&58&18&-16776961&-16738666&C&59&119&56&-20561&-65536&R&119&30&-16776961&-16738666&R&58&43&-16776961&-16738666&
+
+%promenen
+cg(156,[cgr(issue_by, [56, 57], _),
+        cgr(pay_for, [56, 58], _),
+        cgr(attr, [58, 59], _),cgr(poss, [57, 58], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Municipal bonds are issued by municipal authority to pay for its infrastructural projects')]).
+
+%$graph$157&C&63&23&15&-20561&-65536&C&60&76&15&-20561&-65536&R&53&15&-16776961&-16738666&C&61&122&15&-20561&-65536&R&97&15&-16776961&-16738666&
+cg(157,[cgr(secured_by, [63, 60], _),
+        cgr(of, [60, 61], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Housing bond is a municipal bond secured by mortgage of house')]).
+
+cgc(3030,complex,lambdaexpression,[157],[]).
+cgc(3031,simple,'housing_bond',[fs(num,sing)],[]).
+cg(158,[cgr(def, [3031, 3030], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Housing bond is a municipal bond secured by mortgage of house')]).
+%typedef(158,'housing_bond',lambda([x],157)).
+
+%$graph$159&C&63&27&16&-20561&-65536&C&34&80&16&-20561&-65536&R&55&16&-16776961&-16738666&C&27&128&16&-20561&-65536&R&104&16&-16776961&-16738666&
+cg(159,[cgr(char, [63, 34], _),
+        cgr(attr, [34, 27], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Municipal note is a municipal bond with short term maturity')]).
+
+cgc(3032,complex,lambdaexpression,[159],[]).
+cgc(3033,simple,'municipal_note',[fs(num,sing)],[]).
+cg(160,[cgr(def, [3033, 3032], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Municipal note is a municipal bond with short term maturity')]).
+%typedef(160,'municipal_note',lambda([x],159)).
+
+%$graph$161&C&51&15&16&-20561&-65536&C&86&15&50&-20561&-65536&R&15&34&-16776961&-16738666&C&64&80&50&-20561&-65536&R&49&50&-16776961&-16738666&C&65&80&16&-20561&-65536&R&80&35&-16776961&-16738666&R&43&16&-16776961&-16738666&C&66&118&50&-20561&-65536&R&108&30&-16776961&-16738666&
+cg(161,[cgr(attr, [51, 86], _),
+        cgr(goal, [86, 64], _),cgr(obj, [64, 65], _),
+        cgr(attr, [51, 65], _),cgr(att, [65, 66], _)], 
+        [],
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Coupon bond is a bond with coupons representing semiannual interest payments attached')]).
+
+cgc(3034,complex,lambdaexpression,[161],[]).
+cgc(3035,simple,'coupon_bond',[fs(num,sing)],[]).
+cg(162,[cgr(def, [3035, 3034], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Coupon bond is a bond with coupons representing semiannual interest payments attached')]).
+%typedef(162,'coupon_bond',lambda([x],161)).
+
+%$graph$163&C&68&22&15&-20561&-65536&C&67&88&36&-20561&-65536&R&49&36&-16776961&-16738666&C&69&88&15&-20561&-65536&R&59&15&-16776961&-16738666&
+cg(163,[cgr(issued_by, [68, 67], _),
+        cgr(stable_in, [68, 69], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Defensive stock is issued by industry and is stable in recession')]).
+
+%$graph$164&C&72&21&18&-20561&-65536&C&70&76&18&-20561&-65536&R&53&18&-16776961&-16738666&C&71&108&40&-20561&-65536&R&108&18&-16776961&-16738666&C&73&84&54&-20561&-65536&R&56&37&-16776961&-16738666&
+
+%promenen
+cg(164,[cgr(char, [72, 70], _),
+        cgr(attr, [70, 71], _),cgr(trade, [72, 73], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Penny stock has low price and trade over the counter')]).
+
+%$graph$165&C&74&16&19&-20561&-65536&C&75&69&19&-20561&-65536&R&45&19&-16776961&-16738666&C&76&122&19&-20561&-65536&R&95&19&-16776961&-16738666&
+cg(165,[cgr(provide, [74, 75], _),
+        cgr(attr, [75, 76], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Preferred stock is a stock with fixed dividents')]).
+
+cgc(3036,complex,lambdaexpression,[165],[]).
+cgc(3037,simple,'preferred_stock',[fs(num,sing)],[]).
+cg(166,[cgr(def, [3037, 3036], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Preferred stock is a stock with fixed dividents')]).
+%typedef(166,'preferred_stock',lambda([x],165)).
+
+%$graph$167&C&74&21&15&-20561&-65536&C&77&21&52&-20561&-65536&R&21&33&-16776961&-16738666&C&75&70&15&-20561&-65536&R&47&15&-16776961&-16738666&C&78&96&36&-20561&-65536&R&96&15&-16776961&-16738666&
+
+%promenen!!!
+cg(167,[cgr(provide, [74, 77], _),
+        cgr(provide, [74, 75], _),
+        cgr(attr, [75, 78], _)], [],
+        
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Common stock is a stock with floating dividents and provide voting rights')]).
+
+cgc(3038,complex,lambdaexpression,[167],[]).
+cgc(3039,simple,'common_stock',[fs(num,sing)],[]).
+cg(168,[cgr(def, [3039, 3038], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Common stock is a stock with floating dividents and provide voting rights')]).
+%typedef(168,'common_stock',lambda([x],167)).
+
+%$graph$169&C&95&20&42&-20561&-65536&C&80&20&10&-20561&-65536&R&20&26&-16776961&-16738666&C&9&70&42&-20561&-65536&R&40&42&-16776961&-16738666&C&27&125&42&-20561&-65536&R&99&42&-16776961&-16738666&C&79&52&60&-20561&-65536&R&20&60&-16776961&-16738666&
+
+%promenen
+cg(169,[cgr(agnt, [95, 80], _),
+        cgr(obj, [95, 9], _),cgr(attr, [9, 27], _),
+        cgr(rcpt, [95, 79], _)], [],
+        
+        [fs(kind,'body_of_concept_type_def'),
+        fs(comment,'Bank is an organization which supply private individuals with short term loans')]).
+
+cgc(3040,complex,lambdaexpression,[169],[]).
+cgc(3041,simple,'bank',[fs(num,sing)],[]).
+cg(170,[cgr(def, [3041, 3040], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Bank is an organization which supply private individuals with short term loans')]).
+%typedef(170,'bank',lambda([x],169)).
+
+%$graph$171&C&80&17&14&-20561&-65536&C&81&68&14&-20561&-65536&R&45&14&-16776961&-16738666&C&13&118&14&-20561&-65536&R&90&14&-16776961&-16738666&
+%promjana
+cg(171,[cgr(attr, [80, 81], _),
+        cgr(divide_into, [81, 13], _)], 
+        [],
+        [fs(kind,body_of_concept_type_def),
+        fs(comment,'Corporatin is an organization in which the total worth is divided into stocks')]).
+
+cgc(3042,complex,lambdaexpression,[171],[]).
+cgc(3043,simple,'corporation',[fs(num,sing)],[]).
+cg(172,[cgr(def, [3043, 3042], _)], 
+        [],
+        [fs(kind,typedef),
+        fs(comment,'Corporatin is an organization in which the total worth is divided into stocks')]).
+%typedef(172,'corporation',lambda([x],171)).
+
+%$graph$173&C&5&23&59&-20561&-65536&C&32&92&40&-20561&-65536&R&48&40&-16776961&-16738666&C&2&23&18&-20561&-65536&R&23&40&-16776961&-16738666&C&82&105&59&-20561&-65536&R&70&59&-16776961&-16738666&C&83&54&18&-20561&-65536&
+
+%promenen!!!
+cg(173,[cgr(agnt, [5, 32], _),
+        cgr(obj, [5, 2], _),cgr(loc, [5, 82], _)], 
+        [identity_line([2,83])], [fs(kind,normal),
+        fs(comment,'On the market lender trades financial instruments called credit. ')]).
+
+%$graph$174&C&5&71&10&-20561&-65536&C&33&135&10&-20561&-65536&R&105&10&-16776961&-16738666&C&2&25&10&-20561&-65536&R&52&10&-16776961&-16738666&C&1054&133&23&-20561&-65536&R&99&23&-16776961&-16738666&C&15&49&25&-20561&-65536&
+
+%promenen!!!
+cg(174,[cgr(agnt, [5, 33], _),
+        cgr(obj, [5, 2], _),cgr(loc, [5, 1054], _)], 
+        [identity_line([2,15])], [fs(kind,normal),
+        fs(comment,'On the financial market borrower trades financial instruments called capital.')]).
+
+
+
+%$graph$175&C&18&116&12&-20561&-65536&C&6&105&46&-20561&-65536&R&105&29&-16776961&-16738666&C&17&85&67&-20561&-65536&R&105&67&-16776961&-16738666&C&9&56&77&-20561&-65536&R&116&77&-16776961&-16738666&R&68&67&-16776961&-16738666&C&23&57&12&-20561&-65536&R&84&12&-16776961&-16738666&C&24&37&29&-20561&-65536&R&68&23&-16776961&-16738666&C&7&14&41&-20561&-65536&C&88&14&11&-20561&-65536&R&14&25&-16776961&-16738666&C&84&14&77&-20561&-65536&R&14&59&-16776961&-16738666&C&89&47&40&-20561&-65536&R&33&57&-16776961&-16738666&C&8&85&35&-20561&-65536&R&63&35&-16776961&-16738666&C&90&50&64&-20561&-65536&R&40&77&-16776961&-16738666&R&75&52&-16776961&-16738666&
+
+%promenen!!!
+cg(175,[cgr(trade, [18, 6], _),
+        cgr(attr, [6, 17], _),cgr(trade, [18, 9], _),
+        cgr(attr, [9, 17], _),cgr(rcpt, [18, 23], _),
+        cgr(agnt, [18, 24], _),cgr(rcpt, [7, 88], _),
+        cgr(agnt, [7, 84], _),cgr(trade, [84, 89], _),
+        cgr(attr, [89, 8], _),cgr(trade, [84, 90], _),
+        cgr(attr, [90, 8], _)], [identity_line([24,88])], 
+        [fs(kind,context),fs(comment,'On the secondary market buyer and seller trade already issued securities and loans')]).
+%*tova e tvardenieto koeto opisva gorniat graf, moje bi to trjabva da e kato komenter na %grafa? 'On the primary market issuing authority/seller and buyer trade newly issued %securities and loans,buyer on the primary market is seller on the secondary market and on %the secondary market buyer and seller trade already issued securities and loans.'
+
+%$graph$176&C&7&101&16&-20561&-65536&C&23&119&54&-20561&-65536&R&107&34&-16776961&-16738666&C&84&53&31&-20561&-65536&R&77&16&-16776961&-16738666&C&6&64&53&-20561&-65536&R&89&53&-16776961&-16738666&C&8&14&53&-20561&-65536&R&38&53&-16776961&-16738666&C&9&14&16&-20561&-65536&R&37&16&-16776961&-16738666&R&14&36&-16776961&-16738666&
+cg(176,[cgr(rcpt, [7, 23], _),
+        cgr(agnt, [7, 84], _),cgr(trade, [84, 6], _),
+        cgr(attr, [6, 8], _),cgr(trade, [84, 9], _),
+        cgr(attr, [9, 8], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Issuing authority trades newly issued securities and loans on the primary market')]).
+%relation definitions
+cgc(1000,simple,'entity',[fs(num,sing),fs(quant,lambda)],[]). %EntityX
+cgc(1001,simple,'entity',[fs(num,sing),fs(quant,lambda)],[]). %EntityY
+cgc(1002,simple,'animate',[fs(num,sing),fs(quant,lambda)],[]). %AnimateX
+cgc(1003,simple,'entity',[fs(num,sing),fs(quant,lambda)],[]). %AnimateY
+
+cgc(1004,simple,'operate',[],[]).
+%$graph$1005&C&1004&56&13&-20561&-65536&C&1000&12&13&-20561&-65536&R&36&13&-16776961&-16738666&C&1001&100&13&-20561&-65536&R&78&13&-16776961&-16738666&
+cg(1005,[cgr(agnt, [1004, 1000], _),
+        cgr(with, [1004, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation operate_with')]).
+
+cgc(3044,complex,lambdaexpression,[1005],[]).
+cgc(3045,simple,'operate_with',[fs(num,sing)],[]).
+cg(1006,[cgr(def, [3045, 3044], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation operate_with')]).
+%reldef(1006,'operate_with',labda([x,y],1005)).
+
+cgc(1007,simple,'provide',[],[]).
+%$graph$1008&C&1007&54&17&-20561&-65536&C&1000&14&17&-20561&-65536&R&37&17&-16776961&-16738666&C&1001&97&17&-20561&-65536&R&76&17&-16776961&-16738666&
+cg(1008,[cgr(agnt, [1007, 1000], _),
+        cgr(obj, [1007, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation provide')]).
+
+cgc(3046,complex,lambdaexpression,[1008],[]).
+cgc(3047,simple,'provide',[fs(num,sing)],[]).
+cg(1009,[cgr(def, [3047, 3046], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation provide')]).
+%reldef(1009,'provide',labda([x,y],1008)).
+
+cgc(1010,simple,'trade',[],[]).
+%$graph$1011&C&1010&59&13&-20561&-65536&C&1000&18&13&-20561&-65536&R&41&13&-16776961&-16738666&C&1001&100&13&-20561&-65536&R&79&13&-16776961&-16738666&
+cg(1011,[cgr(agnt, [1010, 1000], _),
+        cgr(obj, [1010, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation trade')]).
+
+cgc(3048,complex,lambdaexpression,[1011],[]).
+cgc(3049,simple,'trade',[fs(num,sing)],[]).
+cg(1012,[cgr(def, [3049, 3048], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation trade')]).
+%reldef(1012,'trade',labda([x,y],1011)).
+
+cgc(1013,simple,'raise',[],[]).
+%$graph$1014&C&1013&55&16&-20561&-65536&C&1000&15&16&-20561&-65536&R&37&16&-16776961&-16738666&C&1001&99&16&-20561&-65536&R&76&16&-16776961&-16738666&
+cg(1014,[cgr(agnt, [1013, 1000], _),
+        cgr(obj, [1013, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation raise')]).
+
+cgc(3050,complex,lambdaexpression,[1014],[]).
+cgc(3051,simple,'raise',[fs(num,sing)],[]).
+cg(1015,[cgr(def, [3051, 3050], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation raise')]).
+%reldef(1015,'raise',labda([x,y],1014)).
+
+cgc(1016,simple,'goal',[],[]).
+%$graph$1017&C&1016&59&17&-20561&-65536&C&1000&97&17&-20561&-65536&R&76&17&-16776961&-16738666&C&1001&17&17&-20561&-65536&R&41&17&-16776961&-16738666&
+cg(1017,[cgr(agnt, [1016, 1000], _),
+        cgr(result, [1016, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation goal')]).
+
+cgc(3052,complex,lambdaexpression,[1017],[]).
+cgc(3053,simple,'goal',[fs(num,sing)],[]).
+cg(1018,[cgr(def, [3053, 3052], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation goal')]).
+%reldef(1018,'goal',labda([x,y],1017)).
+
+cgc(1019,simple,'convert',[],[]).
+%$graph$1020&C&1019&66&13&-20561&-65536&C&1000&24&13&-20561&-65536&R&47&13&-16776961&-16738666&C&1001&103&13&-20561&-65536&R&83&13&-16776961&-16738666&
+cg(1020,[cgr(agnt, [1019, 1000], _),
+        cgr(obj, [1019, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation convert_into')]).
+
+cgc(3054,complex,lambdaexpression,[1020],[]).
+cgc(3055,simple,'convert_into',[fs(num,sing)],[]).
+cg(1021,[cgr(def, [3055, 3054], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation convert_into')]).
+%reldef(1021,'convert_into',labda([x,y],1020)).
+
+cgc(1022,simple,'support',[],[]).
+%$graph$1023&C&1022&57&14&-20561&-65536&C&1000&15&14&-20561&-65536&R&38&14&-16776961&-16738666&C&1001&99&14&-20561&-65536&R&76&14&-16776961&-16738666&
+cg(1023,[cgr(agnt, [1022, 1000], _),
+        cgr(obj, [1022, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation support')]).
+
+cgc(3056,complex,lambdaexpression,[1023],[]).
+cgc(3057,simple,'support',[fs(num,sing)],[]).
+cg(1024,[cgr(def, [3057, 3056], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation support')]).
+%reldef(1024,'support',labda([x,y],1023)).
+
+cgc(1025,simple,'buy',[],[]).
+%$graph$1026&C&1025&56&13&-20561&-65536&C&1002&12&13&-20561&-65536&R&36&13&-16776961&-16738666&C&1001&97&13&-20561&-65536&R&76&13&-16776961&-16738666&
+cg(1026,[cgr(agnt, [1025, 1002], _),
+        cgr(obj, [1025, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation buy')]).
+
+cgc(3058,complex,lambdaexpression,[1026],[]).
+cgc(3059,simple,'buy',[fs(num,sing)],[]).
+cg(1027,[cgr(def, [3059, 3058], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation buy')]).
+%reldef(1027,'buy',labda([x,y],1026)).
+
+cgc(1028,simple,'sell',[],[]).
+%$graph$1029&C&1028&61&12&-20561&-65536&C&1002&16&12&-20561&-65536&R&41&12&-16776961&-16738666&C&1001&105&12&-20561&-65536&R&81&12&-16776961&-16738666&
+cg(1029,[cgr(agnt, [1028, 1002], _),
+        cgr(obj, [1028, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation sell')]).
+
+cgc(3060,complex,lambdaexpression,[1029],[]).
+cgc(3061,simple,'sell',[fs(num,sing)],[]).
+cg(1030,[cgr(def, [3061, 3060], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation sell')]).
+%reldef(1030,'sell',labda([x,y],1029)).
+
+cgc(1031,simple,'dimension',[],[]).
+%$graph$1032&C&1031&58&14&-20561&-65536&C&1000&102&14&-20561&-65536&R&78&14&-16776961&-16738666&C&1001&14&14&-20561&-65536&R&38&14&-16776961&-16738666&
+cg(1032,[cgr(obj, [1031, 1000], _),
+        cgr(char, [1031, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation dim')]).
+
+cgc(3062,complex,lambdaexpression,[1032],[]).
+cgc(3063,simple,'dim',[fs(num,sing)],[]).
+cg(1033,[cgr(def, [3063, 3062], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation dim')]).
+%reldef(1033,'dim',labda([x,y],1032)).
+
+cgc(1034,simple,'method',[],[]).
+%$graph$1035&C&1034&53&16&-20561&-65536&C&1000&10&16&-20561&-65536&R&33&16&-16776961&-16738666&C&1001&96&16&-20561&-65536&R&74&16&-16776961&-16738666&
+cg(1035,[cgr(agnt, [1034, 1000], _),
+        cgr(inst, [1034, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation method')]).
+
+cgc(3064,complex,lambdaexpression,[1035],[]).
+cgc(3065,simple,'method',[fs(num,sing)],[]).
+cg(1036,[cgr(def, [3065, 3064], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation method')]).
+%reldef(1036,'method',labda([x,y],1035)).
+
+cgc(1037,simple,'represent',[],[]).
+%$graph$1038&C&1037&63&15&-20561&-65536&C&1000&20&15&-20561&-65536&R&44&15&-16776961&-16738666&C&1001&106&15&-20561&-65536&R&85&15&-16776961&-16738666&
+cg(1038,[cgr(agnt, [1037, 1000], _),
+        cgr(obj, [1037, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation represent')]).
+
+cgc(3066,complex,lambdaexpression,[1038],[]).
+cgc(3067,simple,'represent',[fs(num,sing)],[]).
+cg(1039,[cgr(def, [3067, 3066], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation represent')]).
+%reldef(1039,'represent',labda([x,y],1038)).
+
+cgc(1040,simple,'reduce',[],[]).
+%$graph$1041&C&1040&56&13&-20561&-65536&C&1000&9&13&-20561&-65536&R&35&13&-16776961&-16738666&C&1001&99&13&-20561&-65536&R&77&13&-16776961&-16738666&
+cg(1041,[cgr(agnt, [1040, 1000], _),
+        cgr(obj, [1040, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation reduce')]).
+
+cgc(3068,complex,lambdaexpression,[1041],[]).
+cgc(3069,simple,'reduce',[fs(num,sing)],[]).
+cg(1042,[cgr(def, [3069, 3068], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation reduce')]).
+%reldef(1042,'reduce',labda([x,y],1041)).
+
+cgc(1043,simple,'secure',[],[]).
+%$graph$1044&C&1043&55&14&-20561&-65536&C&1000&101&14&-20561&-65536&R&77&14&-16776961&-16738666&C&1001&13&14&-20561&-65536&R&36&14&-16776961&-16738666&
+cg(1044,[cgr(agnt, [1043, 1000], _),
+        cgr(obj, [1043, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation secured_by')]).
+
+cgc(3070,complex,lambdaexpression,[1044],[]).
+cgc(3071,simple,'secured_by',[fs(num,sing)],[]).
+cg(1045,[cgr(def, [3071, 3070], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation secured_by')]).
+%reldef(1045,'secured_by',labda([x,y],1044)).
+
+cgc(1046,simple,'stable',[],[]).
+%$graph$1047&C&1046&58&15&-20561&-65536&C&1000&13&15&-20561&-65536&R&38&15&-16776961&-16738666&C&1001&106&15&-20561&-65536&R&79&15&-16776961&-16738666&
+cg(1047,[cgr(agnt, [1046, 1000], _),
+        cgr(loc, [1046, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation stable_in')]).
+
+cgc(3072,complex,lambdaexpression,[1047],[]).
+cgc(3073,simple,'stable_in',[fs(num,sing)],[]).
+cg(1048,[cgr(def, [3073, 3072], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation stable_in')]).
+%reldef(1048,'stable_in',labda([x,y],1047)).
+
+
+cgc(1049,simple,'divide',[],[]).
+%$graph$1050&C&1049&61&16&-20561&-65536&C&1000&14&16&-20561&-65536&R&40&16&-16776961&-16738666&C&1001&102&16&-20561&-65536&R&79&16&-16776961&-16738666&
+cg(1050,[cgr(agnt, [1049, 1000], _),
+        cgr(obj, [1049, 1001], _)], 
+        [],
+        [fs(kind,body_of_rel_type_def),
+        fs(comment,'Definition of relation divide_into')]).
+
+cgc(3074,complex,lambdaexpression,[1050],[]).
+cgc(3075,simple,'divide_into',[fs(num,sing)],[]).
+cg(1051,[cgr(def, [3075, 3074], _)], 
+        [],
+        [fs(kind,reldef),
+        fs(comment,'Definition of relation divide_into')]).
+%reldef(1051,'divide_into',labda([x,y],1050)).
+
+cgc(1052,simple,'preferred_stock',[fs(num,plur)],[]).
+%$graph$1053&C&7&17&21&-20561&-65536&C&1052&66&21&-20561&-65536&R&40&21&-16776961&-16738666&C&8&116&21&-20561&-65536&R&91&21&-16776961&-16738666&
+cg(1053,[cgr(operate_with, [7, 1052], _),
+        cgr(attr, [1052, 8], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Primary market operates with newly issued preferred stocks')]).
+
+cgc(1054,simple,'financial_market',[fs(num,sing)],[]).
+%$graph$1055&C&1054&16&20&-20561&-65536&C&6&64&21&-20561&-65536&R&43&21&-16776961&-16738666&C&8&105&21&-20561&-65536&R&84&21&-16776961&-16738666&
+cg(1055,[cgr(operate_with, [1054, 6], _),
+        cgr(attr, [6, 8], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Financial market operates with newly issued securities')]).
+
+cgc(1056,simple,'bond',[fs(num,plur)],[]).
+
+cgc(1063,simple,'newly_issued',[fs(num,sing)],[]).
+	
+	
+%$graph$1057&C&7&17&17&-20561&-65536&C&13&57&32&-20561&-65536&R&17&32&-16776961&-16738666&C&8&129&32&-20561&-65536&R&96&32&-16776961&-16738666&C&1056&95&17&-20561&-65536&R&57&17&-16776961&-16738666&C&1063&148&17&-20561&-65536&R&118&17&-16776961&-16738666&
+cg(1057,[cgr(operate_with, [7, 13], _),
+        cgr(attr, [13, 8], _),cgr(operate_with, [7, 1056], _),
+        cgr(attr, [1056, 1063], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Primary market operates with newly issued stocks and bonds')]).
+
+        
+        
+%$graph$1058&C&7&20&25&-20561&-65536&C&6&91&25&-20561&-65536&R&57&25&-16776961&-16738666&
+cg(1058,[cgr(trade, [7, 6], _)], 
+        [],
+        [fs(kind,normal),
+        fs(comment,'Primary market trades securitiues')]).
+
+%$graph$1059&C&1054&19&15&-20561&-65536&C&2&71&15&-20561&-65536&R&43&15&-16776961&-16738666&C&8&116&15&-20561&-65536&R&95&15&-16776961&-16738666&C&10&43&51&-20561&-65536&R&19&51&-16776961&-16738666&C&11&96&51&-20561&-65536&R&68&51&-16776961&-16738666&
+cg(1059,[cgr(trade, [1054, 2], _),
+        cgr(attr, [2, 8], _),cgr(provide, [1054, 10], _),
+        cgr(attr, [10, 11], _)], [],
+        
+        [fs(kind,normal),fs(comment,'Financial market trades newly issued financial instruments and provide new investments')]).
+%$graph$1060&C&5&66&13&-20561&-65536&C&32&108&13&-20561&-65536&R&87&13&-16776961&-16738666&C&6&108&29&-20561&-65536&R&86&29&-16776961&-16738666&C&1054&18&13&-20561&-65536&R&42&13&-16776961&-16738666&C&83&32&32&-20561&-65536&
+cg(1060,[cgr(agnt, [5, 32], _),
+        cgr(obj, [5, 2], _),cgr(loc, [5, 1054], _)], 
+        [identity_line([2,83])], [fs(kind,normal),
+        fs(comment,'On the financial market lender trades financial instruments called credit. ')]).
+
+%$graph$3080&C&5&68&14&-20561&-65536&C&33&118&14&-20561&-65536&R&93&14&-16776961&-16738666&C&6&15&14&-20561&-65536&R&40&14&-16776961&-16738666&C&82&118&28&-20561&-65536&R&90&28&-16776961&-16738666&C&15&34&30&-20561&-65536&
+cg(3080,[cgr(agnt, [5, 33], _),
+        cgr(obj, [5, 6], _),cgr(loc, [5, 82], _)], 
+        [identity_line([6,15])], [fs(kind,normal),
+        fs(comment,'On the market borrower trades securities called capital. ')]).
+
+cg(1061,[cgr(agnt, [5, 32], _),
+        cgr(obj, [5, 1056], _),cgr(loc, [5, 1054], _)], 
+        [identity_line([1056,83])], 
+        [fs(kind,normal),fs(comment,'On the financial market lender trades bonds called credit. ')]).
+
+cg(1062,[cgr(agnt, [5, 32], _),
+        cgr(obj, [5, 13], _),cgr(loc, [5, 1054], _)], 
+        [identity_line([13,83])], 
+        [fs(kind,normal),fs(comment,'On the financial market lender trades stocks called credit. ')]).
+
+
+
+cg(1064,[cgr(agnt, [5, 32], _),
+        cgr(agnt, [5, 33], _),cgr(obj, [5, 6], _),
+        cgr(loc, [5, 1054], _)], [identity_line([1054,83]),
+        identity_line([6,15])], [fs(kind,maximal_joined),
+        fs(comment,'This graph is received from graphs 1060 and 174 performing the maximal join operation'),
+        fs(operation,[max_join,1060,174,1064])]).
+%$graph$1065&C&5&71&13&-20561&-65536&C&33&116&29&-20561&-65536&R&94&29&-16776961&-16738666&C&32&31&29&-20561&-65536&R&50&29&-16776961&-16738666&C&6&114&12&-20561&-65536&R&94&13&-16776961&-16738666&C&1054&26&13&-20561&-65536&R&50&13&-16776961&-16738666&C&15&135&29&-20561&-65536&C&83&6&29&-20561&-65536&
+cg(1065,[cgr(agnt, [5, 33], _),
+        cgr(agnt, [5, 32], _),cgr(obj, [5, 6], _),
+        cgr(loc, [5, 1054], _)], [identity_line([6,15]),
+        identity_line([1054,83])], 
+        [fs(kind,maximal_joined),fs(comment,'This graph is received from graphs 174 and 1060 performing the maximal join operation'),
+        fs(operation,[max_join,174,1060,1065])]).
+%$graph$1066&C&1054&27&22&-20561&-65536&C&6&122&22&-20561&-65536&R&75&22&-16776961&-16738666&
+cg(1066,[cgr(trade, [1054, 6], _)], 
+        [],
+        [fs(kind,generalized),
+        fs(comment,'This graph is received from graphs 103 and 138 performing the generalization operation'),
+        fs(operation,[generalization,103,138,1066])]).
+%$graph$1067&C&38&15&14&-20561&-65536&C&1056&15&40&-20561&-65536&R&15&28&-16776961&-16738666&C&39&68&14&-20561&-65536&R&39&14&-16776961&-16738666&C&24&40&31&-20561&-65536&R&68&31&-16776961&-16738666&C&23&131&14&-20561&-65536&R&100&14&-16776961&-16738666&C&40&131&31&-20561&-65536&R&101&31&-16776961&-16738666&
+cg(1067,[cgr(trade, [38, 1056], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 performing the specialization operation'),
+        fs(operation,[spec_graph,138,1067])]).
+cgc(1068,simple,'fixed_interest_security',[fs(num,plur)],[]).
+%$graph$1069&C&38&18&16&-20561&-65536&C&1068&18&43&-20561&-65536&R&18&30&-16776961&-16738666&C&39&85&16&-20561&-65536&R&54&16&-16776961&-16738666&C&24&47&34&-20561&-65536&R&68&34&-16776961&-16738666&C&23&134&16&-20561&-65536&R&109&16&-16776961&-16738666&C&40&133&34&-20561&-65536&R&109&34&-16776961&-16738666&
+cg(1069,[cgr(trade, [38, 1068], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 performing the specialization operation'),
+        fs(operation,[spec_graph,138,1069])]).
+cgc(1070,simple,'floating_rate_security',[fs(num,plur)],[]).
+cg(1071,[cgr(trade, [38, 1070], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 performing the specialization operation'),
+        fs(operation,[spec_graph,138,1071])]).
+cgc(1072,simple,'hybrid_security',[fs(num,plur)],[]).
+cg(1073,[cgr(trade, [38, 1072], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 performing the specialization operation'),
+        fs(operation,[spec_graph,138,1073])]).
+cgc(1074,simple,'asset_backed_security',[fs(num,plur)],[]).
+cg(1075,[cgr(trade, [38, 1074], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 performing the specialization operation'),
+        fs(operation,[spec_graph,138,1075])]).
+cgc(1076,simple,'mortgage_backed_security',[fs(num,plur)],[]).
+cg(1077,[cgr(trade, [38, 1076], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 performing the specialization operation'),
+        fs(operation,[spec_graph,138,1077])]).
+cg(1078,[cgr(trade, [38, 13], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 performing the specialization operation'),
+        fs(operation,[spec_graph,138,1078])]).
+%$graph$1079&C&7&15&17&-20561&-65536&C&13&88&17&-20561&-65536&R&53&17&-16776961&-16738666&C&8&144&17&-20561&-65536&R&115&17&-16776961&-16738666&
+cg(1079,[cgr(operate_with, [7, 13], _),
+        cgr(attr, [13, 8], _)], [],
+        
+        [fs(kind,projected),fs(comment,'This graph is received from graphs 1055 and 1057 by performing the projection operation'),
+        fs(operation,[projection,1055,1057,1079])]).
+%$graph$1080&C&7&17&18&-20561&-65536&C&1056&90&18&-20561&-65536&R&56&18&-16776961&-16738666&C&1063&145&18&-20561&-65536&R&118&18&-16776961&-16738666&
+cg(1080,[cgr(operate_with, [7, 1056], _),
+        cgr(attr, [1056, 1063], _)], 
+        [],
+        [fs(kind,projected),
+        fs(comment,'This graph is received from graphs 1055 and 1057 by performing the projection operation'),
+        fs(operation,[projection,1055,1057,1080])]).
+cg(1081,[cgr(trade, [1054, 2], _),
+        cgr(attr, [2, 8], _)], [],
+        
+        [fs(kind,projected),fs(comment,'This graph is received from graphs 111 and 1059 by performing the projection operation'),
+        fs(operation,[projection,111,1059,1081])]).
+%$graph$1082&C&7&18&17&-20561&-65536&C&10&77&17&-20561&-65536&R&46&17&-16776961&-16738666&C&11&141&17&-20561&-65536&R&107&17&-16776961&-16738666&
+cg(1082,[cgr(provide, [7, 10], _),
+        cgr(attr, [10, 11], _)], [],
+        
+        [fs(kind,type_contracted),
+        fs(comment,'This graph is received from graph 1059 by performing the type_contraction operation of type: primary_market'),
+        fs(operation,[type_contraction,1059,primary_market,1082])]).
+cg(1083,[cgr(trade, [7, 6], _),
+        cgr(attr, [6, 8], _),cgr(provide, [7, 15], _),
+        cgr(rcpt, [15, 10], _),cgr(attr, [10, 11], _)], 
+        [],
+        [fs(kind,joined),
+        fs(comment,'This graph is reseived from graphs 103 and 110 performing the join operation on concepts with id 7 and 7'),
+        fs(operation,[join,103,110,7,7,7,1083])]).
+cg(1084,[cgr(attr, [6, 8], _),
+        cgr(attr, [10, 11], _),cgr(trade, [7, 6], _),
+        cgr(provide, [7, 15], _),cgr(rcpt, [15, 10], _)], 
+        [],
+        [fs(kind,maximal_joined),
+        fs(comment,'This graph is received from graphs 103 and 110 performing the maximal join operation'),
+        fs(operation,[max_join,103,110,1084])]).
+cg(1085,[cgr(trade, [7, 2], _),
+        cgr(attr, [2, 8], _)], [],
+        
+        [fs(kind,generalized),fs(comment,'This graph is received from graphs 103 and 104 performing the generalization operation'),
+        fs(operation,[generalization,103,104,1085])]).
+cg(1086,[cgr(trade, [7, 12], _)], 
+        [],
+        [fs(kind,projected),
+        fs(comment,'This graph is received from graphs 1058 and 106 by performing the projection operation'),
+        fs(operation,[projection,1058,106,1086])]).
+cg(1087,[cgr(trade, [7, 12], _),
+        cgr(attr, [12, 8], _)], [],
+        
+        [fs(kind,ext_projected),fs(comment,'This graph is received from graphs 1058 and 106 by performing the extended projection operation'),
+        fs(operation,[ext_projection,1058,106,1087])]).
+cg(1088,[cgr(trade, [38, 1056], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 by specializing the concept with label security'),
+        fs(operation,[spec_conc_gr,138,security,1088])]).
+cg(1089,[cgr(trade, [38, 1068], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 by specializing the concept with label security'),
+        fs(operation,[spec_conc_gr,138,security,1089])]).
+cg(1090,[cgr(trade, [38, 1070], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 by specializing the concept with label security'),
+        fs(operation,[spec_conc_gr,138,security,1090])]).
+cg(1091,[cgr(trade, [38, 1072], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 by specializing the concept with label security'),
+        fs(operation,[spec_conc_gr,138,security,1091])]).
+cg(1092,[cgr(trade, [38, 1074], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 by specializing the concept with label security'),
+        fs(operation,[spec_conc_gr,138,security,1092])]).
+cg(1093,[cgr(trade, [38, 1076], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 by specializing the concept with label security'),
+        fs(operation,[spec_conc_gr,138,security,1093])]).
+cg(1094,[cgr(trade, [38, 13], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,specialized),
+        fs(comment,'This graph is received from graph 138 by specializing the concept with label security'),
+        fs(operation,[spec_conc_gr,138,security,1094])]).
+cgc(1095,simple,'debt_instrument',[fs(num,plur)],[]).
+cg(1096,[cgr(trade, [38, 1095], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,generalized),
+        fs(comment,'This graph is received from graph 1088 by generalizing the concept with label bond'),
+        fs(operation,[gen_conc_gr,1088,bond,1096])]).
+cg(1097,[cgr(trade, [38, 6], _),
+        cgr(method, [38, 39], _),cgr(agnt, [39, 24], _),
+        cgr(rcpt, [39, 23], _),cgr(attr, [39, 40], _)], 
+        [],
+        [fs(kind,generalized),
+        fs(comment,'This graph is received from graph 1088 by generalizing the concept with label bond'),
+        fs(operation,[gen_conc_gr,1088,bond,1097])]).
+cg(1098,[cgr(trade, [1054, 2], _),
+        cgr(attr, [2, 8], _),cgr(goal, [1054, 14], _)], 
+        [],
+        [fs(kind,type_expanded),
+        fs(comment,'This graph is received from graph 108 and definition graph of type with label: primary_market by performing the type_expansion operation'),
+        fs(operation,[type_expansion,108,primary_market,1098])]).
+cg(1099,[cgr(trade, [7, 12], _),
+        cgr(attr, [12, 8], _)], [],
+        
+        [fs(kind,joined),fs(comment,'This graph is reseived from graphs 103 and 106 performing the join operation on concepts with id 6 and 12'),
+        fs(operation,[join,103,106,6,12,12,1099])]).
+cgc(1100,simple,'newly_issued',[fs(num,sing)],'rep(8,1100)').
+cgc(1101,simple,'newly_issued',[fs(num,sing)],'rep(8,1101)').
+cg(1102,[cgr(attr, [2, 1100], _),
+        cgr(attr, [12, 1101], _),cgr(trade, [1054, 2], _),
+        cgr(trade, [1054, 12], _)], 
+        [],
+        [fs(kind,type_expanded),
+        fs(comment,'This graph is received from graph 106 and definition graph of type with label: primary_market by performing the type_expansion operation'),
+        fs(operation,[type_expansion,106,primary_market,1102])]).
+cg(1103,[cgr(attr, [2, 8], _)], 
+        [],
+        [fs(kind,generalized),
+        fs(comment,'This graph is received from graphs 100 and 104 performing the generalization operation'),
+        fs(operation,[generalization,100,104,1103])]).
+cg(1104,[cgr(agnt, [5, 33], _),
+        cgr(agnt, [5, 32], _),cgr(obj, [5, 6], _),
+        cgr(loc, [5, 1054], _)], [identity_line([6,15]),
+        identity_line([6,83])], [fs(kind,maximal_joined),
+        fs(comment,'This graph is received from graphs 174 and 1060 performing the maximal join operation'),
+        fs(operation,[max_join,174,1060,1104])]).
+cg(1105,[cgr(agnt, [5, 32], _),
+        cgr(agnt, [5, 33], _),cgr(obj, [5, 2], _),
+        cgr(loc, [5, 82], _)], [identity_line([2,83]),
+        identity_line([2,15])], [fs(kind,maximal_joined),
+        fs(comment,'This graph is received from graphs 173 and 174 performing the maximal join operation'),
+        fs(operation,[max_join,173,174,1105])]).
+cg(1106,[cgr(agnt, [5, 32], _),
+        cgr(obj, [5, 6], _),cgr(loc, [5, 1054], _),
+        cgr(convert_into, [55, 53], _)], 
+        [identity_line([6,83])], [fs(kind,maximal_joined),
+        fs(comment,'This graph is received from graphs 1060 and 155 performing the maximal join operation'),
+        fs(operation,[max_join,1060,155,1106])]).
+
+cg(1107,[cgr(operate_with, [1054, 6], _),
+        cgr(attr, [6, 8], _)], [],
+        
+        [fs(kind,generalized),fs(comment,'This graph is received from graphs 1055 and 1057 performing the generalization operation'),
+        fs(operation,[generalization,1055,1057,1107])]).
+cgc(1108,simple,'buyer',[fs(num,sing)],'rep(23,1108)').
+cgc(1109,simple,'buyer',[fs(num,sing)],'rep(23,1109)').
+cgc(1110,simple,'security',[fs(num,plur)],'rep(6,1110)').
+cgc(1111,simple,'security',[fs(num,plur)],'rep(6,1111)').
+cgc(1112,simple,'loan',[fs(num,plur)],'rep(9,1112)').
+cgc(1113,simple,'loan',[fs(num,plur)],'rep(9,1113)').
+cgc(1114,simple,'already_issued',[fs(num,sing)],'rep(17,1114)').
+cgc(1115,simple,'already_issued',[fs(num,sing)],'rep(17,1115)').
+cgc(1116,simple,'newly_issued',[fs(num,sing)],'rep(8,1116)').
+cgc(1117,simple,'newly_issued',[fs(num,sing)],'rep(8,1117)').
+cg(1118,[cgr(rcpt, [18, 1108], _),
+        cgr(rcpt, [7, 1109], _),cgr(trade, [18, 1110], _),
+        cgr(trade, [84, 1111], _),
+        cgr(trade, [18, 1112], _),
+        cgr(trade, [84, 1113], _),
+        cgr(attr, [6, 1114], _),cgr(attr, [9, 1115], _),
+        cgr(attr, [6, 1116], _),cgr(attr, [9, 1117], _),
+        cgr(agnt, [18, 24], _),cgr(agnt, [7, 84], _)], 
+        [identity_line([24,23])], 
+        [fs(kind,maximal_joined),fs(comment,'This graph is received from graphs 176 and 175 performing the maximal join operation'),
+        fs(operation,[max_join,176,175,1118])]).
+cgc(1119,simple,'newly_issued',[fs(num,sing)],'rep(8,1119)').
+cgc(1120,simple,'newly_issued',[fs(num,sing)],'rep(8,1120)').
+cg(1121,[cgr(attr, [6, 1119], _),
+        cgr(attr, [9, 1120], _),cgr(trade, [7, 6], _),
+        cgr(trade, [7, 9], _)], [],
+        
+        [fs(kind,joined),fs(comment,'This graph is reseived from graphs 103 and 104 performing the join operation on concepts with id 7 and 7'),
+        fs(operation,[join,103,104,7,7,7,1121])]).
+%end of file
+
+%$graph$3081&C&5&64&15&-20561&-65536&C&33&113&15&-20561&-65536&R&91&15&-16776961&-16738666&C&6&96&33&-20561&-65536&R&74&33&-16776961&-16738666&C&3001&16&15&-20561&-65536&R&43&15&-16776961&-16738666&C&15&113&33&-20561&-65536&
+cg(3081,[cgr(agnt, [5, 33], _),
+        cgr(obj, [5, 6], _),cgr(loc, [5, 3001], _)], 
+        [identity_line([6,15]),identity_line([6,15])], 
+        [fs(kind,maximal_joined),fs(comment,'This graph is received from graphs 174 and 3080 performing the maximal join operation'),
+        fs(operation,[max_join,174,3080,3081])]).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% end of file

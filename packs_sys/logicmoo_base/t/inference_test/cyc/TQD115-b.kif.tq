@@ -1,0 +1,56 @@
+(note TQD115-b)
+
+(causes-SitProp #$HYP-AttackOnTangible-4675173 
+ (quantityChangeFunction 
+ (ShortTermFn #$HYP-AttackOnTangible-4675173) Iran 
+ (FunctionToArg 2 
+ (Kappa 
+ (?COUNTRY ?GDP) 
+ (grossDomesticProduct ?COUNTRY HYP-AttackOnTangible-4675173 ?GDP))) NetIncreasingFunction)) 
+
+
+(implies 
+ (and 
+ (opponents ?X ?Y) 
+ (exports ?X ?PRODUCT) 
+ (exports ?Y ?PRODUCT) 
+ (maleficiary ?EVENT 
+ (IndustryOfRegionFn 
+ (IndustryFn ?PRODUCT) ?X))) 
+ (causes-SitProp ?EVENT 
+ (quantityChangeFunction 
+ (ShortTermFn ?EVENT) ?Y 
+ (FunctionToArg 2 
+ (Kappa 
+ (?COUNTRY ?GDP) 
+ (grossDomesticProduct ?COUNTRY ?EVENT ?GDP))) NetIncreasingFunction))) 
+
+(opponents SaudiArabia Iran) 
+
+(exports Iran Petroleum-CrudeOil) 
+
+(exports SaudiArabia Petroleum-CrudeOil) 
+
+(maleficiary #$HYP-AttackOnTangible-4675173 
+ (IndustryOfRegionFn 
+ (IndustryFn Petroleum-CrudeOil) SaudiArabia)) 
+
+
+
+( query (findal  (?CHANGE ?TIME ?TRUST) (implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIO) 
+ (instance ?BIO BiologicalWeapon) 
+ (maleficiary ?ATTACK SaudiArabia)) 
+ (causes-SitProp ?ATTACK 
+ (quantityChangeFunction ?TIME Iran 
+ (FunctionToArg 2 
+ (Kappa 
+ (?COUNTRY ?GDP) 
+ (grossDomesticProduct ?COUNTRY ?ATTACK ?GDP))) ?CHANGE)))  
+))
+
+(answer NetIncreasingFunction (list (ShortTermFn #$HYP-AttackOnTangible-4675173)) )
+
+(end_of_file)

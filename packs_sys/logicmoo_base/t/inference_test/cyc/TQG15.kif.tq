@@ -1,0 +1,7 @@
+(note TQG15)
+
+(meetsTemporally Time1 Time2)
+
+(query (not (overlapsTemporally Time1 Time2)))
+
+(answer Yes)

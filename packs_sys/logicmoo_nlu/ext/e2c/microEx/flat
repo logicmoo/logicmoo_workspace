@@ -1,0 +1,31 @@
+% Variations a propos de lineariser une liste.
+
+ % Version "naive" classique avec conc en final.
+   $ flat0([X|Xs],R) :- flat0(X,X1), flat0(Xs,Xs1), conc(X1,Xs1,R).
+   $ flat0(X,[X]) :- atomic(X).
+   $ flat0([],[]).
+  
+ % listes de differences Shapiro pp239-244
+   $ flat(X,Y) :- flat_dl(X,d(Y,[])).
+   $ flat_dl([X|Xs],d(As,Ds)) :- flat_dl(X,d(As,Bs)),
+                                 flat_dl(Xs,d(Bs,Ds)).
+   $ flat_dl(X,d([X|Xs],Xs)) :- atomic(X).
+   $ flat_dl([],d(X,X)).
+
+ % Idem que precedente mais en vision accumulateur.
+ % On met l'accumulateur en dernier parametre.
+   $ flat2(X,Y) :- flat_ac(X,Y,[]).
+   $ flat_ac([X|Xs],As,Ds) :- flat_ac(Xs,Bs,Ds),
+                              flat_ac(X,As,Bs).
+   $ flat_ac(X,[X|Xs],Xs) :- atomic(X).
+   $ flat_ac([],X,X).
+
+   
+   $ l([a,b,[c,d,[e]],[g],h]).
+   $ l([a,b,[c,d,[e]],[[[g],h]]]).
+   $ l([a,b,[[c,d,[e]],[g],h]]).
+   $ test :- l(X), wb(X), 
+             flat(X,R), wb(R), nl,
+             flat0(X,R1), wb(R1),
+             flat2(X,R2), wf(R2).
+

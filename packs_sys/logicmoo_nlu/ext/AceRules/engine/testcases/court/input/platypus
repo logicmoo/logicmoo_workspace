@@ -1,0 +1,11 @@
+R1: Every monotreme is a mammal.
+R2: Everything that has some fur is a mammal.
+R3: Nothing that lays some eggs is a mammal.
+R4: Nothing that has a bill is a mammal.
+R1 overrides R3.
+R2 overrides R4.
+Every platypus is a monotreme.
+Every platypus has some fur.
+Every platypus lays some eggs.
+Every platypus has a bill.
+John is a platypus.

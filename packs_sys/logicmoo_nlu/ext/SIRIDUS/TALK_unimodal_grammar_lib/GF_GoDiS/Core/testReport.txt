@@ -1,0 +1,3852 @@
+managed to get help . what can i do for you ? what can i do for you ?
+
+managed to get help . what can i do for you ? no .
+
+managed to get help . what can i do for you ? yes .
+
+managed to get help . what can i do for you ? hello !
+
+managed to get help . what can i do for you ? goodbye !
+
+managed to get help . no . what can i do for you ?
+
+managed to get help . no . no .
+
+managed to get help . no . yes .
+
+managed to get help . no . hello !
+
+managed to get help . no . goodbye !
+
+managed to get help . yes . what can i do for you ?
+
+managed to get help . yes . no .
+
+managed to get help . yes . yes .
+
+managed to get help . yes . hello !
+
+managed to get help . yes . goodbye !
+
+managed to get help . hello ! what can i do for you ?
+
+managed to get help . hello ! no .
+
+managed to get help . hello ! yes .
+
+managed to get help . hello ! hello !
+
+managed to get help . hello ! goodbye !
+
+managed to get help . goodbye ! what can i do for you ?
+
+managed to get help . goodbye ! no .
+
+managed to get help . goodbye ! yes .
+
+managed to get help . goodbye ! hello !
+
+managed to get help . goodbye ! goodbye !
+
+failed to get help . what can i do for you ? what can i do for you ?
+
+failed to get help . what can i do for you ? no .
+
+failed to get help . what can i do for you ? yes .
+
+failed to get help . what can i do for you ? hello !
+
+failed to get help . what can i do for you ? goodbye !
+
+failed to get help . no . what can i do for you ?
+
+failed to get help . no . no .
+
+failed to get help . no . yes .
+
+failed to get help . no . hello !
+
+failed to get help . no . goodbye !
+
+failed to get help . yes . what can i do for you ?
+
+failed to get help . yes . no .
+
+failed to get help . yes . yes .
+
+failed to get help . yes . hello !
+
+failed to get help . yes . goodbye !
+
+failed to get help . hello ! what can i do for you ?
+
+failed to get help . hello ! no .
+
+failed to get help . hello ! yes .
+
+failed to get help . hello ! hello !
+
+failed to get help . hello ! goodbye !
+
+failed to get help . goodbye ! what can i do for you ?
+
+failed to get help . goodbye ! no .
+
+failed to get help . goodbye ! yes .
+
+failed to get help . goodbye ! hello !
+
+failed to get help . goodbye ! goodbye !
+
+started to get help . what can i do for you ? what can i do for you ?
+
+started to get help . what can i do for you ? no .
+
+started to get help . what can i do for you ? yes .
+
+started to get help . what can i do for you ? hello !
+
+started to get help . what can i do for you ? goodbye !
+
+started to get help . no . what can i do for you ?
+
+started to get help . no . no .
+
+started to get help . no . yes .
+
+started to get help . no . hello !
+
+started to get help . no . goodbye !
+
+started to get help . yes . what can i do for you ?
+
+started to get help . yes . no .
+
+started to get help . yes . yes .
+
+started to get help . yes . hello !
+
+started to get help . yes . goodbye !
+
+started to get help . hello ! what can i do for you ?
+
+started to get help . hello ! no .
+
+started to get help . hello ! yes .
+
+started to get help . hello ! hello !
+
+started to get help . hello ! goodbye !
+
+started to get help . goodbye ! what can i do for you ?
+
+started to get help . goodbye ! no .
+
+started to get help . goodbye ! yes .
+
+started to get help . goodbye ! hello !
+
+started to get help . goodbye ! goodbye !
+
+waiting to get help . what can i do for you ? what can i do for you ?
+
+waiting to get help . what can i do for you ? no .
+
+waiting to get help . what can i do for you ? yes .
+
+waiting to get help . what can i do for you ? hello !
+
+waiting to get help . what can i do for you ? goodbye !
+
+waiting to get help . no . what can i do for you ?
+
+waiting to get help . no . no .
+
+waiting to get help . no . yes .
+
+waiting to get help . no . hello !
+
+waiting to get help . no . goodbye !
+
+waiting to get help . yes . what can i do for you ?
+
+waiting to get help . yes . no .
+
+waiting to get help . yes . yes .
+
+waiting to get help . yes . hello !
+
+waiting to get help . yes . goodbye !
+
+waiting to get help . hello ! what can i do for you ?
+
+waiting to get help . hello ! no .
+
+waiting to get help . hello ! yes .
+
+waiting to get help . hello ! hello !
+
+waiting to get help . hello ! goodbye !
+
+waiting to get help . goodbye ! what can i do for you ?
+
+waiting to get help . goodbye ! no .
+
+waiting to get help . goodbye ! yes .
+
+waiting to get help . goodbye ! hello !
+
+waiting to get help . goodbye ! goodbye !
+
+managed to top . what can i do for you ? what can i do for you ?
+
+managed to top . what can i do for you ? no .
+
+managed to top . what can i do for you ? yes .
+
+managed to top . what can i do for you ? hello !
+
+managed to top . what can i do for you ? goodbye !
+
+managed to top . no . what can i do for you ?
+
+managed to top . no . no .
+
+managed to top . no . yes .
+
+managed to top . no . hello !
+
+managed to top . no . goodbye !
+
+managed to top . yes . what can i do for you ?
+
+managed to top . yes . no .
+
+managed to top . yes . yes .
+
+managed to top . yes . hello !
+
+managed to top . yes . goodbye !
+
+managed to top . hello ! what can i do for you ?
+
+managed to top . hello ! no .
+
+managed to top . hello ! yes .
+
+managed to top . hello ! hello !
+
+managed to top . hello ! goodbye !
+
+managed to top . goodbye ! what can i do for you ?
+
+managed to top . goodbye ! no .
+
+managed to top . goodbye ! yes .
+
+managed to top . goodbye ! hello !
+
+managed to top . goodbye ! goodbye !
+
+failed to top . what can i do for you ? what can i do for you ?
+
+failed to top . what can i do for you ? no .
+
+failed to top . what can i do for you ? yes .
+
+failed to top . what can i do for you ? hello !
+
+failed to top . what can i do for you ? goodbye !
+
+failed to top . no . what can i do for you ?
+
+failed to top . no . no .
+
+failed to top . no . yes .
+
+failed to top . no . hello !
+
+failed to top . no . goodbye !
+
+failed to top . yes . what can i do for you ?
+
+failed to top . yes . no .
+
+failed to top . yes . yes .
+
+failed to top . yes . hello !
+
+failed to top . yes . goodbye !
+
+failed to top . hello ! what can i do for you ?
+
+failed to top . hello ! no .
+
+failed to top . hello ! yes .
+
+failed to top . hello ! hello !
+
+failed to top . hello ! goodbye !
+
+failed to top . goodbye ! what can i do for you ?
+
+failed to top . goodbye ! no .
+
+failed to top . goodbye ! yes .
+
+failed to top . goodbye ! hello !
+
+failed to top . goodbye ! goodbye !
+
+started to top . what can i do for you ? what can i do for you ?
+
+started to top . what can i do for you ? no .
+
+started to top . what can i do for you ? yes .
+
+started to top . what can i do for you ? hello !
+
+started to top . what can i do for you ? goodbye !
+
+started to top . no . what can i do for you ?
+
+started to top . no . no .
+
+started to top . no . yes .
+
+started to top . no . hello !
+
+started to top . no . goodbye !
+
+started to top . yes . what can i do for you ?
+
+started to top . yes . no .
+
+started to top . yes . yes .
+
+started to top . yes . hello !
+
+started to top . yes . goodbye !
+
+started to top . hello ! what can i do for you ?
+
+started to top . hello ! no .
+
+started to top . hello ! yes .
+
+started to top . hello ! hello !
+
+started to top . hello ! goodbye !
+
+started to top . goodbye ! what can i do for you ?
+
+started to top . goodbye ! no .
+
+started to top . goodbye ! yes .
+
+started to top . goodbye ! hello !
+
+started to top . goodbye ! goodbye !
+
+waiting to top . what can i do for you ? what can i do for you ?
+
+waiting to top . what can i do for you ? no .
+
+waiting to top . what can i do for you ? yes .
+
+waiting to top . what can i do for you ? hello !
+
+waiting to top . what can i do for you ? goodbye !
+
+waiting to top . no . what can i do for you ?
+
+waiting to top . no . no .
+
+waiting to top . no . yes .
+
+waiting to top . no . hello !
+
+waiting to top . no . goodbye !
+
+waiting to top . yes . what can i do for you ?
+
+waiting to top . yes . no .
+
+waiting to top . yes . yes .
+
+waiting to top . yes . hello !
+
+waiting to top . yes . goodbye !
+
+waiting to top . hello ! what can i do for you ?
+
+waiting to top . hello ! no .
+
+waiting to top . hello ! yes .
+
+waiting to top . hello ! hello !
+
+waiting to top . hello ! goodbye !
+
+waiting to top . goodbye ! what can i do for you ?
+
+waiting to top . goodbye ! no .
+
+waiting to top . goodbye ! yes .
+
+waiting to top . goodbye ! hello !
+
+waiting to top . goodbye ! goodbye !
+
+what can i do for you ? what can i do for you ? what can i do for you ?
+
+what can i do for you ? what can i do for you ? no .
+
+what can i do for you ? what can i do for you ? yes .
+
+what can i do for you ? what can i do for you ? hello !
+
+what can i do for you ? what can i do for you ? goodbye !
+
+what can i do for you ? no . what can i do for you ?
+
+what can i do for you ? no . no .
+
+what can i do for you ? no . yes .
+
+what can i do for you ? no . hello !
+
+what can i do for you ? no . goodbye !
+
+what can i do for you ? yes . what can i do for you ?
+
+what can i do for you ? yes . no .
+
+what can i do for you ? yes . yes .
+
+what can i do for you ? yes . hello !
+
+what can i do for you ? yes . goodbye !
+
+what can i do for you ? hello ! what can i do for you ?
+
+what can i do for you ? hello ! no .
+
+what can i do for you ? hello ! yes .
+
+what can i do for you ? hello ! hello !
+
+what can i do for you ? hello ! goodbye !
+
+what can i do for you ? goodbye ! what can i do for you ?
+
+what can i do for you ? goodbye ! no .
+
+what can i do for you ? goodbye ! yes .
+
+what can i do for you ? goodbye ! hello !
+
+what can i do for you ? goodbye ! goodbye !
+
+do you want to get help ? what can i do for you ? what can i do for you ?
+
+do you want to get help ? what can i do for you ? no .
+
+do you want to get help ? what can i do for you ? yes .
+
+do you want to get help ? what can i do for you ? hello !
+
+do you want to get help ? what can i do for you ? goodbye !
+
+do you want to get help ? no . what can i do for you ?
+
+do you want to get help ? no . no .
+
+do you want to get help ? no . yes .
+
+do you want to get help ? no . hello !
+
+do you want to get help ? no . goodbye !
+
+do you want to get help ? yes . what can i do for you ?
+
+do you want to get help ? yes . no .
+
+do you want to get help ? yes . yes .
+
+do you want to get help ? yes . hello !
+
+do you want to get help ? yes . goodbye !
+
+do you want to get help ? hello ! what can i do for you ?
+
+do you want to get help ? hello ! no .
+
+do you want to get help ? hello ! yes .
+
+do you want to get help ? hello ! hello !
+
+do you want to get help ? hello ! goodbye !
+
+do you want to get help ? goodbye ! what can i do for you ?
+
+do you want to get help ? goodbye ! no .
+
+do you want to get help ? goodbye ! yes .
+
+do you want to get help ? goodbye ! hello !
+
+do you want to get help ? goodbye ! goodbye !
+
+do you want to top ? what can i do for you ? what can i do for you ?
+
+do you want to top ? what can i do for you ? no .
+
+do you want to top ? what can i do for you ? yes .
+
+do you want to top ? what can i do for you ? hello !
+
+do you want to top ? what can i do for you ? goodbye !
+
+do you want to top ? no . what can i do for you ?
+
+do you want to top ? no . no .
+
+do you want to top ? no . yes .
+
+do you want to top ? no . hello !
+
+do you want to top ? no . goodbye !
+
+do you want to top ? yes . what can i do for you ?
+
+do you want to top ? yes . no .
+
+do you want to top ? yes . yes .
+
+do you want to top ? yes . hello !
+
+do you want to top ? yes . goodbye !
+
+do you want to top ? hello ! what can i do for you ?
+
+do you want to top ? hello ! no .
+
+do you want to top ? hello ! yes .
+
+do you want to top ? hello ! hello !
+
+do you want to top ? hello ! goodbye !
+
+do you want to top ? goodbye ! what can i do for you ?
+
+do you want to top ? goodbye ! no .
+
+do you want to top ? goodbye ! yes .
+
+do you want to top ? goodbye ! hello !
+
+do you want to top ? goodbye ! goodbye !
+
+no . what can i do for you ? what can i do for you ?
+
+no . what can i do for you ? no .
+
+no . what can i do for you ? yes .
+
+no . what can i do for you ? hello !
+
+no . what can i do for you ? goodbye !
+
+no . no . what can i do for you ?
+
+no . no . no .
+
+no . no . yes .
+
+no . no . hello !
+
+no . no . goodbye !
+
+no . yes . what can i do for you ?
+
+no . yes . no .
+
+no . yes . yes .
+
+no . yes . hello !
+
+no . yes . goodbye !
+
+no . hello ! what can i do for you ?
+
+no . hello ! no .
+
+no . hello ! yes .
+
+no . hello ! hello !
+
+no . hello ! goodbye !
+
+no . goodbye ! what can i do for you ?
+
+no . goodbye ! no .
+
+no . goodbye ! yes .
+
+no . goodbye ! hello !
+
+no . goodbye ! goodbye !
+
+yes . what can i do for you ? what can i do for you ?
+
+yes . what can i do for you ? no .
+
+yes . what can i do for you ? yes .
+
+yes . what can i do for you ? hello !
+
+yes . what can i do for you ? goodbye !
+
+yes . no . what can i do for you ?
+
+yes . no . no .
+
+yes . no . yes .
+
+yes . no . hello !
+
+yes . no . goodbye !
+
+yes . yes . what can i do for you ?
+
+yes . yes . no .
+
+yes . yes . yes .
+
+yes . yes . hello !
+
+yes . yes . goodbye !
+
+yes . hello ! what can i do for you ?
+
+yes . hello ! no .
+
+yes . hello ! yes .
+
+yes . hello ! hello !
+
+yes . hello ! goodbye !
+
+yes . goodbye ! what can i do for you ?
+
+yes . goodbye ! no .
+
+yes . goodbye ! yes .
+
+yes . goodbye ! hello !
+
+yes . goodbye ! goodbye !
+
+hello ! what can i do for you ? what can i do for you ?
+
+hello ! what can i do for you ? no .
+
+hello ! what can i do for you ? yes .
+
+hello ! what can i do for you ? hello !
+
+hello ! what can i do for you ? goodbye !
+
+hello ! no . what can i do for you ?
+
+hello ! no . no .
+
+hello ! no . yes .
+
+hello ! no . hello !
+
+hello ! no . goodbye !
+
+hello ! yes . what can i do for you ?
+
+hello ! yes . no .
+
+hello ! yes . yes .
+
+hello ! yes . hello !
+
+hello ! yes . goodbye !
+
+hello ! hello ! what can i do for you ?
+
+hello ! hello ! no .
+
+hello ! hello ! yes .
+
+hello ! hello ! hello !
+
+hello ! hello ! goodbye !
+
+hello ! goodbye ! what can i do for you ?
+
+hello ! goodbye ! no .
+
+hello ! goodbye ! yes .
+
+hello ! goodbye ! hello !
+
+hello ! goodbye ! goodbye !
+
+lets see . what can i do for you ? what can i do for you ?
+
+lets see . what can i do for you ? no .
+
+lets see . what can i do for you ? yes .
+
+lets see . what can i do for you ? hello !
+
+lets see . what can i do for you ? goodbye !
+
+lets see . no . what can i do for you ?
+
+lets see . no . no .
+
+lets see . no . yes .
+
+lets see . no . hello !
+
+lets see . no . goodbye !
+
+lets see . yes . what can i do for you ?
+
+lets see . yes . no .
+
+lets see . yes . yes .
+
+lets see . yes . hello !
+
+lets see . yes . goodbye !
+
+lets see . hello ! what can i do for you ?
+
+lets see . hello ! no .
+
+lets see . hello ! yes .
+
+lets see . hello ! hello !
+
+lets see . hello ! goodbye !
+
+lets see . goodbye ! what can i do for you ?
+
+lets see . goodbye ! no .
+
+lets see . goodbye ! yes .
+
+lets see . goodbye ! hello !
+
+lets see . goodbye ! goodbye !
+
+so , what can i do for you ? what can i do for you ?
+
+so , what can i do for you ? no .
+
+so , what can i do for you ? yes .
+
+so , what can i do for you ? hello !
+
+so , what can i do for you ? goodbye !
+
+so , no . what can i do for you ?
+
+so , no . no .
+
+so , no . yes .
+
+so , no . hello !
+
+so , no . goodbye !
+
+so , yes . what can i do for you ?
+
+so , yes . no .
+
+so , yes . yes .
+
+so , yes . hello !
+
+so , yes . goodbye !
+
+so , hello ! what can i do for you ?
+
+so , hello ! no .
+
+so , hello ! yes .
+
+so , hello ! hello !
+
+so , hello ! goodbye !
+
+so , goodbye ! what can i do for you ?
+
+so , goodbye ! no .
+
+so , goodbye ! yes .
+
+so , goodbye ! hello !
+
+so , goodbye ! goodbye !
+
+i thought you said what can i do for you ? what can i do for you ?
+
+i thought you said what can i do for you ? no .
+
+i thought you said what can i do for you ? yes .
+
+i thought you said what can i do for you ? hello !
+
+i thought you said what can i do for you ? goodbye !
+
+i thought you said no . what can i do for you ?
+
+i thought you said no . no .
+
+i thought you said no . yes .
+
+i thought you said no . hello !
+
+i thought you said no . goodbye !
+
+i thought you said yes . what can i do for you ?
+
+i thought you said yes . no .
+
+i thought you said yes . yes .
+
+i thought you said yes . hello !
+
+i thought you said yes . goodbye !
+
+i thought you said hello ! what can i do for you ?
+
+i thought you said hello ! no .
+
+i thought you said hello ! yes .
+
+i thought you said hello ! hello !
+
+i thought you said hello ! goodbye !
+
+i thought you said goodbye ! what can i do for you ?
+
+i thought you said goodbye ! no .
+
+i thought you said goodbye ! yes .
+
+i thought you said goodbye ! hello !
+
+i thought you said goodbye ! goodbye !
+
+i am sorry i do not understand . what can i do for you ? what can i do for you ?
+
+i am sorry i do not understand . what can i do for you ? no .
+
+i am sorry i do not understand . what can i do for you ? yes .
+
+i am sorry i do not understand . what can i do for you ? hello !
+
+i am sorry i do not understand . what can i do for you ? goodbye !
+
+i am sorry i do not understand . no . what can i do for you ?
+
+i am sorry i do not understand . no . no .
+
+i am sorry i do not understand . no . yes .
+
+i am sorry i do not understand . no . hello !
+
+i am sorry i do not understand . no . goodbye !
+
+i am sorry i do not understand . yes . what can i do for you ?
+
+i am sorry i do not understand . yes . no .
+
+i am sorry i do not understand . yes . yes .
+
+i am sorry i do not understand . yes . hello !
+
+i am sorry i do not understand . yes . goodbye !
+
+i am sorry i do not understand . hello ! what can i do for you ?
+
+i am sorry i do not understand . hello ! no .
+
+i am sorry i do not understand . hello ! yes .
+
+i am sorry i do not understand . hello ! hello !
+
+i am sorry i do not understand . hello ! goodbye !
+
+i am sorry i do not understand . goodbye ! what can i do for you ?
+
+i am sorry i do not understand . goodbye ! no .
+
+i am sorry i do not understand . goodbye ! yes .
+
+i am sorry i do not understand . goodbye ! hello !
+
+i am sorry i do not understand . goodbye ! goodbye !
+
+okay what can i do for you ? what can i do for you ?
+
+okay what can i do for you ? no .
+
+okay what can i do for you ? yes .
+
+okay what can i do for you ? hello !
+
+okay what can i do for you ? goodbye !
+
+okay no . what can i do for you ?
+
+okay no . no .
+
+okay no . yes .
+
+okay no . hello !
+
+okay no . goodbye !
+
+okay yes . what can i do for you ?
+
+okay yes . no .
+
+okay yes . yes .
+
+okay yes . hello !
+
+okay yes . goodbye !
+
+okay hello ! what can i do for you ?
+
+okay hello ! no .
+
+okay hello ! yes .
+
+okay hello ! hello !
+
+okay hello ! goodbye !
+
+okay goodbye ! what can i do for you ?
+
+okay goodbye ! no .
+
+okay goodbye ! yes .
+
+okay goodbye ! hello !
+
+okay goodbye ! goodbye !
+
+no . what can i do for you ? what can i do for you ?
+
+no . what can i do for you ? no .
+
+no . what can i do for you ? yes .
+
+no . what can i do for you ? hello !
+
+no . what can i do for you ? goodbye !
+
+no . no . what can i do for you ?
+
+no . no . no .
+
+no . no . yes .
+
+no . no . hello !
+
+no . no . goodbye !
+
+no . yes . what can i do for you ?
+
+no . yes . no .
+
+no . yes . yes .
+
+no . yes . hello !
+
+no . yes . goodbye !
+
+no . hello ! what can i do for you ?
+
+no . hello ! no .
+
+no . hello ! yes .
+
+no . hello ! hello !
+
+no . hello ! goodbye !
+
+no . goodbye ! what can i do for you ?
+
+no . goodbye ! no .
+
+no . goodbye ! yes .
+
+no . goodbye ! hello !
+
+no . goodbye ! goodbye !
+
+yes . what can i do for you ? what can i do for you ?
+
+yes . what can i do for you ? no .
+
+yes . what can i do for you ? yes .
+
+yes . what can i do for you ? hello !
+
+yes . what can i do for you ? goodbye !
+
+yes . no . what can i do for you ?
+
+yes . no . no .
+
+yes . no . yes .
+
+yes . no . hello !
+
+yes . no . goodbye !
+
+yes . yes . what can i do for you ?
+
+yes . yes . no .
+
+yes . yes . yes .
+
+yes . yes . hello !
+
+yes . yes . goodbye !
+
+yes . hello ! what can i do for you ?
+
+yes . hello ! no .
+
+yes . hello ! yes .
+
+yes . hello ! hello !
+
+yes . hello ! goodbye !
+
+yes . goodbye ! what can i do for you ?
+
+yes . goodbye ! no .
+
+yes . goodbye ! yes .
+
+yes . goodbye ! hello !
+
+yes . goodbye ! goodbye !
+
+i do not understand what you mean . what can i do for you ? what can i do for you ?
+
+i do not understand what you mean . what can i do for you ? no .
+
+i do not understand what you mean . what can i do for you ? yes .
+
+i do not understand what you mean . what can i do for you ? hello !
+
+i do not understand what you mean . what can i do for you ? goodbye !
+
+i do not understand what you mean . no . what can i do for you ?
+
+i do not understand what you mean . no . no .
+
+i do not understand what you mean . no . yes .
+
+i do not understand what you mean . no . hello !
+
+i do not understand what you mean . no . goodbye !
+
+i do not understand what you mean . yes . what can i do for you ?
+
+i do not understand what you mean . yes . no .
+
+i do not understand what you mean . yes . yes .
+
+i do not understand what you mean . yes . hello !
+
+i do not understand what you mean . yes . goodbye !
+
+i do not understand what you mean . hello ! what can i do for you ?
+
+i do not understand what you mean . hello ! no .
+
+i do not understand what you mean . hello ! yes .
+
+i do not understand what you mean . hello ! hello !
+
+i do not understand what you mean . hello ! goodbye !
+
+i do not understand what you mean . goodbye ! what can i do for you ?
+
+i do not understand what you mean . goodbye ! no .
+
+i do not understand what you mean . goodbye ! yes .
+
+i do not understand what you mean . goodbye ! hello !
+
+i do not understand what you mean . goodbye ! goodbye !
+
+okay . what can i do for you ? what can i do for you ?
+
+okay . what can i do for you ? no .
+
+okay . what can i do for you ? yes .
+
+okay . what can i do for you ? hello !
+
+okay . what can i do for you ? goodbye !
+
+okay . no . what can i do for you ?
+
+okay . no . no .
+
+okay . no . yes .
+
+okay . no . hello !
+
+okay . no . goodbye !
+
+okay . yes . what can i do for you ?
+
+okay . yes . no .
+
+okay . yes . yes .
+
+okay . yes . hello !
+
+okay . yes . goodbye !
+
+okay . hello ! what can i do for you ?
+
+okay . hello ! no .
+
+okay . hello ! yes .
+
+okay . hello ! hello !
+
+okay . hello ! goodbye !
+
+okay . goodbye ! what can i do for you ?
+
+okay . goodbye ! no .
+
+okay . goodbye ! yes .
+
+okay . goodbye ! hello !
+
+okay . goodbye ! goodbye !
+
+sorry what can i do for you ? what can i do for you ?
+
+sorry what can i do for you ? no .
+
+sorry what can i do for you ? yes .
+
+sorry what can i do for you ? hello !
+
+sorry what can i do for you ? goodbye !
+
+sorry no . what can i do for you ?
+
+sorry no . no .
+
+sorry no . yes .
+
+sorry no . hello !
+
+sorry no . goodbye !
+
+sorry yes . what can i do for you ?
+
+sorry yes . no .
+
+sorry yes . yes .
+
+sorry yes . hello !
+
+sorry yes . goodbye !
+
+sorry hello ! what can i do for you ?
+
+sorry hello ! no .
+
+sorry hello ! yes .
+
+sorry hello ! hello !
+
+sorry hello ! goodbye !
+
+sorry goodbye ! what can i do for you ?
+
+sorry goodbye ! no .
+
+sorry goodbye ! yes .
+
+sorry goodbye ! hello !
+
+sorry goodbye ! goodbye !
+
+okay what can i do for you ? what can i do for you ?
+
+okay what can i do for you ? no .
+
+okay what can i do for you ? yes .
+
+okay what can i do for you ? hello !
+
+okay what can i do for you ? goodbye !
+
+okay no . what can i do for you ?
+
+okay no . no .
+
+okay no . yes .
+
+okay no . hello !
+
+okay no . goodbye !
+
+okay yes . what can i do for you ?
+
+okay yes . no .
+
+okay yes . yes .
+
+okay yes . hello !
+
+okay yes . goodbye !
+
+okay hello ! what can i do for you ?
+
+okay hello ! no .
+
+okay hello ! yes .
+
+okay hello ! hello !
+
+okay hello ! goodbye !
+
+okay goodbye ! what can i do for you ?
+
+okay goodbye ! no .
+
+okay goodbye ! yes .
+
+okay goodbye ! hello !
+
+okay goodbye ! goodbye !
+
+pardon ? what can i do for you ? what can i do for you ?
+
+pardon ? what can i do for you ? no .
+
+pardon ? what can i do for you ? yes .
+
+pardon ? what can i do for you ? hello !
+
+pardon ? what can i do for you ? goodbye !
+
+pardon ? no . what can i do for you ?
+
+pardon ? no . no .
+
+pardon ? no . yes .
+
+pardon ? no . hello !
+
+pardon ? no . goodbye !
+
+pardon ? yes . what can i do for you ?
+
+pardon ? yes . no .
+
+pardon ? yes . yes .
+
+pardon ? yes . hello !
+
+pardon ? yes . goodbye !
+
+pardon ? hello ! what can i do for you ?
+
+pardon ? hello ! no .
+
+pardon ? hello ! yes .
+
+pardon ? hello ! hello !
+
+pardon ? hello ! goodbye !
+
+pardon ? goodbye ! what can i do for you ?
+
+pardon ? goodbye ! no .
+
+pardon ? goodbye ! yes .
+
+pardon ? goodbye ! hello !
+
+pardon ? goodbye ! goodbye !
+
+pardon i did not hear what you said . what can i do for you ? what can i do for you ?
+
+pardon i did not hear what you said . what can i do for you ? no .
+
+pardon i did not hear what you said . what can i do for you ? yes .
+
+pardon i did not hear what you said . what can i do for you ? hello !
+
+pardon i did not hear what you said . what can i do for you ? goodbye !
+
+pardon i did not hear what you said . no . what can i do for you ?
+
+pardon i did not hear what you said . no . no .
+
+pardon i did not hear what you said . no . yes .
+
+pardon i did not hear what you said . no . hello !
+
+pardon i did not hear what you said . no . goodbye !
+
+pardon i did not hear what you said . yes . what can i do for you ?
+
+pardon i did not hear what you said . yes . no .
+
+pardon i did not hear what you said . yes . yes .
+
+pardon i did not hear what you said . yes . hello !
+
+pardon i did not hear what you said . yes . goodbye !
+
+pardon i did not hear what you said . hello ! what can i do for you ?
+
+pardon i did not hear what you said . hello ! no .
+
+pardon i did not hear what you said . hello ! yes .
+
+pardon i did not hear what you said . hello ! hello !
+
+pardon i did not hear what you said . hello ! goodbye !
+
+pardon i did not hear what you said . goodbye ! what can i do for you ?
+
+pardon i did not hear what you said . goodbye ! no .
+
+pardon i did not hear what you said . goodbye ! yes .
+
+pardon i did not hear what you said . goodbye ! hello !
+
+pardon i did not hear what you said . goodbye ! goodbye !
+
+get help . what can i do for you ? what can i do for you ?
+
+get help . what can i do for you ? no .
+
+get help . what can i do for you ? yes .
+
+get help . what can i do for you ? hello !
+
+get help . what can i do for you ? goodbye !
+
+get help . no . what can i do for you ?
+
+get help . no . no .
+
+get help . no . yes .
+
+get help . no . hello !
+
+get help . no . goodbye !
+
+get help . yes . what can i do for you ?
+
+get help . yes . no .
+
+get help . yes . yes .
+
+get help . yes . hello !
+
+get help . yes . goodbye !
+
+get help . hello ! what can i do for you ?
+
+get help . hello ! no .
+
+get help . hello ! yes .
+
+get help . hello ! hello !
+
+get help . hello ! goodbye !
+
+get help . goodbye ! what can i do for you ?
+
+get help . goodbye ! no .
+
+get help . goodbye ! yes .
+
+get help . goodbye ! hello !
+
+get help . goodbye ! goodbye !
+
+top . what can i do for you ? what can i do for you ?
+
+top . what can i do for you ? no .
+
+top . what can i do for you ? yes .
+
+top . what can i do for you ? hello !
+
+top . what can i do for you ? goodbye !
+
+top . no . what can i do for you ?
+
+top . no . no .
+
+top . no . yes .
+
+top . no . hello !
+
+top . no . goodbye !
+
+top . yes . what can i do for you ?
+
+top . yes . no .
+
+top . yes . yes .
+
+top . yes . hello !
+
+top . yes . goodbye !
+
+top . hello ! what can i do for you ?
+
+top . hello ! no .
+
+top . hello ! yes .
+
+top . hello ! hello !
+
+top . hello ! goodbye !
+
+top . goodbye ! what can i do for you ?
+
+top . goodbye ! no .
+
+top . goodbye ! yes .
+
+top . goodbye ! hello !
+
+top . goodbye ! goodbye !
+
+goodbye ! what can i do for you ? what can i do for you ?
+
+goodbye ! what can i do for you ? no .
+
+goodbye ! what can i do for you ? yes .
+
+goodbye ! what can i do for you ? hello !
+
+goodbye ! what can i do for you ? goodbye !
+
+goodbye ! no . what can i do for you ?
+
+goodbye ! no . no .
+
+goodbye ! no . yes .
+
+goodbye ! no . hello !
+
+goodbye ! no . goodbye !
+
+goodbye ! yes . what can i do for you ?
+
+goodbye ! yes . no .
+
+goodbye ! yes . yes .
+
+goodbye ! yes . hello !
+
+goodbye ! yes . goodbye !
+
+goodbye ! hello ! what can i do for you ?
+
+goodbye ! hello ! no .
+
+goodbye ! hello ! yes .
+
+goodbye ! hello ! hello !
+
+goodbye ! hello ! goodbye !
+
+goodbye ! goodbye ! what can i do for you ?
+
+goodbye ! goodbye ! no .
+
+goodbye ! goodbye ! yes .
+
+goodbye ! goodbye ! hello !
+
+goodbye ! goodbye ! goodbye !
+
+get help . what can i do for you ? what can i do for you ?
+
+get help . what can i do for you ? no .
+
+get help . what can i do for you ? yes .
+
+get help . what can i do for you ? hello !
+
+get help . what can i do for you ? goodbye !
+
+get help . no . what can i do for you ?
+
+get help . no . no .
+
+get help . no . yes .
+
+get help . no . hello !
+
+get help . no . goodbye !
+
+get help . yes . what can i do for you ?
+
+get help . yes . no .
+
+get help . yes . yes .
+
+get help . yes . hello !
+
+get help . yes . goodbye !
+
+get help . hello ! what can i do for you ?
+
+get help . hello ! no .
+
+get help . hello ! yes .
+
+get help . hello ! hello !
+
+get help . hello ! goodbye !
+
+get help . goodbye ! what can i do for you ?
+
+get help . goodbye ! no .
+
+get help . goodbye ! yes .
+
+get help . goodbye ! hello !
+
+get help . goodbye ! goodbye !
+
+top . what can i do for you ? what can i do for you ?
+
+top . what can i do for you ? no .
+
+top . what can i do for you ? yes .
+
+top . what can i do for you ? hello !
+
+top . what can i do for you ? goodbye !
+
+top . no . what can i do for you ?
+
+top . no . no .
+
+top . no . yes .
+
+top . no . hello !
+
+top . no . goodbye !
+
+top . yes . what can i do for you ?
+
+top . yes . no .
+
+top . yes . yes .
+
+top . yes . hello !
+
+top . yes . goodbye !
+
+top . hello ! what can i do for you ?
+
+top . hello ! no .
+
+top . hello ! yes .
+
+top . hello ! hello !
+
+top . hello ! goodbye !
+
+top . goodbye ! what can i do for you ?
+
+top . goodbye ! no .
+
+top . goodbye ! yes .
+
+top . goodbye ! hello !
+
+top . goodbye ! goodbye !
+
+managed to get help . managed to get help .
+
+managed to get help . failed to get help .
+
+managed to get help . started to get help .
+
+managed to get help . waiting to get help .
+
+managed to get help . managed to top .
+
+managed to get help . failed to top .
+
+managed to get help . started to top .
+
+managed to get help . waiting to top .
+
+managed to get help . what can i do for you ?
+
+managed to get help . do you want to get help ?
+
+managed to get help . do you want to top ?
+
+managed to get help . no .
+
+managed to get help . yes .
+
+managed to get help . hello !
+
+managed to get help . lets see .
+
+managed to get help . so ,
+
+managed to get help . i thought you said
+
+managed to get help . i am sorry i do not understand .
+
+managed to get help . okay
+
+managed to get help . no .
+
+managed to get help . yes .
+
+managed to get help . i do not understand what you mean .
+
+managed to get help . okay .
+
+managed to get help . sorry
+
+managed to get help . okay
+
+managed to get help . pardon ?
+
+managed to get help . pardon i did not hear what you said .
+
+managed to get help . get help .
+
+managed to get help . top .
+
+managed to get help . goodbye !
+
+managed to get help . get help .
+
+managed to get help . top .
+
+failed to get help . managed to get help .
+
+failed to get help . failed to get help .
+
+failed to get help . started to get help .
+
+failed to get help . waiting to get help .
+
+failed to get help . managed to top .
+
+failed to get help . failed to top .
+
+failed to get help . started to top .
+
+failed to get help . waiting to top .
+
+failed to get help . what can i do for you ?
+
+failed to get help . do you want to get help ?
+
+failed to get help . do you want to top ?
+
+failed to get help . no .
+
+failed to get help . yes .
+
+failed to get help . hello !
+
+failed to get help . lets see .
+
+failed to get help . so ,
+
+failed to get help . i thought you said
+
+failed to get help . i am sorry i do not understand .
+
+failed to get help . okay
+
+failed to get help . no .
+
+failed to get help . yes .
+
+failed to get help . i do not understand what you mean .
+
+failed to get help . okay .
+
+failed to get help . sorry
+
+failed to get help . okay
+
+failed to get help . pardon ?
+
+failed to get help . pardon i did not hear what you said .
+
+failed to get help . get help .
+
+failed to get help . top .
+
+failed to get help . goodbye !
+
+failed to get help . get help .
+
+failed to get help . top .
+
+started to get help . managed to get help .
+
+started to get help . failed to get help .
+
+started to get help . started to get help .
+
+started to get help . waiting to get help .
+
+started to get help . managed to top .
+
+started to get help . failed to top .
+
+started to get help . started to top .
+
+started to get help . waiting to top .
+
+started to get help . what can i do for you ?
+
+started to get help . do you want to get help ?
+
+started to get help . do you want to top ?
+
+started to get help . no .
+
+started to get help . yes .
+
+started to get help . hello !
+
+started to get help . lets see .
+
+started to get help . so ,
+
+started to get help . i thought you said
+
+started to get help . i am sorry i do not understand .
+
+started to get help . okay
+
+started to get help . no .
+
+started to get help . yes .
+
+started to get help . i do not understand what you mean .
+
+started to get help . okay .
+
+started to get help . sorry
+
+started to get help . okay
+
+started to get help . pardon ?
+
+started to get help . pardon i did not hear what you said .
+
+started to get help . get help .
+
+started to get help . top .
+
+started to get help . goodbye !
+
+started to get help . get help .
+
+started to get help . top .
+
+waiting to get help . managed to get help .
+
+waiting to get help . failed to get help .
+
+waiting to get help . started to get help .
+
+waiting to get help . waiting to get help .
+
+waiting to get help . managed to top .
+
+waiting to get help . failed to top .
+
+waiting to get help . started to top .
+
+waiting to get help . waiting to top .
+
+waiting to get help . what can i do for you ?
+
+waiting to get help . do you want to get help ?
+
+waiting to get help . do you want to top ?
+
+waiting to get help . no .
+
+waiting to get help . yes .
+
+waiting to get help . hello !
+
+waiting to get help . lets see .
+
+waiting to get help . so ,
+
+waiting to get help . i thought you said
+
+waiting to get help . i am sorry i do not understand .
+
+waiting to get help . okay
+
+waiting to get help . no .
+
+waiting to get help . yes .
+
+waiting to get help . i do not understand what you mean .
+
+waiting to get help . okay .
+
+waiting to get help . sorry
+
+waiting to get help . okay
+
+waiting to get help . pardon ?
+
+waiting to get help . pardon i did not hear what you said .
+
+waiting to get help . get help .
+
+waiting to get help . top .
+
+waiting to get help . goodbye !
+
+waiting to get help . get help .
+
+waiting to get help . top .
+
+managed to top . managed to get help .
+
+managed to top . failed to get help .
+
+managed to top . started to get help .
+
+managed to top . waiting to get help .
+
+managed to top . managed to top .
+
+managed to top . failed to top .
+
+managed to top . started to top .
+
+managed to top . waiting to top .
+
+managed to top . what can i do for you ?
+
+managed to top . do you want to get help ?
+
+managed to top . do you want to top ?
+
+managed to top . no .
+
+managed to top . yes .
+
+managed to top . hello !
+
+managed to top . lets see .
+
+managed to top . so ,
+
+managed to top . i thought you said
+
+managed to top . i am sorry i do not understand .
+
+managed to top . okay
+
+managed to top . no .
+
+managed to top . yes .
+
+managed to top . i do not understand what you mean .
+
+managed to top . okay .
+
+managed to top . sorry
+
+managed to top . okay
+
+managed to top . pardon ?
+
+managed to top . pardon i did not hear what you said .
+
+managed to top . get help .
+
+managed to top . top .
+
+managed to top . goodbye !
+
+managed to top . get help .
+
+managed to top . top .
+
+failed to top . managed to get help .
+
+failed to top . failed to get help .
+
+failed to top . started to get help .
+
+failed to top . waiting to get help .
+
+failed to top . managed to top .
+
+failed to top . failed to top .
+
+failed to top . started to top .
+
+failed to top . waiting to top .
+
+failed to top . what can i do for you ?
+
+failed to top . do you want to get help ?
+
+failed to top . do you want to top ?
+
+failed to top . no .
+
+failed to top . yes .
+
+failed to top . hello !
+
+failed to top . lets see .
+
+failed to top . so ,
+
+failed to top . i thought you said
+
+failed to top . i am sorry i do not understand .
+
+failed to top . okay
+
+failed to top . no .
+
+failed to top . yes .
+
+failed to top . i do not understand what you mean .
+
+failed to top . okay .
+
+failed to top . sorry
+
+failed to top . okay
+
+failed to top . pardon ?
+
+failed to top . pardon i did not hear what you said .
+
+failed to top . get help .
+
+failed to top . top .
+
+failed to top . goodbye !
+
+failed to top . get help .
+
+failed to top . top .
+
+started to top . managed to get help .
+
+started to top . failed to get help .
+
+started to top . started to get help .
+
+started to top . waiting to get help .
+
+started to top . managed to top .
+
+started to top . failed to top .
+
+started to top . started to top .
+
+started to top . waiting to top .
+
+started to top . what can i do for you ?
+
+started to top . do you want to get help ?
+
+started to top . do you want to top ?
+
+started to top . no .
+
+started to top . yes .
+
+started to top . hello !
+
+started to top . lets see .
+
+started to top . so ,
+
+started to top . i thought you said
+
+started to top . i am sorry i do not understand .
+
+started to top . okay
+
+started to top . no .
+
+started to top . yes .
+
+started to top . i do not understand what you mean .
+
+started to top . okay .
+
+started to top . sorry
+
+started to top . okay
+
+started to top . pardon ?
+
+started to top . pardon i did not hear what you said .
+
+started to top . get help .
+
+started to top . top .
+
+started to top . goodbye !
+
+started to top . get help .
+
+started to top . top .
+
+waiting to top . managed to get help .
+
+waiting to top . failed to get help .
+
+waiting to top . started to get help .
+
+waiting to top . waiting to get help .
+
+waiting to top . managed to top .
+
+waiting to top . failed to top .
+
+waiting to top . started to top .
+
+waiting to top . waiting to top .
+
+waiting to top . what can i do for you ?
+
+waiting to top . do you want to get help ?
+
+waiting to top . do you want to top ?
+
+waiting to top . no .
+
+waiting to top . yes .
+
+waiting to top . hello !
+
+waiting to top . lets see .
+
+waiting to top . so ,
+
+waiting to top . i thought you said
+
+waiting to top . i am sorry i do not understand .
+
+waiting to top . okay
+
+waiting to top . no .
+
+waiting to top . yes .
+
+waiting to top . i do not understand what you mean .
+
+waiting to top . okay .
+
+waiting to top . sorry
+
+waiting to top . okay
+
+waiting to top . pardon ?
+
+waiting to top . pardon i did not hear what you said .
+
+waiting to top . get help .
+
+waiting to top . top .
+
+waiting to top . goodbye !
+
+waiting to top . get help .
+
+waiting to top . top .
+
+what can i do for you ? managed to get help .
+
+what can i do for you ? failed to get help .
+
+what can i do for you ? started to get help .
+
+what can i do for you ? waiting to get help .
+
+what can i do for you ? managed to top .
+
+what can i do for you ? failed to top .
+
+what can i do for you ? started to top .
+
+what can i do for you ? waiting to top .
+
+what can i do for you ? what can i do for you ?
+
+what can i do for you ? do you want to get help ?
+
+what can i do for you ? do you want to top ?
+
+what can i do for you ? no .
+
+what can i do for you ? yes .
+
+what can i do for you ? hello !
+
+what can i do for you ? lets see .
+
+what can i do for you ? so ,
+
+what can i do for you ? i thought you said
+
+what can i do for you ? i am sorry i do not understand .
+
+what can i do for you ? okay
+
+what can i do for you ? no .
+
+what can i do for you ? yes .
+
+what can i do for you ? i do not understand what you mean .
+
+what can i do for you ? okay .
+
+what can i do for you ? sorry
+
+what can i do for you ? okay
+
+what can i do for you ? pardon ?
+
+what can i do for you ? pardon i did not hear what you said .
+
+what can i do for you ? get help .
+
+what can i do for you ? top .
+
+what can i do for you ? goodbye !
+
+what can i do for you ? get help .
+
+what can i do for you ? top .
+
+do you want to get help ? managed to get help .
+
+do you want to get help ? failed to get help .
+
+do you want to get help ? started to get help .
+
+do you want to get help ? waiting to get help .
+
+do you want to get help ? managed to top .
+
+do you want to get help ? failed to top .
+
+do you want to get help ? started to top .
+
+do you want to get help ? waiting to top .
+
+do you want to get help ? what can i do for you ?
+
+do you want to get help ? do you want to get help ?
+
+do you want to get help ? do you want to top ?
+
+do you want to get help ? no .
+
+do you want to get help ? yes .
+
+do you want to get help ? hello !
+
+do you want to get help ? lets see .
+
+do you want to get help ? so ,
+
+do you want to get help ? i thought you said
+
+do you want to get help ? i am sorry i do not understand .
+
+do you want to get help ? okay
+
+do you want to get help ? no .
+
+do you want to get help ? yes .
+
+do you want to get help ? i do not understand what you mean .
+
+do you want to get help ? okay .
+
+do you want to get help ? sorry
+
+do you want to get help ? okay
+
+do you want to get help ? pardon ?
+
+do you want to get help ? pardon i did not hear what you said .
+
+do you want to get help ? get help .
+
+do you want to get help ? top .
+
+do you want to get help ? goodbye !
+
+do you want to get help ? get help .
+
+do you want to get help ? top .
+
+do you want to top ? managed to get help .
+
+do you want to top ? failed to get help .
+
+do you want to top ? started to get help .
+
+do you want to top ? waiting to get help .
+
+do you want to top ? managed to top .
+
+do you want to top ? failed to top .
+
+do you want to top ? started to top .
+
+do you want to top ? waiting to top .
+
+do you want to top ? what can i do for you ?
+
+do you want to top ? do you want to get help ?
+
+do you want to top ? do you want to top ?
+
+do you want to top ? no .
+
+do you want to top ? yes .
+
+do you want to top ? hello !
+
+do you want to top ? lets see .
+
+do you want to top ? so ,
+
+do you want to top ? i thought you said
+
+do you want to top ? i am sorry i do not understand .
+
+do you want to top ? okay
+
+do you want to top ? no .
+
+do you want to top ? yes .
+
+do you want to top ? i do not understand what you mean .
+
+do you want to top ? okay .
+
+do you want to top ? sorry
+
+do you want to top ? okay
+
+do you want to top ? pardon ?
+
+do you want to top ? pardon i did not hear what you said .
+
+do you want to top ? get help .
+
+do you want to top ? top .
+
+do you want to top ? goodbye !
+
+do you want to top ? get help .
+
+do you want to top ? top .
+
+no . managed to get help .
+
+no . failed to get help .
+
+no . started to get help .
+
+no . waiting to get help .
+
+no . managed to top .
+
+no . failed to top .
+
+no . started to top .
+
+no . waiting to top .
+
+no . what can i do for you ?
+
+no . do you want to get help ?
+
+no . do you want to top ?
+
+no . no .
+
+no . yes .
+
+no . hello !
+
+no . lets see .
+
+no . so ,
+
+no . i thought you said
+
+no . i am sorry i do not understand .
+
+no . okay
+
+no . no .
+
+no . yes .
+
+no . i do not understand what you mean .
+
+no . okay .
+
+no . sorry
+
+no . okay
+
+no . pardon ?
+
+no . pardon i did not hear what you said .
+
+no . get help .
+
+no . top .
+
+no . goodbye !
+
+no . get help .
+
+no . top .
+
+yes . managed to get help .
+
+yes . failed to get help .
+
+yes . started to get help .
+
+yes . waiting to get help .
+
+yes . managed to top .
+
+yes . failed to top .
+
+yes . started to top .
+
+yes . waiting to top .
+
+yes . what can i do for you ?
+
+yes . do you want to get help ?
+
+yes . do you want to top ?
+
+yes . no .
+
+yes . yes .
+
+yes . hello !
+
+yes . lets see .
+
+yes . so ,
+
+yes . i thought you said
+
+yes . i am sorry i do not understand .
+
+yes . okay
+
+yes . no .
+
+yes . yes .
+
+yes . i do not understand what you mean .
+
+yes . okay .
+
+yes . sorry
+
+yes . okay
+
+yes . pardon ?
+
+yes . pardon i did not hear what you said .
+
+yes . get help .
+
+yes . top .
+
+yes . goodbye !
+
+yes . get help .
+
+yes . top .
+
+hello ! managed to get help .
+
+hello ! failed to get help .
+
+hello ! started to get help .
+
+hello ! waiting to get help .
+
+hello ! managed to top .
+
+hello ! failed to top .
+
+hello ! started to top .
+
+hello ! waiting to top .
+
+hello ! what can i do for you ?
+
+hello ! do you want to get help ?
+
+hello ! do you want to top ?
+
+hello ! no .
+
+hello ! yes .
+
+hello ! hello !
+
+hello ! lets see .
+
+hello ! so ,
+
+hello ! i thought you said
+
+hello ! i am sorry i do not understand .
+
+hello ! okay
+
+hello ! no .
+
+hello ! yes .
+
+hello ! i do not understand what you mean .
+
+hello ! okay .
+
+hello ! sorry
+
+hello ! okay
+
+hello ! pardon ?
+
+hello ! pardon i did not hear what you said .
+
+hello ! get help .
+
+hello ! top .
+
+hello ! goodbye !
+
+hello ! get help .
+
+hello ! top .
+
+lets see . managed to get help .
+
+lets see . failed to get help .
+
+lets see . started to get help .
+
+lets see . waiting to get help .
+
+lets see . managed to top .
+
+lets see . failed to top .
+
+lets see . started to top .
+
+lets see . waiting to top .
+
+lets see . what can i do for you ?
+
+lets see . do you want to get help ?
+
+lets see . do you want to top ?
+
+lets see . no .
+
+lets see . yes .
+
+lets see . hello !
+
+lets see . lets see .
+
+lets see . so ,
+
+lets see . i thought you said
+
+lets see . i am sorry i do not understand .
+
+lets see . okay
+
+lets see . no .
+
+lets see . yes .
+
+lets see . i do not understand what you mean .
+
+lets see . okay .
+
+lets see . sorry
+
+lets see . okay
+
+lets see . pardon ?
+
+lets see . pardon i did not hear what you said .
+
+lets see . get help .
+
+lets see . top .
+
+lets see . goodbye !
+
+lets see . get help .
+
+lets see . top .
+
+so , managed to get help .
+
+so , failed to get help .
+
+so , started to get help .
+
+so , waiting to get help .
+
+so , managed to top .
+
+so , failed to top .
+
+so , started to top .
+
+so , waiting to top .
+
+so , what can i do for you ?
+
+so , do you want to get help ?
+
+so , do you want to top ?
+
+so , no .
+
+so , yes .
+
+so , hello !
+
+so , lets see .
+
+so , so ,
+
+so , i thought you said
+
+so , i am sorry i do not understand .
+
+so , okay
+
+so , no .
+
+so , yes .
+
+so , i do not understand what you mean .
+
+so , okay .
+
+so , sorry
+
+so , okay
+
+so , pardon ?
+
+so , pardon i did not hear what you said .
+
+so , get help .
+
+so , top .
+
+so , goodbye !
+
+so , get help .
+
+so , top .
+
+i thought you said managed to get help .
+
+i thought you said failed to get help .
+
+i thought you said started to get help .
+
+i thought you said waiting to get help .
+
+i thought you said managed to top .
+
+i thought you said failed to top .
+
+i thought you said started to top .
+
+i thought you said waiting to top .
+
+i thought you said what can i do for you ?
+
+i thought you said do you want to get help ?
+
+i thought you said do you want to top ?
+
+i thought you said no .
+
+i thought you said yes .
+
+i thought you said hello !
+
+i thought you said lets see .
+
+i thought you said so ,
+
+i thought you said i thought you said
+
+i thought you said i am sorry i do not understand .
+
+i thought you said okay
+
+i thought you said no .
+
+i thought you said yes .
+
+i thought you said i do not understand what you mean .
+
+i thought you said okay .
+
+i thought you said sorry
+
+i thought you said okay
+
+i thought you said pardon ?
+
+i thought you said pardon i did not hear what you said .
+
+i thought you said get help .
+
+i thought you said top .
+
+i thought you said goodbye !
+
+i thought you said get help .
+
+i thought you said top .
+
+i am sorry i do not understand . managed to get help .
+
+i am sorry i do not understand . failed to get help .
+
+i am sorry i do not understand . started to get help .
+
+i am sorry i do not understand . waiting to get help .
+
+i am sorry i do not understand . managed to top .
+
+i am sorry i do not understand . failed to top .
+
+i am sorry i do not understand . started to top .
+
+i am sorry i do not understand . waiting to top .
+
+i am sorry i do not understand . what can i do for you ?
+
+i am sorry i do not understand . do you want to get help ?
+
+i am sorry i do not understand . do you want to top ?
+
+i am sorry i do not understand . no .
+
+i am sorry i do not understand . yes .
+
+i am sorry i do not understand . hello !
+
+i am sorry i do not understand . lets see .
+
+i am sorry i do not understand . so ,
+
+i am sorry i do not understand . i thought you said
+
+i am sorry i do not understand . i am sorry i do not understand .
+
+i am sorry i do not understand . okay
+
+i am sorry i do not understand . no .
+
+i am sorry i do not understand . yes .
+
+i am sorry i do not understand . i do not understand what you mean .
+
+i am sorry i do not understand . okay .
+
+i am sorry i do not understand . sorry
+
+i am sorry i do not understand . okay
+
+i am sorry i do not understand . pardon ?
+
+i am sorry i do not understand . pardon i did not hear what you said .
+
+i am sorry i do not understand . get help .
+
+i am sorry i do not understand . top .
+
+i am sorry i do not understand . goodbye !
+
+i am sorry i do not understand . get help .
+
+i am sorry i do not understand . top .
+
+okay managed to get help .
+
+okay failed to get help .
+
+okay started to get help .
+
+okay waiting to get help .
+
+okay managed to top .
+
+okay failed to top .
+
+okay started to top .
+
+okay waiting to top .
+
+okay what can i do for you ?
+
+okay do you want to get help ?
+
+okay do you want to top ?
+
+okay no .
+
+okay yes .
+
+okay hello !
+
+okay lets see .
+
+okay so ,
+
+okay i thought you said
+
+okay i am sorry i do not understand .
+
+okay okay
+
+okay no .
+
+okay yes .
+
+okay i do not understand what you mean .
+
+okay okay .
+
+okay sorry
+
+okay okay
+
+okay pardon ?
+
+okay pardon i did not hear what you said .
+
+okay get help .
+
+okay top .
+
+okay goodbye !
+
+okay get help .
+
+okay top .
+
+no . managed to get help .
+
+no . failed to get help .
+
+no . started to get help .
+
+no . waiting to get help .
+
+no . managed to top .
+
+no . failed to top .
+
+no . started to top .
+
+no . waiting to top .
+
+no . what can i do for you ?
+
+no . do you want to get help ?
+
+no . do you want to top ?
+
+no . no .
+
+no . yes .
+
+no . hello !
+
+no . lets see .
+
+no . so ,
+
+no . i thought you said
+
+no . i am sorry i do not understand .
+
+no . okay
+
+no . no .
+
+no . yes .
+
+no . i do not understand what you mean .
+
+no . okay .
+
+no . sorry
+
+no . okay
+
+no . pardon ?
+
+no . pardon i did not hear what you said .
+
+no . get help .
+
+no . top .
+
+no . goodbye !
+
+no . get help .
+
+no . top .
+
+yes . managed to get help .
+
+yes . failed to get help .
+
+yes . started to get help .
+
+yes . waiting to get help .
+
+yes . managed to top .
+
+yes . failed to top .
+
+yes . started to top .
+
+yes . waiting to top .
+
+yes . what can i do for you ?
+
+yes . do you want to get help ?
+
+yes . do you want to top ?
+
+yes . no .
+
+yes . yes .
+
+yes . hello !
+
+yes . lets see .
+
+yes . so ,
+
+yes . i thought you said
+
+yes . i am sorry i do not understand .
+
+yes . okay
+
+yes . no .
+
+yes . yes .
+
+yes . i do not understand what you mean .
+
+yes . okay .
+
+yes . sorry
+
+yes . okay
+
+yes . pardon ?
+
+yes . pardon i did not hear what you said .
+
+yes . get help .
+
+yes . top .
+
+yes . goodbye !
+
+yes . get help .
+
+yes . top .
+
+i do not understand what you mean . managed to get help .
+
+i do not understand what you mean . failed to get help .
+
+i do not understand what you mean . started to get help .
+
+i do not understand what you mean . waiting to get help .
+
+i do not understand what you mean . managed to top .
+
+i do not understand what you mean . failed to top .
+
+i do not understand what you mean . started to top .
+
+i do not understand what you mean . waiting to top .
+
+i do not understand what you mean . what can i do for you ?
+
+i do not understand what you mean . do you want to get help ?
+
+i do not understand what you mean . do you want to top ?
+
+i do not understand what you mean . no .
+
+i do not understand what you mean . yes .
+
+i do not understand what you mean . hello !
+
+i do not understand what you mean . lets see .
+
+i do not understand what you mean . so ,
+
+i do not understand what you mean . i thought you said
+
+i do not understand what you mean . i am sorry i do not understand .
+
+i do not understand what you mean . okay
+
+i do not understand what you mean . no .
+
+i do not understand what you mean . yes .
+
+i do not understand what you mean . i do not understand what you mean .
+
+i do not understand what you mean . okay .
+
+i do not understand what you mean . sorry
+
+i do not understand what you mean . okay
+
+i do not understand what you mean . pardon ?
+
+i do not understand what you mean . pardon i did not hear what you said .
+
+i do not understand what you mean . get help .
+
+i do not understand what you mean . top .
+
+i do not understand what you mean . goodbye !
+
+i do not understand what you mean . get help .
+
+i do not understand what you mean . top .
+
+okay . managed to get help .
+
+okay . failed to get help .
+
+okay . started to get help .
+
+okay . waiting to get help .
+
+okay . managed to top .
+
+okay . failed to top .
+
+okay . started to top .
+
+okay . waiting to top .
+
+okay . what can i do for you ?
+
+okay . do you want to get help ?
+
+okay . do you want to top ?
+
+okay . no .
+
+okay . yes .
+
+okay . hello !
+
+okay . lets see .
+
+okay . so ,
+
+okay . i thought you said
+
+okay . i am sorry i do not understand .
+
+okay . okay
+
+okay . no .
+
+okay . yes .
+
+okay . i do not understand what you mean .
+
+okay . okay .
+
+okay . sorry
+
+okay . okay
+
+okay . pardon ?
+
+okay . pardon i did not hear what you said .
+
+okay . get help .
+
+okay . top .
+
+okay . goodbye !
+
+okay . get help .
+
+okay . top .
+
+sorry managed to get help .
+
+sorry failed to get help .
+
+sorry started to get help .
+
+sorry waiting to get help .
+
+sorry managed to top .
+
+sorry failed to top .
+
+sorry started to top .
+
+sorry waiting to top .
+
+sorry what can i do for you ?
+
+sorry do you want to get help ?
+
+sorry do you want to top ?
+
+sorry no .
+
+sorry yes .
+
+sorry hello !
+
+sorry lets see .
+
+sorry so ,
+
+sorry i thought you said
+
+sorry i am sorry i do not understand .
+
+sorry okay
+
+sorry no .
+
+sorry yes .
+
+sorry i do not understand what you mean .
+
+sorry okay .
+
+sorry sorry
+
+sorry okay
+
+sorry pardon ?
+
+sorry pardon i did not hear what you said .
+
+sorry get help .
+
+sorry top .
+
+sorry goodbye !
+
+sorry get help .
+
+sorry top .
+
+okay managed to get help .
+
+okay failed to get help .
+
+okay started to get help .
+
+okay waiting to get help .
+
+okay managed to top .
+
+okay failed to top .
+
+okay started to top .
+
+okay waiting to top .
+
+okay what can i do for you ?
+
+okay do you want to get help ?
+
+okay do you want to top ?
+
+okay no .
+
+okay yes .
+
+okay hello !
+
+okay lets see .
+
+okay so ,
+
+okay i thought you said
+
+okay i am sorry i do not understand .
+
+okay okay
+
+okay no .
+
+okay yes .
+
+okay i do not understand what you mean .
+
+okay okay .
+
+okay sorry
+
+okay okay
+
+okay pardon ?
+
+okay pardon i did not hear what you said .
+
+okay get help .
+
+okay top .
+
+okay goodbye !
+
+okay get help .
+
+okay top .
+
+pardon ? managed to get help .
+
+pardon ? failed to get help .
+
+pardon ? started to get help .
+
+pardon ? waiting to get help .
+
+pardon ? managed to top .
+
+pardon ? failed to top .
+
+pardon ? started to top .
+
+pardon ? waiting to top .
+
+pardon ? what can i do for you ?
+
+pardon ? do you want to get help ?
+
+pardon ? do you want to top ?
+
+pardon ? no .
+
+pardon ? yes .
+
+pardon ? hello !
+
+pardon ? lets see .
+
+pardon ? so ,
+
+pardon ? i thought you said
+
+pardon ? i am sorry i do not understand .
+
+pardon ? okay
+
+pardon ? no .
+
+pardon ? yes .
+
+pardon ? i do not understand what you mean .
+
+pardon ? okay .
+
+pardon ? sorry
+
+pardon ? okay
+
+pardon ? pardon ?
+
+pardon ? pardon i did not hear what you said .
+
+pardon ? get help .
+
+pardon ? top .
+
+pardon ? goodbye !
+
+pardon ? get help .
+
+pardon ? top .
+
+pardon i did not hear what you said . managed to get help .
+
+pardon i did not hear what you said . failed to get help .
+
+pardon i did not hear what you said . started to get help .
+
+pardon i did not hear what you said . waiting to get help .
+
+pardon i did not hear what you said . managed to top .
+
+pardon i did not hear what you said . failed to top .
+
+pardon i did not hear what you said . started to top .
+
+pardon i did not hear what you said . waiting to top .
+
+pardon i did not hear what you said . what can i do for you ?
+
+pardon i did not hear what you said . do you want to get help ?
+
+pardon i did not hear what you said . do you want to top ?
+
+pardon i did not hear what you said . no .
+
+pardon i did not hear what you said . yes .
+
+pardon i did not hear what you said . hello !
+
+pardon i did not hear what you said . lets see .
+
+pardon i did not hear what you said . so ,
+
+pardon i did not hear what you said . i thought you said
+
+pardon i did not hear what you said . i am sorry i do not understand .
+
+pardon i did not hear what you said . okay
+
+pardon i did not hear what you said . no .
+
+pardon i did not hear what you said . yes .
+
+pardon i did not hear what you said . i do not understand what you mean .
+
+pardon i did not hear what you said . okay .
+
+pardon i did not hear what you said . sorry
+
+pardon i did not hear what you said . okay
+
+pardon i did not hear what you said . pardon ?
+
+pardon i did not hear what you said . pardon i did not hear what you said .
+
+pardon i did not hear what you said . get help .
+
+pardon i did not hear what you said . top .
+
+pardon i did not hear what you said . goodbye !
+
+pardon i did not hear what you said . get help .
+
+pardon i did not hear what you said . top .
+
+get help . managed to get help .
+
+get help . failed to get help .
+
+get help . started to get help .
+
+get help . waiting to get help .
+
+get help . managed to top .
+
+get help . failed to top .
+
+get help . started to top .
+
+get help . waiting to top .
+
+get help . what can i do for you ?
+
+get help . do you want to get help ?
+
+get help . do you want to top ?
+
+get help . no .
+
+get help . yes .
+
+get help . hello !
+
+get help . lets see .
+
+get help . so ,
+
+get help . i thought you said
+
+get help . i am sorry i do not understand .
+
+get help . okay
+
+get help . no .
+
+get help . yes .
+
+get help . i do not understand what you mean .
+
+get help . okay .
+
+get help . sorry
+
+get help . okay
+
+get help . pardon ?
+
+get help . pardon i did not hear what you said .
+
+get help . get help .
+
+get help . top .
+
+get help . goodbye !
+
+get help . get help .
+
+get help . top .
+
+top . managed to get help .
+
+top . failed to get help .
+
+top . started to get help .
+
+top . waiting to get help .
+
+top . managed to top .
+
+top . failed to top .
+
+top . started to top .
+
+top . waiting to top .
+
+top . what can i do for you ?
+
+top . do you want to get help ?
+
+top . do you want to top ?
+
+top . no .
+
+top . yes .
+
+top . hello !
+
+top . lets see .
+
+top . so ,
+
+top . i thought you said
+
+top . i am sorry i do not understand .
+
+top . okay
+
+top . no .
+
+top . yes .
+
+top . i do not understand what you mean .
+
+top . okay .
+
+top . sorry
+
+top . okay
+
+top . pardon ?
+
+top . pardon i did not hear what you said .
+
+top . get help .
+
+top . top .
+
+top . goodbye !
+
+top . get help .
+
+top . top .
+
+goodbye ! managed to get help .
+
+goodbye ! failed to get help .
+
+goodbye ! started to get help .
+
+goodbye ! waiting to get help .
+
+goodbye ! managed to top .
+
+goodbye ! failed to top .
+
+goodbye ! started to top .
+
+goodbye ! waiting to top .
+
+goodbye ! what can i do for you ?
+
+goodbye ! do you want to get help ?
+
+goodbye ! do you want to top ?
+
+goodbye ! no .
+
+goodbye ! yes .
+
+goodbye ! hello !
+
+goodbye ! lets see .
+
+goodbye ! so ,
+
+goodbye ! i thought you said
+
+goodbye ! i am sorry i do not understand .
+
+goodbye ! okay
+
+goodbye ! no .
+
+goodbye ! yes .
+
+goodbye ! i do not understand what you mean .
+
+goodbye ! okay .
+
+goodbye ! sorry
+
+goodbye ! okay
+
+goodbye ! pardon ?
+
+goodbye ! pardon i did not hear what you said .
+
+goodbye ! get help .
+
+goodbye ! top .
+
+goodbye ! goodbye !
+
+goodbye ! get help .
+
+goodbye ! top .
+
+get help . managed to get help .
+
+get help . failed to get help .
+
+get help . started to get help .
+
+get help . waiting to get help .
+
+get help . managed to top .
+
+get help . failed to top .
+
+get help . started to top .
+
+get help . waiting to top .
+
+get help . what can i do for you ?
+
+get help . do you want to get help ?
+
+get help . do you want to top ?
+
+get help . no .
+
+get help . yes .
+
+get help . hello !
+
+get help . lets see .
+
+get help . so ,
+
+get help . i thought you said
+
+get help . i am sorry i do not understand .
+
+get help . okay
+
+get help . no .
+
+get help . yes .
+
+get help . i do not understand what you mean .
+
+get help . okay .
+
+get help . sorry
+
+get help . okay
+
+get help . pardon ?
+
+get help . pardon i did not hear what you said .
+
+get help . get help .
+
+get help . top .
+
+get help . goodbye !
+
+get help . get help .
+
+get help . top .
+
+top . managed to get help .
+
+top . failed to get help .
+
+top . started to get help .
+
+top . waiting to get help .
+
+top . managed to top .
+
+top . failed to top .
+
+top . started to top .
+
+top . waiting to top .
+
+top . what can i do for you ?
+
+top . do you want to get help ?
+
+top . do you want to top ?
+
+top . no .
+
+top . yes .
+
+top . hello !
+
+top . lets see .
+
+top . so ,
+
+top . i thought you said
+
+top . i am sorry i do not understand .
+
+top . okay
+
+top . no .
+
+top . yes .
+
+top . i do not understand what you mean .
+
+top . okay .
+
+top . sorry
+
+top . okay
+
+top . pardon ?
+
+top . pardon i did not hear what you said .
+
+top . get help .
+
+top . top .
+
+top . goodbye !
+
+top . get help .
+
+top . top .
+
+managed to get help .
+
+failed to get help .
+
+started to get help .
+
+waiting to get help .
+
+managed to top .
+
+failed to top .
+
+started to top .
+
+waiting to top .
+
+what can i do for you ?
+
+do you want to get help ?
+
+do you want to top ?
+
+no .
+
+yes .
+
+hello !
+
+lets see .
+
+so ,
+
+i assume you mean get help .
+
+i assume you mean top .
+
+returning to get help .
+
+returning to top .
+
+so , get help .
+
+so , top .
+
+i thought you said
+
+i am sorry i do not understand .
+
+okay
+
+no .
+
+yes .
+
+get help . .
+
+top . .
+
+i do not understand what you mean .
+
+okay .
+
+sorry
+
+okay
+
+pardon ?
+
+pardon i did not hear what you said .
+
+get help .
+
+top .
+
+goodbye !
+
+get help .
+
+top .
+
+what can i do for you ? what can i do for you ?
+
+what can i do for you ? no .
+
+what can i do for you ? yes .
+
+what can i do for you ? hello !
+
+what can i do for you ? goodbye !
+
+no . what can i do for you ?
+
+no . no .
+
+no . yes .
+
+no . hello !
+
+no . goodbye !
+
+yes . what can i do for you ?
+
+yes . no .
+
+yes . yes .
+
+yes . hello !
+
+yes . goodbye !
+
+hello ! what can i do for you ?
+
+hello ! no .
+
+hello ! yes .
+
+hello ! hello !
+
+hello ! goodbye !
+
+goodbye ! what can i do for you ?
+
+goodbye ! no .
+
+goodbye ! yes .
+
+goodbye ! hello !
+
+goodbye ! goodbye !
+
+managed to get help .
+
+failed to get help .
+
+started to get help .
+
+waiting to get help .
+
+managed to top .
+
+failed to top .
+
+started to top .
+
+waiting to top .
+
+what can i do for you ?
+
+do you want to get help ?
+
+do you want to top ?
+
+no .
+
+yes .
+
+hello !
+
+lets see .
+
+so ,
+
+i thought you said
+
+i am sorry i do not understand .
+
+okay
+
+no .
+
+yes .
+
+i do not understand what you mean .
+
+okay .
+
+sorry
+
+okay
+
+pardon ?
+
+pardon i did not hear what you said .
+
+get help .
+
+top .
+
+goodbye !
+
+get help .
+
+top .
+
+what can i do for you ?
+
+no .
+
+yes .
+
+hello !
+
+goodbye !
+

@@ -1,0 +1,5 @@
+Entity > Animate.
+Animate > HumanBeing, Animal.
+
+HumanBeing = Peter, Paul, Mary.
+Animal = Garfield, Odie, Eeek.

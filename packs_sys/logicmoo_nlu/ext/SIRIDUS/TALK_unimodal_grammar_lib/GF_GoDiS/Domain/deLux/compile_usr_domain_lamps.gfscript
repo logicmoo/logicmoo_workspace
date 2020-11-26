@@ -1,0 +1,9 @@
+i -conversion=finite User/usr_domain_lamps_english.gf
+i -conversion=finite User/usr_domain_lamps_svenska.gf
+i -conversion=finite User/usr_domain_lamps_sem.gf
+
+pm -utf8 -utf8id -printer=header | wf usr_domain_lamps.gfcm
+pm -utf8 -utf8id -printer=cfgm | wf usr_domain_lamps.cfgm
+
+pg -lang=usr_domain_lamps_english -printer=gsl | wf usr_domain_lamps_english.grammar
+pg -lang=usr_domain_lamps_svenska -printer=gsl | wf usr_domain_lamps_svenska.grammar

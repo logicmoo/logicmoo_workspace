@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.cs3.prolog.connector" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.cs3.prolog.connector" id="hooks" name="Lifecycle Hooks"/>
+      </appinfo>
+      <documentation>
+         Define code hooks that should be executed on certain points during the lifecycle of the PrologProcess.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <choice minOccurs="0" maxOccurs="unbounded">
+            <element ref="hook"/>
+            <element ref="registryHook"/>
+         </choice>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="hook">
+      <complexType>
+         <choice minOccurs="0" maxOccurs="unbounded">
+            <element ref="tag"/>
+            <element ref="consult"/>
+            <element ref="libraryDependency"/>
+            <element ref="hookDependency"/>
+         </choice>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  fully qualified class name of a class implementing the org.cs3.pl.prolog.LifeCycleHook interface.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.cs3.pl.LifeCycleHook"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="dependsOn" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated list of hook ids this hook code depends on. E.g. in start-up situation, the hooks specified here will be executed before this hook. (vice versa for shutdown)
+
+Use of this attribute is deprecated, please use the hookDependency element instead.
+               </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Any string that is unique can serve as an identifier for a hook.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="key" type="string">
+            <annotation>
+               <documentation>
+                  An optional key identifying a PrologProcess instance created by the PDT.&lt;p&gt;
+This hook will be registered with all PrologProcess instances that are created using the &lt;code&gt; org.cs3.pdt.PDTPlugin.getPrologProcess(String key)&lt;/code&gt; method with a matching &lt;code&gt;key&lt;/code&gt; argument. If this attribute is ommited, the hook is registered with every PrologProcess created by the PDT.
+
+Use of this attribute is deprecated, please use tag elements instead.
+               </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="tag">
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="consult">
+      <complexType>
+         <attribute name="resource" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the resource that should be consulted.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="libraryDependency">
+      <complexType>
+         <attribute name="library" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The identifier of a a library element. 
+See Extension Point org.cs3.prolog.connector.prologLibrary.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="hookDependency">
+      <complexType>
+         <attribute name="hook" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of another hook.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="registryHook">
+      <complexType>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.cs3.prolog.connector.RegistryHook"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

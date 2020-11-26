@@ -1,0 +1,35 @@
+(note TQC99)
+
+
+(budgetExpenditures Libya GovernmentMilitaryOrganization 
+ (YearFn 1994) 
+ (BillionDollars 1.40000)) 
+
+(budgetExpenditures SaudiArabia GovernmentMilitaryOrganization 
+ (YearFn 1994) 
+ (BillionDollars 15.5000)) 
+
+
+
+
+(query (findall (?GREATER ?TIME)
+
+ (thereExists ?LESSER 
+ (thereExists ?GREATER-AMT 
+ (thereExists ?LESSER-AMT 
+ (and 
+ (budgetExpenditures ?GREATER GovernmentMilitaryOrganization ?TIME ?GREATER-AMT) 
+ (budgetExpenditures ?LESSER GovernmentMilitaryOrganization ?TIME ?LESSER-AMT) 
+ (greaterThan ?GREATER-AMT ?LESSER-AMT) 
+ (or 
+ (and 
+ (equals Libya ?GREATER) 
+ (equals SaudiArabia ?LESSER)) 
+ (and 
+ (equals SaudiArabia ?GREATER) 
+ (equals Libya ?LESSER)))))))))
+
+(answer Saudi Arabia 1994)  
+
+(end_of_file)
+

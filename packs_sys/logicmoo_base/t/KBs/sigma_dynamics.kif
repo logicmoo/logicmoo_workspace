@@ -1,0 +1,1059 @@
+
+;; ====================================================================================
+;; As Kernel Predicates are Passed As they Are and only explored the surface-nth-domains
+;; ====================================================================================
+
+
+
+( as-kernel true 0 )
+( as-kernel false 0 )
+( as-kernel fail 0 )
+( as-kernel succeed 0 )
+( as-kernel trace 0 )
+( as-kernel atom 1 )
+( as-kernel integer 1 )
+( as-kernel number 1 )
+( as-kernel atomic 1 )
+( as-kernel proven 1 )
+( as-kernel proven 2 )
+( as-kernel constant 1 )
+( as-kernel functor 3 )
+( as-kernel and ?UNK )
+( as-kernel or ?UNK )
+( as-kernel arg 3 )
+( as-kernel var 1 )
+( as-kernel nonvar 1 )
+( as-kernel call 1 )
+( as-kernel = 2 )
+( as-kernel \= 2 )
+( as-kernel == 2 )
+( as-kernel \== 2 )
+( as-kernel =\= 2 )
+( as-kernel > 2 )
+( as-kernel < 2 )
+( as-kernel >= 2 )
+( as-kernel =< 2 )
+( as-kernel dif 2 )
+( as-kernel is 2 )
+( as-kernel max 3 )
+( as-kernel min 3 )
+( as-kernel display 1 )
+( as-kernel write 1 )
+( as-kernel nl 0 )
+( as-kernel infer_by ?UNK )
+( as-kernel search_cost ?UNK )
+( as-kernel test_and_decrement_search_cost ?UNK )
+( as-kernel unify ?UNK )
+( as-kernel identical_member ?UNK )
+( as-kernel unifiable_member ?UNK )
+( as-kernel inc_ncalls 0 )
+( as-kernel axioms ?UNK )
+( as-kernel anc_del ?UNK ) 
+( as-kernel anc_union ?UNK ) 
+( as-kernel anc_subset ?UNK )
+
+
+;; ====================================================================================
+;;  The compiler must know some taxonimic pairs
+;; ====================================================================================
+(taxonomic-pair isa genls)
+(taxonomic-pair instance-of subclass-of)
+(taxomonic-pair surface-instance surface-subclass)
+
+
+
+;; ========================================================
+;; Compiler Macros
+;; Some Reduction predicates to save Compiler Bandwidth 
+;; ========================================================
+
+;;                                               ;;
+;;                Declarations to Kernel Language         ;;
+;;                                               ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   KERNEL CORE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(Class context-atom)
+(Class resource-atom)
+(Class macro-atom)
+(Class inference-language-atom)
+(Class system-known-atom)
+(Class relational-atom)
+
+                                                   
+(subclass-of context-atom resource-atom)
+(subclass-of resource-atom system-known-atom)
+
+;; If Resource was an object
+;; Resource.Name  as a Resource-atom
+;; Resource.Location as a prolog_file, url_path, kif_file, etc
+;; Resource.resource-state 
+;; Resource.availability 
+
+(instance-of sigma-kernel resource-atom)
+(instance-of sigma-kernel kif-file-resource)
+(instance-of sigma-kernel prolog-file-resource)
+(instance-of kernel-kb context-atom)
+(instance-of context-links-kb context-atom)
+(instance-of complier-kb context-atom)
+(instance-of default-context context-atom)
+ 
+
+;; If Context was an object:
+;;
+;; Context.Name  as a Context-atom
+;; Context.Resource as a Resource-path
+;; Context.context-state as loaded-unchanged or loaded-change
+;; Context.Parents as ListOf Contexts
+;; Context.Children as ListOf Contexts
+
+
+
+(instance-of assert inference-language-atom)
+(instance-of retract inference-language-atom)
+(instance-of retractall inference-language-atom)
+(instance-of update inference-language-atom)
+
+( =>
+        (instance-of ?Atom inference-language-atom)
+        (relation-located ?Atom sigma-kernel)
+
+)
+                                                                                                       
+(instance-of macro-script relational-atom)
+(functsymbol macro-script 2)
+(nth-domain macro-script 1 sigma-prototype-argument)
+(nth-domain macro-script 2 sigma-expression)
+ 
+
+;;(context-object ?Name ?Resource ?State ?Parents ?Children)
+
+;;(instance-of Context.Name Context-atom)
+;;(instance-of Context.FileName Resource-path)
+
+(instance-of context-create ContextManagementMacro)
+(subclass-of ContextManagementMacro ImmediateModeMacro)
+                                                   
+
+( instance-of context-create macro-scripts)
+( instance-of use-kr macro-scripts)
+( instance-of assert macro-scripts)
+( instance-of query macro-scripts)
+( instance-of save-kr macro-scripts)
+( instance-of use-resource macro-scripts)
+( instance-of unuse-resource macro-scripts)
+( instance-of add-relation macro-scripts)
+( instance-of delete-relation macro-scripts)
+( instance-of info-relation macro-scripts)
+( instance-of list-kr macro-scripts)
+
+;;;;;;;;;;;;;;;;;;;;;;RELATION LOCATED;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(relation-located prolog-unify 2 kernel  (SetFn ?h639  ?h641) prolog-unify  always )
+(relation-located prolog-eval 2 kernel  (SetFn ?h639  ?h641) prolog-eval  always )
+(relation-located sigma-consultation 3 kernel  (SetFn ?h639  ?h641 ?h643) sigma-consultation always )
+(relation-located user-believes 1 kernel  (SetFn ?h639 ) user-believes always )
+(relation-located nnf 2 kernel  (SetFn ?h639 ?h639 ) nnf always )
+(relation-located equal 2 kernel  (SetFn ?h639 ?h639 ) prolog-unify always )
+(relation-located = 2 kernel  (SetFn ?h639 ?h639 ) prolog-unify always )
+
+(instance-of  the-user-name  consultation-predicate)
+
+
+                                                   
+
+;;(instance-of Context.State Context-state-atom)
+;;(instance-of Context.State Context-state-atom)
+ 
+
+;Rule.Context
+;Rule.ExternalTrackingNumber
+;Rule.CompliedForm
+;Rule.Certainty
+
+
+
+
+          
+                           
+(
+=>
+        (macro-script  (?Atom) ?Proposition)
+        (instance-of ?Atom macro-atom)
+)
+
+(
+=>
+        (macro-script  (?Atom ?1 ?2) ?Proposition)
+        (instance-of ?Atom macro-atom)
+)
+
+(
+=>
+        (macro-script  (?Atom ?1 ?2 ?3) ?Proposition)
+        (instance-of ?Atom macro-atom)
+)
+
+(
+=>
+        (macro-script  (?Atom ?1 ?2 ?3 ?4) ?Proposition)
+        (instance-of ?Atom macro-atom)
+)
+                                                   
+
+
+                      
+                                                   
+(macro-script   (context-create ?Context-atom)
+        (and-then
+                (assert  resources-kb (instance-of ?Context-atom  context-atom ) ) 
+                (retractall  resources-kb  (context-state ?Context-atom  ?? ) ) 
+                (assert  resources-kb  (context-state ?Context-atom  context-state-unloaded)) 
+        )
+)
+
+
+
+
+(macro-script 
+        (use-kr ?Context-atom ?Resource-Path)
+
+        (and-then
+                (context-create ?Context-atom)
+                (file-resource-create ?Resource-Path)
+        )
+)
+                      
+(macro-script 
+        (file-resource-create ?Resource-name ?Resource-path)
+                (assert  resources-kb  (instance-of FileName  source-file-path)) 
+                (assert  resources-kb  (context-exists-in-file NewContext-atom  FileName)) 
+)
+
+
+
+(end_of_file)
+
+(end-of-file)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                               ;;
+;;                Bootstrap/INI file                        ;;
+;;                                               ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;(use-kr kernel-kb 'builtin\kernel-kb.kif')          ; That is here
+;(use-kr compiler-kb 'builtin\compiler-kb.kif')
+;(use-kr inference-kb 'builtin\inference-kb.kif')
+;(use-kr context-links 'builtin\context-links.kif')
+;;;(use-kr merged-ontology-kb 'builtin\merged-ontology-kb.kif')
+;(use-kr universal-kb 'builtin\universal-kb.kif')
+;(use-kr sample-kb 'builtin\sample-kb.kif')
+;(use-kr resources-kb 'resources\resources-kb.kif')
+;(use-resource sigma-user-assisted-inference)
+
+
+
+
+
+ 
+
+;; Context/Rule Management
+
+;; Imagine a context as an object:
+
+;; It has these properties:
+
+
+
+
+
+
+
+(=>
+        (relation-located ?RelationName ?Valence kernel  ?ModeList ?RelationName ?Availabily )
+        (instance-of ?RelationName  kernel-atom))
+
+(=>
+        (relation-located ?RelationName ?Valence sigma-user-assisted-inference  ?ModeList ?RelationName ?Availabily )
+        (instance-of ?RelationName  consultation-predicate))
+
+(=>
+        (relation-located ?RelationName ?Valence sigma-user-assisted-inference  ?ModeList ?RelationName always )
+        (instance-of ?RelationName  consultation-predicate-always))
+
+(=>
+        (relation-located ?RelationName ?Valence sigma-user-assisted-inference  ?ModeList ?RelationName after-failure )
+        (instance-of ?RelationName  consultation-predicate-after-failure))
+
+;;;;; A consultation predicate Assertion
+(relation-located 
+        user-name 1 
+        sigma-user-assisted-inference (external-agent-must-bind)
+        get-user-name  once )
+
+;;;;   This means if ( user-name ?X ) is being sought by the inference engine 
+;;;;   Call the sigma-user-assisted-inference is used with function call get-user-name and it must external-agent-must-bind  the argument
+;;;;   This will only happen once per session
+(functsymbol relation-located 5)
+        ( nth-domain relation-located 1 Relation-atom )
+        ( nth-domain relation-located 2 Resource-Modules )
+        ( nth-subclass relation-located 3 Argument-Mode )
+        ( nth-domain relation-located 4 Relation-atom )
+        ( nth-domain relation-located 5 Resource-Availabily )
+  
+(subclass-of Argument-List Unmonitored-List)       
+ ;; Unmonitored lists are structures that only are understood by the predicate using them and cannot be optimally constrained (and therefore are never subject to backchaining or negation this is this is a simular to the understanding that integers are not entities as the same way these are ussualy 'flags' or 'properties' are never existencially quantifiable (DISPARAMS)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+( nth-domain relation-located 2 Resource-Modules )
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Five Code Implimented Resource-Modules
+(Class Resource-Modules)
+       ;; hardwired into prolog and cannot be changed
+        (instance-of kernel Resource-Modules)
+       ;; GAFS and Proven Assertions
+        (instance-of local-assertions Resource-Modules)
+       ;; Subsumes the above two but has Infenrece as well
+        (instance-of local-inference Resource-Modules)
+       ;; Built in Consultation with User or Agent 
+        (instance-of sigma-user-assisted-inference Resource-Modules)
+       ;; Built in Consultation with Resouces exported by a wrapped SIGMA Interface  (TODO)
+        (instance-of sigma-resource-module Resource-Modules)
+        
+;; Further one adds RDBMS's, Web Agents and Full Foriegn Applications
+;; To do this:
+;; 
+;;   Create a Small .P file 
+;;   In the XSB Prolog manual there are examples of linking the C/C++ or to an ODBC interface
+;;   In the Prolog File Make only one Predicate that will access your resource
+;;
+;;   Put the file in the $InferenceEnginePath/resources the new file
+;;   Assert into the Contexts that you would like to use the external resource:
+;;   (functsymbol ?KRName-Predicate ?VALENCE)    ;;Valence assertions actually act as the only requried marker in a context
+;;   (nth-domain ?KRName-Predicate 1 ?Known-Class)
+;;   (nth-domain ?KRName-Prfedicate 2 ?Known-Class)
+;;            ...etc...
+;;   (relation-located ?KRName-Predicate ?VALENCE ?Name-of-resource ( ?Arg1Argument-Mode ?Arg2Argument-Mode ) ?'Predicate-Name-in-Resource' ?Resource-Availabily)
+
+;;  Now into the $/resources/resources-kb.kif file add the lines:  (Or make sure SIGMA agent adds this assertion)
+;;   (instance-of ?Name-of-resource Resource-Modules)
+;;   (instance-of  ?KRName-Predicate Relation-atom)
+;;   (resource-module ?Name-of-resource filesystem ?RelativePath) or (resource-module ?Name-of-resource sigma-system ?RequestName)
+;;
+;;  The inference Engine is now considering the predicate but cannot use it until the final assertion (actually a call that results in an assertion)
+;;  ( use-resource ?Name-of-resource )
+;;  this will result in this assertion ( resource-state ?Name-of-resource load-defered )
+;;  or possibly ( resource-state ?Name-of-resource cb_error )
+;;
+;;  Try out a call to the predicate 
+;;  the resources-kb should now have  ( resource-state ?Name-of-resource loaded )
+;;
+;;   From that point on it will stay loaded until you call  ( unuse-resource ?Name-of-resource )
+;;   Now you will see no assertion of  (resource-state ... ...)
+;;
+
+                                                   
+
+;;;;(relation-located between 2 ( at-least-one-other-arg-bound at-least-one-other-arg-bound ) 
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;       Before Calling a Resource Is Used each Argument is checked for Single_bindings     ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Four code implimented modes
+
+(Class Argument-Mode)
+        ( instance-of must-be-bound-before-call Argument-Mode)
+        ( instance-of external-agent-must-bind Argument-Mode)
+        ( instance-of not-monitored Argument-Mode)
+        ( instance-of at-least-one-other-arg-bound Argument-Mode)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;       Resource Availablity Atoms                         ;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Four code implimented modes
+        
+(Class Resource-Availabily)
+        ;; Each Iteration Calls The Resource-Modules
+        ( instance-of always Resource-Availabily)
+        
+        ;; No Iteration Calls The Resource-Modules
+        ( instance-of never Resource-Availabily)
+        
+        ;; Only if the minimum Answers has not been reached call the Resource-Modules
+        ( instance-of after-failure Resource-Availabily)
+        
+        ;; Only if the minimum Answers has not been reached call the Resource-Modules (But Once you have received a disp_single_binding set do not ask resource again)
+        ;; This is how to add a prolog style-cut into the real world!
+        ( instance-of once Resource-Availabily)
+        
+                                       
+
+
+(=>
+        (relation-located ?RelationName ?Valence kernel  ?ModeList ?RelationName ?Availabily )
+        (functsymbol ?RelationName  ?Valence))
+
+
+
+
+(relation-located isa 2 forward_chainer (external-agent-must-bind external-agent-must-bind) forward_chain  always )
+(relation-located genls 2 forward_chainer (external-agent-must-bind external-agent-must-bind) forward_chain  always )
+(relation-located forward_chain 1 forward_chainer (external-agent-must-bind) forward_chain  always )
+(relation-located ?Pred ?Valence forward_chainer ??? forward_chain  always )
+(relation-located backward_chain 2 backward_chainer (must-be-bound-before-call external-agent-must-bind) backward_chain  always )
+(relation-located ?Pred ?Valence backward_chainer ??? backward_chain  always )
+
+
+        
+(relation-located flush 0 kernel  (EmptySetFn) flush  always )
+(relation-located \== 2 kernel  (SetFn ?h640  ?h642) \==  always )
+(relation-located =.. 2 kernel  (SetFn ?h640  ?h642) =..  always )
+(relation-located meta-interpret 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) meta-interpret  always )
+(relation-located socket-write 1 kernel  (SetFn ?h639) socket-write  always )
+(relation-located socket-write 2 kernel  (SetFn ?h640  ?h642) socket-write  always )
+;(relation-located - 0 kernel  (EmptySetFn) -  always )
+;(relation-located   2 kernel  (SetFn ?h640  ?h642)    always )
+;(relation-located . 2 kernel  (SetFn ?h639  ?h641) .  always )
+(relation-located seeing 1 kernel  (SetFn ?h639) seeing  always )
+;(relation-located ; 2 kernel  (SetFn ?h640  ?h642) ;  always )
+(relation-located < 2 kernel  (SetFn ?h640  ?h642) <  always )
+(relation-located = 2 kernel  (SetFn ?h640  ?h642) =  always )
+(relation-located > 2 kernel  (SetFn ?h640  ?h642) >  always )
+;(relation-located ^=.. 2 kernel  (SetFn ?h640  ?h642) ^=..  always )
+(relation-located C 3 kernel  (SetFn ?h641  ?h643  ?h645) C  always )
+(relation-located module-property 2 kernel  (SetFn ?h640  ?h642) module-property  always )
+(relation-located read-clause 1 kernel  (SetFn ?h639) read-clause  always )
+;(relation-located ^ 2 kernel  (SetFn ?h640  ?h642) ^  always )
+(relation-located a 1 kernel  (SetFn ?h639) a  always )
+
+(relation-located c 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) c  always )
+(relation-located socket-accept 2 kernel  (SetFn ?h640  ?h642) socket-accept  always )
+(relation-located socket-accept 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-accept  always )
+(relation-located close-list 1 kernel  (SetFn ?h639) close-list  always )
+(relation-located unrestricted 2 kernel  (SetFn ?h640  ?h642) unrestricted  always )
+(relation-located current-functor 1 kernel  (SetFn ?h639) current-functor  always )
+(relation-located current-functor 2 kernel  (SetFn ?h640  ?h642) current-functor  always )
+(relation-located invert 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) invert  always )
+(relation-located get-word-chars 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) get-word-chars  always )
+(relation-located create-legal-gafs 2 kernel  (SetFn ?h640  ?h642) create-legal-gafs  always )
+(relation-located xsb-configuration 2 kernel  (SetFn ?h640  ?h642) xsb-configuration  always )
+(relation-located nonvar-backward-chain 3 kernel  (SetFn ?h641  ?h643  ?h645) nonvar-backward-chain  always )
+(relation-located sigma-console 0 kernel  (EmptySetFn) sigma-console  always )
+(relation-located =:= 2 kernel  (SetFn ?h640  ?h642) =:=  always )
+(relation-located tsetof 3 kernel  (SetFn ?h641  ?h643  ?h645) tsetof  always )
+(relation-located hilog-arg 3 kernel  (SetFn ?h641  ?h643  ?h645) hilog-arg  always )
+(relation-located sigma-A-do-retract-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) sigma-A-do-retract-list  always )
+(relation-located replace-nth 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) replace-nth  always )
+(relation-located hilog-symbol 1 kernel  (SetFn ?h639) hilog-symbol  always )
+(relation-located hex-digit 2 kernel  (SetFn ?h640  ?h642) hex-digit  always )
+(relation-located file-read-line-atom 2 kernel  (SetFn ?h640  ?h642) file-read-line-atom  always )
+(relation-located file-read-line-atom 3 kernel  (SetFn ?h641  ?h643  ?h645) file-read-line-atom  always )
+(relation-located ua-context-create 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-context-create  always )
+(relation-located digit 1 kernel  (SetFn ?h639) digit  always )
+(relation-located ua-context-info 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) ua-context-info  always )
+(relation-located sigma-U-setup-confirmation 1 kernel  (SetFn ?h639) sigma-U-setup-confirmation  always )
+(relation-located tphrase-set-string 1 kernel  (SetFn ?h639) tphrase-set-string  always )
+(relation-located sigma-P-chars-to-term 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-P-chars-to-term  always )
+(relation-located file-read-line-list 2 kernel  (SetFn ?h640  ?h642) file-read-line-list  always )
+(relation-located flag-list 3 kernel  (SetFn ?h641  ?h643  ?h645) flag-list  always )
+(relation-located file-read-line-list 3 kernel  (SetFn ?h641  ?h643  ?h645) file-read-line-list  always )
+(relation-located bagof 3 kernel  (SetFn ?h641  ?h643  ?h645) bagof  always )
+(relation-located socket-set-option 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-set-option  always )
+(relation-located integer 1 kernel  (SetFn ?h639) integer  always )
+(relation-located ua-context-link 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-context-link  always )
+(relation-located socket-set-select 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) socket-set-select  always )
+(relation-located check-legal-modes 3 kernel  (SetFn ?h641  ?h643  ?h645) check-legal-modes  always )
+(relation-located instanc 2 kernel  (SetFn ?h640  ?h642) instanc  always )
+(relation-located sigma 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma  always )
+(relation-located skip 1 kernel  (SetFn ?h639) skip  always )
+(relation-located compile-quantitatives-deterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-quantitatives-deterministicly  always )
+(relation-located nonvar-backwards-chain 3 kernel  (SetFn ?h641  ?h643  ?h645) nonvar-backwards-chain  always )
+(relation-located compile-quantitatives-nondeterministicly 2 kernel  (SetFn ?h640  ?h642) compile-quantitatives-nondeterministicly  always )
+(relation-located compile-quantitatives-nondeterministicly-arg 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-quantitatives-nondeterministicly-arg  always )
+(relation-located compile-quantitatives-nondeterministicly-list 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-quantitatives-nondeterministicly-list  always )
+(relation-located client-terminate 0 kernel  (EmptySetFn) client-terminate  always )
+(relation-located nodisp_debug 0 kernel  (EmptySetFn) nodisp_debug  always )
+(relation-located statistics 0 kernel  (EmptySetFn) statistics  always )
+(relation-located statistics 1 kernel  (SetFn ?h639) statistics  always )
+(relation-located inform-single_bindings 2 kernel  (SetFn ?h640  ?h642) inform-single_bindings  always )
+(relation-located check-legal-types 3 kernel  (SetFn ?h641  ?h643  ?h645) check-legal-types  always )
+(relation-located check-result 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) check-result  always )
+(relation-located ua-retractall 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-retractall  always )
+(relation-located verify-assertion 2 kernel  (SetFn ?h640  ?h642) verify-assertion  always )
+(relation-located callable 1 kernel  (SetFn ?h639) callable  always )
+(relation-located sigma-H-assert 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-assert  always )
+(relation-located sigma-X-assert 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-X-assert  always )
+(relation-located sigma-A-do-update-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) sigma-A-do-update-list  always )
+(relation-located sigma-H-resource-info 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-resource-info  always )
+(relation-located sigma-X-retract-new-1 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-X-retract-new-1  always )
+(relation-located =\= 2 kernel  (SetFn ?h640  ?h642) =\=  always )
+(relation-located list-all-clauses 1 kernel  (SetFn ?h639) list-all-clauses  always )
+(relation-located ttywrite 1 kernel  (SetFn ?h639) ttywrite  always )
+;(relation-located -> 2 kernel  (SetFn ?h640  ?h642) ->  always )
+(relation-located html-foot 0 kernel  (EmptySetFn) html-foot  always )
+(relation-located socket-writeln 1 kernel  (SetFn ?h639) socket-writeln  always )
+(relation-located socket-writeln 2 kernel  (SetFn ?h640  ?h642) socket-writeln  always )
+(relation-located generate-language 2 kernel  (SetFn ?h640  ?h642) generate-language  always )
+(relation-located sigma-H-resource-delete 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-resource-delete  always )
+(relation-located sigma-H-resource-create 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-resource-create  always )
+(relation-located retractall 1 kernel  (SetFn ?h639) retractall  always )
+(relation-located sigma-H-optional-setting 2 kernel  (SetFn ?h640  ?h642) sigma-H-optional-setting  always )
+(relation-located compile-predicates-deterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-predicates-deterministicly  always )
+(relation-located compile-predicates-nondeterministicly-list 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-predicates-nondeterministicly-list  always )
+(relation-located compile-predicates-nondeterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-predicates-nondeterministicly  always )
+(relation-located file-open 3 kernel  (SetFn ?h641  ?h643  ?h645) file-open  always )
+(relation-located cputime 1 kernel  (SetFn ?h639) cputime  always )
+(relation-located =< 2 kernel  (SetFn ?h640  ?h642) =<  always )
+(relation-located == 2 kernel  (SetFn ?h640  ?h642) ==  always )
+(relation-located @=< 2 kernel  (SetFn ?h640  ?h642) @=<  always )
+(relation-located tokenize 2 kernel  (SetFn ?h640  ?h642) tokenize  always )
+(relation-located number-chars 2 kernel  (SetFn ?h640  ?h642) number-chars  always )
+(relation-located number-codes 2 kernel  (SetFn ?h640  ?h642) number-codes  always )
+(relation-located >= 2 kernel  (SetFn ?h640  ?h642) >=  always )
+(relation-located @>= 2 kernel  (SetFn ?h640  ?h642) @>=  always )
+(relation-located socket-listen 2 kernel  (SetFn ?h640  ?h642) socket-listen  always )
+(relation-located compile-clause-rewrites-deterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-clause-rewrites-deterministicly  always )
+(relation-located compile-clause-rewrites-deterministicly-q 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-clause-rewrites-deterministicly-q  always )
+(relation-located socket-listen 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-listen  always )
+(relation-located compile-clause-rewrites-nondeterministicly-q 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-clause-rewrites-nondeterministicly-q  always )
+(relation-located compile-clause-rewrites-nondeterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-clause-rewrites-nondeterministicly  always )
+(relation-located sigma-X-retractall-new-1 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-X-retractall-new-1  always )
+(relation-located @< 2 kernel  (SetFn ?h640  ?h642) @<  always )
+(relation-located @> 2 kernel  (SetFn ?h640  ?h642) @>  always )
+(relation-located atom-codes 2 kernel  (SetFn ?h640  ?h642) atom-codes  always )
+(relation-located html-head 1 kernel  (SetFn ?h639) html-head  always )
+(relation-located sigma-H-restart-inference-kb 0 kernel  (EmptySetFn) sigma-H-restart-inference-kb  always )
+(relation-located optional-bound 2 kernel  (SetFn ?h640  ?h642) optional-bound  always )
+(relation-located ua-context-remove 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) ua-context-remove  always )
+(relation-located pterm-to-sterm-list 2 kernel  (SetFn ?h640  ?h642) pterm-to-sterm-list  always )
+(relation-located instantiate 2 kernel  (SetFn ?h640  ?h642) instantiate  always )
+(relation-located sterm-to-pterm-list 2 kernel  (SetFn ?h640  ?h642) sterm-to-pterm-list  always )
+(relation-located once 1 kernel  (SetFn ?h639) once  always )
+(relation-located socket-select 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) socket-select  always )
+(relation-located coll-white 2 kernel  (SetFn ?h640  ?h642) coll-white  always )
+(relation-located log-ith 3 kernel  (SetFn ?h641  ?h643  ?h645) log-ith  always )
+(relation-located store-assertion 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) store-assertion  always )
+(relation-located file-exists 1 kernel  (SetFn ?h639) file-exists  always )
+(relation-located constant 1 kernel  (SetFn ?h639) constant  always )
+(relation-located coll-white2 2 kernel  (SetFn ?h640  ?h642) coll-white2  always )
+(relation-located coll-white3 2 kernel  (SetFn ?h640  ?h642) coll-white3  always )
+(relation-located reconsult 1 kernel  (SetFn ?h639) reconsult  always )
+(relation-located reconsult 2 kernel  (SetFn ?h640  ?h642) reconsult  always )
+(relation-located never-retractall 1 kernel  (SetFn ?h639) never-retractall  always )
+(relation-located load-dync 1 kernel  (SetFn ?h639) load-dync  always )
+(relation-located concat-list 3 kernel  (SetFn ?h641  ?h643  ?h645) concat-list  always )
+(relation-located never-assert 1 kernel  (SetFn ?h639) never-assert  always )
+(relation-located conv-det 2 kernel  (SetFn ?h640  ?h642) conv-det  always )
+(relation-located ua-context-unlink 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-context-unlink  always )
+(relation-located vars-splitter 3 kernel  (SetFn ?h641  ?h643  ?h645) vars-splitter  always )
+(relation-located clear-quit-query 0 kernel  (EmptySetFn) clear-quit-query  always )
+(relation-located \+ 1 kernel  (SetFn ?h639) \+  always )
+(relation-located \= 2 kernel  (SetFn ?h640  ?h642) \=  always )
+(relation-located check-start 2 kernel  (SetFn ?h640  ?h642) check-start  always )
+(relation-located clear-dcg-mode 0 kernel  (EmptySetFn) clear-dcg-mode  always )
+(relation-located open-list 2 kernel  (SetFn ?h640  ?h642) open-list  always )
+(relation-located infer-branch 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) infer-branch  always )
+(relation-located delete 3 kernel  (SetFn ?h641  ?h643  ?h645) delete  always )
+(relation-located sigma-H-query 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-query  always )
+(relation-located conv 2 kernel  (SetFn ?h640  ?h642) conv  always )
+(relation-located recollect-body 2 kernel  (SetFn ?h640  ?h642) recollect-body  always )
+(relation-located hello 0 kernel  (EmptySetFn) hello  always )
+(relation-located sigma-C-make-list-q 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-C-make-list-q  always )
+(relation-located copy 2 kernel  (SetFn ?h640  ?h642) copy  always )
+(relation-located structure 1 kernel  (SetFn ?h639) structure  always )
+(relation-located file-read 2 kernel  (SetFn ?h640  ?h642) file-read  always )
+(relation-located hilog 1 kernel  (SetFn ?h639) hilog  always )
+(relation-located sort 2 kernel  (SetFn ?h640  ?h642) sort  always )
+(relation-located valid 1 kernel  (SetFn ?h639) valid  always )
+(relation-located quote-found 3 kernel  (SetFn ?h641  ?h643  ?h645) quote-found  always )
+(relation-located select 3 kernel  (SetFn ?h641  ?h643  ?h645) select  always )
+(relation-located open 3 kernel  (SetFn ?h641  ?h643  ?h645) open  always )
+(relation-located is 2 kernel  (SetFn ?h640  ?h642) is  always )
+(relation-located atom-concat 3 kernel  (SetFn ?h641  ?h643  ?h645) atom-concat  always )
+(relation-located fail-if 1 kernel  (SetFn ?h639) fail-if  always )
+(relation-located mc 2 kernel  (SetFn ?h640  ?h642) mc  always )
+(relation-located nl 0 kernel  (EmptySetFn) nl  always )
+(relation-located nl 1 kernel  (SetFn ?h639) nl  always )
+(relation-located write-prolog 1 kernel  (SetFn ?h639) write-prolog  always )
+(relation-located write-prolog 2 kernel  (SetFn ?h640  ?h642) write-prolog  always )
+(relation-located op 3 kernel  (SetFn ?h641  ?h643  ?h645) op  always )
+(relation-located filter-proof 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) filter-proof  always )
+(relation-located system-hash-301 2 kernel  (SetFn ?h640  ?h642) system-hash-301  always )
+(relation-located good-response-to 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) good-response-to  always )
+(relation-located qq 1 kernel  (SetFn ?h639) qq  always )
+(relation-located filter 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) filter  always )
+(relation-located inform-readln 3 kernel  (SetFn ?h641  ?h643  ?h645) inform-readln  always )
+(relation-located clean-true 2 kernel  (SetFn ?h640  ?h642) clean-true  always )
+(relation-located functor0 3 kernel  (SetFn ?h641  ?h643  ?h645) functor0  always )
+(relation-located member 2 kernel  (SetFn ?h640  ?h642) member  always )
+(relation-located memberchk 2 kernel  (SetFn ?h640  ?h642) memberchk  always )
+(relation-located number 1 kernel  (SetFn ?h639) number  always )
+(relation-located tq 0 kernel  (EmptySetFn) tq  always )
+(relation-located tq 1 kernel  (SetFn ?h639) tq  always )
+(relation-located handle-xml-java-request 1 kernel  (SetFn ?h639) handle-xml-java-request  always )
+(relation-located fail 0 kernel  (EmptySetFn) fail  always )
+(relation-located concat 3 kernel  (SetFn ?h641  ?h643  ?h645) concat  always )
+(relation-located halt 0 kernel  (EmptySetFn) halt  always )
+(relation-located ch-white 1 kernel  (SetFn ?h639) ch-white  always )
+(relation-located name 2 kernel  (SetFn ?h640  ?h642) name  always )
+(relation-located arg 3 kernel  (SetFn ?h641  ?h643  ?h645) arg  always )
+(relation-located remove 1 kernel  (SetFn ?h639) remove  always )
+(relation-located list-to-set 2 kernel  (SetFn ?h640  ?h642) list-to-set  always )
+(relation-located not-forward-chain 2 kernel  (SetFn ?h640  ?h642) not-forward-chain  always )
+(relation-located e-o-f 1 kernel  (SetFn ?h639) e-o-f  always )
+(relation-located not-forward-chain 3 kernel  (SetFn ?h641  ?h643  ?h645) not-forward-chain  always )
+(relation-located vars 3 kernel  (SetFn ?h641  ?h643  ?h645) vars  always )
+(relation-located vars 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) vars  always )
+(relation-located vars 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) vars  always )
+(relation-located arg0 3 kernel  (SetFn ?h641  ?h643  ?h645) arg0  always )
+(relation-located compound 1 kernel  (SetFn ?h639) compound  always )
+(relation-located predicate-type 2 kernel  (SetFn ?h640  ?h642) predicate-type  always )
+(relation-located generate-external-tracking-number 2 kernel  (SetFn ?h640  ?h642) generate-external-tracking-number  always )
+(relation-located bind-var 2 kernel  (SetFn ?h640  ?h642) bind-var  always )
+(relation-located length 2 kernel  (SetFn ?h640  ?h642) length  always )
+(relation-located nthmember 3 kernel  (SetFn ?h641  ?h643  ?h645) nthmember  always )
+(relation-located argf 3 kernel  (SetFn ?h641  ?h643  ?h645) argf  always )
+(relation-located term-to-list 2 kernel  (SetFn ?h640  ?h642) term-to-list  always )
+(relation-located xml-java-server 2 kernel  (SetFn ?h640  ?h642) xml-java-server  always )
+(relation-located detect-cut 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) detect-cut  always )
+(relation-located disp_debugging 0 kernel  (EmptySetFn) disp_debugging  always )
+(relation-located short-circuit-TODO 2 kernel  (SetFn ?h640  ?h642) short-circuit-TODO  always )
+(relation-located ignore 1 kernel  (SetFn ?h639) ignore  always )
+(relation-located sigma-P-file-line-format 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) sigma-P-file-line-format  always )
+(relation-located global-increment 1 kernel  (SetFn ?h639) global-increment  always )
+(relation-located write-rule 1 kernel  (SetFn ?h639) write-rule  always )
+(relation-located nonvar 1 kernel  (SetFn ?h639) nonvar  always )
+(relation-located file-nl 1 kernel  (SetFn ?h639) file-nl  always )
+(relation-located never-retract 1 kernel  (SetFn ?h639) never-retract  always )
+(relation-located check-end 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) check-end  always )
+(relation-located current-input-port 1 kernel  (SetFn ?h639) current-input-port  always )
+(relation-located suokif-xsb 2 kernel  (SetFn ?h640  ?h642) suokif-xsb  always )
+(relation-located is-most-general-term 1 kernel  (SetFn ?h639) is-most-general-term  always )
+(relation-located get-token 3 kernel  (SetFn ?h641  ?h643  ?h645) get-token  always )
+(relation-located cls 0 kernel  (EmptySetFn) cls  always )
+(relation-located write-rulep 1 kernel  (SetFn ?h639) write-rulep  always )
+(relation-located suokif 3 kernel  (SetFn ?h641  ?h643  ?h645) suokif  always )
+(relation-located predicate-type-funct 2 kernel  (SetFn ?h640  ?h642) predicate-type-funct  always )
+(relation-located assert-new 1 kernel  (SetFn ?h639) assert-new  always )
+(relation-located fmt-read 3 kernel  (SetFn ?h641  ?h643  ?h645) fmt-read  always )
+(relation-located fmt-read 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) fmt-read  always )
+(relation-located var-list 2 kernel  (SetFn ?h640  ?h642) var-list  always )
+(relation-located int-to-chars 3 kernel  (SetFn ?h641  ?h643  ?h645) int-to-chars  always )
+(relation-located telling 1 kernel  (SetFn ?h639) telling  always )
+(relation-located repeat 0 kernel  (EmptySetFn) repeat  always )
+(relation-located number-digits 2 kernel  (SetFn ?h640  ?h642) number-digits  always )
+(relation-located remap-keys 2 kernel  (SetFn ?h640  ?h642) remap-keys  always )
+(relation-located get-term 3 kernel  (SetFn ?h641  ?h643  ?h645) get-term  always )
+(relation-located ua-relation-add 9 kernel  (SetFn ?h647  ?h649  ?h651  ?h653  ?h655  ?h657  ?h659  ?h661  ?h663) ua-relation-add  always )
+(relation-located parse-filename 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) parse-filename  always )
+(relation-located var-found 3 kernel  (SetFn ?h641  ?h643  ?h645) var-found  always )
+(relation-located import 1 kernel  (SetFn ?h639) import  always )
+(relation-located read-sock-chars 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) read-sock-chars  always )
+(relation-located notrace 0 kernel  (EmptySetFn) notrace  always )
+(relation-located compile 1 kernel  (SetFn ?h639) compile  always )
+(relation-located compile 2 kernel  (SetFn ?h640  ?h642) compile  always )
+(relation-located dynamic 1 kernel  (SetFn ?h639) dynamic  always )
+(relation-located atom 1 kernel  (SetFn ?h639) atom  always )
+(relation-located compare 3 kernel  (SetFn ?h641  ?h643  ?h645) compare  always )
+(relation-located read 1 kernel  (SetFn ?h639) read  always )
+(relation-located read 2 kernel  (SetFn ?h640  ?h642) read  always )
+(relation-located url-decode 2 kernel  (SetFn ?h640  ?h642) url-decode  always )
+(relation-located real 1 kernel  (SetFn ?h639) real  always )
+(relation-located chars-to-term 2 kernel  (SetFn ?h640  ?h642) chars-to-term  always )
+(relation-located chars-to-term 3 kernel  (SetFn ?h641  ?h643  ?h645) chars-to-term  always )
+(relation-located tphrase-string-length 1 kernel  (SetFn ?h639) tphrase-string-length  always )
+(relation-located flatten1-hash-301 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) flatten1-hash-301  always )
+(relation-located findall 3 kernel  (SetFn ?h641  ?h643  ?h645) findall  always )
+(relation-located url-decode1 2 kernel  (SetFn ?h640  ?h642) url-decode1  always )
+(relation-located length1 3 kernel  (SetFn ?h641  ?h643  ?h645) length1  always )
+(relation-located functor 3 kernel  (SetFn ?h641  ?h643  ?h645) functor  always )
+(relation-located tbagof 3 kernel  (SetFn ?h641  ?h643  ?h645) tbagof  always )
+(relation-located write-xml-java-header 0 kernel  (EmptySetFn) write-xml-java-header  always )
+(relation-located ua-relation-info 11 kernel  (SetFn ?h649  ?h651  ?h653  ?h655  ?h657  ?h659  ?h661  ?h663  ?h665  ?h667  ?h669) ua-relation-info  always )
+(relation-located name-value-pairs 3 kernel  (SetFn ?h641  ?h643  ?h645) name-value-pairs  always )
+(relation-located xsb-configuration-hash-301 1 kernel  (SetFn ?h639) xsb-configuration-hash-301  always )
+(relation-located xsb-configuration-hash-302 1 kernel  (SetFn ?h639) xsb-configuration-hash-302  always )
+(relation-located xsb-configuration-hash-303 1 kernel  (SetFn ?h639) xsb-configuration-hash-303  always )
+(relation-located xsb-configuration-hash-304 1 kernel  (SetFn ?h639) xsb-configuration-hash-304  always )
+(relation-located charst 2 kernel  (SetFn ?h640  ?h642) charst  always )
+(relation-located charst 3 kernel  (SetFn ?h641  ?h643  ?h645) charst  always )
+(relation-located tell 1 kernel  (SetFn ?h639) tell  always )
+(relation-located clause 1 kernel  (SetFn ?h639) clause  always )
+(relation-located clause 2 kernel  (SetFn ?h640  ?h642) clause  always )
+(relation-located is-charlist 1 kernel  (SetFn ?h639) is-charlist  always )
+(relation-located is-charlist 2 kernel  (SetFn ?h640  ?h642) is-charlist  always )
+(relation-located eval 2 kernel  (SetFn ?h640  ?h642) eval  always )
+(relation-located console 0 kernel  (EmptySetFn) console  always )
+(relation-located compile-functions-deterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-functions-deterministicly  always )
+(relation-located compile-functions-deterministicly-for-query 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-functions-deterministicly-for-query  always )
+(relation-located consult-add 1 kernel  (SetFn ?h639) consult-add  always )
+(relation-located compile-functions-nondeterministicly-for-query-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) compile-functions-nondeterministicly-for-query-list  always )
+(relation-located compile-functions-nondeterministicly-for-query 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) compile-functions-nondeterministicly-for-query  always )
+(relation-located compile-functions-nondeterministicly-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) compile-functions-nondeterministicly-list  always )
+(relation-located compile-functions-nondeterministicly 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) compile-functions-nondeterministicly  always )
+(relation-located consult 1 kernel  (SetFn ?h639) consult  always )
+(relation-located consult 2 kernel  (SetFn ?h640  ?h642) consult  always )
+(relation-located ua-post-confirmation-list 2 kernel  (SetFn ?h640  ?h642) ua-post-confirmation-list  always )
+(relation-located collect-temp-vars 1 kernel  (SetFn ?h639) collect-temp-vars  always )
+(relation-located convert 2 kernel  (SetFn ?h640  ?h642) convert  always )
+(relation-located sigma-console-loop 0 kernel  (EmptySetFn) sigma-console-loop  always )
+(relation-located pterm-to-sterm 2 kernel  (SetFn ?h640  ?h642) pterm-to-sterm  always )
+(relation-located basic 3 kernel  (SetFn ?h641  ?h643  ?h645) basic  always )
+(relation-located cross-reference-tracking 3 kernel  (SetFn ?h641  ?h643  ?h645) cross-reference-tracking  always )
+(relation-located separator 3 kernel  (SetFn ?h641  ?h643  ?h645) separator  always )
+(relation-located sterm-to-pterm 2 kernel  (SetFn ?h640  ?h642) sterm-to-pterm  always )
+(relation-located bootstrap-sitepackage 2 kernel  (SetFn ?h640  ?h642) bootstrap-sitepackage  always )
+(relation-located sigma_X_kb-pred 1 kernel  (SetFn ?h639) sigma_X_kb-pred  always )
+(relation-located sigma-C-query-based-on-language-2 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) sigma-C-query-based-on-language-2  always )
+(relation-located sigma-C-query-based-on-language 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-C-query-based-on-language  always )
+(relation-located list-var-symbols 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) list-var-symbols  always )
+(relation-located assert-n 1 kernel  (SetFn ?h639) assert-n  always )
+(relation-located var-pure 1 kernel  (SetFn ?h639) var-pure  always )
+(relation-located assert 1 kernel  (SetFn ?h639) assert  always )
+(relation-located compile-ignored-clauses 2 kernel  (SetFn ?h640  ?h642) compile-ignored-clauses  always )
+(relation-located hilog-functor 3 kernel  (SetFn ?h641  ?h643  ?h645) hilog-functor  always )
+(relation-located chars-to-term-s 3 kernel  (SetFn ?h641  ?h643  ?h645) chars-to-term-s  always )
+(relation-located get-word 3 kernel  (SetFn ?h641  ?h643  ?h645) get-word  always )
+(relation-located get 1 kernel  (SetFn ?h639) get  always )
+(relation-located catch 1 kernel  (SetFn ?h639) catch  always )
+(relation-located catch 3 kernel  (SetFn ?h641  ?h643  ?h645) catch  always )
+(relation-located file-clone 3 kernel  (SetFn ?h641  ?h643  ?h645) file-clone  always )
+(relation-located varsfo 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) varsfo  always )
+(relation-located sigma-H-command 1 kernel  (SetFn ?h639) sigma-H-command  always )
+(relation-located sigma-H-command 2 kernel  (SetFn ?h640  ?h642) sigma-H-command  always )
+(relation-located file-close 1 kernel  (SetFn ?h639) file-close  always )
+(relation-located nospy 1 kernel  (SetFn ?h639) nospy  always )
+(relation-located clean-wff 2 kernel  (SetFn ?h640  ?h642) clean-wff  always )
+(relation-located ua-relation-delete 9 kernel  (SetFn ?h647  ?h649  ?h651  ?h653  ?h655  ?h657  ?h659  ?h661  ?h663) ua-relation-delete  always )
+(relation-located index 2 kernel  (SetFn ?h640  ?h642) index  always )
+(relation-located index 3 kernel  (SetFn ?h641  ?h643  ?h645) index  always )
+(relation-located cutin 3 kernel  (SetFn ?h641  ?h643  ?h645) cutin  always )
+(relation-located sigma-P-wff 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-P-wff  always )
+(relation-located bracket 2 kernel  (SetFn ?h640  ?h642) bracket  always )
+(relation-located write-name-value-pairs 2 kernel  (SetFn ?h640  ?h642) write-name-value-pairs  always )
+(relation-located break 0 kernel  (EmptySetFn) break  always )
+(relation-located system 1 kernel  (SetFn ?h639) system  always )
+(relation-located setof 3 kernel  (SetFn ?h641  ?h643  ?h645) setof  always )
+(relation-located read-canonical 1 kernel  (SetFn ?h639) read-canonical  always )
+(relation-located store-retraction 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) store-retraction  always )
+(relation-located compile-atomic-rewrites-deterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-atomic-rewrites-deterministicly  always )
+(relation-located segfault-handler 1 kernel  (SetFn ?h639) segfault-handler  always )
+(relation-located compile-atomic-rewrites-nondeterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-atomic-rewrites-nondeterministicly  always )
+(relation-located compile-atomic-rewrites-nondeterministicly-hash-304 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) compile-atomic-rewrites-nondeterministicly-hash-304  always )
+(relation-located letter 1 kernel  (SetFn ?h639) letter  always )
+(relation-located flatten 2 kernel  (SetFn ?h640  ?h642) flatten  always )
+(relation-located ua-resource-info 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-resource-info  always )
+(relation-located file-read-line 3 kernel  (SetFn ?h641  ?h643  ?h645) file-read-line  always )
+(relation-located parse-single-char 1 kernel  (SetFn ?h639) parse-single-char  always )
+(relation-located fmt-write 2 kernel  (SetFn ?h640  ?h642) fmt-write  always )
+(relation-located fmt-write 3 kernel  (SetFn ?h641  ?h643  ?h645) fmt-write  always )
+(relation-located real-file-name 2 kernel  (SetFn ?h640  ?h642) real-file-name  always )
+(relation-located prove-conj 7 kernel  (SetFn ?h645  ?h647  ?h649  ?h651  ?h653  ?h655  ?h657) prove-conj  always )
+(relation-located file-reopen 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) file-reopen  always )
+(relation-located copy-term 2 kernel  (SetFn ?h640  ?h642) copy-term  always )
+(relation-located roundz 2 kernel  (SetFn ?h640  ?h642) roundz  always )
+(relation-located collect-vars-hash-304 3 kernel  (SetFn ?h641  ?h643  ?h645) collect-vars-hash-304  always )
+(relation-located var-start 1 kernel  (SetFn ?h639) var-start  always )
+(relation-located ith 3 kernel  (SetFn ?h641  ?h643  ?h645) ith  always )
+(relation-located get-next-num 1 kernel  (SetFn ?h639) get-next-num  always )
+(relation-located current-op 3 kernel  (SetFn ?h641  ?h643  ?h645) current-op  always )
+(relation-located current-output-port 1 kernel  (SetFn ?h639) current-output-port  always )
+(relation-located socket-select-destroy 1 kernel  (SetFn ?h639) socket-select-destroy  always )
+(relation-located process-answer 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) process-answer  always )
+(relation-located process-answer 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) process-answer  always )
+(relation-located asserta 1 kernel  (SetFn ?h639) asserta  always )
+(relation-located bootstrap-userpackage 3 kernel  (SetFn ?h641  ?h643  ?h645) bootstrap-userpackage  always )
+(relation-located hex-code 3 kernel  (SetFn ?h641  ?h643  ?h645) hex-code  always )
+(relation-located console-post 2 kernel  (SetFn ?h640  ?h642) console-post  always )
+(relation-located assertz 1 kernel  (SetFn ?h639) assertz  always )
+(relation-located sigma-H-use-kr-datafile 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-use-kr-datafile  always )
+(relation-located peek-counter 2 kernel  (SetFn ?h640  ?h642) peek-counter  always )
+(relation-located bootstrap-syspackage 2 kernel  (SetFn ?h640  ?h642) bootstrap-syspackage  always )
+(relation-located increment-counter 2 kernel  (SetFn ?h640  ?h642) increment-counter  always )
+(relation-located display 1 kernel  (SetFn ?h639) display  always )
+(relation-located get-var 2 kernel  (SetFn ?h640  ?h642) get-var  always )
+(relation-located multifile 1 kernel  (SetFn ?h639) multifile  always )
+(relation-located store-assertion-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) store-assertion-list  always )
+(relation-located compile-metalogics-deterministicly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-metalogics-deterministicly  always )
+(relation-located compile-metalogics-nondeterministicly-hash-303 2 kernel  (SetFn ?h640  ?h642) compile-metalogics-nondeterministicly-hash-303  always )
+(relation-located compile-metalogics-nondeterministicly-hash-302 2 kernel  (SetFn ?h640  ?h642) compile-metalogics-nondeterministicly-hash-302  always )
+(relation-located compile-metalogics-nondeterministicly-hash-301 2 kernel  (SetFn ?h640  ?h642) compile-metalogics-nondeterministicly-hash-301  always )
+(relation-located compile-metalogics-nondeterministicly 2 kernel  (SetFn ?h640  ?h642) compile-metalogics-nondeterministicly  always )
+(relation-located ua-process-command 2 kernel  (SetFn ?h640  ?h642) ua-process-command  always )
+(relation-located ua-process-command 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-process-command  always )
+(relation-located ua-resource-delete 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-resource-delete  always )
+(relation-located ua-resource-create 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-resource-create  always )
+(relation-located set-dcg-style 1 kernel  (SetFn ?h639) set-dcg-style  always )
+;(relation-located sys-hid-cutto 1 kernel  (SetFn ?h639) sys-hid-cutto  always )
+(relation-located store-assertion-list-1 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) store-assertion-list-1  always )
+(relation-located has-singleton-vars 1 kernel  (SetFn ?h639) has-singleton-vars  always )
+(relation-located listing 0 kernel  (EmptySetFn) listing  always )
+(relation-located listing 1 kernel  (SetFn ?h639) listing  always )
+(relation-located show-query 1 kernel  (SetFn ?h639) show-query  always )
+(relation-located sigma-U-option-set 2 kernel  (SetFn ?h640  ?h642) sigma-U-option-set  always )
+(relation-located meta-interpret-hash-301 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) meta-interpret-hash-301  always )
+(relation-located meta-interpret-hash-302 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) meta-interpret-hash-302  always )
+(relation-located meta-interpret-hash-303 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) meta-interpret-hash-303  always )
+(relation-located add-file-p 2 kernel  (SetFn ?h640  ?h642) add-file-p  always )
+(relation-located current-atom 1 kernel  (SetFn ?h639) current-atom  always )
+(relation-located sigma-sigma_X_kb-predicates 1 kernel  (SetFn ?h639) sigma-sigma_X_kb-predicates  always )
+(relation-located tmpfile-open 1 kernel  (SetFn ?h639) tmpfile-open  always )
+(relation-located nth-item 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) nth-item  always )
+(relation-located var-number 2 kernel  (SetFn ?h640  ?h642) var-number  always )
+(relation-located shift-var 2 kernel  (SetFn ?h640  ?h642) shift-var  always )
+(relation-located nonotrace 0 kernel  (EmptySetFn) nonotrace  always )
+(relation-located flag 3 kernel  (SetFn ?h641  ?h643  ?h645) flag  always )
+(relation-located collect-vars-nums 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) collect-vars-nums  always )
+(relation-located compile-as-prolog 2 kernel  (SetFn ?h640  ?h642) compile-as-prolog  always )
+(relation-located retract 1 kernel  (SetFn ?h639) retract  always )
+(relation-located process-ascii 1 kernel  (SetFn ?h639) process-ascii  always )
+(relation-located current-module 1 kernel  (SetFn ?h639) current-module  always )
+(relation-located current-module 2 kernel  (SetFn ?h640  ?h642) current-module  always )
+(relation-located collect-failbranches 3 kernel  (SetFn ?h641  ?h643  ?h645) collect-failbranches  always )
+(relation-located handle-httpd-request 1 kernel  (SetFn ?h639) handle-httpd-request  always )
+(relation-located ensure-loaded 1 kernel  (SetFn ?h639) ensure-loaded  always )
+(relation-located ensure-loaded 2 kernel  (SetFn ?h640  ?h642) ensure-loaded  always )
+(relation-located nd-sigma-H-command 2 kernel  (SetFn ?h640  ?h642) nd-sigma-H-command  always )
+(relation-located garbage-collection 1 kernel  (SetFn ?h639) garbage-collection  always )
+(relation-located backwards-chain 3 kernel  (SetFn ?h641  ?h643  ?h645) backwards-chain  always )
+(relation-located backwards-chain 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) backwards-chain  always )
+(relation-located delete-once-hash-302 3 kernel  (SetFn ?h641  ?h643  ?h645) delete-once-hash-302  always )
+(relation-located print 1 kernel  (SetFn ?h639) print  always )
+(relation-located sigma-call 2 kernel  (SetFn ?h640  ?h642) sigma-call  always )
+(relation-located delete-once 3 kernel  (SetFn ?h641  ?h643  ?h645) delete-once  always )
+(relation-located ua-set-agent-location 1 kernel  (SetFn ?h639) ua-set-agent-location  always )
+(relation-located httpd-server 2 kernel  (SetFn ?h640  ?h642) httpd-server  always )
+(relation-located httpd-server 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) httpd-server  always )
+(relation-located ua-post-sdtout 2 kernel  (SetFn ?h640  ?h642) ua-post-sdtout  always )
+(relation-located reverse 2 kernel  (SetFn ?h640  ?h642) reverse  always )
+(relation-located reverse 3 kernel  (SetFn ?h641  ?h643  ?h645) reverse  always )
+(relation-located socket-write-list 1 kernel  (SetFn ?h639) socket-write-list  always )
+(relation-located global-get 2 kernel  (SetFn ?h640  ?h642) global-get  always )
+(relation-located write 1 kernel  (SetFn ?h639) write  always )
+(relation-located write 2 kernel  (SetFn ?h640  ?h642) write  always )
+(relation-located sigma-P-parse-proposition 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-P-parse-proposition  always )
+(relation-located ua-set-agent-callback 1 kernel  (SetFn ?h639) ua-set-agent-callback  always )
+(relation-located legal-char 2 kernel  (SetFn ?h640  ?h642) legal-char  always )
+(relation-located exit-sub 0 kernel  (EmptySetFn) exit-sub  always )
+(relation-located sigma-U-collect-confirmation 1 kernel  (SetFn ?h639) sigma-U-collect-confirmation  always )
+(relation-located evaluate-disp_modification 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) evaluate-disp_modification  always )
+(relation-located writeq 1 kernel  (SetFn ?h639) writeq  always )
+(relation-located writeq 2 kernel  (SetFn ?h640  ?h642) writeq  always )
+(relation-located ua-constant-info 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-constant-info  always )
+(relation-located test-sigma-compiler 0 kernel  (EmptySetFn) test-sigma-compiler  always )
+(relation-located is-chars 1 kernel  (SetFn ?h639) is-chars  always )
+(relation-located non 2 kernel  (SetFn ?h640  ?h642) non  always )
+(relation-located not 1 kernel  (SetFn ?h639) not  always )
+(relation-located nonvar-meta-interpret 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) nonvar-meta-interpret  always )
+(relation-located shared-variables 2 kernel  (SetFn ?h640  ?h642) shared-variables  always )
+(relation-located atom-to-term 2 kernel  (SetFn ?h640  ?h642) atom-to-term  always )
+(relation-located atom-to-term 3 kernel  (SetFn ?h641  ?h643  ?h645) atom-to-term  always )
+(relation-located atomical 1 kernel  (SetFn ?h639) atomical  always )
+(relation-located compile-as-function 2 kernel  (SetFn ?h640  ?h642) compile-as-function  always )
+(relation-located parser-tokenize 2 kernel  (SetFn ?h640  ?h642) parser-tokenize  always )
+(relation-located log-ith-bound 3 kernel  (SetFn ?h641  ?h643  ?h645) log-ith-bound  always )
+(relation-located socket-write-chars 1 kernel  (SetFn ?h639) socket-write-chars  always )
+(relation-located socket-write-chars 2 kernel  (SetFn ?h640  ?h642) socket-write-chars  always )
+(relation-located atom-chars 2 kernel  (SetFn ?h640  ?h642) atom-chars  always )
+(relation-located sigma-X-assert-new 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-X-assert-new  always )
+(relation-located grab-last-arg 3 kernel  (SetFn ?h641  ?h643  ?h645) grab-last-arg  always )
+(relation-located told 0 kernel  (EmptySetFn) told  always )
+(relation-located compile-heuristics-deterministcly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-heuristics-deterministcly  always )
+(relation-located compile-heuristics-nondeterministcly 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-heuristics-nondeterministcly  always )
+(relation-located sigma-H-retract 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-retract  always )
+(relation-located sigma-X-retract 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-X-retract  always )
+(relation-located compile-rewrite-clause 3 kernel  (SetFn ?h641  ?h643  ?h645) compile-rewrite-clause  always )
+(relation-located is-prolog 1 kernel  (SetFn ?h639) is-prolog  always )
+(relation-located current-output 1 kernel  (SetFn ?h639) current-output  always )
+(relation-located recompile-all 0 kernel  (EmptySetFn) recompile-all  always )
+(relation-located cb_error-type 2 kernel  (SetFn ?h640  ?h642) cb_error-type  always )
+(relation-located sigma-C-assert-based-on-language-first 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) sigma-C-assert-based-on-language-first  always )
+(relation-located sigma-C-assert-based-on-language 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-C-assert-based-on-language  always )
+(relation-located new-relation-exists-in-context 3 kernel  (SetFn ?h641  ?h643  ?h645) new-relation-exists-in-context  always )
+(relation-located inference-module-query 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) inference-module-query  always )
+(relation-located write-canonical 1 kernel  (SetFn ?h639) write-canonical  always )
+(relation-located write-canonical 2 kernel  (SetFn ?h640  ?h642) write-canonical  always )
+(relation-located tphrase 1 kernel  (SetFn ?h639) tphrase  always )
+(relation-located tphrase 2 kernel  (SetFn ?h640  ?h642) tphrase  always )
+(relation-located uninstantiated 2 kernel  (SetFn ?h640  ?h642) uninstantiated  always )
+(relation-located global-set 2 kernel  (SetFn ?h640  ?h642) global-set  always )
+(relation-located sigma-console-end-char 2 kernel  (SetFn ?h640  ?h642) sigma-console-end-char  always )
+(relation-located sigma-console-scan-text 2 kernel  (SetFn ?h640  ?h642) sigma-console-scan-text  always )
+(relation-located unload-package 1 kernel  (SetFn ?h639) unload-package  always )
+(relation-located ua-query 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-query  always )
+(relation-located put 1 kernel  (SetFn ?h639) put  always )
+(relation-located disp_debug-ctl 2 kernel  (SetFn ?h640  ?h642) disp_debug-ctl  always )
+(relation-located sigma-console-read-stdin 2 kernel  (SetFn ?h640  ?h642) sigma-console-read-stdin  always )
+(relation-located prove-not 2 kernel  (SetFn ?h640  ?h642) prove-not  always )
+(relation-located re-var-list 2 kernel  (SetFn ?h640  ?h642) re-var-list  always )
+(relation-located is-absolute-filename 1 kernel  (SetFn ?h639) is-absolute-filename  always )
+(relation-located sigma-H-relation-add 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) sigma-H-relation-add  always )
+(relation-located make-functsymbol2 2 kernel  (SetFn ?h640  ?h642) make-functsymbol2  always )
+(relation-located set-global-compiler-options 1 kernel  (SetFn ?h639) set-global-compiler-options  always )
+(relation-located sigma-console-get-chars0 1 kernel  (SetFn ?h639) sigma-console-get-chars0  always )
+(relation-located query-done 1 kernel  (SetFn ?h639) query-done  always )
+(relation-located inference-module-create-query-workspace 1 kernel  (SetFn ?h639) inference-module-create-query-workspace  always )
+(relation-located keysort 2 kernel  (SetFn ?h640  ?h642) keysort  always )
+(relation-located proper-hilog 1 kernel  (SetFn ?h639) proper-hilog  always )
+(relation-located sigma_X_kb-eval 2 kernel  (SetFn ?h640  ?h642) sigma_X_kb-eval  always )
+(relation-located write-http-header 0 kernel  (EmptySetFn) write-http-header  always )
+(relation-located call 1 kernel  (SetFn ?h639) call  always )
+(relation-located writeln 1 kernel  (SetFn ?h639) writeln  always )
+(relation-located sigma-console-readstring-stdin 1 kernel  (SetFn ?h639) sigma-console-readstring-stdin  always )
+(relation-located load-dyn 1 kernel  (SetFn ?h639) load-dyn  always )
+(relation-located current-predicate 1 kernel  (SetFn ?h639) current-predicate  always )                                                                                                                                          
+(relation-located current-predicate 2 kernel  (SetFn ?h640  ?h642) current-predicate  always )
+(relation-located listing-out 1 kernel  (SetFn ?h639) listing-out  always )
+(relation-located file-write 2 kernel  (SetFn ?h640  ?h642) file-write  always )
+(relation-located clsid-gen 1 kernel  (SetFn ?h639) clsid-gen  always )
+(relation-located sigma-H-relation-info 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) sigma-H-relation-info  always )
+(relation-located socket-bind 2 kernel  (SetFn ?h640  ?h642) socket-bind  always )
+(relation-located socket-bind 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-bind  always )
+(relation-located forward-chain 2 kernel  (SetFn ?h640  ?h642) forward-chain  always )
+(relation-located forward-chain 3 kernel  (SetFn ?h641  ?h643  ?h645) forward-chain  always )
+(relation-located float 1 kernel  (SetFn ?h639) float  always )
+(relation-located expand-term 2 kernel  (SetFn ?h640  ?h642) expand-term  always )
+(relation-located sigma-H-retractall 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-retractall  always )
+(relation-located sigma-X-retractall 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-X-retractall  always )
+(relation-located sys-hid-savecp 1 kernel  (SetFn ?h639) sys-hid-savecp  always )
+(relation-located sigma-H-relation-delete 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) sigma-H-relation-delete  always )
+(relation-located tokenize2 2 kernel  (SetFn ?h640  ?h642) tokenize2  always )
+(relation-located tokenize3 2 kernel  (SetFn ?h640  ?h642) tokenize3  always )
+(relation-located socket-write-pretty 2 kernel  (SetFn ?h640  ?h642) socket-write-pretty  always )
+(relation-located socket-get0 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-get0  always )
+(relation-located see 1 kernel  (SetFn ?h639) see  always )
+(relation-located abort 0 kernel  (EmptySetFn) abort  always )
+(relation-located abort 1 kernel  (SetFn ?h639) abort  always )
+(relation-located ground-vars 1 kernel  (SetFn ?h639) ground-vars  always )
+(relation-located current-input 1 kernel  (SetFn ?h639) current-input  always )
+(relation-located atomic 1 kernel  (SetFn ?h639) atomic  always )
+(relation-located close 1 kernel  (SetFn ?h639) close  always )
+(relation-located true 0 kernel  (EmptySetFn) true  always )
+(relation-located get-chars 3 kernel  (SetFn ?h641  ?h643  ?h645) get-chars  always )
+(relation-located get-chars 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) get-chars  always )
+(relation-located term-to-atomlist 2 kernel  (SetFn ?h640  ?h642) term-to-atomlist  always )
+(relation-located ttywritenl 1 kernel  (SetFn ?h639) ttywritenl  always )
+(relation-located fmt-write-string 3 kernel  (SetFn ?h641  ?h643  ?h645) fmt-write-string  always )
+(relation-located sigma-C-retract-based-on-language 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-C-retract-based-on-language  always )
+(relation-located any-to-string 2 kernel  (SetFn ?h640  ?h642) any-to-string  always )
+(relation-located append 3 kernel  (SetFn ?h641  ?h643  ?h645) append  always )
+(relation-located ua-retract 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-retract  always )
+(relation-located tab 1 kernel  (SetFn ?h639) tab  always )
+(relation-located spy 1 kernel  (SetFn ?h639) spy  always )
+(relation-located prove 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) prove  always )
+(relation-located valid-char 1 kernel  (SetFn ?h639) valid-char  always )
+(relation-located valid-char 3 kernel  (SetFn ?h641  ?h643  ?h645) valid-char  always )
+(relation-located windows-os 0 kernel  (EmptySetFn) windows-os  always )
+(relation-located ground 1 kernel  (SetFn ?h639) ground  always )
+(relation-located do-xor 2 kernel  (SetFn ?h640  ?h642) do-xor  always )
+(relation-located xsb-flag 2 kernel  (SetFn ?h640  ?h642) xsb-flag  always )
+(relation-located tfa 1 kernel  (SetFn ?h639) tfa  always )
+(relation-located never-assert-new 1 kernel  (SetFn ?h639) never-assert-new  always )
+(relation-located socket-close 1 kernel  (SetFn ?h639) socket-close  always )
+(relation-located predicate-property 2 kernel  (SetFn ?h640  ?h642) predicate-property  always )
+(relation-located socket-close 2 kernel  (SetFn ?h640  ?h642) socket-close  always )
+(relation-located collect-var 2 kernel  (SetFn ?h640  ?h642) collect-var  always )
+(relation-located pred-args-legal-modes 3 kernel  (SetFn ?h641  ?h643  ?h645) pred-args-legal-modes  always )
+(relation-located unnumbervars-nil 2 kernel  (SetFn ?h640  ?h642) unnumbervars-nil  always )
+(relation-located socket-flush 1 kernel  (SetFn ?h639) socket-flush  always )
+(relation-located ttt 0 kernel  (EmptySetFn) ttt  always )
+(relation-located new-function-exists-in-context 3 kernel  (SetFn ?h641  ?h643  ?h645) new-function-exists-in-context  always )
+(relation-located seen 0 kernel  (EmptySetFn) seen  always )
+(relation-located bootstrap-package 2 kernel  (SetFn ?h640  ?h642) bootstrap-package  always )
+(relation-located reify-vars 2 kernel  (SetFn ?h640  ?h642) reify-vars  always )
+(relation-located pred-args-legal-types 3 kernel  (SetFn ?h641  ?h643  ?h645) pred-args-legal-types  always )
+(relation-located store-retraction-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) store-retraction-list  always )
+(relation-located handle-request 0 kernel  (EmptySetFn) handle-request  always )
+(relation-located continue-the-query 0 kernel  (EmptySetFn) continue-the-query  always )
+(relation-located socket-put 2 kernel  (SetFn ?h640  ?h642) socket-put  always )
+(relation-located socket-put 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-put  always )
+(relation-located sigma-U-set-session-defaults 2 kernel  (SetFn ?h640  ?h642) sigma-U-set-session-defaults  always )
+(relation-located var 1 kernel  (SetFn ?h639) var  always )
+(relation-located ltrim 2 kernel  (SetFn ?h640  ?h642) ltrim  always )
+(relation-located phrase 2 kernel  (SetFn ?h640  ?h642) phrase  always )
+(relation-located socket-connect 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-connect  always )
+(relation-located phrase 3 kernel  (SetFn ?h641  ?h643  ?h645) phrase  always )
+(relation-located socket-connect 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) socket-connect  always )
+(relation-located get0 1 kernel  (SetFn ?h639) get0  always )
+(relation-located socket-recv 2 kernel  (SetFn ?h640  ?h642) socket-recv  always )
+(relation-located socket-recv 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-recv  always )
+(relation-located ua-assert 6 kernel  (SetFn ?h644  ?h646  ?h648  ?h650  ?h652  ?h654) ua-assert  always )
+(relation-located collect-vars 2 kernel  (SetFn ?h640  ?h642) collect-vars  always )
+(relation-located sigma-U-option-lookup 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-U-option-lookup  always )
+(relation-located socket-send 2 kernel  (SetFn ?h640  ?h642) socket-send  always )
+(relation-located socket-send 3 kernel  (SetFn ?h641  ?h643  ?h645) socket-send  always )
+(relation-located newstance-of 3 kernel  (SetFn ?h641  ?h643  ?h645) newstance-of  always )
+(relation-located table 1 kernel  (SetFn ?h639) table  always )
+(relation-located disp_debug 0 kernel  (EmptySetFn) disp_debug  always )
+(relation-located sigma_X_kb 2 kernel  (SetFn ?h640  ?h642) sigma_X_kb  always )
+(relation-located not-backwards-chain 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) not-backwards-chain  always )
+(relation-located sigma-H-context-info 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-context-info  always )
+(relation-located get-chars-hash-301 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) get-chars-hash-301  always )
+(relation-located get-chars-hash-302 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) get-chars-hash-302  always )
+(relation-located sigma-H-context-link 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-context-link  always )
+(relation-located abolish 1 kernel  (SetFn ?h639) abolish  always )
+(relation-located abolish 2 kernel  (SetFn ?h640  ?h642) abolish  always )
+(relation-located sigma-H-context-list 1 kernel  (SetFn ?h639) sigma-H-context-list  always )
+(relation-located sigma-H-context-save 2 kernel  (SetFn ?h640  ?h642) sigma-H-context-save  always )
+(relation-located sigma-H-context-dirty 1 kernel  (SetFn ?h639) sigma-H-context-dirty  always )
+(relation-located is-list 1 kernel  (SetFn ?h639) is-list  always )
+(relation-located sigma-H-context-merge 2 kernel  (SetFn ?h640  ?h642) sigma-H-context-merge  always )
+(relation-located compile-as-predicate 2 kernel  (SetFn ?h640  ?h642) compile-as-predicate  always )
+(relation-located wff 3 kernel  (SetFn ?h641  ?h643  ?h645) wff  always )
+(relation-located post-comment 1 kernel  (SetFn ?h639) post-comment  always )
+(relation-located compile-as-metalogical 2 kernel  (SetFn ?h640  ?h642) compile-as-metalogical  always )
+(relation-located sigma-H-context-delete 1 kernel  (SetFn ?h639) sigma-H-context-delete  always )
+(relation-located subclass 2 kernel  (SetFn ?h640  ?h642) subclass  always )
+(relation-located sigma-H-context-delete 2 kernel  (SetFn ?h640  ?h642) sigma-H-context-delete  always )
+(relation-located sigma-H-context-delete 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-context-delete  always )
+(relation-located sigma-H-context-create 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-context-create  always )
+(relation-located valid-start 1 kernel  (SetFn ?h639) valid-start  always )
+(relation-located expand-filename 2 kernel  (SetFn ?h640  ?h642) expand-filename  always )
+(relation-located term-to-list-hash-301 2 kernel  (SetFn ?h640  ?h642) term-to-list-hash-301  always )
+(relation-located tokens-to-wff 2 kernel  (SetFn ?h640  ?h642) tokens-to-wff  always )
+(relation-located sigma-H-context-changed 2 kernel  (SetFn ?h640  ?h642) sigma-H-context-changed  always )
+(relation-located split-key-list 3 kernel  (SetFn ?h641  ?h643  ?h645) split-key-list  always )
+(relation-located split-key-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) split-key-list  always )
+(relation-located ua-post 2 kernel  (SetFn ?h640  ?h642) ua-post  always )
+(relation-located socket 1 kernel  (SetFn ?h639) socket  always )
+(relation-located socket 2 kernel  (SetFn ?h640  ?h642) socket  always )
+(relation-located sigma-A-do-assert-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) sigma-A-do-assert-list  always )
+(relation-located sigma-H-context-unlink 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-context-unlink  always )
+(relation-located t-cut 0 kernel  (EmptySetFn) t-cut  always )
+(relation-located otherwise 0 kernel  (EmptySetFn) otherwise  always )
+(relation-located tilde-expand-filename 2 kernel  (SetFn ?h640  ?h642) tilde-expand-filename  always )
+(relation-located httpd 0 kernel  (EmptySetFn) httpd  always )
+(relation-located generate-internal-tracking-number 2 kernel  (SetFn ?h640  ?h642) generate-internal-tracking-number  always )
+(relation-located httpd 1 kernel  (SetFn ?h639) httpd  always )
+(relation-located duplicated-answer 2 kernel  (SetFn ?h640  ?h642) duplicated-answer  always )
+(relation-located sigma-H-constant-info 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-constant-info  always )
+(relation-located set-timer 1 kernel  (SetFn ?h639) set-timer  always )
+(relation-located atomic-compilation 2 kernel  (SetFn ?h640  ?h642) atomic-compilation  always )
+(relation-located sigma-H-update 3 kernel  (SetFn ?h641  ?h643  ?h645) sigma-H-update  always )
+(relation-located ua-restart-inference-kb 3 kernel  (SetFn ?h641  ?h643  ?h645) ua-restart-inference-kb  always )
+(relation-located sigma-H-context-ensure-loaded 1 kernel  (SetFn ?h639) sigma-H-context-ensure-loaded  always )
+(relation-located collect-vars-nums-list 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) collect-vars-nums-list  always )
+(relation-located file-flush 2 kernel  (SetFn ?h640  ?h642) file-flush  always )
+(relation-located sigma-U-setup-notify 1 kernel  (SetFn ?h639) sigma-U-setup-notify  always )
+(relation-located sigma-H-constant-create 4 kernel  (SetFn ?h642  ?h644  ?h646  ?h648) sigma-H-constant-create  always )
+(relation-located sigma-X-assert-new-1 5 kernel  (SetFn ?h643  ?h645  ?h647  ?h649  ?h651) sigma-X-assert-new-1  always )
+
+(end_of_file)
+(end-of-file)
+
+
+
+
+                                                                                                           
+
+
+                                                                                                       
+								
+

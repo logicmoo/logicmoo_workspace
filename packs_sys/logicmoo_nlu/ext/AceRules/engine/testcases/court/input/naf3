@@ -1,0 +1,8 @@
+If there is someone X and it is not provable that X is a n:criminal_x then X is not a criminal.
+Every n:criminal_x is a criminal.
+Mary is a n:criminal_x.
+Mary is a catholic.
+Every catholic is religious.
+Nobody who is religious is a n:criminal_x.
+John waits.
+Bill is a n:criminal_x.

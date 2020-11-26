@@ -1,0 +1,215 @@
+
+;; (setf (readtable-case *readtable*) :preserve )
+;; (logicmoo::require '((if 2) (iff 2) (not 1) (and) (or) (ist)(mtHybrid)(subContextOf) (forall 2) (exists 2) (exactly 3)(atleast 3)(atmost 3)))
+
+;; (let ((*print-pretty* t)) (format t "~%~S " '(
+
+
+(ModalHelperFunction AssertedFor)
+(ModalHelperFunction PossibleFor)
+(ModalHelperFunction FalsifiedFor)
+(ModalHelperFunction FallaciousFor)
+(ModalHelperFunction UnknownFor)
+(ModalHelperFunction AskableFrom)
+(ModalHelperFunction AnswerableFrom)
+
+(forall ((ModalHelperFunction mhf))
+  (UniqueObjectDesignatingFunction mhf ModalContext HelperContext))
+
+(forall (odf domain range) 
+ (if
+  (UniqueObjectDesignatingFunction odf domain range)
+  (forall ((domain term))
+   (exists ((range denotes))
+    (and
+     (= denotes (odf term))
+
+    ;; forces all odf results to be unique
+     (forall (other-term)
+       (if (= (odf other-term) denotes)
+	  (= term other-term))))
+
+    ;; forces all odfs to have at max one result
+     (forall (other-denotes)
+       (if (= other-denotes (odf term))
+	   (= other-denotes denotes)))))))
+
+
+;; a testing mt
+(ModalContext TestMt)
+
+;; Funny little set of ist/2 assertions
+(forall (MT S)
+  (if
+   (ModalContext MT)
+   (and
+
+ ;; at least 1/2 are redundant logically 
+ ;; But sometimes it is nice to see them
+
+    (if (ist (AssertedFor MT) S)
+        (ist (ProvenFor MT) S))
+
+    (if (ist (ProvenFor MT) S)
+     (and 
+      (not (ist (FalsifiedFor MT) S))
+           (ist (PossibleFor MT) S)
+      (not (ist (UnknownFor MT) S))))
+
+    (if (not (ist (AssertedFor MT) S))
+     (or (ist (PossibleFor MT) S)
+         (ist (FalsifiedFor MT) S)
+         (ist (FallaciousFor MT) S)))
+
+
+    (if (not (ist (FallaciousFor MT) S))
+     (or (ist (UnknownFor MT) S)
+         (ist (FalsifiedFor MT) S)
+         (ist (ProvenFor MT) S)))
+  
+    (if (and
+        (not (ist (UnknownFor MT) S))
+	(not (ist (FallaciousFor MT) S)))
+     (or (ist (ProvenFor MT) S)
+         (ist (FalsifiedFor MT) S)))
+  
+    (if (not (ist (FalsifiedFor MT) S))
+     (or (ist (FallaciousFor MT) S)
+         (ist (UnknownFor MT) S)
+         (ist (ProvenFor MT) S)))
+  
+    (iff (ist (AnswerableFrom MT) S)
+      (and   (ist (AskableFrom MT) S)
+           (not (ist (UnknownFor MT) S))))
+  
+    (if (ist (AnswerableFrom MT) S)
+     (or (ist (ProvenFor MT) S)
+         (ist (FalsifiedFor MT) S)))
+  
+    (iff  (ist (AskableFrom MT) S)
+     (not (ist (FallaciousFor MT) S)))
+
+
+    (if (ist (AskableFrom MT) S)
+     (or (ist (ProvenFor MT) S)
+         (ist (UnknownFor MT) S)
+         (ist (FalsifiedFor MT) S)))
+
+    (not
+     (and (ist (AskableFrom MT) S)
+         (ist (FallaciousFor MT) S)))
+
+    (if 
+     (ist (FallaciousFor MT) S)
+     (not
+      (or (ist (FalsifiedFor MT) S)
+          (ist (ProvenFor MT) S)
+          (ist (UnknownFor MT) S)
+          (ist (PossibleFor MT) S))))       
+
+    (if
+     (and (ist (ProvenFor MT) S)
+         (ist (FalsifiedFor MT) S))
+     (ist (FallaciousFor MT) S))
+
+
+    (if
+      (ist (ProvenFor MT) S)
+      (not
+       (or (ist (FalsifiedFor MT) S)
+           (ist (FallaciousFor MT) S))))
+
+    (if (ist (ProvenFor MT) S)
+     (and (not (ist (UnknownFor MT) S))
+          (not (ist (FalsifiedFor MT) S))
+          (not (ist (FallaciousFor MT) S))))
+
+    (if (ist (ProvenFor MT) S)
+        (ist (PossibleFor MT) S))
+
+    (if (ist (PossibleFor MT) S)
+     (and (not (ist (FalsifiedFor MT) S))
+          (not (ist (FallaciousFor MT) S))))
+
+    (if (not (ist (ProvenFor MT) S))
+     (or (ist (FalsifiedFor MT) S)
+         (ist (FallaciousFor MT) S)
+         (ist (PossibleFor MT) S)))
+
+    (iff (ist (FalsifiedFor MT) S)
+     (and
+      (not (ist (ProvenFor MT) S))
+      (not (ist (PossibleFor MT) S))
+      (not (ist (UnknownFor MT) S))))
+
+    (if (not (ist (PossibleFor MT) S))
+     (or (ist (FalsifiedFor MT) S)
+         (ist (FallaciousFor MT) S)))
+
+    (if (ist (PossibleFor MT) S)
+     (and (not (ist (FalsifiedFor MT) S))
+          (not (ist (FallaciousFor MT) S))))
+
+    (if (ist (UnknownFor MT) S)
+     (and
+      (not (ist (ProvenFor MT) S))
+           (ist (PossibleFor MT) S)
+      (not (ist (AssertedFor MT) S))
+      (not (ist (FalsifiedFor MT) S))))
+
+ ;; subcontext inheritance
+ (forall (SUBCTX)
+    (if
+     (subContextOf SUBCTX MT)
+     (and 
+
+        (if (ist (ProvenFor MT) S)
+	    (ist (ProvenFor SUBCTX) S))
+
+        (if (ist (AskableFrom MT) S)
+	    (ist (AskableFrom SUBCTX) S))
+
+        (if (ist (FalsifiedFor MT) S)
+	    (ist (FalsifiedFor SUBCTX) S)))))
+
+)))
+
+
+;; Unrelated but other fun stuff
+
+;; sentence instance ?
+(forall (mgu lgu)
+ (exists (tmp-ctx)
+  (if
+    (if
+     (ist tmp-ctx mgu)
+     (ist tmp-ctx lgu))))
+  (prop-instance-of-prop lgu mgu))
+
+
+
+;; some sentence unifier ?
+(forall (sent1 sent2)
+ (exists (tmp-ctx)
+  (if
+   (and 
+    (subContextOf tmp-ctx LogicalEquivAxiomsMt)
+    (iff
+     (ist tmp-ctx sent1)
+     (ist tmp-ctx sent2)))
+  (sents-unify sent1 sent2))))
+
+;; some sentence unifier ?
+(forall (sent1 sent2)
+ (exists (tmp-ctx)
+  (if
+   (and 
+    (subContextOf tmp-ctx LogicalEquivAxiomsMt)
+    (ist tmp-ctx (iff sent1 sent2)))
+  (sents-unify sent1 sent2))))
+
+;; )))
+
+
+
+

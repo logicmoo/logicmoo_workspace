@@ -1,0 +1,16 @@
+---+ SPARQL TODO List
+
+* Complete SORT BY:
+	* Compare order in test-cases
+	* Value-specific comparison
+	* Compare expression results (e.g., ASC(?a+?b))
+
+* Implement value based semantics in xsd:dateTime
+
+* { ?x ?y 1 } cannot be mapped to rdf(X, Y, literal(type(xsd:integer, '1')))
+  because it must match :a :b "01"^^xsd:integer.
+
+* Does SPARQL define a total ordering of literals?  If so, we may use
+  this for the literal AVL-tree and speedup some of these queries a
+  lot.
+

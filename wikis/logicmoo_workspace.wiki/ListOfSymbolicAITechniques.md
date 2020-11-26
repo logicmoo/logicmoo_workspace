@@ -1,0 +1,53 @@
+* List of Symbolic AI Techniques (Nonexhaustive)
+
+- anomalometry
+- argumentation systems
+- automated complexity analysis
+- automated theorem proving
+- BDI agents
+- biz rules
+- commonsense reasoning
+- computational semantics
+- concept graphs
+- defeasible reasoning
+- expert systems
+- explainable recommenders
+- formal verification
+- framenets
+- general game playing
+- geometric reasoning
+- grammar learning
+- grammatical inference
+- graph analysis
+- inductive logic programming
+- knowledge-based machine translation
+- knowledge-based parsing
+- knowledge-based systems
+- knowledge graphs
+- knowledge representation and reasoning
+- lexical ontologies
+- logic
+- model-checking
+- multi-agent dialog
+- multiagent systems
+- multinets
+- natural language inference
+- ontologies
+- ontology based RDF data  symbolic NLU techniques
+- ontology learning and population
+- ontology merging
+- planning
+- practical reasoning
+- procedural generation
+- program synthesis
+- program transformation
+- robotics
+- scripts, plans, goals
+- semantic conversion prior to text mining
+- semantic networks
+- semantic web
+- symbolic algrebra
+- symbolic recommenders
+- symbolic search for bias
+- textual entailment recognition
+- wordnets

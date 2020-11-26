@@ -1,0 +1,156 @@
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% props(Obj,[height(ObjHt)]) == t(height,Obj,ObjHt) == rdf(Obj,height,ObjHt) == t(height(Obj,ObjHt)).
+% padd(Obj,[height(ObjHt)]) == prop_set(height,Obj,ObjHt,...) == ain(height(Obj,ObjHt))
+% [pdel/pclr](Obj,[height(ObjHt)]) == [del/clr](height,Obj,ObjHt) == [del/clr]svo(Obj,height,ObjHt) == [del/clr](height(Obj,ObjHt))
+% keraseall(AnyTerm).
+%
+%                      ANTECEEDANT                                   CONSEQUENT
+%
+%        P =         test nesc true                         assert(P),retract(~P) , enable(P).
+%       ~P =         test nesc false                        assert(~P),retract(P), disable(P).
+%
+%   ~ ~(P) =        rewrite_to \+ ~(P)                      rewrite_to \+ ~(P) 
+%  ~ \+(P) =        rewrite_to     (P)                      rewrite_to     (P) 
+%  \+ ~(P) =        test impossiblity is unknown            retract(~P).
+%    \+(P) =        test P is unknown                       retract(P)
+%
+% Dec 13, 2035
+% Douglas Miles
+
+%  was_module(sanity_birdt,[]).
+
+%# Tests Finin original defeasabilty system is working over 2nd order
+
+:- dynamic(t/2).
+:- include(library(pfc_header_3_0)).
+:- mpred_trace_exec.
+
+
+%:- rtrace.
+==> t(tBird,iChilly).
+
+:- dynamic(instanceOf/2).
+%:- file_begin(pfc).
+
+(tType(COL)==>{kb_local(COL/1)},
+ functorDeclares(COL),
+ (t(COL,X)<==>instanceOf(X,COL))).
+
+
+(bmdefault(P)/pfcLiteral(P))  ==>  (\+ ~(P) ==> P).
+
+bmdefault((P ==> Q))/pfcLiteral(Q) ==> (P, \+ ~(Q) ==> Q).
+
+
+
+==> tType(tType).
+==> tType(tFly).
+==> tType(tCanary).
+==> tType(tPenguin).
+==> tType(tBird).
+
+
+:- mpred_test(predicate_property(t(tBird,_),dynamic)).
+
+subClassOf(C1,C2)==> (instanceOf(X,C1)==>instanceOf(X,C2)).
+
+
+:- dmsg("A cannary is a type of bird.").
+==> subClassOf(tCanary,tBird).
+:- dmsg("A penguin is a type of bird.").
+==> subClassOf(tPenguin,tBird).
+
+
+
+:- dmsg("Chilly is a penguin.").
+==> t(tPenguin,iChilly).
+
+:- dmsg("Make sure Chilly is a bird now.").
+:- mpred_test((t(tBird,iChilly))).
+
+
+:- dmsg("Tweety is a canary.").
+t(tCanary,iTweety).
+
+:- mpred_test((t(tBird,iTweety))).
+
+:- dmsg("birds fly by bmdefault.").
+bmdefault(( t(tBird,X) ==> t(tFly,X) )).
+
+:- mpred_test((t(tBird,iTweety))).
+:- mpred_test((t(tFly,iTweety))).
+
+:- dmsg("make sure Chilly can fly").
+:- mpred_test((instanceOf(I,tFly),I=iChilly)).
+
+:- mpred_test((t(tBird,iTweety))).
+
+:- listing([tFly/1,tBird/1,instanceOf/2]).
+
+
+:- dmsg("make sure Tweety can fly (and again Chilly)").
+:- mpred_test((t(tFly,iTweety))).
+:- mpred_test((t(tFly,iChilly))).
+
+
+==> never_retract_u(t(tBird,iChilly)).
+
+
+:- dmsg("penguins do not tFly.").
+t(tPenguin,X) ==>  ~t(tFly,X). 
+
+:- dmsg("confirm Chilly now cant fly").
+
+:- mpred_test(( ~ t(tFly,iChilly))).
+
+:- mpred_test((\+ t(tFly,iChilly))).
+
+%= repropigate that Chilly was a bird again (actualy this asserts)
+
+==> t(tBird,iChilly).
+
+:- listing(tBird/1).
+
+%= the dmsg explains the difference between \+ and ~
+:- dmsg("confirm Chilly still does not fly").
+:- mpred_test(( \+ t(tFly,iChilly))).
+:- dmsg("confirm Chilly still cant fly").
+:- mpred_test(( ~  t(tFly,iChilly))).
+
+
+
+:- dmsg("Chilly is no longer a penguin (hopefly the assertion above about him being a bird wont be removed)").
+
+
+:- debug_logicmoo(_).
+:- debug_logicmoo(logicmoo(_)).
+
+:- mpred_test(t(tBird,iChilly)).
+
+==> never_retract_u(t(tBird,iChilly)).
+
+
+==> ~ t(tPenguin,iChilly).                              
+
+
+:- mpred_test((t(tBird,iChilly))).
+
+:- mpred_test(( \+ t(tPenguin,iChilly))).
+
+:- dmsg("Chilly is still a bird").
+:- mpred_test((t(tBird,iChilly))).
+
+:- dmsg("confirm Chilly is flying bird").
+:- mpred_test(( t(tFly,iChilly))).
+
+:- repropagate(t(tBird,iChilly)).   
+
+:- dmsg("confirm Chilly is flying bird").
+:- mpred_test(( t(tFly,iChilly))).
+:- mpred_test(( \+ t(tPenguin,iChilly))).
+:- mpred_test(( \+ ~t(tFly,iChilly))).
+
+
+

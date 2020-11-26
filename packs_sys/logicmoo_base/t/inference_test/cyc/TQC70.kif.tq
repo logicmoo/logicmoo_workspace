@@ -1,0 +1,13 @@
+(note TQC70)
+(agreeingAgents BiologicalAndToxinWeaponsConvention Iran) 
+
+
+
+
+(queryyn
+
+ (agreeingAgents BiologicalAndToxinWeaponsConvention Iran))
+
+(answer Yes)  
+
+(end_of_file)

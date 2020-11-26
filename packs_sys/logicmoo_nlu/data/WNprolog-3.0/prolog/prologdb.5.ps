@@ -1,0 +1,1722 @@
+%!PS
+%%Version: 3.15
+%%DocumentFonts: (atend)
+%%Pages: (atend)
+%%EndComments
+%ident	"@(#)lp:filter/postscript/postscript/dpost.ps	1.1"
+%
+% Version 3.16 prologue for troff files.
+%
+
+/#copies 1 store
+/aspectratio 1 def
+/formsperpage 1 def
+/landscape false def
+/linewidth .3 def
+/magnification 1 def
+/margin 0 def
+/orientation 0 def
+/resolution 720 def
+/xoffset 0 def
+/yoffset 0 def
+
+/roundpage true def
+/useclippath true def
+/pagebbox [0 0 612 792] def
+
+/R  /Times-Roman def
+/I  /Times-Italic def
+/B  /Times-Bold def
+/BI /Times-BoldItalic def
+/H  /Helvetica def
+/HI /Helvetica-Oblique def
+/HB /Helvetica-Bold def
+/HX /Helvetica-BoldOblique def
+/CW /Courier def
+/CO /Courier def
+/CI /Courier-Oblique def
+/CB /Courier-Bold def
+/CX /Courier-BoldOblique def
+/PA /Palatino-Roman def
+/PI /Palatino-Italic def
+/PB /Palatino-Bold def
+/PX /Palatino-BoldItalic def
+/Hr /Helvetica-Narrow def
+/Hi /Helvetica-Narrow-Oblique def
+/Hb /Helvetica-Narrow-Bold def
+/Hx /Helvetica-Narrow-BoldOblique def
+/KR /Bookman-Light def
+/KI /Bookman-LightItalic def
+/KB /Bookman-Demi def
+/KX /Bookman-DemiItalic def
+/AR /AvantGarde-Book def
+/AI /AvantGarde-BookOblique def
+/AB /AvantGarde-Demi def
+/AX /AvantGarde-DemiOblique def
+/NR /NewCenturySchlbk-Roman def
+/NI /NewCenturySchlbk-Italic def
+/NB /NewCenturySchlbk-Bold def
+/NX /NewCenturySchlbk-BoldItalic def
+/ZD /ZapfDingbats def
+/ZI /ZapfChancery-MediumItalic def
+/VR /Varitimes#Roman def
+/VI /Varitimes#Italic def
+/VB /Varitimes#Bold def
+/VX /Varitimes#BoldItalic def
+/S  /S def
+/S1 /S1 def
+/GR /Symbol def
+
+/inch {72 mul} bind def
+/min {2 copy gt {exch} if pop} bind def
+
+/setup {
+	counttomark 2 idiv {def} repeat pop
+
+	landscape {/orientation 90 orientation add def} if
+	/scaling 72 resolution div def
+	linewidth setlinewidth
+	1 setlinecap
+
+	pagedimensions
+	xcenter ycenter translate
+	orientation neg rotate
+	width 2 div neg height 2 div translate
+	xoffset inch yoffset inch translate
+	margin 2 div dup neg translate
+	magnification dup aspectratio mul scale
+	scaling scaling scale
+
+	/Symbol /S Sdefs cf
+	/Times-Roman /S1 S1defs cf
+	0 0 moveto
+} def
+
+/pagedimensions {
+	useclippath userdict /gotpagebbox known not and {
+		/pagebbox [clippath pathbbox newpath] def
+		roundpage currentdict /roundpagebbox known and {roundpagebbox} if
+	} if
+	pagebbox aload pop
+	4 -1 roll exch 4 1 roll 4 copy
+	landscape {4 2 roll} if
+	sub /width exch def
+	sub /height exch def
+	add 2 div /xcenter exch def
+	add 2 div /ycenter exch def
+	userdict /gotpagebbox true put
+} def
+
+/pagesetup {
+	/page exch def
+	currentdict /pagedict known currentdict page known and {
+		page load pagedict exch get cvx exec
+	} if
+} def
+
+/decodingdefs [
+	{counttomark 2 idiv {y moveto show} repeat}
+	{neg /y exch def counttomark 2 idiv {y moveto show} repeat}
+	{neg moveto {2 index stringwidth pop sub exch div 0 32 4 -1 roll widthshow} repeat}
+	{neg moveto {spacewidth sub 0.0 32 4 -1 roll widthshow} repeat}
+	{counttomark 2 idiv {y moveto show} repeat}
+	{neg setfunnytext}
+] def
+
+/setdecoding {/t decodingdefs 3 -1 roll get bind def} bind def
+
+/w {neg moveto show} bind def
+/m {neg dup /y exch def moveto} bind def
+/done {/lastpage where {pop lastpage} if} def
+
+/f {
+	dup /font exch def findfont exch
+	dup /ptsize exch def scaling div dup /size exch def scalefont setfont
+	linewidth ptsize mul scaling 10 mul div setlinewidth
+	/spacewidth ( ) stringwidth pop def
+} bind def
+
+/changefont {
+	/fontheight exch def
+	/fontslant exch def
+	currentfont [
+		1 0
+		fontheight ptsize div fontslant sin mul fontslant cos div
+		fontheight ptsize div
+		0 0
+	] makefont setfont
+} bind def
+
+/sf {f} bind def
+
+/cf {
+	dup length 2 idiv
+	/entries exch def
+	/chtab exch def
+	/newfont exch def
+
+	findfont dup length 1 add dict
+	/newdict exch def
+	{1 index /FID ne {newdict 3 1 roll put} {pop pop} ifelse} forall
+
+	newdict /Metrics entries dict put
+	newdict /Metrics get
+	begin
+		chtab aload pop
+		1 1 entries {pop def} for
+		newfont newdict definefont pop
+	end
+} bind def
+
+%
+% A few arrays used to adjust reference points and character widths in some
+% of the printer resident fonts. If square roots are too high try changing
+% the lines describing /radical and /radicalex to,
+%
+%	/radical	[0 -75 550 0]
+%	/radicalex	[-50 -75 500 0]
+%
+
+/Sdefs [
+	/bracketlefttp		[220 500]
+	/bracketleftbt		[220 500]
+	/bracketrighttp		[-70 380]
+	/bracketrightbt		[-70 380]
+	/braceleftbt		[220 490]
+	/bracketrightex		[220 -125 500 0]
+	/radical		[0 0 550 0]
+	% NeWSprint's \(br is too low, compensate
+	statusdict /product get (NeWS Server) eq {
+		/radicalex		[-50 100 500 0]
+		/parenleftex		[-20 100 0 0]
+
+	} {
+		/radicalex		[-50 0 500 0]
+		/parenleftex		[-20 -170 0 0]
+	} ifelse
+	/integral		[100 -50 500 0]
+	/infinity		[10 -75 730 0]
+] def
+
+/S1defs [
+	/underscore		[0 80 500 0]
+	/endash			[7 90 650 0]
+] def
+%%EndProlog
+%%BeginSetup
+mark
+/resolution 720 def
+setup
+2 setdecoding
+%%EndSetup
+%%Page: 1 1
+save
+mark
+1 pagesetup
+10 R f
+(WordNet)720 480 w
+10 S f
+(\324)1091 480 w
+10 R f
+( \( 5WN \))3 330( PROLOGDB)1 3340(File Formats)1 517 3 1213 480 t
+9 B f
+(NAME)720 960 w
+10 R f
+(wn)1080 1080 w
+10 S f
+(_)1202 1080 w
+10 R f
+(pl)1252 1080 w
+10 S1 f
+(\261)1363 1080 w
+10 R f
+(description of Prolog database \256les)4 1436 1 1461 1080 t
+9 B f
+(DESCRIPTION)720 1248 w
+10 R f
+(The \256les)1 371 1 1080 1368 t
+10 B f
+(wn)1500 1368 w
+10 S f
+(_*)1628 1368 w
+10 B f
+(.pl)1728 1368 w
+10 R f
+( prolog interface to)3 837( A)1 155( database in a prolog-readable format.)5 1637(contain the WordNet)2 885 4 1886 1368 t
+(WordNet is not implemented.)3 1212 1 1080 1488 t
+( A)1 149( is very large and may take many minutes to load into the Prolog workspace.)14 3326(The prolog database)2 845 3 1080 1728 t
+( the user the ability to load only those)8 1641(separate \256le has been created for each WordNet relation giving)9 2679 2 1080 1848 t
+(parts of the database that they are interested.)7 1829 1 1080 1968 t
+(See)1080 2208 w
+10 B f
+(FILES)1271 2208 w
+10 R f
+( database \256les and)3 798(, below, for a list of the)6 1064 2 1561 2208 t
+10 B f
+(wndb)3471 2208 w
+10 R f
+(\(5WN\) and)1 474 1 3711 2208 t
+10 B f
+(wninput)4233 2208 w
+10 R f
+(\(5WN\) for detailed)2 810 1 4590 2208 t
+(descriptions of the various WordNet relations \(referred to as)8 2469 1 1080 2328 t
+10 I f
+(operators)3582 2328 w
+10 R f
+(in this manual page\).)3 862 1 4004 2328 t
+9 B f
+(File Format)1 480 1 900 2496 t
+10 R f
+( database \256le contains information corresponding to the synsets and word senses contained)12 3820(Each prolog)1 500 2 1080 2616 t
+( the prolog version of the database, the)7 1624( In)1 152(in the WordNet database.)3 1047 3 1080 2736 t
+10 I f
+(synset)3939 2736 w
+10 S f
+(_)4183 2736 w
+10 I f
+(id)4233 2736 w
+10 R f
+( are used)2 374(s \(de\256ned below\))2 715 2 4311 2736 t
+(as unique synset identi\256ers.)3 1129 1 1080 2856 t
+( lines with the same)4 838( All)1 197( of a \256le contains an operator that corresponds to a WordNet relation.)12 2901(Each line)1 384 4 1080 3096 t
+10 I f
+(operator)1080 3216 w
+10 R f
+(value are stored in the \256le)5 1074 1 1463 3216 t
+10 B f
+(wn)2570 3216 w
+10 S f
+(_)2698 3216 w
+10 I f
+(operator)2748 3216 w
+10 B f
+(.pl)3098 3216 w
+10 R f
+(.)3207 3216 w
+(The general format of a line in a prolog database \256le is as follows:)13 2752 1 1080 3456 t
+10 I f
+(operator)1440 3696 w
+10 B f
+(\()1790 3696 w
+10 I f
+(\256eld1)1823 3696 w
+10 B f
+(,)2045 3696 w
+10 I f
+(...)2136 3696 w
+10 B f
+(,)2277 3696 w
+10 I f
+(\256eldn)2302 3696 w
+10 B f
+(\).)2524 3696 w
+10 R f
+( a left parenthesis, a comma-separated list of)7 1905(Each line contains the name of the operator, followed by)9 2415 2 1080 3936 t
+( there are no spaces, and each line is terminated with a)11 2370( Note)1 270( period.)1 323(\256elds, a right parenthesis, and a)5 1357 4 1080 4056 t
+(newline character.)1 738 1 1080 4176 t
+9 B f
+(Operators)900 4344 w
+10 R f
+( a separate \256le by)4 746(Each WordNet relation is represented in)5 1659 2 1080 4464 t
+10 I f
+(operator)3522 4464 w
+10 R f
+( operators are re\257exive)3 952(name. Some)1 539 2 3909 4464 t
+(\(i.e. the)1 311 1 1080 4584 t
+10 S1 f
+(")1425 4584 w
+10 R f
+(reverse)1466 4584 w
+10 S1 f
+(")1753 4584 w
+10 R f
+( example, if)2 490( for)1 150( So,)1 198(relation is implicit\).)2 810 4 1828 4584 t
+10 B f
+(x)3509 4584 w
+10 R f
+(is a hypernym of)3 698 1 3592 4584 t
+10 B f
+(y)4323 4584 w
+10 R f
+(,)4373 4584 w
+10 B f
+(y)4431 4584 w
+10 R f
+(is necessarily a hypo-)3 886 1 4514 4584 t
+(nym of)1 294 1 1080 4704 t
+10 B f
+(x)1407 4704 w
+10 R f
+( the prolog database, re\257ected pointers are usually implied for semantic relations.)11 3335(. In)1 174 2 1457 4704 t
+(Semantic relations are represented by a pair of)7 1972 1 1080 4944 t
+10 I f
+(synset)3094 4944 w
+10 S f
+(_)3338 4944 w
+10 I f
+(id)3388 4944 w
+10 R f
+(s, in which the \256rst)4 832 1 3466 4944 t
+10 I f
+(synset)4340 4944 w
+10 S f
+(_)4584 4944 w
+10 I f
+(id)4634 4944 w
+10 R f
+(is generally the)2 646 1 4754 4944 t
+( two pairs)2 418( If)1 136(source of the relation and the second is the target.)9 2087 3 1080 5064 t
+10 I f
+(synset)3758 5064 w
+10 S f
+(_)4002 5064 w
+10 I f
+(id)4052 5064 w
+10 B f
+(,)4130 5064 w
+10 I f
+(w)4155 5064 w
+10 S f
+(_)4222 5064 w
+10 I f
+(num)4272 5064 w
+10 R f
+( the opera-)2 448(are present,)1 471 2 4481 5064 t
+(tor represents a lexical relation between word forms.)7 2156 1 1080 5184 t
+10 B f
+(s\()1080 5424 w
+10 I f
+(synset)1152 5424 w
+10 S f
+(_)1396 5424 w
+10 I f
+(id)1446 5424 w
+10 B f
+(,)1524 5424 w
+10 I f
+(w)1549 5424 w
+10 S f
+(_)1616 5424 w
+10 I f
+(num)1666 5424 w
+10 B f
+(,')1838 5424 w
+10 I f
+(word)1896 5424 w
+10 B f
+(',)2102 5424 w
+10 I f
+(ss)2160 5424 w
+10 S f
+(_)2238 5424 w
+10 I f
+(type)2288 5424 w
+10 B f
+(,)2454 5424 w
+10 I f
+(sense)2479 5424 w
+10 S f
+(_)2695 5424 w
+10 I f
+(number)2745 5424 w
+10 B f
+(,)3050 5424 w
+10 I f
+(tag)3075 5424 w
+10 S f
+(_)3203 5424 w
+10 I f
+(count)3253 5424 w
+10 B f
+(\).)3475 5424 w
+10 R f
+(A)1440 5544 w
+10 B f
+(s)1559 5544 w
+10 R f
+( In)1 163(operator is present for every word sense in WordNet.)8 2295 2 1645 5544 t
+10 B f
+(wn)4150 5544 w
+10 S f
+(_)4278 5544 w
+10 B f
+(s.pl)4328 5544 w
+10 R f
+(,)4476 5544 w
+10 I f
+(w)4549 5544 w
+10 S f
+(_)4616 5544 w
+10 I f
+(num)4666 5544 w
+10 R f
+(speci\256es the)1 514 1 4886 5544 t
+(word number for)2 692 1 1440 5664 t
+10 I f
+(word)2165 5664 w
+10 R f
+(in the synset.)2 541 1 2404 5664 t
+10 B f
+(sk\()1080 5904 w
+10 I f
+(synset)1208 5904 w
+10 S f
+(_)1452 5904 w
+10 I f
+(id)1502 5904 w
+10 B f
+(,)1580 5904 w
+10 I f
+(w)1605 5904 w
+10 S f
+(_)1672 5904 w
+10 I f
+(num)1722 5904 w
+10 B f
+(,')1894 5904 w
+10 I f
+(sense)1952 5904 w
+10 S f
+(_)2168 5904 w
+10 I f
+(key)2218 5904 w
+10 B f
+('\).)2350 5904 w
+10 R f
+(A)1440 6024 w
+10 B f
+(sk)1551 6024 w
+10 R f
+( in WordNet. This gives the WordNet sense key)8 2036(operator is present for every word sense)6 1679 2 1685 6024 t
+(for each word sense.)3 843 1 1440 6144 t
+10 B f
+(g\()1080 6384 w
+10 I f
+(synset)1163 6384 w
+10 S f
+(_)1407 6384 w
+10 I f
+(id)1457 6384 w
+10 B f
+(,')1535 6384 w
+10 I f
+(gloss)1593 6384 w
+10 B f
+('\).)1799 6384 w
+10 R f
+(The)1440 6504 w
+10 B f
+(g)1628 6504 w
+10 R f
+(operator speci\256es the gloss for a synset.)6 1637 1 1711 6504 t
+10 B f
+(syntax\()1080 6744 w
+10 I f
+(synset)1391 6744 w
+10 S f
+(_)1635 6744 w
+10 I f
+(id)1685 6744 w
+10 B f
+(,)1763 6744 w
+10 I f
+(w)1788 6744 w
+10 S f
+(_)1855 6744 w
+10 I f
+(num)1905 6744 w
+10 B f
+(,)2077 6744 w
+10 I f
+(syntax)2102 6744 w
+10 B f
+(\).)2357 6744 w
+10 R f
+(The)1440 6864 w
+10 B f
+(syntax)1628 6864 w
+10 R f
+(operator speci\256es the syntactic marker for a given word sense if one is speci\256ed.)13 3319 1 1939 6864 t
+10 B f
+(hyp\()1080 7104 w
+10 I f
+(synset)1275 7104 w
+10 S f
+(_)1519 7104 w
+10 I f
+(id)1569 7104 w
+10 B f
+(,)1647 7104 w
+10 I f
+(synset)1672 7104 w
+10 S f
+(_)1916 7104 w
+10 I f
+(id)1966 7104 w
+10 B f
+(\).)2044 7104 w
+10 R f
+(The)1440 7224 w
+10 B f
+(hyp)1648 7224 w
+10 R f
+( This)1 265( second synset is a hypernym of the \256rst synset.)9 2165(operator speci\256es that the)3 1107 3 1863 7224 t
+( 1)1 1870( change: Dec 2006)3 769( Last)1 1512(WordNet 3.0)1 529 4 720 7704 t
+cleartomark
+showpage
+restore
+%%EndPage: 1 1
+%%Page: 2 2
+save
+mark
+2 pagesetup
+10 R f
+(WordNet)720 480 w
+10 S f
+(\324)1091 480 w
+10 R f
+( \( 5WN \))3 330( PROLOGDB)1 3340(File Formats)1 517 3 1213 480 t
+( re\257exive operator, hyponym, implies that the \256rst syn-)8 2292( The)1 224( nouns and verbs.)3 732(relation holds for)2 712 4 1440 960 t
+(set is a hyponym of the second synset.)7 1588 1 1440 1080 t
+10 B f
+(ins\()1080 1320 w
+10 I f
+(synset)1236 1320 w
+10 S f
+(_)1480 1320 w
+10 I f
+(id)1530 1320 w
+10 B f
+(,)1608 1320 w
+10 I f
+(synset)1633 1320 w
+10 S f
+(_)1877 1320 w
+10 I f
+(id)1927 1320 w
+10 B f
+(\).)2005 1320 w
+10 R f
+(The)1440 1440 w
+10 B f
+(ins)1632 1440 w
+10 R f
+( an instance of the second synset. This relation)8 1965(operator speci\256es that the \256rst synset is)6 1643 2 1792 1440 t
+(holds for nouns. The re\257exive operator, has)6 1921 1 1440 1560 t
+10 S f
+(_)3361 1560 w
+10 R f
+( synset is an)3 573(instance, implies that the second)4 1416 2 3411 1560 t
+(instance of the \256rst synset.)4 1095 1 1440 1680 t
+10 B f
+(ent\()1080 1920 w
+10 I f
+(synset)1246 1920 w
+10 S f
+(_)1490 1920 w
+10 I f
+(id)1540 1920 w
+10 B f
+(,)1618 1920 w
+10 I f
+(synset)1643 1920 w
+10 S f
+(_)1887 1920 w
+10 I f
+(id)1937 1920 w
+10 B f
+(\).)2015 1920 w
+10 R f
+(The)1440 2040 w
+10 B f
+(ent)1633 2040 w
+10 R f
+( relation)1 344( This)1 250(operator speci\256es that the second synset is an entailment of \256rst synset.)11 3001 3 1805 2040 t
+(only holds for verbs.)3 851 1 1440 2160 t
+10 B f
+(sim\()1080 2400 w
+10 I f
+(synset)1263 2400 w
+10 S f
+(_)1507 2400 w
+10 I f
+(id)1557 2400 w
+10 B f
+(,)1635 2400 w
+10 I f
+(synset)1660 2400 w
+10 S f
+(_)1904 2400 w
+10 I f
+(id)1954 2400 w
+10 B f
+(\).)2032 2400 w
+10 R f
+(The)1440 2520 w
+10 B f
+(sim)1630 2520 w
+10 R f
+( This)1 247( second synset is similar in meaning to the \256rst synset.)10 2285(operator speci\256es that the)3 1053 3 1815 2520 t
+( rela-)1 218( This)1 247( head.)1 249(means that the second synset is a satellite the \256rst synset, which is the cluster)14 3246 4 1440 2640 t
+(tion only holds for adjective synsets contained in adjective clusters.)9 2769 1 1440 2760 t
+10 B f
+(mm\()1080 3000 w
+10 I f
+(synset)1279 3000 w
+10 S f
+(_)1523 3000 w
+10 I f
+(id)1573 3000 w
+10 B f
+(,)1651 3000 w
+10 I f
+(synset)1676 3000 w
+10 S f
+(_)1920 3000 w
+10 I f
+(id)1970 3000 w
+10 B f
+(\).)2048 3000 w
+10 R f
+(The)1440 3120 w
+10 B f
+(mm)1642 3120 w
+10 R f
+( \256rst synset.)2 527(operator speci\256es that the second synset is a member meronym of the)11 3018 2 1855 3120 t
+( re\257exive operator, member holonym, can be implied.)7 2208( The)1 221(This relation only holds for nouns.)5 1423 3 1440 3240 t
+10 B f
+(ms\()1080 3480 w
+10 I f
+(synset)1235 3480 w
+10 S f
+(_)1479 3480 w
+10 I f
+(id)1529 3480 w
+10 B f
+(,)1607 3480 w
+10 I f
+(synset)1632 3480 w
+10 S f
+(_)1876 3480 w
+10 I f
+(id)1926 3480 w
+10 B f
+(\).)2004 3480 w
+10 R f
+(The)1440 3600 w
+10 B f
+(ms)1641 3600 w
+10 R f
+(operator speci\256es that the second synset is a substance meronym of the \256rst synset.)13 3591 1 1809 3600 t
+( re\257exive operator, substance holonym, can be implied.)7 2269( The)1 221(This relation only holds for nouns.)5 1423 3 1440 3720 t
+10 B f
+(mp\()1080 3960 w
+10 I f
+(synset)1252 3960 w
+10 S f
+(_)1496 3960 w
+10 I f
+(id)1546 3960 w
+10 B f
+(,)1624 3960 w
+10 I f
+(synset)1649 3960 w
+10 S f
+(_)1893 3960 w
+10 I f
+(id)1943 3960 w
+10 B f
+(\).)2021 3960 w
+10 R f
+(The)1440 4080 w
+10 B f
+(mp)1638 4080 w
+10 R f
+( This)1 255( part meronym of the \256rst synset.)6 1438(operator speci\256es that the second synset is a)7 1887 3 1820 4080 t
+( re\257exive operator, part holonym, can be implied.)7 2036( The)1 221(relation only holds for nouns.)4 1212 3 1440 4200 t
+10 B f
+(der\()1080 4440 w
+10 I f
+(synset)1257 4440 w
+10 S f
+(_)1501 4440 w
+10 I f
+(id)1551 4440 w
+10 B f
+(,)1629 4440 w
+10 I f
+(synset)1654 4440 w
+10 S f
+(_)1898 4440 w
+10 I f
+(id)1948 4440 w
+10 B f
+(\).)2026 4440 w
+10 R f
+(The)1440 4560 w
+10 B f
+(der)1632 4560 w
+10 R f
+( relation between)2 713(operator speci\256es that there exists a re\257exive lexical morphosemantic)8 2874 2 1813 4560 t
+(the \256rst and second synset terms representing derivational morphology.)8 2919 1 1440 4680 t
+10 B f
+(cls\()1080 4920 w
+10 I f
+(synset)1224 4920 w
+10 S f
+(_)1468 4920 w
+10 I f
+(id)1518 4920 w
+10 B f
+(,)1596 4920 w
+10 I f
+(w)1621 4920 w
+10 S f
+(_)1688 4920 w
+10 I f
+(num)1738 4920 w
+10 B f
+(,)1910 4920 w
+10 I f
+(synset)1935 4920 w
+10 S f
+(_)2179 4920 w
+10 I f
+(id)2229 4920 w
+10 B f
+(,)2307 4920 w
+10 I f
+(w)2332 4920 w
+10 S f
+(_)2399 4920 w
+10 I f
+(num)2449 4920 w
+10 B f
+(,)2621 4920 w
+10 I f
+(class)2646 4920 w
+10 S f
+(_)2846 4920 w
+10 I f
+(type)2896 4920 w
+10 B f
+(\).)3062 4920 w
+10 R f
+(The)1440 5040 w
+10 B f
+(cls)1644 5040 w
+10 R f
+( synset has been classi\256ed as a member of the class)10 2296(operator speci\256es that the \256rst)4 1300 2 1804 5040 t
+(represented by the second synset. Either of the)7 1955 1 1440 5160 t
+10 I f
+(w)3433 5160 w
+10 S f
+(_)3500 5160 w
+10 I f
+(num)3550 5160 w
+10 B f
+('s can be 0, re\257ecting that the pointer)7 1678 1 3722 5160 t
+(is semantic in the original WordNet database.)6 1995 1 1440 5280 t
+(cs\()1080 5520 w
+10 I f
+(synset)1196 5520 w
+10 S f
+(_)1440 5520 w
+10 I f
+(id)1490 5520 w
+10 B f
+(,)1568 5520 w
+10 I f
+(synset)1593 5520 w
+10 S f
+(_)1837 5520 w
+10 I f
+(id)1887 5520 w
+10 B f
+(\).)1965 5520 w
+10 R f
+(The)1440 5640 w
+10 B f
+(cs)1629 5640 w
+10 R f
+( relation only)2 553( This)1 246( of the \256rst synset.)4 776(operator speci\256es that the second synset is a cause)8 2079 4 1746 5640 t
+(holds for verbs.)2 640 1 1440 5760 t
+10 B f
+(vgp\()1080 6000 w
+10 I f
+(synset)1269 6000 w
+10 S f
+(_)1513 6000 w
+10 I f
+(id)1563 6000 w
+10 B f
+(,)1641 6000 w
+10 I f
+(w)1666 6000 w
+10 S f
+(_)1733 6000 w
+10 I f
+(num)1783 6000 w
+10 B f
+(,)1955 6000 w
+10 I f
+(synset)1980 6000 w
+10 S f
+(_)2224 6000 w
+10 I f
+(id)2274 6000 w
+10 B f
+(,)2352 6000 w
+10 I f
+(w)2377 6000 w
+10 S f
+(_)2444 6000 w
+10 I f
+(num)2494 6000 w
+10 B f
+(\).)2666 6000 w
+10 R f
+(The)1440 6120 w
+10 B f
+(vgp)1645 6120 w
+10 R f
+( and should be grouped)4 1036(operator speci\256es verb synsets that are similar in meaning)8 2513 2 1851 6120 t
+(together when displayed in response to a grouped synset search.)9 2628 1 1440 6240 t
+10 B f
+(at\()1080 6480 w
+10 I f
+(synset)1196 6480 w
+10 S f
+(_)1440 6480 w
+10 I f
+(id)1490 6480 w
+10 B f
+(,)1568 6480 w
+10 I f
+(synset)1593 6480 w
+10 S f
+(_)1837 6480 w
+10 I f
+(id)1887 6480 w
+10 B f
+(\).)1965 6480 w
+10 R f
+(The)1440 6600 w
+10 B f
+(at)1633 6600 w
+10 R f
+(operator de\256nes the attribute relation between noun and adjective synset pairs in which)12 3645 1 1755 6600 t
+( \(ie. each)2 386( each pair, both relations are listed)6 1450( For)1 210(the adjective is a value of the noun.)7 1505 4 1440 6720 t
+10 I f
+(synset)5028 6720 w
+10 S f
+(_)5272 6720 w
+10 I f
+(id)5322 6720 w
+10 R f
+(is both a source and target\).)5 1143 1 1440 6840 t
+10 B f
+(ant\()1080 7080 w
+10 I f
+(synset)1252 7080 w
+10 S f
+(_)1496 7080 w
+10 I f
+(id)1546 7080 w
+10 B f
+(,)1624 7080 w
+10 I f
+(w)1649 7080 w
+10 S f
+(_)1716 7080 w
+10 I f
+(num)1766 7080 w
+10 B f
+(,)1938 7080 w
+10 I f
+(synset)1963 7080 w
+10 S f
+(_)2207 7080 w
+10 I f
+(id)2257 7080 w
+10 B f
+(,)2335 7080 w
+10 I f
+(w)2360 7080 w
+10 S f
+(_)2427 7080 w
+10 I f
+(num)2477 7080 w
+10 B f
+(\).)2649 7080 w
+10 R f
+(The)1440 7200 w
+10 B f
+(ant)1648 7200 w
+10 R f
+(operator speci\256es antonymous)2 1273 1 1841 7200 t
+10 I f
+(word)3168 7200 w
+10 R f
+( is a lexical relation that holds for all)8 1697(s. This)1 329 2 3374 7200 t
+( 2)1 1870( change: Dec 2006)3 769( Last)1 1512(WordNet 3.0)1 529 4 720 7680 t
+cleartomark
+showpage
+restore
+%%EndPage: 2 2
+%%Page: 3 3
+save
+mark
+3 pagesetup
+10 R f
+(WordNet)720 480 w
+10 S f
+(\324)1091 480 w
+10 R f
+( \( 5WN \))3 330( PROLOGDB)1 3340(File Formats)1 517 3 1213 480 t
+( each antonymous pair, both relations are listed \(ie. each)9 2824( For)1 262(syntactic categories.)1 874 3 1440 960 t
+10 I f
+(synset)1440 1080 w
+10 S f
+(_)1684 1080 w
+10 I f
+(id,w)1734 1080 w
+10 S f
+(_)1904 1080 w
+10 I f
+(num)1954 1080 w
+10 R f
+(pair is both a source and target word.\))7 1569 1 2159 1080 t
+10 B f
+(sa\()1080 1320 w
+10 I f
+(synset)1202 1320 w
+10 S f
+(_)1446 1320 w
+10 I f
+(id)1496 1320 w
+10 B f
+(,)1574 1320 w
+10 I f
+(w)1599 1320 w
+10 S f
+(_)1666 1320 w
+10 I f
+(num)1716 1320 w
+10 B f
+(,)1888 1320 w
+10 I f
+(synset)1913 1320 w
+10 S f
+(_)2157 1320 w
+10 I f
+(id)2207 1320 w
+10 B f
+(,)2285 1320 w
+10 I f
+(w)2310 1320 w
+10 S f
+(_)2377 1320 w
+10 I f
+(num)2427 1320 w
+10 B f
+(\).)2599 1320 w
+10 R f
+(The)1440 1440 w
+10 B f
+(sa)1640 1440 w
+10 R f
+( the \256rst word can be obtained by)7 1481(operator speci\256es that additional information about)5 2145 2 1774 1440 t
+( is no)2 255( There)1 309( operator is only de\256ned for verbs and adjectives.)8 2123( This)1 255( word.)1 274(seeing the second)2 744 6 1440 1560 t
+( \(ie. it cannot be inferred that the additional information about the second word)13 3273(re\257exive relation)1 687 2 1440 1680 t
+(can be obtained from the \256rst word\).)6 1509 1 1440 1800 t
+10 B f
+(ppl\()1080 2040 w
+10 I f
+(synset)1253 2040 w
+10 S f
+(_)1497 2040 w
+10 I f
+(id)1547 2040 w
+10 B f
+(,)1625 2040 w
+10 I f
+(w)1650 2040 w
+10 S f
+(_)1717 2040 w
+10 I f
+(num)1767 2040 w
+10 B f
+(,)1939 2040 w
+10 I f
+(synset)1964 2040 w
+10 S f
+(_)2208 2040 w
+10 I f
+(id)2258 2040 w
+10 B f
+(,)2336 2040 w
+10 I f
+(w)2361 2040 w
+10 S f
+(_)2428 2040 w
+10 I f
+(num)2478 2040 w
+10 B f
+(\).)2650 2040 w
+10 R f
+(The)1440 2160 w
+10 B f
+(ppl)1633 2160 w
+10 R f
+( adjective \256rst word is a participle of the verb second word.)11 2527(operator speci\256es that the)3 1062 2 1811 2160 t
+(The re\257exive operator can be implied.)5 1564 1 1440 2280 t
+10 B f
+(per\()1080 2520 w
+10 I f
+(synset)1257 2520 w
+10 S f
+(_)1501 2520 w
+10 I f
+(id)1551 2520 w
+10 B f
+(,)1629 2520 w
+10 I f
+(w)1654 2520 w
+10 S f
+(_)1721 2520 w
+10 I f
+(num)1771 2520 w
+10 B f
+(,)1943 2520 w
+10 I f
+(synset)1968 2520 w
+10 S f
+(_)2212 2520 w
+10 I f
+(id)2262 2520 w
+10 B f
+(,)2340 2520 w
+10 I f
+(w)2365 2520 w
+10 S f
+(_)2432 2520 w
+10 I f
+(num)2482 2520 w
+10 B f
+(\).)2654 2520 w
+10 R f
+(The)1440 2640 w
+10 B f
+(per)1632 2640 w
+10 R f
+( the)1 159( If)1 136(operator speci\256es two different relations based on the parts of speech involved.)11 3292 3 1813 2640 t
+( an adjective synset, that word pertains to either the noun or adjective second)13 3319(\256rst word is in)3 641 2 1440 2760 t
+( synset, that word is derived from the adjective second)9 2318( the \256rst word is in an adverb)7 1273(word. If)1 369 3 1440 2880 t
+(word.)1440 3000 w
+10 B f
+(fr\()1080 3240 w
+10 I f
+(synset)1190 3240 w
+10 S f
+(_)1434 3240 w
+10 I f
+(id)1484 3240 w
+10 B f
+(,)1562 3240 w
+10 I f
+(f)1587 3240 w
+10 S f
+(_)1615 3240 w
+10 I f
+(num)1665 3240 w
+10 B f
+(,)1837 3240 w
+10 I f
+(w)1862 3240 w
+10 S f
+(_)1929 3240 w
+10 I f
+(num)1979 3240 w
+10 B f
+(\).)2151 3240 w
+10 R f
+(The)1440 3360 w
+10 B f
+(fr)1631 3360 w
+10 R f
+( opera-)1 291( The)1 225(operator speci\256es a generic sentence frame for one or all words in a synset.)13 3140 3 1744 3360 t
+(tor is de\256ned only for verbs.)5 1172 1 1440 3480 t
+9 B f
+(Field De\256nitions)1 655 1 900 3648 t
+10 R f
+(A)1080 3768 w
+10 I f
+(synset)1192 3768 w
+10 S f
+(_)1436 3768 w
+10 I f
+(id)1486 3768 w
+10 R f
+( byte de\256nes the syntactic category of the synset and)9 2243(is a nine byte \256eld in which the \256rst)8 1553 2 1604 3768 t
+(the remaining eight bytes are a)5 1278 1 1080 3888 t
+10 I f
+(synset)2393 3888 w
+10 S f
+(_)2637 3888 w
+10 I f
+(offset)2687 3888 w
+10 R f
+(, as de\256ned in)3 585 1 2904 3888 t
+10 B f
+(wndb)3524 3888 w
+10 R f
+( in the)2 268(\(5WN\), indicating the byte offset)4 1368 2 3764 3888 t
+10 B f
+(data.)1080 4008 w
+10 I f
+(pos)1294 4008 w
+10 R f
+(\256le that corresponds to the syntactic category.)6 1881 1 1466 4008 t
+(The syntactic category is encoded as:)5 1528 1 1080 4248 t
+10 B f
+(1)1440 4488 w
+10 R f
+(NOUN)1800 4488 w
+10 B f
+(2)1440 4608 w
+10 R f
+(VERB)1800 4608 w
+10 B f
+(3)1440 4728 w
+10 R f
+(ADJECTIVE)1800 4728 w
+10 B f
+(4)1440 4848 w
+10 R f
+(ADVERB)1800 4848 w
+10 I f
+(w)1080 5088 w
+10 S f
+(_)1147 5088 w
+10 I f
+(num)1197 5088 w
+10 R f
+( numbers are assigned)3 923( Word)1 298( in the synset is being referred to.)7 1422(, if present, indicates which word)5 1388 4 1369 5088 t
+(to the)1 249 1 1080 5208 t
+10 I f
+(word)1377 5208 w
+10 R f
+( used to represent lexical)4 1084( When)1 319(\256elds in a synset, from left to right, beginning with 1.)10 2366 3 1631 5208 t
+(WordNet relations)1 755 1 1080 5328 t
+10 I f
+(w)1875 5328 w
+10 S f
+(_)1942 5328 w
+10 I f
+(num)1992 5328 w
+10 R f
+( synset indi-)2 521(may be 0, indicating that the relation holds for all words in the)12 2675 2 2204 5328 t
+(cated by the preceding)3 924 1 1080 5448 t
+10 I f
+(synset)2037 5448 w
+10 S f
+(_)2281 5448 w
+10 I f
+(id)2331 5448 w
+10 R f
+(. See)1 235 1 2409 5448 t
+10 B f
+(wninput)2677 5448 w
+10 R f
+(\(5WN\) for a discussion of semantic and lexical relations.)8 2340 1 3034 5448 t
+10 I f
+(ss)1080 5688 w
+10 S f
+(_)1158 5688 w
+10 I f
+(type)1208 5688 w
+10 R f
+(is a one character code indicating the synset type:)8 2043 1 1407 5688 t
+10 B f
+(n)1440 5928 w
+10 R f
+(NOUN)1800 5928 w
+10 B f
+(v)1440 6048 w
+10 R f
+(VERB)1800 6048 w
+10 B f
+(a)1440 6168 w
+10 R f
+(ADJECTIVE)1800 6168 w
+10 B f
+(s)1440 6288 w
+10 R f
+(ADJECTIVE SATELLITE)1 1098 1 1800 6288 t
+10 B f
+(r)1440 6408 w
+10 R f
+(ADVERB)1800 6408 w
+10 I f
+(sense)1080 6648 w
+10 S f
+(_)1296 6648 w
+10 I f
+(number)1346 6648 w
+10 R f
+( within the part of speech encoded in the)8 1907(speci\256es the sense number of the word,)6 1782 2 1711 6648 t
+10 I f
+(synset)1080 6768 w
+10 S f
+(_)1324 6768 w
+10 I f
+(id)1374 6768 w
+10 R f
+(, in the WordNet database.)4 1096 1 1452 6768 t
+10 I f
+(word)1080 7008 w
+10 R f
+( the lexicographer. The text of the word is)8 1749(is the ASCII text of the word as entered in the synset by)12 2332 2 1319 7008 t
+( adjective)1 395( An)1 190(case sensitive.)1 581 3 1080 7128 t
+10 I f
+(word)2281 7128 w
+10 R f
+( was speci\256ed in)3 690(is immediately followed by a syntactic marker if one)8 2188 2 2522 7128 t
+(the lexicographer \256le.)2 889 1 1080 7248 t
+( 3)1 1870( change: Dec 2006)3 769( Last)1 1512(WordNet 3.0)1 529 4 720 7728 t
+cleartomark
+showpage
+restore
+%%EndPage: 3 3
+%%Page: 4 4
+save
+mark
+4 pagesetup
+10 R f
+(WordNet)720 480 w
+10 S f
+(\324)1091 480 w
+10 R f
+( \( 5WN \))3 330( PROLOGDB)1 3340(File Formats)1 517 3 1213 480 t
+10 I f
+(sense)1080 960 w
+10 S f
+(_)1296 960 w
+10 I f
+(key)1346 960 w
+10 R f
+( for a given word sense. See)6 1350(speci\256es the WordNet sense key)4 1445 2 1540 960 t
+10 B f
+(senseidx)4398 960 w
+10 R f
+(\(5WN\) for the)2 646 1 4754 960 t
+(speci\256cations.)1080 1080 w
+10 I f
+(syntax)1080 1320 w
+10 R f
+( for a given adjective sense if one was speci\256ed in the input \256les. See)14 3059(is the syntactic marker)3 961 2 1380 1320 t
+10 B f
+(wninput)1080 1440 w
+10 R f
+( the parentheses are)3 819(\(5WN\) for a list of the syntactic markers. Note that in the Prolog database,)13 3144 2 1437 1440 t
+(not included.)1 530 1 1080 1560 t
+(Each synset has a)3 725 1 1080 1800 t
+10 I f
+(gloss)1838 1800 w
+10 R f
+(that contains a de\256nition and one or more example sentences.)9 2529 1 2077 1800 t
+10 I f
+(class)1080 2040 w
+10 S f
+(_)1280 2040 w
+10 I f
+(type)1330 2040 w
+10 R f
+( regional, as indi-)3 741(indicates whether the classi\256cation relation represented is topical, usage, or)9 3125 2 1534 2040 t
+(cated by the)2 498 1 1080 2160 t
+10 I f
+(class)1611 2160 w
+10 S f
+(_)1811 2160 w
+10 I f
+(type)1861 2160 w
+10 R f
+(of)2060 2160 w
+10 B f
+(t)2176 2160 w
+10 R f
+(,)2209 2160 w
+10 B f
+(u)2267 2160 w
+10 R f
+(, or)1 141 1 2323 2160 t
+10 B f
+(r)2497 2160 w
+10 R f
+(, respectively.)1 565 1 2541 2160 t
+10 I f
+(f)1080 2400 w
+10 S f
+(_)1108 2400 w
+10 I f
+(num)1158 2400 w
+10 R f
+( generic sentence frame number for word)6 1698(speci\256es the)1 499 2 1363 2400 t
+10 I f
+(w)3594 2400 w
+10 S f
+(_)3661 2400 w
+10 I f
+(num)3711 2400 w
+10 R f
+(in the synset indicated by)4 1052 1 3917 2400 t
+10 I f
+(synset)5003 2400 w
+10 S f
+(_)5247 2400 w
+10 I f
+(id)5297 2400 w
+10 R f
+(.)5375 2400 w
+(Note that when)2 630 1 1080 2520 t
+10 I f
+(w)1745 2520 w
+10 S f
+(_)1812 2520 w
+10 I f
+(num)1862 2520 w
+10 R f
+(is)2069 2520 w
+10 B f
+(0)2171 2520 w
+10 R f
+( non-zero, the frame)3 835( If)1 133( in the synset.)3 577(, the frame number applies to all words)7 1634 4 2221 2520 t
+(applies to that word in the synset.)6 1389 1 1080 2640 t
+(In WordNet, sense numbers are assigned as described in)8 2311 1 1080 2880 t
+10 B f
+(wndb)3424 2880 w
+10 R f
+(\(5WN\).)3664 2880 w
+10 I f
+(tag)4037 2880 w
+10 S f
+(_)4165 2880 w
+10 I f
+(count)4215 2880 w
+10 R f
+(is the number of times)4 930 1 4470 2880 t
+(the sense was tagged in the Semantic Concordances, and)8 2329 1 1080 3000 t
+10 B f
+(0)3442 3000 w
+10 R f
+(if it was not instantiated.)4 1018 1 3525 3000 t
+9 B f
+(NOTES)720 3168 w
+10 R f
+( to enclose character strings, single quote characters found in)9 2550(Since single forward quotes are used)5 1526 2 1080 3288 t
+10 I f
+(word)5194 3288 w
+10 R f
+(and)1080 3408 w
+10 I f
+(gloss)1257 3408 w
+10 R f
+(\256elds are represented as two adjacent single quote characters.)8 2515 1 1496 3408 t
+(The load time can be greatly reduced by creating)8 2054 1 1080 3648 t
+10 S1 f
+(")3172 3648 w
+10 R f
+(object language)1 643 1 3213 3648 t
+10 S1 f
+(")3856 3648 w
+10 R f
+(versions of the \256les, an option that)6 1464 1 3936 3648 t
+(is supported by some implementations, such as Quintus Prolog.)8 2603 1 1080 3768 t
+9 B f
+(ENVIRONMENT VARIABLES \(UNIX\))2 1600 1 720 3936 t
+10 B f
+(WNHOME)1080 4056 w
+10 R f
+( is)1 100( Default)1 365(Base directory for WordNet.)3 1165 3 2080 4056 t
+10 B f
+(/usr/local/WordNet-2.1)3743 4056 w
+10 R f
+(.)4723 4056 w
+9 B f
+(REGISTRY \(WINDOWS\))1 1040 1 720 4224 t
+10 B f
+(HKEY)1080 4344 w
+10 S f
+(_)1375 4344 w
+10 B f
+(LOCAL)1425 4344 w
+10 S f
+(_)1781 4344 w
+10 B f
+(MACHINE)1831 4344 w
+10 S1 f
+(\\)2325 4344 w
+10 B f
+(SOFTWARE)2353 4344 w
+10 S1 f
+(\\)2926 4344 w
+10 B f
+(WordNet)2954 4344 w
+10 S1 f
+(\\)3353 4344 w
+10 B f
+(2.1)3381 4344 w
+10 S1 f
+(\\)3506 4344 w
+10 B f
+(WNHome)3534 4344 w
+10 R f
+( is)1 100( Default)1 365(Base directory for WordNet.)3 1165 3 2080 4464 t
+10 B f
+(C:)3743 4464 w
+10 S1 f
+(\\)3848 4464 w
+10 B f
+(Program Files)1 615 1 3876 4464 t
+10 S1 f
+(\\)4491 4464 w
+10 B f
+(WordNet)4519 4464 w
+10 S1 f
+(\\)4918 4464 w
+10 B f
+(2.1)4946 4464 w
+10 R f
+(.)5071 4464 w
+9 B f
+(FILES)720 4632 w
+10 R f
+(All \256les are in)3 593 1 1080 4752 t
+10 B f
+(WNHOME/prolog)1706 4752 w
+10 R f
+(on Unix platforms and)3 926 1 2534 4752 t
+10 B f
+(WNHome)3493 4752 w
+10 S1 f
+(\\)3920 4752 w
+10 B f
+(prolog)3948 4752 w
+10 R f
+(on Windows platforms)2 932 1 4259 4752 t
+10 B f
+(wn)1080 4920 w
+10 S f
+(_)1208 4920 w
+10 B f
+(s.pl)1258 4920 w
+10 R f
+(synset pointers)1 605 1 2080 4920 t
+10 B f
+(wn)1080 5088 w
+10 S f
+(_)1208 5088 w
+10 B f
+(sk.pl)1258 5088 w
+10 R f
+(sense keys)1 432 1 2080 5088 t
+10 B f
+(wn)1080 5256 w
+10 S f
+(_)1208 5256 w
+10 B f
+(syntax.pl)1258 5256 w
+10 R f
+(syntactic markers)1 709 1 2080 5256 t
+10 B f
+(wn)1080 5424 w
+10 S f
+(_)1208 5424 w
+10 B f
+(g.pl)1258 5424 w
+10 R f
+(gloss pointers)1 561 1 2080 5424 t
+10 B f
+(wn)1080 5592 w
+10 S f
+(_)1208 5592 w
+10 B f
+(hyp.pl)1258 5592 w
+10 R f
+(hypernym pointers)1 760 1 2080 5592 t
+10 B f
+(wn)1080 5760 w
+10 S f
+(_)1208 5760 w
+10 B f
+(ins.pl)1258 5760 w
+10 R f
+(instance pointers)1 682 1 2080 5760 t
+10 B f
+(wn)1080 5928 w
+10 S f
+(_)1208 5928 w
+10 B f
+(ent.pl)1258 5928 w
+10 R f
+(entailment pointers)1 777 1 2080 5928 t
+10 B f
+(wn)1080 6096 w
+10 S f
+(_)1208 6096 w
+10 B f
+(sim.pl)1258 6096 w
+10 R f
+(similar pointers)1 633 1 2080 6096 t
+10 B f
+(wn)1080 6264 w
+10 S f
+(_)1208 6264 w
+10 B f
+(mm.pl)1258 6264 w
+10 R f
+(member meronym pointers)2 1098 1 2080 6264 t
+10 B f
+(wn)1080 6432 w
+10 S f
+(_)1208 6432 w
+10 B f
+(ms.pl)1258 6432 w
+10 R f
+(substance meronym pointers)2 1159 1 2080 6432 t
+10 B f
+(wn)1080 6600 w
+10 S f
+(_)1208 6600 w
+10 B f
+(mp.pl)1258 6600 w
+10 R f
+(part meronym pointers)2 926 1 2080 6600 t
+10 B f
+(wn)1080 6768 w
+10 S f
+(_)1208 6768 w
+10 B f
+(der.pl)1258 6768 w
+10 R f
+(derivational morphology pointers)2 1354 1 2080 6768 t
+10 B f
+(wn)1080 6936 w
+10 S f
+(_)1208 6936 w
+10 B f
+(cls.pl)1258 6936 w
+10 R f
+(class \(domain\) pointers)2 948 1 2080 6936 t
+10 B f
+(wn)1080 7104 w
+10 S f
+(_)1208 7104 w
+10 B f
+(cs.pl)1258 7104 w
+10 R f
+(cause pointers)1 576 1 2080 7104 t
+10 B f
+(wn)1080 7272 w
+10 S f
+(_)1208 7272 w
+10 B f
+(vgp.pl)1258 7272 w
+10 R f
+(grouped verb pointers)2 892 1 2080 7272 t
+( 4)1 1870( change: Dec 2006)3 769( Last)1 1512(WordNet 3.0)1 529 4 720 7752 t
+cleartomark
+showpage
+restore
+%%EndPage: 4 4
+%%Page: 5 5
+save
+mark
+5 pagesetup
+10 R f
+(WordNet)720 480 w
+10 S f
+(\324)1091 480 w
+10 R f
+( \( 5WN \))3 330( PROLOGDB)1 3340(File Formats)1 517 3 1213 480 t
+10 B f
+(wn)1080 960 w
+10 S f
+(_)1208 960 w
+10 B f
+(at.pl)1258 960 w
+10 R f
+(attribute pointers)1 688 1 2080 960 t
+10 B f
+(wn)1080 1128 w
+10 S f
+(_)1208 1128 w
+10 B f
+(ant.pl)1258 1128 w
+10 R f
+(antonym pointers)1 705 1 2080 1128 t
+10 B f
+(wn)1080 1296 w
+10 S f
+(_)1208 1296 w
+10 B f
+(sa.pl)1258 1296 w
+10 R f
+(see also pointers)2 676 1 2080 1296 t
+10 B f
+(wn)1080 1464 w
+10 S f
+(_)1208 1464 w
+10 B f
+(ppl.pl)1258 1464 w
+10 R f
+(participle pointers)1 732 1 2080 1464 t
+10 B f
+(wn)1080 1632 w
+10 S f
+(_)1208 1632 w
+10 B f
+(per.pl)1258 1632 w
+10 R f
+(pertainym pointers)1 760 1 2080 1632 t
+10 B f
+(wn)1080 1800 w
+10 S f
+(_)1208 1800 w
+10 B f
+(fr.pl)1258 1800 w
+10 R f
+(frame pointers)1 587 1 2080 1800 t
+9 B f
+(SEE ALSO)1 460 1 720 1968 t
+10 B f
+(wndb)1080 2088 w
+10 R f
+(\(5WN\),)1320 2088 w
+10 B f
+(wninput)1660 2088 w
+10 R f
+(\(5WN\),)2017 2088 w
+10 B f
+(senseidx)2357 2088 w
+10 R f
+(\(5WN\),)2713 2088 w
+10 B f
+(wngroups)3053 2088 w
+10 R f
+(\(7WN\),)3476 2088 w
+10 B f
+(wnpkgs)3816 2088 w
+10 R f
+(\(7WN\).)4145 2088 w
+( 5)1 1870( change: Dec 2006)3 769( Last)1 1512(WordNet 3.0)1 529 4 720 7680 t
+cleartomark
+showpage
+restore
+%%EndPage: 5 5
+%%Trailer
+done
+%%DocumentFonts: Times-Roman Symbol Times-Bold Times-Italic
+%%Pages: 5

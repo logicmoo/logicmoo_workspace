@@ -1,0 +1,1 @@
+cmd /k xapp -package %REGULUS%\Examples\Toy0Strcat\Generated\recogniser

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.cs3.pdt.connector.bootstrapContribution">
+      <fileSearchPathContribution
+            alias="pdt_builder_analyzer"
+            id="pdt.builder.analyzer"
+            path="prolog-src/analyzer/">
+      </fileSearchPathContribution>
+   </extension>
+
+</plugin>

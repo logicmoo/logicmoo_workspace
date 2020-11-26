@@ -1,0 +1,3 @@
+[PetrolEngine]-
+	-fuel->[Gasoline]-mass->[Average],
+	-force->[Average]

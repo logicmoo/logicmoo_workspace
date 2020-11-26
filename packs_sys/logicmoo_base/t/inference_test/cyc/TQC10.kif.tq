@@ -1,0 +1,62 @@
+(note "TQC10 - exportAmountDuring")
+
+(contains PersianGulf ClarenceStrait)
+(instance SaudiArabia IndependentCountry) 
+(exportAmountDuring SaudiArabia NaturalGas (YearFn 1996) (CubicFoot 0))
+(instance Abqaiq-YanbuPipeline Object)
+(instance (Barrel-UnitOfVolume 0) Volume) 
+
+(implies 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME (CubicFoot 0)) 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME (Barrel-UnitOfVolume 0))) 
+
+(implies 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME (Barrel-UnitOfVolume 0)) 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME (BarrelsPerDay 0))) 
+
+(implies 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME (BarrelsPerDay 0)) 
+  (exportThroughAmountDuring ?REGION ?PRODUCT-TYPE ?PT ?TIME (BarrelsPerDay 0)))
+
+(contains PersianGulf PersianGulf) 
+(contains PersianGulf MadinatIsaDistrictBahrain) 
+(contains PersianGulf AlMuharraqDistrictBahrain) 
+(contains PersianGulf JiddHafsDistrictBahrain) 
+(contains PersianGulf Bahrain) 
+(contains PersianGulf MadinatHamadDistrictBahrain) 
+(contains PersianGulf (WesternRegionFn PersianGulf)) 
+(contains ?REG (WesternRegionFn ?REG)) 
+(contains PersianGulf (CoastlineFn Bahrain)) 
+(contains PersianGulf CityOfSitraBahrain) 
+(contains PersianGulf ArRifawaAlMintaqahAlJanubiyahDistrictBahrain) 
+(contains PersianGulf CityOfManamaBahrain) 
+(contains PersianGulf MintaqatJuzurHawarDistrictBahrain) 
+(contains PersianGulf SitrahDistrictBahrain) 
+(contains PersianGulf CityOfMinaSalmanBahrain) 
+
+(query 
+  (and 
+    (instance ?COUNTRY IndependentCountry) 
+    (contains PersianGulf ?-COUNTRY) 
+    (thereExists ?TOTAL 
+      (and 
+        (exportAmountDuring ?COUNTRY NaturalGas ?TIME ?TOTAL) 
+        (instance ?TOTAL Volume) 
+        (exportThroughAmountDuring ?COUNTRY NaturalGas Abqaiq-YanbuPipeline ?TIME ?THROUGH)))))
+
+(answer ClarenceStrait SaudiArabia 0 1996)
+(answer PersianGulf SaudiArabia 0 1996)
+(answer MadinatIsaDistrictBahrain SaudiArabia 0 1996)
+(answer AlMuharraqDistrictBahrain SaudiArabia 0 1996)
+(answer JiddHafsDistrictBahrain SaudiArabia 0 1996)
+(answer Bahrain SaudiArabia 0 1996)
+(answer MadinatHamadDistrictBahrainSaudiArabia 0 1996)
+(answer (list WesternRegionFn Bahrain) SaudiArabia 0 1996)
+(answer (list CoastlineFn Bahrain) SaudiArabia 0 1996)
+(answer ArRifawaAlMintaqahAlJanubiyahDistrictBahrain SaudiArabia 0 1996)
+(answer CityOfManamaBahrain SaudiArabia 0 1996)
+(answer MintaqatJuzurHawarDistrictBahrain SaudiArabia 0 1996)
+(answer SitrahDistrictBahrain SaudiArabia 0 1996)
+(answer CityOfMinaSalmanBahrain SaudiArabia 0 1996)
+
+(end_of_file)

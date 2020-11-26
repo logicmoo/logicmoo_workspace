@@ -1,0 +1,310 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%      Extracts from the book "Natural Language Processing in LISP"     %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+The fundamental rule of chart parsing
+
+We can easily implement a chart parser in LISP by using a global
+variable chart to store the active and inactive edges of the chart
+(the complete code is in lib chart).  Each edge we will represent by a
+list of the following form:
+
+    (<start> <finish> <label> <found> <tofind>)
+
+where:
+
+    <start>  (an integer) is the position in the chart where the edge starts
+    <finish> (an integer) is the position where the edge ends
+    <label>  (a category) is the type of phrase that the edge is involved with
+    <found>  (a list) is the list of constituents that have already been found
+    <tofind> (a list) is the list of constituents that remain to be found
+
+For a chart recognizer, the found and tofind lists need only be lists
+of categories.  Thus the following edge represents an edge that is
+trying to find an NP starting at position 0 (the beginning of the
+string).  So far, a Det has already been found between the start and
+finish points.  However, before a complete NP can be found, an Adj and
+an N must be found (starting at the current <finish> point):
+
+    start finish label     found       tofind
+
+    ( 0     3     (NP)     ((Det))     ((Adj) (N)) )
+
+We will make use of the following functions to access the components
+of an edge:
+
+    (defun start (edge)
+      (nth 0 edge))
+
+    (defun finish (edge)
+      (nth 1 edge))
+
+    (defun label (edge)
+      (nth 2 edge))
+
+    (defun found (edge)
+      (nth 3 edge))
+
+    (defun tofind (edge)
+      (nth 4 edge))
+
+For a chart parser, we will require that the edges remember more about
+what they have already found.  So we will require the <found> list to
+be a list of parse trees.  We will come back to this case shortly, and
+will initially consider the recognizer case.  In this case, a first
+attempt to formulate the fundamental rule of chart parsing looks like
+the following:
+
+    (dolist (active_edge chart)
+      (if (not (null (tofind active_edge)))
+        (dolist (inactive_edge chart)
+          (if (and
+              (null (tofind inactive_edge))
+              (equal (start inactive_edge) (finish active_edge))
+              (equal (label inactive_edge) (car (tofind active_edge))))
+            (setq chart
+              (cons
+                (list
+                  (start active_edge)
+                  (finish inactive_edge)
+                  (label active_edge)
+                  (append (found active_edge)
+                    (list (label inactive_edge)))
+                  (cdr (tofind active_edge)))))))))
+
+That is, we need to look for pairs of entries in the chart, such that
+the first (the active edge) ends where the second (the inactive edge)
+starts, the second has no tofind categories and the label of the
+second is the same as the first <tofind> category of the first.
+
+This piece of code for applying the fundamental rule in all possible
+ways, although suggestive, is unfortunately not quite what we need.
+First of all, the additions to the chart are taking place during two
+nested dolist iterations.  In each of these loops the LISP system is
+keeping track of how far through the chart it has searched so far.
+When we add new items the chart changes and LISP will almost certainly
+get confused, so that we will either check pairs of edges several
+times or fail to check some combinations.  A second problem is that we
+have no control over which new edges are added when - it just depends
+on the order in which dolist happens to find things.  Finally, we can
+make the checking of the fundamental rule more efficient by doing it
+only when we add a new edge.  So instead of having to check for all
+combinations of edges in the database, we simply check, whenever an
+edge is added to the chart, whether there is something that combines
+with that edge.  Here now is the core of our chart parser program, the
+function which adds a new edge to the chart, checking for applications                     
+of the fundamental rule:
+
+    (defun add_edge (edge)
+      (setq chart (cons edge chart))
+      (if (null (tofind edge))    ; added edge is inactive
+        (progn
+          (dolist (chartedge chart)
+            (if (not (null (tofind chartedge)))   ; look for active edge
+              (check_and_combine chartedge edge)))
+          (inactive_edge_function edge))
+        (progn  ; otherwise added edge is active
+          (dolist (chartedge chart)
+            (if (null (tofind chartedge))   ; look for inactive edge
+              (check_and_combine edge chartedge)))
+          (active_edge_function edge))))
+
+The actual testing for the application of the fundamental rule is now
+done by the function check_and_combine.  check_and_combine tries to
+combine an active and inactive edge using the fundamental rule.  When
+it wishes to add a new edge to the chart, instead of changing the
+chart directly it calls agenda_add to put the new edge on the genda of
+additions to be made:
+
+    (defun check_and_combine (active_edge inactive_edge)
+      (if
+        (and
+          (equal (start inactive_edge) (finish active_edge))
+          (equal (label inactive_edge) (car (tofind active_edge))))
+        (agenda_add
+          (list                         ; new edge
+            (start active_edge)
+            (finish inactive_edge)
+            (label active_edge)
+            (append (found active_edge)
+              (list
+                (tree (label inactive_edge) (found inactive_edge))))
+            (cdr (tofind active_edge))))))
+
+As well as calling check_and_combine, add_edge also calls functions
+inactive_edge_function and active_edge_function according to whether
+the edge added is inactive or active.  We will appropriately define
+these functions later to obtain bottom-up or top-down parsing as
+required.  Finally, we have now produced the core of a parser by
+having the <found> elements of edges be lists of parse trees.  The
+function tree constructs a parse tree for a phrase, given the category
+of the phrase and the list of the parse trees of the constituents.
+
+Initialization
+
+We have now covered most of the content of the top-level function
+chart_parse for the parser.  chart_parse expects a goal (a category)
+and a string (list of words).  It returns all the possible parse trees
+in a list.  Before going into its main loop, chart_parse must perform                     
+initialization and for this it calls the function initialize_chart.
+When the chart is run using a bottom-up strategy, this simply produces
+inactive edges for all the words in the string:
+
+    (defun initialize_chart (goal string)
+      (do* (
+         (vertex 0 (+ vertex 1))
+         (remaining string (cdr remaining))
+         (word (car string) (car remaining)))
+        ((null word))
+        (agenda_add
+          (list
+            ;; (start finish label found tofind)
+            vertex (+ 1 vertex) word nil nil))))
+
+Note that for simplicity we have entered the words rather than their
+categories.  Given that we are representing lexical entries as normal
+grammar rules, as we will see that normal bottom-up parsing will fill
+in the categories for us.  When all applications of the edge-adding
+rules have been made in the main loop, chart_parse then looks for
+complete parses by looking for edges of the form:
+
+    (0 L GOAL TREES ())
+
+where L is the number of words in the string and GOAL is the name of
+the category that we are interested in (e.g. (S)).  In any edge of
+this form, TREES will be the sequence of parse trees for the immediate
+constituents of the goal category (e.g. ((NP Dr Chan) (VP (V
+employed)(NP nurses)))).  These can easily be combined with the GOAL
+category (e.g. (S)) to produce a parse tree of the string.
+
+    (defun chart_parse (goal string)
+      (setq agenda nil)
+      (setq chart nil)
+      (initialize_chart goal string)
+          ...main loop...
+      (let ((parses ()))
+        (dolist (edge chart parses)
+          (if (and
+              (equal (start edge) 0)
+              (equal (finish edge) (length string)) ; end of string
+              (equal (label edge) goal)        ; recognizes goal
+              (null (tofind edge)))         ; edge complete
+            (setq parses
+              (cons
+                (tree goal (found edge))  ; parse tree
+                parses))))))
+
+Rule invocation
+
+Top-down and bottom-up styles of parsing are implemented in our
+program by the functions active_edge_function and
+inactive_edge_function, which are called whenever an active, or
+inactive, edge is added to the chart.  Any parsing strategy will need
+to refer to the rules of the grammar, and we will assume that these
+are available in the global variable rules, as in Chapter 4.  We will
+not, for the present, deal with general feature specifications, but
+will confine ourselves to monadic categories like (S).  Here are the
+functions for bottom-up parsing:
+
+    (defun inactive_edge_function (edge)
+      (dolist (rule rules)
+        (if (equal (label edge) (cadr rule)) ; the first daughter in the rhs
+          (agenda_add
+            (list
+              (start edge) (start edge) (car rule) nil (cdr rule))))))
+
+    (defun active_edge_function (edge) t)
+
+Search strategy      
+
+The main loop of the parser is entirely concerned with manipulating
+the agenda:
+
+    (do
+      ((edge (car agenda) (car agenda)))
+      ((null agenda))
+      (setq agenda (cdr agenda))
+      (add_edge edge))
+
+agenda, a global variable, holds the list of edges waiting to be added
+to the chart.  This list holds the edges in priority order, because
+the loop deals with the edges in the order they appear in the list.
+In general, of course, add_edge will cause new edges to be added to
+the agenda, so that agenda may grow between iterations.
+
+So far, however, our parser remains fairly neutral about the search
+strategy to be adopted.  However, by providing appropriate definitions
+for the remaining functions we can force it to work in a number of
+different ways.  As we have seen, the search strategy is determined by
+how new edges are to be added to the agenda.  The following definition
+of agenda_add causes new edges to be added at the beginning (i.e. they
+are given highest priority) and this leads to a kind of depth-first
+search.
+
+    (defun agenda_add (edge)
+      (setq agenda (cons edge agenda)))
+
+Housekeeping
+
+We can readily deal with the necessary housekeeping by minor additions
+to the code already shown.  The following will ensure that agenda_add
+checks for duplicate edges:
+
+    (defun agenda_add (edge)
+      (if (or
+          (already_in edge agenda)   ; left recursion check
+          (already_in edge chart))
+        nil            ; do not add to agenda
+        (setq agenda (cons edge agenda))))  ; add to front of agenda
+
+    (defun already_in (edge edgelist)
+      (member edge edgelist :test #'equal))
+
+For the already_in check we use member, but using equal (rather than
+eql) as the relevant equality test, because eql will not succeed if it
+is provided with two different lists with the same elements.
+
+The function add_edge already calls tree so as to put trees rather
+than categories in the found list.  This function to build a tree from
+a category and a list of subtrees is as follows:
+
+    (defun tree (cat subtrees)
+      (if (consp cat)
+        (cons (car cat) subtrees)
+        cat))
+
+Alternative rule invocation strategies      
+
+The functions initialize_chart, active_edge_function and
+inactive_edge_function are easily redefined for top-down parsing.
+Top-down parsing has to be started by the addition of initial active
+edges for all rules which can expand the goal category.  The function
+add_rules_to_expand adds active edges at a given vertex corresponding
+to all possible rules with a given category on the LHS.  Note that in
+bottom-up parsing, no special actions are performed when active edges
+are added.  For top-down parsing, this situation is reversed:
+
+    (defun inactive_edge_function (edge) t)
+
+    (defun active_edge_function (edge)
+       (add_rules_to_expand (car (tofind edge)) (finish edge)))
+
+    (defun add_rules_to_expand (goal vertex)
+      (dolist (rule rules)
+        (if (equal goal (car rule)) ; the lhs of the rule
+          (agenda_add
+            (list vertex vertex (car rule) nil (cdr rule))))))
+
+    (defun initialize_chart (goal string)
+      (do* (
+         (vertex 0 (+ vertex 1))
+         (remaining string (cdr remaining))
+         (word (car string) (car remaining)))
+        ((null word))
+        (agenda_add
+          (list
+            ;; (start  finish       label found tofind)
+                vertex (+ 1 vertex) word  nil   nil   )))
+      (add_rules_to_expand goal 0))

@@ -1,0 +1,4 @@
+In translation mode, switch on printing of generation tracing. Each
+example processed prints the tree for the generated target, together
+with preference information. If multiple target sentences are
+produced, the tree and preference information is printed for each one.

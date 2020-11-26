@@ -1,0 +1,43 @@
+(note TQC62)
+(internationalOrg-MemberCountry UN-SecurityCouncil Russia) 
+(internationalOrg-MemberCountry UN-SecurityCouncil UnitedKingdomOfGreatBritainAndNorthernIreland) 
+(internationalOrg-MemberCountry UN-SecurityCouncil France) 
+(internationalOrg-MemberCountry UN-SecurityCouncil Japan) 
+(internationalOrg-MemberCountry UN-SecurityCouncil Guinea-Bissau) 
+(internationalOrg-MemberCountry UN-SecurityCouncil Portugal) 
+(internationalOrg-MemberCountry UN-SecurityCouncil Egypt) 
+(internationalOrg-MemberCountry UN-SecurityCouncil CostaRica) 
+(internationalOrg-MemberCountry UN-SecurityCouncil Chile) 
+(internationalOrg-MemberCountry UN-SecurityCouncil Sweden) 
+(internationalOrg-MemberCountry UN-SecurityCouncil SouthKorea) 
+(internationalOrg-MemberCountry UN-SecurityCouncil Kenya) 
+(internationalOrg-MemberCountry UN-SecurityCouncil Poland) 
+(internationalOrg-MemberCountry UN-SecurityCouncil China-PeoplesRepublic) 
+(internationalOrg-MemberCountry UN-SecurityCouncil UnitedStatesOfAmerica) 
+
+
+
+
+(query (findall ?COUNTRY
+
+ (internationalOrg-MemberCountry UN-SecurityCouncil ?COUNTRY)))
+
+(answer Russia)
+(answer UnitedKingdomOfGreatBritainAndNorthernIreland)
+(answer France)
+(answer Japan)
+(answer Guinea-Bissau)
+(answer Portugal)
+(answer Egypt)
+(answer CostaRica)
+(answer Chile)
+(answer Sweden)
+(answer SouthKorea)
+(answer Kenya)
+(answer Poland)
+(answer China-PeoplesRepublic)
+(answer UnitedStatesOfAmerica)  
+
+(end_of_file)
+
+

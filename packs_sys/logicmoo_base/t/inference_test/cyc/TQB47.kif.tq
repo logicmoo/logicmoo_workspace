@@ -1,0 +1,63 @@
+(note TQB47)
+(abort)
+
+(subclass LegalGovernmentOrganization Organization) 
+(instance (NavyFn SaudiArabia) LegalGovernmentOrganization) 
+(subOrganizations (GovernmentFn SaudiArabia) (NavyFn SaudiArabia)) 
+(officialArmedForces (GovernmentFn SaudiArabia) (NavyFn SaudiArabia))
+(officialArmedForces (GovernmentFn ?COUNTRY) (NavyFn ?COUNTRY))   
+
+(termOfUnit 
+ (NavyFn SaudiArabia) 
+ (NavyFn SaudiArabia)) 
+
+(termOfUnit 
+ (GovernmentFn SaudiArabia) 
+ (GovernmentFn SaudiArabia)) 
+
+(subrelation officialArmedForces subOrganizations) 
+(instance (AirForceFn SaudiArabia) AirForce) 
+(subclass AirForce Organization) 
+(subOrganizations (GovernmentFn ?COUNTRY) (AirForceFn ?COUNTRY)) 
+(subclass ModernMilitaryOrganization Organization) 
+(instance (NavyFn SaudiArabia) ModernMilitaryOrganization)  
+(instance (ArmyFn SaudiArabia) Army) 
+(subclass Army Organization) 
+(subclass GovernmentMilitaryOrganization Organization) 
+(instance (NavyFn SaudiArabia) GovernmentMilitaryOrganization) 
+(subclass Organization Organization) 
+(instance (NavyFn SaudiArabia) Organization) 
+(subclass MilitaryOrganization Organization) 
+(instance (NavyFn SaudiArabia) MilitaryOrganization) 
+(subclass Navy Organization) 
+(instance (NavyFn SaudiArabia) Navy) 
+
+(query (findall ?RESOURCETYPE
+  (implies 
+    (and 
+      (instance ?ACT PhysicalDistributionEvent) 
+      (agent ?ACT SaudiArabia) 
+      (instance ?OBJ PetroleumProduct) 
+      (cost ?OBJ (LowAmountFn Money)) 
+      (transferredThing ?ACT ?OBJ)) 
+    (and 
+      (subclass ?RESOURCETYPE Organization) 
+      (thereExists ?RESOURCE 
+        (and 
+          (subOrganizations (GovernmentFn SaudiArabia) ?RESOURCE) 
+          (instance ?RESOURCE ?RESOURCETYPE) 
+          (consistent 
+            (instrument-Generic ?ACT ?RESOURCE))))))))
+ 
+(answer LegalGovernmentOrganization)
+(answer AirForce)
+(answer ModernMilitaryOrganization)
+(answer Army)
+(answer GovernmentMilitaryOrganization)
+(answer Organization)
+(answer Military)
+(answer Navy)
+			 
+
+(end_of_file)
+

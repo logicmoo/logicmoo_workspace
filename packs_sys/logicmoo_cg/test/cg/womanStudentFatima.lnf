@@ -1,0 +1,6 @@
+// ontology required (to load first): aminePlatform/samples/ontology/ManOntology2.xml
+[Perform]-
+         -agnt->[WomanStudent:Fatima]-
+		-agnt->[Responsible]-obj->[Service],
+		-chrc->[Kind];
+         -obj->[Project:ProjA]-chrc->[Complex]

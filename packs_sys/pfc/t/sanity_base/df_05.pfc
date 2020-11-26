@@ -1,0 +1,64 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+%  cls ; kill -9 %1 ; fg ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
+
+%  was_module(sanity,[]).
+
+:- include(test_header).
+
+:- begin_pfc.
+
+:- dynamic(test1_2_3/3).
+:- dynamic(meta_argtypes/1).
+
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+%  cls ; kill -9 %1 ; fg ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
+ 
+:- dynamic(most/1).
+
+:- begin_pfc.
+
+meta_argtypes(most(ftAssertable)).
+
+% BWD chaining
+most((Q <- P))/mpred_literal(Q) ==> (Q <-(P, \+ ~(Q))).
+
+% FWD chaining
+most(P==>Q)/nonvar(Q) ==> (((P ==> most(Q)))).
+
+% NEG chaining
+most(~Q)/mpred_positive_literal(Q)  ==>  (( \+ Q ) ==> ~ Q ).
+
+% POS chaining 1
+most(Q)/(mpred_positive_literal(Q),if_missing_mask(Q,R,Test)) ==> (  ( ( \+R /Test , (\+ ~ Q)) ==> Q )).
+
+% POS chaining 2
+most(Q)/(mpred_positive_literal(Q),if_missing_mask(Q,R,Test)) ==> ( ((R/( \+(R=Q), Test)) ==> (\+ Q))).
+
+% POS chaining 1+2
+% most(Q)/(mpred_positive_literal(Q),if_missing_mask(Q,R,Test)) ==> (  ( ( \+R /Test ) ==> Q ) ,((R/( \+(R=Q), Test)) ==> (\+ Q))).
+
+% most(Q) ==> if_missing(Q,Q).
+
+%(most(P=>Q)/(mpred_literal_nv(Q),if_missing_mask(Q,R,Test)))  ==> ((P, \+ R/Test) => Q).
+%(most(P=>Q)/nonvar(Q)) ==> (P => most(Q)).
+
+ 
+:-ain(most(t(test1_2_3,1,2,3))).
+
+most(t(test1_2_3,1,2,3)).
+
+
+?- listing(test1_2_3).
+
+:- mpred_test(test1_2_3(1,2,3)).
+
+

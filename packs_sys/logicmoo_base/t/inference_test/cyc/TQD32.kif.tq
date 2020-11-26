@@ -1,0 +1,28 @@
+(note TQD32)
+
+(contains MiddleEast-Region Iran) 
+
+(subrelation contains externalParts) 
+
+(not 
+ (and 
+ (instance ?X Organization) 
+ (externalParts ?Y ?X))) 
+
+(subclass Country Organization) 
+
+(implies 
+ (goalCategoryForAgent ?AGT ?GOAL StrategicNationalInterest) 
+ (instance ?AGT Country)) 
+
+
+
+(query (findall ?INTEREST
+ (goalCategoryForAgent Iran 
+   (pathState SuezCanal PathBlocked) ?INTEREST) 
+))
+
+(answer StrategicNationalInterest
+)
+
+(end_of_file)

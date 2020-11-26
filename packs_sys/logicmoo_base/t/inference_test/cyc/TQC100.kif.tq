@@ -1,0 +1,147 @@
+(note TQC100)
+
+
+(instance CityOfJijelAlgeria City) 
+
+(inRegion CityOfJijelAlgeria Algeria) 
+
+
+
+
+(instance CityOfGhazaouetAlgeria City) 
+
+(inRegion CityOfGhazaouetAlgeria Algeria) 
+
+
+
+
+(instance CityOfQacentinaAlgeria City) 
+
+(inRegion CityOfQacentinaAlgeria Algeria) 
+
+
+
+
+(instance CityOfMersElKebirAlgeria City) 
+
+(inRegion CityOfMersElKebirAlgeria Algeria) 
+
+
+
+
+(instance CityOfAnnabaAlgeria City) 
+
+(inRegion CityOfAnnabaAlgeria Algeria) 
+
+
+
+
+(instance CityOfWahranAlgeria City) 
+
+(inRegion CityOfWahranAlgeria Algeria) 
+
+
+
+
+(instance CityOfArzewAlgeria City) 
+
+(inRegion CityOfArzewAlgeria Algeria) 
+
+
+
+
+(instance CityOfAlgiersAlgeria City) 
+
+(inRegion CityOfAlgiersAlgeria Algeria) 
+
+
+
+
+(instance CityOfDjendjeneAlgeria City) 
+
+(inRegion CityOfDjendjeneAlgeria Algeria) 
+
+
+
+
+(instance CityOfOranAlgeria City) 
+
+(inRegion CityOfOranAlgeria Algeria) 
+
+
+
+
+(instance CityOfSkikdaAlgeria City) 
+
+(inRegion CityOfSkikdaAlgeria Algeria) 
+
+
+
+
+(instance CityOfBejaiaAlgeria City) 
+
+(inRegion CityOfBejaiaAlgeria Algeria) 
+
+
+
+
+(instance CityOfMostaganemAlgeria City) 
+
+(inRegion CityOfMostaganemAlgeria Algeria) 
+
+
+
+
+(geopoliticalSubdivision Algeria CityOfJijelAlgeria) 
+
+(inverse geopoliticalSubdivision inRegion) 
+
+(geopoliticalSubdivision Algeria CityOfGhazaouetAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfQacentinaAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfMersElKebirAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfAnnabaAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfWahranAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfArzewAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfAlgiersAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfDjendjeneAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfOranAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfSkikdaAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfBejaiaAlgeria) 
+
+(geopoliticalSubdivision Algeria CityOfMostaganemAlgeria) 
+
+
+
+
+(query (findall ?CITY
+
+ (and 
+ (instance ?CITY City) 
+ (inRegion ?CITY Algeria))))
+
+(answer CityOfJijelAlgeria)
+(answer CityOfGhazaouetAlgeria)
+(answer CityOfQacentinaAlgeria)
+(answer CityOfMersElKebirAlgeria)
+(answer CityOfAnnabaAlgeria)
+(answer CityOfWahranAlgeria)
+(answer CityOfArzewAlgeria)
+(answer CityOfAlgiersAlgeria)
+(answer CityOfDjendjeneAlgeria)
+(answer CityOfOranAlgeria)
+(answer CityOfSkikdaAlgeria)
+(answer CityOfBejaiaAlgeria)
+(answer CityOfMostaganemAlgeria)
+
+(end_of_file)
+

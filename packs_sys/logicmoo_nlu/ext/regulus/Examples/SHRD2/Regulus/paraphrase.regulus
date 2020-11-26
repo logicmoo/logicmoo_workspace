@@ -1,0 +1,316 @@
+
+% Declarations
+ 
+feature_value_space(yesno_value, [[yes, no]]).
+feature_value_space(tense_value, [[past, present, future]]).
+feature_value_space(quant_type_value, [[exist, all]]).
+
+feature(tense, tense_value).
+feature(quant_type, quant_type_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(utterance, [sem]).
+category(question, [sem]).
+category(command, [sem]).
+category(quant_form, [sem]).
+category(quant, [sem, quant_type]).
+category(scope, [sem, quant_type]).
+category(var, [sem]).
+category(number, [sem]).
+category(such_that, []).
+category(restriction, [sem]).
+category(quant_conj, [quant_type]).
+category(restriction_item, [sem]).
+
+%---------------------------------------------------------------
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=[S1, S2]] -->
+	command:[sem=S1],
+	command:[sem=S2].
+utterance:[sem=S] -->
+	(   question:[sem=S]
+	;   command:[sem=S]
+	).
+
+command:[sem=[[imp, Body]]] -->
+	'COMMAND',
+	quant_form:[sem=Body].
+
+question:[sem=[[ynq, Body]]] -->
+	'TRUE-OR-FALSE',
+	quant_form:[sem=Body].
+
+question:[sem=[[whq, Body]]] -->
+	'WH-QUESTION',
+	quant_form:[sem=Body].
+
+%---------------------------------------------------------------
+
+quant_form:[sem=imperative(Body)] -->
+	'MAKE', 'IT', 'TRUE', 'THAT',
+	quant_form:[sem=Body].
+quant_form:[sem=can(Body)] -->
+	'IT', 'IS', 'POSSIBLE', 'THAT',
+	quant_form:[sem=Body].
+quant_form:[sem=not(Body)] -->
+	'IT', 'IS', 'NOT', 'TRUE', 'THAT',
+	quant_form:[sem=Body].
+quant_form:[sem=quant(Quant, Var, true, Scope)] -->
+	% there is a
+	quant:[sem=Quant, quant_type=QuantType],
+	% B
+	var:[sem=Var],
+	% such that
+	such_that:[],
+	scope:[sem=Scope, quant_type=QuantType].
+quant_form:[sem=quant(Quant, Var, Rest, true)] -->
+	% there is a
+	quant:[sem=Quant, quant_type=QuantType],
+	% B
+	var:[sem=Var],
+	% such that
+	such_that:[],
+	% a big red block
+	restriction:[sem=Rest].
+quant_form:[sem=quant(Quant, Var, Rest, Scope)] -->
+	% there is a
+	quant:[sem=Quant, quant_type=QuantType],
+	% B
+	var:[sem=Var],
+	% such that
+	such_that:[],
+	% a big red block
+	restriction:[sem=Rest],
+	% and
+	quant_conj:[quant_type=QuantType],	
+	scope:[sem=Scope, quant_type=QuantType].
+
+%scope:[sem=true] --> [].
+
+scope:[sem=Scope, quant_type=QuantType] -->
+	quant_form:[sem=Scope].
+
+%---------------------------------------------------------------
+
+quant:[sem=exist, quant_type=exist] --> there, is, a.
+quant:[sem=def_sing, quant_type=exist] --> there, is, a, contextually, relevant.
+quant:[sem=def_plur, quant_type=all] --> for, all.
+quant:[sem=all, quant_type=all] --> for, all.
+quant:[sem=what, quant_type=exist] --> find, and, describe, the.
+quant:[sem=how_many, quant_type=exist] --> find, the, number, of.
+quant:[sem=N, quant_type=exist] --> there, are, number:[sem=N].
+
+%quant:[sem=pro, quant_type=exist] --> there, is, a.
+%quant:[sem=a, quant_type=exist] --> there, is, a.
+%quant:[sem=event_exists, quant_type=exist] --> there, is, a.
+
+%---------------------------------------------------------------
+
+var:[sem='A'] --> 'A'.
+var:[sem='B'] --> 'B'.
+var:[sem='C'] --> 'C'.
+var:[sem='D'] --> 'D'.
+var:[sem='E'] --> 'E'.
+var:[sem='F'] --> 'F'.
+var:[sem='G'] --> 'G'.
+var:[sem='H'] --> 'H'.
+var:[sem='I'] --> 'I'.
+var:[sem='J'] --> 'J'.
+var:[sem='L'] --> 'L'.
+var:[sem='M'] --> 'M'.
+var:[sem='N'] --> 'N'.
+var:[sem='O'] --> 'O'.
+var:[sem='P'] --> 'P'.
+var:[sem='Q'] --> 'Q'.
+var:[sem='R'] --> 'R'.
+var:[sem='S'] --> 'S'.
+
+%---------------------------------------------------------------
+
+such_that:[] --> 'SUCH', 'THAT'.
+
+%---------------------------------------------------------------
+
+%restriction:[sem=true] --> [].
+
+restriction:[sem=[Single]] -->
+	restriction_item:[sem=Single].
+
+restriction:[sem=[F | R]] -->
+	restriction_item:[sem=F],
+	'AND',
+	restriction:[sem=R].
+
+%---------------------------------------------------------------
+
+quant_conj:[quant_type=exist] --> 'AND'.
+quant_conj:[quant_type=exist] --> 'AND'.
+quant_conj:[quant_type=all] --> [].
+
+%---------------------------------------------------------------
+
+restriction_item:[sem=F] -->
+	quant_form:[sem=F].
+
+restriction_item:[sem=[you, A]] -->
+	you, are, var:[sem=A].
+
+restriction_item:[sem=[block, A]] -->
+	var:[sem=A], is, a, block.
+restriction_item:[sem=[pyramid, A]] -->
+	var:[sem=A], is, a, pyramid.
+restriction_item:[sem=[box, A]] -->
+	var:[sem=A], is, a, box.
+restriction_item:[sem=[table, A]] -->
+	var:[sem=A], is, a, table.
+restriction_item:[sem=[cube, A]] -->
+	var:[sem=A], is, a, cube.
+restriction_item:[sem=[ball, A]] -->
+	var:[sem=A], is, a, ball.
+restriction_item:[sem=[stack, A]] -->
+	var:[sem=A], is, a, stack.
+restriction_item:[sem=[steeple, A]] -->
+	var:[sem=A], is, a, steeple.
+restriction_item:[sem=[square, A]] -->
+	var:[sem=A], is, a, square.
+
+
+restriction_item:[sem=[thing, A]] -->
+	var:[sem=A], is, a, thing.
+restriction_item:[sem=[one, A]] -->
+	var:[sem=A], is, a, thing, of, contextually, relevant, kind.
+
+restriction_item:[sem=[size, A, big]] -->
+	var:[sem=A], is, big.
+restriction_item:[sem=[size, A, small]] -->
+	var:[sem=A], is, small.
+restriction_item:[sem=[size, A, short]] -->
+	var:[sem=A], is, short.
+restriction_item:[sem=[size, A, tall]] -->
+	var:[sem=A], is, tall.
+
+restriction_item:[sem=[color, A, red]] -->
+	var:[sem=A], is, red.
+restriction_item:[sem=[color, A, blue]] -->
+	var:[sem=A], is, blue.
+restriction_item:[sem=[color, A, green]] -->
+	var:[sem=A], is, green.
+restriction_item:[sem=[color, A, yellow]] -->
+	var:[sem=A], is, yellow.
+
+restriction_item:[sem=[has_color, A, B, red]] -->
+	var:[sem=A], is, that, var:[sem=B], is, red.
+restriction_item:[sem=[has_color, A, B, blue]] -->
+	var:[sem=A], is, that, var:[sem=B], is, blue.
+restriction_item:[sem=[has_color, A, B, green]] -->
+	var:[sem=A], is, that, var:[sem=B], is, green.
+restriction_item:[sem=[has_color, A, B, yellow]] -->
+	var:[sem=A], is, that, var:[sem=B], is, yellow.
+
+restriction_item:[sem=[pick_up, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], picks, up, var:[sem=B].
+restriction_item:[sem=[stack_up, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], stacks, up, var:[sem=B].
+restriction_item:[sem=[put_down, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], puts, down, var:[sem=B].
+restriction_item:[sem=[put_back, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], puts, back, var:[sem=B].
+restriction_item:[sem=[clear_off, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], clears, off, var:[sem=B].
+restriction_item:[sem=[take_off, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], takes, off, var:[sem=B].
+restriction_item:[sem=[turn_over, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], turns, over, var:[sem=B].
+restriction_item:[sem=[move, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], moves, var:[sem=B].
+restriction_item:[sem=[make, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], makes, var:[sem=B].
+restriction_item:[sem=[dismantle, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], dismantles, var:[sem=B].
+
+restriction_item:[sem=[grasp, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], grasps, var:[sem=B].
+restriction_item:[sem=[contain, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], contains, var:[sem=B].
+restriction_item:[sem=[support, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], supports, var:[sem=B].
+restriction_item:[sem=[build, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], builds, var:[sem=B].
+restriction_item:[sem=[drop, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], drops, var:[sem=B].
+restriction_item:[sem=[empty, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], empties, var:[sem=B].
+
+restriction_item:[sem=[do, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], does, var:[sem=B].
+
+restriction_item:[sem=[be_in_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, in, var:[sem=B].
+restriction_item:[sem=[be_on_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, on, var:[sem=B].
+restriction_item:[sem=[be_in_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, in, var:[sem=B].
+restriction_item:[sem=[be_behind_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, behind, var:[sem=B].
+restriction_item:[sem=[be_under_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, under, var:[sem=B].
+restriction_item:[sem=[be_in_front_of_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, in, front, of, var:[sem=B].
+restriction_item:[sem=[be_closest_to_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, closest, to, var:[sem=B].
+restriction_item:[sem=[be_at_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, at, var:[sem=B].
+restriction_item:[sem=[be_to_the_left_of_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, to, the, left, of, var:[sem=B].
+restriction_item:[sem=[be_to_the_right_of_loc, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], is, to, the, right, of, var:[sem=B].
+
+restriction_item:[sem=[put_on_loc, F, A, B, C]] -->
+	var:[sem=F], is, that, var:[sem=A], puts, var:[sem=B], on, var:[sem=C].
+restriction_item:[sem=[put_in_loc, F, A, B, C]] -->
+	var:[sem=F], is, that, var:[sem=A], puts, var:[sem=B], in, var:[sem=C].
+restriction_item:[sem=[put_behind_loc, F, A, B, C]] -->
+	var:[sem=F], is, that, var:[sem=A], puts, var:[sem=B], behind, var:[sem=C].
+restriction_item:[sem=[put_under_loc, F, A, B, C]] -->
+	var:[sem=F], is, that, var:[sem=A], puts, var:[sem=B], under, var:[sem=C].
+restriction_item:[sem=[put_in_front_of_loc, F, A, B, C]] -->
+	var:[sem=F], is, that, var:[sem=A], puts, var:[sem=B], in, front, of, var:[sem=C].
+restriction_item:[sem=[put_at_loc, F, A, B, C]] -->
+	var:[sem=F], is, that, var:[sem=A], puts, var:[sem=B], at, var:[sem=C].
+
+restriction_item:[sem=[exists, C, B]] -->
+	var:[sem=C], is, that, var:[sem=B], exists.
+
+restriction_item:[sem=[has_color, C, A, B]] -->
+	var:[sem=C], is, that, var:[sem=A], has, the, color, var:[sem=B].
+
+restriction_item:[sem=[tense, C, present]] -->
+	var:[sem=C], is, in, the, present.
+restriction_item:[sem=[tense, C, past]] -->
+	var:[sem=C], was, in, the, past.
+
+restriction_item:[sem=[is_now, C]] -->
+	var:[sem=C], is, now.
+restriction_item:[sem=[is_then, C]] -->
+	var:[sem=C], was, then.
+
+restriction_item:[sem=[time, A, B]] -->
+	var:[sem=B], is, the, time, of, var:[sem=A].
+restriction_item:[sem=[reason, A, B]] -->
+	var:[sem=B], is, the, reason, for, var:[sem=A].
+restriction_item:[sem=[manner, A, B]] -->
+	var:[sem=B], is, the, manner, of, var:[sem=A].
+
+%---------------------------------------------------------------
+
+number:[sem=2] --> two.
+number:[sem=3] --> three.
+number:[sem=4] --> four.
+number:[sem=5] --> five.

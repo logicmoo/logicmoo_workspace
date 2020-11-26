@@ -1,0 +1,650 @@
+%==============================================================================
+%----Procedures for writing out THF in LF format
+%----
+%----Written by Geoff Sutcliffe October 2008
+%----Revised by Geoff Sutcliffe, Florian Rabe
+%==============================================================================
+%------------------------------------------------------------------------------
+%----auxiliary function of output_lf_symbol: eta-expands connectives
+translate_lf_connective(TPTPConnective,LFConnective):-
+    tptp2X_member(tlf(TPTPConnective,LFConnective),[
+% tlf('!!','(^[x](!! x))'),
+% tlf('??','(^[x](?? x))'),
+% tlf('@@+','(^[x](@@+ x))'),
+% tlf('@@-','(^[x](@@- x))'),
+%----These are now constants in TH1
+tlf('!!','!!'),
+tlf('??','??'),
+tlf('@@+','@@+'),
+tlf('@@-','@@-'),
+tlf('@=','@='),
+tlf('~','(^[x](~ x))'),
+tlf('|','(^[x] ^[y](x | y))'),
+tlf('~|','(^[x] ^[y](x ~| y))'),
+tlf('&','(^[x] ^[y](x & y))'),
+tlf('~&','(^[x] ^[y](x ~& y))'),
+tlf('=>','(^[x] ^[y](x => y))'),
+tlf('<=','(^[x] ^[y](x <= y))'),
+tlf('<=>','(^[x] ^[y](x <=> y))'),
+tlf('<~>','(^[x] ^[y](x <~> y))'),
+tlf('=','([a: $tType] ^[x: $tm a] ^[y: $tm a](x == y))'),
+tlf('!=','([a: $tType] ^[x: $tm a] ^[y: $tm a](x != y))')
+]).
+%------------------------------------------------------------------------------
+%----auxiliary function of lf_dequote 
+lf_dequote_ascii([],[]).
+
+%----Keep alphanumeric
+lf_dequote_ascii([First|Rest],[First|DequotedRest]):-
+    atom_codes('abcdefghijklmnopqrstuvwxyzABCEDFGHIJKLMNOPQRSTUVWXYZ0123456789_!&$^+/<=>?@~|#*`;,-\\',LegalCodes),
+    tptp2X_member(First,LegalCodes),
+    !,
+    lf_dequote_ascii(Rest,DequotedRest).
+
+%----Change everything else to _
+lf_dequote_ascii([_|Rest],[95|DequotedRest]):-
+    lf_dequote_ascii(Rest,DequotedRest).
+%------------------------------------------------------------------------------
+%----auxiliary function of output_lf_symbol to handle differences in allowed ID characters
+lf_dequote(Functor,DequotedFunctor):-
+    atom_codes(Functor,ASCII),
+    lf_dequote_ascii(ASCII,DequotedASCII),
+    atom_codes(DequotedFunctor,DequotedASCII).
+%------------------------------------------------------------------------------
+%----convert atoms: built-in constants, built-in operators used as constants etc.
+%----Do not change Prolog style vars
+output_lf_symbol(Variable):-
+    looks_like_a_prolog_variable(Variable),
+    !,
+    write(Variable).
+
+%----Translate $iType and $oType to $i and $o
+output_lf_symbol('$iType'):-
+    !,
+    write('$i').
+
+output_lf_symbol('$oType'):-
+    !,
+    write('$o').
+
+%----Names, if it starts with a dollar, no quotes
+output_lf_symbol(DefinedSymbol):-
+    name(DefinedSymbol,[36|_]),
+    !,
+    write(DefinedSymbol).
+
+%----type is a reserved word and cannot be used as a symbol
+output_lf_symbol(type):-
+    !,
+    write(type_type).
+
+%----Numbers get translated to special constants
+output_lf_symbol(Integer):-
+    looks_like_a_number(Integer),
+    integer(Integer),
+    !,
+    write('$intliteral').
+
+output_lf_symbol(Numerator / Denominator):-
+    looks_like_a_number(Numerator / Denominator),
+    !,
+    write('$ratliteral').
+
+%----If not int or rat, must be real
+output_lf_symbol(Real):-
+    looks_like_a_number(Real),
+    !,
+    write('$realliteral').
+
+%----Translate connectives
+output_lf_symbol(TPTPConnective):-
+    nonvar(TPTPConnective),
+    translate_lf_connective(TPTPConnective,LFConnective),
+    !,
+    write(LFConnective).
+
+output_lf_symbol(Functor):-
+    lf_dequote(Functor,DequotedFunctor),
+    write(DequotedFunctor).
+%------------------------------------------------------------------------------
+%----is_kind(K) checks if K is a kind
+%----base kind $tType
+is_kind('$tType').
+
+%----product, function, and union kinds
+is_kind(Kind):-
+    binary_formula(tptp,Kind,Connective,LHS,RHS,_,_,_,_),
+    tptp2X_member(Connective,['*','>','+']),
+    is_kind(LHS),
+    is_kind(RHS).
+%------------------------------------------------------------------------------
+%----is_type(T,AllTypes) checks if T is a type where AllTypes is the list 
+%----of type identifiers
+%----Base case
+is_type(Type,AllTypes):-
+    tptp2X_member(Type,AllTypes).
+
+%----Product, function, and union types
+is_type(Type,AllTypes):-
+    binary_formula(tptp,Type,Connective,LHS,RHS,_,_,_,_),
+    tptp2X_member(Connective,['*','>','+']),
+    is_type(LHS,AllTypes),
+    is_type(RHS,AllTypes).
+
+%----Application of a type operator to arguments
+is_type(Type,AllTypes):-
+    binary_formula(tptp,Type,'@',LHS,_,_,_,_,_),
+    is_type(LHS,AllTypes).
+%------------------------------------------------------------------------------
+%----writes a kind; only first-order function kinds are supported
+output_lf_kind_formula('$tType' > RestOftType):-
+    !,
+    write('$tType -> '),
+    output_lf_kind_formula(RestOftType).
+
+output_lf_kind_formula('$tType'):-
+    write('$tType').
+%------------------------------------------------------------------------------
+%----writes a type/kind or definiens declaration
+%----kind declaration
+output_lf_type_formula(_,_,':',Formula,_,_,_):-
+    is_kind(Formula),
+    !,
+    curry_type_formula(Formula,CurriedFormula),
+    output_lf_kind_formula(CurriedFormula).
+
+%----definiens declaration
+output_lf_type_formula(Language,Status,'=',Formula,AllTypes,NewIndent,
+NewAlreadyIndented):-
+    !,
+    output_lf_formula(Language,Status,Formula,AllTypes,NewIndent,
+NewAlreadyIndented).
+
+%----polymorphic declaration: recurse into output_lf_formula
+%----special type poly_type is used to recurse back into output_lf_type_formula
+output_lf_type_formula(Language,_,_,Formula,AllTypes,Indent,AlreadyIndented):-
+    quantified_formula(tptp,Formula,'!>',_,_,_,_,_,_,_),
+    !,
+    NewIndent is Indent + 4,
+    NewAlreadyIndented is AlreadyIndented + 4,
+    output_lf_formula(Language,poly_type,Formula,AllTypes,NewIndent,
+NewAlreadyIndented).
+
+%---monomorphic type declaration
+output_lf_type_formula(Language,Status,_,Formula,AllTypes,Indent,
+AlreadyIndented):-
+    write('$tm '),
+    NewIndent is Indent + 4,
+    NewAlreadyIndented is AlreadyIndented + 4,
+    curry_type_formula(Formula,CurriedFormula),
+    output_lf_formula(Language,Status,CurriedFormula,AllTypes,NewIndent,
+NewAlreadyIndented).
+%------------------------------------------------------------------------------
+%----Splits a TPTP type/definiens declaration into identifier (LHS) and RHS
+lf_definition_or_type(_Language,_Status,DefnOrType,LFConnective,LHS,RHS):-
+    DefnOrType =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(LFConnective),[(':=')-('='),(':')-(':')]),
+    !.
+
+lf_definition_or_type(_Language,definition,'$tptp_equal'(LHS,RHS),'=',LHS,RHS):-
+    atomic(LHS).
+
+lf_definition_or_type(_Language,definition,LHS <=> RHS,': $tm $o =',LHS,RHS).
+%------------------------------------------------------------------------------
+all_numbers([]).
+
+all_numbers([Head|Tail]):-
+    integer(Head),
+    all_numbers(Tail).
+%------------------------------------------------------------------------------
+%----auxiliary function of convert_structure_to_application
+convert_reverse_list_to_application([Variable],Variable):-
+    looks_like_a_variable(Variable),
+    !.
+
+convert_reverse_list_to_application([AtomicThing],AtomicThing):-
+    atomic(AtomicThing),
+    !.
+
+convert_reverse_list_to_application([OneThing],OneThingApplication):-
+    !,
+    convert_structure_to_application(OneThing,OneThingApplication).
+
+convert_reverse_list_to_application([LastThing|RestOfThings],
+(RestOfThingsApplication @ LastThingApplication)):-
+    !,
+    convert_structure_to_application(LastThing,LastThingApplication),
+    convert_reverse_list_to_application(RestOfThings,RestOfThingsApplication).
+
+convert_reverse_list_to_application(Thing,ThingApplication):-
+    Thing =.. ThingList,
+    convert_reverse_list_to_application(ThingList,ThingApplication).
+%------------------------------------------------------------------------------
+%----converts first-order f(a,b) into higher-order f @ a @ b
+%----Distinct objects. Has to be done here because it's a list
+convert_structure_to_application([Head|Tail],'$distinctobject'):-
+    all_numbers([Head|Tail]),
+    !.
+%    tptp2X_append("distinct_",[Head|Tail],AllASCII),
+%    name(Symbol,AllASCII).
+
+convert_structure_to_application(FirstOrder,Application):-
+    FirstOrder =.. FirstOrderList,
+    fast_reverse_list(FirstOrderList,[],FirstOrderReverseList),
+    convert_reverse_list_to_application(FirstOrderReverseList,Application).
+%------------------------------------------------------------------------------
+%----auxiliary function of curry_type_formula
+xprod_to_list(Atomic,[Atomic]):-
+    var(Atomic),
+    !.
+
+xprod_to_list((LHS * RHS),List):-
+    !,
+    xprod_to_list(LHS,LHSList),
+    tptp2X_append(LHSList,[RHS],List).
+
+xprod_to_list(Atomic,[Atomic]).
+
+%------------------------------------------------------------------------------
+%----auxiliary function of curry_type_formula
+list_to_map([Atomic],Atomic):-
+    !.
+
+list_to_map([H|T],(H > TMap)):-
+    list_to_map(T,TMap).
+%------------------------------------------------------------------------------
+%----converts first-order (a*b)>c into higher-order a>b>c
+curry_type_formula(LHS > RHS,Curried):-
+    xprod_to_list(LHS,LHSList),
+    !,
+    tptp2X_append(LHSList,[RHS],AllList),
+    list_to_map(AllList,Curried).
+
+curry_type_formula(NotType,NotType).
+%------------------------------------------------------------------------------
+extract_lambda_variables(Symbol @ Variable,VariablesSoFar,
+[Variable|VariablesSoFar]):-
+    atomic(Symbol),
+    !.
+
+extract_lambda_variables(Application @ Variable,VariablesSoFar,Variables):-
+    extract_lambda_variables(Application,[Variable|VariablesSoFar],Variables).
+%------------------------------------------------------------------------------
+output_let_lambda_variables([]).
+
+output_let_lambda_variables([Variable|RestOfVariables]):-
+    write('^ ['),
+    write(Variable),
+    write('] '),
+    output_let_lambda_variables(RestOfVariables).
+%------------------------------------------------------------------------------
+%----Case with variables
+output_let_lambdas(LHS @ RHS):-
+    !,
+    extract_lambda_variables(LHS @ RHS,[],Variables),
+    write('('),
+    output_let_lambda_variables(Variables),
+    write(' ').
+
+%----Case without variables
+output_let_lambdas(_).
+
+%------------------------------------------------------------------------------
+%----The central induction to output objects
+output_lf_formula(_Language,_Status,Variable,_,Indent,AlreadyIndented):-
+    looks_like_a_prolog_variable(Variable),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    write(Variable).
+
+%----Flattens binders with multiple bindings
+output_lf_formula(Language,Status,QuantifiedManyVarsFormula,AllTypes,Indent,
+AlreadyIndented):-
+    tptp_quantified_formula(QuantifiedManyVarsFormula,Quantifier,
+[OneVariable,TwoVariables|MoreVariables],QuantifiedFormula),
+    !,
+    InnerQuantifier =.. [Quantifier,[TwoVariables|MoreVariables]],
+    InnerFormula =.. [:,InnerQuantifier,QuantifiedFormula],
+    OuterQuantifier =.. [Quantifier,[OneVariable]],
+    QuantifiedOneVarFormula =.. [:,OuterQuantifier,InnerFormula],
+    output_lf_formula(Language,Status,QuantifiedOneVarFormula,AllTypes,Indent,
+AlreadyIndented).
+
+%----polymorphic type as called by output_lf_type_formula
+output_lf_formula(Language,poly_type,QuantifiedFormula,AllTypes,Indent,
+AlreadyIndented):-
+    tptp_quantified_formula(QuantifiedFormula,'!>',[Variable : Kind],Formula),
+    is_kind(Kind),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    write(' { '),
+    VariableIndent is Indent + 6,
+    output_lf_formula(Language,poly_type,Variable,AllTypes,VariableIndent,
+VariableIndent),
+    write(': '),
+    output_lf_kind_formula(Kind),
+    write(' }'),
+    nl,
+    NewIndent is Indent + 2,
+%DEBUG write('Recurse with '),write(Formula),nl,
+    output_lf_type_formula(Language,poly_type,none,Formula,[Variable|AllTypes],
+NewIndent,0).
+%ZZZZZ Pretty here
+
+%%----quantified formula with kinded variable
+%output_lf_formula(Language,Status,QuantifiedFormula,AllTypes,Indent,
+%AlreadyIndented):-
+%    quantified_formula(tptp,QuantifiedFormula,Quantifier,[Variable: Kind],
+%Formula,_,_,_,_,_),
+%    !,
+%    output_indent(Indent,AlreadyIndented),
+%    write('( '),
+%    write(Quantifier),
+%    write(t),
+%    write(Quantifier),
+%    write(' [ '),
+%    VariableIndent is Indent + 6,
+%    output_lf_formula(Language,Status,Variable,AllTypes,VariableIndent,
+%VariableIndent),
+%    write(' ]'),
+%    nl,
+%    NewIndent is Indent + 2,
+%    output_lf_formula(Language,Status,Formula,[Variable|AllTypes],NewIndent,0),
+%    write(' )').
+
+%----quantified formula with typed variable
+output_lf_formula(Language,Status,QuantifiedFormula,AllTypes,Indent,
+AlreadyIndented):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,[Variable],Formula),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    write('( '),
+    write(Quantifier),
+    write(' [ '),
+    VariableIndent is Indent + 6,
+    output_lf_formula(Language,Status,Variable,AllTypes,VariableIndent,
+VariableIndent),
+    write(' ]'),
+    nl,
+    NewIndent is Indent + 2,
+    output_lf_formula(Language,Status,Formula,AllTypes,NewIndent,0),
+    write(' )').
+
+%----Defns and Types - do before binary to catch <=> definitions
+output_lf_formula(Language,Status,DefnOrType,AllTypes,Indent,AlreadyIndented):-
+    lf_definition_or_type(Language,Status,DefnOrType,LFConnective,LHS,RHS),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 2,
+    output_lf_formula(Language,Status,LHS,AllTypes,NewIndent,NewIndent),
+    write(' '),
+    write(LFConnective),
+    nl,
+    output_indent(NewIndent,0),
+%----Once we're inside it's no longer a definition (if it was)
+    output_lf_type_formula(Language,axiom,LFConnective,RHS,AllTypes,
+NewIndent,NewIndent).
+
+%----Application formula on type
+output_lf_formula(Language,Status,BinaryFormula,AllTypes,Indent,
+AlreadyIndented):-
+    tptp_binary_formula(BinaryFormula,'@',LHS,RHS),
+    is_type(RHS,AllTypes),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 2,
+    write('( '),
+    output_lf_formula(Language,Status,LHS,AllTypes,NewIndent,NewIndent),
+    nl,
+    output_indent(Indent,0),
+    write(' '),
+    output_lf_formula(Language,Status,RHS,AllTypes,NewIndent,NewIndent),
+    write(' )').
+
+%----Binary formula
+output_lf_formula(Language,Status,BinaryFormula,AllTypes,Indent,
+AlreadyIndented):-
+    tptp_binary_formula(BinaryFormula,Connective,LHS,RHS),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 2,
+    write('( '),
+    output_lf_formula(Language,Status,LHS,AllTypes,NewIndent,NewIndent),
+    nl,
+    output_indent(Indent,0),
+    write(Connective),
+    write(' '),
+    output_lf_formula(Language,Status,RHS,AllTypes,NewIndent,NewIndent),
+    write(' )').
+
+%----Unary formula
+output_lf_formula(Language,Status,~'$tptp_equal'(LHS,RHS),AllTypes,Indent,
+AlreadyIndented):-
+    !,
+    output_lf_formula(Language,Status,'$tptp_not_equal'(LHS,RHS),AllTypes,
+Indent,AlreadyIndented).
+
+output_lf_formula(Language,Status,UnaryFormula,AllTypes,Indent,
+AlreadyIndented):-
+    tptp_unary_formula(UnaryFormula,Connective,Formula),
+    !,      
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 4,
+    write('( '),
+    write(Connective),
+    write(' '),
+    output_lf_formula(Language,Status,Formula,AllTypes,NewIndent,NewIndent),
+    write(' )').
+
+%----Equality
+output_lf_formula(Language,Status,Equality,AllTypes,Indent,AlreadyIndented):-
+    Equality =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(LFConnective),[('$tptp_equal')-('=='),
+('$tptp_not_equal')-('!=')]),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 2,
+    write('( '),
+    output_lf_formula(Language,Status,LHS,AllTypes,NewIndent,NewIndent),
+    nl,
+    output_indent(Indent,0),
+    write(LFConnective),
+    write(' '),
+    output_lf_formula(Language,Status,RHS,AllTypes,NewIndent,NewIndent),
+    write(' )').
+
+%% FR: this problem should be taken care of now; temporarily leaving the original code as a comment
+%%%----Equality as a symbol
+%%output_lf_formula(_Language,_Status,Equality,_AllTypes,_Indent,
+%%_AlreadyIndented):-
+%%    tptp2X_member(Equality,['=','!=']),
+%%    !,
+%%    nl,
+%%    write('ERROR : Dont know what to do with '),
+%%    write(Equality),
+%%    write(' as a term'),
+%%    nl.
+%%%----Waiting for Florian's input here
+%%%    output_lf_formula(Language,Status,(^ [A: $tType,X:A,Y:A] : (X=Y)),
+%%%Indent,AlreadyIndented).
+
+%----Symbols
+output_lf_formula(_,_,Atomic,_,Indent,AlreadyIndented):-
+    atomic(Atomic),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    output_lf_symbol(Atomic).
+
+%----$ite
+output_lf_formula(Language,Status,'$ite'(Condition,IfTrue,IfFalse),AllTypes,
+Indent,AlreadyIndented):-
+    !,
+    output_indent(Indent,AlreadyIndented),
+    write('($ite '),
+    NewIndent is Indent + 6,
+    output_lf_formula(Language,Status,Condition,AllTypes,NewIndent,NewIndent),
+    nl,
+    output_indent(NewIndent,0),
+    output_lf_formula(Language,Status,IfTrue,AllTypes,NewIndent,NewIndent),
+    nl,
+    output_indent(NewIndent,0),
+    output_lf_formula(Language,Status,IfFalse,AllTypes,NewIndent,NewIndent),
+    write(')').
+
+%---$let
+output_lf_formula(Language,Status,'$let'(LetSymbol:LetType,
+':='(LetDefnLHS,LetDefnRHS),LetFormula),AllTypes,Indent,AlreadyIndented):-
+    !,
+    output_indent(Indent,AlreadyIndented),
+    write('$let '),
+    NewIndent is Indent + 6,
+    output_let_lambdas(LetDefnLHS),
+    nl,
+    output_lf_formula(Language,Status,LetDefnRHS,AllTypes,NewIndent,0),
+    write(')'),
+    nl,
+    output_indent(NewIndent,AlreadyIndented),
+    write('(['),
+    write(LetSymbol),
+    write(': $tm '),
+    write(LetType),
+    write('] '),
+    nl,
+    output_lf_formula(Language,Status,LetFormula,AllTypes,NewIndent,0),
+    write(' )'),
+    nl.
+
+%----Must be a first-order function/predicate
+output_lf_formula(Language,Status,FirstOrder,AllTypes,Indent,AlreadyIndented):-
+    convert_structure_to_application(FirstOrder,Application),
+    output_lf_formula(Language,Status,Application,AllTypes,Indent,
+AlreadyIndented).
+%    nl,
+%    write('ERROR : Dont know what to do with '),
+%    write(Unknown),
+%    nl.
+%------------------------------------------------------------------------------
+%----Print a constant declaration as "c : A."
+output_lf_formula_start(_Language,_Name,type,0):- 
+    !.
+
+%----Print a constant definition as "c = A."
+output_lf_formula_start(_Language,_Name,definition,0):- 
+    !.
+
+%----Print a formula F as "Status_Name : $istrue F.", status is 'axiom', etc.
+output_lf_formula_start(_Language,Name,Status,2):-
+    write(Status),
+    write('_'),
+    lf_dequote(Name,SaneName),
+    write(SaneName),
+    write(' : $istrue '),
+    nl.
+%------------------------------------------------------------------------------
+%----outputs a single formula as a Twelf comment and one Twelf declaration
+output_lf_annotated_formula(AnnotatedFormula,AllTypes):-
+    AnnotatedFormula =.. [Language,Name,Status,Formula|_],
+    write('%%---- '),
+    write(Name),
+    write(' ('),
+    write(Status),
+    write(')'),
+    nl,
+    output_lf_formula_start(Language,Name,Status,Indent),
+    output_lf_formula(Language,Status,Formula,AllTypes,Indent,0),
+    write('.'),
+    nl.
+%------------------------------------------------------------------------------
+%----outputs a list of formulae
+output_lf_annotated_formulae([],_).
+
+output_lf_annotated_formulae([FirstFormula|RestOfFormulae],AllTypes):-
+    output_lf_annotated_formula(FirstFormula,AllTypes),
+    nl,
+    output_lf_annotated_formulae(RestOfFormulae,AllTypes).
+%------------------------------------------------------------------------------
+%----auxiliary function of merge_types_into_definitions
+lf_type_formula(thf(TypeName,Role,TypeFormula),TypeName,Symbol,Type):-
+    lf_definition_or_type(thf,Role,TypeFormula,':',Symbol,Type),
+    atomic(Symbol).
+%------------------------------------------------------------------------------
+%----auxiliary function of merge_types_into_definitions
+lf_defn_formula(thf(DefnName,Role,DefnFormula),DefnName,Symbol,Defn):-
+    lf_definition_or_type(thf,Role,DefnFormula,'=',Symbol,Defn),
+    atomic(Symbol).
+
+%----This would be needed for <=> type definitions - not sure now
+% lf_defn_formula(thf(DefnName,Role,DefnFormula),DefnName,Symbol,Defn):-
+%     lf_definition_or_type(thf,definition,DefnFormula,_Connective,Symbol,Defn),
+%     atomic(Symbol).
+%------------------------------------------------------------------------------
+%----auxiliary function of lf: merges type and definition for the same symbol
+merge_types_into_definitions(ReversedPassedFormulae,[],PassedFormulae):-
+    fast_reverse_list(ReversedPassedFormulae,[],PassedFormulae).
+
+merge_types_into_definitions(PassedFormulae,[DefnFormula|RestOfFormulae],
+MergedFormulae):-
+    lf_defn_formula(DefnFormula,DefnName,Symbol,Defn),
+    tptp2X_select(TypeFormula,PassedFormulae,DeTypedPassedFormulae),
+    lf_type_formula(TypeFormula,TypeName,Symbol,Type),
+    !,
+    concatenate_atoms([TypeName,'_',DefnName],MergedName),
+    merge_types_into_definitions(
+[thf(MergedName,definition,(Symbol : Type) := Defn)|DeTypedPassedFormulae],
+RestOfFormulae,MergedFormulae).
+
+%----All other definitions become axioms
+merge_types_into_definitions(PassedFormulae,[DefnFormula|RestOfFormulae],
+MergedFormulae):-
+    DefnFormula =.. [thf,DefnName,definition,Formula],
+    !,
+    merge_types_into_definitions([thf(DefnName,axiom,Formula)|
+PassedFormulae],RestOfFormulae,MergedFormulae).
+
+merge_types_into_definitions(PassedFormulae,[FirstFormula|RestOfFormulae],
+MergedFormulae):-
+    merge_types_into_definitions([FirstFormula|PassedFormulae],RestOfFormulae,
+MergedFormulae).
+%------------------------------------------------------------------------------
+%----auxiliary function of lf: checks for type declarations
+type_in_declaration(TypeDeclarations,AType):-
+    tptp2X_member(Declaration,TypeDeclarations),
+    Declaration =.. [_,_,type,AType : Kind |_],
+    is_kind(Kind).
+%------------------------------------------------------------------------------
+%----the main function
+lf(lf,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    write('%% skipping CNF clause (not available for LF)'),
+    nl.
+
+lf(lf,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    convert_formulae_to_tptp(Formulae,TSTPFormulae),
+%DEBUG write('TSTPFormulae : '),write(TSTPFormulae),nl,
+%----infer omitted type declarations of fof symbols 
+    tptp_complete_types(TSTPFormulae,CompletedTypeDeclarations,
+CompletedLogicalFormulae),
+%DEBUG write('CompletedTypeDeclarations : '),write(CompletedTypeDeclarations),nl,
+%DEBUG write('CompletedLogicalFormulae : '),write(CompletedLogicalFormulae),nl,
+    tptp2X_append(CompletedTypeDeclarations,CompletedLogicalFormulae,
+AllFormulae),
+%DEBUG write('AllFormulae : '),write(AllFormulae),nl,
+%----merge types and definition for the same symbol
+    merge_types_into_definitions([],AllFormulae,MergedFormulae),
+%DEBUG write('MergedFormulae : '),write(MergedFormulae),nl,
+%----build list of type operators
+    findall(AType,type_in_declaration(CompletedTypeDeclarations,AType),
+AllTypes),
+%----the main work: output all formulas
+    output_lf_annotated_formulae(MergedFormulae,
+['$i','$o','$int','$rat','$real'|AllTypes]).
+
+%------------------------------------------------------------------------------
+%----Information about the LF format and file
+%------------------------------------------------------------------------------
+lf_format_information('%%','.elf').
+lf_file_information(format,lf,'LF format').
+%------------------------------------------------------------------------------

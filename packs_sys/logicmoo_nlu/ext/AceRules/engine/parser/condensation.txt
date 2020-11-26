@@ -1,0 +1,156 @@
+---+ Condensation
+
+*|This file is out of date and needs to be updated!|*
+
+This document describes the condensation step of the AceRules parser.
+
+
+---+++ 1. Objects
+
+An object like 'a code' is represented in the DRS as:
+
+==
+object(A,atomic,code,object,cardinality,count_unit,eq,1)
+==
+
+If there is a string in apposition like 'a code "Abc"' then it is represented as:
+
+==
+object(A,atomic,code,object,cardinality,count_unit,eq,1)
+quoted_string(A,'Abc')
+==
+
+For a correct processing of strings in apposition, an additional argument is
+added to the object-predicate. This additional argument stands for the
+attached string and is an unbound variable if there is no such string.
+For the first case, we get:
+
+==
+object(A,atomic,code,object,cardinality,count_unit,eq,1,_)
+==
+
+For the second case, we get:
+
+==
+object(A,atomic,code,object,cardinality,count_unit,eq,1,'Abc')
+==
+
+
+---+++ 2. Proper Names
+
+Proper names are represented in the DRS like:
+
+==
+named(A,'John')
+object(A,atomic,named_entity,person,cardinality,count_unit,eq,1)
+==
+
+In order to reduce the number of predicates, these are merged to a single
+predicate:
+
+==
+object(A,atomic,named('John'),person,cardinality,count_unit,eq,1,_)
+==
+
+
+---+++ 3. Predicates
+
+Predicates and their modifiers (adverbs or prepositional phrases) are
+represented in multiple predicates in the DRS:
+
+==
+predicate(F,unspecified,give,A,D,E)
+modifier(F,unspecified,in,C)
+modifier(F,unspecified,none,manually)
+==
+
+These predicates are merged to:
+
+==
+pred_mod(unspecified,give,A,D,E, [modifier(unspecified,in,B), modifier(unspecified,none,manually)])
+==
+
+
+---+++ 4. Of
+
+Of-relations (e.g. "a brother of") are represented in the DRS as follows:
+
+==
+object(A,atomic,brother,person,cardinality,count_unit,eq,1)
+relation(A,brother,of,B)
+==
+
+These predicates are merged to:
+
+==
+of_relation(object(A,atomic,brother,person,cardinality,count_unit,eq,1,_),B)
+==
+
+
+---+++ 5. Anonymous Pronouns
+
+Anonymous pronouns that stand for objects (something, everything, nothing) are
+represented as:
+
+==
+object(A,dom,unspecified,object,unspecified,unspecified,eq,unspecified)
+==
+
+In order to allow this statement to unify with every other object description,
+it is replaced by:
+
+==
+object(A,_,_,_,_,_,_,_,_)
+==
+
+The same holds for anonymous pronouns for persons (somebody, everyone, nobody)
+that are represented as:
+
+==
+object(A,dom,unspecified,person,unspecified,unspecified,eq,unspecified)
+==
+
+And they are replaced by:
+
+==
+object(A,_,_,person,_,_,_,_,_)
+==
+
+
+---+++ 6. Be
+
+If the verb "be" is used in its transitive form and without any modifiers then
+it is interpreted as identity (e.g. in "John is a customer"). If the
+transformation #2 has already been applied then we get something like:
+
+==
+pred_mod(state,be,A,B,[])
+==
+
+In this case the variables A and B are unified and the predicate is removed.
+
+
+---+++ 7. Modality
+
+The modal constructs describing possiblity and necessity are represented in the
+original DRS as separate boxes. For possiblity they have the form
+
+==
+<>drs(V,Conds)
+==
+
+and for necessity they look like this:
+
+==
+[]drs(V,Conds)
+==
+
+These boxes are replaced by an ordinary predicate containing the conditions:
+
+==
+can(Conds)
+must(Conds)
+==
+
+After this, the modal constructs can be handled in the same way as the other predicates.
+(The conditions inside of the modal boxes have to be flat!)

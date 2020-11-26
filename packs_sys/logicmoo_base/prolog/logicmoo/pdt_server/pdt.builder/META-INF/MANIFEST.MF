@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Eclipse-BundleShape: dir
+Bundle-ManifestVersion: 2
+Bundle-Name: PDT Prolog Builder
+Bundle-SymbolicName: org.cs3.pdt.builder;singleton:=true
+Bundle-Version: 3.1.2.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.cs3.pdt.connector;bundle-version="[3.1.2,4.0.0)",
+ org.cs3.prolog.library;bundle-version="[3.1.2,4.0.0)"
+Bundle-Vendor: http://sewiki.iai.uni-bonn.de/research/pdt/docs

@@ -1,0 +1,138 @@
+// This file contains a group of multi-step inference examples, which show the expressive and inferential capability of NARS, as implemented in version 1.5.1.
+
+// Each example starts at a line with a "*" to empty the memory of the system. 
+// To run an example, copy/paste the input lines into the input window of the NARS. 
+// Listed after the input lines are the lines displayed in the main window of NARS during the processing of the input, followed by a brief explanation of the example.
+
+// To only display the relevant output, in the main window of NARS go to menu item "Paremeter", then select "Report Silence Level", and move the scrollbar to its right-most position (value 100). Click "Hide" to finish the change.
+
+
+**** Choice ****
+<robin --> bird>.
+10
+<swan --> bird>. %1.00;0.80%
+10
+<penguin --> bird>. %0.80%
+10
+<?1 --> bird>?
+60
+
+// When a question has more than one candidate answers, their order of evaluation is highly context-sensative. The system reports the best it has found so far, and therefore may report more than one answer to a given question. In this example, the system will settle down at the last answer even if it is given longer time.
+
+**** Contradiction ****
+<coffee --> beverage>.
+<Java --> coffee>.
+(--,<Java --> coffee>).
+10 
+<Java --> coffee>?
+10
+<tea --> beverage>?
+10
+<coffee --> beverage>?
+10
+
+// A contradiction makes the system unsure on directly related questions, but will not make the system to derive an arbitrary conclusion on other questions, as in propositional logic.
+
+**** Confidence and revision ****
+<Willy {-- swimmer>.
+<fish --> swimmer>.
+<Willy {-- fish>?
+10
+<Willy {-- whale>.
+<whale --] black>.
+<Willy {-] black>?
+20  
+<Willy {-] black>. %0%
+<Willy {-- fish>. %0%
+10
+
+
+// Even when all the input judgments using the default confidence value, different rules produce conclusions with difference confidence, which have different sensitivity when facing the same amount of new evidence.
+
+**** Deduction chain ****
+<Tweety {-- robin>.
+<robin --> bird>.
+<bird --> animal>.
+30 
+<Tweety {-- bird>?
+10
+<Tweety {-- animal>?
+10
+
+// The conclusion of a previous step may be used as a premise in a following step.  In the example, though both answers are positive (with frequency 1), their confidence is getting lower as the deduction chain gets longer.
+
+**** Resemblance Chain ****
+<dog <-> cat>. %0.9%
+<cat <-> tiger>. %0.9%
+<tiger <-> lion>. %0.9%
+<dog <-> lion>?
+40
+
+// Given incomplete similarity, both frequency and the confidence decrease alone an inference chain.
+
+**** Induction and revision ****
+<bird --> swimmer>?
+<swimmer --> bird>? 
+10
+<swan --> bird>.
+<swan --> swimmer>.
+10 
+<gull --> bird>.
+<gull --> swimmer>.
+20
+<crow --> bird>.
+(--, <crow --> swimmer>).
+50
+
+
+// (1) Question may still be remembered before available knowledge arrives, or after answers are reported;
+// (2) The system can change its mind when new evidence is taken into consideration;
+// (3) Positive evidence has the same effect on symmetric inductive conclusions, but negative evidence does not.
+
+**** Mixed Inference ****
+<swan --> bird>.
+<swan --> swimmer>.
+<gull --> bird>.
+<gull --> swimmer>.
+<bird --> swimmer>?
+30
+<robin --> [feathered]>. 
+<bird --> [feathered]>.
+<robin --> bird>?
+30
+<robin --> swimmer>?
+50
+
+
+// The final conclusion is produced using induction, abduction, deduction, and revision.
+// The selection of inference rule is data driven, not specified explicitly in the input. There is no guarantee that all relevant evidence will be taken into consideration.
+
+**** Semi-compositionality ****
+<light --> traffic_signal>. %0.1% 
+<[red] --> traffic_signal>. %0.1% 
+10
+<(&, [red], light) --> traffic_signal>?
+10 
+<light_1 {-- (&, [red], light)>.
+<light_1 {-- traffic_signal>.
+10
+<light_2 {-- (&, [red], light)>.
+<light_2 {-- traffic_signal>.
+10
+
+// Initially, the meaning of compound term "(&,[red],light)" is determined by the meaning of its components "red" and "light", but it will no longer be the case when the system gets experience about the compound that cannot be reduced to its components.
+
+**** Fuzzy Concept ****
+<John {-- boy>.
+<John {-- (/, taller_than, {Tom}, _)>.
+10
+<Tom {-- (/, taller_than, _, boy)>?
+10
+<David {-- boy>.
+(--, <David {-- (/, taller_than, {Tom}, _)>).
+200
+<Karl {-- boy>.
+<Karl {-- (/, taller_than, {Tom}, _)>. 
+100
+
+// John's degree of membership to fuzzy concept "tall boy" depends on the extent to which he is taller than the other boys, determined according to available evidence.

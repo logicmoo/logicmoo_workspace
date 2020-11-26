@@ -1,0 +1,65 @@
+digraph G {
+
+rankdir = LR;
+
+node [shape = "plaintext"];
+edge [arrowsize=1 color=black];
+
+subgraph cluster_0 {
+	label = "ACE in German";
+	color = "yellowgreen";
+
+	AttemptoGer;
+	LexAttemptoGer;
+	TestAttemptoGer;
+}
+
+// RGL
+RGL [shape = "circle"];
+
+// Abstract (rect)
+Attempto [shape = "rect"];
+Symbols [shape = "rect"];
+TestAttempto [shape = "rect"];
+
+// Incomplete (dashed rect)
+AttemptoI [shape = "rect" style = "dashed"];
+
+// Interface (dashed diamond)
+LexAttempto [shape = "diamond" style = "dashed"];
+
+// Concrete (ellipse)
+SymbolsC [shape = "ellipse"];
+AttemptoGer [shape = "ellipse"];
+TestAttemptoGer [shape = "ellipse"];
+
+// Instance
+LexAttemptoGer [shape = "diamond"];
+
+// TODO: what is the correct convention?
+// dotted = concrete
+// dashed = opens
+// solid = extends
+
+Attempto -> Symbols;
+
+SymbolsC -> Symbols [style = "dotted"];
+
+AttemptoI -> Attempto [style = "dotted"];
+AttemptoI -> SymbolsC;
+AttemptoI -> LexAttempto [style = "dashed"];
+
+TestAttempto -> Attempto;
+
+AttemptoGer -> Attempto [style = "dotted"];
+AttemptoGer -> SymbolsC;
+AttemptoGer -> AttemptoI [label = "LexAttemptoGer"];
+
+LexAttemptoGer -> LexAttempto;
+TestAttemptoGer -> TestAttempto [style = "dotted"];
+TestAttemptoGer -> AttemptoGer;
+
+AttemptoI -> RGL [style = "dashed"];
+LexAttempto -> RGL [style = "dashed"];
+TestAttemptoGer -> RGL [style = "dashed"];
+}

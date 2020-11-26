@@ -1,0 +1,18 @@
+Universal > CITIZEN, BORN, NATURALIZE, COUNTRY.
+CITIZEN > PERSON.
+PERSON > MAN, GIRL.
+GIRL =  "Dorothy".
+MAN =  "Tinman".
+COUNTRY = "Oz".
+
+[CITIZEN : x]<-MEMB-[COUNTRY : "Oz"] :- 
+     [PERSON: x]<-AGNT-[BORN]-LOC->[COUNTRY : "Oz"].
+[CITIZEN : x]<-MEMB-[COUNTRY : "Oz"] :- 
+     [PERSON: x]<-CHLD-[PERSON: y], 
+     [CITIZEN : y]<-MEMB-[COUNTRY : "Oz"].
+[CITIZEN : x]<-MEMB-[COUNTRY : "Oz"] :- 
+     [PERSON : x]<-RCPT-[NATURALIZE]-LOC->[COUNTRY : "Oz"].
+
+[PERSON : "Tinman"]-
+	      -CHLD->[GIRL : "Dorothy"],
+	      <-AGNT-[BORN]-LOC->[COUNTRY : "Oz"].

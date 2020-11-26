@@ -1,0 +1,68 @@
+(note TQF205a)
+
+(formulaImplies 
+  (thereExists ?GEO-REGION 
+    (thereExists ?ATTACK 
+      (and 
+        (instance ?GEO-REGION GeographicalArea) 
+        (instance ?ATTACK Battle) 
+        (controls Taliban ?GEO-REGION) 
+        (agent ?ATTACK Taliban) 
+        (agent ?ATTACK Iran) 
+        (eventOccursAt ?ATTACK ?GEO-REGION))))
+  (thereExists ?GEO-REGION 
+    (thereExists ?ATTACK 
+      (and 
+        (instance ?ATTACK Battle) 
+        (instance ?GEO-REGION GeographicalArea) 
+        (controls Taliban ?GEO-REGION) 
+        (eventOccursAt ?ATTACK ?GEO-REGION) 
+        (agent ?ATTACK Iran)))))
+
+(formulaRefersTo 
+  (thereExists ?GEO-REGION 
+    (thereExists ?ATTACK 
+      (and 
+        (instance ?GEO-REGION GeographicalArea) 
+        (instance ?ATTACK Battle) 
+        (controls Taliban ?GEO-REGION) 
+        (agent ?ATTACK Taliban) 
+        (agent ?ATTACK Iran) 
+        (eventOccursAt ?ATTACK ?GEO-REGION)))) Iran)
+
+(infoTransferred #$TalibanAccountOfBorderClashes 
+  (thereExists ?GEO-REGION 
+    (thereExists ?ATTACK 
+      (and 
+        (instance ?GEO-REGION GeographicalArea) 
+        (instance ?ATTACK Battle) 
+        (controls Taliban ?GEO-REGION) 
+        (agent ?ATTACK Taliban) 
+        (agent ?ATTACK Iran) 
+        (eventOccursAt ?ATTACK ?GEO-REGION)))))
+
+(instance TalibanAccountOfBorderClashes Inform-CommunicationAct) 
+(senderOfInfo TalibanAccountOfBorderClashes Taliban) 
+
+(query (findall ?WHO 
+   (thereExists ?CLAIM 
+       (thereExists ?INFO 
+           (and 
+               (instance ?CLAIM Inform-CommunicationAct) 
+               (senderOfInfo ?CLAIM Taliban) 
+               (infoTransferred ?CLAIM ?INFO) 
+               (formulaRefersTo ?INFO ?WHO) 
+               (formulaImplies ?INFO 
+                   (thereExists ?GEO-REGION 
+                       (thereExists ?ATTACK 
+                           (and 
+                               (instance ?GEO-REGION GeographicalArea) 
+                               (instance ?ATTACK Battle) 
+                               (controls Taliban ?GEO-REGION) 
+                               (agent ?ATTACK ?WHO) 
+                               (eventOccursAt ?ATTACK ?GEO-REGION))))))))))
+
+(answer Iran)
+
+(end_of_file)
+

@@ -1,0 +1,14 @@
+(note TQC89)
+
+(groupCardinality 
+ (ArmyFn SaudiArabia) 70000) 
+
+
+(query (findall ?N
+
+ (groupCardinality 
+ (ArmyFn SaudiArabia) ?N)))
+
+(answer 70000)  
+
+(end_of_file)

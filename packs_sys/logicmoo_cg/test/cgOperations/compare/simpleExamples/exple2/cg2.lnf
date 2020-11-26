@@ -1,0 +1,3 @@
+[Average]<-mass-[RoadVehicle]-engn->[Engine] -
+               			-fuel->[Gasoline]-state->[state = Volatile],
+               			-force->[Average]

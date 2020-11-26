@@ -1,0 +1,13 @@
+(note TQC66b)
+
+(queryyn 
+  (implies 
+    (and 
+      (instance ?ACTION ExpropriatingSomething) 
+      (objectOfPossessionTransfer ?ACTION SuezCanal)) 
+    (consistent 
+      (toPossessor ?ACTION SaudiArabia))))
+
+(answer Yes)  
+
+(end_of_file)

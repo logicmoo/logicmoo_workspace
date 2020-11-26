@@ -1,0 +1,17 @@
+carre(_a, _b) :-
+	_x is 1 + _a,
+	lister(_x, _b).
+
+lister(_x, _b) :-
+	not(sup(_x, _b, true)),
+	_y is _x * _x,
+	writeln(_y),
+	_z is 1 + _x,
+	lister(_z, _b).
+
+lister(_x, _b) :- inf(_x, _b, false).
+
+sup(_x, _y, _z) :- _z is _x > _y.
+
+not(_p) :- _p, !, fail.
+not(_p).

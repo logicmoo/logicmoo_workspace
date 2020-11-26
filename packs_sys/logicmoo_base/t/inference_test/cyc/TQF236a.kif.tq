@@ -1,0 +1,51 @@
+(note "TQF236a - hypothetical")
+
+(agent HYP-Stealing-Physical-12854086 HYP-TransnationalCriminalOrganization-41325394) 
+(instance HYP-TransnationalCriminalOrganization-41325394 TransnationalCriminalOrganization) 
+(instance HYP-Stealing-Physical-12854086 CriminalAct) 
+
+(implies 
+  (and 
+    (instance ?CRIME CriminalAct) 
+    (instance ?MOB TransnationalCriminalOrganization) 
+    (peformedBy ?CRIME ?MOB) 
+    (subrelation ?PERFORM-PRED agent)) 
+  (increases-Generic ?CRIME 
+    (thereExists ?INCREASE 
+      (increases-Generic ?INCREASE ?MOB totalValueOfAssets)) likelihood)) 
+
+(implies 
+  (instance ?MOB TransnationalCriminalOrganization) 
+  (goalCategoryForAgent ?MOB 
+    (thereExists ?INCREASE 
+      (increases-Generic ?INCREASE ?MOB totalValueOfAssets)) EconomicGoal))
+
+(implies 
+ (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+ (desires ?AGT ?FORM)) 
+
+(query (findall (?MOTIVE)
+  (implies 
+    (and 
+      (instance ?CRIME-ORG TransnationalCriminalOrganization) 
+      (instance ?STEALING Stealing-Physical) 
+      (instance ?STEALING CriminalAct) 
+      (agent ?STEALING ?CRIME-ORG) 
+      (objectOfPossessionTransfer ?STEALING ?GOODS) 
+      (instance ?GOODS ?CONSUMER-TYPE) 
+      (instance ?CONSUMER-TYPE MarketCategoryType)) 
+    (and 
+      (desires ?CRIME-ORG ?MOTIVE) 
+      (increases-Generic ?STEALING ?MOTIVE likelihood)))))
+
+(answer (list 
+  (increases-Generic HYP-Stealing-Physical-12854086 
+    (thereExists ?INCREASE 
+      (increases-Generic 
+        ?INCREASE 
+        HYP-TransnationalCriminalOrganization-41325394 
+        totalValueOfAssets)) 
+    likelihood)))
+
+(end_of_file)
+

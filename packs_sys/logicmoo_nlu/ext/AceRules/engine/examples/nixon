@@ -1,0 +1,5 @@
+Quaker-Rule: Every quaker is a pacifist.
+Republican-Rule: No republican is a pacifist.
+Nixon is a quaker.
+Nixon is a republican.
+Republican-Rule overrides Quaker-Rule.

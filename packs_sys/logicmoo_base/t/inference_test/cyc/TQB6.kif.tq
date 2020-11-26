@@ -1,0 +1,37 @@
+
+(note TQB6)
+
+
+(instance 
+ (BillionDollars 14.8000) ScalarInterval) 
+
+(exportAmountDuring Kuwait Product 
+ (YearFn 1997) 
+ (BillionDollars 14.8000))
+
+(instance 
+ (BillionDollars 2) ScalarInterval) 
+
+(importFromAmountDuring UnitedStatesOfAmerica Product Kuwait 
+ (YearFn 1997) 
+ (BillionDollars 2))
+
+
+(query (findall ?FRACTION  (findall ?TIME
+ (thereExists ?A1 
+ (thereExists ?A2 
+ (and 
+ (exportAmountDuring Kuwait Product ?TIME ?A1) 
+ (instance ?A1 ScalarInterval) 
+ (importFromAmountDuring UnitedStatesOfAmerica Product Kuwait ?TIME ?A2) 
+ (instance ?A2 ScalarInterval) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?A2 ?A1))))))  )))
+
+(answer 13.5135 1997)
+
+
+
+(end_of_file)
+

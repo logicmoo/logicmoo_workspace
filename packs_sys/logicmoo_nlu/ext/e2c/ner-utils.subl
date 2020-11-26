@@ -1,0 +1,258 @@
+
+(csetq *STANFORD-NER-HOST* "logicmoo.ath.cx")
+(csetq *NER-INSTANCE* (fcm 'stanford-ner 'new))
+;; (GET-STANFORD-NER-KNOWN-CYC-TYPES *NER-INSTANCE* )  ==>  (#$Person #$Organization #$Place #$Date)
+
+(get-aq-lexicon)
+
+
+(csetq *OntosNamedFn* (find-or-create-constant "OntosNamedFn"))
+(cyc-assert `(#$isa ,*OntosNamedFn* #$TernaryFunction) #$UniversalVocabularyMt)
+(cyc-assert `(#$arg1Isa ,*OntosNamedFn* #$CharacterString) #$UniversalVocabularyMt)
+(cyc-assert `(#$arg1QuotedIsa ,*OntosNamedFn* #$SubLString) #$UniversalVocabularyMt)
+(cyc-assert `(#$arg2Isa ,*OntosNamedFn* #$Thing) #$UniversalVocabularyMt)
+(cyc-assert `(#$arg3Isa ,*OntosNamedFn* #$NonNegativeInteger) #$UniversalVocabularyMt)
+(cyc-assert `(#$quotedIsa ,*OntosNamedFn* #$ForwardReifiableCycLFunctor) #$UniversalVocabularyMt)
+(cyc-assert `(#$nameString (#$OntosNamedFn ?String . ??Rest) ?String ) #$UniversalVocabularyMt)
+(cyc-assert `(#$resultIsa #$OntosNamedFn #$Location-Underspecified) #$UniversalVocabularyMt)
+
+
+(fim *augmented-query-lexicon* 'add-learner 'stanford-ner-learn)
+
+;; (GET-STANFORD-NER-TYPE-MAP *NER-INSTANCE* ) ==> ((PERSON . #$Person) (ORGANIZATION . #$Organization) (LOCATION . #$Place) (DATE . #$Date))
+
+(deflexical *NER-TOTAL* ())
+(deflexical *NER-MT* ())
+(deflexical *NER-ARTICLE* ())
+(deflexical *NER-TEXT* "Posted May 18th, 1980. That one of the ideas tossed out Tuesday night when the City Council met with Donner for a study session about a draft Fire Master Plan, a document that outlines the goals and funding issues that will drive the department operations for years to come. 
+Donner told the council that the department isn t meeting national standards for arriving at the scene of emergency calls, and that the city growth, increased traffic and lack of funding for the fire department are all contributing factors. 
+While national standards call for the first fire engine to arrive within six minutes of a 911 call 90 percent of the time, Boulder respective mark falls short at seven minutes, 53 seconds. ")
+
+;;(print (STANFORD-NER-RUN-METHOD *NER-INSTANCE* *NER-TEXT*))
+
+(fim  *augmented-query-lexicon* 'stanford-ner-learn *NER-TEXT* '(#$Date) nil)
+(fim  *augmented-query-lexicon* 'stanford-ner-learn *NER-TEXT* '(#$Individual) nil)
+
+;;;(term-learner-tighten-type-metrics "dailycamera.txt")
+(defmacro or (&rest forms) (ret (fif forms (fif (cdr forms) `(pcond (,(car forms)) ((or ,@(cdr forms))))`,(car forms)))))
+
+
+;; (member (string-downcase "Samsung Boulevard") '(" street" " road" " boulevard" " parkway" " lane") #'ends-with)
+(define ends-with (text listmember)
+  (ret (CYC-SUFFIX-SUBSTRING listmember text)))
+
+(define excluded-ne (ne)
+  (clet ((type (GET-NAMED-ENTITY-TYPE ne))(string (GET-NAMED-ENTITY-STRING ne)))
+   (ret (cor 
+   ;;; 3. Money/Date, lets chuck them. 
+     (member type '(O MONEY DATE MISC TIME |.|))
+
+   ;;; Stanford internal error
+     (member string '("LOCATION" "ORGANIZATION" "MISC" "PERSON" "DATE" "MONEY" "O" "O O" "TIME") #'string-equal)
+   ;;; 4. If at the end of the NER, "street", "road", "boulevard", "parkway" is found, then we need to remove them. They are classified as person/place or organization sometimes.
+     (member (string-downcase string) '(" street" " road" " boulevard" " parkway" " lane" " ave" " st." "\\") #'ends-with)
+      
+   ))))
+    
+
+
+(define excluded-ne-count (ne)
+  (clet ((type (GET-NAMED-ENTITY-TYPE ne))(string (GET-NAMED-ENTITY-STRING ne)))
+   (ret (cor 
+     (cand (eq type 'ORGANIZATION) (cnot (position #\Space string)))     
+    ))))
+
+(define make-hitlist (hitlist)
+  (clet (harvest)
+     (cdolist (ne hitlist)
+       ;;(punless (instance-p ne) (print `(bad ,ne)))
+      (pwhen (consp ne) (csetq ne (first ne)))
+      (pwhen (consp ne) (csetq ne (first ne)))
+      (pwhen (instance-p ne) 
+       (punless (excluded-ne ne)
+	(punless (string-equal (GET-NAMED-ENTITY-string ne) "O") 
+	  (cpush ne harvest)))
+       ))
+   (ret harvest)))
+
+
+(csetq *NER-TOTAL* ())
+
+(define make-counted (harvest)
+  (clet (counted)
+     (cdolist (ne harvest)
+     ;;(punless (instance-p ne) (print `(bad ,ne)))
+      (pwhen (consp ne) (csetq ne (first ne)))
+      (pwhen (consp ne) (csetq ne (first ne)))
+     (pwhen (instance-p ne)
+      (pwhen (include-in-rollup ne harvest)
+         (cpush (list (get-named-entity-string ne)(or (get-named-entity-cyc ne) (get-named-entity-type ne))(count-occurs-of ne harvest)) counted)
+	 ;;(make-asserted ne harvest)
+	 (find-or-create-ne ne)
+       )))
+       (ret (remove-duplicates counted #'equalp))))
+
+
+(define make-asserted (ne harvest)
+     ;;(punless (instance-p ne) (print `(bad ,ne)))
+      (pwhen (consp ne) (csetq ne (first ne)))
+      (pwhen (consp ne) (csetq ne (first ne)))
+     (pwhen (instance-p ne)      
+	(pwhen (include-in-rollup ne harvest)
+         (ret (find-or-create-ne ne)))))
+       
+
+(define find-or-create-article (text) 
+ (clet ((list (ask-template '?A `(#$originalPhrase ?A ,text) *NER-MT*)))
+  (cdolist (c list)
+    (csetq *NER-ARTICLE* c)
+    (ret c))
+   (csetq *NER-ARTICLE* (create-constant (CS-MAKE-UNIQUE-CONSTANT-NAME (suggest-constant-name (cconcatenate (get-cntxt-name-from-sentence text) "-TextualPCW")))))
+    ;;(cyc-assert `(#$isa ,*NER-ARTICLE* #$TextualPCW) *NER-MT*)
+    (cyc-assert `(#$isa ,*NER-ARTICLE* #$LinguisticExpressionPeg) *NER-MT*)
+    (cyc-assert `(#$originalPhrase ,*NER-ARTICLE* ,text) *NER-MT*)
+   (ret *NER-ARTICLE*)))
+
+
+(define find-or-create-ne (ne)
+  (clet ((cyc (get-named-entity-cyc ne))(string (get-named-entity-string ne))(type (get-named-entity-type ne))
+    ;;(dm (denotation-mapper string () :greedy))
+     (smf `(#$OntosNamedFn ,string ,*NER-MT* 0))
+     (goodlist ()))
+    '(cdolist (m dm)
+       (pwhen (string-equal (car m) string) 
+         (cpushnew (cdr m) goodlist)))
+    (cyc-assert `(#$isa ,smf #$Location-Underspecified) *NER-MT*)
+    (cyc-assert `(#$parts ,*NER-ARTICLE* ,smf) *NER-MT*)
+    '(cdolist (good goodlist)
+       '(cyc-assert `(#$conceptuallyCoRelated ,smf ,good) *NER-MT*)
+       )   
+   ))
+
+(define text-cleaner (text)
+ (csetq text (substitute #\. #\newline text))
+ (csetq text (substitute #\. #\linefeed text))
+ (csetq text (substitute #\. #\return text))
+ (csetq text (substitute #\. #\\ text))
+ (csetq text (substitute #\Space #\; text))
+ (csetq text (substitute #\Space #\& text))
+  (ret text))
+
+
+;; NEs have  "@param STRING stringp; @param TYPE symbolp;@param CONTEXT stringp;@param CONFIDENCE intergerp;@param CYC constantp;"
+(define ner-harvest (text)
+ (print `(ner-harvest ,text))
+ (csetq *ner-article* (find-or-create-article text))
+ (csetq text (text-cleaner text))
+ (csetq *ner-text* text)
+ (clet ((harvest (STANFORD-NER-RUN-METHOD *NER-INSTANCE* text))
+	  (hitlist (make-hitlist harvest))
+	  ;;(counted (make-counted hitlist))
+	  )
+      (cdolist (hit hitlist)
+        (print hit)
+        (pwhen (instance-p hit) (cpush hit *NER-TOTAL*)))
+   (ner-total hitlist)))
+
+(define ner-total (hitlist)
+  (print `(=> , (make-counted hitlist)))
+   (fresh-line)
+   (force-output))
+
+(define cyc-substring-type (s1 s2)
+  (csetq s1 (string-downcase s1))
+  (csetq s2 (string-downcase s2))
+  (pcond 
+  
+     ((CYC-PREFIX-SUBSTRING (cconcatenate s1 " ") s2) (ret :START))
+     ((CYC-SUFFIX-SUBSTRING (cconcatenate " " s1) s2) (ret :END))
+        ((string-equal s1 s2) (ret :EQUAL))))
+
+(define include-in-rollup (ne list)
+  (pwhen (is-substring-of-others ne list) (ret nil))
+  (ret t)
+  )
+(define is-substring-of-others (ne list)
+ (clet ((from (get-named-entity-string ne)))
+  (cdolist (compare list)
+    (clet ((target (get-named-entity-string compare)))
+      (pwhen (member (cyc-substring-type from target) '(:start :end))
+	 (ret t))
+      ))
+  (ret nil)))
+
+;; (InstanceNamedFn "Kurdistan" Place)
+
+(define count-occurs-of (ne list)
+ (clet ((from (get-named-entity-string ne))(count 0))
+  (cdolist (compare list)
+    (clet ((target (get-named-entity-string compare))(mtype (cyc-substring-type target from)))
+      (pcase mtype
+        ((:START :END :EQUAL) 
+	 (cinc count))
+	('otherwise ))))
+  (ret count)))
+
+;;(cyc-assert `(#$quotedIsa #$StringMentionFn #$ForwardReifiableCycLFunctor) #$BaseKB)
+
+(define load-articles (file mtname) 
+ (csetq *NER-MT* (find-or-create-constant mtname)) ;;BoulderColoradoKB / AustinTexasKB
+ (cyc-assert `(#$isa ,*NER-MT* #$Microtheory) #$BaseKB)
+ (load file))
+
+
+(csetq *NER-TOTAL* ())
+(csetq *NER-MT* (find-or-create-constant "BoulderColoradoKB")) ;;BoulderColoradoKB / AustinTexasKB
+(cyc-assert `(#$isa ,*NER-MT* #$Microtheory) #$BaseKB)
+
+'(load-articles "statesman_articles.txt" "AustinTexasKB")
+
+'(load-articles "dailycamera.txt" "BoulderColoradoKB")
+
+;;
+;;(ner-harvest *NER-TEXT*)
+
+
+;; (ner-harvest "In a few weeks La Casita de Durango will move across Nickel Street into what until late last year was Lucky Four Cafe at 145 Nickel St.. Ooka`s three Cao brothers are veterans in the restaurant business, with several decades of experience between them.")
+;; (ner-total *NER-TOTAL*) 
+
+;;(load-articles "bclocalnews_articles_2010_03_10.txt"  "BoulderColoradoKB")
+;;(load-articles "dailycamera_articles_2010_03_10.txt"  "BoulderColoradoKB")
+;;(load-articles "alabama_articles_2010_03_10.txt" "AlabamaNewsMt")
+
+
+
+
+'(NER-HARVEST "
+Updated: 9:29 p.m. Saturday, Feb. 20, 2010
+Published: 8:28 p.m. Saturday, Feb. 20, 2010
+Flying an airplane into a multistory, glass covered building is a symbolically powerful act, even 8{1/2} years after the Sept. 11 attacks.
+But it was Andrew Joseph Stack III online manifesto describing a life of powerlessness in the face of government hostility and corporate greed that clearly struck a national nerve last week.
+Reaction to his note raced through an already polarized America in a way that spoke volumes about the national mood. It was as if Stack, who authorities have said was the pilot, held up a mirror, and we saw what we wanted to see.
+Some lauded Stack as a hero in the war against an oppressive government or a crooked tax system.
+Others dismissed the Austin man as a terrorist or cowardly criminal who targeted innocents.
+And somewhere in the middle were some who believed Stack, though misguided and wrong, articulated their frustrations with economic hardship made worse by unresponsive politicians or greedy corporate fat cats.
+Like others driven to political violence, Stack angry rant focused on two themes class based anger in a time of economic crisis and frustration over having no effective way to voice grievances or improve lives, said Dana Cloud, a University of Texas associate professor who studies violence as a political expression.
+&quot;What he wrote has tapped into some common concerns, and people are talking,&quot; Cloud said. &quot;It speaks to a deep sense of disaffection and unsettlement. ... I think his action is an index of popular anger and frustration.&quot;
+Shortly after Thursday crash, Facebook pages praising Stack generated hundreds of followers and a flurry of comments, including these on a site titled &quot;Joseph Andrew Stack, we salute thee&quot;:
+&quot;Wow, at least someone stood up for us.&quot;
+&quot;Stack was a terrorist. He is no better than those behind 9 11.&quot;
+&quot;He did what he did to make a point and clear up our vision, the only way our government would understand. I just hope people realize this, and do not dismiss him as another nutjob rebel stereotype.&quot;
+And just like in many blogs or newspaper stories about the plane crash, commenters unleashed a stream of vitriol and ridicule directed at liberals, conservatives, conspiracy theorists or those striving for a middle ground.
+Unsurprised by the strong reaction was UT classics professor Tom Palaima, who studies society and violence.
+&quot;Violence of any sort whether a tragic accident, a terrorist attack or something like this if it hits your psyche, it impossible for human beings not to react on some level. I say the molecules of your soul have been moved around,&quot; Palaima said.
+&quot;There no such thing as an act of violence that does not send out shock waves that we all feel,&quot; he said.
+The shock waves from the plane crash rolled across a nation experiencing economic turmoil and two wars in a frequently bitter political climate.
+Think about December jobless numbers, Palaima said. The US economy lost 85,000 jobs, but the unemployment rate remained at 10 percent because so many people were no longer counted. They d given up looking for work.
+&quot;What is that but a way of simply disappearing human beings who are really suffering?&quot; he said. &quot;There are real problems in American society, a kind of fragmentation. People are feeling that they re isolated, that there isn t any sense of understanding of what individuals are going through.&quot;
+Stack manifesto arrived seething with frustration, sadness and self pity into a climate where anger at the Bush administration swept Barack Obama into the White House, and a vocally angry tea party movement hopes to sweep him out again.
+&quot;There has never been a politician (who) cast a vote on any matter with the likes of me or my interests in mind. Nor, for that matter, are they the least bit interested in me or anything I have to say,&quot; Stack wrote.
+Elsewhere, Stack railed against a tax system misunderstood even by experts that penalizes middle class taxpayers for mistakes. &quot;If this is not the measure of a totalitarian regime, nothing is,&quot; he wrote.
+&quot;This provided an event for people to begin to express their views on a lot of underlying anger that we re seeing in the political discussion,&quot; said UT psychology professor Art Markman.
+But Markman, who studies the culture of aggression and anger, was struck by a more personal aspect of Thursday tragedy: Stack written description of his manifesto as a therapeutic exercise.
+&quot;It often possible to write your way out of anxiety and anger,&quot; Markman said. &quot;Where he goes wrong is that he writes in a way that allows him to reinforce all of the causes of his anger. He puts the blame for all scenarios in his life outside of himself, mostly on the government, so he doesn t give himself any way of defusing his own anger.&quot;
+Stack friends, interviewed after Thursday plane crash, said he never discussed his financial problems or conflicts with the Internal Revenue Service, Markman noted.
+&quot;He was caught in a spiral of anxiety and anger ... that he reinforced internally without talking to people who might be able to provide an alternate perspective,&quot; Markman said.
+The result appears to have been a public suicide doubling as a political statement one that will continue to be debated in a politically and economically fractured nation.
+")
+

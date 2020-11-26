@@ -1,0 +1,10 @@
+Like {\tt BATCH\_DIALOGUE\_SPEECH\_AGAIN}, but uses the version of the speech corpus tagged {\tt Arg1}. Input is taken from the transcriptions file specified by the config parameter
+\begin{verbatim}
+dialogue_speech_corpus(Arg1)
+\end{verbatim}
+and output is written to the file specified by the config parameter
+\begin{verbatim}
+dialogue_speech_corpus_results(Arg1)
+\end{verbatim}
+
+The config file also needs to define all the entries associated with spoken dialogue applications.

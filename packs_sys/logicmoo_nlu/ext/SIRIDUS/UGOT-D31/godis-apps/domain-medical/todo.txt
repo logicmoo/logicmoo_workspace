@@ -1,0 +1,481 @@
+*** bugs ***
+
+x include "bind" in resource interfaces: depends
+x include clarifyDependentIssue, or generalize clarifyAction in selection_rules
+
+* quit does not work after clarification q
+
+x?? (control) godis bug: when plan has been reloaded without producing reraising
+  fb, agenda is empty; this leads to leaving the turn to the user even
+  if there is a "findout" on top of the plan that would have been selected
+
+* other bug: y/n answers not fed back so strange they are also denied
+$S> Hello  How are you feeling today? 
+$U> 
+[score 0.0-1.0]:
+$S> Are you feeling nauseous? 
+$U> yes headache
+[score 0.0-1.0]:0.8
+$S> Okay.  head aches.
+$U> no
+[score 0.0-1.0]:
+$S> not head aches. So,  Are you feeling nauseous? 
+
+* bug III: issue reraised since "okay" is relevant -> no backtracking
+of "issues"
+  - raised issues should not be reraised!
+  ! same thing happens if the answer needs grounding & is denied
+S> Hello  How are you feeling today? 
+$U> okay
+$S> So,  How are you feeling today? 
+$U> 
+
+
+* reraise *still* produced when taking tests, since no question was
+  raised while testing... 
+  x hack: empty output form
+  - real solution: keep track of previous goal issue
+
+
+x? cannot quit or request top after initial altq?
+  - why the final thingies on irrelevantFollowup???
+
+# answer(disease...) not integrated here:
+  [greet].
+  [ask(X^info(X)), answer(disease(malaria))].
+
+* problem with forget(bestq) etc: if plan for Q is interrupted and
+  answer to Q is given in subdialogue, bestq stays on PRIv/BEL
+  - could be solved by deleting inconsistent info in dev_query
+
+* there are two irrelevantFollowup rules
+
+X several symptoms at once -> assumes self-correction
+  [answer(symptom(fever)), answer(symptom(headache))]
+
+
+
+*** OTHER ***
+
+x make slides
+  - choice between IOD, AOD; motivations
+    * we learned that IOD may require devices
+  - add plans
+  - add sample dialogues
+
+x things we would like to add to plan execution rules:
+  - precedence constraints
+    * see below
+  - subplans
+    * new constructs 
+      - resolve(Q)
+      - do(A)
+
+x things we have added:
+  - assume, assume_issue
+
+
+
+
+*** todo ***
+
+* get GUI to work
+
+* not confirmed vs fail
+  - fail is not resolving
+  - need to decide when to give up a plan
+  - what does fail mean? 
+    * fail for current info vs. 
+    # terminal fail: notexist(X,PX)??? does not work for y/n
+   - assume terminal fail this if fail + best_... empty
+
+x "not bestq(_)" is not deleted; perhaps just fail(...)???
+   - should be notexist(X,bestq(X))
+
+# same qs in interview and diagnosis?
+  ! no, since interview presupposes diagnosis
+
+x diagnosis input form for disease q
+
+x only fever test!
+
+w domain needs to handle rejected(X^symptom(X)) without breaking
+  - just dont answer with disease here!
+
+! we could easily have gotten info directly from device, but didn't
+want to clutter the IS
+
+
+
+
+--- nice extras ---
+
+* fix all error reports
+
+* rename medical -> diseaseDB
+
+* swedish lexicon, to show mutilinguiality by resource switching
+  on-line
+  - also reinclude domain stuff needed for lang. change
+  ! shows advantage of discoupling lexicon from plan
+
+* device_nurse
+
+* report should be q-raising? which q? whether to proceed?
+  ! ?action(A)
+  - action assumed by plan?
+  - what if "no"?
+
+* generalize IOD to work with with device & change to that?
+* replace device with database?
+
+? user request test actions
+
+* domain stuff
+  - asking for which medications have been taken
+  - asking for countries traveled to
+    * inference to "travel to tropical climate" or "... desert region"
+
+
+
+--- half-done ---
+
+x? how treat negative confirmation? 
+  - = disconfirmed???
+
+x? dependent issue accommodation & clarification
+  - example?
+    * "I have malaria"
+      "Do you want general information or recommendations for treatment?"
+
+x? accommodation
+  - check that it really works with bind; that "bind" is in all
+  accommodation rules where "findout" is
+
+x? additional issues
+  - provide recommendations about treatment
+    * now called "info"
+    * add to lexicon, remove from device 
+  x provide general info
+    x modify device
+  - get to work with infosharing
+x? multiple simultaneous issues?
+  ! interference if try to ask about info for some other disease 
+    - not really a good example of information sharing; not same
+    question ("what disease do I have" vs "what disease do I want info
+    about")
+  ? ask if have to pay extra for test
+    - also add request(not_take_test)?
+    - and add request(take_test)
+   plan(pay_extra,
+	[ findout(X^test(X))
+     
+x? issue clarification
+  - example: info vs. treatment given disease
+    * input form disease -> info_disease
+
+? positive_diagnosis as action?
+  - findout(X^disease(X)) should trigger plan
+  - rule: if findout(Q) on plan and 
+
+* trindikit: surpress initalization reports 
+
+? user request test actions
+
+
+? prevention q
+
+? territories q
+
+w GODIS: 
+  w findPlan rule: loadplan not triggered if no "findout" or "raise" in plan.
+  - logical operators for if_then -> can shorten rules for info,
+  treatment
+  x fix reraising fb so generated only when issue is changed; peek in
+    tmp? (but will be vulnurable to grounding subdialogs, but perhaps OK
+    to say "returning to" after subdialog?)
+    x if not q top on tmp/sys/issues, generate reraise
+ 
+x? now, confirmed_... is reraised
+  - since on issues from start
+  - should be raised at end of X^disease(X)!
+    x or empty output form (ugly)
+  - masterplan?
+
+x? info does not work
+  w rename "treatment"
+  * get info-share to work
+  ? push info at start
+
+x treatment q
+  - add to lexicon, remove from device 
+
+x? check feedback and sequencing moves
+  - incl denying
+  - reraise:fb only in tree variant
+
+x revising by reaccommodation (works?)
+
+# gör ett riktigt beslutsträd & komplettera domäninfo
+
+
+? why isn't "so" generated in multiissue example?
+
+w bug: if a treatment was discussed during the examination dialogue,
+  it is still the one assumed at the end
+
+x fix godis bug
+
+? sem_sort test? needed?
+
+x check lexicon so all works
+  ? malaise
+
+--- done ---
+
+
+x alternative version, not push Q's at start?
+  - "I want a diagnosis"
+  - "I want to be tested for malaria", binds X^disease(X)
+    * change lexicon input form for diseases
+  ! V2 changes in 
+    - domain, l.57
+    - lexicon, l.356
+  - PROBLEM: does not ask about anything but diseasehistory
+    * change in domain
+  - confirm_by_tests should also bind X^disease(X)
+
+x should confirmed_by_interview really bind questions?
+  - yes, accommodation should work there too (but can avoid in demo)
+  - no, because X^disease(X) must be answered first
+    * need to encode ordering constraints
+      - precedes( X^disease(X), confirmed... ) 
+        * precedes( Q1, Q ) prevents dependent accommodation of Q
+	  unless Q1 already resolved
+        * add condition to acc. rule:
+	  not( $domain :: precedes( Q1, Q ) and
+	       plan( Q1, _ ) and 
+	       not( resolved( Q1 ) )
+
+x negative test results do not work
+
+# subplans in godis? exec?
+  - when loading a Qplan, raise Q
+# or inference; but what if non-com info needed? assume?
+
+
+x bestq returns too many qs
+
+x how get out of confirmed_by_interview by failing? it does not
+  resolve!
+ 
+x disconfirmed not same as not confirmed!!!
+  - ok, so the system cannot disconfirm
+
+x? möjliga resultat från dev_query:
+
+X^disease(X)
+vet ej	- fail(X^disease(X))
+pos	- disease(a)
+neg	- notexist(X,disease(X))
+
+confirmed_by_interview
+vet ej	- fail(confirmed_by_interview)
+pos	- confirmed_by_interview
+neg	- not(confirmed_by_interview)
+
+samma för confirmed_by_tests
+
+x? how make sure that subsequent tests are not performed?
+  - masterplan?
+
+x dev_query info(Disease)
+
+D device_nurse
+* get to work with actions
+  ! confirm(test) should trigger??? but never requested, only dev_do
+  - take_test(T) dev-action -> assert test_result(T)
+* assume_issue(X^test_result(X))
+  - add to lexicon
+
+x koppla in nya device & testa
+
+x how capture this:
+  - when asking for treatment/info, this can be about any disease
+  - but when a disease has been diagnosed, it is probably about that
+  one
+  # inference disease(X) -> info_disease(X)
+  # hyp_disease isa disease, so answer to disease is answer to hyp_disease 
+  x info_disease isa disease, so disease is answer to info_disease
+
+! why necessay to push all issues on agenda at start???
+
+x lexicon!
+  x top
+  x "maybe" and "i think so" -> rej
+  x outputfor for positive_diagnosis
+  x output_form for confirmed_by_tests 
+  x output_form for confirmed_by_tests 
+
+ 
+x? what if test show no disease? answer(not(positive_diagnosis)) -> 
+
+x best_labtest
+
+x? what if user cannot answer questions
+  x rejected(Q) added to sh.com
+  *DH device rensar bort alla rejected Q
+
+
+x restart using "top"
+
+? make sure info(_) and characteristics(_) get deleted so not same
+  answer given second time (perhaps reinstate urule solution?)  
+
+? "maybe" to y/n
+  - regard as reject?
+
+? precedense constraints on accommmodation?
+
+x how make tests?
+  - tell user take test, ask for result
+  - provide random result
+  > call device, where user enters result
+
+x plan for info; share disease/1 with other plan
+
+x använd forget(bestq(_)) för att rense priv/bel; ta bort godisändring
+
+x koppla in OAA-databas
+  ? ta hand om fail(Q,Reason)
+
+x mutiple-answer questions
+
+x correction using negation
+
+x fever -> symptom(fever), etc.
+  - "how are you feelding today" = X^symptom(X); "fine"= symptom(none)
+
+* två lösningar
+
+x1 använd backend för att hitta nästa fråga att ställa
+    ! utgår från att backend är mer eller mindre intelligent
+    ! man kan tänka sig att lägga till beslutsträd till backend
+    * remove old bestqs in priv/bel
+    * how change plan when no bestq, to do requests
+    * don't generate reraise fb if q topmost on ISSUES
+
+x2 implementera beslutsträd i dialogplan
+    ! var hittar vi "rätt" träd? hitta på själva?
+
+
+
+* accommodationlösnginar
+
+x 1a accommodation, backend/trädplan: i slutet av planen finns
+  bind(Q1), bind(Q2) osv där Q1, Q2, ... är *alla* frågor som någonsin
+  kan vara relevant för X^disease(X)
+	       
+    # kan bli problem med reraising & retraction: ev måste vi ändra
+      ordningen på accommodationreglerna så att GoDiS försöker ackommodera
+      från share/com före den provar med bind i planen
+      ! gör inget; retract är oberoende om varifrån acc görs! 
+
+- 1b accommodation, backend: fråga device om vilka frågos som ska bindas
+    ! bind set of questions, retrieved from expert system
+    ! binding alternatives
+      x all q's
+      - all except already known
+      - all except bestq
+
+- 2 (trädplan): accommodation kikar in i if_then
+    * svårt; ska planen göras om till träd?
+
+
+
+? ej spara tillstånd
+
+x AOD or IOD?
+  - it's AOD since tests are performed
+  - but IOD since database search
+  - consider as interface to device containing expert system +
+  test-taker? 
+
+
+** MORE COMPLEX **
+
+* how deal with actions?
+  - requests by system! exec_instruct
+  - add tests
+    1. request action
+    2. device-do action
+* new move: warn(A): "I'm going to do A"
+
+
+
+
+
+
+*** GoDiS changes: X = copied to src & CVSd ***
+
+x modified definition of "depends" in resource_interfaces
+
+x clarifyDependetIssue in AOD selection, or generalize clarifyAction
+
+x exec_assume_issue
+
+x exec_forget- commented out clear actions
+
+x irrelevantFollowup 031023
+  - but try again with old rule, may not have done []
+
+X integrateUsrAccNegICM: 
+	 % SL031022
+	 add( /shared/com, rejected(Q) )
+	 ]).
+
+X added exec_assume
+
+X change integrateUsrAnswer so it is possible to give multiple
+  answers to same Q in one turn 
+
+  - abandoned solution, removes last not first, should be own rule
+  	forall_do(
+		  in($/private/nim, DP_M2) and
+		   DP_M2/snd = answer(A2) and
+		    $domain::relevant(A2,Q) and
+		     $domain::combine(Q,A2,P2) and
+		      $domain::incompatible(P,P2),
+		  del( /private/nim, DP_M2 )
+		 )
+
+
+X definition of incompatible should be partly domain-specific
+
+
+# exec_consultDB removes incompatible propositions
+
+* "maybe" as answer to y/n questions
+  X resource_interfaces fixed
+  * integration rule
+* questions that are rejected or not resolved when raised first time
+  should be stored for later reraising, but not reraised immedialtely
+
+
+
+* only if they are contradictory, assume selfcorrection & delete first!
+
+    
+? need to add self-correction move? ocm:corr
+
+
+
+
+*** trindikit changes ***
+
+x interpret_empty 
+
+? vilka predikat ska egentligen exporteras från modulerna? Inga alls?
+
+* reports from modules and about initialization should be surpressed
+  in "quiet" mode

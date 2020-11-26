@@ -1,0 +1,22 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Theme Hungry 
+//Algorithm :
+//1.	Add the theme Theme_Hungry ,
+//2.	If the current agent is lasy and cuning then call plan Plan3_SatisfyHungry, 
+//	else call the plan Plan1_SatisfyHungry or Plan2_SatisfyHungry or Plan3_SatisfyHungry.
+
+Animal( x, StateEvent ):: [Animal : x] <-actor- [Hungry] :- 
+	Asserta(Animal( x, State):: [Animal : x] <-actor- [Theme_Hungry], []), 
+	Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry].
+
+
+Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry]:-
+	Animal( x, Personality):: [Character] -has-> [List = L],
+	member( Lasy, L ),
+	Animal( x, Plan ):: [Animal : x] <-actor- [Plan3_SatisfyHungry] -intensityOf-> [Hungry = _Level] , !.  // Plan3_SatisfaireFaim must be defined
+Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry]:-
+	Animal( x, Plan ):: [Animal : x] <-actor- [Plan1_SatisfyHungry] -intensityOf-> [Hungry = _Level] , !.   // Plan1_SatisfaireFaim must be defined
+Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry]:-
+	Animal( x, Plan ):: [Animal : x] <-actor- [Plan2_SatisfyHungry] -intensityOf-> [Hungry = _Level] ,!.   // Plan2_SatisfaireFaim must be defined
+Animal( x, Goal ):: [Animal : x] <-actor- [Goal_SatisfyHungry]:-
+	Animal( x, Plan ):: [Animal : x] <-actor- [Plan3_SatisfyHungry] -intensityOf-> [Hungry = _Level] ,!.   // Plan3_SatisfaireFaim must be defined

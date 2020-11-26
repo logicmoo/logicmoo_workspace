@@ -1,0 +1,36 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Enumerating instances
+
+The RDF store contains various predicates for enumerating instances such as predicates,
+resources, graphs, etc.  These are strictly speaking not needed as one can enumerate all
+predicates using a call like this:
+</div>
+
+<div class="nb-cell query">
+distinct(rdf(_,P,_)).
+</div>
+
+<div class="nb-cell markdown">
+This however is rather slow as it enumerates all triples in the database and checks them against a table of already produced predicates.  The generator rdf_current_predicate/1 is much more efficient.  It however does not guarantee that the predicate still has triples.  In most cases
+generating too many resources will not change the result and a call to e.g., `rdf(_,P,_)` can
+be replaced by `rdf_current_predicate(P)`.  If it is necessary that there are triples known
+using this pattern:
+</div>
+
+<div class="nb-cell query">
+rdf_current_predicate(P), once(rdf(_,P,_)).
+</div>
+
+<div class="nb-cell markdown">
+The available enumerators are given below.  All of them, except for rdf_subject/1 may return too many answers, typically returning objects that have existed or exist inside a transaction or snapshot that is not visible from the current context.
+
+  - rdf_current_predicate/1
+  - rdf_current_literal/1
+  - rdf_graph/1
+  - rdf_resource/1
+  - rdf_subject/1
+</div>
+
+</div>

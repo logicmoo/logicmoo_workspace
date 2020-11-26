@@ -1,0 +1,10 @@
+default quaker_so_dove(X): quaker(X) => dove(X).
+default republican_so_hawk(X): republican(X) => hawk(X).
+default hawk_so_motivated(X): hawk(X) => motivated(X).
+default dove_so_motivated(X): dove(X) => motivated(X).
+default dove_so_peaceful(X): dove(X) => peaceful(X).
+fact not (hawk(X) and dove(X)).
+fact republican(ron).
+fact quaker(george).
+fact republican(dick).
+fact quaker(dick).

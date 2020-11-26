@@ -1,0 +1,91 @@
+
+
+    //composantes(nom_composante_mere,nom_composantes).
+
+      // principales composante du PC.
+
+composantes(pc,carte_mere).
+composantes(pc,cartes_extension).
+composantes(pc,microprocesseur).
+composantes(pc,bios).
+composantes(pc,bus).
+composantes(pc,pile).
+composantes(pc,circuit_integré).
+composantes(pc,socket).
+composantes(pc,condensateur).
+composantes(pc,résistance).
+composantes(pc,interrupteur).
+composantes(pc,cavalier).
+composantes(pc,connecteurs).
+composantes(pc,ports).
+composantes(pc,mémoire_RAM).
+composantes(pc,mémoire_ROM).
+composantes(pc,horloge).
+composantes(pc,disque_dur).
+composantes(pc,boite_alimentation).
+composantes(pc,périferiques).
+
+composantes(carte_mere,carte_graphique).
+composantes(carte_mere,carte_son).
+composantes(carte_mere,carte_réseaux).
+composantes(carte_mere,carte_3D).
+composantes(carte_mere,carte_video).
+composantes(carte_mere,carte_modem).
+composantes(carte_mere,carte_TV).
+
+
+  
+     //         type(nom_composante,nom_type).
+
+            // connecteurs
+type(connecteurs,IDE).
+type(connecteurs,PCI).
+type(connecteurs,AGP).
+type(connecteurs,SCSI).
+
+           // ports       
+type(ports,souris).
+type(ports,cavalier).
+type(ports,USB).
+type(ports,parallèle).
+type(ports,serie).
+
+          // cartes
+type(carte,carte_mere).
+type(carte,carte_son).
+type(carte,carte_3D).
+type(carte,carte_video).
+type(carte,carte_modem).
+type(carte,carte_TV).
+
+       //cartes d'extensions.
+
+type(carte_extension,carte_8_bits).
+type(carte_extension,carte_16_bits_ISA).
+type(carte_extension,carte_32_bits_MCA).
+type(carte_extension,carte_32_bits_EISA).
+type(carte_extension,carte32_bits_PCI).
+
+     //périferiques
+
+type(periferique,moniteur).
+type(periferique,sourie).
+type(periferique,imprimante).
+type(periferique,scanner).
+type(periferique,graveur).
+type(periferique,lecteur_disquettes).
+type(periferique,lecteur_CD_ROM).
+type(periferique,lecteur_DVD).
+type(periferique,lecteur_bande_magnetique).
+type(periferique,lecteur_ZIP).
+
+
+installation(carte_mere,demonter_le_boitier).
+installation(carte_mere,visser_la_carte_mere).
+installation(carte_mere,installer_le_processeur).
+installation(carte_mere,installer_la_mémoire).
+installation(carte_mere,installer_la_carte_video).
+installation(carte_mere,intaller_carte_son).
+installation(carte_mere,installer_les_nappes_des_périferiques).
+installation(carte_mere,installer_la_carte_mere_dans_le_boitier).
+

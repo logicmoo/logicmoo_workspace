@@ -1,0 +1,22 @@
+% Startup MicroLog1,2
+%
+
+    $ repeat.
+    $ repeat :- repeat.
+
+    $ eq(X,X).
+    $ neq(X,X):- !, fail.
+    $ neq(_1,_2).
+
+    $ conc([],X,X) .
+    $ conc([T|Q],L,[T|R]) :- conc(Q,L,R).
+    $ element(X,[X|_1]).
+    $ element(X,[_1|Z]) :- element(X,Z).
+    $ del(X,[X|Y],Y).
+    $ del(X,[Y|Z],[Y|R]) :- del(X,Z,R).
+
+
+
+    $ wb(X) :- write(X), write(' ').
+    $ wf(X) :- write(X), nl, fail.
+

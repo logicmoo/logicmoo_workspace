@@ -1,0 +1,152 @@
+[Global]
+CurrentProject=..\..\taupl\SxxLog\SxxLog.vpj
+[ProjectDates]
+Parser_SUPPLE_SWI.vpj=20180801010738188
+..\..\taupl\SxxLog\SxxLog.vpj=20180729204012182
+[ActiveConfig]
+Parser_SUPPLE_SWI.vpj=Release
+..\..\taupl\SxxLog\SxxLog.vpj=Release
+[TreeExpansion2]
+- Parser_SUPPLE_SWI.vpj
+  - prolog
+  - prolog\grammar
+  + shef.nlp.supple
+  + shef.nlp.supple.category
+  + shef.nlp.supple.mapping
+  + shef.nlp.supple.prolog
+  + shef.nlp.supple.utils
+- ..\..\taupl\SxxLog\SxxLog.vpj
+  + .git
+    + refs
+      + heads
+      + remotes
+        + origin
+  - asplog
+    + CMakeFiles
+      + 3.12.0-rc3
+        + CompilerIdCXX
+    + winmake
+      + CMakeFiles
+        + 3.12.0-rc3
+          + CompilerIdCXX
+            + Debug
+              + CompilerIdCXX.tlog
+          + Debug
+            + VCTargetsPath.tlog
+        + a3e341cb67ce01b62791a0260cf97481
+      + Debug
+      + plog.dir
+        + Debug
+          + plog.tlog
+      + Win32
+        + Debug
+          + ALL_BUILD
+            + ALL_BUILD.tlog
+          + ZERO_CHECK
+            + ZERO_CHECK.tlog
+  + demo_inputs
+  + docs
+  + example
+    + BlockWorld
+    + BloodType
+    + Grid
+    + InPaper
+    + Poker
+    + ProfessorStudents
+    + RCS
+    + SandCastle
+    + SoccerGame
+    + ToiletBomb
+  + library
+  - ProCplusLog
+    - pro_cplus_log
+    + x64
+      + Debug
+        + ProCplusLog.tlog
+  + schlog
+scroll:89
+[State]
+SCREEN: 1920 1200 -4 -5 1440 669 0 0 M 0 0 0 0 1219 842
+CWD: ..\..\taupl\SxxLog
+BUFFER: BN="prolog\buchart.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.8653 CL=25 LE=0 CX=24 CY=9 WI=5 BI=20 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\swiserver.bat"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.150 CL=67 LE=0 CX=66 CY=5 WI=5 BI=14 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\sigma_win32.P"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.780 CL=1 LE=0 CX=0 CY=36 WI=5 BI=16 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\prolog_server.P"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.35 CL=78 LE=0 CX=77 CY=1 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\sigma_server.P"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.9127 CL=31 LE=0 CX=30 CY=7 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="..\..\taupl\SxxLog\ProCplusLog\pro_cplus_log\base.hpp"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="..\..\taupl\SxxLog\ProCplusLog\pro_cplus_log\rule.hpp"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.352 CL=56 LE=0 CX=55 CY=5 WI=5 BI=22 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\sigma_httpd.P"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.2541 CL=6 LE=0 CX=5 CY=24 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="src\shef\nlp\supple\category\InitialEdge.java"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Java	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1652 CL=19 LE=0 CX=18 CY=33 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prolog\grammar\npcore_rules.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=19 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prolog\supple_io.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.949 CL=11 LE=0 CX=10 CY=13 WI=5 BI=15 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="src\shef\nlp\supple\category\Chart.java"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Java	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.8484 CL=45 LE=0 CX=44 CY=29 WI=5 BI=17 HT=0 HN=0 HF=0 HC=4
+WINDOW: 88 88 955 578 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
+BUFFER: BN="..\..\taupl\SxxLog\ProCplusLog\pro_cplus_log\base.hpp"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=498 BI=4 HT=0 HN=0 HF=0 HC=4
+WINDOW: 44 44 955 578 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\sigma_server.P"
+VIEW: LN=.9127 CL=31 LE=0 CX=30 CY=7 WI=485 BI=21 HT=0 HN=0 HF=0 HC=4
+WINDOW: 66 66 955 578 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\sigma_httpd.P"
+VIEW: LN=.315 CL=28 LE=0 CX=27 CY=9 WI=283 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 22 22 955 578 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\prolog_server.P"
+VIEW: LN=.35 CL=78 LE=0 CX=77 CY=1 WI=349 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 955 578 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\sigma_win32.P"
+VIEW: LN=.780 CL=1 LE=0 CX=0 CY=36 WI=348 BI=16 HT=0 HN=0 HF=0 HC=4
+WINDOW: 264 264 955 578 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="..\..\packs_xtra\sigma_ace\engine\swiserver.bat"
+VIEW: LN=.150 CL=67 LE=0 CX=66 CY=5 WI=340 BI=14 HT=0 HN=0 HF=0 HC=4
+WINDOW: 154 154 955 578 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="prolog\buchart.pl"
+VIEW: LN=.8653 CL=25 LE=0 CX=24 CY=9 WI=478 BI=20 HT=0 HN=0 HF=0 HC=4
+WINDOW: 242 242 955 578 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="prolog\supple_io.pl"
+VIEW: LN=.5154 CL=10 LE=0 CX=9 CY=19 WI=342 BI=15 HT=0 HN=0 HF=0 HC=4
+WINDOW: 220 220 955 578 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="prolog\grammar\npcore_rules.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=496 BI=19 HT=0 HN=0 HF=0 HC=4
+WINDOW: 176 176 955 578 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="src\shef\nlp\supple\category\InitialEdge.java"
+VIEW: LN=.1652 CL=19 LE=0 CX=18 CY=33 WI=282 BI=23 HT=0 HN=0 HF=0 HC=4
+WINDOW: 198 198 955 578 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="src\shef\nlp\supple\category\Chart.java"
+VIEW: LN=.419 CL=5 LE=0 CX=4 CY=17 WI=481 BI=17 HT=0 HN=0 HF=0 HC=4
+WINDOW: 110 110 955 578 -1 -1 M  WF=0 WT=1 "Default Fixed Font,14,0,1"
+BUFFER: BN="..\..\taupl\SxxLog\ProCplusLog\pro_cplus_log\rule.hpp"
+VIEW: LN=.352 CL=57 LE=0 CX=56 CY=5 WI=500 BI=22 HT=0 HN=0 HF=0 HC=4
+FILEHIST: 9
+prolog\supple_io.pl
+prolog\buchart.pl
+..\..\packs_xtra\sigma_ace\engine\swiserver.bat
+..\..\packs_xtra\sigma_ace\engine\sigma_win32.P
+..\..\packs_xtra\sigma_ace\engine\prolog_server.P
+..\..\packs_xtra\sigma_ace\engine\sigma_server.P
+..\..\packs_xtra\sigma_ace\engine\sigma_httpd.P
+..\..\taupl\SxxLog\ProCplusLog\pro_cplus_log\base.hpp
+..\..\taupl\SxxLog\ProCplusLog\pro_cplus_log\rule.hpp

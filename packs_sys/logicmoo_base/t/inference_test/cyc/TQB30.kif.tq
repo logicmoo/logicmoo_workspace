@@ -1,0 +1,88 @@
+(note "TQB30 -ist")
+(abort)
+
+(implies ?FORMULA 
+ (ist IranPakistanGasDeal ?FORMULA)) 
+
+(seller SKF-31969999 Iran) 
+(buyer SKF-31969999 Pakistan) 
+(instance SKF-31969999 (BuyingFn NaturalGas)) 
+
+(infoTransferred SKF-5237428 IranPakistanGasDeal) 
+(senderOfInfo SKF-5237428 Iran) 
+(instance SKF-5237428  MultiDirectionalCommunication) 
+(senderOfInfo SKF-5237428 Pakistan) 
+
+(different Pakistan Iran) 
+(imports Pakistan NaturalGas) 
+(subclass NaturalGas NaturalGas) 
+
+(implies ?FORMULA 
+ (ist IranTurkmenistanGasDeal ?FORMULA)) 
+
+(seller SKF-62089143 Iran) 
+(buyer SKF-62089143 Turkmenistan) 
+(instance SKF-62089143 (BuyingFn NaturalGas))
+
+(infoTransferred SKF-9015167 IranTurkmenistanGasDeal) 
+(senderOfInfo SKF-9015167 Iran) 
+(instance SKF-9015167 MultiDirectionalCommunication) 
+(senderOfInfo SKF-9015167 Turkmenistan) 
+
+(different Iran Turkmenistan) 
+(imports Turkmenistan NaturalGas) 
+(implies ?FORMULA 
+ (ist IranTurkeyGasDeal ?FORMULA)) 
+
+(seller SKF-2699614 Iran) 
+(buyer SKF-2699614 Turkey) 
+(instance SKF-2699614  (BuyingFn NaturalGas)) 
+
+(infoTransferred SKF-28501403 IranTurkeyGasDeal) 
+(senderOfInfo (SKF-28501403) Iran) 
+(instance SKF-28501403  MultiDirectionalCommunication) 
+(senderOfInfo SKF-28501403 Turkey) 
+
+(different Turkey Iran) 
+(imports Turkey NaturalGas) 
+
+(implies ?FORMULA 
+ (ist IranArmeniaGasDeal ?FORMULA)) 
+
+(seller SKF-47961364 Iran) 
+(buyer SKF-47961364 Armenia) 
+(instance SKF-47961364 (BuyingFn NaturalGas)) 
+
+(infoTransferred SKF-16520992 IranArmeniaGasDeal) 
+(senderOfInfo SKF-16520992 Iran) 
+(instance SKF-16520992  MultiDirectionalCommunication) 
+(senderOfInfo SKF-16520992 Armenia) 
+
+(different Iran Armenia) 
+(imports Armenia NaturalGas) 
+
+(query (findall ?COUNTRY
+  (thereExists ?COM 
+    (thereExists ?TOPIC 
+      (thereExists ?IM 
+        (thereExists ?BUYING 
+          (and 
+            (instance ?COM MultiDirectionalCommunication) 
+            (senderOfInfo ?COM Iran) 
+            (different Iran ?COUNTRY) 
+            (subclass ?IM NaturalGas) 
+            (senderOfInfo ?COM ?COUNTRY) 
+            (infoTransferred ?COM ?TOPIC) 
+            (imports ?COUNTRY ?IM) 
+            (ist ?TOPIC 
+              (seller ?BUYING Iran)) 
+            (ist ?TOPIC 
+              (instance ?BUYING (BuyingFn NaturalGas))) 
+            (ist ?TOPIC (buyer ?BUYING ?COUNTRY)))))))))
+
+(answer Pakistan)
+(answer Turkmenistan)
+(answer Turkey)
+(answer Armenia)
+
+(end_of_file)

@@ -1,0 +1,67 @@
+(note TQD67a)
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Kuwait) 
+
+(subrelation internationalOrg-MemberCountry groupMembers) 
+
+(implies 
+ (and 
+ (instance ?ORG InternationalAlliance) 
+ (groupMembers ?ORG ?MEMBER) 
+ (temporallySubsumes ?TIME 
+ (givesSupportToAgent ?AGT ?ORG ?SUPPORT))) 
+ (temporallySubsumes ?TIME 
+ (givesSupportToAgent ?AGT ?MEMBER ?SUPPORT))) 
+
+(instance GulfCooperationCouncil InternationalAlliance) 
+
+(groupMembers GulfCooperationCouncil Kuwait) 
+
+(temporallySubsumes (YearFn 1997) 
+ (givesSupportToAgent UnitedStatesOfAmerica GulfCooperationCouncil 
+ (MediumAmountFn MilitarySupport))) 
+
+(implies 
+ (and 
+ (laterThan ?X ?Y) 
+ (endingDate ?TMP ?Y)) 
+ (startsAfterEndingOf ?X ?TMP)) 
+
+(laterThan 
+ (YearFn 1997) 
+ (MonthFn February 
+ (YearFn 1991))) 
+
+(endingDate PersianGulfWar 
+ (MonthFn February 
+ (YearFn 1991))) 
+
+(temporallySubsumes (YearFn 1997) 
+ (givesSupportToAgent UnitedStatesOfAmerica Kuwait 
+ (MediumAmountFn MilitarySupport))) 
+
+(startsAfterEndingOf 
+ (YearFn 1997) PersianGulfWar) 
+
+(instance UnitedStatesOfAmerica Country) 
+
+(instance 
+ (MediumAmountFn MilitarySupport) MilitarySupport) 
+
+
+(query (findall ?COUNTRY
+ (thereExists ?SUPPORT 
+   (thereExists ?TIME 
+       (and 
+           (temporallySubsumes ?TIME 
+               (givesSupportToAgent ?COUNTRY Kuwait ?SUPPORT)) 
+           (instance ?SUPPORT MilitarySupport) 
+           (instance ?COUNTRY Country) 
+           (startsAfterEndingOf ?TIME PersianGulfWar)))) 
+))
+
+(answer UnitedStatesOfAmerica
+)
+
+(end_of_file)
+

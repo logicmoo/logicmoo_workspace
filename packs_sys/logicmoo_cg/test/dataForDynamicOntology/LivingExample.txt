@@ -1,0 +1,26 @@
+$$$$$ DEFINITIONS $$$$$$$$$$
+
+Human is [Object :super] -
+             -Life->[Life],
+             -Intelligence->[Intelligence]
+
+
+Vegetable is [Object :super] -
+             -Life->[Life],
+             -lack->[Intelligence]
+
+
+Sea_Vegetable is [Object :super] -
+             			-Life->[Life],
+             			-lack->[Intelligence],
+				-loc->[Sea]
+
+
+Living is [Life]<-Life-[Object:super]
+
+
+
+Person is [Object :super] -
+             -Life->[Life],
+             -Intelligence->[Intelligence]
+

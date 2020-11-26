@@ -1,0 +1,12 @@
+[submodule "web/FlintSparqlEditor"]
+	path = web/FlintSparqlEditor
+	url = https://github.com/TSO-Openup/FlintSparqlEditor.git
+[submodule "test/Tests/sparql-1.1"]
+	path = test/Tests/sparql-1.1
+	url = https://github.com/ClioPatria/sparql-1.1-test-cases.git
+[submodule "web/yasqe"]
+	path = web/yasqe
+	url = https://github.com/YASGUI/YASQE.git
+[submodule "web/yasr"]
+	path = web/yasr
+	url = https://github.com/YASGUI/YASR.git

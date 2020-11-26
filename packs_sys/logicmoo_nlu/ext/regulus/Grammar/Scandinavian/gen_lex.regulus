@@ -1,0 +1,68 @@
+
+macro(yes_features, [sem= @interjection_sem(yes), interjection_type=yn]).
+
+macro(no_features, [sem= @interjection_sem(no), interjection_type=yn]).
+
+macro(okay_features, [sem= @interjection_sem(okay), interjection_type=yn]).
+
+macro(correction_features, [sem= @interjection_sem(correction), interjection_type=correction, stype=(\(none))]).
+
+macro(thank_you_pre_features, [sem= @politeness_sem(thank_you), politeness_pos=pre, stype=dcl\/imp\/ynq\/whq\/ellipsis\/none]).
+
+macro(thank_you_post_features, [sem= @politeness_sem(thank_you), politeness_pos=post, stype=dcl\/imp\/ynq\/whq\/ellipsis]).
+
+macro(sorry_pre_features, [sem= @politeness_sem(sorry), politeness_pos=pre, stype=dcl\/imp\/ynq\/whq\/ellipsis]).
+
+macro(sorry_post_features, [sem= @politeness_sem(sorry), politeness_pos=post, stype=imp\/ynq\/whq\/none]).
+
+macro(salutation_features(Sem), [sem= @politeness_sem(Sem), politeness_pos=pre, stype=dcl\/imp\/ynq\/whq\/ellipsis\/none]).
+
+macro(how_about_features, [sem= @politeness_sem(how_about), politeness_pos=pre, stype=ellipsis]).
+
+macro(conj_intro_features, [sem= @politeness_sem(and), politeness_pos=pre, stype=imp\/ynq\/whq\/ellipsis]).
+
+macro(embedded_dcl_comp_features, [stype=embedded_dcl]).
+
+macro(embedded_q_features, [stype=embedded_q]).
+
+macro(modal_verb(Word, Sem),
+      ( v:[sem=Sem, subcat=nx0vvx1_modal, vform=finite, vp_vform=@infinitive, passive=_, subj_nform=_,
+	   @takes_no_pps, takes_advp=y] --> Word )).
+
+macro(aux_have_verb(Word, VForm, Agr, Sem),
+      ( v:[sem=Sem, agr=Agr, subcat=nx0vvx1_modal, vform=VForm, vp_vform=@perfect_vform, passive=_, subj_nform=_,
+           @takes_no_pps, takes_advp=y] --> Word )).
+
+macro(personal_pronoun(Surface, Sem, Agr, Case),
+      ( pronoun:[sem= @pronoun_sem(Sem), agr=Agr, wh=n, sem_n_type=agent, case=Case] --> Surface)).
+
+macro(non_personal_pronoun(Surface, Sem, Agr, Case),
+      ( pronoun:[sem= @pronoun_sem(Sem), agr=Agr, wh=n, sem_n_type= @thing_type, case=Case] --> Surface)).
+
+macro(personal_or_non_personal_pronoun(Surface, Sem, Agr, Case),
+      ( pronoun:[sem= @pronoun_sem(Sem), agr=Agr, wh=n, sem_n_type=_Any, case=Case] --> Surface)).
+
+macro(wh_personal_pronoun(Surface, Sem, Agr, Case),
+      ( pronoun:[sem= @pronoun_sem(Sem), agr=Agr, wh=y, sem_n_type=agent, case=Case] --> Surface)).
+
+macro(wh_non_personal_pronoun(Surface, Sem, Agr, Case),
+      ( pronoun:[sem= @pronoun_sem(Sem), agr=Agr, wh=y, sem_n_type=(\(agent)), case=Case] --> Surface)).
+
+macro(relative_pronoun(Surface, SemType, Case),
+      ( np:[sem= @rel_pron_sem, agr=3, wh=rel, takes_post_mods=n, @takes_no_pps, sem_n_type=SemType] --> Surface)).
+
+macro(reflexive_pronoun(Surface, Sem, Agr, SemType),
+      ( reflexive_pronoun:[sem= @pronoun_sem(Sem), agr=Agr, sem_n_type=SemType, case=nonsubj] --> Surface)).
+
+macro(impersonal_there_subject(Surface),
+      ( np:[sem=[], agr=3, wh=n, nform=there, takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GIn, pronoun=n] --> Surface )).
+
+macro(personal_quantified_pronoun(Surface, Agr, Sem),
+      ( np:[sem= @np_quantified_pronoun_sem(Sem), 
+	    agr=Agr, sem_n_type= agent, wh=n, gapsin=GIn, gapsout=GIn, pronoun=y, @takes_all_pps] --> Surface )).
+
+macro(not_personal_quantified_pronoun(Surface, Agr, Sem),
+      ( np:[sem= @np_quantified_pronoun_sem(Sem), 
+	    agr=Agr, sem_n_type= @thing_type, wh=n, gapsin=GIn, gapsout=GIn, pronoun=y, @takes_all_pps] --> Surface )).
+
+

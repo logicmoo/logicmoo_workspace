@@ -1,0 +1,4 @@
+If someone X is a customer then X is not an employee.
+If someone X is an employee then X is a customer.
+If someone X is not an employee then X is not a customer.
+John is an employee.

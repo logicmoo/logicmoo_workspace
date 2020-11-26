@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+  <title>SWISH: SWI-Prolog for SHaring</title>
+  </head>
+<body>
+<style>
+p.note { margin-left: 5%; position: relative }
+p.note span.glyphicon-hand-right {
+float: left; font-size: 150%; color: orange; padding-right: 0.2em;
+}
+</style>
+
+<h4>Table of Contents</h4>
+  <ul>
+    <li><a href="#help-basics">Basic operation</a></li>
+    <li><a href="#help-examples">Embedding examples in the program text</a></li>
+    <li><a href="#help-share">Save or share your program</a></li>
+    <li><a href="#help-include">Include other programs</a></li>
+    <li><a href="#help-csv">Download query results as CVS</a></li>
+    <li><a href="#help-preload">Preload SWISH with data</a></li>
+  </ul>
+
+<h2 id="help-basics">Basic operation</h2>
+<p>
+Prolog is about running a <i>query</i> against a <i>program</i>. The
+<i>query</i> goes into the bottom-right editor and the <i>program</i>
+into the left editor.  The program can be empty, executing queries
+against the <i>built-in</i> predicates of Prolog.  For example:
+
+<pre style="font-size:80%">
+?- format("Hello world!~n").</pre>
+
+<p>
+A query can be executed by hitting <code>RETURN</code> if the query is
+<em>complete</em> (i.e., ends in a full-stop) or by using the <a
+class="btn btn-xs btn-primary">Run!</a> button. At this moment, the
+following happens:
+
+<ol>
+  <li>The interface creates a <em>runner</em> in the top-right window
+      that controls the execution of the query.
+  <li>The runner collects the text from the top-left editor (if any)
+      and the query and sends this to the server, which creates a <a target="_blank"
+      href="http://www.swi-prolog.org/pldoc/man?section=pengines">Pengine</a>
+      (<i>Prolog Engine</i>).
+  <li>The Pengine compiles the program into a temporary private module.
+  <li>The Pengine assesses whether executing the query can compromise
+      the server.  If this fails, an error is displated.  See
+      the help topic <b>Caveats ...</b> for details.
+  <li>If the query is considered safe, it executes the query and
+      communicates with the <em>runner</em>
+      about the results using JSON messages.  The <em>runner</em>
+      interaction is described in the help topic <b>Runner ...</b>
+</ol>
+
+<p>
+Note that <b>you do not have to save your program to execute it</b>. If
+your are not satisfied with the answer to a query, you can simply edit
+the program and use <a class="btn btn-xs btn-primary">Run!</a> again.
+The new query is executed in a completely new environment. In
+particular, data that you asserted in a previous query is not available
+in the next.
+
+<p class="note">
+<span class="glyphicon glyphicon-hand-right"></span> Use
+<strong>Ctrl-Enter</strong> to insert a newline in a complete query
+
+<h2 id="help-examples">Embedding examples in the program text</h2>
+<p>
+If you include example goals inside comments as shown below,
+they will be used to populate the example menu and make the
+first goal show in the Goal input field.
+</p>
+<pre style="font-size:80%">
+/** &lt;examples&gt;
+
+?- loves(X, mia).
+?- jealous(X, Y).
+
+*/</pre>
+
+<h2 id="help-share">Save or share your program</h2>
+<p>
+The menu <b>File/Save ...</b> can be used to save your program.  There
+are several options:
+
+  <ul>
+    <li>By default, the program is saved to a randomly generated name
+        and may be searched by all users.  The <b>Public | Name</b> fields
+	can be used to hide the file and/or give it a name.
+    <li>The title is displayed in the search results and can help others
+        to guess what the file is about.
+    <li>You can fill in the author.  Future versions are likely to use
+        login for that.
+    <li>If an updated version of the file is changed, <b>Changes</b> may
+        be used to summarise the changes.
+    <li>Tags may be added to help people finding your code.  Type a comma
+        (,) to start a new tag.
+  </ul>
+
+<p>
+The <b>Info &amp; History ...</b> menu can be used to examine and use
+old versions of the program.
+
+<h2 id="help-include">Include other programs</h2>
+<p>
+If you know the name of a saved program (see above), you can reuse this
+program using Prolog's <b>include/1</b> predicate as illustrated below.
+
+<pre style="font-size:80%">
+:- include(clever).
+</pre>
+
+<p>
+You can also include a <em>specific version</em> of a program by including
+its <em>hash</em>.  You can find the hash of a specific version using
+<b>Info &amp; History ...</b>, selecting the desired version and opening
+it using the <em>play</em> button.  This will display the hash in the
+browser's address field.  Now, include this version using e.g.,
+
+<pre style="font-size:80%">
+:- include('23dacada6952ec6701da2dc9d4ebcf5c7b860380').
+</pre>
+
+<p>
+You can also use the <i>Alias(Name)</i> syntax to include files from
+the directories in the search path <i>Alias</i>.  By default this is
+enabled for <code>example</code>, so the following directive allow you
+to reuse the predicates from the <em>movies</em> example:
+
+<pre style="font-size:80%">
+:- include(example(movies)).
+</pre>
+
+<p>
+Using <b>File/Collaborate ...</b>, you create a
+<a target="_blank" href="https://togetherjs.com/">TogetherJS</a> session
+that provides shared editing, chat and voice communication.
+
+<h2 id="help-csv">Download query results as CSV</h2>
+<p>
+After running a query, the <strong>complete</strong> result set for the
+query can be downloaded as a CSV (Comma Separated Values) document by
+clicking the <span class="glyphicon glyphicon-download"></span> button
+at the top-right of a <em>runner</em> window or using the
+<strong>Download answers as CSV</strong> option from the <span
+class="glyphicon glyphicon-menu-hamburger"></span> button on
+<em>notebook query cells</em>. This causes a dialogue to appear that
+allows for specifying the columns, optionally the detailed result format
+(if the server provides multiple result formats), whether only
+<em>distinct</em> results should be returned and the maximum number of
+results to return. The latter is by default set to 10&nbsp;000 to avoid
+sending huge documents by accident. The field can be cleared to return
+all results.
+
+<h3>Download query results through an API</h3>
+<p>
+The CSV results can also be downloaded programmatically by directly
+approaching the Pengine API. Example client code is <a
+href="https://github.com/SWI-Prolog/swish/tree/master/client"
+target="_blank">available</a>.  For example, the `swish-ask.sh` client
+can be used with `bash` to download the results for a query.  The call
+below downloads a CSV file for the <em>sin</em> function.
+
+<pre style="font-size:80%">
+$ bash swish.ask.sh --server=http://swish.swi-prolog.org \
+		    X,Y \
+		    "between(0,90,X),Y is sin(X*pi/180)"
+</pre>
+
+<p>
+The script can ask queries against stored Prolog scripts by specifying
+the script on the commandline.  For example:
+
+<pre style="font-size:80%">
+$ bash swish.ask.sh --server=http://swish.swi-prolog.org \
+		    sin_table.pl X,Y "sin_table(X,Y)"
+</pre>
+
+<p>
+Prolog can exploit the Pengine API directly.  For example, the above can
+be called as:
+
+<pre style="font-size:80%">
+?- [library(pengines)].
+?- pengine_rpc('http://swish.swi-prolog.org',
+	       sin_table(X,Y),
+	       [ src_text(':- include(sin_table).'),
+		 application(swish)
+	       ]).
+X = 0,
+Y = 0.0 ;
+X = 1,
+Y = 0.01745240643728351 ;
+X = 2
+...
+</pre>
+
+
+<h2 id="help-preload">Preload SWISH with data</h2>
+<p>
+You can make <span style="color:darkblue">SWI</span><span style="color:maroon">SH</span>
+start with a loaded program using the URL <code>http://swish.swi-prolog.org/</code> and
+providing the parameters below.  The URL accepts both `GET` and `POST` requests.
+
+  <dl class="dl-horizontal">
+  <dt>code<dd>
+  Either the concrete code or a URL from which the code will be downloaded.
+  If <code>code</code> is a URL and the extension is <code>.swinb</code>,
+  the data is loaded into a SWISH notebook.
+  </dd>
+  <dt>background<dd>
+  As <code>code</code>, but this part of the code will not be visible in
+  the editor.
+  </dd>
+  <dt>examples<dd>
+  As the above described examples comment block.
+  </dd>
+  <dt>q<dd>
+  The initial query to load into the query window.  Note that the following
+  characters need to be escaped: '#', '&' and the space.
+  </dd>
+  </dl>
+
+<p>The URL below opens <span style="color:darkblue">SWI</span><span style="color:maroon">SH</span> on a file from GitHub with a default query.
+
+<pre>
+http://swish.swi-prolog.org/?code=https://github.com/SWI-Prolog/swipl-devel/raw/master/demo/likes.pl&amp;q=likes(sam,Food).</pre>
+<a target="_blank" href="http://swish.swi-prolog.org/?code=https://github.com/SWI-Prolog/swipl-devel/raw/master/demo/likes.pl&amp;q=likes(sam,Food).">Try it!</a> (launches a new tab)
+
+<p>The URL below opens <span style="color:darkblue">SWI</span><span style="color:maroon">SH</span> on notebook.
+
+<pre>
+http://localhost:3050/?code=https://raw.githubusercontent.com/SWI-Prolog/swish/master/examples/htmlcell.swinb</pre>
+<a target="_blank" href="http://localhost:3050/?code=https://raw.githubusercontent.com/SWI-Prolog/swish/master/examples/htmlcell.swinb">Try it!</a> (launches a new tab)
+
+</body>
+</html>

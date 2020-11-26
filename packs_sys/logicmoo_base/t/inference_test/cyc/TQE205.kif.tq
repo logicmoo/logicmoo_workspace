@@ -1,0 +1,45 @@
+(note TQE205)
+(infoTransferred IranAccusesTaliban 
+ (directingAgent TalibanTakeHostages Taliban)) 
+
+(instance IranAccusesTaliban Inform-CommunicationAct) 
+(senderOfInfo IranAccusesTaliban Iran) 
+(objectActedOn TalibanTakeHostages GroupOfIranianHostages-DiplomatsAndCitizens) 
+(directingAgent TalibanTakeHostages Taliban) 
+(instance TalibanTakeHostages TakingSomeoneHostage) 
+
+(instance GroupOfIranianHostages-DiplomatsAndCitizens 
+  (GroupFn 
+    (CitizensFn Iran))) 
+
+(instance Taliban IntelligentAgent) 
+(residenceOfOrganization Taliban Afghanistan) 
+
+(query (findall ?WHO
+  (exists 
+    (?TAKING) 
+    (exists 
+      (?AGENT) 
+      (exists 
+        (?HOSTAGES) 
+        (exists 
+          (?CLAIM) 
+          (and 
+            (instance ?TAKING TakingSomeoneHostage) 
+            (instance ?AGENT IntelligentAgent) 
+            (instance ?HOSTAGES (GroupFn (CitizensFn Iran))) 
+            (instance ?CLAIM Inform-CommunicationAct) 
+            (directingAgent ?TAKING ?AGENT) 
+            (objectActedOn ?TAKING ?HOSTAGES) 
+            (or 
+              (residenceOfOrganization ?AGENT Afghanistan) 
+              (residesInRegion ?AGENT Afghanistan)) 
+            (senderOfInfo ?CLAIM Iran) 
+            (infoTransferred ?CLAIM 
+              (directingAgent ?TAKING ?WHO)))))))))
+               
+(answer Taliban)
+
+(end_of_file)
+
+

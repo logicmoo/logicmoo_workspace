@@ -1,0 +1,2091 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 12 (filtered)">
+<title>A SWI-Prolog to Dotnet interface</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Helvetica;
+	panose-1:2 11 6 4 2 2 2 2 2 4;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+@font-face
+	{font-family:Constantia;
+	panose-1:2 3 6 2 5 3 6 3 3 3;}
+@font-face
+	{font-family:Verdana;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:24.0pt;
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:18.0pt;
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p
+	{margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+address
+	{mso-style-link:"HTML Address Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";
+	font-style:italic;}
+code
+	{font-family:"Courier New";}
+pre
+	{mso-style-link:"HTML Preformatted Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";}
+tt
+	{font-family:"Courier New";}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-link:"Balloon Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+span.HTMLAddressChar
+	{mso-style-name:"HTML Address Char";
+	mso-style-link:"HTML Address";
+	font-family:"Times New Roman","serif";
+	font-style:italic;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Constantia","serif";
+	color:#7C9163;
+	font-weight:bold;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Constantia","serif";
+	color:#A5B592;
+	font-weight:bold;}
+span.HTMLPreformattedChar
+	{mso-style-name:"HTML Preformatted Char";
+	mso-style-link:"HTML Preformatted";
+	font-family:Consolas;}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-link:"Balloon Text";
+	font-family:"Tahoma","sans-serif";}
+p.msochpdefault, li.msochpdefault, div.msochpdefault
+	{mso-style-name:msochpdefault;
+	margin-right:0in;
+	margin-left:0in;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+.MsoChpDefault
+	{font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+<meta name=Author content="Douglas R. Miles">
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=WordSection1>
+
+<h1><i><span style='font-family:"Verdana","sans-serif"'>SWICLI 1.x</span></i><span
+style='font-family:"Verdana","sans-serif"'> Prolog API overview</span></h1>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#Introduction">Introduction</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#JPL_types_Dotnet_types_as_seen_by">SWICLI types (.NET types, as
+     seen by Prolog)</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#representation_of_Dotnet_values...">representation of .NET values
+     and references within Prolog</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#repn_of_Dotnet_types_1_structured">representation of .NET types
+     within Prolog (1): <i>structured</i> notation</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#repn_of_Dotnet_types_2_descriptor">representation of .NET types
+     within Prolog (2): <i>descriptor</i> notation</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#repn_of_Dotnet_types_3_classname">representation of .NET types
+     within Prolog (3): classname notation</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#creating_instances_of_Dotnet_classes">creating instances of .NET
+     classes</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#calling_methods_of_Dotnet_objects_...">calling methods of .NET
+     objects or classes</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#fetching_field_values_of_Dotnet_objects">fetching field values of
+     .NET objects or classes</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#setting_field_values_of_Dotnet_objects.">setting field values of
+     .NET objects or classes</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#a_slightly_longer_example">a slightly longer example</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#jpl_new3">cli_new/3</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#jpl_call4">cli_call/4</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#jpl_set3">cli_set/3</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#jpl_get3">cli_get/3</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#exceptions">exceptions thrown by .NET</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#testing">testing</a></span></li>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><a
+     href="#to_do">to do</a></span></li>
+</ul>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name=Introduction></a><span style='font-family:"Verdana","sans-serif"'>Introduction</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>This is an
+overview of an interface which allows SWI-Prolog programs to dynamically create
+and manipulate .NET objects.</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>Here are some significant
+features of the interface and its implementation:</span><span style='font-family:
+"Verdana","sans-serif"'> </span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>it is
+     completely dynamic: no precompilation is required to manipulate any .NET
+     classes which can be found at run time, and any objects which can be
+     instantiated from them</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>it is
+     interoperable with <b><i>SWICLI</i></b>'s .NET API (which has evolved from
+     Uwe Lesta's <i>SwiPlCS</i>)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>it
+     requires .NET 2.0 and class libraries (although it doesn't depend on any
+     .NET 2-specific facilities, and originally was developed for use with both
+     1.0 thru 4.0 .NETs, I haven't tested it with 1.0 recently, and don't
+     support this)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>it
+     exploits the <i>Invocation API</i> of the <i>.NET P/Invoke Interface</i>:
+     this is a mandatory feature of any compliant .NET</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>it is
+     implemented with a fair amount of C# code and Prolog code in one module (<i>swicli.pl</i>)&nbsp;
+     (which I believe to be ISO Standard Prolog compliant and portable) and a
+     SWI-Prolog-specific foreign library (<i>swicli[32].dll</i> for Windows and
+     swicli[32].so *nix), implemented in ANSI C but making a lot of use of the
+     SWI-Prolog <i>Foreign Language Interface </i>Then uses Swicli.Library.dll
+     (Managed binary) that runs on both Mono and .NET runtimes.</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>the
+     foreign-language part has so far been tested on Windows XP, Windows7 and
+     Fedora Linux, but is believed to be readily portable to SWI-Prolog on
+     other platforms</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>as far as
+     is feasible, .NET data values and object references are represented within
+     Prolog canonically and without loss of information (minor exceptions: .NET
+     <i>float </i>and <i>double</i> values are both converted to Prolog <i>float
+     </i>values; .NET <i>byte</i>, <i>char</i>, <i>short</i>, <i>int</i> and <i>long</i>
+     values are all converted to Prolog <i>integer</i> values; the type
+     distinctions which are lost are normally of no significance)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>references
+     within Prolog to .NET objects:</span></li>
+ <ul style='margin-top:0in' type=circle>
+  <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>should
+      be treated as opaque handles</span></li>
+  <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>are
+      canonical (two references are ==/2 equal if-and-only-if they refer to the
+      <i>same object</i> within the .NET)</span></li>
+  <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>are
+      represented as structures containing a distinctive atom so as to exploit
+      SWI-Prolog's atom garbage collection: when an object reference is garbage-collected
+      in Prolog, the .NET garbage collector is informed, so there is sound and
+      complete overall garbage collection of .NET objects within the combined
+      Prolog+.NET system</span></li>
+ </ul>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>.NET
+     class methods can be called by name: <b><i>SWICLI</i></b> invisibly
+     fetches (and caches) essential details of method invocation, exploiting <i>.NET
+     Reflection</i> facilities</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>the API
+     is similar to that of XPCE: the four main interface calls are <i>cli_new</i>,
+     <i>cli_call, cli_set</i> and <i>cli_get</i> (there is a single <i>cli_free</i>,
+     though .NET's garbage collection is extended transparently into Prolog)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><i><span style='font-family:"Verdana","sans-serif"'>cli_call</span></i><span
+     style='font-family:"Verdana","sans-serif"'> resolves overloaded methods
+     automatically and dynamically, inferring the types of the call's actual
+     parameters, and identifying the most specific of the applicable method
+     implementations (similarly, <i>cli_new</i> resolves overloaded
+     constructors)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Prolog
+     code which uses the API calls is responsible for passing suitably-typed
+     values and references, since the P/INVOKE doesn't perform complete dynamic
+     type-checking, and nor currently does <b><i>SWICLI</i></b> (although the <i>overloaded
+     method resolution</i> mechanism could probably be adapted to do this)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Prolog
+     code can reason about the types of .NET data values, object references,
+     fields and methods: <b><i>SWICLI</i></b> supports a canonical
+     representation of all .NET types as structured terms (e.g. </span><tt><b><span
+     style='font-size:10.0pt;font-family:"Verdana","sans-serif"'>array(array(byte))</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'>) and also as atomic .NET
+     signatures</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>the
+     Prolog-calls-.NET (mine) and .NET-calls-Prolog (Fred's) parts of <b><i>SWICLI</i></b>
+     are largely independent; mine concentrates on representing all .NET data
+     values and objects within Prolog, and supporting manipulation of objects;
+     Fred's concentrates on representing any Prolog term within .NET, and
+     supporting the calling of goals within Prolog and the retrieving of
+     results back into .NET</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>when
+     called from Prolog, <i>void</i> methods return a <i>void</i> value (which
+     is distinct from all other <b><i>SWICLI</i></b> values and references)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>it uses </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@/1</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> to construct representations
+     of certain .NET values; if&nbsp; </span><tt><b><span style='font-size:
+     13.5pt;font-family:"Verdana","sans-serif"'>@/1</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> is defined as a prefix
+     operator (as used by XPCE), then you can write </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@false</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@true</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@null</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> etc. in your source code;
+     otherwise (and for portability) you'll have to write e.g. </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@(true)</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> etc.</span></li>
+</ul>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="JPL_types_Dotnet_types_as_seen_by"></a><span style='font-family:
+"Verdana","sans-serif"'>SWICLI types (.NET types, as seen by Prolog)</span></h2>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>All .NET
+values and object references which are passed between Prolog engines and .NET
+VMs via <b><i>SWICLI</i></b>'s Prolog API are seen as instances of types within
+this simplified <b><i>SWICLI</i></b> type system:<br>
+<br>
+a <b><i>datum</i></b>&nbsp;&nbsp; (this term is introduced, out of necessity,
+to refer jointly to <i>values </i>and <i>refs</i>)</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>is a <b><i>value</i></b>&nbsp;&nbsp;&nbsp;
+(values are copied between Prolog and the .NET)</span></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>is a <b><i>boolean</i></b></span></p>
+
+</blockquote>
+
+</blockquote>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a <b><i>char</i></b></span></p>
+
+</blockquote>
+
+</blockquote>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a <b><i>long</i></b>,
+<b><i>int</i></b>, <b><i>short</i></b> or <b><i>byte</i></b></span></p>
+
+</blockquote>
+
+</blockquote>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a <b><i>double</i></b>
+or <b><i>float</i></b></span></p>
+
+</blockquote>
+
+</blockquote>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a <b><i>string</i></b>&nbsp;&nbsp;
+(an instance of <i>System.String</i>)</span></p>
+
+</blockquote>
+
+</blockquote>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a <b><i>void</i></b>&nbsp;&nbsp;&nbsp;&nbsp;
+(an artificial value returned by calls to .NET void methods)</span></p>
+
+</blockquote>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a <b><i>ref</i></b></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>is <b><i>null</i></b></span></p>
+
+</blockquote>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or an <b><i>object</i></b>&nbsp;&nbsp;&nbsp;
+(held within the .NET, and represented in Prolog by a canonical reference)</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>is an <b><i>array</i></b></span></p>
+
+</blockquote>
+
+</blockquote>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a <b><i>class
+instance</i></b> (other than of <i>System.String</i>)</span></p>
+
+</blockquote>
+
+</blockquote>
+
+</blockquote>
+
+</blockquote>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="representation_of_Dotnet_values..."></a><span style='font-family:
+"Verdana","sans-serif"'>representation of .NET values and references within
+Prolog</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Instances
+of <b><i>SWICLI</i></b> types are represented within Prolog as follows:</span></p>
+
+<p class=MsoNormal><b><i><span style='font-family:"Verdana","sans-serif"'>boolean</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> has two values, represented by </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@(true)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> and </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@(false)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><b><i><span style='font-family:"Verdana","sans-serif"'>char</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> values are represented by
+corresponding Prolog <i>integers</i></span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<p><b><i><span style='font-family:"Verdana","sans-serif"'>int</span></i></b><span
+style='font-family:"Verdana","sans-serif"'>, <b><i>short</i></b> and <b><i>byte</i></b>
+values are represented by corresponding Prolog <i>integers</i></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><b><i><span style='font-family:"Verdana","sans-serif"'>long</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> values are represented as Prolog <i>integers</i>
+if possible (32-bit in current SWI-Prolog), else as </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>jlong(Hi,Lo)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> where </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Hi</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is an <i>integer</i> corresponding
+to the top32 bits of the long, and </span><tt><b><span style='font-size:13.5pt;
+font-family:"Verdana","sans-serif"'>Lo</span></b></tt><span style='font-family:
+"Verdana","sans-serif"'> similarly represents the lower 32 bits</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><b><i><span style='font-family:"Verdana","sans-serif"'>double</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> and <b><i>float</i></b> values are
+represented as Prolog floats (which are equivalent to .NET doubles) (there may
+be minor rounding, normalisation or loss-of-precision issues when a .NET float
+is widened to a Prolog float then narrowed back again, but what the heck)</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><b><i><span style='font-family:"Verdana","sans-serif"'>string</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> values (immutable instances of <i>System.Stri</i>ng)
+are represented as Prolog <i>atoms</i> (in UTF-8 encoding)</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><b><i><span style='font-family:"Verdana","sans-serif"'>null</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> has only one value, represented as </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@(null)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><b><i><span style='font-family:"Verdana","sans-serif"'>void</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> has only one value, represented as </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@(void)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><b><i><span style='font-family:"Verdana","sans-serif"'>array</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> and <b><i>class instance</i></b>
+references are currently represented as </span><tt><b><span style='font-size:
+13.5pt;font-family:"Verdana","sans-serif"'>@(Tag)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>, where Tag ia an <i>atom</i> whose
+name encodes a P/INVOKE global reference value; this may change, but won't
+affect Prolog programs which respect the opacity of references</span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="repn_of_Dotnet_types_1_structured"></a><span style='font-family:
+"Verdana","sans-serif"'>Representation of .NET types within Prolog (1): <i>structured</i>
+notation</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>The <b><i>SWICLI
+Prolog API</i></b> allows Prolog applications to inspect, manipulate, and
+reason about the types of .NET values, references, methods etc., and this
+section describes how these types themselves (as opposed to instances thereof)
+are represented.&nbsp; Predicates which pass these type representations include
+</span><b><span style='font-family:"Verdana","sans-serif"'><a
+href="api.html#jpl_class_to_type/2">cli_type_to_type/2</a>, <a
+href="api.html#jpl_classname_to_type/2">cli_typename_to_type/2</a>, <a
+href="api.html#jpl_datum_to_type/2">cli_datum_to_type/2</a>, <a
+href="api.html#jpl_is_object_type/1">cli_is_object_type/1</a>, <a
+href="api.html#jpl_is_type/1">cli_is_type/1</a>, </span></b><span
+style='font-family:"Verdana","sans-serif"'><a
+href="api.html#jpl_object_to_type/2"><b>cli_object_to_type/2</b></a><b>, <a
+href="api.html#jpl_primitive_type/1">cli_primitive_type/1</a>, <a
+href="api.html#jpl_ref_to_type/2">cli_ref_to_type/2</a>, <a
+href="api.html#jpl_type_to_class/2">cli_type_to_type/2</a>. <a
+href="api.html#jpl_type_to_classname/2">cli_type_to_typename/2</a>.</b> </span></p>
+
+<p class=MsoNormal><b><i><span style='font-family:"Verdana","sans-serif"'>void</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> is represented as </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>void</span></b></tt></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><b><i><span style='font-family:"Verdana","sans-serif"'>null</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> is represented as </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>null</span></b></tt></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>the
+primitive types are represented as </span><tt><b><span style='font-size:13.5pt;
+font-family:"Verdana","sans-serif"'>boolean</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>char</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>byte</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>short</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>int</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>long</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>float</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>double</span></b></tt></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><b><i><span style='font-family:"Verdana","sans-serif"'>classes</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> are represented as </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>class(</span></b></tt><i><span
+style='font-family:"Verdana","sans-serif"'>package_parts</span></i><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>,</span></b></tt><i><span
+style='font-family:"Verdana","sans-serif"'>classname_parts</span></i><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>e.g.&nbsp; </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>class(['System','Forms'],['TextBox'])</span></b></tt></p>
+
+<p class=MsoNormal><b><i><span style='font-family:"Verdana","sans-serif"'>array</span></i></b><span
+style='font-family:"Verdana","sans-serif"'> types are represented as </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>array(</span></b></tt><i><span
+style='font-family:"Verdana","sans-serif"'>type</span></i><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>e.g.&nbsp; </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>array(boolean)</span></b></tt></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>e.g.&nbsp; </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>array(class([System],['String'])</span></b></tt></p>
+
+</blockquote>
+
+</blockquote>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>This <i>structured
+</i>notation for .NET types is designed to be convenient for composition and
+decomposition by matching (unification).</span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="repn_of_Dotnet_types_2_descriptor"></a><span style='font-family:
+"Verdana","sans-serif"'>representation of .NET types within Prolog (2): <i>descriptor</i>
+notation</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>The <i>descriptor</i>
+notation for .NET types is one of two textual notations employed by the .NET
+and the .NET class libraries; <b><i>SWICLI</i></b> (necessarily) supports both
+(and supports conversion between all three representations).</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>Examples:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'bool'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes <b><i>boolean</i></b></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'byte(4)'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes <b><i>System.Byte</i></b></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'char'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes <b><i>System.Character</i></b></span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'short'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes <b><i>short</i></b></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'int'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes <b><i>int32</i></b></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'long'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes <b><i>long</i></b></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'single'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes <b><i>float</i></b></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'double'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes <b><i>double</i></b></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'System.DateTime'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> (for example) deno</span><span
+style='font-family:"Verdana","sans-serif"'>tes the System.<i>Datetime</i></span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'</span></b></tt><i><span
+style='font-family:"Verdana","sans-serif"'>type[]</span></i><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes an <b><i>array</i></b> of <i>type</i></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'(</span></b></tt><i><span
+style='font-family:"Verdana","sans-serif"'>argument_types</span></i><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>)</span></b></tt><i><span
+style='font-family:"Verdana","sans-serif"'>return_type</span></i><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes the type of a method</span></p>
+
+</blockquote>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="repn_of_Dotnet_types_3_classname"></a><span style='font-family:
+"Verdana","sans-serif"'>representation of .NET types within Prolog (3): <i>classname</i>
+notation</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>The <i>classname</i>
+notation for .NET types is the other textual notation employed by the .NET and
+the .NET class libraries.&nbsp; It is a (seemingly unnecessary) variation on
+the <i>descriptor</i> notation, used by a few P/INVOKE routines.&nbsp; It has
+the slight advantage that, in the case of simple class types only, it resembles
+the .NET source text notation for classes.&nbsp; This representation is
+supported only because certain P/INVOKE functions use it; it is used within <b><i>SWICLI</i></b>'s
+implementation of <b>cli_call/4</b> etc.&nbsp; You may encounter this notation
+when tracing <b><i>SWICLI</i></b> activity, but otherwise you need not know
+about it.</span><span style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>Examples:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'System.Array'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes the .NET class </span><tt><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>System.Array</span></tt></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'array(bool)'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes an <b><i>array</i></b> of <b><i>boolean</i></b></span></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'System.String[]'</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes an <b><i>array</i></b> of <b><i>string</i></b></span></p>
+
+</blockquote>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h1><span style='font-family:"Verdana","sans-serif"'>Using the <i>SWICLI 1.x</i>
+Prolog API</span></h1>
+
+<h2><a name="creating_instances_of_Dotnet_classes"></a><span style='font-family:
+"Verdana","sans-serif"'>creating instances of .NET classes</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>To create
+an instance of a .NET class from within Prolog, call <b>cli_new(+Class,+Params,-Ref)</b>
+with a classname, a list of actual parameters for the constructor, and a
+variable to be bound to the new reference, e.g.</span><span style='font-family:
+"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_new(
+'System.Forms.Frame', ['frame with dialog'], F)</span></b></tt></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>which binds
+<b>F</b> to a new object reference, e.g.</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>@('C#0008272420')</span></b></tt></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>(not that
+the details of this structure are of any necessary concern to the Prolog
+programmer or to the applications she writes).<br>
+NB for convenience, this predicate is overloaded: <b>Class</b> can also be a
+class type in <i>structured </i>notation, e.g. </span><code><span
+style='font-size:10.0pt;font-family:"Verdana","sans-serif"'>array(boolean)</span></code><span
+style='font-family:"Verdana","sans-serif"'>.</span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="calling_methods_of_Dotnet_objects_..."></a><span style='font-family:
+"Verdana","sans-serif"'>calling methods of .NET objects or classes</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>The object
+reference generated by the <b>cli_new/3</b> call (above) can be passed to other
+<b><i>SWICLI</i></b> API predicates such as </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_call(
++Ref, +Method, +Params, -Result)</span></b></tt></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span><span
+style='font-family:"Verdana","sans-serif"'>e.g.</span><span style='font-family:
+"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_call(
+F, setVisible, [@(true)], _)</span></b></tt></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>which calls
+the <b>setVisible</b> method of the object to which <b>F</b> refers,
+effectively passing it the .NET value <i>true.</i></span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>(This call should display
+the new <b>JFrame</b> in the top left corner of the desktop.)</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>Note the anonymous variable
+passed as the fourth argument to <b>cli_call/4.&nbsp;</b> A variable in this
+position receives the result of the method call: either a value or a reference.&nbsp;
+Since </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>SetVisible()</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is a void method, the call returns
+the (artificial) reference </span><tt><b><span style='font-size:13.5pt;
+font-family:"Verdana","sans-serif"'>@(void)</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>.</span><span style='font-family:
+"Verdana","sans-serif"'> </span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>Some may prefer to code
+this call thus:</span><span style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_call(
+F, setVisible, [@true], @void)</span></b></tt></p>
+
+</blockquote>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>which
+documents the programmer's understanding that this is a <i>void </i>method (and
+fails if it isn't :-).<br>
+</span><span style='font-family:"Verdana","sans-serif"'>&nbsp;<br>
+</span><span style='font-family:"Verdana","sans-serif"'>If the </span><b><span
+style='font-family:"Verdana","sans-serif"'>+Ref</span></b><span
+style='font-family:"Verdana","sans-serif"'> argument represents a class, then
+the named static method of that class&nbsp; is called.</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="fetching_field_values_of_Dotnet_objects."></a><span
+style='font-family:"Verdana","sans-serif"'>Fetching field and property values
+of .NET objects or classes</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>The <b>cli_get/3</b>
+API predicate can retrieve the value of an instance field or a static field,
+e.g.</span><span style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>   
+cli_get( 'System.Color', pink, Pink)</span></b></tt></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>which binds
+the Prolog variable </span><tt><b><span style='font-size:13.5pt;font-family:
+"Verdana","sans-serif"'>Pink</span></b></tt><span style='font-family:"Verdana","sans-serif"'>
+to a reference to the predefined<b> System.Drawing.Color</b>
+&quot;constant&quot; which is held in the static final <b>.pink</b> field of
+the <b>System.Drawing.Color</b> class.</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>More generally, <b>cli_get/3</b>
+has the following interface:</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_get(
++Class_or_Object, +Field, -Datum)</span></b></tt></p>
+
+</blockquote>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>If the
+first argument represents a class, then a static field of that class with
+FieldName is accessed.</span><span style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="setting_field_values_of_Dotnet_objects.."></a><span
+style='font-family:"Verdana","sans-serif"'>Setting field or properties values
+of .NET objects or classes</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Object and
+class fields can be set (i.e. have values or references assigned to them) by
+the <b>cli_set/3</b> API procedure, which has the following interface:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_set(
++Class_or_Object, +Field, +Datum)</span></b></tt></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>where <b>Datum</b>
+must be a value or reference of a type suitable for assignment to the named
+field of the class or object.</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="a_slightly_longer_example"></a><span style='font-family:"Verdana","sans-serif"'>a
+slightly longer example</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>This code
+fragment</span><span style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<pre><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; findall(</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ar,</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp;&nbsp; current_prolog_flag( N, V),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; term_to_atom( V, Va),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cli_new( '[LSystem.String;', [N,Va], Ar)</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ars</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; ),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_new( '[[LSystem.String;', Ars, Ac),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_datums_to_array( [name,value], Ah),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_new( 'System.Forms.Frame', ['current_prolog_flag'], F),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_call( F, getContentPane, [], CP),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_new( 'System.Forms.Table', [Ac,Ah], T),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_new( 'System.Forms.ScrollPane', [T], SP),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_call( CP, add, [SP,'Center'], _),</span></b></tt></pre><pre><tt><b><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_call( F, setSize, [600,400], _),!.</span></b></tt></pre><pre><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;</span></pre>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>builds an
+array of arrays of strings containing the names and values of the current
+SWI-Prolog &quot;flags&quot;, and displays it in a JTable within a ScrollPane
+within a JFrame:</span><span style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>In addition
+to <b><i>SWICLI</i></b> API calls, this code calls <b>cli_datums_to_array/2</b>,
+a utility which converts any list of valid representations of .NET values (or
+objects) into a new .NET array, whose base type is the most specialised type of
+which all list members are instances, and which is defined thus:</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<pre><tt><b><span style='font-size:12.0pt;font-family:"Verdana","sans-serif"'>cli_datums_to_array( Ds, A) :-</span></b></tt></pre><pre><tt><b><span
+style='font-size:12.0pt;font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; ground( Ds),</span></b></tt></pre><pre><tt><b><span
+style='font-size:12.0pt;font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_datums_to_most_specific_common_ancestor_type( Ds, T),</span></b></tt></pre><pre><tt><b><span
+style='font-size:12.0pt;font-family:"Verdana","sans-serif"'>&nbsp;&nbsp;&nbsp; cli_new( array(T), Ds, A).</span></b></tt></pre><pre><span
+style='font-family:"Verdana","sans-serif"'>&nbsp;</span></pre>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Having
+found the &quot;most specific common ancestor type&quot; (my phrase :-), a new
+array of this type is created, whose elements are initialised to the successive
+members of the list of datums.</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>This illustrates another
+mode of operation of <b>cli_new/3</b>:</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_new(
++ArrayType, +InitialValues, -ArrayRef)</span></b></tt></p>
+
+</blockquote>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>See the
+relevant Appendix for fuller details of the API procedures.</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><span style='font-family:"Verdana","sans-serif"'>Don't forget the
+possibility of writing and manipulating new .NET classes to serve your Prolog
+applications: this interface is not designed to make .NET programming redundant
+:-)</span><span style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><br>
+</span><a name="jpl_new3"></a><tt><b><span style='font-size:18.0pt;font-family:
+"Verdana","sans-serif"'>cli_new( +X, +Argz, -V) :-</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> can be:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a
+     suitable <i>type</i></span></li>
+ <ul style='margin-top:0in' type=circle>
+  <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>i.e. any
+      </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>class(_,_)</span></b></tt><span
+      style='font-family:"Verdana","sans-serif"'>, </span><tt><b><span
+      style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>array(_)</span></b></tt><span
+      style='font-family:"Verdana","sans-serif"'> or primitive type (e.g. </span><tt><b><span
+      style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>byte</span></b></tt><span
+      style='font-family:"Verdana","sans-serif"'> but not </span><tt><b><span
+      style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>void</span></b></tt><span
+      style='font-family:"Verdana","sans-serif"'>)</span></li>
+ </ul>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>an atomic
+     <i>classname</i></span></li>
+ <ul style='margin-top:0in' type=circle>
+  <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>e.g. </span><tt><b><span
+      style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'System.String'</span></b></tt></li>
+  <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>e.g. </span><tt><b><span
+      style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'LSystem.String;'</span></b></tt><span
+      style='font-family:"Verdana","sans-serif"'>&nbsp;&nbsp; (a redundant but
+      legitimate form)</span></li>
+ </ul>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>an atomic
+     <i>descriptor</i></span></li>
+ <ul style='margin-top:0in' type=circle>
+  <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>e.g. </span><tt><b><span
+      style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>'[I'</span></b></tt></li>
+ </ul>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a class
+     object</span></li>
+ <ul style='margin-top:0in' type=circle>
+  <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>i.e. an
+      object whose type is&nbsp; </span><tt><b><span style='font-size:13.5pt;
+      font-family:"Verdana","sans-serif"'>class([.NET,lang],['Class'])</span></b></tt></li>
+ </ul>
+</ul>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>if </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes a primitive type and </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Argz</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is castable to a value of that
+type, then </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is that value (a pointless mode of
+operation, but somehow complete...)</span></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>if </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes an array type and </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Argz</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is a non-negative integer, then </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is a new array of that many
+elements, initialised to the appropriate default value</span></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>if </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes an array type and </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Argz</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is a list of datums, each of which
+is (independently) castable to the array element type, then </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is a new array of as many elements
+as </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Argz</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> has members, initialised to the
+results of casting the respective members of </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Argz</span></b></tt></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>if </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> denotes a non-array object type and
+</span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Argz</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is a list of datums, then </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> is the result of an invocation of
+that type's most specifically-typed constructor to whose respective parameters
+the members of </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Argz</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> are assignable</span></p>
+
+</blockquote>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><br>
+</span><a name="jpl_call4"></a><tt><b><span style='font-size:18.0pt;font-family:
+"Verdana","sans-serif"'>cli_call( +X, +Method, +Args, -R) :-</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> can be:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>·&nbsp; </span><span
+style='font-family:"Verdana","sans-serif"'>a <i>type</i>, <i>class object</i>
+or <i>classname</i> (for static methods of the denoted class, or for static or
+instance methods of System.Class)</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>·&nbsp; </span><span
+style='font-family:"Verdana","sans-serif"'>a class instance or array (for
+static or instance methods)</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+</blockquote>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Method</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> can be:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>·&nbsp; </span><span
+style='font-family:"Verdana","sans-serif"'>an atomic method name (if this name
+is ambiguous, as a result of method overloading, then it will be resolved by
+considering the types of <b>Args</b>, as far as they can be inferred)</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>·&nbsp; </span><span
+style='font-family:"Verdana","sans-serif"'>an integral method index (untested:
+for static overload resolution)</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+</blockquote>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>·&nbsp; </span><span
+style='font-family:"Verdana","sans-serif"'>a </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>methodID/1</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> structure (ditto)</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+</blockquote>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Args</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> must be</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a proper
+     list (possibly empty) of ground arguments</span></li>
+</ul>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Finally, an
+attempt will be made to unify </span><tt><b><span style='font-size:13.5pt;
+font-family:"Verdana","sans-serif"'>R</span></b></tt><span style='font-family:
+"Verdana","sans-serif"'> with the returned result.</span></p>
+
+</blockquote>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><br>
+</span><a name="jpl_set3"></a><tt><b><span style='font-size:18.0pt;font-family:
+"Verdana","sans-serif"'>cli_set( +X, +Field, +V) :-</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>basically,
+sets the </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Fspec</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'>-th field of object </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> to value </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> can be:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a <i>class
+     object</i>, a <i>classname</i>, or an (object or array) <i>type</i> (for
+     static fields, or System.Class fields)</span></li>
+</ul>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a <i>class
+     instance</i> (for non-static fields)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>an <i>array</i>
+     (for indexed element or subrange assignment)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>but not a
+     <i>string</i> (no fields to retrieve)</span></li>
+</ul>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Field</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> can be:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>an atomic
+     field name (overloading will be resolved dynamically, by considering the
+     inferred type of </span><b><span style='font-family:"Verdana","sans-serif"'>V</span></b><span
+     style='font-family:"Verdana","sans-serif"'>)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>an
+     integral field index (static resolution: not tried yet)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>fieldID/1</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> (static resolution: not tried
+     yet)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a
+     variable (field names, or array indices, are generated)(?!)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>an array
+     index </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>I</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> (</span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> must be an array object: </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X[I]</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> is assigned </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'>)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a pair </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>I-J</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> of integers (</span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>J</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> can be a variable) (</span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> must be an array object, </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> must be a list of values: </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X[I-J]</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> will be assigned </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'>)</span></li>
+</ul>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> must be ground (although one day we
+may pass variables to <b><i>SWICLI</i></b>?!)</span></p>
+
+</blockquote>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'><br>
+</span><a name="jpl_get3"></a><tt><b><span style='font-size:18.0pt;font-family:
+"Verdana","sans-serif"'>cli_get( +X, +Field, -V) :-</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>X</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> can be:</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a <i>class
+     object</i>, a <i>classname</i>, or an (object or array) <i>type</i> (for
+     static fields, or System.Class fields)</span></li>
+</ul>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>a <i>class
+     instance</i> (for non-static fields)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>an <i>array</i>
+     (for the 'length' pseudo field, or for indexed element retrieval)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>but not a
+     String (clashes with classname; anyway, System.String has no fields to
+     retrieve)</span></li>
+</ul>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>Field</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> can be</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>an atomic
+     field name</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or an
+     integral field index (these are a secret :-)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>fieldID/1</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> (not for general consumption
+     :-)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or an
+     integral array index (high-bound checking is done by .NET, maybe throwing
+     an exception)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a
+     variable (field names, or array indices, are generated)</span></li>
+</ul>
+
+</blockquote>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>or a pair
+     </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>I-J</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> of integers or variables
+     (array subranges are generated) (relational or what?!)</span></li>
+</ul>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Immediately
+before <b>cli_get/4</b> returns, an attempt will be made to unify </span><tt><b><span
+style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>V</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> with the internally computed
+result.</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+</blockquote>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name=exceptions></a><span style='font-family:"Verdana","sans-serif"'>exceptions
+thrown by .NET</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Uncaught
+exceptions thrown by the .NET in the course of handling a <b><i>SWICLI</i> 3.x
+Prolog API</b> call are mapped onto Standard Prolog exceptions, e.g.</span><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<pre><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_new( 'Systen.DateTime', [yesterday], D)</span></b></tt></pre>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>raises the
+Prolog exception</span><span style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_exception('System.IllegalArgumentException',
+@'C#0008408972')</span></b></tt></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>because, as
+the exception suggests, <b>yesterday </b>is not a valid constructor argument.</span><span
+style='font-family:"Verdana","sans-serif"'><br>
+&nbsp;<br>
+</span><span style='font-family:"Verdana","sans-serif"'>.NET exceptions are
+always returned as Prolog exceptions with this structure:</span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>cli_exception(
+<i>classname</i>, <i>reference_to_exception_object</i>)</span></b></tt></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>&nbsp;</span></b></tt></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><tt><b><span style='font-size:18.0pt;font-family:"Verdana","sans-serif"'>cli_add_event_handler(
++Class_or_Object, +EventName, +PredicateIndicator) :-</span></b></tt><span
+style='font-family:"Verdana","sans-serif"'> </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>ADDING A
+NEW EVENT HOOK</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>We already
+at least know that the object we want to hook is found via our call to</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>?-
+botget(['Self'],AM).</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>So we ask
+for the e/7 (event handlers of the members)</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>?-
+botget(['Self'],AM),cli_memb(AM,e(A,B,C,D,E,F,G)). </span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'> Press ;;;;
+a few times until you find the event Name you need (in the B var)</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>A =
+6,                                          <i>% index number</i></span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>B <span
+style='color:#548DD4'>= </span><b><span style='color:red'>'IM',</span></b><span
+style='color:red'>                                       </span><i>% event name</i></span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>C =
+'System.EventHandler'('InstantMessageEventArgs'),   <i>% the delegation type</i></span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>D <span
+style='color:#548DD4'>= </span><b><span style='color:red'>['Object',
+'InstantMessageEventArgs'],</span></b>      <i>% the parameter types (2)</i></span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>E =
+[],                                         <i>% the generic paramters</i></span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>F = decl(<b><span
+style='color:red'>static(false)</span></b><span style='color:black'>,</span>
+'AgentManager'),        <i>% the static/non static-ness.. the declaring class</i></span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>G =
+access_pafv(true, false, false, false)      <i>% the PAFV bits</i></span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>So reading
+the parameter types  &quot;['Object', 'InstantMessageEventArgs']&quot; lets you
+know the predicate needs at least two arguments</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>And &quot;F
+= decl(static(false), 'AgentManager')&quot; says add on extra argument at start
+for Origin</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>  <b>handle_im(Origin,Obj,IM)</b></span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>So
+registering the event is done:</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>?-
+botget(['Self'],AM), cli_add_event_handler(AM,'IM',handle_im(_Origin,_Object,_InstantMessageEventArgs))</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>To target a
+predicate such as:     handle_im(Origin,Obj,IM):-writeq(handle_im(Origin,Obj,IM)),nl.</span></p>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><a name=testing></a><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<h2><a name="to_do"></a><span style='font-size:12.0pt;font-family:"Verdana","sans-serif";
+font-weight:normal'>We have 3 different ways to denote Types in the system:<br>
+<br>
+</span><span style='font-size:12.0pt;font-family:"Verdana","sans-serif"'>Type:</span><span
+style='font-size:12.0pt;font-family:"Verdana","sans-serif";font-weight:normal'>
+ </span><i><span style='font-size:12.0pt;font-family:"Verdana","sans-serif";
+font-weight:normal'>SWICLI</span></i><span style='font-size:12.0pt;font-family:
+"Verdana","sans-serif";font-weight:normal'> type, e.g. </span><code><span
+style='font-size:12.0pt;font-family:"Verdana","sans-serif";font-weight:normal'>char,
+byte</span></code><span style='font-size:12.0pt;font-family:"Verdana","sans-serif";
+font-weight:normal'>, </span><code><span style='font-size:12.0pt;font-family:
+"Verdana","sans-serif";font-weight:normal'>class(['System'],['String'])</span></code><span
+style='font-size:12.0pt;font-family:"Verdana","sans-serif";font-weight:normal'>,
+</span><code><span style='font-size:12.0pt;font-family:"Verdana","sans-serif";
+font-weight:normal'>boolean</span></code><span style='font-size:12.0pt;
+font-family:"Verdana","sans-serif";font-weight:normal'>, array(boolean)</span></h2>
+
+<h2><span style='font-size:12.0pt;font-family:"Verdana","sans-serif"'>Typeref:</span><span
+style='font-size:12.0pt;font-family:"Verdana","sans-serif";font-weight:normal'>
+ The @('C#345345345')  that points to </span><span style='font-size:12.0pt;
+font-family:"Verdana","sans-serif";font-weight:normal'>an instance of <i>System.Type</i></span></h2>
+
+<h2><span style='font-size:12.0pt;font-family:"Verdana","sans-serif"'>Typename:</span><span
+style='font-size:12.0pt;font-family:"Verdana","sans-serif";font-weight:normal'>
+ The 'System.Char', 'System.Boolean','System.Boolean[]'</span></h2>
+
+<h2><br>
+Conversions between the three</h2>
+
+<p class=MsoNormal><a name="jpl_class_to_classname"></a><b>cli_typeref _to_typename</b>(
+<var>+Class, -Classname</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Class</var> must be a <b><i>SWICLI</i></b>
+reference to a .NET class object (i.e. an instance of <i>System.Type</i>); <var>Classname</var>
+is its canonical dotted name, e.g. <code><span style='font-size:10.0pt'>'System.Collections.Date'</span></code>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_class_to_type"></a><b>cli_typeref_to_type</b>( <var>+Class,
+-Type)</var></p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Class</var> must be a <b><i>SWICLI</i></b>
+reference to a .NET class object (i.e. an instance of <i>System.Type</i>); <var>Type</var>
+is its <b><i>SWICLI</i></b> type, e.g. <code><span style='font-size:10.0pt'>class(['System'],['DateTime'])</span></code>
+or <code><span style='font-size:10.0pt'>array(double)</span></code>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_classname_to_class"></a><b>cli_typename_to_typeref</b>(
+<var>+Classname, -Class</var>)</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Classname</var> must be a
+canonical dotted name (an atom) of a .NET class, e.g. <code><span
+style='font-size:10.0pt'>'System.Date'</span></code>; <var>Class</var> is a <b><i>SWICLI</i></b>
+reference to a corresponding .NET class object (i.e. an instance of System.Type).<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_classname_to_type"></a><b>cli_typename_to_type</b>(
+<var>+Classname, -Type</var>)</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Classname</var> must be a
+canonical dotted name (an atom) of a .NET class, e.g. <code><span
+style='font-size:10.0pt'>'System.Collections.Date'</span></code>; <var>Type</var>
+is its <b><i>SWICLI</i></b> type, e.g. <code><span style='font-size:10.0pt'>class(['System'],['DateTime'])</span></code>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><b>cli_type_to_typeref</b>( <var>+Type, -Class</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Type</var> is a <b><i>SWICLI</i></b>
+class (or array) type, e.g. <code><span style='font-size:10.0pt'>class(['System','Data','Sql'],['Timestamp'])</span></code>
+or <code><span style='font-size:10.0pt'>array(boolean)</span></code>; <var>Class</var>
+is a <b><i>SWICLI</i></b> reference to a .NET class object (an instance of <i>System.Type</i>)
+which corresponds to <var>Type</var>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_type_to_classname"></a><b>cli_type_to_typename</b>(
+<var>+Type, -Classname</var>) </p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:.5in'><var>Type</var> is a <b><i>SWICLI</i></b> class (or array)
+type, e.g. <code><span style='font-size:10.0pt'>class(['System','Data','Sql'],['Timestamp'])</span></code>
+or <code><span style='font-size:10.0pt'>array(boolean)</span></code>; <var>Classname</var>
+is its canonical dotted name (an atom).</p>
+
+<h2><a name="jpl_datum_to_type"></a><br>
+Object Type Checking</h2>
+
+<p class=MsoNormal style='margin-left:.5in'>&nbsp;</p>
+
+<p class=MsoNormal><b>cli_object_is_typeref</b>( <var>+Object, ?Class</var>)   AKA: 
+cli_get_type/2</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Object</var> is a <b><i>SWICLI</i></b>
+reference to a .NET object; <var>Class</var> is a <b><i>SWICLI</i></b>
+reference to a .NET class object (an instance of <i>System.Type</i>) which
+represents <var>Object</var>'s class.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_object_to_type"></a><a name="jpl_primitive_type"></a><b>cli_object_is_type</b>(
+<var>+Object, ?Type</var>)   AKA:  cli_is_type/2</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Object</var> is a <b><i>SWICLI</i></b>
+reference to a .NET object; <var>Type</var> is its <b><i>SWICLI</i></b> type,
+e.g. <code><span style='font-size:10.0pt'>array(boolean)</span></code>, <code><span
+style='font-size:10.0pt'>class(['System','Data','Sql'],['Timestamp'])</span></code>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><b>cli_object_is_typename</b>( <var>+Object, ?Classname</var>)
+   AKA: cli_get_typename/2</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Object</var> is a <b><i>SWICLI</i></b>
+reference to a .NET object; <var>Classname</var> is its canonical dotted name
+(an atom)..&nbsp;</p>
+
+<p class=MsoNormal><b><br>
+cli_datum_to_type</b>( <var>+Datum, ?Type</var>)</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Datum</var> must be a valid <b><i>SWICLI</i></b>
+representation of some .NET object or value e.g. <code><span style='font-size:
+10.0pt'>3</span></code>, <code><span style='font-size:10.0pt'>fred</span></code>,
+<code><span style='font-size:10.0pt'>@(false)</span></code>; <var>Type</var> is
+its <b><i>SWICLI</i></b> type, e.g. <code><span style='font-size:10.0pt'>char_byte</span></code>,
+<code><span style='font-size:10.0pt'>class(['System'],['String'])</span></code>,
+<code><span style='font-size:10.0pt'>boolean</span></code>.</p>
+
+<p class=MsoNormal><b><br>
+cli_ref_to_type</b>( <var>+Ref, ?Type</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Ref</var> is a <b><i>SWICLI</i></b>
+reference to a .NET object; <var>Typ</var>e is the <b><i>SWICLI</i></b> type of
+<var>Object</var>, e.g. <code><span style='font-size:10.0pt'>array(boolean)</span></code>,
+<code><span style='font-size:10.0pt'>class(['System','Data','Sql'],['Timestamp'])</span></code>.</p>
+
+<h2><br>
+Inspection of Terms denoting Objects</h2>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><b>cli_primitive_type</b>( <var>-Type</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Type</var> is one of the <b><i>SWICLI</i></b>
+primitive types <code><span style='font-size:10.0pt'>boolean</span></code>, <code><span
+style='font-size:10.0pt'>char</span></code>, <code><span style='font-size:10.0pt'>byte</span></code>,
+<code><span style='font-size:10.0pt'>short</span></code>, <code><span
+style='font-size:10.0pt'>int</span></code>, <code><span style='font-size:10.0pt'>long</span></code>,
+<code><span style='font-size:10.0pt'>float</span></code>, <code><span
+style='font-size:10.0pt'>double</span></code>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_ref_to_type"></a><b>cli_is_typeref</b>( <var>?Term</var>)
+</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Term</var> is a <b><i>SWICLI</i></b>
+reference to a .NET class object, i.e. to an instance of <i>System.Type</i>. No
+further instantiation of <var>Term</var> will take place; if it is not ground,
+this predicate fails.&nbsp;</p>
+
+<p class=MsoNormal><br>
+<b>cli_is_object</b>( <var>?Term</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Term</var> is a <b><i>SWICLI</i></b>
+reference to a .NET object. No further instantiation of <var>Term</var> will
+take place; if it is not ground, this predicate fails.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_is_object_type"></a><a name="jpl_is_true"></a><a
+name="jpl_is_type"></a><b>cli_is_object_type</b>( <var>?Term</var>)    </p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:.5in'><var>Term</var> is a <b><i>SWICLI</i></b> class or array type
+(but not <code><span style='font-size:10.0pt'>null</span></code>, <code><span
+style='font-size:10.0pt'>void</span></code>, or one of the primitive
+types).&nbsp; No further instantiation of <var>Term</var> will take place; if
+it is not ground, this predicate fails.</p>
+
+<p class=MsoNormal><a name="jpl_is_ref"></a><b>cli_is_ref</b>( <var>?Term</var>)
+</p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:.5in'><var>Term</var> is a <b><i>SWICLI</i></b> class or array
+type, or is <code><span style='font-size:10.0pt'>null</span></code> (i.e. the <b><i>SWICLI</i></b>
+type of .NET's null reference) (but not <code><span style='font-size:10.0pt'>void</span></code>
+or one of the primitive types).&nbsp; No further instantiation of <var>Term</var>
+will take place; if it is not ground, this predicate fails.</p>
+
+<p class=MsoNormal><b>cli_is_type</b>( <var>?Term</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Term</var> is a <b><i>SWICLI</i></b>
+type, e.g. <code><span style='font-size:10.0pt'>char_byte</span></code>, <code><span
+style='font-size:10.0pt'>float</span></code>, <code><span style='font-size:
+10.0pt'>array(int)</span></code>.&nbsp; No further instantiation of <var>Term</var>
+will take place; if it not ground, this predicate fails.&nbsp;</p>
+
+<h2><a name="jpl_false"></a><br>
+Inspection of Terms denoting Values</h2>
+
+<p class=MsoNormal>&nbsp;<a name="jpl_void"></a><b>cli_void</b>( <var>-Datum</var>)
+</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Datum</var> is the <b><i>SWICLI</i></b>
+representation of the (notional but convenient) .NET value <i>void</i>, i.e. <code><span
+style='font-size:10.0pt'>@(void)</span></code>.</p>
+
+<p class=MsoNormal style='margin-left:.5in'>&nbsp;</p>
+
+<p class=MsoNormal><b>cli_false</b>( <var>-Datum</var>)</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Datum</var> is the <b><i>SWICLI</i></b>
+representation of the .NET boolean value <i>false</i>, i.e. <code><span
+style='font-size:10.0pt'>@(false)</span></code>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_is_class"></a><b>cli_true</b>( <var>-Datum</var>)
+</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Datum</var> is the <b><i>SWICLI</i></b>
+representation of the .NET boolean value <i>true</i>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_is_false"></a><b>cli_is_false</b>( <var>?Term</var>)
+</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Term</var> is the <b><i>SWICLI</i></b>
+representation of the .NET boolean value <i>false</i>. No further instantiation
+of <var>Term</var> will take place; if it is not ground, this predicate fails.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_is_null"></a><b>cli_is_null</b>( <var>?Term</var>)
+</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Term</var> is a <b><i>SWICLI</i></b>
+representation of the .NET boolean value <i>null</i>. No further instantiation
+of <var>Term</var> will take place; if it is not ground, this predicate fails.<br>
+&nbsp;           </p>
+
+<p class=MsoNormal><a name="jpl_is_object"></a><b>cli_is_true</b>( <var>?Term</var>)
+</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Term</var> is the <b><i>SWICLI</i></b>
+representation of the .NET boolean value <i>true</i>.&nbsp; No further
+instantiation of <var>Term</var> will take place; if it is not ground, this
+predicate fails.<br>
+&nbsp;</p>
+
+<p class=MsoNormal style='margin-left:.5in'>&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_is_void"></a><b>cli_is_void</b>( <var>?Term</var>)
+</p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Term</var> is the <b><i>SWICLI</i></b>
+representation of the (notional but convenient) .NET value <i>void</i>, i.e. <code><span
+style='font-size:10.0pt'>@(void)</span></code>.&nbsp; No further instantiation
+of <var>Term</var> will take place; if it not ground, this predicate fails.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_null"></a><b>cli_null</b>( <var>-Datum</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Datum</var> is the <b><i>SWICLI</i></b>
+representation of the .NET null reference <i>null</i>.<br>
+&nbsp;</p>
+
+<h2><a name="jpl_object_to_class"></a><a name="jpl_true"></a><a
+name="jpl_type_to_class"></a>Utilities</h2>
+
+<p class=MsoNormal>&nbsp;<a name="jpl_array_to_length"></a><b>cli_array_to_length</b>(
+<var>+Array, -Length</var>) </p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:.5in'><var>Array</var> is a <b><i>SWICLI</i></b> reference to a
+.NET array;&nbsp; <var>Length</var> is its length (an integer).</p>
+
+<p class=MsoNormal>&nbsp;<a name="jpl_array_to_list"></a><b>cli_array_to_list</b>(
+<var>+Array, -ListOfDatums</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Array</var> is a <b><i>SWICLI</i></b>
+reference to a .NET array (of any base type); <var>ListOfDatums</var> is a
+(Prolog) list of <b><i>SWICLI</i></b> references to, or values of, its
+respective elements.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_datums_to_array"></a><b>cli_datums_to_array</b>(
+<var>+ListOfDatums, -Array</var>)&nbsp;</p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:.5in'><var>ListOfDatums</var> is a (Prolog) list of <b><i>SWICLI</i></b>
+references or values; <var>Array</var> is a <b><i>SWICLI</i></b> reference to a
+.NET array of corresponding objects or values.&nbsp; The base type of <var>Array</var>
+is the most specific .NET type of which each member of<var> ListOfDatums</var>
+is (directly or indirectly) an instance. If there is no such type, this
+predicate fails. Values of .NET primitive types are not automatically
+&quot;boxed&quot;. Lists which are mixtures of numbers, booleans and object
+references cannot be converted to .NET arrays with this predicate.</p>
+
+<p class=MsoNormal>&nbsp;<a name="jpl_enumeration_element"></a><b>cli_enumeration_element</b>(
+<var>+Enumeration, -Element</var>)&nbsp;</p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:.5in'><var>Enumeration</var> is a <b><i>SWICLI</i></b> reference to
+a .NET object whose class implements the <i>System.Collections.Enumeration</i>
+interface; <var>Element</var> is an element of <var>Enumeration</var>.&nbsp;
+This predicate can generate each element of an enumeration.</p>
+
+<p class=MsoNormal><a name="jpl_enumeration_to_list"></a><b>cli_enumeration_to_list</b>(
+<var>+Enumeration, -ListOfElement</var>) </p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:.5in'><var>Enumeration</var> is a <b><i>SWICLI</i></b> reference to
+a .NET object whose class implements the <i>System.Collections.Enumeration</i>
+interface;&nbsp; <var>ListOfElement</var> is a list of <b><i>SWICLI</i></b>
+references to each element of <var>Enumeration</var>.</p>
+
+<p class=MsoNormal>&nbsp;<a name="jpl_hashtable_pair"></a><b>cli_hashtable_pair</b>(
+<var>+Hashtable, -KeyValuePair</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Hashtable</var> is a <b><i>SWICLI</i></b>
+reference to a .NET hashtable object (an instance of <i>System.Collections.Hashtable</i>);
+<var>KeyValuePair</var> is a <code><span style='font-size:10.0pt'>-/2</span></code>
+compound term whose first arg is a key (atom or ref) from <var>Hashtable</var>,
+and whose second arg is its corresponding value (atom or ref), e.g.<code><span
+style='font-size:10.0pt'>fred-@'J#0008127852'</span></code>.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_iterator_element"></a><b>cli_iterator_element</b>(
+<var>+Iterator, -Element</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Iterator</var> is a <b><i>SWICLI</i></b>
+reference to a .NET object whose class implements the <i>System.Collections.Iterator
+interface</i>; <var>Element</var> is a <b><i>SWICLI</i></b> reference to one of
+its elements.&nbsp; This predicate can generate all elements.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_list_to_array"></a><b>cli_list_to_array</b>( <var>+ListOfDatum,
+-Array</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'>This is a synonym for <a
+href="http://www.swi-prolog.org/packages/jpl/prolog_api/api.html#jpl_datums_to_array"><b>cli_datums_to_array/2</b></a>,
+in case you forget that <b><i>SWICLI</i></b> values and references are called
+&quot;datums&quot;.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_map_element"></a><b>cli_map_element</b>( <var>+Map,
+-KeyValuePair</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Map</var> is a <b><i>SWICLI</i></b>
+reference to a .NET object whose class implements the <i>System.Collections.Map</i>
+interface; <var>KeyValuePair</var> is a <code><span style='font-size:10.0pt'>-/2</span></code>
+compound term whose first arg is a key (atom or ref) from <var>Map</var>, and
+whose second arg is its corresponding value (atom or ref), e.g.<code><span
+style='font-size:10.0pt'> -(fred,@'J#0008127852'</span></code>), or <code><span
+style='font-size:10.0pt'>fred-@'J#0008127852'</span></code> using conventional
+operator definitions.<br>
+&nbsp;</p>
+
+<p class=MsoNormal><a name="jpl_set_element"></a><b>cli_set_element</b>( <var>+Set,
+-Element</var>) </p>
+
+<p class=MsoNormal style='margin-left:.5in'><var>Set</var> is a <b><i>SWICLI</i></b>
+reference to a .NET object whose class implements the <i>System.Collections.Set</i>
+interface; <var>Element</var> is a <b><i>SWICLI</i></b> reference to an object
+(or null) within <var>Set</var>.&nbsp; This predicate can generate all elements
+of <var>Set</var></p>
+
+<h2>&nbsp;</h2>
+
+<h2><span style='font-family:"Verdana","sans-serif"'>to do</span></h2>
+
+<p class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>Apart from
+any bugs I don't know about, this interface is usable and useful as it
+stands.&nbsp; Nevertheless there are some things &quot;to do&quot; at some
+stage in the future, e.g.</span><span style='font-family:"Verdana","sans-serif"'>
+</span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>support
+     non-virtual method calls (i.e. explicitly call a method of some ancestor
+     class despite there being an overriding method (i.e. of the same name
+     etc.) in a &quot;nearer&quot; class). &nbsp;I believe this is a fairly
+     arcane .NET feature, but it is needed for completeness; I want to accommodate
+     it without complicating the syntax of regular method calls.</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>map the
+     .NET's </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>vprintf()</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> messages onto something in
+     SWI-Prolog (the user_error stream?)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>catch the
+     .NET's </span><tt><b><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>abort()</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> and </span><tt><b><span
+     style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>exit()</span></b></tt><span
+     style='font-family:"Verdana","sans-serif"'> events, and handle them
+     appropriately (e.g. stop a .NET <i>abort</i> from killing the SWI-Prolog
+     process)</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>propagate
+     SWI-Prolog's ABORT action into the .NET as appropriate, e.g. to interrupt
+     a pending <b><i>SWICLI</i></b> call</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal><span style='font-family:"Verdana","sans-serif"'>reduce
+     the (extravagant) overheads of each <b><i>SWICLI</i></b> call (without
+     compromising functionality or safety)</span></li>
+</ul>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Verdana","sans-serif"'>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<address><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'><a
+href="mailto:paul.singleton@bcs.org.uk">Douglas R. Miles</a></span></address>
+
+<address><span style='font-size:13.5pt;font-family:"Verdana","sans-serif"'>drafted
+10th April 2012</span></address>
+
+<p class=MsoNormal style='margin-bottom:12.0pt'><span style='font-family:"Verdana","sans-serif"'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

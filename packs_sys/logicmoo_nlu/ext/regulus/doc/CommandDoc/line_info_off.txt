@@ -1,0 +1,12 @@
+A typical parse tree printed without line info will look like this:
+\begin{verbatim}
+.MAIN
+   utterance
+      command
+      /  verb lex(switch)
+      |  onoff null lex(on)
+      |  np
+      |  /  lex(the)
+      |  |  noun lex(light)
+      \  \  null
+\end{verbatim}

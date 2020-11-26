@@ -1,0 +1,51 @@
+/* Specify icons for a file type.  Elements that must be styles this way
+   need the style "type-icon" and the file extension.
+*/
+
+.type-icon.pl {
+  background-image: url("../icons/pl.png");
+}
+
+/* TO REMOVE
+*/
+.type-icon.cpl {
+  background-image: url("../icons/cpl.png");
+}
+/*
+*/
+.type-icon.json {
+  background-image: url("../icons/json.png");
+}
+
+.type-icon.lpad {
+  background-image: url("../icons/lpad.png");
+}
+
+.type-icon.swinb {
+  background-image: url("../icons/swinb.png");
+}
+
+.type-icon.select {
+  background-image: url("../icons/select.png");
+}
+
+.type-icon.lnk {
+  background-image: url("../icons/lnk.png");
+}
+
+.type-icon.swinb {
+/* Actually, these are icons for dropdown menus */
+}
+
+.type-icon.chat {
+  background-image: url("../icons/chat.png");
+}
+
+.type-icon.chathelp {
+  background-image: url("../icons/chathelp.png");
+}
+
+.type-icon.togetherjs {
+  background-image: url("../icons/togetherjs.png");
+}
+

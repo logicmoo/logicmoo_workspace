@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\Amine8_Release\aminePlatform8\aminePlatform8Release\classes\aminePlatform\samples\ontology\biblio.xml</Name>
+  <Ontologies2Import />
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>Fr</Language>
+    <Language>En</Language>
+  </Languages>
+  <MainLanguage>Fr</MainLanguage>
+  <RelationRoot>relation</RelationRoot>
+  <Root>
+    <Key>Biblio</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Biblio</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Biblio</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>relation</Key>
+        </Child>
+        <Child>
+          <Key>ObjetNonAnimee</Key>
+        </Child>
+        <Child>
+          <Key>ObjetAnime</Key>
+        </Child>
+        <Child>
+          <Key>Action</Key>
+        </Child>
+        <Child>
+          <Key>Attribut</Key>
+        </Child>
+        <Child>
+          <Key>Date</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Date</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Date</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Biblio</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Attribut</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Attribut</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Biblio</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Action</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Action</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Grdhgf</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Biblio</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Grdhgf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Grdhgf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Document</Key>
+        </Father>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ObjetAnime</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>ObjetAnime</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Biblio</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ObjetNonAnimee</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>ObjetNonAnimee</Synonym>
+            <Synonym>ObjetStatique</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms>
+            <Synonym>NonAnimateObject</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Document</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Biblio</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Document</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Document</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Livre</Key>
+        </Child>
+        <Child>
+          <Key>Encyclopdie</Key>
+        </Child>
+        <Child>
+          <Key>Journal</Key>
+        </Child>
+        <Child>
+          <Key>Grdhgf</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>ObjetNonAnimee</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Journal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Journal</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Document</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Encyclopdie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Encyclopdie</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Document</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Livre</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Livre</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>MonLivre3425</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Document</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>MonLivre3425</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>MonLivre3425</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Livre</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Livre</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <RelationType>
+      <Key>relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Biblio</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

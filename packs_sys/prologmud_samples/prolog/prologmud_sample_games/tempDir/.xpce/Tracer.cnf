@@ -1,0 +1,11 @@
+setting(show_unbound,false).
+setting(cluster_variables,true).
+setting(list_max_clauses,25).
+setting(stack_depth,10).
+setting(choice_depth,10).
+setting(term_depth,2).
+setting(portray_codes,false).
+setting(auto_raise,true).
+setting(auto_close,true).
+setting(console_actions,false).
+setting(use_pce_emacs,true).

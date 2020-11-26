@@ -1,0 +1,187 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: c0362248
+ *  Institution: University of Huddersfield
+ *  Date created: Tue Nov 21 12:43:07 GMT 2006
+ *  Date last modified: 2006/12/13 at 06:03:09 PM GMT
+ *  Description:
+ *    
+ *    Object Life History : warming_food5.gfx
+ *    Object Life History : warming_food5.gfx
+ *    Object Life History : warming_food6.gfx
+ *    Object Life History : warming_food6.gfx
+ *    Object Life History : warming_food6.gfx
+ *    Object Life History : warming_food7.gfx
+ *    Object Life History : warming_food7.gfx
+ */
+
+domain_name(warmingfood).
+
+% Sorts
+sorts(primitive_sorts,[object,vtOnOff,food,tempature]).
+
+% Objects
+objects(object,[microwave]).
+objects(vtOnOff,[on,off]).
+objects(food,[curry,soup]).
+objects(tempature,[very_hot,hot,mild,cold]).
+objects(doorStat,[isOpened,isClosed]).
+
+% Predicates
+predicates([
+    isClosed(object),
+    objectOnOff(object,vtOnOff),
+    isOpened(object),
+    onTable(food),
+    heatValue(food,tempature),
+    inMicrowave(food,object),
+    tempRaise(tempature,tempature),
+    statusType(vtOnOff,vtOnOff)]).
+
+% Object Class Definitions
+substate_classes(object,Object,[
+    [isClosed(Object),objectOnOff(Object,Status)],
+    [isOpened(Object),objectOnOff(Object,Status)]]).
+substate_classes(food,Food,[
+    [onTable(Food),heatValue(Food,Tempature)],
+    [inMicrowave(Food,Object),heatValue(Food,Tempature)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    tempRaise(cold,mild),
+    tempRaise(mild,hot),
+    tempRaise(hot,very_hot),
+    statusType(on,off),
+    statusType(off,on)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(putIn(Object,Status,Food,Tempature),
+    % prevail
+    [     se(object,Object,[isOpened(Object),objectOnOff(Object,Status)])],
+    % necessary
+    [     sc(food,Food,[onTable(Food),heatValue(Food,Tempature)]=>[inMicrowave(Food,Object),heatValue(Food,Tempature)])],
+    % conditional
+    []).
+operator(takeOut(Object,Status,Food,Tempature),
+    % prevail
+    [     se(object,Object,[isOpened(Object),objectOnOff(Object,Status)])],
+    % necessary
+    [     sc(food,Food,[inMicrowave(Food,Object),heatValue(Food,Tempature)]=>[onTable(Food),heatValue(Food,Tempature)])],
+    % conditional
+    []).
+operator(opendoor(Object,Status),
+    % prevail
+    [],
+    % necessary
+    [     sc(object,Object,[isClosed(Object),objectOnOff(Object,Status)]=>[isOpened(Object),objectOnOff(Object,Status)])],
+    % conditional
+    []).
+operator(closedoor(Object,Status),
+    % prevail
+    [],
+    % necessary
+    [     sc(object,Object,[isOpened(Object),objectOnOff(Object,Status)]=>[isClosed(Object),objectOnOff(Object,Status)])],
+    % conditional
+    []).
+operator(warm(Object,Food,Tempature_A,Tempature_B),
+    % prevail
+    [     se(object,Object,[isClosed(Object),objectOnOff(Object,on)])],
+    % necessary
+    [     sc(food,Food,[inMicrowave(Food,Object),heatValue(Food,Tempature_A),
+                   tempRaise(Tempature_A,Tempature_B)]=>[inMicrowave(Food,Object),heatValue(Food,Tempature_B)])],
+    % conditional
+    []).
+operator(switch(Object,StatusA,StatusB),
+    % prevail
+    [],
+    % necessary
+    [     sc(object,Object,[isClosed(Object),objectOnOff(Object,StatusA),statusType(StatusA,StatusB)]=>[isClosed(Object),objectOnOff(Object,StatusB)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(food,curry,[inMicrowave(curry,microwave),heatValue(curry,mild)])],
+    % INIT States
+    [
+     ss(food,curry,[onTable(curry),heatValue(curry,cold)]),
+     ss(food,soup,[onTable(soup),heatValue(soup,cold)]),
+     ss(object,microwave,[isClosed(microwave),objectOnOff(microwave,off)])]).
+planner_task(2,
+    % Goals
+    [
+     se(food,curry,[onTable(curry),heatValue(curry,mild)]),
+     se(food,soup,[onTable(soup),heatValue(soup,mild)])],
+    % INIT States
+    [
+     ss(food,curry,[onTable(curry),heatValue(curry,cold)]),
+     ss(food,soup,[onTable(soup),heatValue(soup,cold)]),
+     ss(object,microwave,[isClosed(microwave),objectOnOff(microwave,off)])]).
+planner_task(3,
+    % Goals
+    [
+     se(food,curry,[onTable(curry),heatValue(curry,very_hot)]),
+     se(object,microwave,[isClosed(microwave),objectOnOff(microwave,off)])],
+    % INIT States
+    [
+     ss(food,curry,[onTable(curry),heatValue(curry,cold)]),
+     ss(object,microwave,[isClosed(microwave),objectOnOff(microwave,off)])]).
+planner_task(4,
+    % Goals
+    [
+     se(food,curry,[onTable(curry),heatValue(curry,very_hot)])],
+    % INIT States
+    [
+     ss(food,curry,[inMicrowave(curry,microwave),heatValue(curry,mild)]),
+     ss(object,microwave,[isClosed(microwave),objectOnOff(microwave,off)])]).
+planner_task(5,
+    % Goals
+    [
+     se(food,soup,[onTable(soup),heatValue(soup,very_hot)]),
+     se(food,curry,[onTable(curry),heatValue(curry,very_hot)]),
+     se(object,microwave,[isClosed(microwave),objectOnOff(microwave,off)])],
+    % INIT States
+    [
+     ss(food,curry,[onTable(curry),heatValue(curry,cold)]),
+     ss(food,soup,[onTable(soup),heatValue(soup,cold)]),
+     ss(object,microwave,[isClosed(microwave),objectOnOff(microwave,off)])]).
+planner_task(6,
+    % Goals
+    [
+     se(object,microwave,[isClosed(microwave),objectOnOff(microwave,off)]),
+     se(food,curry,[onTable(curry),heatValue(curry,very_hot)])],
+    % INIT States
+    [
+     ss(object,microwave,[isOpened(microwave),objectOnOff(microwave,on)]),
+     ss(food,curry,[onTable(curry),heatValue(curry,cold)])]).
+planner_task(7,
+    % Goals
+    [
+     se(food,curry,[onTable(curry),heatValue(curry,mild)])],
+    % INIT States
+    [
+     ss(object,microwave,[isOpened(microwave),objectOnOff(microwave,on)]),
+     ss(food,curry,[inMicrowave(curry,microwave),heatValue(curry,cold)])]).
+planner_task(8,
+    % Goals
+    [
+     se(food,curry,[onTable(curry),heatValue(curry,very_hot)])],
+    % INIT States
+    [
+     ss(food,curry,[onTable(curry),heatValue(curry,cold)]),
+     ss(object,microwave,[isOpened(microwave),objectOnOff(microwave,on)])]).

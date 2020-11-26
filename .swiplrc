@@ -1,0 +1,144 @@
+
+% =====================
+% Enable History
+% =====================
+%:- if(\+ current_predicate(setup_logicmoo_hist/0)).
+setup_logicmoo_hist:- 
+  (
+   exists_source(library(readline)) -> use_module(library(readline)) 
+   ; 
+   exists_source(library(editline)) -> use_module(library(editline)) 
+   ; true ),
+  '$toplevel':setup_history.
+%:- endif.
+
+% =====================
+% Easier to trace while access_level system
+% =====================
+/*
+:- '$hide'('$toplevel':restore_debug).
+:- '$hide'('$toplevel':save_debug).
+:- '$hide'('$toplevel':residue_vars/2).
+:- '$hide'('system':deterministic/1).
+:- '$hide'(toplevel_call/2).
+:- '$hide'('$toplevel':'$query_loop'/0).
+
+% =====================
+% System metapredicates
+% =====================
+:- meta_predicate '$syspreds':bit(2,?,?).
+:- meta_predicate '$bags':findnsols_loop(*,*,0,*,*).
+:- meta_predicate '$bags':findall_loop(*,0,*,*).
+:- meta_predicate '$attvar':unfreeze(0).
+:- meta_predicate '$attvar':run_crv(0,*,*,*).
+:- meta_predicate '$expand':expand_term_list(4,*,*,*,*).
+:- meta_predicate '$parms':cached_library_directory(*,0,*).
+:- meta_predicate '$toplevel':residue_vars(0,-).
+:- meta_predicate '$toplevel':toplevel_call(0).
+:- meta_predicate '$toplevel':run_initialize(0,*).
+% :- meta_predicate '$toplevel':run_init_goal(0,*).
+% :- meta_predicate '$attvar':uhook(*,0,*,*).
+% :- meta_predicate '$attvar':uhook(*,0,*).
+:- meta_predicate '$toplevel':'$execute_goal2'(0,*).
+
+*/
+
+% =====================
+% Add Pack Directories
+% =====================
+
+:- multifile(user:file_search_path/2).
+:-   dynamic(user:file_search_path/2).
+dir_from_0(Rel,Y):-
+    ((getenv('LOGICMOO_WS',Dir);
+     prolog_load_context(directory,Dir);
+     '~/logicmoo_workspace'=Dir;
+     '/opt/logicmoo_workspace/'=Dir)),
+    absolute_file_name(Rel,Y,[relative_to(Dir),file_type(directory),file_errors(fail)]),
+    exists_directory(Y),!.
+add_pack_path_0(Rel):- dir_from_0(Rel,Abs), attach_packs(Abs), !.
+add_pack_path_0(Rel):- 
+   dir_from_0(Rel,Y),
+   (( \+ user:file_search_path(pack,Y)) ->asserta(user:file_search_path(pack,Y));true).
+
+add_pack_paths:-
+ stream_property(Err,file_no(2)),
+ current_prolog_flag(os_argv,OSArgV),current_prolog_flag(argv,ArgV),
+ flush_output,flush_output(Err),ttyflush,
+ format(Err,'~N%         os_argv = ~q ~n',[OSArgV]),
+ format(Err,'~N%            argv = ~q ~n',[  ArgV]),
+ add_pack_path_0(packs_sys),
+ add_pack_path_0(packs_usr),
+ add_pack_path_0(packs_web),
+ add_pack_path_0(packs_web/swish/pack),
+ add_pack_path_0(packs_xtra),
+ add_pack_path_0(packs_lib),
+ attach_packs,
+ % pack_install(logicmoo_utils,[upgrade(true),interactive(false)]),
+ use_module(library(logicmoo_common)),
+ pack_list_installed,
+ (current_prolog_flag(lisp_repl_goal,REPL)-> true ; REPL = unknown),
+ format(Err,'~N% lisp_repl_goal = ~q ~n',[  REPL]),
+ flush_output,flush_output(Err),ttyflush,!.
+
+%:- pack_install(logicmoo_utils,[upgrade(true),interactive(false)]),!.
+%:- initialization(attach_packs,now).
+%:- use_module(library(logicmoo_common)),use_module(library(wamcl_runtime)),use_module(library(pfc_lib)).
+% :- ensure_loaded(library(logicmoo_common)),ensure_loaded(library(wamcl_runtime)),ensure_loaded(library(pfc_lib)).
+% use_module(library(pfc)).
+%:- pack_list_installed.
+
+preload_logicmoo:-
+   ensure_loaded(library(logicmoo_common)),
+   meta_predicate(logicmoo_startup:enotrace(0)),
+   meta_predicate(logicmoo_startup:with_abs_paths(1,?)),
+   reconsult(library('../boot/autoload')),
+   ensure_loaded('/opt/logicmoo_workspace/packs_web/swish/run_swish_and_clio'),
+   (( module(baseKB)  )),
+   ensure_loaded(library(pfc_lib)),
+   (( ensure_loaded(library(logicmoo_mud)) )),
+   ensure_loaded(library(logicmoo_nlu)),
+   ensure_loaded(library(wamcl_runtime)),
+   %ensure_loaded(library(pfc_lib)),
+   % :- meta_predicate mpred_type_constraints:'__aux_wrapper_594d82f1742fe8b6586d0fcc675e4bd8258e4541'(0).
+% :- meta_predicate mpred_type_constraints:freeze_rev(0,?).
+% :- meta_predicate mpred_type_constraints:lazy_1(0).
+% :- meta_predicate common_logic_compiler:map_each_subterm_compound(2,*,*).
+% :- meta_predicate baseKB:apply_cond(*,0).
+% :- meta_predicate mpred_type_constraints:'__aux_maplist/2_freeze_rev+1'(*,0).
+   ensure_loaded(library(logicmoo_cg)),
+   pfc:ensure_loaded(library(pfc)),
+   ensure_loaded(library(wamcl_runtime)),
+   set_prolog_flag(access_level,system),
+   %ensure_loaded(library(logicmoo_nlu)),
+   %ensure_loaded(library(logicmoo_ec)),
+    !.
+
+qcompile_logicmoo:-
+   stream_property(Err,file_no(2)),
+   flush_output,flush_output(Err),ttyflush,
+   current_prolog_flag(stack_limit,Stack_limit),
+   gensym('logicmoo_server_',Name),
+   atom_concat(Name,'.map',MapName),
+   qsave_program(Name,
+   [   class(development), 
+       verbose(true),
+       stack_limit(Stack_limit),
+       toplevel(prolog),
+       %goal(prolog),
+       undefined(ignore), 
+       op(save),
+       %map(MapName),
+       foreign(no_save),
+       %autoload(true),       
+       stand_alone(false)]),
+   format(Err,'~N% qsave_program = ~q ~n',[Name]),
+   flush_output,flush_output(Err),ttyflush,!.
+
+
+
+:- use_module(library(prolog_pack)).
+:- initialization(add_pack_paths,now).
+% :- initialization(add_pack_paths,restore).
+
+

@@ -1,0 +1,46 @@
+% Selectionne les 2 faces cachees
+% haut,bas - dev,der - gau,droi
+$ select([F1,F2,F3,F4,F5,F6],[F3,F4,F5,F6]).
+$ select([F1,F2,F3,F4,F5,F6],[F1,F2,F5,F6]).
+$ select([F1,F2,F3,F4,F5,F6],[F1,F2,F3,F4]).
+
+% Retourner le cube 2 memes faces cachees
+$ turn(X,X).
+$ turn([Dev,Der,Gau,Droi],[Der,Dev,Gau,Droi]).
+
+% Rotations possibles vers la droite 0,90,180,270
+$ rotate(X,X).
+$ rotate([Dev,Der,Gau,Droi], [Gau,Droi,Der,Dev]).
+$ rotate([Dev,Der,Gau,Droi], [Der,Dev,Droi,Gau]).
+$ rotate([Dev,Der,Gau,Droi], [Droi,Gau,Dev,Der]).
+
+% Pour un cube, 24 pos. differentes
+$ sol1(Cube,Pos) :- select(Cube,F4), turn(F4,Pos).
+$ sol(Cube,Pos) :- sol1(Cube,F), rotate(F,Pos).
+
+$ insanity(C1,C2,C3,C4) :- 
+      are_dif([Dev1,Dev2,Dev3,Dev4]),
+      are_dif([Der1,Der2,Der3,Der4]),
+      are_dif([Gau1,Gau2,Gau3,Gau4]),
+      are_dif([Droi1,Droi2,Droi3,Droi4]),
+      sol1(C1,[Dev1,Der1,Gau1,Droi1]),
+      sol(C2,[Dev2,Der2,Gau2,Droi2]),
+      sol(C3,[Dev3,Der3,Gau3,Droi3]),
+      sol(C4,[Dev4,Der4,Gau4,Droi4]),
+      write([Dev1,Der1,Gau1,Droi1]),nl,
+      write([Dev2,Der2,Gau2,Droi2]),nl,
+      write([Dev3,Der3,Gau3,Droi3]),nl,
+      write([Dev4,Der4,Gau4,Droi4]),nl.
+
+$ are_dif([]).
+$ are_dif([T|Q]) :- out_of(T,Q), are_dif(Q).
+$ out_of(_,[]).
+$ out_of(X,[T|Q]) :- dif(X,T), out_of(X,Q).
+
+$ p1 :- insanity([a,a,a,a,a,a],[b,b,b,b,b,b],[c,c,c,c,c,c],[d,d,d,d,d,d]).
+
+$ p2 :- insanity([j,b,j,r,v,j],[b,j,j,b,r,v],[r,j,r,b,v,b],[b,v,r,v,r,v]).
+
+$ p3 :- insanity([a,a,a,a,a,a],[a,a,a,a,a,a],[a,a,a,a,a,a],[a,a,a,a,a,a]).
+
+$ p4 :- insanity([v,j,v,r,j,b],[j,b,r,b,v,v],[r,v,b,j,r,r],[b,r,j,v,r,j]).

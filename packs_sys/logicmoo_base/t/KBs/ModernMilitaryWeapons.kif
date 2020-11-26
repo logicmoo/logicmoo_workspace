@@ -1,0 +1,2299 @@
+
+
+ (exceptWhen 
+  (= BiologicalWeapon-GeneticallyEngineeredOrganismBased ?WEAPONTYPE1) 
+  (implies 
+   (and 
+    (isa ?WEAPONTYPE1 BiologicalWeaponTypeByAgent) 
+    (isa ?WEAPONTYPE2 BiologicalWeaponTypeByAgent) 
+    (different ?WEAPONTYPE1 ?WEAPONTYPE2) 
+    (relationAllInstance weaponBasisObjectType ?WEAPONTYPE1 ?TYPE1) 
+    (relationAllInstance weaponBasisObjectType ?WEAPONTYPE2 ?TYPE2)) 
+   (different ?TYPE1 ?TYPE2)))
+
+ (salientAssertions BiologicalWeapon-Rickettsial 
+  (implies 
+   (and 
+    (isa ?ATTACK BiologicalAttack) 
+    (isa ?VICTIM Person) 
+    (isa ?WEAPON BiologicalWeapon-Rickettsial) 
+    (deviceUsed ?ATTACK ?WEAPON) 
+    (maleficiary ?ATTACK ?VICTIM)) 
+   (relationExistsInstance maleficiary Rickettsiosis ?VICTIM)))
+
+ (salientAssertions weaponEffectiveRange-Max 
+  (implies 
+   (and 
+    (maxQuantValue ?RANGE ?MAXRANGE) 
+    (weaponEffectiveRange ?WEAPON ?RANGE)) 
+   (weaponEffectiveRange-Max ?WEAPON ?MAXRANGE)))
+
+ (salientAssertions weaponEffectiveRange-Min 
+  (implies 
+   (and 
+    (isa ?SHOOTING ShootingAProjectileWeapon) 
+    (damages ?SHOOTING ?TARGET) 
+    (fromLocation ?SHOOTING ?LAUNCHER) 
+    (deviceUsed ?SHOOTING ?WEAPON) 
+    (instrument-Generic ?SHOOTING ?LAUNCHER) 
+    (weaponEffectiveRange-Min ?WEAPON ?MINRANGE) 
+    (distanceBetween ?LAUNCHER ?TARGET ?DIST)) 
+   (greaterThan ?DIST ?MINRANGE)))
+
+ (salientAssertions intendedTargetTypeOfWeaponType 
+  (implies 
+   (and 
+    (completeCollectionExtent ?DISJOINT-COLTYPE) 
+    (genls ?WEAPONCOL Weapon) 
+    (partitionedInto ?WEAPONCOL ?DISJOINT-COLTYPE)) 
+   (intendedTargetTypeOfWeaponType ?WEAPONCOL 
+    (CollectionUnionFn 
+     (TheSetOf ?TARGET-TYPE 
+      (exists 
+       (?CELL-COL) 
+       (and 
+        (isa ?CELL-COL ?DISJOINT-COLTYPE) 
+        (intendedTargetTypeOfWeaponType ?CELL-COL ?TARGET-TYPE))))))))
+
+ (salientAssertions weaponEffectiveRange 
+  (implies 
+   (and 
+    (isa ?SHOOTING ShootingAProjectileWeapon) 
+    (damages ?SHOOTING ?TARGET) 
+    (fromLocation ?SHOOTING ?LAUNCHER) 
+    (deviceUsed ?SHOOTING ?WEAPON) 
+    (instrument-Generic ?SHOOTING ?LAUNCHER) 
+    (weaponEffectiveRange ?WEAPON ?RANGE) 
+    (distanceBetween ?LAUNCHER ?TARGET ?DIST)) 
+   (quantitySubsumes ?RANGE ?DIST)))
+
+ (salientAssertions BiologicalWeaponTypeByAgent 
+  (implies 
+   (and 
+    (isa ?WEAPONTYPE1 BiologicalWeaponTypeByAgent) 
+    (isa ?WEAPONTYPE2 BiologicalWeaponTypeByAgent) 
+    (different ?WEAPONTYPE1 ?WEAPONTYPE2) 
+    (relationAllInstance weaponBasisObjectType ?WEAPONTYPE1 ?TYPE1) 
+    (relationAllInstance weaponBasisObjectType ?WEAPONTYPE2 ?TYPE2)) 
+   (different ?TYPE1 ?TYPE2)))
+
+ (salientAssertions weaponEffectiveRange-Max 
+  (implies 
+   (and 
+    (isa ?SHOOTING ShootingAProjectileWeapon) 
+    (damages ?SHOOTING ?TARGET) 
+    (fromLocation ?SHOOTING ?LAUNCHER) 
+    (deviceUsed ?SHOOTING ?WEAPON) 
+    (instrument-Generic ?SHOOTING ?LAUNCHER) 
+    (weaponEffectiveRange-Max ?WEAPON ?MAXRANGE) 
+    (distanceBetween ?LAUNCHER ?TARGET ?DIST)) 
+   (greaterThan ?MAXRANGE ?DIST)))
+
+ (comment 
+  (implies 
+   (and 
+    (genls ?WEAPONTYPE MilitaryWeapon) 
+    (isa ?WEAPON ?WEAPONTYPE) 
+    (capableOf ?AGENT 
+     (CollectionSubsetFn AttackOnTangible 
+      (TheSetOf ?OBJ 
+       (instrument-Generic ?OBJ ?WEAPON))) performedBy)) 
+  (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE)) "If some agent is capable of making an attack using a particular kind of military weapon, then that agent possesses many weapons of that type.") 
+
+ (salientAssertions intendedTargetTypeOfWeapon 
+  (implies 
+   (intendedTargetTypeOfWeapon ?WEAP ?ATTK ?TYPE) 
+   (deviceUsed ?ATTK ?WEAP)))
+
+ (cyclistNotes 
+  (implies 
+   (and 
+    (completeCollectionExtent ?DISJOINT-COLTYPE) 
+    (genls ?WEAPONCOL Weapon) 
+    (partitionedInto ?WEAPONCOL ?DISJOINT-COLTYPE)) 
+   (intendedTargetTypeOfWeaponType ?WEAPONCOL 
+    (CollectionUnionFn 
+     (TheSetOf ?TARGET-TYPE 
+      (exists 
+       (?CELL-COL) 
+       (and 
+        (isa ?CELL-COL ?DISJOINT-COLTYPE) 
+    (intendedTargetTypeOfWeaponType ?CELL-COL ?TARGET-TYPE))))))) "The working assumption is that the conditions for discharging this rule--a weapons-collection partitioned, and intendedTargetTypeOWeaponTypes specified for all of the partition cells--will be met comparatively rarely, and that when they are, the collection-union will probably be worth reifying locally. Since the rule is backward, such reifications will only happen in a local image.") 
+
+ (salientAssertions weaponEffectiveRange-Min 
+  (implies 
+   (and 
+    (minQuantValue ?RANGE ?MINRANGE) 
+    (weaponEffectiveRange ?WEAPON ?RANGE)) 
+   (weaponEffectiveRange-Min ?WEAPON ?MINRANGE)))
+
+ (arg1Isa angleOfLauncher ProjectileLauncher)
+
+ (genls 
+  (BiologicalWeaponFn Staphylococcus) BiologicalWeapon-Bacterial)
+
+ (isa CruiseMissile-GroundLaunched MilitaryWeaponTypeByFunction)
+
+ (comment GeneticallyEngineeredBacterialPathogen "The collection of all instances of Bacterium that have been genetically engineered for use in BiologicalAttacks.") 
+
+ (isa 
+  (MakingFn NerveAgent) TemporalObjectType)
+
+ (genls Warplane ConventionalWeapon)
+
+ (genls BombSubmunition ExplosiveDevice)
+
+ (comment BallisticMissile-Guided "The collection of BallisticMissiles which can change course in flight using either remote guidance, such as radio control, or internal guidance, such as on-board heat-seeking sensors.") 
+
+ (isa BallisticMissileLauncher ExistingObjectType)
+
+ (isa weaponEffectiveRange-Max BinaryPredicate)
+
+ (isa intendedTargetTypeOfWeapon TernaryPredicate)
+
+ (argIsa IntendedTargetTypeFn 1 Collection)
+
+ (genls Tondar-68-Missile SurfaceToSurfaceMissile-Ballistic)
+
+ (genls 
+  (ChemicalWeaponFn VX-NerveGas) ChemicalWeapon)
+
+ (genls ArtilleryShell ProjectileWeapon)
+
+ (implies 
+  (and 
+   (isa ?PROGRAM MilitaryWMDProgram) 
+   (directingAgent ?PROGRAM ?AGENT)) 
+  (purposeInEvent ?AGENT ?PROGRAM 
+   (exists 
+    (?MAKING) 
+    (and 
+     (isa ?MAKING 
+      (MakingFn WeaponOfMassDestruction)) 
+     (directingAgent ?MAKING ?AGENT)))))
+
+ (relationAllInstance groupMemberType 
+  (GroupFn BallisticMissile-SCUDB) BallisticMissile-SCUDB)
+
+ (comment weaponEffectiveRange-Min "(weaponEffectiveRange-Min WEAPON RANGE) means that RANGE is the minimum range at which the projectile weapon WEAPON is considered to be 'effective', ie, capable of doing significant damage to a target. Some projectile weapons have specifiable minimum ranges, while others do not. It is a particularly useful concept with respect to certain kinds of IndirectFireWeapon which cannot be fired higher than a certain angle, and which therefore cannot fall inside a certain circumference.") 
+
+ (genls NerveGas ChemicalAgent)
+
+ (relationInstanceAll hasOwnershipIn 
+  (ArmyFn UnitedStatesOfAmerica) USMilitaryChemicalProtectiveMask)
+
+ (isa BallisticMissile-ICBM ExistingObjectType)
+
+ (comment Warhead-HighExplosiveAntiTank "The collection of Warheads that are meant to be used against Tank-Vehicles and other ArmoredVehicles.") 
+
+ (genls AutomaticGrenadeLauncher Belt-FedFirearm)
+
+ (isa IncapacitatingAgent ExistingStuffType)
+
+ (genls BallisticMissile-CSS2 BallisticMissile)
+
+ (keStrongSuggestionPreds BiologicalAttack deviceUsed)
+
+ (transportedInTypes BiologicalWeapon BallisticMissile)
+
+ (genls Sidewinder-Missile AirToAirMissile)
+
+ (genls F-16CFighter F-16-Fighter)
+
+ (isa Howitzer-155mmSelfPropelled ExistingObjectType)
+
+ (genls MidcourseGuidedProjectile 
+  (CollectionUnionFn 
+   (TheSet HardwareTool PhysicalDevice)))
+
+ (genls 
+  (BiologicalWeaponFn RickettsiaRicketsii) BiologicalWeapon)
+
+ (argIsa weaponRounds 1 Gun)
+
+ (conceptuallyRelated BiologicalWeapon-GeneticallyEngineeredBacteriumBased GeneticEngineering)
+
+ (isa 
+  (GroupFn BallisticMissile-CSS8) ObjectType)
+
+ (isa MineField-Scatterable ExistingStuffType)
+
+ (argGenl intendedTargetTypeOfWeaponType 2 SomethingExisting)
+
+ (relationAllExists physicalParts 
+  (BiologicalWeaponFn CoxiellaBurnetti) CoxiellaBurnetti)
+
+ (arity angleOfLauncher 2)
+
+ (genls GrenadeLauncher SmallArm-Weapon)
+
+ (genls 
+  (BiologicalWeaponFn BrucellaBacterium) BiologicalWeapon-Bacterial)
+
+ (genls 
+  (ChemicalWeaponFn Phosgene) ChemicalWeapon)
+
+ (genls CombatAircraft ConventionalWeapon)
+
+ (genls BombSubmunition MilitaryWeapon)
+
+ (genls BallisticMissile-Guided BallisticMissile)
+
+ (genls BallisticMissile-SubmarineLaunched BallisticMissile)
+
+ (relationExistsAll physicalParts MilitaryAircraft AircraftWeaponPylon)
+
+ (genls BoforsGun AntiAircraftArtilleryGun)
+
+ (arg1Isa IntendedTargetTypeFn Collection)
+
+ (comment MultipleRocketLauncherSystem-MLRS "The collection of American-made multiple rocket launchers, similar to the Soviet MultipleRocketLauncher-122mmMRL, but much newer.") 
+
+ (relationAllExists physicalParts BiologicalWeapon-BiologicalToxinBased BiologicalToxin)
+
+ (isa 
+  (ChemicalWeaponFn VX-NerveGas) ExistingObjectType)
+
+ (isa 
+  (ChemicalWeaponFn Sarin) ExistingObjectType)
+
+ (genls ArtilleryShell PoweredDevice)
+
+ (relationAllInstance groupMemberType 
+  (GroupFn BallisticMissile-SCUDC) BallisticMissile-SCUDC)
+
+ (arg1Isa weaponEffectiveRange-Min ProjectileWeapon)
+
+ (comment BallisticMissile-IntermediateRange "A ballistic missile with a range of 1,500-3,437 miles") 
+
+ (comment USMilitaryChemicalProtectiveMask "The class of all ProtectiveFiltrationMasks manufactured by the US Army during the last decade of the 20th century and the first decade of the 21st, and issued to US Army personnel for field use.") 
+
+ (isa 
+  (MakingFn CruiseMissile-AS7Kerry) SituationType)
+
+ (isa BallisticMissile-ICBM MilitaryWeaponTypeByFunction)
+
+ (genls Warhead-HighExplosiveAntiTank AntiTankWeapon)
+
+ (genls AutomaticGrenadeLauncher GrenadeLauncher)
+
+ (genls Torpedo-MK-46 Torpedo)
+
+ (genls SurfaceToSurfaceMissile-Ballistic SurfaceToSurfaceMissile)
+
+ (genls Platform-Military TransportationDevice)
+
+ (relationAllExists outputsCreated 
+  (MakingFn BallisticMissile-SCUDB) BallisticMissile-SCUDB)
+
+ (relationAllExists deviceUsed MissileAttack Missile)
+
+ (genls 
+  (MakingFn BiologicalWeapon) 
+  (MakingFn WeaponOfMassDestruction))
+
+ (genls 
+  (BiologicalWeaponFn Anthrax-Bacterium) BiologicalWeapon)
+
+ (isa 
+  (BiologicalWeaponFn RickettsiaRicketsii) ExistingObjectType)
+
+ (genls BiologicalWeapon-GeneticallyEngineeredBacteriumBased BiologicalWeapon-GeneticallyEngineeredOrganismBased)
+
+ (comment CruiseMissile-AS7Kerry "The collection of AS-7 missiles. These are short-range air-to-surface missiles developed in Russia, and deployed in about 30 countries worldwide.") 
+
+ (implies 
+  (and 
+   (isa ?MISSILE BallisticMissile) 
+   (weaponRange ?MISSILE ?RANGE) 
+   (greaterThanOrEqualTo ?RANGE 
+    (Mile 3500))) 
+  (isa ?MISSILE BallisticMissile-ICBM))
+
+ (genls Anthrax-DryForm Anthrax-Bacterium)
+
+ (genls AntiAircraftArtilleryGun AntiAircraftWeapon)
+
+ (isa 
+  (GroupFn BallisticMissile-M11) ObjectType)
+
+ (genls MineField-AntiTankWithGap MineField-AntiTank)
+
+ (genls AntiArmorMine AntiArmorWeapon)
+
+ (arg2Genl intendedTargetTypeOfWeaponType SomethingExisting)
+
+ (genls 
+  (BiologicalWeaponFn CoxiellaBurnetti) BiologicalWeapon)
+
+ (isa angleOfLauncher BinaryPredicate)
+
+ (genls GrenadeLauncher ProjectileLauncher)
+
+ (genls DepthBomb Bomb)
+
+ (isa 
+  (ChemicalWeaponFn Phosgene) ExistingObjectType)
+
+ (genls Saxitoxin BiologicalToxin)
+
+ (isa BombSubmunition ExistingObjectType)
+
+ (comment BiologicalWeapon-Fungal "The collection of all BiologicalWeapons that make use of fungi.") 
+
+ (comment MineField-Scatterable "Collection of instances of MineField such that the relevant instances of Mine-Weapon are emplaced by broadcast scatter.") 
+
+ (isa BallisticMissile-SubmarineLaunched MilitaryWeaponTypeByFunction)
+
+ (genls 
+  (GroupFn SilkwormMissile) PartiallyTangible)
+
+ (genls AntiAircraftArtilleryGun Gun)
+
+ (genls 
+  (BiologicalWeaponFn ClostridiumPerfringens) BiologicalWeapon-BiologicalToxinBased)
+
+ (genls SulfurMustardGas MustardGas)
+
+ (genls 
+  (ChemicalWeaponFn Sarin) ChemicalWeapon)
+
+ (genls ArtilleryShell Device-OneTimeUse)
+
+ (genls BallisticMissile-Mushak120 BallisticMissile-BattlefieldShortRange)
+
+ (isa NavalMine-Deployed ExistingObjectType)
+
+ (comment SelectiveFireFirearm "The collection of AutomaticFirearms that can operate as either a FullyAutomaticFirearm or a SemiAutomaticFirearm.") 
+
+ (relationAllInstance groupMemberType 
+  (GroupFn BallisticMissile-CSS8) BallisticMissile-CSS8)
+
+ (comment MachinePistol "The collection of Handguns that are also MachineGuns. Such guns are fairly rare, since they are relatively useless: Once the trigger is pulled, the clip is more or less emptied instantly.") 
+
+ (genls USMilitaryChemicalProtectiveMask MilitaryHardware)
+
+ (genls Diphosgene ChokingAgent)
+
+ (genls BallisticMissile-IntermediateRange BallisticMissile)
+
+ (genls Warhead-HighExplosiveAntiTank Warhead)
+
+ (relationAllExists outputsCreated 
+  (MakingFn CruiseMissile-AS7Kerry) CruiseMissile-AS7Kerry)
+
+ (isa AutomaticGrenadeLauncher ExistingObjectType)
+
+ (arg2Isa rateOfFire Rate)
+
+ (isa Torpedo-MK-46 ProductType)
+
+ (genls SurfaceToSurfaceMissile Missile)
+
+ (isa Platform-Military ExistingObjectType)
+
+ (relationAllExists deviceUsed BiologicalAttack BiologicalWeapon)
+
+ (argIsa rateOfFire 1 Gun)
+
+ (isa BiologicalWeapon-GeneticallyEngineeredBacteriumBased BiologicalWeaponTypeByAgent)
+
+ (arg3Isa SKF-2834698 NonNegativeScalarInterval)
+
+ (implies 
+  (and 
+   (isa ?ATTACK AttackOnTangible) 
+   (instrument-Generic ?ATTACK ?WEAPON) 
+   (isa ?WEAPON ChemicalWeapon)) 
+  (isa ?ATTACK ChemicalAttack))
+
+ (interArgIsa1-2 objectPaidFor 
+  (BuyingFn BiologicalAgent) BiologicalAgent)
+
+ (implies 
+  (and 
+   (isa ?MISSILE BallisticMissile) 
+   (weaponRange ?MISSILE ?RANGE) 
+   (quantitySubsumes 
+    (Mile 1500 3437) ?RANGE)) 
+  (isa ?MISSILE BallisticMissile-IntermediateRange))
+
+ (isa Anthrax-DryForm ExistingObjectType)
+
+ (implies 
+  (isa ?BIO BiologicalAgent) 
+  (intendedBehaviorCapable ?BIO HarmingAnAgent stuffUsed))
+
+ (isa AntiArmorMine ExistingObjectType)
+
+ (argIsa intendedTargetTypeOfWeaponType 2 Collection)
+
+ (isa angleOfLauncher FunctionalPredicate)
+
+ (isa 
+  (BiologicalWeaponFn CoxiellaBurnetti) ExistingObjectType)
+
+ (genls Torpedo-MK-44 ElectricalDevice)
+
+ (genls HeavyMachineGun FullyAutomaticFirearm)
+
+ (isa Saxitoxin ExistingStuffType)
+
+ (comment AntiArmorWeapon "The collection of Weapons that are designed to be used against ArmoredVehicles.") 
+
+ (isa BallisticMissile-Guided MilitaryWeaponTypeByFunction)
+
+ (comment 125MMSmoothBoreCannon "A kind of Cannon common on Chinese Tanks.") 
+
+ (isa weaponRange FunctionalPredicate)
+
+ (conceptuallyRelated MineField-AntiTankWithGap Canalize-MilitaryTask)
+
+ (isa BallisticMissile-SubmarineLaunched ExistingObjectType)
+
+ (isa IntendedTargetTypeFn CollectionDenotingFunction)
+
+ (genls 
+  (BiologicalWeaponFn RicinToxin) BiologicalWeapon-BiologicalToxinBased)
+
+ (comment BallisticMissile-M11 "A short range ballistic missile produced in China.") 
+
+ (relationAllInstance weaponEffectiveRange-Max BallisticMissile-Minuteman1 
+  (Mile 6214))
+
+ (relationAllInstance groupMemberType 
+  (GroupFn BallisticMissile-M11) BallisticMissile-M11)
+
+ (comment AntiSubmarineRocket "The collection of Missiles designed to destroy or inflict damage on Submarines.") 
+
+ (genls Phosgene ChokingAgent)
+
+ (isa BallisticMissile-IntermediateRange ExistingObjectType)
+
+ (isa Warhead-HighExplosiveAntiTank ExistingObjectType)
+
+ (genls 
+  (MakingFn CruiseMissile-AS7Kerry) MakingSomething)
+
+ (arg1Isa rateOfFire Gun)
+
+ (isa SurfaceToSurfaceMissile MilitaryWeaponTypeByFunction)
+
+ (relationAllExists physicalParts BallisticMissile-ICBM NuclearWarhead)
+
+ (genls 
+  (MakingFn NuclearWeapon) 
+  (MakingFn WeaponOfMassDestruction))
+
+ (relationAllExists deviceUsed NuclearAttack NuclearWeapon)
+
+ (argIsa angleOfLauncher 1 ProjectileLauncher)
+
+ (arg2Isa SKF-2834698 TransportationEvent)
+
+ (genls BiologicalAgent PrecursorMaterialForChemicalOrBiologicalWeapons)
+
+ (implies 
+  (and 
+   (isa ?MISSILE BallisticMissile) 
+   (weaponRange ?MISSILE ?RANGE) 
+   (quantitySubsumes 
+    (Mile 500 1499) ?RANGE)) 
+  (isa ?MISSILE BallisticMissile-MediumRange))
+
+ (genls AntiArmorMine LandMine)
+
+ (isa MineField-AntiTankWithGap ExistingStuffType)
+
+ (arg2Isa intendedTargetTypeOfWeaponType Collection)
+
+ (comment SemiAutomaticFirearm "The collection of AutomaticFirearms that fire a burst of bullets per pull of the trigger.") 
+
+ (genls 
+  (BiologicalWeaponFn Anthrax-Bacterium) BiologicalWeapon-Bacterial)
+
+ (genls Torpedo-MK-46 FuelPoweredDevice)
+
+ (genls ClusterBomb Bomb)
+
+ (isa AntiArmorWeapon ExistingObjectType)
+
+ (isa BallisticMissile-BattlefieldShortRange MilitaryWeaponTypeByFunction)
+
+ (arity weaponRange 2)
+
+ (conceptuallyRelated MineField-AntiTankWithGap MechanizedUnit-MilitarySpecialty)
+
+ (isa AntiAircraftArtilleryGun ExistingObjectType)
+
+ (isa IntendedTargetTypeFn ReifiableFunction)
+
+ (genls 
+  (BiologicalWeaponFn BotulinumToxin) BiologicalWeapon-BiologicalToxinBased)
+
+ (isa SulfurMustardGas ProductType)
+
+ (relationAllExists physicalParts AntiTankWeapon Warhead)
+
+ (comment NavalMine "A mine intended to be planted undersea.") 
+
+ (isa SelectiveFireFirearm ExistingObjectType)
+
+ (genls BlastGrenade Bomb)
+
+ (genls BallisticMissile-M11 BallisticMissile-ShortRange)
+
+ (isa BallisticMissile-Minuteman1 ProductType)
+
+ (implies 
+  (and 
+   (weaponEffectiveRange ?WEAPON ?RANGE) 
+   (maxQuantValue ?RANGE ?MAXRANGE)) 
+  (weaponEffectiveRange-Max ?WEAPON ?MAXRANGE))
+
+ (arity rateOfFire 2)
+
+ (relationAllExists physicalParts ChemicalWeapon ChemicalAgent)
+
+ (genls 105MMRifledBoreCannon RifledBoreWeapon)
+
+ (holdsIn 
+  (MonthFn June 
+   (YearFn 1965)) 
+  (relationInstanceExistsCount possesses UnitedStatesOfAmerica BallisticMissile-Minuteman1 800))
+
+ (genls PSChloropicrin ChokingAgent)
+
+ (isa BallisticMissile-IntermediateRange MilitaryWeaponTypeByFunction)
+
+ (genls IncapacitatingAgent ChemicalAgent)
+
+ (isa Torpedo-MK-46 ExistingObjectType)
+
+ (relationAllExists deviceUsed ChemicalAttack ChemicalWeapon)
+
+ (argIsa rotationOfLauncher 1 ProjectileLauncher)
+
+ (arg2Isa SKF-2834698 LaunchingAMissile)
+
+ (isa 
+  (ChemicalWeaponFn MustardGas) ExistingObjectType)
+
+ (comment 85MMSmoothBoreCannon "A kind of Cannon common on Tank-Vehicles.") 
+
+ (typePrimaryFunction Napalm 
+  (CollectionSubsetFn AttackOnTangible 
+   (TheSetOf ?ATTACK 
+    (and 
+     (isa ?DEVICE IncendiaryDevice) 
+     (deviceUsed ?ATTACK ?DEVICE)))) stuffUsed)
+
+ (implies 
+  (and 
+   (isa ?MISSILE BallisticMissile) 
+   (weaponRange ?MISSILE ?RANGE) 
+   (quantitySubsumes 
+    (Mile 94 499) ?RANGE)) 
+  (isa ?MISSILE BallisticMissile-ShortRange))
+
+ (genls MineField-AntiTank MineField)
+
+ (argFormat intendedTargetTypeOfWeaponType 1 SetTheFormat)
+
+ (isa ClusterBomb ExistingObjectType)
+
+ (genls 
+  (BiologicalWeaponFn Plague-Bacterium) BiologicalWeapon-Bacterial)
+
+ (comment Torpedo-MK-46 "A type of Torpedo with ActiveSonar-Device and PassiveSonar-Device to provide guidance. The Torpedo-MK-46 was designed specifically for attacking high performance Submarines and is the preferred Warhead for AntiSubmarineRockets.") 
+
+ (genls AerialBomb Bomb)
+
+ (genls 125MMSmoothBoreCannon SmoothBoreWeapon)
+
+ (isa weaponRange BinaryPredicate)
+
+ (conceptuallyRelated MineField-AntiTank MechanizedUnit-MilitarySpecialty)
+
+ (genls BoforsGun MachineCannon)
+
+ (arity IntendedTargetTypeFn 1)
+
+ (genls MultipleRocketLauncherSystem-MLRS MultipleRocketLauncher)
+
+ (genls 
+  (BiologicalWeaponFn ClostridiumPerfringens) BiologicalWeapon)
+
+ (isa SulfurMustardGas ExistingStuffType)
+
+ (arg2Isa weaponRounds PositiveInteger)
+
+ (isa TearGas MilitaryWeaponTypeByFunction)
+
+ (isa 
+  (ChemicalWeaponFn Soman) ProductType)
+
+ (genls NavalMine Mine-Weapon)
+
+ (isa BallisticMissile-M11 ExistingObjectType)
+
+ (genls Sidewinder-Missile RocketPropelledVehicle)
+
+ (genls BlastGrenade ConventionalWeapon)
+
+ (isa rateOfFire BinaryPredicate)
+
+ (implies 
+  (and 
+   (isa ?SHOOT ShootingAProjectileWeapon) 
+   (deviceUsed ?SHOOT ?GUN) 
+   (distanceTranslated ?SHOOT ?DISTANCE) 
+   (isa ?AGENT Agent) 
+   (weaponEffectiveRange ?GUN ?RANGE) 
+   (greaterThan ?RANGE ?DISTANCE)) 
+  (successfulForAgents ?SHOOT ?AGENT))
+
+ (relationAllInstance lengthOfObject LGM-30B-MinutemanMissile 
+  (Foot-UnitOfMeasure 55.75))
+
+ (genls ChlorineGas ChokingAgent)
+
+ (genls BallisticMissile-MediumRange BallisticMissile)
+
+ (isa 
+  (MakingFn CruiseMissile-AS7Kerry) TemporalObjectType)
+
+ (genls FullyAutomaticFirearm Gun)
+
+ (genls 
+  (ChemicalWeaponFn Soman) ChemicalWeapon)
+
+ (genls 
+  (MakingFn ChemicalWeapon) 
+  (MakingFn WeaponOfMassDestruction))
+
+ (argIsa reloadTime 1 ProjectileLauncher)
+
+ (arg1Isa SKF-2834698 AntiSubmarineRocket)
+
+ (genls 
+  (ChemicalWeaponFn MustardGas) ChemicalWeapon)
+
+ (implies 
+  (and 
+   (isa ?MISSILE BallisticMissile) 
+   (weaponRange ?MISSILE ?RANGE) 
+   (quantitySubsumes 
+    (Mile 0 94) ?RANGE)) 
+  (isa ?MISSILE BallisticMissile-BattlefieldShortRange))
+
+ (isa weaponEffectiveRange-Min FunctionalPredicate)
+
+ (arg1Format intendedTargetTypeOfWeaponType SetTheFormat)
+
+ (relationAllExists physicalParts BiologicalWeapon BiologicalAgent)
+
+ (isa 
+  (BiologicalWeaponFn BrucellaBacterium) ExistingObjectType)
+
+ (comment MineField-AntiTankWithGap "Collection of instances of MineField characterized as being intended to impede progress of mechanized or tracked units, but with an intentionally inbuilt gap for purposes of canalization. See Canalize-MilitaryTask.") 
+
+ (isa IntendedTargetTypeFn UnaryFunction)
+
+ (isa MultipleRocketLauncherSystem-MLRS ExistingObjectType)
+
+ (isa 
+  (BiologicalWeaponFn ClostridiumPerfringens) ExistingObjectType)
+
+ (arg1Isa weaponRounds Gun)
+
+ (comment 76MMRifledBoreCannon "A kind of Cannon common on Tank-Vehicles.") 
+
+ (isa 
+  (ChemicalWeaponFn Sarin) ProductType)
+
+ (isa NavalMine ExistingObjectType)
+
+ (comment BallisticMissile-SCUDC "A short range ballistic missile produced in North Korea.") 
+
+ (genls FragmentationGrenade Bomb)
+
+ (comment BiologicalWeapon-GeneticallyEngineeredVirusBased "The collection of all BiologicalWeapons that make use of GeneticallyEngineeredViralPathogens.") 
+
+ (genls MachinePistol MachineGun-Portable)
+
+ (comment weaponEffectiveRange-Max "(weaponEffectiveRange-Max WEAPON RANGE) means that RANGE is the maximum range at which the projectile weapon WEAPON is considered to be 'effective', ie, capable of doing significant damage to a target. Every projectile weapon has a maximum effective range, at least in the terrestrial frame of reference. Some also have a minimum effective range--see weaponEffectiveRange-Min. Where it is desireable to have both the minimum and maximum effective range referenced in the same GAF, use weaponEffectiveRange. Also, weaponEffectiveRange-Max should be distinguished from weaponRange, which cites the maximum distance a projectile weapon can travel. This is often much greater than the weaponEffectiveRange-Max.") 
+
+ (isa 
+  (MakingFn BallisticMissile-SCUDC) TemporalObjectType)
+
+ (isa rateOfFire FunctionalPredicate)
+
+ (genls 
+  (BiologicalWeaponFn Batrachotoxin) BiologicalWeapon-BiologicalToxinBased)
+
+ (isa USMilitaryChemicalProtectiveMask ProductType)
+
+ (comment LGM-30B-MinutemanMissile "The collection of all LGM-30B-MinutemanMissiles, the second (and last) type of BallisticMissile-Minuteman1.") 
+
+ (isa BallisticMissile-MediumRange ExistingObjectType)
+
+ (comment ProximityDetonatingWeapon "The collection of ExplosiveDevices whose instances detonate when something gets within a certain range of the device.") 
+
+ (isa 
+  (ChemicalWeaponFn Soman) ExistingObjectType)
+
+ (argIsa weaponEffectiveRange-Max 1 ProjectileWeapon)
+
+ (resultIsa SKF-2834698 Torpedo)
+
+ (genls MachineGun-Portable FullyAutomaticFirearm)
+
+ (arity weaponEffectiveRange-Min 2)
+
+ (isa MineField-AntiTank ExistingStuffType)
+
+ (argGenl intendedTargetTypeOfWeaponType 1 Weapon)
+
+ (isa 
+  (BiologicalWeaponFn Plague-Bacterium) ExistingObjectType)
+
+ (genls GeneticallyEngineeredBacterialPathogen GeneticallyEngineeredPathogen)
+
+ (conceptuallyRelated MineField-AntiTankWithGap Tank-Vehicle)
+
+ (intendedTargetTypeOfWeaponType 
+  (AntiWeaponTypeFn ?TARGETTYPE) ?TARGETTYPE)
+
+ (implies 
+  (and 
+   (isa ?GUN DirectFireWeapon) 
+   (deviceUsed ?SHOOT ?GUN) 
+   (isa ?SHOOT ShootingAProjectileWeapon) 
+   (target ?SHOOT ?TARGET) 
+   (objectMoving ?SHOOT ?BULLET) 
+   (successfulForAgents ?SHOOT ?AGENT) 
+   (distanceBetween ?GUN ?TARGET ?DISTANCE)) 
+  (distanceTranslated ?SHOOT ?DISTANCE))
+
+ (comment weaponRounds "The number of Bullets that can be fired consecutively without reloading. For most MachineGuns this is a large number > 100, whereas for most Pistols it is somewhere between 1 and 6.") 
+
+ (isa TridentBallisticMissile ProductType)
+
+ (siblingDisjointExceptions BiologicalWeapon-GeneticallyEngineeredOrganismBased BiologicalWeapon-Fungal)
+
+ (isa weaponPayload-Max FunctionalPredicate)
+
+ (genls BallisticMissile-SCUDC BallisticMissile-ShortRange)
+
+ (genls FragmentationGrenade ConventionalWeapon)
+
+ (genls BiologicalWeapon-GeneticallyEngineeredVirusBased BiologicalWeapon-Viral)
+
+ (genls AntiSubmarineRocket Missile)
+
+ (arg1Isa weaponEffectiveRange-Max ProjectileWeapon)
+
+ (genls 
+  (MakingFn BallisticMissile-SCUDC) MakingSomething)
+
+ (genls 
+  (BiologicalWeaponFn Batrachotoxin) BiologicalWeapon)
+
+ (comment GeneticallyEngineeredViralPathogen "The collection of all instances of Virus that have been genetically engineered for use in BiologicalWeapons.") 
+
+ (genls AssaultRifle SelectiveFireFirearm)
+
+ (relationAllInstance lengthOfObject LGM-30B-MinutemanMissile 
+  (Foot-UnitOfMeasure 54))
+
+ (isa BallisticMissile-MediumRange MilitaryWeaponTypeByFunction)
+
+ (isa 
+  (MakingFn 
+   (BiologicalWeaponFn Anthrax-Bacterium)) Collection)
+
+ (genls ProximityDetonatingWeapon Weapon)
+
+ (genls LaserGuidedBomb Device-RemoteControlled)
+
+ (comment weaponPayload-Max "(weaponPayload-Max ?WEAP ?MASS) means that the weapon ?WEAP can carry ?MASS amount of explosive charge.") 
+
+ (argIsa weaponEffectiveRange-Min 1 ProjectileWeapon)
+
+ (arity SKF-2834698 3)
+
+ (disjointWith BlastGrenade FragmentationGrenade)
+
+ (isa weaponEffectiveRange-Min BinaryPredicate)
+
+ (genls MineField-AntiPersonnel MineField)
+
+ (arg1Genl intendedTargetTypeOfWeaponType Weapon)
+
+ (sourceOfTerm-Person MultipleRocketLauncher-122mmMRL Rasch)
+
+ (isa AntiArmorGrenade ExistingObjectType)
+
+ (genls BiologicalWeapon-Fungal BiologicalWeapon)
+
+ (conceptuallyRelated MineField-AntiTank Tank-Vehicle)
+
+ (relationAllExists physicalParts WeaponSystem Weapon)
+
+ (comment weaponRange "The maximum distance that a ProjectileWeapon can travel in a ShootingAProjectileWeapon event. This is something different than the weaponEffectiveRange that is never greater than weaponRange, but often quite a lot smaller. For IndirectFireWeapons the weaponRange is not the length of the trajectory it follows, but rather the maximum direct distance between the Gun and the place of impact of the ProjectileWeapon.") 
+
+ (intendedTargetTypeOfWeaponType AntiArmorWeapon ArmoredVehicle)
+
+ (isa 
+  (BiologicalWeaponFn RicinToxin) ExistingObjectType)
+
+ (arg2Isa weaponEffectiveRange-Max PositiveScalarInterval)
+
+ (implies 
+  (and 
+   (weaponRange ?WEAPON ?RANGE) 
+   (weaponEffectiveRange ?WEAPON ?RANGE-EFFECTIVE)) 
+  (greaterThan ?RANGE ?RANGE-EFFECTIVE))
+
+ (genls 76MMRifledBoreCannon RifledBoreWeapon)
+
+ (genls 125MMSmoothBoreCannon FieldArtillery)
+
+ (isa MortarShell ExistingObjectType)
+
+ (genls TridentBallisticMissile BallisticMissile-SubmarineLaunched)
+
+ (siblingDisjointExceptions BiologicalWeapon-GeneticallyEngineeredOrganismBased BiologicalWeapon-Bacterial)
+
+ (arity weaponPayload-Max 2)
+
+ (comment BallisticMissile-SCUDB "A short range ballistic missile produced in North Korea.") 
+
+ (genls RifleGrenade Bomb)
+
+ (genls BiologicalWeapon-GeneticallyEngineeredVirusBased BiologicalWeapon-GeneticallyEngineeredOrganismBased)
+
+ (comment IntendedTargetTypeFn "(IntendedTargetTypeFn ?WEAPONTYPE) returns the intended primary target type that instances of ?WEAPONTYPE are designed to act against, assuming this can be defined. In cases where it cannot be defined, the function is undefined. This is the functional counterpart of intendedTargetTypeOfWeaponType.") 
+
+ (isa 
+  (BiologicalWeaponFn Batrachotoxin) ExistingObjectType)
+
+ (relationAllExists physicalParts NuclearWarhead NuclearBomb)
+
+ (implies 
+  (and 
+   (isa ?ACQUIRE GainingUserRights) 
+   (objectOfPossessionTransfer ?ACQUIRE ?BIO-AGENT) 
+   (toPossessor ?ACQUIRE ?AGENT) 
+   (isa ?BIO-AGENT ?BIO-AGENT-TYPE) 
+   (genls ?BIO-AGENT-TYPE BiologicalAgent)) 
+  (increasesCausally ?ACQUIRE 
+   (exists 
+    (?WMD) 
+    (and 
+     (isa ?WMD WeaponOfMassDestruction) 
+     (possesses ?AGENT ?WMD))) likelihood))
+
+ (comment reloadTime "(reloadTime GUN TIME) indicates the time it takes to load GUN after it has been fired. This predicate can also be used for MissileLaunchers that must be loaded before launching another Missile. In case of Guns that contain more Bullets the reloadTime is the time it takes to reload the gun when it is empty. ") 
+
+ (relationInstanceExistsCount possesses Japan NuclearWeapon 0)
+
+ (genls CruiseMissile-AS7Kerry AirToSurfaceMissile)
+
+ (implies 
+  (relationInstanceExists possesses ?AGENT NuclearWeapon) 
+  (resourceCapableOf ?AGENT NuclearAttack doneBy))
+
+ (genls 
+  (BiologicalWeaponFn Aflatoxin) BiologicalWeapon-BiologicalToxinBased)
+
+ (genls ProximityDetonatingWeapon ExplosiveDevice)
+
+ (implies 
+  (and 
+   (genls ?WEAPONTYPE MilitaryWeapon) 
+   (isa ?WEAPON ?WEAPONTYPE) 
+   (capableOf ?AGENT 
+    (CollectionSubsetFn AttackOnTangible 
+     (TheSetOf ?OBJ 
+      (instrument-Generic ?OBJ ?WEAPON))) performedBy)) 
+  (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE))
+
+ (isa LaserGuidedBomb ExistingObjectType)
+
+ (comment MachineCannon "The collection of Cannons which can fire continuously.") 
+
+ (arg2Isa weaponPayload-Max Mass)
+
+ (disjointWith DirectFireWeapon IndirectFireWeapon)
+
+ (argIsa weaponPayload-Max 1 ProjectileWeapon)
+
+ (implies 
+  (and 
+   (isa ?ATTACK WeaponOfMassDestructionAttack) 
+   (maleficiary ?ATTACK ?VICTIM) 
+   (isa ?VICTIM Country)) 
+  (holdsIn 
+   (STIF ?ATTACK) 
+   (economicStability 
+    (EconomyFn PlanetEarth) Low)))
+
+ (isa SKF-2834698 FixedAritySkolemFuncN)
+
+ (implies 
+  (and 
+   (isa ?SHOOTING ShootingAProjectileWeapon) 
+   (damages ?SHOOTING ?TARGET) 
+   (fromLocation ?SHOOTING ?LAUNCHER) 
+   (instrument-Generic ?SHOOTING ?LAUNCHER) 
+   (deviceUsed ?SHOOTING ?WEAPON) 
+   (weaponEffectiveRange-Max ?WEAPON ?MAXRANGE) 
+   (distanceBetween ?TARGET ?LAUNCHER ?DIST)) 
+  (greaterThan ?MAXRANGE ?DIST))
+
+ (isa DepthBomb ExistingObjectType)
+
+ (argIsa intendedTargetTypeOfWeaponType 1 Collection)
+
+ (comment MultipleRocketLauncher-122mmMRL "The collection of 122mm multiple rocket launchers. The MRL is a Soviet-made, truck mounted rocket launcher, similar to the American Multiple Launch Rocket system (MLRS), but much older.") 
+
+ (isa GeneticallyEngineeredBacterialPathogen ExistingObjectType)
+
+ (genls FieldArtillery IndirectFireWeapon)
+
+ (genls MilitaryAircraft Platform-Military)
+
+ (isa BiologicalWeapon-Fungal BiologicalWeaponTypeByAgent)
+
+ (isa 125MMSmoothBoreCannon ExistingObjectType)
+
+ (comment MineField-AntiTank "Collection of instances of MineField designed to impede the progress of mechanized or tracked units.") 
+
+ (comment weaponEffectiveRange "The effective range of ProjectileWeapon. This range indicates the range within which, if you aim at something you will be likely to hit it. Unlike weaponRange that gives values for the maximum distance, weaponEffectiveRange is a minimum and a maximum. Depending on the type of weapon this may be the minimum and maximum height at which a flying AirTransportationDevice can be effectively hit by a SurfaceToAirMissile. ") 
+
+ (isa 
+  (BiologicalWeaponFn BotulinumToxin) ExistingObjectType)
+
+ (arg1Isa weaponEffectiveRange ProjectileWeapon)
+
+ (isa 76MMRifledBoreCannon ExistingObjectType)
+
+ (isa TridentBallisticMissile ExistingObjectType)
+
+ (comment BiologicalWeapon-GeneticallyEngineeredOrganismBased "The collection of all BiologicalWeapons that make use of genetically engineered BiologicalAgents. In general, any spec of BiologicalWeapon-GeneticallyEngineeredOrganismBased will be a spec of some other instance of BiologicalWeaponTypeByAgent.") 
+
+ (isa weaponPayload-Max BinaryPredicate)
+
+ (genls Bazooka SmallArm-Weapon)
+
+ (genls BallisticMissile-SCUDB BallisticMissile-ShortRange)
+
+ (genls RifleGrenade ConventionalWeapon)
+
+ (comment BallisticMissile-Minuteman1 "The collection of all Minuteman I missiles. The Minuteman I was an early type of MinutemanBallisticMissile developed by the U.S. during the early 1960's.") 
+
+ (implies 
+  (and 
+   (isa ?ATTACK AttackOnTangible) 
+   (deviceUsed ?ATTACK ?WEAPON) 
+   (isa ?WEAPON ProjectileWeapon)) 
+  (isa ?ATTACK ShootingAProjectileWeapon))
+
+ (genls LGM-30B-MinutemanMissile BallisticMissile-Minuteman1)
+
+ (isa CruiseMissile-AS7Kerry ExistingObjectType)
+
+ (isa 
+  (BiologicalWeaponFn Aflatoxin) ExistingObjectType)
+
+ (isa ProximityDetonatingWeapon ExistingObjectType)
+
+ (arg1Isa weaponPayload-Max ProjectileWeapon)
+
+ (comment Bazooka "The collection of shoulder-held MissileLaunchers that fire Missiles which are RocketPropelledVehicles and AntiArmorWeapons.") 
+
+ (isa MineField-AntiPersonnel ExistingStuffType)
+
+ (arg1Isa intendedTargetTypeOfWeaponType Collection)
+
+ (genls MultipleRocketLauncher-122mmMRL MultipleRocketLauncher)
+
+ (comment BiologicalWeapon-Bacterial "The collection of all bacterial-based BiologicalWeapons.") 
+
+ (comment TOWMissile "A subset of GuidedMissiles. TOW stands for 'tube-launched, optically-tracked, wire-guided.' These missiles can be launched from tripods, vehicles such as Humvees and tanks, and helicopters. TOWMissiles are capable of piercing the armor of any 1990's tank.") 
+
+ (comment MineField-AntiPersonnel "A collection of instances of MineField that are specifically designed and intended to attrit enemy forces by inflicting casualties on enemy personnel.") 
+
+ (intendedTargetTypeOfWeaponType AntiRadarMissile RADAR-Device)
+
+ (genls MachineGun-Portable Gun-Portable)
+
+ (implies 
+  (and 
+   (isa ?SHOOT ShootingAProjectileWeapon) 
+   (deviceUsed ?SHOOT ?GUN) 
+   (distanceTranslated ?SHOOT ?DISTANCE) 
+   (objectMoving ?SHOOT ?BULLET) 
+   (weaponRange ?GUN ?RANGE)) 
+  (greaterThan ?RANGE ?DISTANCE))
+
+ (comment TridentBallisticMissile "The collection of all BallisticMissiles designed for use on TridentClassSubmarines.") 
+
+ (siblingDisjointExceptions BiologicalWeapon-Viral BiologicalWeapon-GeneticallyEngineeredOrganismBased)
+
+ (isa weaponRounds FunctionalPredicate)
+
+ (implies 
+  (and 
+   (isa ?PROGRAM MilitaryNuclearWeaponsProgram) 
+   (directingAgent ?PROGRAM ?AGENT)) 
+  (purposeInEvent ?AGENT ?PROGRAM 
+   (exists 
+    (?MAKING) 
+    (and 
+     (isa ?MAKING 
+      (MakingFn NuclearWeapon)) 
+     (directingAgent ?MAKING ?AGENT)))))
+
+ (comment BallisticMissile-CSS8 "A short range ballistic missile produced in China.") 
+
+ (genls BallisticMissile-Minuteman1 MinutemanBallisticMissile)
+
+ (isa LGM-30B-MinutemanMissile ProductType)
+
+ (arg2Isa reloadTime TimeInterval)
+
+ (genls Aflatoxin BiologicalToxin)
+
+ (comment PressureSensitiveDetonatingWeapon "The collection of ExplosiveDevices that contain pressure-sensitive sensors to control detonation.") 
+
+ (genls AntiTankWeapon MilitaryWeapon)
+
+ (isa MachineCannon ExistingObjectType)
+
+ (relationAllInstance lengthOfObject BallisticMissile-Minuteman3 
+  (Foot-UnitOfMeasure 59.75))
+
+ (genls SelectiveFireFirearm Gun)
+
+ (relationAllInstance weaponRange AntiSubmarineRocket 
+  (Mile 5.6))
+
+ (genls BallisticMissile-BattlefieldShortRange BallisticMissile)
+
+ (comment TerminalGuidedProjectile "The collection of PhysicalDevices which have guidance systems in use during the terminal phase of the flight. Subsets include some types of AirToSurfaceMissiles and SurfaceToSurfaceMissiles.") 
+
+ (isa MultipleRocketLauncher-122mmMRL ExistingObjectType)
+
+ (isa Napalm MilitaryWeaponTypeByFunction)
+
+ (genls TOWMissile RocketPropelledVehicle)
+
+ (intendedTargetTypeOfWeaponType AntiTankWeapon Tank-Vehicle)
+
+ (genls RicinToxin BiologicalAgent)
+
+ (isa NitrogenMustardGas ExistingStuffType)
+
+ (comment MatraMica-AirToAirMissile "A kind of AirToAirMissile currently (2000) used by France (who designed it) as well as Taiwan-RepublicOfChina.") 
+
+ (isa ArtilleryShell ExistingObjectType)
+
+ (comment BiologicalWeaponTypeByAgent "A collection of collections. Instances of BiologicalWeaponTypeByAgent are collections of BiologicalWeapons, arranged according to the BiologicalAgent used in their instances.") 
+
+ (arity weaponRounds 2)
+
+ (genls BallisticMissile-CSS8 BallisticMissile-ShortRange)
+
+ (isa BallisticMissile-Minuteman1 ExistingObjectType)
+
+ (conceptuallyRelated BiologicalWeapon-GeneticallyEngineeredVirusBased GeneticEngineering)
+
+ (implies 
+  (and 
+   (isa ?BIO-ATTACK AttackOnTangible) 
+   (bodilyActedOn ?BIO-ATTACK ?BLO) 
+   (maleficiary ?BIO-ATTACK ?BLO) 
+   (instrument-Generic ?BIO-ATTACK ?BW) 
+   (isa ?BW BiologicalAgent)) 
+  (isa ?BLO BiologicalLivingObject))
+
+ (genls GeneticallyEngineeredViralPathogen GeneticallyEngineeredVirus)
+
+ (isa LGM-30B-MinutemanMissile ExistingObjectType)
+
+ (genls Mine-Weapon ConventionalWeapon)
+
+ (arg1Isa reloadTime ProjectileLauncher)
+
+ (isa 
+  (MakingFn CruiseMissile-AS7Kerry) Collection)
+
+ (genls AntiArmorWeapon MilitaryWeapon)
+
+ (isa BallisticMissile-Minuteman3 ProductType)
+
+ (genls Staphylococcus EmeticAgent)
+
+ (comment Howitzer-122mmSelfPropelled "The collection of self-propelled 122mm Howitzers.") 
+
+ (genls MachineCannon FieldArtillery)
+
+ (sourceOfTerm InfantryFightingVehicle-BMP-2 ST100-7Mt)
+
+ (isa 
+  (IndustryFn ChemicalWeapon) IndustryOrEconomicSectorType)
+
+ (genls 
+  (GroupFn BallisticMissile-Mushak120) Group)
+
+ (implies 
+  (and 
+   (isa ?WEAPONTYPE1 BiologicalWeaponTypeByAgent) 
+   (different ?WEAPONTYPE1 ?WEAPONTYPE2) 
+   (isa ?WEAPONTYPE2 BiologicalWeaponTypeByAgent) 
+   (relationAllInstance weaponBasisObjectType ?WEAPONTYPE1 ?TYPE1) 
+   (relationAllInstance weaponBasisObjectType ?WEAPONTYPE2 ?TYPE2)) 
+  (different ?TYPE1 ?TYPE2))
+
+ (isa intendedTargetTypeOfWeaponType FunctionalPredicate)
+
+ (isa AntiSubmarineRocket ExistingObjectType)
+
+ (isa IncendiaryDevice MilitaryWeaponTypeByFunction)
+
+ (intendedTargetTypeOfWeaponType AntiShipMissile Ship)
+
+ (argIsa weaponRange 2 Distance)
+
+ (isa MachineGun-Portable ExistingObjectType)
+
+ (genls BotulinumToxin BiologicalAgent)
+
+ (genls NitrogenMustardGas MustardGas)
+
+ (genls SurfaceToSurfaceMissile-Ballistic BallisticMissile)
+
+ (genls 105MMRifledBoreCannon FieldArtillery)
+
+ (comment ObstacleSystem-Military "A structured system of artifacts intended to play the collective role of constrainingObject in a non-trivial subset of the collection of Movement-TranslationEvents such that the objectMoving is an instance of ModernMilitaryUnit-Deployable. Collections of instances of ObstacleSystem-Military designed to impede the movements of certain kinds of military unit can be referenced via MilitarySpecialtyObstacleFn: collections where the type is intended to impede the performance of certain tasks can be referenced via MilitaryTaskObstacleFn.") 
+
+ (isa weaponRounds BinaryPredicate)
+
+ (isa SemiAutomaticFirearm ExistingObjectType)
+
+ (isa BallisticMissile-CSS8 ExistingObjectType)
+
+ (conceptuallyRelated BiologicalWeapon-GeneticallyEngineeredOrganismBased GeneticEngineering)
+
+ (implies 
+  (and 
+   (isa ?VICTIM Person) 
+   (maleficiary ?ATTACK ?VICTIM) 
+   (isa ?ATTACK BiologicalAttack) 
+   (deviceUsed ?ATTACK ?WEAPON) 
+   (isa ?WEAPON BiologicalWeapon-Rickettsial)) 
+  (relationExistsInstance maleficiary Rickettsiosis ?VICTIM))
+
+ (comment Batrachotoxin "Batrachotoxin is a toxin produced by certain species of Frogs.") 
+
+ (implies 
+  (and 
+   (genls ?WEAPONTYPE MilitaryWeapon) 
+   (isa ?WEAPON ?WEAPONTYPE) 
+   (instrument-Generic ?ATTACK ?WEAPON) 
+   (isa ?ATTACK AttackOnTangible) 
+   (capableOfDoing ?AGENT ?ATTACK performedBy)) 
+  (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE))
+
+ (genls GeneticallyEngineeredViralPathogen GeneticallyEngineeredPathogen)
+
+ (isa 105MMRifledBoreCannon ExistingObjectType)
+
+ (genls Gun ConventionalWeapon)
+
+ (arity reloadTime 2)
+
+ (argIsa weaponRounds 2 PositiveInteger)
+
+ (genls Gun-Portable SmallArm-Weapon)
+
+ (genls Howitzer-122mmSelfPropelled Artillery-SelfPropelled)
+
+ (cyclistNotes InfantryFightingVehicle-BMP-2 "Relation between BradleyFightingVehicle-M2 and InfantryFightingVehicle-BMP-2: BradleyFightingVehicle-M2 is a US infantry fighting vehicle which takes basically the same type of role as the Red BMP-2s though not necessarily with the same capability, as reflected in the combat power values of 1.0 and 0.58 for battalions of M2 and BMP-2, respectively.") 
+
+ (relationAllExists physicalParts 
+  (BiologicalWeaponFn RickettsiaQuintana) RickettsiaQuintana)
+
+ (comment AntiSubmarineRocket "The collection of Missiles designed to transport a Torpedo as payload to the vicinity of an enemy Submarine. Once in the water, the Torpedo executes a search for the enemy Submarine.") 
+
+ (isa 
+  (BiologicalWeaponFn Staphylococcus) ExistingObjectType)
+
+ (genls 
+  (GroupFn BallisticMissile-Mushak160) Group)
+
+ (isa TerminalGuidedProjectile ExistingObjectType)
+
+ (arity intendedTargetTypeOfWeaponType 2)
+
+ (relationAllExists physicalParts 
+  (BiologicalWeaponFn RickettsiaProwsecki) RickettsiaProwsecki)
+
+ (isa Warhead-HighExplosiveAntiTank MilitaryWeaponTypeByFunction)
+
+ (isa TOWMissile ExistingObjectType)
+
+ (intendedTargetTypeOfWeaponType NavalMine Ship)
+
+ (arg2Isa weaponRange Distance)
+
+ (comment rotationOfLauncher "(rotationOfLauncher GUN ANGLE-RANGE) indicates the range of horizontal rotation at which a GUN can be fired. This is not relevant for all guns but for those that are fixed and point in some forward direction, the range of left-right rotation may be limited. For example, (angleOfLauncher ?CANNON (Degree-UnitOfAngularMeasure -45 45) means that ?CANNON can be fired between 45 degrees to the left and 45 degrees to the right with respect to its intrinsic forward direction. ") 
+
+ (comment BiologicalWeapon-BiologicalToxinBased "The collection of all BiologicalWeapons that make use of BiologicalToxins.") 
+
+ (genls 
+  (GroupFn SmallArm-Weapon) Group)
+
+ (implies 
+  (and 
+   (isa ?BARRIER ObstacleSystem-Military) 
+   (genls ?MOVETYPE Movement-TranslationEvent) 
+   (relationAllExists objectMoving ?MOVETYPE ModernMilitaryUnit-Deployable)) 
+  (intendedBehaviorCapable ?BARRIER ?MOVETYPE constrainingObject))
+
+ (comment Warhead-CruiseMissile "A Warhead designed to be used with a CruiseMissile.") 
+
+ (isa BiologicalWeaponTypeByAgent SiblingDisjointCollection)
+
+ (isa weaponEffectiveRange FunctionalPredicate)
+
+ (implies 
+  (and 
+   (isa ?PROGRAM MilitaryChemicalWeaponsProgram) 
+   (directingAgent ?PROGRAM ?AGENT)) 
+  (purposeInEvent ?AGENT ?PROGRAM 
+   (exists 
+    (?MAKING) 
+    (and 
+     (isa ?MAKING 
+      (MakingFn ChemicalWeapon)) 
+     (directingAgent ?MAKING ?AGENT)))))
+
+ (comment BallisticMissile-Mushak200 "A short range ballistic missile produced by Iran.") 
+
+ (genls Gun-Portable DirectFireWeapon)
+
+ (genls Batrachotoxin BiologicalToxin)
+
+ (implies 
+  (isa ?WEAPON ConventionalWeapon) 
+  (destructivePotentialOf ?WEAPON 
+   (LowAmountFn DestructivePotential)))
+
+ (comment rateOfFire "(rateOfFire GUN RATE) indicates the number of rounds per minute that can be fired. The unit of RATE to use is TimesPerMinute. This predicate can be used for most ProjectileLaunchers that have a store of projectiles. The obvious examples are the instances of MachineGun that have a large store of bullets that can be fired at a rapid rate. Less obvious examples include the Pistols that can fire six bullets at the rateOfFire, after which one must pause for the reloadTime of that pistol. For certain instances of MissileLauncher the rateOfFire is determined by the reloadTime: the time it takes to reload the launcher after firing a missile, determines the rate at which one can fire missiles.") 
+
+ (genls 
+  (GroupFn BallisticMissile-Mushak120) PartiallyTangible)
+
+ (isa reloadTime BinaryPredicate)
+
+ (argIsa rateOfFire 2 Rate)
+
+ (genls AntiShipCruiseMissile AntiShipMissile)
+
+ (isa 
+  (DetectionFn NavalMine-Deployed) Collection)
+
+ (implies 
+  (genls ?MISSILETYPE BallisticMissile-IntermediateRange) 
+  (relationAllInstance destructivePotentialOf ?MISSILETYPE 
+   (HighAmountFn DestructivePotential)))
+
+ (genls Howitzer-122mmSelfPropelled Howitzer)
+
+ (comment InfantryFightingVehicle-BMP-2 "InfantryFightingVehicle-BMP-2 is the collection BMP-2's. The BMP-2 is an infantry fighting vehicle of Russian origin, first seen publicly in 1982, but in use for some time before that. It has been used in combat by the Russian army in Afghanistan, and apparently by armies of both Iraq and Kuwait during Desert Storm. In addition to Russian manufacture, it is also manufactured under license by India (and known as the `Sarath') and in the former Czechoslovakia. Russia was marketing the BMP-2 for $200,000 in 1993. It is amphibious, floating and being propelled on the water by its tracks. BMP-2's are associated primarily with Red mechanized infantry units (rather than armored units), at least at the battalion level. At higher levels, various types of divisions may have lower-level components of several types, so mechanized infantry (with BMP-2s) and armored (with T-64 tanks, for instance) may very well be found in the same division.") 
+
+ (genls 
+  (BiologicalWeaponFn RickettsiaQuintana) BiologicalWeapon-Rickettsial)
+
+ (genls 
+  (GroupFn BallisticMissile-Mushak200) Group)
+
+ (typeBehaviorCapable ChemicalWeapon BombingMission deviceUsed)
+
+ (comment IncendiaryDevice "A collection of devices that project fire at enemy troops.") 
+
+ (comment MidcourseGuidedProjectile "A collection. Instances have paths which can be altered in flight, either using on-board equipment or a RemoteControlDevice. Subsets include CruiseMissiles and some types of AirToSurfaceMissiles and SurfaceToSurfaceMissiles.") 
+
+ (genls TOWMissile CruiseMissile)
+
+ (genls Rickettsia LivingBiologicalAgent)
+
+ (isa intendedTargetTypeOfWeaponType BinaryPredicate)
+
+ (genls AntiAircraftGun AntiAircraftWeapon)
+
+ (genls 
+  (BiologicalWeaponFn RickettsiaProwsecki) BiologicalWeapon)
+
+ (genls Submarine WaterPlatform-Subsurface)
+
+ (isa TOWMissile MilitaryWeaponTypeByFunction)
+
+ (implies 
+  (and 
+   (genls ?WEAPONGENTYPE Weapon) 
+   (intendedTargetTypeOfWeaponType ?WEAPONGENTYPE ?TARGETGENTYPE) 
+   (genls ?WEAPONTYPE ?WEAPONGENTYPE)) 
+  (keWeakSuggestion ?WEAPONTYPE 
+   (exists 
+    (?TARGETTYPE) 
+    (and 
+     (genls ?TARGETTYPE ?TARGETGENTYPE) 
+     (different ?TARGETGENTYPE ?TARGETTYPE) 
+     (intendedTargetTypeOfWeaponType ?WEAPONTYPE ?TARGETTYPE)))))
+
+ (argIsa weaponRange 2 NonNegativeScalarInterval)
+
+ (isa NitrogenMustardGas ProductType)
+
+ (isa 
+  (GroupFn SmallArm-Weapon) ObjectType)
+
+ (genls ObstacleSystem-Military TangibleThing)
+
+ (genls Warhead-CruiseMissile Warhead)
+
+ (isa BiologicalWeaponTypeByAgent CollectionType)
+
+ (arity weaponEffectiveRange 2)
+
+ (genls BallisticMissile-Mushak200 BallisticMissile-ShortRange)
+
+ (comment intendedTargetTypeOfWeapon "(intendedTargetTypeOfWeapon WEAPON ATTACK TYPE) says that during ATTACK, WEAPON is being directed at instances of TYPE. For example, (intendedTargetTypeOfWeapon Gun001 TodaysAttackInWashingtonDC Politician) says that Gun001 was fired at politicians during today's attack in Washington. To say that a weapon *type* is generally used to target things of a given type, use intendedTargetTypeOfWeaponType.") 
+
+ (genls SurfaceToAirMissile AntiAircraftWeapon)
+
+ (isa Batrachotoxin ExistingStuffType)
+
+ (implies 
+  (isa ?WEAPON WeaponOfMassDestruction) 
+  (destructivePotentialOf ?WEAPON 
+   (HighAmountFn DestructivePotential)))
+
+ (implies 
+  (and 
+   (isa ?MISSILE BallisticMissile-ShortRange) 
+   (weaponRange ?MISSILE ?RANGE)) 
+  (quantitySubsumes 
+   (Mile 94 499) ?RANGE))
+
+ (genls 
+  (GroupFn BallisticMissile-Mushak160) PartiallyTangible)
+
+ (genls 
+  (GroupFn SilkwormMissile) Group)
+
+ (genls SmallArm-Weapon ConventionalWeapon)
+
+ (genls MachineCannon HeavyMachineGun)
+
+ (isa reloadTime FunctionalPredicate)
+
+ (argIsa angleOfLauncher 2 AngularDistance)
+
+ (genls AntiShipMissile Missile)
+
+ (relationAllInstance maxSpeed TOWMissile 
+  (MilesPerHour 692))
+
+ (isa 
+  (MakingFn BiologicalWeapon) Collection)
+
+ (comment KiloClassSubmarine "A kind of Submarine, manufactured in Russia. As of April of 1998, Iran is known to have purchased several.") 
+
+ (relationAllInstance lengthOfObject BallisticMissile-Minuteman2 
+  (Foot-UnitOfMeasure 59.75))
+
+ (implies 
+  (genls ?WEAPONTYPE BiochemicallyHarmfulSubstance) 
+  (relationAllInstance destructivePotentialOf ?WEAPONTYPE 
+   (HighAmountFn DestructivePotential)))
+
+ (genls InfantryFightingVehicle-BMP-2 ArmoredFightingVehicle)
+
+ (genls 
+  (BiologicalWeaponFn RickettsiaQuintana) BiologicalWeapon)
+
+ (genls 
+  (GroupFn BallisticMissile-SCUDB) Group)
+
+ (isa IncendiaryDevice ExistingObjectType)
+
+ (sourceOfTerm-Person MultipleRocketLauncer-122mmMRL Rasch)
+
+ (genls Anthrax-Bacterium LivingBiologicalAgent)
+
+ (isa 
+  (BiologicalWeaponFn RickettsiaProwsecki) ExistingObjectType)
+
+ (comment AntiShipCruiseMissile "The collection of CruiseMissiles that are designed to attack instances of ModernNavalShips.") 
+
+ (genls AircraftWeaponPylon PhysicalDevice)
+
+ (isa BiologicalWeapon-Viral BiologicalWeaponTypeByAgent)
+
+ (relationAllInstance groupMemberType 
+  (GroupFn SilkwormMissile) SilkwormMissile)
+
+ (arg2Isa weaponRange NonNegativeScalarInterval)
+
+ (arg2Isa rotationOfLauncher AngularDistance)
+
+ (genls MatraMica-AirToAirMissile AirToAirMissile)
+
+ (genls LandMine PressureSensitiveDetonatingWeapon)
+
+ (genls 85MMSmoothBoreCannon FieldArtillery)
+
+ (isa Warhead-CruiseMissile ExistingObjectType)
+
+ (genls BiologicalWeaponTypeByAgent ExistingObjectType)
+
+ (isa weaponEffectiveRange BinaryPredicate)
+
+ (isa BallisticMissile-Mushak200 ExistingObjectType)
+
+ (argGenl intendedTargetTypeOfWeapon 3 PartiallyTangible)
+
+ (isa GeneticallyEngineeredViralPathogen ExistingObjectType)
+
+ (genls 
+  (GroupFn BallisticMissile-Mushak200) PartiallyTangible)
+
+ (isa 
+  (GroupFn SilkwormMissile) ObjectType)
+
+ (genls Bazooka MilitaryWeapon)
+
+ (disjointWith WeaponOfMassDestruction ConventionalWeapon)
+
+ (genls CruiseMissile-ExocetAM39 AntiShipCruiseMissile)
+
+ (argIsa rotationOfLauncher 2 AngularDistance)
+
+ (relationAllExists physicalParts BiologicalWeapon-Rickettsial Rickettsia)
+
+ (comment AntiShipMissile "A subset of Missile comprising missiles that are designed to attack instances of ModernNavalShip.") 
+
+ (genls MustardGas ChemicalAgent)
+
+ (isa PressureSensitiveDetonatingWeapon ExistingObjectType)
+
+ (genls KiloClassSubmarine Submarine)
+
+ (genlPreds primaryFunction intendedBehaviorCapable)
+
+ (isa Howitzer-122mmSelfPropelled ExistingObjectType)
+
+ (isa InfantryFightingVehicle-BMP-2 ExistingObjectType)
+
+ (isa 
+  (BiologicalWeaponFn RickettsiaQuintana) ExistingObjectType)
+
+ (relationAllExists physicalParts Torpedo Warhead)
+
+ (genls 
+  (GroupFn BallisticMissile-SCUDC) Group)
+
+ (isa SurfaceToAirMissile MilitaryWeaponTypeByFunction)
+
+ (genls 85MMSmoothBoreCannon SmoothBoreWeapon)
+
+ (genls IncendiaryDevice MilitaryWeapon)
+
+ (isa MidcourseGuidedProjectile ExistingObjectType)
+
+ (comment MultipleRocketLauncer-122mmMRL "The collection of 122mm multiple rocket launchers. The MRL is a Soviet-made, truck mounted rocket launcher, similar to the American Multiple Launch Rocket system (MLRS), but much older.") 
+
+ (genls Staphylococcus LivingBiologicalAgent)
+
+ (isa AntiShipCruiseMissile ExistingObjectType)
+
+ (genls AircraftWeaponPylon MilitaryHardware)
+
+ (isa AntiTankWeapon MilitaryWeaponTypeByFunction)
+
+ (genls BiologicalWeapon-Viral BiologicalWeapon)
+
+ (implies 
+  (intendedTargetTypeOfWeapon ?WEAP ?ATTK ?TYPE) 
+  (deviceUsed ?ATTK ?WEAP))
+
+ (physicalPartTypes ChemicalWeapon ChemicalAgent)
+
+ (arg1Isa rotationOfLauncher ProjectileLauncher)
+
+ (relationAllExists outputsCreated 
+  (MakingFn BlisterAgent) BlisterAgent)
+
+ (isa CruiseMissile-SubmarineLaunched MilitaryWeaponTypeByFunction)
+
+ (isa ObstacleSystem-Military ProductType)
+
+ (behaviorCapable UnitedStatesOfAmerica NuclearAttack performedBy)
+
+ (comment BallisticMissile-Mushak160 "A short range ballistic missile produced by Iran.") 
+
+ (disjointWith RifledBoreWeapon SmoothBoreWeapon)
+
+ (arg3Genl intendedTargetTypeOfWeapon PartiallyTangible)
+
+ (isa BiologicalWeapon-GeneticallyEngineeredVirusBased BiologicalWeaponTypeByAgent)
+
+ (comment AntiAircraftArtillery "The collection of large anti-aircraft weapons (such as cannons).") 
+
+ (genls 
+  (GroupFn BallisticMissile-SCUDB) PartiallyTangible)
+
+ (isa CruiseMissile-ExocetAM39 ExistingObjectType)
+
+ (argIsa reloadTime 2 TimeInterval)
+
+ (genls AgentOrange ChemicalAgent)
+
+ (comment LitFuseDetonatingDevice "The collection of ExplosiveDevices that detonate when their lit fuse is exhausted.") 
+
+ (isa 
+  (MakingFn NuclearWeapon) Collection)
+
+ (isa KiloClassSubmarine ExistingObjectType)
+
+ (relationAllInstance weaponEffectiveRange-Max BallisticMissile-Minuteman2 
+  (Mile 6990))
+
+ (genls BallisticMissile IndirectFireWeapon)
+
+ (genls LaserGuidedBomb AerialBomb)
+
+ (isa 
+  (MakingFn BallisticMissile-SCUDC) Collection)
+
+ (genls 
+  (GroupFn BallisticMissile-CSS8) Group)
+
+ (isa AntiAircraftGun MilitaryWeaponTypeByFunction)
+
+ (comment LaunchGuidedProjectile "The collection of Projectile-Devices which have paths that cannot be altered after the projectile leaves the ProjectileLauncher.") 
+
+ (genls LaunchGuidedProjectile 
+  (CollectionUnionFn 
+   (TheSet HardwareTool PhysicalDevice)))
+
+ (genls MultipleRocketLauncer-122mmMRL MultipleRocketLauncher)
+
+ (genls ClostridiumPerfringens LivingBiologicalAgent)
+
+ (relationAllExists physicalParts BiologicalWeapon-Viral Virus)
+
+ (isa AntiArmorMine MilitaryWeaponTypeByFunction)
+
+ (physicalPartTypes BiologicalWeapon BiologicalAgent)
+
+ (argIsa weaponEffectiveRange 2 Distance)
+
+ (arity rotationOfLauncher 2)
+
+ (genls 
+  (MakingFn BlisterAgent) MakingSomething)
+
+ (isa MatraMica-AirToAirMissile ProductType)
+
+ (isa CruiseMissile-SeaLaunched MilitaryWeaponTypeByFunction)
+
+ (isa ObstacleSystem-Military ExistingObjectType)
+
+ (comment Warhead-BallisticMissile "A Warhead designed to be used with a BallisticMissile.") 
+
+ (isa BiologicalWeapon-Rickettsial BiologicalWeaponTypeByAgent)
+
+ (genls BallisticMissile-Mushak160 BallisticMissile-ShortRange)
+
+ (comment RifledBoreWeapon "The collection of ProjectileLaunchers that have Bores with spiralled scoring. Rifling the Bore increases the accuracy of the ProjectileWeapon.") 
+
+ (relationAllExists subEvents MissileAttack LaunchingAMissile)
+
+ (argIsa intendedTargetTypeOfWeapon 3 TemporalStuffType)
+
+ (genls AntiAircraftArtillery AntiAircraftWeapon)
+
+ (comment MissileSystem-Offensive "The collection of WeaponSystems used to attack cities, armies, vehicles, etc. with Missiles.") 
+
+ (genls 
+  (GroupFn BallisticMissile-SCUDC) PartiallyTangible)
+
+ (relationAllInstance lengthOfObject LGM-30A-MinutemanMissile 
+  (Foot-UnitOfMeasure 54))
+
+ (argIsa weaponPayload-Max 2 Mass)
+
+ (genls 
+  (BiologicalWeaponFn Staphylococcus) BiologicalWeapon)
+
+ (genls Missile CruiseMissile)
+
+ (genls LitFuseDetonatingDevice ExplosiveDevice)
+
+ (genls BallisticMissile-Minuteman2 MinutemanBallisticMissile)
+
+ (comment DepthBomb "The collection of Bombs used especially against Submarines. DepthBombs, also called depth charges, are dropped from ModernNavalShips and MilitaryAircraft and which explode under water.") 
+
+ (genls 
+  (GroupFn BallisticMissile-M11) Group)
+
+ (isa 85MMSmoothBoreCannon ExistingObjectType)
+
+ (isa MultipleRocketLauncer-122mmMRL ExistingObjectType)
+
+ (genls 
+  (BiologicalWeaponFn Smallpox-Virus) BiologicalWeapon-Viral)
+
+ (implies 
+  (and 
+   (isa ?AGENT GeographicalAgent) 
+   (performedBy ?ATTACK ?AGENT) 
+   (isa ?ATTACK AttackOnTangible) 
+   (deviceUsed ?ATTACK ?WEAPON) 
+   (isa ?WEAPON ?WEAPONTYPE) 
+   (genls ?WEAPONTYPE Weapon)) 
+  (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE))
+
+ (isa AntiArmorGrenade MilitaryWeaponTypeByFunction)
+
+ (implies 
+  (and 
+   (completeCollectionExtent ?DISJOINT-COLTYPE) 
+   (partitionedInto ?WEAPONCOL ?DISJOINT-COLTYPE) 
+   (genls ?WEAPONCOL Weapon)) 
+  (intendedTargetTypeOfWeaponType ?WEAPONCOL 
+   (CollectionUnionFn 
+    (TheSetOf ?TARGET-TYPE 
+     (exists 
+      (?CELL-COL) 
+      (and 
+       (isa ?CELL-COL ?DISJOINT-COLTYPE) 
+       (intendedTargetTypeOfWeaponType ?CELL-COL ?TARGET-TYPE)))))))
+
+ (arg2Isa weaponEffectiveRange Distance)
+
+ (isa rotationOfLauncher BinaryPredicate)
+
+ (comment BiologicalWeapon-Rickettsial "The collection of all BiologicalWeapons that make use of rickettsial organisms.") 
+
+ (isa MatraMica-AirToAirMissile ExistingObjectType)
+
+ (isa CruiseMissile-AirLaunched MilitaryWeaponTypeByFunction)
+
+ (genls Warhead-BallisticMissile Warhead)
+
+ (genls BiologicalWeapon-Rickettsial BiologicalWeapon)
+
+ (isa BallisticMissile-Mushak160 ExistingObjectType)
+
+ (genls AntiTankGuidedWeapon AntiTankWeapon)
+
+ (genls RifledBoreWeapon ProjectileLauncher)
+
+ (arg3Isa intendedTargetTypeOfWeapon TemporalStuffType)
+
+ (isa AntiAircraftArtillery ExistingObjectType)
+
+ (genls 
+  (GroupFn BallisticMissile-CSS8) PartiallyTangible)
+
+ (comment LGM-30A-MinutemanMissile "The collection of all LGM-30A-MinutemanMissiles, the first type of MinutemanBallisticMissile.") 
+
+ (genls Bazooka MissileLauncher)
+
+ (genls NerveAgent ChemicalAgent)
+
+ (relationAllInstance weaponRange TOWMissile 
+  (Meter 3000))
+
+ (isa LitFuseDetonatingDevice ExistingObjectType)
+
+ (isa BallisticMissile-Minuteman2 ExistingObjectType)
+
+ (isa 
+  (MakingFn BallisticMissile-SCUDB) TemporalObjectType)
+
+ (genls CruiseMissile-AirLaunched CruiseMissile)
+
+ (genls PressureSensitiveDetonatingWeapon ExplosiveDevice)
+
+ (genls Smallpox-Virus LivingBiologicalAgent)
+
+ (isa 
+  (BiologicalWeaponFn Smallpox-Virus) ExistingObjectType)
+
+ (isa AntiArmorWeapon MilitaryWeaponTypeByFunction)
+
+ (argIsa weaponEffectiveRange-Max 2 Distance)
+
+ (completeExtentKnown intendedTargetTypeOfWeaponType)
+
+ (argIsa weaponEffectiveRange 2 NonNegativeScalarInterval)
+
+ (isa rotationOfLauncher FunctionalPredicate)
+
+ (isa 
+  (MakingFn BlisterAgent) TemporalObjectType)
+
+ (genls TOWMissile AntiTankGuidedWeapon)
+
+ (isa AntiShipCruiseMissile MilitaryWeaponTypeByFunction)
+
+ (genls 76MMRifledBoreCannon FieldArtillery)
+
+ (isa Warhead-BallisticMissile ExistingObjectType)
+
+ (isa BiologicalWeapon-BiologicalToxinBased BiologicalWeaponTypeByAgent)
+
+ (comment BallisticMissile-Mushak120 "A battlefield short range ballistic missile produced by Iran") 
+
+ (isa AntiTankGuidedWeapon ExistingObjectType)
+
+ (isa RifledBoreWeapon ExistingObjectType)
+
+ (argIsa intendedTargetTypeOfWeapon 2 AttackOnTangible)
+
+ (genls AntiArmorGrenade AntiArmorWeapon)
+
+ (comment GatlingGun "the collection of mounted, multi-barrel MachineGuns that fire when the wheel to which the barrels are attached, turn.") 
+
+ (genls 
+  (GroupFn BallisticMissile-M11) PartiallyTangible)
+
+ (genls 
+  (DetectionFn NavalMine-Deployed) Event)
+
+ (genls LGM-30A-MinutemanMissile BallisticMissile-Minuteman1)
+
+ (isa Bazooka ExistingObjectType)
+
+ (isa CruiseMissile-SubmarineLaunched ExistingObjectType)
+
+ (isa AntiShipMissile MilitaryWeaponTypeByFunction)
+
+ (genls BlisterAgent ChemicalAgent)
+
+ (isa Weapon ProductType)
+
+ (comment TimedDetonatingDevice "The collection of ExplosiveDevices which use Timers to control detonation.") 
+
+ (isa 
+  (MakingFn ChemicalWeapon) Collection)
+
+ (genls GeneticallyEngineeredPathogen LivingBiologicalAgent)
+
+ (comment AnthraxSprayer-PortableWeapon "A collection of weapons. Each instance of AnthraxSprayer-PortableWeapon is a spraying device designed to be carried by a single person and used to contaminate an area with anthrax.") 
+
+ (implies 
+  (and 
+   (isa ?PROGRAM MilitaryBiologicalWeaponsProgram) 
+   (directingAgent ?PROGRAM ?AGENT)) 
+  (purposeInEvent ?AGENT ?PROGRAM 
+   (exists 
+    (?MAKING) 
+    (and 
+     (isa ?MAKING 
+      (MakingFn BiologicalWeapon)) 
+     (directingAgent ?MAKING ?AGENT)))))
+
+ (isa BallisticMissile-Minuteman2 ProductType)
+
+ (genls 
+  (MakingFn BallisticMissile-SCUDB) MakingSomething)
+
+ (genls CruiseMissile MidcourseGuidedProjectile)
+
+ (relationAllInstance weaponRange Torpedo-MK-44 
+  (Mile 3.4))
+
+ (comment CloseQuarterCombatWeapon "A collection of the collections of Weapons which are normally used in hand-to-hand combat.") 
+
+ (genls AnthraxSprayer-PortableWeapon 
+  (BiologicalWeaponFn Anthrax-Bacterium))
+
+ (argIsa intendedTargetTypeOfWeapon 1 Weapon)
+
+ (cyclistNotes intendedTargetTypeOfWeaponType "In cases where the user believes he/she has a strong case to make for a class of weapon being intended target more than one class of target, CollectionUnionFn may be used. However, users are strongly cautioned not to reify arbitrary collection-unions unless they appear to be independently useful in their own right. For example, it may be fairly said that Grenades are designed to target a wide range of types--military personnel, ConstructionArtifacts, ArmoredVehicles, and maybe one or two other things besides. However, the collection-union of MilitaryPerson, ConstructionArtifact, and ArmoredVehicle probably has little intrinsic utility attaching to it, which is an argument against having an intendedTargetTypeOfWeaponType asserted for Grenade. Bear in mind that not every weapon class needs to have an intendedTargetTypeOfWeaponType asserted.") 
+
+ (arg2Isa weaponEffectiveRange-Max Distance)
+
+ (arg2Isa weaponEffectiveRange NonNegativeScalarInterval)
+
+ (conceptuallyRelated GeneticallyEngineeredBacterium GeneticEngineering)
+
+ (isa 
+  (ChemicalWeaponFn Lewisite) ProductType)
+
+ (isa SurfaceToSurfaceMissile-Ballistic MilitaryWeaponTypeByFunction)
+
+ (genls BiologicalWeapon-BiologicalToxinBased BiologicalWeapon)
+
+ (genls BallisticMissile-ShortRange BallisticMissile)
+
+ (comment SmoothBoreWeapon "The collection of ProjectileLaunchers that have Bores with smooth surfaces.") 
+
+ (arg2Isa intendedTargetTypeOfWeapon AttackOnTangible)
+
+ (intendedTargetTypeOfWeaponType ?WEAPONTYPE 
+  (IntendedTargetTypeFn ?WEAPONTYPE))
+
+ (genls GatlingGun HeavyMachineGun)
+
+ (genls DistilledMustardGas MustardGas)
+
+ (genls SilkwormMissile AntiShipCruiseMissile)
+
+ (genls CruiseMissile-SubmarineLaunched CruiseMissile)
+
+ (isa AntiShipMissile ExistingObjectType)
+
+ (genls ChokingAgent ChemicalAgent)
+
+ (genls TimedDetonatingDevice ExplosiveDevice)
+
+ (isa GeneticallyEngineeredPathogen ExistingObjectType)
+
+ (genls AnthraxSprayer-PortableWeapon PortableObject)
+
+ (relationAllInstance weaponRange Torpedo-MK-46 
+  (Mile 6.4))
+
+ (genls SurfaceToAirMissileLauncher AntiAircraftWeapon)
+
+ (isa LaunchGuidedProjectile ExistingObjectType)
+
+ (genls BrucellaBacterium LivingBiologicalAgent)
+
+ (genls AntiShipCruiseMissile CruiseMissile)
+
+ (comment BiologicalWeapon-Viral "The collection of all BiologicalWeapons that make use of viruses.") 
+
+ (isa 
+  (BiologicalWeaponFn Anthrax-Bacterium) ExistingObjectType)
+
+ (comment BallisticMissile-AlHussein "Efforts to extend the standard Scud B's (BallisticMissile-SCUDB) range began in the early 1980s as project 144, and in August 1987 Saddam announced that it had successfully tested a longer-range Scud, the Al Hussein (BallisticMissile-AlHussein), over a range of more than 500 km.") 
+
+ (arg1Isa intendedTargetTypeOfWeapon Weapon)
+
+ (cyclistNotes intendedTargetTypeOfWeaponType "This predicate is NOT transitive via genls in either of its argument positions. This is due to the fact that the predicate is deemed to be functional in the second argument position. The reason of THIS is that it is supposed that, where a primary target type is specified, it will be specified at a certain level, and it will be incorrect to also specify a more general or a more specific thing. Making the second argument transitive or inverse-transitive via genls would defeat this purpose. More subtly, making the first argument transitive or inverse-transitive via genls would too, because once an intended target type had been inherited to a more specific or a more general weapon type, it would become impossible to assert a more specific target type for the more specific weapon type, or a more general target type for the more general weapon type, which one might very well want to do.") 
+
+ (genls 
+  (ChemicalWeaponFn Lewisite) ChemicalWeapon)
+
+ (genls 
+  (BiologicalWeaponFn Saxitoxin) BiologicalWeapon-BiologicalToxinBased)
+
+ (comment AerialSpraytank "A means of delivery for certain kinds of weapons.") 
+
+ (isa BiologicalWeapon-GeneticallyEngineeredOrganismBased BiologicalWeaponTypeByAgent)
+
+ (isa BallisticMissile-ShortRange ExistingObjectType)
+
+ (genls SmoothBoreWeapon ProjectileLauncher)
+
+ (genls MinutemanBallisticMissile BallisticMissile-ICBM)
+
+ (comment Howitzer "A collection. Each instance is a large Weapon too large for one person to carry and used for indirect shooting. A Howitzer has a caliber larger than 15mm and fires projectiles at medium muzzle speed with a trajectory over 45 degrees.") 
+
+ (isa DistilledMustardGas ProductType)
+
+ (isa LGM-30A-MinutemanMissile ExistingObjectType)
+
+ (implies 
+  (and 
+   (isa ?SHOOTING ShootingAProjectileWeapon) 
+   (damages ?SHOOTING ?TARGET) 
+   (fromLocation ?SHOOTING ?LAUNCHER) 
+   (instrument-Generic ?SHOOTING ?LAUNCHER) 
+   (deviceUsed ?SHOOTING ?WEAPON) 
+   (weaponEffectiveRange ?WEAPON ?RANGE) 
+   (distanceBetween ?TARGET ?LAUNCHER ?DIST)) 
+  (quantitySubsumes ?RANGE ?DIST))
+
+ (argIsa weaponEffectiveRange-Max 2 PositiveScalarInterval)
+
+ (genls BloodAgent ChemicalAgent)
+
+ (isa TimedDetonatingDevice ExistingObjectType)
+
+ (genls GeneticallyEngineeredPathogen GeneticallyEngineeredOrganism)
+
+ (isa AnthraxSprayer-PortableWeapon ExistingObjectType)
+
+ (genls TearGas IncapacitatingAgent)
+
+ (comment Torpedo-MK-44 "A type of Torpedo with ActiveSonar-Device.") 
+
+ (comment SmallArm-Weapon "A subset of Weapon. Each element of the collection SmallArm-Weapon can be carried by one person. Subsets include Grenade, Sidearm and CloseCombatWeapon.") 
+
+ (comment SurfaceToAirMissileLauncher "The collection of all MissileLaunchers that fire SurfaceToAirMissiles.") 
+
+ (genls AntiArmorGrenade Bomb)
+
+ (genls BallisticMissile-AlHussein BallisticMissile-SCUDB)
+
+ (isa 
+  (GroupFn BallisticMissile-Mushak120) ObjectType)
+
+ (argIsa weaponEffectiveRange-Min 2 Distance)
+
+ (cyclistNotes intendedTargetTypeOfWeaponType "It is very important that the *PRIMARY* target type be the type cited in the second argument. For example, it would be INCORRECT to assert (intendedTargetTypeOfWeaponType AntiArmorWeapon Person) even though anti armor weapons work primarily against armored vehicles and armored vehicles are generally driven by persons. In cases where the designer or design specification of the weapon type does not explicitly mention what the 'primary' class of target is, determining this may be hard, and in some cases, impossible.") 
+
+ (isa 
+  (ChemicalWeaponFn Lewisite) ExistingObjectType)
+
+ (genls 
+  (BiologicalWeaponFn Saxitoxin) BiologicalWeapon)
+
+ (genls AerialSpraytank MilitaryHardware)
+
+ (genls BiologicalWeapon-GeneticallyEngineeredOrganismBased BiologicalWeapon)
+
+ (comment BallisticMissile-BattlefieldShortRange "A ballistic missile with a range of up to 94 miles") 
+
+ (isa SmoothBoreWeapon ExistingObjectType)
+
+ (isa MinutemanBallisticMissile ExistingObjectType)
+
+ (resultGenl IntendedTargetTypeFn SomethingExisting)
+
+ (isa Howitzer ExistingObjectType)
+
+ (isa HeavyMachineGun ExistingObjectType)
+
+ (isa DistilledMustardGas ExistingStuffType)
+
+ (isa LGM-30A-MinutemanMissile ProductType)
+
+ (implies 
+  (and 
+   (genls ?WEAPONSPECTYPE ?WEAPONTYPE) 
+   (different ?WEAPONSPECTYPE ?WEAPONTYPE) 
+   (intendedTargetTypeOfWeaponType ?WEAPONSPECTYPE ?TARGETSPECTYPE) 
+   (intendedTargetTypeOfWeaponType ?WEAPONTYPE ?TARGETTYPE)) 
+  (genls ?TARGETSPECTYPE ?TARGETTYPE))
+
+ (implies 
+  (and 
+   (weaponEffectiveRange ?WEAPON ?RANGE) 
+   (minQuantValue ?RANGE ?MINRANGE)) 
+  (weaponEffectiveRange-Min ?WEAPON ?MINRANGE))
+
+ (genls MortarShell ArtilleryShell)
+
+ (comment PointDetonatingWeapon "The collection of ExplosiveDevices which detonate upon impact.") 
+
+ (comment IncapacitatingAgent "The collection of ToxicSubstances designed to cause temporary disability in its target.") 
+
+ (implies 
+  (resourceCapableOf ?AGENT WeaponOfMassDestructionAttack performedBy) 
+  (relationInstanceExists possesses ?AGENT WeaponOfMassDestruction))
+
+ (genls Torpedo-MK-44 Torpedo)
+
+ (isa 
+  (MakingFn BallisticMissile-SCUDB) Collection)
+
+ (comment SurfaceToSurfaceMissile "The collection of all Missiles propelled from a surface Platform-Military (located on land or on water), with the intention of having it detonate on contact with the target that is either on land or water.") 
+
+ (genls LightSurfaceToAirMissileLauncher SurfaceToAirMissileLauncher)
+
+ (genls SemiAutomaticFirearm Gun)
+
+ (genls Plague-Bacterium LivingBiologicalAgent)
+
+ (comment Howitzer-155mmSelfPropelled "The collection of self-propelled 155mm Howitzers.") 
+
+ (genls AntiArmorGrenade ConventionalWeapon)
+
+ (comment CruiseMissile-AirLaunched "The collection of CruiseMissiles which are deployed from MilitaryAircraft.") 
+
+ (genls Howitzer FieldArtillery)
+
+ (implies 
+  (and 
+   (isa ?LAUNCH LaunchingAMissile) 
+   (objectEmitted ?LAUNCH ?ASROC) 
+   (isa ?ASROC AntiSubmarineRocket)) 
+  (transportees ?LAUNCH 
+   (SKF-2834698 ?ASROC ?LAUNCH 1)))
+
+ (isa 
+  (GroupFn BallisticMissile-Mushak160) ObjectType)
+
+ (arg2Isa weaponEffectiveRange-Min Distance)
+
+ (comment intendedTargetTypeOfWeaponType "Many classes of weapon are defined in part by the type of thing that instances are intended to immediately target, e.g. AntiPersonnelMine. intendedTargetTypeOfWeaponType is intended to allow us to explicate the class of thing immediately targeted by a particular type of Weapon, if such a class is known. (intendedTargetTypeOfWeaponType WEAPON-TYPE TARGET-TYPE) means that weapons of type WEAPON-TYPE are designed to be used primarily against typical instances of TARGET-TYPE.") 
+
+ (arg2Isa angleOfLauncher AngularDistance)
+
+ (relationAllExists outputsCreated 
+  (MakingFn NerveAgent) NerveAgent)
+
+ (isa 
+  (BiologicalWeaponFn Saxitoxin) ExistingObjectType)
+
+ (isa BallisticMissile-ShortRange MilitaryWeaponTypeByFunction)
+
+ (genls Platform-Military MilitaryHardware)
+
+ (isa AerialSpraytank ExistingObjectType)
+
+ (isa BiologicalWeapon-Bacterial BiologicalWeaponTypeByAgent)
+
+ (implies 
+  (and 
+   (genls ?WEAPONTYPE MilitaryWeapon) 
+   (isa ?WEAPON ?WEAPONTYPE) 
+   (behaviorCapable ?AGENT 
+    (CollectionSubsetFn AttackOnTangible 
+     (TheSetOf ?OBJ 
+      (instrument-Generic ?OBJ ?WEAPON))) performedBy)) 
+  (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE))
+
+ (isa BallisticMissile-BattlefieldShortRange ExistingObjectType)
+
+ (comment BoforsGun "A large, double barrelled MachineCannon used to shoot down airplanes.") 
+
+ (isa MinutemanBallisticMissile ProductType)
+
+ (resultIsa IntendedTargetTypeFn Collection)
+
+ (not 
+  (isa NavalMine-Deployed ProductType))
+
+ (relationAllInstance groupMemberType 
+  (GroupFn BallisticMissile-Mushak120) BallisticMissile-Mushak120)
+
+ (isa MustardGas ProductType)
+
+ (genls LSD ChemicalAgent)
+
+ (genls PointDetonatingWeapon Weapon)
+
+ (comment 105MMRifledBoreCannon "A kind of Cannon common on Tank-Vehicles.") 
+
+ (isa Torpedo-MK-44 ProductType)
+
+ (genls SmallArm-Weapon PortableObject)
+
+ (relationAllExists outputsCreated 
+  (MakingFn BallisticMissile-SCUDC) BallisticMissile-SCUDC)
+
+ (genls Howitzer-155mmSelfPropelled Artillery-SelfPropelled)
+
+ (genls FighterInterceptorPlane 
+  (AntiWeaponTypeFn Warplane))
+
+ (implies 
+  (and 
+   (isa ?LAUNCH LaunchingAMissile) 
+   (isa ?ASROC AntiSubmarineRocket) 
+   (objectEmitted ?LAUNCH ?ASROC)) 
+  (transporter ?LAUNCH ?ASROC))
+
+ (implies 
+  (and 
+   (isa ?ATTACK AttackOnTangible) 
+   (instrument-Generic ?ATTACK ?WEAPON) 
+   (isa ?WEAPON WeaponOfMassDestruction)) 
+  (isa ?ATTACK WeaponOfMassDestructionAttack))
+
+ (isa 
+  (GroupFn BallisticMissile-Mushak200) ObjectType)
+
+ (argIsa weaponEffectiveRange-Min 2 NonNegativeScalarInterval)
+
+ (comment angleOfLauncher "(angleOfLauncher GUN ANGLE-RANGE) indicates possible vertical angles at which a GUN can be fired. For example, (angleOfLauncher ?MORTAR (Degree-UnitOfAngularMeasure 45 90) means that ?MORTAR can be fired at angles between 45 and 90 degrees.") 
+
+ (genls CruiseMissile-GroundLaunched CruiseMissile)
+
+ (genls 
+  (MakingFn NerveAgent) MakingSomething)
+
+ (genls 
+  (GroupFn Warplane) PartiallyTangible)
+
+ (comment BallisticMissileLauncher "The collection of MissileLaunchers designed to fire BallisticMissiles.") 
+
+ (genls BiologicalWeapon-Bacterial BiologicalWeapon)
+
+ (isa weaponEffectiveRange-Max FunctionalPredicate)
+
+ (argGenl IntendedTargetTypeFn 1 Weapon)
+
+ (isa GatlingGun ExistingObjectType)
+
+ (comment NavalMine-Deployed "Instances are NavalMines that have been successfully planted undersea.") 
+
+ (relationAllInstance groupMemberType 
+  (GroupFn BallisticMissile-Mushak160) BallisticMissile-Mushak160)
+
+ (isa CruiseMissile-SeaLaunched ExistingObjectType)
+
+ (implies 
+  (and 
+   (isa ?SHOOTING ShootingAProjectileWeapon) 
+   (damages ?SHOOTING ?TARGET) 
+   (fromLocation ?SHOOTING ?LAUNCHER) 
+   (instrument-Generic ?SHOOTING ?LAUNCHER) 
+   (deviceUsed ?SHOOTING ?WEAPON) 
+   (weaponEffectiveRange-Min ?WEAPON ?MINRANGE) 
+   (distanceBetween ?TARGET ?LAUNCHER ?DIST)) 
+  (greaterThan ?DIST ?MINRANGE))
+
+ (genls Mescaline ChemicalAgent)
+
+ (genls PointDetonatingWeapon ExplosiveDevice)
+
+ (isa SurfaceToAirMissileLauncher ExistingObjectType)
+
+ (genls Howitzer-155mmSelfPropelled Howitzer)
+
+ (genls TerminalGuidedProjectile 
+  (CollectionUnionFn 
+   (TheSet HardwareTool PhysicalDevice)))
+
+ (genls 
+  (BiologicalWeaponFn RickettsiaRicketsii) BiologicalWeapon-Rickettsial)
+
+ (argIsa weaponRange 1 ProjectileWeapon)
+
+ (implies 
+  (and 
+   (isa ?LAUNCH LaunchingAMissile) 
+   (objectEmitted ?LAUNCH ?ASROC) 
+   (isa ?ASROC AntiSubmarineRocket)) 
+  (isa 
+   (SKF-2834698 ?ASROC ?LAUNCH 1) Torpedo))
+
+ (isa AircraftWeaponPylon ExistingObjectType)
+
+ (arg1Isa weaponRange ProjectileWeapon)
+
+ (transportedInTypes Warhead-BallisticMissile BallisticMissile)
+
+ (isa 
+  (GroupFn BallisticMissile-SCUDB) ObjectType)
+
+ (implies 
+  (and 
+   (isa ?ACQUIRE GainingUserRights) 
+   (objectOfPossessionTransfer ?ACQUIRE ?BIO-AGENT) 
+   (toPossessor ?ACQUIRE ?AGENT) 
+   (isa ?BIO-AGENT ?BIO-AGENT-TYPE) 
+   (genls ?BIO-AGENT-TYPE BiologicalAgent)) 
+  (increasesCausally ?ACQUIRE 
+   (exists 
+    (?WEAPON) 
+    (and 
+     (possesses ?AGENT ?WEAPON) 
+     (isa ?WEAPON 
+      (BiologicalWeaponFn ?BIO-AGENT-TYPE)))) likelihood))
+
+ (genls MineField-Scatterable MineField)
+
+ (arg2Isa weaponEffectiveRange-Min NonNegativeScalarInterval)
+
+ (argFormat intendedTargetTypeOfWeaponType 2 SingleEntry)
+
+ (isa CruiseMissile-GroundLaunched ExistingObjectType)
+
+ (isa 
+  (ChemicalWeaponFn Phosgene) ProductType)
+
+ (comment BombSubmunition "A military device, usually intended to strike a target or pierce through armor before the main munition is released.") 
+
+ (genls BallisticMissileLauncher MissileLauncher)
+
+ (arity weaponEffectiveRange-Max 2)
+
+ (isa BallisticMissile-Mushak120 ExistingObjectType)
+
+ (arity intendedTargetTypeOfWeapon 3)
+
+ (arg1Genl IntendedTargetTypeFn Weapon)
+
+ (comment AntiArmorMine "The collection of LandMines that detonate when a heavy vehicle, such as a Tank-Vehicle or ArmoredPersonnelCarrier, rolls over the ground above the LandMine. AntiArmorMines usually have armor-piercing capability.") 
+
+ (comment F-16-Fighter "The collection of a type of aircraft, used widely and in a variety of combat roles. Flown by U.S. AirForce, Air National Guard, Air Force Reserve. Also flown by air forces of a significant number of European, Asian, and South American countries. Produced in U.S., Belgium, Netherlands, and Turkey.") 
+
+ (isa 
+  (ChemicalWeaponFn VX-NerveGas) ProductType)
+
+ (arg2Format intendedTargetTypeOfWeaponType SingleEntry)
+
+ (isa 
+  (GroupFn BallisticMissile-SCUDC) ObjectType)
+
+ (disjointWith SmallArm-Weapon FieldArtillery)
+
+ (genls Mine-Weapon ProximityDetonatingWeapon)
+
+ (genls BiologicalWeapon-GeneticallyEngineeredBacteriumBased BiologicalWeapon-Bacterial)
+
+ (argIsa weaponEffectiveRange 1 ProjectileWeapon)
+
+ (isa CruiseMissile-AirLaunched ExistingObjectType)
+
+ (relationAllExists physicalParts 
+  (BiologicalWeaponFn RickettsiaRicketsii) RickettsiaRicketsii)
+
+ (isa Sidewinder-Missile ExistingObjectType)
+
+ (genls SurfaceToAirMissileLauncher MissileLauncher)
+
+ (isa SurfaceToSurfaceMissile ExistingObjectType)
+
+ (genls SmallArm-Weapon Device-SingleUser)
+
+ (isa Torpedo-MK-44 ExistingObjectType)
+
+ (genls BallisticMissile-ICBM BallisticMissile)
+
+ (isa PointDetonatingWeapon ExistingObjectType)
+
+ (genls Psilocybin ChemicalAgent)
+
+ (isa Lewisite ProductType)
+
+ (implies 
+  (and 
+   (isa ?AGENT IndependentCountry) 
+   (isa ?ATTACK AttackOnTangible) 
+   (deviceUsed ?ATTACK ?DEVICE) 
+   (isa ?DEVICE ChemicalWeapon) 
+   (genls ?CHEMTYPE BiochemicallyHarmfulSubstance) 
+   (relationInstanceExistsMany possesses ?AGENT ?CHEMTYPE)) 
+  (capableOfDoing ?AGENT ?ATTACK performedBy))
+
+ (genls CruiseMissile-SeaLaunched CruiseMissile)
+
+ (isa 
+  (DetectionFn NavalMine-Deployed) TemporalObjectType)
+
+ (relationAllInstance groupMemberType 
+  (GroupFn BallisticMissile-Mushak200) BallisticMissile-Mushak200)
+
+ (genls NavalMine-Deployed NavalMine)
+)
+
+(end_of_file)
+

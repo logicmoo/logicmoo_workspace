@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse-cdt version="2.0"?>
+
+<cdtproject id="org.eclipse.cdt.make.core.make">
+<extension point="org.eclipse.cdt.core.BinaryParser" id="org.eclipse.cdt.core.ELF"/>
+<extension point="org.eclipse.cdt.core.CIndexer" id="org.eclipse.cdt.core.domsourceindexer"/>
+<data>
+
+<item id="org.eclipse.cdt.make.core.buildtargets">
+<buildTargets>
+<target name="win32" targetID="org.eclipse.cdt.make.MakeTargetBuilder" path="">
+<buildCommand>C:/cygwin/bin/make.exe</buildCommand>
+<buildArguments/>
+<buildTarget>win32</buildTarget>
+<stopOnError>false</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+</buildTargets>
+</item>
+<item id="org.eclipse.cdt.core.pathentry">
+<pathentry kind="inc" path="" include="C:/Program Files/Microsoft Visual Studio .NET/Vc7/include"/>
+<pathentry kind="inc" path="" include="C:/Nuance/v8.0.0/include" system="true"/>
+<pathentry kind="mac" path="" name="WIN32" value=""/>
+<pathentry kind="mac" path="" name="_MBCS" value=""/>
+<pathentry kind="mac" path="" name="NDEBUG" value=""/>
+<pathentry kind="src" path=""/>
+<pathentry kind="out" path=""/>
+</item>
+</data>
+</cdtproject>

@@ -1,0 +1,3590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\aminePlatform\aminePlatform\classes\aminePlatform\samples\ontology\Omar\ontology.xml</Name>
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>English</Language>
+    <Language>Francais</Language>
+  </Languages>
+  <MainLanguage>English</MainLanguage>
+  <RelationRoot>Relation</RelationRoot>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Universal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Universal</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Relation</Key>
+        </Child>
+        <Child>
+          <Key>Agent</Key>
+        </Child>
+        <Child>
+          <Key>Object</Key>
+        </Child>
+        <Child>
+          <Key>Attribute</Key>
+        </Child>
+        <Child>
+          <Key>State</Key>
+        </Child>
+        <Child>
+          <Key>Proposition</Key>
+        </Child>
+        <Child>
+          <Key>Fact</Key>
+        </Child>
+        <Child>
+          <Key>MissedFact</Key>
+        </Child>
+        <Child>
+          <Key>Goal</Key>
+        </Child>
+        <Child>
+          <Key>Plan</Key>
+        </Child>
+        <Child>
+          <Key>Theme</Key>
+        </Child>
+        <Child>
+          <Key>List</Key>
+        </Child>
+        <Child>
+          <Key>PrimitiveAction</Key>
+        </Child>
+        <Child>
+          <Key>StateEvent</Key>
+        </Child>
+        <Child>
+          <Key>Knowledge</Key>
+        </Child>
+        <Child>
+          <Key>Personality</Key>
+        </Child>
+        <Child>
+          <Key>Memory</Key>
+        </Child>
+        <Child>
+          <Key>Ressource</Key>
+        </Child>
+        <Child>
+          <Key>CommunicatingAct</Key>
+        </Child>
+        <Child>
+          <Key>Procedure</Key>
+        </Child>
+        <Child>
+          <Key>Environment</Key>
+        </Child>
+        <Child>
+          <Key>Type</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Type</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Type</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Environment</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Environment</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Procedure</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Procedure</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Trajectory</Key>
+        </Child>
+        <Child>
+          <Key>PerceptionOf</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>PerceptionOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>PerceptionOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Procedure</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Trajectory</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Trajectory</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Procedure</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>CommunicatingAct</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>CommunicatingAct</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Request</Key>
+        </Child>
+        <Child>
+          <Key>Advice</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Advice</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Advice</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>CommunicatingAct</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Request</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Request</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>CommunicatingAct</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Ressource</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Ressource</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Memory</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Memory</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>ShortMemory</Key>
+        </Child>
+        <Child>
+          <Key>LongMemory</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>LongMemory</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>LongMemory</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Memory</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ShortMemory</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>ShortMemory</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>MessageReceived</Key>
+        </Child>
+        <Child>
+          <Key>MessageSent</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Memory</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>MessageSent</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>MessageSent</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>ShortMemory</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>MessageReceived</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>MessageReceived</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>ShortMemory</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Personality</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Personality</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Knowledge</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Knowledge</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>StateEvent</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>StateEvent</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>PrimitiveAction</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>PrimitiveAction</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Eat</Key>
+        </Child>
+        <Child>
+          <Key>Own</Key>
+        </Child>
+        <Child>
+          <Key>Rob</Key>
+        </Child>
+        <Child>
+          <Key>Move</Key>
+        </Child>
+        <Child>
+          <Key>Acquire</Key>
+        </Child>
+        <Child>
+          <Key>Consume</Key>
+        </Child>
+        <Child>
+          <Key>Ask</Key>
+        </Child>
+        <Child>
+          <Key>Take</Key>
+        </Child>
+        <Child>
+          <Key>Live</Key>
+        </Child>
+        <Child>
+          <Key>Know</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Know</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Know</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>KnowFact</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>KnowFact</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>KnowFact</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Know</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Live</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Live</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Take</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Take</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Ask</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Ask</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Consume</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Consume</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Acquire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Acquire</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Move</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Move</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Rob</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Rob</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Own</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Own</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Eat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Eat</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PrimitiveAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>List</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>List</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Theme</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Theme</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>VitalNeed</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>VitalNeed</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>VitalNeed</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Theme_Hungry</Key>
+        </Child>
+        <Child>
+          <Key>Theme_Tired</Key>
+        </Child>
+        <Child>
+          <Key>Theme_Thirsty</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Theme</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Theme_Thirsty</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Theme_Thirsty</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>VitalNeed</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Theme_Tired</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Theme_Tired</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>VitalNeed</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Theme_Hungry</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Theme_Hungry</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>VitalNeed</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Plan</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Plan</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Plan1_SatisfyHungry</Key>
+        </Child>
+        <Child>
+          <Key>Plan2_SatisfyHungry</Key>
+        </Child>
+        <Child>
+          <Key>Plan3_SatisfyHungry</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Plan3_SatisfyHungry</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Plan3_SatisfyHungry</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Plan</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Plan2_SatisfyHungry</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Plan2_SatisfyHungry</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Plan</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Plan1_SatisfyHungry</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Plan1_SatisfyHungry</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Plan</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Goal_ManifestAngry</Key>
+        </Child>
+        <Child>
+          <Key>Goal_SatisfyHungry</Key>
+        </Child>
+        <Child>
+          <Key>Goal_SatisfyThirsty</Key>
+        </Child>
+        <Child>
+          <Key>Goal_GiveInformation</Key>
+        </Child>
+        <Child>
+          <Key>Goal_Fishing</Key>
+        </Child>
+        <Child>
+          <Key>Goal_GoWith</Key>
+        </Child>
+        <Child>
+          <Key>Goal_Help</Key>
+        </Child>
+        <Child>
+          <Key>Goal_Struggle</Key>
+        </Child>
+        <Child>
+          <Key>Goal_Convince</Key>
+        </Child>
+        <Child>
+          <Key>Goal_Rob</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_Rob</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_Rob</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_Convince</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_Convince</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_Struggle</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_Struggle</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_Help</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_Help</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_GoWith</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_GoWith</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_Fishing</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_Fishing</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_GiveInformation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_GiveInformation</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_SatisfyThirsty</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_SatisfyThirsty</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_SatisfyHungry</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_SatisfyHungry</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Goal_ManifestAngry</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Goal_ManifestAngry</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Goal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>MissedFact</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>MissedFact</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Fact</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Fact</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Proposition</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Proposition</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>State</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>State</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Hungry</Key>
+        </Child>
+        <Child>
+          <Key>Thirsty</Key>
+        </Child>
+        <Child>
+          <Key>Angry</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Angry</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Angry</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>State</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Thirsty</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Thirsty</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>State</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Hungry</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Hungry</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>State</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Attribute</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Attribute</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Character</Key>
+        </Child>
+        <Child>
+          <Key>Location</Key>
+        </Child>
+        <Child>
+          <Key>Weight</Key>
+        </Child>
+        <Child>
+          <Key>length</Key>
+        </Child>
+        <Child>
+          <Key>Unity</Key>
+        </Child>
+        <Child>
+          <Key>Name</Key>
+        </Child>
+        <Child>
+          <Key>Position</Key>
+        </Child>
+        <Child>
+          <Key>Friend</Key>
+        </Child>
+        <Child>
+          <Key>Enemy</Key>
+        </Child>
+        <Child>
+          <Key>Perception</Key>
+        </Child>
+        <Child>
+          <Key>Number</Key>
+        </Child>
+        <Child>
+          <Key>Quantity</Key>
+        </Child>
+        <Child>
+          <Key>Intensity</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Intensity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Intensity</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Quantity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Quantity</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Number</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Number</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Perception</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Perception</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Enemy</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Enemy</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Friend</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Friend</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Position</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Position</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>CurrentPosition</Key>
+        </Child>
+        <Child>
+          <Key>TargetPosition</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>TargetPosition</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>TargetPosition</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Position</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>CurrentPosition</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>CurrentPosition</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Position</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Name</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Name</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Unity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Unity</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>length</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>length</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Weight</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Weight</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Location</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Location</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Character</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Character</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Vanity</Key>
+        </Child>
+        <Child>
+          <Key>Nice</Key>
+        </Child>
+        <Child>
+          <Key>Cunning</Key>
+        </Child>
+        <Child>
+          <Key>Dishonest</Key>
+        </Child>
+        <Child>
+          <Key>Lasy</Key>
+        </Child>
+        <Child>
+          <Key>Generous</Key>
+        </Child>
+        <Child>
+          <Key>Just</Key>
+        </Child>
+        <Child>
+          <Key>Confident</Key>
+        </Child>
+        <Child>
+          <Key>Naive</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Naive</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Naive</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Confident</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Confident</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Just</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Just</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Generous</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Generous</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Lasy</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Lasy</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Dishonest</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Dishonest</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Cunning</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Cunning</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Nice</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Nice</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Vanity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Vanity</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Character</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Object</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Object</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>ConsumableObject</Key>
+        </Child>
+        <Child>
+          <Key>Shelter</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Shelter</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Shelter</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ConsumableObject</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>ConsumableObject</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Food</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Food</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Food</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>ConsumableObject</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Agent</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Agent</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Animal</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Animal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Animal</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Bird</Key>
+        </Child>
+        <Child>
+          <Key>Bear</Key>
+        </Child>
+        <Child>
+          <Key>Fox</Key>
+        </Child>
+        <Child>
+          <Key>Bee</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Agent</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Bee</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Bee</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Betty</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Betty</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Betty</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Bee</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Bee</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Fox</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Fox</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Fox_</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Fox_</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Fox_</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Fox</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Fox</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Bear</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Bear</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>John</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>John</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>John</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Bear</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Bear</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Bird</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Bird</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Arthur</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Arthur</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Arthur</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Bird</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Bird</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <RelationType>
+      <Key>Relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>loves</Key>
+        </Child>
+        <Child>
+          <Key>hates</Key>
+        </Child>
+        <Child>
+          <Key>livesIn</Key>
+        </Child>
+        <Child>
+          <Key>owns</Key>
+        </Child>
+        <Child>
+          <Key>locatedIn</Key>
+        </Child>
+        <Child>
+          <Key>mesuredWith</Key>
+        </Child>
+        <Child>
+          <Key>actor</Key>
+        </Child>
+        <Child>
+          <Key>obj</Key>
+        </Child>
+        <Child>
+          <Key>heightOf</Key>
+        </Child>
+        <Child>
+          <Key>weightOf</Key>
+        </Child>
+        <Child>
+          <Key>friendOf</Key>
+        </Child>
+        <Child>
+          <Key>enemyOf</Key>
+        </Child>
+        <Child>
+          <Key>becomes</Key>
+        </Child>
+        <Child>
+          <Key>reason</Key>
+        </Child>
+        <Child>
+          <Key>target</Key>
+        </Child>
+        <Child>
+          <Key>owner</Key>
+        </Child>
+        <Child>
+          <Key>has</Key>
+        </Child>
+        <Child>
+          <Key>to</Key>
+        </Child>
+        <Child>
+          <Key>from</Key>
+        </Child>
+        <Child>
+          <Key>rank</Key>
+        </Child>
+        <Child>
+          <Key>exists</Key>
+        </Child>
+        <Child>
+          <Key>numberOf</Key>
+        </Child>
+        <Child>
+          <Key>id</Key>
+        </Child>
+        <Child>
+          <Key>intensityOf</Key>
+        </Child>
+        <Child>
+          <Key>quantityOfFood</Key>
+        </Child>
+        <Child>
+          <Key>quantityOf</Key>
+        </Child>
+        <Child>
+          <Key>trajectoryId</Key>
+        </Child>
+        <Child>
+          <Key>follow</Key>
+        </Child>
+        <Child>
+          <Key>typeOf</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>typeOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>typeOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>follow</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>follow</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>trajectoryId</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>trajectoryId</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>quantityOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>quantityOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>quantityOfFood</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>quantityOfFood</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>intensityOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>intensityOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>id</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>id</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>numberOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>numberOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>exists</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>exists</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rank</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rank</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>from</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>from</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>to</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>to</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>has</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>has</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>owner</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>owner</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>target</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>target</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>reason</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>reason</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>becomes</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>becomes</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>enemyOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>enemyOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>friendOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>friendOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>weightOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>weightOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>heightOf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>heightOf</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>obj</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>obj</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>actor</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>actor</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>mesuredWith</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>mesuredWith</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>locatedIn</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>locatedIn</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>owns</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>owns</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>livesIn</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>livesIn</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>hates</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>hates</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>loves</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>loves</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

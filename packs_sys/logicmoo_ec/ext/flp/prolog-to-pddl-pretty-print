@@ -1,0 +1,65 @@
+#!/usr/bin/perl -w
+
+use BOSS::Config;
+use Formalog::Util::SWIPLI;
+use KBS2::ImportExport;
+use KBS2::Util;
+use PerlLib::SwissArmyKnife;
+use Verber::Util::Light;
+
+$specification = q(
+	-i <type>		Input type
+	-o <type>		Output type
+
+	-f <file>...		Files to Convert
+
+	-l			List possible input/output types
+
+	-g			Try to guess input type
+
+	-d			Debug
+);
+
+my $config =
+  BOSS::Config->new
+  (Spec => $specification);
+my $conf = $config->CLIConfig;
+
+my $light = Verber::Util::Light->new;
+my $debug = exists $conf->{'-d'} ? 1 : 0;
+my $importexport = KBS2::ImportExport->new(Debug => $debug);
+die "ERROR: You must specify files to process with -f" unless defined $conf->{'-f'};
+
+foreach my $file (@{$conf->{'-f'}}) {
+  if (-f $file) {
+    my $input = read_file($file);
+    my $inputtype;
+    my $outputtype;
+    if ($conf->{'-i'}) {
+      $inputtype = $conf->{'-i'};
+    } elsif ($conf->{'-g'}) {
+      NotYetImplemented();
+      die;
+    } else {
+      die "ERROR: you must specify input type with -i or to guess with -g";
+    }
+    if ($conf->{'-o'}) {
+      $outputtype = $conf->{'-o'};
+    } else {
+      die "ERROR: you must specify output type with -o";
+    }
+    my $res1 = $importexport->Convert
+      (
+       Input => $input,
+       InputType => $inputtype,
+       OutputType => 'Interlingua',
+      );
+    if ($res1->{Success}) {
+      my $interlingua = $res1->{Output}->[0];
+      my $res2 = SWIPLIDropAnnotations(Interlingua => $interlingua);
+      print $light->PrettyGenerate(Structure => $res2);
+    } else {
+      die Dumper($res1);
+    }
+  }
+}

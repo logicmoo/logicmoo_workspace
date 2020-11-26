@@ -1,0 +1,228 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                           %%
+%%      Version:  1.00   Date:  4/04/95   File: parser.pl                    %%
+%% Last Version:                          File:                              %%
+%% Changes:                                                                  %%
+%%  4/04/95 Created                                                          %%
+%%                                                                           %%
+%% Purpose:                                                                  %%
+%%                                                                           %%
+%% Author:  Torsten Schaub                                                   %%
+%%                                                                           %%
+%% Usage:   prolog parser.pl                                                 %%
+%%                                                                           %%
+%%                                                                           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:- if(current_prolog_flag(logicmoo_xray,true)).
+:- if(( ( \+ ((current_prolog_flag(logicmoo_include,Call),Call))) )).
+:- module(xray_io,[]).
+:- endif.
+
+write_style_header(_):-no_disk,!.
+write_style_header(Stream):-write_clauses(Stream,(:-(style_check(-singleton)))).
+
+:- was_dynamic(no_disk).
+no_disk.
+:- retractall(no_disk).
+
+set_use_disk:-retractall(no_disk).
+set_no_disk:-retractall(no_disk),asserta(no_disk).
+
+:- set_use_disk.
+
+
+my_format(vdisk(write,KBStream),_,[A]) :- C =.. [KBStream,A],no_disk,!,show_call(why,assert(C)).
+my_format(KBFile,Mode,KBStream):- format(KBFile,Mode,KBStream).
+
+myopen(KBStream,Mode,vdisk(Mode,KBStream)) :- Mode = write, no_disk,!,dynamic(KBStream/1),Call=..[KBStream,A],forall(Call,show_call(why,retractall(A))),abolish(KBStream,1),dynamic(KBStream/1).
+myopen(KBStream,read,vdisk(Mode,KBStream)) :- no_disk,!,dynamic(KBStream/1),Call=..[KBStream,A],forall(Call,show_call(why,retractall(A))).
+myopen(KBFile,Mode,KBStream):- open(KBFile,Mode,KBStream).
+
+myclose(vdisk(_Mode,_KBStream)) :- must(no_disk),!.
+myclose(KBStream):- close(KBStream).
+
+my_read_term(vdisk(Mode,KBStream),Wff1,Opts):-call(KBStream,Wff1);(Wff1=end_of_file).
+my_read_term(Stream,Wff1,Opts):-read_term(Stream,Wff1,Opts).
+
+
+
+
+% reads the knowledge base from the file 'Name.baseKB'
+
+read_kb(Name,Wff) :-
+	concatenate(Name,'.baseKB',KBFile),
+	read_clauses(KBFile,Wff).	
+
+read_ckb(Name,Wff) :-
+	concatenate(Name,'.ckb',CKBFile),
+	read_clauses(CKBFile,Wff).	
+
+read_que(Name,Wff) :-
+	concatenate(Name,'.que',QFile),
+	read_clauses(QFile,Wff).	
+
+read_clauses(File,Wff) :-
+	myopen(File,read,Stream),
+	read_wff_loop(Stream,Wff),
+	myclose(Stream).
+
+read_wff_loop(Stream,Wff) :-
+	read_term(Stream,Wff1,[cycles(true)]),
+	(Wff1 == end_of_file ->
+	           Wff = true;
+	 %true               ->
+		   read_wff_loop(Stream,Wff2),
+		   conjoin(Wff1,Wff2,Wff)).
+
+read_matrix(File,Wff) :-
+	myopen(File,read,Stream),
+	read_matrix_loop(Stream,Wff),
+	myclose(Stream).
+
+read_matrix_loop(Stream,Matrix) :-
+	read(Stream,Elem),
+	(Elem == end_of_file ->
+	           Matrix = [];
+	%true                ->
+		   read_matrix_loop(Stream,L),
+		   Matrix = [Elem|L]).
+
+% writes a compiled knowledge base consisting of contrapositives only
+% to the file 'Name.ckb'
+
+write_ckb(File,KB) :-
+ must_det_l((
+	concatenate(File,'.ckb',KBFile),
+	myopen(KBFile,write,KBStream),        
+        write_style_header(KBStream),
+	concatenate(File,'.que',QFile),
+	myopen(QFile,write,QStream),
+        write_style_header(QStream),
+        write_contrapositives(streams(KBStream,QStream),KB),
+        myclose(KBStream),
+        myclose(QStream))),!.
+
+        /*
+	get_file_info(KBFile,size,KBFileSize),
+	get_file_info(QFile,size,QFileSize),
+	
+	write(KBFile),write(" written "),write(KBFileSize),writeln(" bytes"),
+	write(QFile), write(" written "),write(QFileSize), writeln(" bytes"),
+	!.
+        */
+
+write_cmm(File,Matrix) :-
+	concatenate(File,'.cmm',MFile),
+	myopen(MFile,write,MStream),
+        write_style_header(MStream),
+        write_matrix(MStream,Matrix),
+        myclose(MStream),
+	!.
+
+write_query(File,Query) :-
+	concatenate(File,'.que',QFile),
+	myopen(QFile,write,QStream),
+        write_style_header(QStream),
+        write_query_only(QStream,Query),
+        myclose(QStream),
+	!.
+
+write_query_only(Stream,(A,B)) :-
+	!,
+        write_query_only(Stream,A),
+        write_query_only(Stream,B).
+write_query_only(Stream,(A:-B)) :-
+	functor(A,query,_) ->
+		write_clauses(Stream,(A:-B));
+	%true ->
+		true.
+
+
+write_contrapositives(Streams,(A,B)) :-
+	!,
+        write_contrapositives(Streams,A),
+        write_contrapositives(Streams,B).
+write_contrapositives(streams(KBStream,QStream),(A:-B)) :-
+	functor(A,query,_) ->
+		write_clauses(QStream,(A:-B));
+	%true ->
+		write_clauses(KBStream,(A:-B)).	
+
+
+write_clauses(Stream,(A,B)) :-
+        write_clauses(Stream,A),
+        write_clauses(Stream,B),
+        !.
+write_clauses(Stream,A) :- my_format(Stream,'~N~p.~n',[A]).
+
+write_clauses(A) :-
+	File = 'temp.pl',
+	myopen(File,write,Stream),
+        write_style_header(Stream),
+	write_clauses(Stream,A),
+	myclose(Stream).
+
+
+write_matrix(_,[]) :- !.
+write_matrix(Stream,[E|L]) :-
+        my_format(Stream,'~N~q.~n',[E]),
+	write_matrix(Stream,L),
+        !.
+
+write_matrix(L) :-
+	File = 'temp.pl',
+	myopen(File,write,Stream),
+        write_style_header(Stream),
+	write_matrix(Stream,L),
+	myclose(Stream).
+
+compile_with_cyclic_term(File):- \+ no_disk, !, compile(File).
+compile_with_cyclic_term(File):-read_clauses_to_pred(File,assert).
+read_clauses_to_pred(File,Pred) :-
+      myopen(File,read,Stream),
+      repeat,
+	my_read_term(Stream,Wff1,[cycles(true)]),        
+	(Wff1 \== end_of_file -> (once(must(show_call(why,call(Pred,Wff1)))),fail) ; !),
+        myclose(Stream).
+
+
+compile_ckb(File) :-	
+	quietly(concatenate(File,'.ckb',KBFile)),
+	compile_with_cyclic_term(KBFile).
+
+compile_query(File) :-	
+	concatenate(File,'.que',QFile),
+	compile_with_cyclic_term(QFile).
+
+ask(Name,Query) :-
+  must_det_l((
+	(variables(Query,[]) ->
+	         classical_clauses(Query,Q0),
+		 cnf(Q0,Q1),
+		 make_matrix(Q1,Q2),
+		 matrix_reduction(Q2,Q);
+	%true ->
+		 Q = []),
+
+	concatenate(Name,'.cmm',MFile),
+	read_matrix(MFile,Matrix),
+	
+	dpttp1((query:-Query),Q,Matrix,Query1:Matrix),
+
+	
+        write('XRay writing query ... '),
+        write_query(Name,Query1),
+	write('done.'),
+
+	
+        write('XRay compiling query ... '),
+        compile_query(Name),
+	write('done.'))),
+        !.
+
+tell(Name,Wff) :-	
+	read_kb(Name,KB),
+	conjoin(Wff,KB,NewKB),
+	dpttp(Name,NewKB).
+
+:-endif.

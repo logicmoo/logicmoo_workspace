@@ -1,0 +1,87 @@
+#! /bin/sh
+#
+# flashpolicyd   This starts and stops the Flash socket policy server
+#
+# chkconfig: 345 50 50
+# description: The Flash socket policy server
+#
+# processname: /usr/local/sbin/flashpolicyd.py
+# config: /usr/local/etc/flashpolicy.xml
+
+. /etc/init.d/functions
+
+#####################
+#BEGIN CONFIG SECTION
+
+#Location of daemon
+prog=/usr/local/sbin/flashpolicyd.py
+
+#Location of socket policy file
+policy=/usr/local/etc/flashpolicy.xml
+
+#Pid file to track start/stop of process
+pidfile=/var/run/flashpolicyd
+
+#Log file for logging (e.g. /var/log/flashpolicyd)
+#logfile=/var/log/flashpolicyd
+logfile=/dev/null
+
+#END CONFIG SECTION
+#####################
+
+
+[ "$NETWORKING" = "no" ] && exit 0
+[ -f "$prog" ] || exit 1
+[ -f "$policy" ] || exit 1
+
+RETVAL=0
+
+start() {
+    echo -n "Starting flashpolicyd: "
+    $prog --file="$policy" 2>>"$logfile" & 
+    RETVAL=$?
+    echo $! > $pidfile
+    [ "$RETVAL" -eq 0 ] && success $"$base startup" || failure $"$base startup"
+    echo
+    touch /var/lock/subsys/flashpolicyd
+}
+
+stop() {
+    echo -n "Stopping flashpolicyd: "
+    killproc -p $pidfile "$prog"
+    RETVAL=$?
+    echo
+    rm -f /var/lock/subsys/flashpolicyd
+}
+
+restart() {
+    stop
+    start
+}
+
+condrestart() {
+    [ -e /var/lock/subsys/flashpolicyd ] && restart
+}
+    
+case "$1" in
+    start)
+    start
+    ;;
+    stop)
+    stop
+    ;;
+    status)
+    status -p "$pidfile" "$prog"
+    ;;
+    restart|reload)
+    restart
+    ;;
+    condrestart)
+    condrestart
+    ;;
+    *)
+    echo "Usage: flashpolicyd {start|stop|status|restart}"
+    RETVAL=1
+esac
+
+exit $RETVAL

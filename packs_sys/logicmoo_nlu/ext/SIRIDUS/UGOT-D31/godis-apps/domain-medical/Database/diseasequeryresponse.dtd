@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+     Structure of a disease database
+
+     NOTE: It isn't clear to me how namespace declaration
+     and schema location attributes ought to be defined
+     in the DTD. The approach I'm using comes from the
+     http://www.w3.org/XML/1998/06/xmlspec-v21.dtd spec
+     for the 'xmlns:xlink' attribute.
+  -->
+<!ELEMENT disease-query-response
+    (#PCDATA|disease|test|symptom|history|synonyms|discriminating-symptoms|diagnostic-tests|relevant-history|error)*
+>
+<!ATTLIST disease-query-response
+    xmlns:xsi CDATA #REQUIRED
+    xsi:noNamespaceSchemaLocation CDATA #REQUIRED
+>
+<!--
+     error: text error message from query processor
+  -->
+<!ELEMENT error
+    (#PCDATA)
+>
+<!--
+     disease=(description regions symptoms history tests treatment prevention)
+  -->
+<!ELEMENT disease
+   (#PCDATA|description|regions|symptoms|history|tests|treatment|prevention)*
+>
+<!ATTLIST disease
+    name CDATA #REQUIRED
+>
+<!--
+     A disease description
+  -->
+<!ELEMENT description
+    (#PCDATA)
+>
+<!--
+     A disease's endemic regions
+  -->
+<!ELEMENT regions
+    (#PCDATA)
+>
+<!--
+     A disease's symptoms
+  -->
+<!ELEMENT symptoms
+    (#PCDATA|symptom)*
+>
+<!ELEMENT symptom
+   EMPTY
+>
+<!ATTLIST symptom
+    name CDATA #REQUIRED
+    required CDATA #IMPLIED
+    present CDATA #REQUIRED
+>
+<!--
+     Relevant medical history items
+  -->
+<!ELEMENT history
+    (#PCDATA|history-item)*
+>
+<!ELEMENT history-item
+   EMPTY
+>
+<!ATTLIST history-item
+    name CDATA #REQUIRED
+    required CDATA #IMPLIED
+    present CDATA #REQUIRED
+>
+<!--
+     A disease's tests
+  -->
+<!ELEMENT tests
+    (#PCDATA|test)*
+>
+<!ELEMENT test
+   EMPTY
+>
+<!ATTLIST test
+    name CDATA #REQUIRED
+    testname CDATA #IMPLIED
+    result CDATA #IMPLIED
+    required CDATA #IMPLIED
+    present CDATA #REQUIRED
+>
+<!--
+     Synonyms for symptoms
+  -->
+<!ELEMENT synonyms
+    (#PCDATA|synonym)*
+>
+<!ELEMENT synonym
+   EMPTY
+>
+<!ATTLIST synonym
+    name CDATA #REQUIRED
+>
+<!--
+     A disease's treatment
+  -->
+<!ELEMENT treatment
+    (#PCDATA)
+>
+<!--
+     A disease's prevention
+  -->
+<!ELEMENT prevention
+    (#PCDATA)
+>
+<!--
+     Symptoms which can reduce the number of possible diseases.
+     Should be ordered by likelihood and power.
+  -->
+<!ELEMENT discriminating-symptoms
+    (#PCDATA|symptom)*
+>
+<!--
+     Medical history items relevant to discriminating between these diseases.
+  -->
+<!ELEMENT relevant-history
+    (#PCDATA|history-item)*
+>
+<!--
+     Diagnostic tests which can be performed to narrow possible diagnoses
+     or confirm the result.
+  -->
+<!ELEMENT diagnostic-tests
+    (#PCDATA|test)*
+>

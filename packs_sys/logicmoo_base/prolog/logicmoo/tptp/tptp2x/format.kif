@@ -1,0 +1,224 @@
+%==============================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the KIF format devised at Stanford.
+%----
+%----Written by Geoff Sutcliffe, September, 1994.
+%----Extended for FOF by Mark Stickel, February 1998.
+%----Made pretty FOF format by Geoff Sutcliffe, September 1998.
+%----Modified to remove and and or by Geoff Sutcliffe, March 1999.
+%----Fixed to cope with xor by Geoff Sutcliffe, November 2001.
+%==============================================================================
+%==============================================================================
+%----Generic output
+%==============================================================================
+%----Translate symbols if necessary. Only equal right now
+output_kif_symbol('$tptp_equal'):-
+    !,
+    write('=').
+
+output_kif_symbol('$tptp_not_equal'):-
+    !,
+    write('/=').
+
+output_kif_symbol(and):-
+    !,
+    write(and_kif).
+
+output_kif_symbol(or):-
+    !,
+    write(or_kif).
+
+%---All others do as is
+output_kif_symbol(Symbol):-
+    write(Symbol).
+%------------------------------------------------------------------------------
+%----Output an atom with variables in KIF format
+output_kif_term([OneTerm]):-
+    !,
+    output_kif_term(OneTerm).
+
+output_kif_term([FirstTerm|RestOfTerms]):-
+    !,
+    output_kif_term(FirstTerm),
+    write(' '),
+    output_kif_term(RestOfTerms).
+
+%----Variables look like atoms that start with uppercase. For KIF they
+%----need a leading ?.
+output_kif_term(Variable):-
+    atomic(Variable),
+    name(Variable,[FirstASCII|_]),
+    FirstASCII >= 65,
+    FirstASCII =< 90,
+    !,
+    write('?'),
+    write(Variable).
+
+%----Numbervars variables look like shit.
+output_kif_term('$VAR'(Index)):-
+    !,
+    write('?'),
+    write('$VAR'(Index)).
+
+%----Normal atomic things
+output_kif_term(Term):-
+    atomic(Term),
+    !,
+    write(Term).
+
+output_kif_term('$true'):-
+    !,
+    write(true).
+
+output_kif_term('$false'):-
+    !,
+    write(false).
+
+%----Complex terms
+output_kif_term(Complex):-
+    Complex =.. [Symbol|Arguments],
+    write('('),
+    output_kif_symbol(Symbol),
+    write(' '),
+    output_kif_term(Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+%----Output an atom
+kif_output_variable(Variable):-
+    output_kif_term(Variable).
+%------------------------------------------------------------------------------
+%----Output an atom
+kif_output_atom(_,Atom):-
+    output_kif_term(Atom).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----FOF output
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Recognise and split up quantified formulae
+kif_quantified_formula(QuantifiedFormula,KIFQuantifier,Variables,
+Formula):-
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    !,
+    Quantification =.. [Quantifier,Variables],
+    tptp2X_member(ct(Quantifier,KIFQuantifier),[ct('!',forall),ct('?',exists)]).
+%------------------------------------------------------------------------------
+%----Recognise and split up binary formulae
+kif_binary_formula(BinaryFormula,KIFConnective,LHS,RHS):-
+    BinaryFormula =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(KIFConnective),
+[('<=>')-('<=>'),('<~>')-('xor'),('=>')-('=>'),('<=')-('<='),('&')-('and'),
+(';')-('or'),('|')-('or')]).
+%----Both needed after shorten which sets '|' somewhere - need to check
+%----|;BUG
+%------------------------------------------------------------------------------
+%----Recognise and split up unary formulae
+kif_unary_formula(UnaryFormula,KIFConnective,Formula):-
+    UnaryFormula =.. [Connective,Formula],
+%----Had to use ()s due to some Prolog confusion about -
+    tptp2X_member((Connective)-(KIFConnective),[('~')-('not')]).
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in oscar format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+kif_quantified_format('(',' (',' ',')',' )').
+
+%----PrefixBracket,ConnectivePrefix,ConnectiveSuffix,SuffixBracket
+kif_binary_format('(','','',' )').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+kif_unary_format('(',' ',' )').
+%------------------------------------------------------------------------------
+%----If the formulae has an acceptable status then output
+output_kif_formulae([]).
+
+output_kif_formulae([fof(Name,Status,Formula)|RestOfFormulae]):-
+    write('; '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    (Status==conjecture -> 
+        (   write(';----This is the conjecture with negated conjecture'),
+            nl,
+            output_generic_prefix_formula(kif,~Formula)
+        )
+    ;   output_generic_prefix_formula(kif,Formula)),
+    nl,
+    nl,
+    output_kif_formulae(RestOfFormulae).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----CNF output
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Output a literal with - for negative, nothing for positive
+%----Special case for negative equality. Done sadly like this for Eclipse
+%----which dies on strange predicates
+output_kif_signed_literal(--'$tptp_equal'(LHS,RHS)):-
+    !,
+    output_kif_signed_literal(++'$tptp_not_equal'(LHS,RHS)).
+
+output_kif_signed_literal(--Atom):-
+    !,
+    write('(not '),
+    kif_output_atom(cnf,Atom),
+    write(')').
+
+output_kif_signed_literal(++Atom):-
+    kif_output_atom(cnf,Atom).
+%------------------------------------------------------------------------------
+%----Output the literals of the clause in KIF format
+%----Special case of an empty clause
+output_kif_clause([]):-
+    !,
+    write(')'),
+    nl,
+    nl.
+
+output_kif_clause([OneLiteral]):-
+    !,
+    output_kif_signed_literal(OneLiteral),
+    write(')'),
+    nl,
+    nl.
+
+output_kif_clause([FirstLiteral|RestOfLiterals]):-
+    output_kif_signed_literal(FirstLiteral),
+    nl,
+    write('    '),
+    output_kif_clause(RestOfLiterals).
+%------------------------------------------------------------------------------
+%----Output the clauses selected by status
+output_kif_clauses([]):-
+    !.
+
+%----If the clause has an acceptable status then output
+output_kif_clauses([input_clause(Name,Status,Literals)|RestOfClauses]):-
+    write('; '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    write('(or '),
+    output_kif_clause(Literals),
+    output_kif_clauses(RestOfClauses).
+%------------------------------------------------------------------------------
+%----Output all the clauses in kif format
+kif(kif,Clauses,_):-
+    tptp_clauses(Clauses),
+    output_kif_clauses(Clauses).
+
+%----Output all the formulae in kif format
+kif(kif,Formulae,_):-
+    tptp_formulae(Formulae),
+    output_kif_formulae(Formulae).
+%------------------------------------------------------------------------------
+%----Provide information about the kif format
+kif_format_information(';','.kif').
+%------------------------------------------------------------------------------
+%----Provide information about the kif file
+kif_file_information(format,kif,'KIF format').
+%------------------------------------------------------------------------------

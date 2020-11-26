@@ -1,0 +1,6 @@
+Compile and load the current generation grammar, defined by the
+{\tt generation\_\-grammar} config file entry. The resulting compiled
+generation grammar is placed in the file defined by the
+{\tt generation\_\-grammar($\langle$Arg$\rangle$)} config file entry. This can
+be useful if you are normally using grammar specialisation to build
+the generation grammar.

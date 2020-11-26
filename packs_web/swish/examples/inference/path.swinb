@@ -1,0 +1,140 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Computing the probability of a path between two nodes in a probabilistic graph
+
+A probabilistic graph is a graph where each edge has a
+probability of being present.
+
+Consider the probabilistic graph:
+</div>
+
+<div class="nb-cell query">
+graph(G).
+</div>
+
+<div class="nb-cell markdown">
+What is the probability that =a= and =e= are connected?
+</div>
+
+<div class="nb-cell query">
+prob(path(a,e),Prob).
+</div>
+
+<div class="nb-cell markdown">
+What is the probability that =a= and =e= are connected represented graphically?
+</div>
+
+<div class="nb-cell query">
+prob(path(a,e),Prob),bar(Prob,C).
+</div>
+
+<div class="nb-cell markdown">
+What is the BDD for query path(a,e)?
+</div>
+
+<div class="nb-cell query">
+bdd_dot_string(path(a,e),BDD,Var).
+</div>
+
+<div class="nb-cell markdown">
+A solid edge indicates a 1-child, a dashed edge indicates a 0-child and
+a dotted
+edge indicates a negated 0-child.
+Each level of the BDD is associated to a variable of the form XI_J indicated on the left:
+I indicates the multivalued variable index and J the index of the Boolean variable of I.
+The table =Var= contains the associations between the rule groundings and the
+multivalued variables:
+the first column contains the multivalued variable index,
+the second column contains the rule index, corresponding
+to its position in the program, and the last column contains the list
+of constants grounding the rule, each replacing a variable in the order of appearance in the
+rule.
+
+
+## Code
+
+Preamble:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(pita)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- use_rendering(graphviz).
+:- use_rendering(table,[header(['Multivalued variable index','Rule index','Grounding substitution'])]).
+:- endif.
+
+:- pita.
+
+:- begin_lpad.
+</div>
+
+<div class="nb-cell markdown">
+path(X,Y) is true if there is a path between nodes =X= and =Y=
+edge(a,b) indicates that there is an edge between =a= and =b=
+There is surely a path between a node and itself:
+</div>
+
+<div class="nb-cell program" data-background="true">
+path(X,X).
+</div>
+
+<div class="nb-cell markdown">
+There is surely a path between X and Y if there is another node Z such that
+there is an edge between X and Z and there is a path between Z and Y
+</div>
+
+<div class="nb-cell program" data-background="true">
+path(X,Y):-
+  edge(X,Z),path(Z,Y).
+</div>
+
+<div class="nb-cell markdown">
+There is an edge between =a= and =b= with probability 0.2:
+</div>
+
+<div class="nb-cell program" data-background="true">
+edge(a,b):0.2.
+</div>
+
+<div class="nb-cell markdown">
+Other probabilistic edges:
+</div>
+
+<div class="nb-cell program" data-background="true">
+edge(b,e):0.5.
+edge(a,c):0.3.
+edge(c,d):0.4.
+edge(d,e):0.4.
+edge(a,e):0.1.
+</div>
+
+<div class="nb-cell markdown">
+End of probabilistic part:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- end_lpad.
+</div>
+
+<div class="nb-cell markdown">
+Clause for drawing the graph using the integration with Graphviz:
+</div>
+
+<div class="nb-cell program" data-background="true">
+graph(digraph([rankdir='LR'|G])):-
+    findall(edge(A -&gt; B,[label=P]),
+      clause(edge(A,B,_,_),(get_var_n(_,_,_,_,[P|_],_),_)),
+      G).
+</div>
+
+<div class="nb-cell markdown">
+## References
+L. De Raedt, A. Kimmig, and H. Toivonen. ProbLog: A probabilistic Prolog and
+its application in link discovery. In International Joint Conference on
+Artificial Intelligence, pages 2462-2467, 2007.
+</div>
+
+</div>

@@ -1,0 +1,47 @@
+<div class="notebook">
+
+<div class="nb-cell program" data-background="true" data-singleline="false">
+
+is_non_skollem(Var):- nonvar(Var), Var \= ex(_,_).
+make_ex_some(Var, Statement, AltStatement):-
+  copy_term(Var+Statement, AltVar+AltStatement),
+  AltVar = ex(Var, Statement).
+
+
+%= save compiled clauses using forward chaining storage (by default)
+%= we are using forward chaining just so any logical errors, performance and program bugs manefest
+%= immediately
+:- use_module(library(pfc)).		
+:- set_clause_compile(fwc).
+:- mpred_trace_exec.
+
+% Maintains the Skollem only if needed
+( (ex_some(Var, Statement)/
+      make_ex_some(Var, Statement, AltStatement))
+          ==> (( Statement/is_non_skollem(Var) ==> \+ AltStatement),
+	        ( \+ Statement  ==> AltStatement))).
+
+
+person(C) ==> ex_some(P, bio_father(C, P)).
+person(C) ==> ex_some(P, bio_mother(C, P)).
+male(P) ==> ~female(P).
+female(P) ==> ~male(P).
+bio_mother(C, P) <==> (bio_parent(C, P),  female(P)).
+bio_father(C, P) <==> (bio_parent(C, P),  male(P)).
+
+% Creates the two Skollems
+==> person(joe).
+</div>
+
+<div class="nb-cell query">
+% Should not show the Skollem but instead the real thing
+ mpred_why(bio_father(joe, _)),
+ mpred_why(male(_F)),
+% Should show the Skollem 
+ mpred_why(bio_mother(joe, _)),
+ mpred_why(female(_M)).
+</div>
+
+</div>
+
+

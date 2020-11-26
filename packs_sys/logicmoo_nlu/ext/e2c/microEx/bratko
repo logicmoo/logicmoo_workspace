@@ -1,0 +1,25 @@
+ % SEND+MORE=MONEY
+ % sans dif mais avec nonvar
+ % I. Bratko p161
+ %
+ % Solution perdante a tous coups dans ce cas
+ % En effet, on part de la fin, alors que l'on sait que M sera une
+ % une retenue
+
+
+
+ $ sum1([],[],[],0,0,R,R).
+ $ sum1([D1|N1],[D2|N2],[D|N],C1,C,R1,R) :-
+                sum1(N1,N2,N,C1,C2,R1,R2), somme(D1,D2,C2,D,C,R2,R).
+
+ $ somme(D1,D2,C1,D,C,R1,R) :- del1(D1,R1,X), del1(D2,X,Y), del1(D,Y,R),
+             plus(D1,D2,Z), plus(Z,C1,S), mod(S,10,D), divi(S,10,C).
+
+ $ del1(A,L,L) :- nonvar(A), !.
+ $ del1(A,[A|L],L).
+ $ del1(A,[B|L],[B|L1]) :- del1(A,L,L1).
+
+ $ sol :- crypto(X,Y,Z), sum1(X,Y,Z,0,0,[0,1,2,3,4,5,6,7,8,9],U),
+          write(X), nl, write(Y), nl, write(Z), nl.
+
+ $ crypto([0,S,E,N,D],[0,M,Oo,R,E],[M,Oo,N,E,Y]).

@@ -1,0 +1,9 @@
+Entity > Animal, Fable.
+
+Animal = Wolf, Lamb.
+Fable = Fable1.
+
+fab([Animal : Wolf]<-THME-[Fable : Fable1]).
+fab([Animal : Lamb]<-THME-[Fable : Fable1]).
+
+AnimalInFable(F,A) :- fab([Animal : A]<-THME-[Fable : F]).

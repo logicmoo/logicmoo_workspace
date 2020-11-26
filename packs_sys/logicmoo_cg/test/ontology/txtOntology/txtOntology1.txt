@@ -1,0 +1,2 @@
+Univ > Action, Object.
+Action > Drink, Drive, Eat.

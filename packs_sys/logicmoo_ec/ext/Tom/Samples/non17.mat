@@ -1,0 +1,12 @@
+%Der Operator "f" sei definiert durch:
+%	f('$Rp','$Rq') = not '$Rp' or ('$Rq' and diamond a : ('$Rp' and not '$Rq')) or not diamond a : ('$Rp' and '$Rq').
+
+%17.
+not (diamond a : box a : (not '$Rp' equivalent f('$Rp','$Rp'))).
+not (diamond a : box a : (not '$Rp' equivalent (not '$Rp' or ('$Rp' and diamond a : ('$Rp' and not '$Rp')) or not (diamond a : ('$Rp' and '$Rp'))))).
+
+%not (diamond a : box a : ((not '$Rp' implies (not '$Rp' or ('$Rp' and diamond a : ('$Rp' and not '$Rp')) or not (diamond a : ('$Rp' and '$Rp')))) and ( (not '$Rp' or ('$Rp' and diamond a : ('$Rp' and not '$Rp')) or not ( diamond a : ('$Rp' and '$Rp'))) implies not '$Rp' ))).
+
+%%% Axioms of S4: reflexivity and transitivity
+%# modal_axiom_schema(reflexive,a).
+%# modal_axiom_schema(transitive,a).

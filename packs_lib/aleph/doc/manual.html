@@ -1,0 +1,5469 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>aleph module for SWI-Prolog Manual</title>
+</head>
+ <body>
+  <h1 id="aleph" class="title">
+   aleph
+  </h1>
+  <h2 id="index">
+   Index
+  </h2>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#usage-module-loading">Module loading</a></li>
+<li><a href="#usage-aleph-initialization">Aleph initialization</a></li>
+<li><a href="#directives">Directives</a></li>
+<li><a href="#usage-background">Background Knoweledge Section</a></li>
+<li><a href="#usage-positive">Positive Examples Section</a></li>
+<li><a href="#usage-negative">Negative Examples Section</a></li>
+</ul></li>
+<li><a href="#commands">New induction commands</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#manual">Manual</a></li>
+</ul>
+</div>
+  <h2 id="introduction">
+   Introduction
+  </h2>
+  <p>
+   Porting of Aleph for SWI-Prolog.
+  </p>
+  <p>
+   Aleph is an Inductive Logic Programming system developed by
+   <a href="https://www.bits-pilani.ac.in/goa/ashwin/profile">
+    Ashwin Srinivasan</a>:
+  </p>
+  <p>
+   <a href="http://www.cs.ox.ac.uk/activities/machlearn/Aleph/">
+    http://www.cs.ox.ac.uk/activities/machlearn/Aleph/
+   </a>
+  </p>
+  <p>
+   This pack contains a porting of Aleph v.5 to SWI-Prolog. The porting
+   was done by
+   <a href="http://ml.unife.it/fabrizio-riguzzi/">
+    Fabrizio Riguzzi</a>.
+  </p>
+  <p>
+   Two files are included: <code>aleph_orig.pl</code> is a direct porting of Aleph for Yap,
+   while <code>aleph.pl</code>
+   is modoule-file that can run also under SWISH.
+
+   <code>aleph.pl</code> was developed by Paolo Niccolò Giubelli and Fabrizio Riguzzi.
+  </p>
+  <h2 id="usage">
+   Usage
+  </h2>
+  <p>
+   <code>aleph_orig.pl</code> can be used as the original Aleph.
+  </p>
+  <p>
+   <code>aleph.pl</code> differs because it uses a single input
+   file instead of three files for background,
+   positive and negative examples.
+  </p>
+  <p>
+   The input file for aleph.pl must be
+   structured as follows:
+  </p>
+  <p>
+    <h3 id="usage-module-loading">
+     1. Module loading
+    </h3>
+  </p>
+  <pre><code>:- use_module(library(aleph)).
+</code></pre>
+  <p>
+    <h3 id="usage-aleph-initialization">
+     2. Aleph initialization
+    </h3>
+  </p>
+  <pre><code>:- aleph.
+</code></pre>
+  <p>
+  <h3 id="usage-directives">
+     3. Directives
+    </h3>
+   <br/>
+   Nothing has changed here, you can use
+   <code>
+    modeh/2</code>,
+   <code>
+    modeb/2</code>,
+   <code>
+    determination/2</code>
+   as documented in the
+   <a href="manual">
+    manual
+   </a> except that <code>set/2</code> and <code>setting/2</code> are replaced by <code>aleph_set/2</code> and 
+   <code>aleph_setting/2</code>.
+  </p>
+  <pre><code>% e.g.: 
+:- modeh(*,grandparent(+person,-person)).
+:- modeh(*,parent(+person,-person)).
+
+:- modeb(*,mother(+person,-person)).
+:- modeb(*,father(+person,-person)).
+:- modeb(*,parent(+person,-person)).
+
+:- aleph_set(verbose,1).
+
+% ...
+</code></pre>
+  <p>
+    <h3 id="usage-background">
+     4. Background Knowledge Section
+    </h3>
+   <br/>
+   Nothing has changed here except you need to enclose this section with
+   <code>
+    begin_bg/0
+   </code>
+   and
+   <code>
+    end_bg/0
+   </code>
+   directives. Between them you can put your background clauses. E.g.:
+  </p>
+  <pre><code>
+:- begin_bg.
+person(bob).
+person(dad(bob)).
+% ...
+:- end_bg.
+</code></pre>
+  <p>
+    <h3 id="usage-positive">
+     5. Positive Examples Section
+    </h3>
+    The positive examples section is delimited by `begin_in_pos/0` and `end_in_pos/0` 
+    directives. E.g.:
+  </p>
+  <pre><code>
+:- begin_in_pos.
+grandparent(dad(dad(bob)),bob).
+grandparent(dad(mum(bob)),bob).
+% ...
+:- end_in_pos.
+</code></pre>
+  <p>
+    <h3 id="usage-negative">
+     6. Negative Examples Section
+    </h3>
+   The negative examples section is delimited by begin_in_neg/0 and end_in_neg/0 directives. 
+   Negative examples are listed as facts. E.g.:
+  </p>
+  <pre><code>
+:- begin_in_neg.
+grandparent(bob,bob). % bob is not a grandparent of bob
+% ...
+:- end_in_neg.
+</code></pre>
+<h2 id="commands">
+   New induction commands
+  </h2>
+  <p>You can use the usual Aleph commands for performing learning.
+   Moreover, the following predicates were added. 
+   Their arity has been increased by one compared to the original version. 
+   The (new) output argument returns the result of the command.<br />
+	<ul>
+		<li><code>induce(-Program)</code></li>
+		<li><code>induce_tree(-Program)</code></li>
+		<li><code>induce_cover(-Program)</code></li>
+		<li><code>induce_modes(-Modes)</code></li>
+		<li><code>induce_incremental(-Program)</code></li>
+		<li><code>induce_max(-Program)</code></li>
+		<li><code>induce_features(-Features)</code></li>
+		<li><code>induce_constraints(-Constraints)</code></li>
+		<li><code>induce_theory(-Program)</code></li>
+		<li><code>induce_clauses(-Program)</code></li>
+		<li><code>covers(-Ex)</code></li>
+		<li><code>coversn(-Ex)</code></li>
+		<li><code>reduce(-Cl)</code></li>
+		<li><code>addgcws(-Cl)</code></li>
+		<li><code>good_clauses(-Cls)</code></li>
+	</ul>
+  </p>
+  <h2 id="examples">
+   Examples
+  </h2>
+  <p>
+   The examples have been downloaded from
+   <a href="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">
+    http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip
+   </a>
+   and ported to SWI-Prolog.
+  </p>
+<h2 id="manual">Aleph Manual</h2>
+<H1>The Aleph Manual</H1>
+<H2>Version 4 and above</H2>
+<ADDRESS>Ashwin Srinivasan</ADDRESS>
+<P>
+<P><HR><P>
+
+<P>
+ 
+
+
+<P>
+ 
+<EM>Then the rabbi said, "Golem, you have not been completely
+formed, but I am about to finish you now...You will do as I will tell
+you." Saying these words, Rabbi Leib finished engraving the letter Aleph.
+Immediately the golem began to rise."</EM>
+From <EM>The Golem</EM> by Isaac Bashevis Singer with illustrations by
+Uri Shulevitz.
+
+
+<P>
+The development of Aleph owes much to the advice and research
+of many people. Special thanks are due to: Michael Bain, Rui Camacho,
+Vitor Costa, James Cussens, Ross King, Donald Michie,
+Stephen Moyle, Stephen Muggleton, David Page, Mark Reid, Claude Sammut,
+Jude Shavlik, Jan Wielemaker, and Filip Zelezny.
+
+
+
+
+<H1><A ID="SEC1">Introduction</A></H1>
+
+<P>
+This document provides reference information on <STRONG>A</STRONG>
+<STRONG>L</STRONG>earning <STRONG>E</STRONG>ngine for <STRONG>P</STRONG>roposing
+<STRONG>H</STRONG>ypotheses (Aleph).
+Aleph is an Inductive Logic Programming (ILP) system.
+This manual is not intended to be a tutorial on ILP.  A good
+introduction to the theory, implementation and applications of ILP can
+be found in S.H. Muggleton and L. De Raedt (1994), <EM>Inductive Logic
+Programming: Theory and Methods</EM>, Jnl. Logic Programming,
+19,20:629--679, available at
+<A HREF="ftp://ftp.cs.york.ac.uk/pub/ML_GROUP/Papers/lpj.ps.gz">ftp://ftp.cs.york.ac.uk/pub/ML_GROUP/Papers/lpj.ps.gz</A>.  <BR>
+
+
+<P>
+Aleph is intended to be a prototype for exploring ideas. Earlier
+incarnations (under the name P-Progol) originated in 1993
+as part of a fun project undertaken by Ashwin Srinivasan and Rui Camacho at
+Oxford University. The main purpose was to understand ideas of inverse entailment which
+eventually appeared in Stephen Muggleton's 1995 paper:
+<EM>Inverse Entailment and Progol</EM>, New Gen. Comput., 13:245-286,
+available at
+<A HREF="ftp://ftp.cs.york.ac.uk/pub/ML_GROUP/Papers/InvEnt.ps.gz">ftp://ftp.cs.york.ac.uk/pub/ML_GROUP/Papers/InvEnt.ps.gz</A>.
+Since then, the implementation has evolved to emulate some of the
+functionality of several other ILP systems. Some of these
+of relevance to Aleph are: CProgol, FOIL, FORS, Indlog, MIDOS, SRT, Tilde, and WARMR.
+See section <A HREF="#SEC37">Related versions and programs</A> for more details on obtaining
+some of these programs.
+
+
+
+
+<H2><A ID="SEC2">How to obtain Aleph</A></H2>
+<P>
+<A ID="IDX1"></A>
+
+
+<P>
+Aleph is written in Prolog principally for use with the Yap Prolog
+compiler. It should also run, albeit less efficiently, with SWI Prolog.
+It is maintained by Ashwin Srinivasan at the University of Oxford,
+and can be found at:
+
+
+<P>
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/aleph.pl">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/aleph.pl</A>.
+
+
+<P>
+If you obtain this version, and have not already done so, then subscribe to the
+Aleph mailing list.  You can do this by e-mailing
+<A HREF="mailto:majordomo@comlab.ox.ac.uk">majordomo@comlab.ox.ac.uk</A>
+with the body of the message containing the command: <STRONG>subscribe aleph</STRONG>.
+This version is free for academic use (research and teaching). If
+you intend to use it for commercial purposes then please
+contact Ashwin Srinivasan (ashwin at comlab dot ox dot ac uk).
+ 
+<STRONG>NB:</STRONG> Yap is available at:
+
+
+<P>
+<A HREF="http://yap.sourceforge.net/">http://yap.sourceforge.net/</A>
+
+
+<P>
+Aleph requires Yap 4.1.15 or higher, compiled with the DEPTH_LIMIT
+flag set to 1 (that is, include -DDEPTH_LIMIT=1 in the compiler options).
+Aleph 5 requires SWI Version 5.1.10 or higher.
+
+
+<P>
+SWI Prolog is available at:
+
+
+<P>
+<A HREF="http://www.swi-prolog.org/">http://www.swi-prolog.org/</A>
+ 
+
+
+<H2><A ID="SEC3">How to use this manual</A></H2>
+<P>
+<A ID="IDX2"></A>
+
+
+
+<UL>
+<LI>
+
+If you are a first-time user, proceed directly to 
+section <A HREF="#SEC4">The basic Aleph algorithm</A>.
+<LI>
+
+If you have mastered the naive use of Aleph then
+see section <A HREF="#SEC18">Advanced use of Aleph</A> on how to get more out of this program.
+You may also want to look at the section <A HREF="#SEC61">Concept Index</A>.
+<LI>
+
+If you are familiar with idea of setting parameters,
+altering search methods, etc within Aleph, then
+see section <A HREF="#SEC38">Notes</A> for ideas that have proved worthwhile in
+applications.
+<LI>
+
+If you are interested in what is new with this version,
+see section <A HREF="#SEC54">Change Logs</A> for a change-log.
+</UL>
+
+<P>
+The Texinfo source file of this manual is available at:
+
+
+<P>
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/aleph.tex">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/aleph.tex</A>
+
+
+<P>
+A "Makefile" is available for generating a variety of output formats:
+
+
+<P>
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/Makefile.txt">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/Makefile.txt</A>
+
+
+
+
+<H2><A ID="SEC4">The basic Aleph algorithm</A></H2>
+<P>
+<A ID="IDX3"></A>
+
+
+<P>
+During routine use, Aleph follows a very simple
+procedure that can be described in 4 steps:
+
+
+
+<OL>
+
+<LI>
+
+<STRONG>Select example.</STRONG> Select an example to be generalised. If none exist, stop,
+otherwise proceed to the next step.
+
+<LI>
+
+<A ID="IDX4"></A>
+<STRONG>Build most-specific-clause.</STRONG> Construct the most specific clause that
+entails the example selected, and is within language restrictions provided.
+This is usually a definite clause with many literals, and is called the "bottom
+clause." This step is sometimes called the "saturation" step.
+Details of constructing the bottom clause can be found in
+Stephen Muggleton's 1995 paper: <EM>Inverse Entailment and Progol</EM>,
+New Gen. Comput., 13:245-286, available at
+<A HREF="ftp://ftp.cs.york.ac.uk/pub/ML_GROUP/Papers/InvEnt.ps.gz">ftp://ftp.cs.york.ac.uk/pub/ML_GROUP/Papers/InvEnt.ps.gz</A>.
+
+<LI>
+
+<A ID="IDX5"></A>
+<STRONG>Search.</STRONG> Find a clause more general than the bottom clause. This is
+done by searching for some subset of the literals in the bottom clause
+that has the "best" score. Two points should be noted. First, confining the search
+to subsets of the bottom clause does not produce all the clauses more
+general than it, but is good enough for this thumbnail sketch. Second, the
+exact nature of the score of a clause is not really important here.
+This step is sometimes called the "reduction" step.
+
+<LI>
+
+<STRONG>Remove redundant.</STRONG>  The clause with the best score is added to
+the current theory, and all examples made redundant are removed.
+This step is sometimes called the "cover removal" step.
+Note here that the best clause may make clauses other than the examples
+redundant. Again, this is ignored here.
+Return to Step 1.
+
+</OL>
+
+<P>
+A more advanced use of Aleph (see section <A HREF="#SEC18">Advanced use of Aleph</A>) allows
+alteration to each of these steps. At the core of Aleph is
+the "reduction" step, presented above as a simple "subset-selection" algorithm.
+In fact, within Aleph, this is implemented
+by a (restricted) branch-and-bound algorithm which allows an intelligent enumeration
+of acceptable clauses under a range of different conditions. More on this can be found in
+section <A HREF="#SEC45">On how the single-clause search is implemented</A>.
+
+
+
+
+<H1><A ID="SEC5">Getting started with Aleph</A></H1>
+<P>
+<A ID="IDX6"></A>
+
+
+
+
+<H2><A ID="SEC6">Loading Aleph</A></H2>
+<P>
+<A ID="IDX7"></A>
+
+
+<P>
+Aleph code is contained in a single file, usually called
+<TT>`alephX.pl'</TT> (the X stands for the current version number, for
+example aleph4.pl refers to Version 4). To load
+Aleph, you will need to consult this file into your Prolog
+compiler, with sufficient stack and heap size (the more, the better!).
+Here is an example of loading Aleph into the Yap compiler,
+with a stack size of 5000 K bytes and heap size of 20000 K bytes:
+
+
+
+<PRE>
+yap -s5000 -h20000
+
+[ Restoring file startup ]
+ 
+yes
+
+   ?- [aleph4]. 
+
+</PRE>
+
+<P>
+Aleph requires 3 files to construct theories.  The
+most straightforward use of Aleph would involve:
+
+
+
+<OL>
+
+<LI>
+
+Construct the 3 data files called <TT>`filestem.b, filestem.f, filestem.n'</TT>.
+See section <A HREF="#SEC7">Background knowledge file</A>, section <A HREF="#SEC11">Positive examples file</A>, and
+section <A HREF="#SEC12">Negative examples file</A>.
+
+<LI>
+
+Read all data using the <CODE>read_all(filestem)</CODE> command.
+See section <A HREF="#SEC13">Read all input files</A>.
+
+<LI>
+
+Construct a theory using the <CODE>induce</CODE> command
+See section <A HREF="#SEC14">Construct a theory</A>.
+
+</OL>
+
+
+
+<H2><A ID="SEC7">Background knowledge file</A></H2>
+<P>
+<A ID="IDX8"></A>
+
+
+<P>
+All background knowledge for Aleph is contained in a file with
+a <STRONG>.b</STRONG> extension. Background knowledge is in the form of Prolog
+clauses that encode information relevant to the domain. It can also
+contain any directives understood by the Prolog compiler being used
+(for example, <CODE>:- consult(someotherfile).</CODE>). This file also contains
+language and search restrictions for Aleph. The most
+basic amongst these refer to <EM>modes, types</EM> and <EM>determinations</EM>
+(see section <A HREF="#SEC8">Mode declarations</A>, section <A HREF="#SEC9">Type specifications</A>, and section <A HREF="#SEC10">Determinations</A>).
+
+
+
+
+<H3><A ID="SEC8">Mode declarations</A></H3>
+<P>
+<A ID="IDX9"></A>
+
+
+<P>
+<A ID="IDX10"></A>
+These declare the mode of call for predicates that can appear in any
+clause hypothesised by Aleph. They take the form:
+
+
+
+<PRE>
+
+mode(RecallNumber,PredicateMode).
+
+</PRE>
+
+<P>
+where <CODE>RecallNumber</CODE> bounds the non-determinacy of a form of predicate call,
+and <CODE>PredicateMode</CODE> specifies a legal form for calling a predicate.
+
+
+<P>
+<CODE>RecallNumber</CODE> can be either (a) a number specifying the number of
+successful calls to the predicate;
+or (b) <STRONG>*</STRONG> specifying that the predicate has bounded non-determinacy.
+It is usually easiest to specify <CODE>RecallNumber</CODE> as <STRONG>*</STRONG>.
+
+
+<P>
+<CODE>PredicateMode</CODE> is a template of the form:
+
+
+
+<PRE>
+
+p(ModeType, ModeType,...)
+
+</PRE>
+
+<P>
+Here are some examples of how they appear in a file:
+
+
+
+<PRE>
+:- mode(1,mem(+number,+list)).
+:- mode(1,dec(+integer,-integer)).
+:- mode(1,mult(+integer,+integer,-integer)).
+:- mode(1,plus(+integer,+integer,-integer)).
+:- mode(1,(+integer)=(#integer)).
+:- mode(*,has_car(+train,-car)).
+
+</PRE>
+
+<P>
+Each ModeType is either (a) <STRONG>simple</STRONG>; or (b) <STRONG>structured</STRONG>.
+A <STRONG>simple</STRONG> ModeType is one of: (a) <STRONG>+T</STRONG> specifying that when a literal
+with predicate symbol <STRONG>p</STRONG> appears in a hypothesised clause, the corresponding
+argument should be an "input" variable of type <STRONG>T</STRONG>; (b) <STRONG>-T</STRONG> specifying
+that the argument is an "output" variable of type <STRONG>T</STRONG>; or
+(c) <STRONG>#T</STRONG> specifying that it should be a constant of type <STRONG>T</STRONG>.
+All the examples above have simple modetypes.
+A <STRONG>structured</STRONG> ModeType is of the form <STRONG>f(..)</STRONG> where <STRONG>f</STRONG>
+is a function symbol, each argument of which is either a simple or structured
+ModeType. Here is an example containing a structured ModeType:
+
+
+
+<PRE>
+:- mode(1,mem(+number,[+number|+list])).
+
+</PRE>
+
+<P>
+With these directives Aleph ensures that for any hypothesised
+clause of the form <CODE>H:- B1, B2, ..., Bc</CODE>:
+
+
+
+<OL>
+
+<LI>
+
+<STRONG>Input variables.</STRONG> Any input variable of type <STRONG>T</STRONG> in a body literal Bi
+appears as an output variable of type <STRONG>T</STRONG> in a body
+literal that appears before Bi, or appears as an input variable of type <STRONG>T</STRONG>
+in H.
+
+<LI>
+
+<STRONG>Output variables.</STRONG>
+Any output variable of type <STRONG>T</STRONG> in H appears as an output variable of
+type <STRONG>T</STRONG> in Bi.
+
+<LI>
+
+<STRONG>Constants.</STRONG> 
+Any arguments denoted by <STRONG>#T</STRONG> in the modes have only ground terms of
+type <STRONG>T</STRONG>.
+
+</OL>
+
+
+
+<H3><A ID="SEC9">Type specifications</A></H3>
+<P>
+<A ID="IDX11"></A>
+
+
+<P>
+Types have to be specified for every argument of all predicates
+to be used in constructing a hypothesis. This specification is
+done within a <CODE>mode(...,...)</CODE> statement (see section <A HREF="#SEC8">Mode declarations</A>).
+For Aleph types are just names, and no type-checking
+is done. Variables of different types are treated distinctly, even if
+one is a sub-type of the other.
+
+
+
+
+<H3><A ID="SEC10">Determinations</A></H3>
+<P>
+<A ID="IDX12"></A>
+
+
+<P>
+<A ID="IDX13"></A>
+Determination statements declare the predicated that can be used to construct
+a hypothesis.  They take the form:
+ 
+
+<PRE>
+ 
+determination(TargetName/Arity,BackgroundName/Arity).
+ 
+</PRE>
+
+<P>
+ 
+The first argument is the name and arity of the target predicate, that is,
+the predicate that will appear in the head of hypothesised clauses.
+The second argument is the name and arity of a predicate that can appear
+in the body of such clauses. Typically there will be many determination
+declarations for a target predicate, corresponding to the predicates
+thought to be relevant in constructing hypotheses.
+If no determinations are present Aleph does not construct any clauses.
+Determinations are only allowed for 1 target predicate on any given
+run of Aleph: if multiple target determinations occur,
+the first one is chosen.
+
+
+<P>
+Here are some examples of how they appear in a file:
+
+
+
+<PRE>
+:- determination(eastbound/1,has_car/2).
+:- determination(mult/3,mult/3).
+:- determination(p/1,'='/2).
+</PRE>
+
+
+
+<H2><A ID="SEC11">Positive examples file</A></H2>
+<P>
+<A ID="IDX14"></A>
+
+
+<P>
+Positive examples of a concept to be learned with Aleph are
+written in a file with a <STRONG>.f</STRONG> extension. The filestem should be
+the same as that used for the background knowledge. The positive examples
+are simply ground facts. Here are some examples of how they appear in a file:
+
+
+
+<PRE>
+eastbound(east1).
+eastbound(east2).
+eastbound(east3).
+</PRE>
+
+<P>
+Code exists for dealing with non-ground positive examples.
+However, this has never been tested rigorously.
+
+
+
+
+<H2><A ID="SEC12">Negative examples file</A></H2>
+<P>
+<A ID="IDX15"></A>
+
+
+<P>
+Negative examples of a concept to be learned with Aleph are
+written in a file with a <STRONG>.n</STRONG> extension. The filestem should be
+the same as that used for the background knowledge. The negative examples
+are simply ground facts. Here are some examples of how they appear in a file:
+
+
+
+<PRE>
+eastbound(west1).
+eastbound(west1).
+eastbound(west1).
+</PRE>
+
+<P>
+Non-ground constraints can be a more compact way of expressing negative information.
+Such constraints can be specified in the background knowledge file
+(see section <A HREF="#SEC25">User-defined constraints</A>). Aleph is capable of learning from
+positive examples only. This is done using a Bayesian evaluation function
+(see <CODE>posonly</CODE> in section <A HREF="#SEC22">Evaluation functions</A>).
+
+
+
+
+<H2><A ID="SEC13">Read all input files</A></H2>
+<P>
+<A ID="IDX16"></A>
+
+
+<P>
+<A ID="IDX17"></A>
+Once  the <TT>`filestem.b, filestem.f'</TT> and <TT>`filestem.n'</TT> files are in
+place, they can be read into Aleph with the command:
+
+
+
+<PRE>
+
+read_all(filestem).
+
+</PRE>
+
+<P>
+Finer-grain specification of the example files can be achieved by setting
+the <CODE>train_pos</CODE> and <CODE>train_neg</CODE> flags (see section <A HREF="#SEC19">Setting Aleph parameters</A>).
+
+
+
+
+<H2><A ID="SEC14">Construct a theory</A></H2>
+<P>
+<A ID="IDX18"></A>
+
+
+<P>
+<A ID="IDX19"></A>
+The basic command for selecting examples and constructing
+a theory is:
+
+
+
+<PRE>
+              induce.
+</PRE>
+
+<P>
+When issued Aleph does the four steps described earlier
+(see section <A HREF="#SEC4">The basic Aleph algorithm</A>). The result
+is usually a trace that lists clauses searched along with their
+positive and negative example coverage, like:
+
+
+
+<PRE>
+
+eastbound(A) :-
+   has_car(A,B).
+[5/5]
+eastbound(A) :-
+   has_car(A,B), short(B).
+[5/5]
+eastbound(A) :-
+   has_car(A,B), open_car(B).
+[5/5]
+eastbound(A) :-
+   has_car(A,B), shape(B,rectangle).
+[5/5]
+
+</PRE>
+
+<P>
+and the final result that looks like:
+
+
+
+<PRE>
+
+[theory]
+ 
+[Rule 1] [Pos cover = 5 Neg cover = 0]
+
+eastbound(A) :-
+       has_car(A,B), short(B), closed(B).
+
+[pos-neg] [5]
+
+</PRE>
+
+<P>
+<CODE>induce</CODE> also reports the performance on the training data as a confusion
+matrix that looks like:
+
+
+
+<PRE>
+
+[Training set performance]
+
+           Actual
+        +          -  
+     +  5          0         5 
+Pred 
+     -  0          5         5
+ 
+        5          5         10
+ 
+Accuracy = 100%
+
+</PRE>
+
+<P>
+Performance on a test data is also reported if values for the parameters <CODE>test_pos</CODE>
+and <CODE>test_neg</CODE> are set (see section <A HREF="#SEC19">Setting Aleph parameters</A>).
+
+
+<P>
+The simplest use of <CODE>induce</CODE> implements a simple greedy cover-set algorithm.
+Aleph allows you to experiment with a number of 
+other ways of searching for answers (see section <A HREF="#SEC18">Advanced use of Aleph</A>).
+
+
+
+
+<H2><A ID="SEC15">Save a theory</A></H2>
+<P>
+<A ID="IDX20"></A>
+
+
+<P>
+The final theory constructed by Aleph can be saved in a file <CODE>FileName</CODE> using
+the command:
+
+
+<P>
+<A ID="IDX21"></A>
+
+
+
+<PRE>
+
+write_rules(FileName).
+
+</PRE>
+
+<P>
+Alternatively, the command:
+
+
+<P>
+<A ID="IDX22"></A>
+
+
+
+<PRE>
+
+write_rules.
+
+</PRE>
+
+<P>
+calls <CODE>write_rules/1</CODE> with the current setting for the parameter <CODE>rulefile</CODE>.
+
+
+
+
+<H2><A ID="SEC16">Evaluate a theory</A></H2>
+<P>
+<A ID="IDX23"></A>
+
+
+<P>
+Besides automatic performance reporting, the
+theory constructed by Aleph can be evaluated on examples in any data file using the 
+command:
+
+
+<P>
+<A ID="IDX24"></A>
+
+
+
+<PRE>
+
+test(File,Flag,Covered,Total)
+
+</PRE>
+
+<P>
+<CODE>File</CODE> is the name of the data file containing the examples.
+<CODE>Flag</CODE> is one of <CODE>show</CODE> or <CODE>noshow</CODE>
+to show examples covered or otherwise.
+Both <CODE>File</CODE> and <CODE>Flag</CODE> have to be provided.
+<CODE>test/4</CODE> then returns the following numbers.
+<CODE>Covered</CODE> is the number of examples in the data file covered by current theory.
+<CODE>Total</CODE> is the total number of examples in the data file.
+
+
+
+
+<H2><A ID="SEC17">Some simple examples</A></H2>
+<P>
+<A ID="IDX25"></A>
+
+
+<P>
+Some simple examples of Aleph usage can be found in
+
+
+<P>
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+
+<P>
+In each sub-directory you should find Aleph input files and, usually, a typescript of
+Aleph running on the data provided to accomplish some task.
+
+
+
+
+<H1><A ID="SEC18">Advanced use of Aleph</A></H1>
+
+<P>
+Advanced use of Aleph allows modifications
+to each of the steps to the basic algorithm (see section <A HREF="#SEC4">The basic Aleph algorithm</A>):
+
+
+
+<OL>
+
+<LI>
+
+<STRONG>Select example.</STRONG> A sample of more than 1 example can be selected
+(see <CODE>samplesize</CODE> in section <A HREF="#SEC19">Setting Aleph parameters</A>).
+The best clause obtained from reducing each corresponding
+bottom clause is then added to the theory. Alternatively, no sampling need
+be performed, and every example can be saturated and reduced
+(see <CODE>induce</CODE> in section <A HREF="#SEC20">Altering the search</A>).
+
+<LI>
+
+<STRONG>Build most-specific-clause.</STRONG> Bottom clauses may be constructed
+"lazily" or not at all (see <CODE>construct_bottom</CODE> in section <A HREF="#SEC19">Setting Aleph parameters</A>).
+Literals in the a bottom clause may be evaluated "lazily"
+(see <CODE>lazy_evaluate</CODE> in section <A HREF="#SEC36">Other commands</A>). Individual bottom
+clauses can be constructed and examined (see <CODE>sat</CODE> in
+section <A HREF="#SEC36">Other commands</A>).
+
+<LI>
+
+<STRONG>Search.</STRONG> The search for clauses can be altered and customised to
+try different search strategies, evaluation functions, and refinement
+operators (see section <A HREF="#SEC20">Altering the search</A>). A bottom clause can be reduced
+repeatedly using different search constraints
+(see <CODE>reduce</CODE> in section <A HREF="#SEC36">Other commands</A>).
+
+<LI>
+
+<STRONG>Remove redundant.</STRONG>  Examples covered may be retained to give
+better estimates of clause scores
+(see <CODE>induce</CODE> in section <A HREF="#SEC20">Altering the search</A>).
+
+</OL>
+
+<P>
+There is now some software in place that allows
+exploration of the following:
+
+
+
+<OL>
+
+<LI>
+
+<STRONG>Randomised search.</STRONG> The basic Aleph algorithm 
+does a fairly standard general-to-specific search. Some variation
+on this is possible by the user specifying his or her own refinement
+operator. In other areas (satisfiability of propositional formulae,
+simulation of discrete events), randomised methods have proven
+extremely useful tools to search very large spaces. The implementation
+within Aleph is an adaptation of the standard randomised
+methods: GSAT, WSAT, RRR, and the Metropolis algorithm
+(a special case of simulated annealing with a fixed `temperature')
+(see section <A HREF="#SEC28">Randomised search methods</A> and section <A HREF="#SEC20">Altering the search</A>).
+
+<LI>
+
+<STRONG>Incremental learning.</STRONG> The basic Aleph algorithm is
+a "batch" learner in the sense that all examples and background are
+expected to be in place before learning commences. An incremental
+mode allows Aleph to acquire new examples and background information
+by interacting with the user (see section <A HREF="#SEC29">Incremental construction of theories</A>).
+
+<LI>
+
+<STRONG>Theory learning.</STRONG> The basic Aleph algorithm constructs
+a "theory" one clause at a time. This is an implementation of the
+greedy set-cover algorithm to the problem of identifying a set of
+clauses. There is some empirical and theoretical work done on
+on ILP of sets of clauses at once: see the work of I. Bratko
+and H. Midelfart in <EM>Proceedings of the Ninth International
+Workshop on Inductive Logic Programming (ILP'99)</EM>, LNAI-1634.
+Theory learning by Aleph uses randomised search
+methods (see next) to search through the space of theories. It has not been
+tested to any significant extent (see section <A HREF="#SEC30">Theory-level search</A>).
+
+<LI>
+
+<STRONG>Learning trees.</STRONG> The basic Aleph algorithm constructs
+clauses using a greedy set-covering algorithm. In some sense, this
+can be seen as the first-order equivalent of propositional rule-learning
+algorithms like Clark and Niblett's CN2. There is now a substantial body of
+empirical work (done by researchers in Leuven and Freiburg) demonstrating
+the utility of first-order equivalents of propositional tree-learning procedures.
+Tree-based learning can be seen as a special case of theory learning
+and the implementation in Aleph uses the standard recursive-partitioning
+approach to construct classification, regression, class probability, or
+model trees (see section <A HREF="#SEC31">Tree-based theories</A>).
+
+<LI>
+
+<STRONG>Learning constraints.</STRONG> The basic Aleph algorithm constructs
+definite clauses normally intended to be components of a predictive model for
+data. Early ILP work (in the Claudien system) demonstrated the value of discovering
+all non-Horn constraints that hold in a database. The implementation
+of these ideas in Aleph uses a naive generate-and-test strategy
+to enumerate all constraints within the mode language provided
+(see section <A HREF="#SEC32">Constraint learning</A>).
+
+<LI>
+
+<STRONG>Learning modes.</STRONG> The basic Aleph algorithm assumes
+modes will be declared by the user. There has been some work (by McCreath
+and Sharma) on automatic extraction of mode and type information from the
+background knowledge provided. The implementation
+of these ideas in Aleph follows these ideas fairly closely
+(see section <A HREF="#SEC33">Mode learning</A>).
+
+<LI>
+
+<STRONG>Learning features.</STRONG> The basic Aleph algorithm constructs
+a set of rules that, along with the background knowledge, entail the
+positive examples. Good clauses found during the search for this set of
+rules can be used to construct boolean features. These can then be used
+techniques like maximum entropy modelling, support vector machines and so on
+(see section <A HREF="#SEC35">Feature Construction</A>).
+
+</OL>
+
+<P>
+These are all at very early stages of development and therefore
+even less reliable than the rest of the code (probably).
+
+
+
+
+<H2><A ID="SEC19">Setting Aleph parameters</A></H2>
+<P>
+<A ID="IDX26"></A>
+
+
+<P>
+<A ID="IDX27"></A>
+The <CODE>set/2</CODE> predicate forms the basis for setting a number of
+parameter values for Aleph. Parameters are set to values
+using:
+
+
+
+<PRE>
+              set(Parameter,Value)
+</PRE>
+
+<P>
+<A ID="IDX28"></A>
+The current value of a parameter is obtained using:
+
+
+
+<PRE>
+              setting(Parameter,Value)
+</PRE>
+
+<P>
+<A ID="IDX29"></A>
+A parameter can be un-set by using:
+
+
+
+<PRE>
+              noset(Parameter)
+</PRE>
+
+<P>
+Meaningful <CODE>set/2</CODE> statements for Aleph are:
+
+
+<DL COMPACT>
+
+<DT><CODE>set(abduce,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX30"></A>
+<A ID="IDX31"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+If <VAR>V</VAR> is <CODE>true</CODE> then abduction and subsequent generalisation
+of abduced atoms is performed within the <CODE>induce</CODE> loop. Only
+predicates declared to be abducible by <CODE>abducible/1</CODE>
+are candidates for abduction. See section <A HREF="#SEC34">Abductive learning</A> for more details.
+
+<DT><CODE>set(best,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX32"></A>
+<A ID="IDX33"></A>
+<VAR>V</VAR> is a `clause label' obtained from an earlier run.
+This is a list containing at least the number of positives covered,
+the number of negatives covered, and the length of a clause found on
+a previous search. Useful when performing searches iteratively.
+
+<DT><CODE>set(cache_clauselength,+<VAR>V</VAR>)</CODE>
+<DD>
+<VAR>V</VAR> is a positive integer (default 3). Sets an upper bound on the length of
+clauses whose coverages are cached for future use.
+
+<DT><CODE>set(caching,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX34"></A>
+<A ID="IDX35"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+If <CODE>true</CODE> then clauses and coverage are cached for future use.
+Only clauses upto length set by <CODE>cache_clauselength</CODE> are stored in
+the cache.
+
+<DT><CODE>set(check_redundant,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX36"></A>
+<A ID="IDX37"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). Specifies whether a call to <CODE>redundant/2</CODE>
+(see section <A HREF="#SEC36">Other commands</A>) should be made for checking redundant
+literals in a clause.
+
+<DT><CODE>set(check_useless,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX38"></A>
+<A ID="IDX39"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). If set to <CODE>true</CODE>, removes literals in
+the bottom clause that do not contribute to establishing variable
+chains to output variables in the positive literal, or produce
+output variables that are not used by any other literal in the
+bottom clause.
+
+<DT><CODE>set(classes,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX40"></A>
+<VAR>V</VAR> is a list of classes to be predicted by the tree learner
+(see section <A HREF="#SEC31">Tree-based theories</A>).
+
+<DT><CODE>set(clauselength,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX41"></A>
+<A ID="IDX42"></A>
+<VAR>V</VAR> is a positive integer (default 4). Sets upper bound on number of literals in
+an acceptable clause.
+
+<DT><CODE>set(clauselength_distribution,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX43"></A>
+<A ID="IDX44"></A>
+<VAR>V</VAR> is a list of the form [p1-1,p2-2,...] where "pi" represents
+the probability of drawing a clause with "i" literals.  Used by
+randomised search methods
+See section <A HREF="#SEC28">Randomised search methods</A>.
+
+<DT><CODE>set(clauses,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX45"></A>
+<A ID="IDX46"></A>
+<VAR>V</VAR> is a positive integer. Sets upper bound on the number of clauses in
+a theory when performing theory-level search (see section <A HREF="#SEC30">Theory-level search</A>).
+
+<DT><CODE>set(condition,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX47"></A>
+<A ID="IDX48"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+If <CODE>true</CODE> then randomly generated examples are obtained after conditioning
+the stochastic generator with the positive examples.
+
+<DT><CODE>set(confidence,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX49"></A>
+<A ID="IDX50"></A>
+<VAR>V</VAR> is a floating point number in the interval (0.0,1.0) (default
+0.95). Determines the confidence for rule-pruning by the tree learner
+(see section <A HREF="#SEC31">Tree-based theories</A>).
+
+<DT><CODE>set(construct_bottom,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX51"></A>
+<A ID="IDX52"></A>
+<VAR>V</VAR> is one of: <CODE>saturation</CODE>, <CODE>reduction</CODE> or <CODE>false</CODE>
+(default <CODE>saturation</CODE>). Specifies the stage at which the bottom
+clause is constructed.  If <CODE>reduction</CODE> then it is constructed lazily
+during the search. This is useful if the bottom clause is too large to be
+constructed prior to search. This also sets the flag <CODE>lazy_bottom</CODE>
+to <CODE>true</CODE>. The user has to provide a refinement operator
+definition (using <CODE>refine/2</CODE>). If not, the <CODE>refine</CODE> parameter
+is set to <CODE>auto</CODE>.  If <CODE>false</CODE> then no bottom clause is
+constructed. The user would normally provide a refinement operator
+definition in this case.
+
+<DT><CODE>set(dependent,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX53"></A>
+<A ID="IDX54"></A>
+<VAR>V</VAR> is a positive integer. Denotes the argument of the dependent variable
+in the examples (see section <A HREF="#SEC31">Tree-based theories</A> and section <A HREF="#SEC35">Feature Construction</A>).
+
+<DT><CODE>set(depth,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX55"></A>
+<A ID="IDX56"></A>
+<VAR>V</VAR> is a positive integer (default 10). Sets an upper bound on the proof depth
+to which theorem-proving proceeds.
+
+<DT><CODE>set(explore,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX57"></A>
+<A ID="IDX58"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+If <CODE>true</CODE> then forces search to continue until the point
+that all remaining elements in the search space are
+definitely worse than the current best element (normally, search would stop
+when it is certain that all remaining elements are no better than
+the current best. This is a weaker criterion.)
+All internal pruning is turned off (see section <A HREF="#SEC23">Built-in and user-defined pruning</A>).
+
+<DT><CODE>set(evalfn,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX59"></A>
+<A ID="IDX60"></A>
+<VAR>V</VAR> is one of: <CODE>coverage</CODE>, <CODE>compression</CODE>, <CODE>posonly</CODE>,
+<CODE>pbayes</CODE>, <CODE>accuracy</CODE>, <CODE>laplace</CODE>, <CODE>auto_m</CODE>,
+<CODE>mestimate</CODE>, <CODE>entropy</CODE>,
+<CODE>gini</CODE>, <CODE>sd</CODE>, <CODE>wracc</CODE>, or <CODE>user</CODE> (default <CODE>coverage</CODE>).
+Sets the evaluation function for a search.
+See section <A HREF="#SEC20">Altering the search</A>.
+
+<DT><CODE>set(good,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX61"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>). If <CODE>true</CODE>
+then stores a Prolog encoding of "good" clauses found in the search. 
+A good clause is any clause with
+utility above that specified by the setting for <CODE>minscore</CODE>. 
+If <CODE>goodfile</CODE> is set to some filename then this encoding is stored externally in that
+file.
+
+<DT><CODE>set(goodfile,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX62"></A>
+<VAR>V</VAR> is a Prolog atom. Sets the filename for storing a Prolog encoding of good clauses
+found in searches conducted to date.  Any existing file with this name will get appended.
+
+<DT><CODE>set(gsamplesize,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX63"></A>
+<A ID="IDX64"></A>
+<VAR>V</VAR> is a positive integer (default 100). The size of the randomly generated
+example set produced for learning from positive examples only.
+See section <A HREF="#SEC20">Altering the search</A>.
+
+<DT><CODE>set(i,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX65"></A>
+<A ID="IDX66"></A>
+<VAR>V</VAR> is a positive integer (default 2). Set upper bound on layers of new variables.
+
+<DT><CODE>set(interactive,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX67"></A>
+<A ID="IDX68"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>). If <CODE>true</CODE>
+then constructs theories interactively with <CODE>induce_rules</CODE> and <CODE>induce_tree</CODE>.
+
+<DT><CODE>set(language,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX69"></A>
+<A ID="IDX70"></A>
+<VAR>V</VAR> is an integer &#62;= 1 or <CODE>inf</CODE>
+(default <CODE>inf</CODE>). Specifies the number of occurences of a predicate symbol
+in any clause.
+
+<DT><CODE>set(lazy_on_contradiction,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX71"></A>
+<A ID="IDX72"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). Specifies if theorem-proving should proceed if
+a constraint is violated.
+
+<DT><CODE>set(lazy_on_cost,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX73"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default
+<CODE>false</CODE>). Specifies if user-defined cost-statements require clause
+coverages to be evaluated. This is normally not user-set, and decided
+internally.
+
+<DT><CODE>set(lazy_negs,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX74"></A>
+<A ID="IDX75"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+If <CODE>true</CODE> then theorem-proving
+on negative examples stops once bounds set by <CODE>noise</CODE> or <CODE>minacc</CODE>
+are violated.
+
+<DT><CODE>set(lookahead,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX76"></A>
+<A ID="IDX77"></A>
+<VAR>V</VAR> is a positive integer. Sets a lookahead value for the
+automatic refinement operator (obtained by setting <CODE>refine</CODE> to
+<CODE>auto</CODE>).
+
+<DT><CODE>set(m,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX78"></A>
+<A ID="IDX79"></A>
+<VAR>V</VAR> is a floating point number. Sets a value for "m-estimate"
+calculations. See section <A HREF="#SEC22">Evaluation functions</A>.
+
+<DT><CODE>set(max_abducibles,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX80"></A>
+<A ID="IDX81"></A>
+<VAR>V</VAR> is a positive integer (default <CODE>2</CODE>). Sets an
+upper bound on the maximum number of ground atoms within any abductive
+explanation for an observation. See section <A HREF="#SEC34">Abductive learning</A>.
+
+<DT><CODE>set(max_features,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX82"></A>
+<A ID="IDX83"></A>
+<VAR>V</VAR> is a positive integer (default <CODE>inf</CODE>). Sets an
+upper bound on the maximum number of boolean features constructed
+by searching for good clauses. See section <A HREF="#SEC35">Feature Construction</A>
+
+<DT><CODE>set(minacc,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX84"></A>
+<A ID="IDX85"></A>
+<VAR>V</VAR> is an floating point number between 0 and 1 (default 0.0).
+Set a lower bound on the minimum accuracy of an acceptable clause.
+The accuracy of a clause has the same meaning as precision: that
+is, it is <VAR>p/(p+n)</VAR> where <VAR>p</VAR> is the number of positive examples
+covered by the clause (the true positives) and <VAR>n</VAR> is
+the number of negative examples covered by the clause (the false positives).
+
+<DT><CODE>set(mingain,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX86"></A>
+<A ID="IDX87"></A>
+<VAR>V</VAR> is an floating point number (default <CODE>0.05</CODE>).
+Specifies the minimum expected gain from splitting a leaf when
+constructing trees.
+
+<DT><CODE>set(minpos,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX88"></A>
+<A ID="IDX89"></A>
+<VAR>V</VAR> is a positive integer (default 1). Set a lower bound on the number of positive
+examples to be covered by an acceptable clause. If the best clause covers
+positive examples below this number, then it is  not added to the current theory.
+This can be used to prevent Aleph from adding ground unit clauses to the theory
+(by setting the value to 2).
+Beware: you can get counter-intuitive results in conjunction with
+the <CODE>minscore</CODE> setting.
+
+<DT><CODE>set(minposfrac,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX90"></A>
+<A ID="IDX91"></A>
+<VAR>V</VAR> is a is a floating point number in the interval [0.0,1.0]
+(default 0.0). Set a lower bound on the positive examples
+covered by an acceptable clause as a fraction of the positive examples
+covered by the head of that clause. If the best clause
+has a ratio below this number, then it is  not added to the current theory.
+Beware: you can get counter-intuitive results in conjunction with
+the <CODE>minpos</CODE> setting.
+
+<DT><CODE>set(minscore,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX92"></A>
+<A ID="IDX93"></A>
+<VAR>V</VAR> is an floating point number (default <CODE>-inf</CODE>).
+Set a lower bound on the utility of
+of an acceptable clause. When constructing clauses,
+If the best clause has utility
+below this number, then it is  not added to the current theory.
+Beware: you can get counter-intuitive results in conjunction with
+the <CODE>minpos</CODE> setting.
+
+<DT><CODE>set(moves,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX94"></A>
+<A ID="IDX95"></A>
+<VAR>V</VAR> is an integer &#62;= 0. Set an upper bound on the number of
+moves allowed when performing a randomised local search.
+This only makes sense if <CODE>search</CODE> is set to <CODE>rls</CODE>
+and <CODE>rls_type</CODE> is set to an appropriate value.
+
+<DT><CODE>set(newvars,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX96"></A>
+<A ID="IDX97"></A>
+<VAR>V</VAR> is a positive integer or <CODE>inf</CODE> (default <CODE>inf</CODE>).
+Set upper bound on the number of existential variables that can be introduced
+in the body of a clause.
+
+<DT><CODE>set(nodes,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX98"></A>
+<A ID="IDX99"></A>
+<VAR>V</VAR> is a positive integer (default 5000).
+Set upper bound on the nodes to be explored when
+searching for an acceptable clause.
+
+<DT><CODE>set(noise,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX100"></A>
+<A ID="IDX101"></A>
+<VAR>V</VAR> is an integer &#62;= 0 (default 0).
+Set an upper bound on the number of negative
+examples allowed to be covered by an acceptable clause. 
+
+<DT><CODE>set(nreduce_bottom,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX102"></A>
+<A ID="IDX103"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). If <CODE>true</CODE> then removes literals 
+in the body of the bottom clause using the negative examples. The
+procedure is as described by S. Muggleton and C. Feng in
+<EM>Efficient induction of logic programs, Inductive Logic Programming,
+S. Muggleton (ed.),  AFP Press</EM>.
+
+<DT><CODE>set(openlist,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX104"></A>
+<A ID="IDX105"></A>
+<A ID="IDX106"></A>
+<VAR>V</VAR> is an integer &#62;= 0 or <CODE>inf</CODE> (default <CODE>inf</CODE>).
+Set an upper bound on the beam-width to be used
+in a greedy search.
+
+<DT><CODE>set(optimise_clauses,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX107"></A>
+<A ID="IDX108"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). If <CODE>true</CODE> performs query optimisations
+described by V.S. Costa, A. Srinivasan, and R.C. Camacho in
+<EM>A note on two simple transformations for improving the efficiency of an ILP system.</EM>
+
+<DT><CODE>set(permute_bottom,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX109"></A>
+<A ID="IDX110"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). If <CODE>true</CODE> randomly permutes literals in
+the body of the bottom clause, within the constraints imposed by the 
+mode declarations. The utility of is described by P. Tschorn in
+<EM>Random Local Bottom Clause Permutations for Better Search Space
+Exploration in Progol-like ILP Systems.</EM> (short papers, ILP 2006).
+
+<DT><CODE>set(portray_examples,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX111"></A>
+<A ID="IDX112"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). If <CODE>true</CODE> executes goal
+<CODE>aleph_portray(Term)</CODE> where <CODE>Term</CODE> is one
+of <CODE>train_pos</CODE>, <CODE>train_neg</CODE>, <CODE>test_pos</CODE>, or <CODE>test_neg</CODE>
+when executing the command <CODE>show(Term)</CODE>.
+
+<DT><CODE>set(portray_hypothesis,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX113"></A>
+<A ID="IDX114"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). If <CODE>true</CODE> executes goal
+<CODE>aleph_portray(hypothesis)</CODE>.  This is to be written by the user.
+
+<DT><CODE>set(portray_literals,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX115"></A>
+<A ID="IDX116"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). If <CODE>true</CODE> executes goal
+<CODE>aleph_portray(Literal)</CODE> where <CODE>Literal</CODE> is some literal.
+This is to be written by the user.
+
+<DT><CODE>set(portray_search,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX117"></A>
+<A ID="IDX118"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE>
+(default <CODE>false</CODE>). If <CODE>true</CODE> executes goal
+<CODE>aleph_portray(search)</CODE>.  This is to be written by the user.
+
+<DT><CODE>set(print,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX119"></A>
+<VAR>V</VAR> is a positive integer (default 4). Sets an upper bound on the maximum number
+of literals displayed on any one line of the trace.
+
+<DT><CODE>set(proof_strategy,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX120"></A>
+<A ID="IDX121"></A>
+<VAR>V</VAR> is one of: <CODE>restricted_sld</CODE>, <CODE>sld</CODE>, or <CODE>user</CODE> (default
+<CODE>restricted_sld</CODE>). If <CODE>restricted_sld</CODE>, then examples covered
+are determined by forcing current hypothesised clause to
+be the first parent clause in a SLD resolution proof. If <CODE>sld</CODE> then this
+restriction is not enforced. The former strategy is efficient, but not
+refutation complete. It is sufficient if all that is needed is to determine
+how many examples are covered by the current clause, which is what is
+needed when Aleph is used to construct a set of non-recursive clauses
+greedily (for example using the <CODE>induce/0</CODE> command: see section <A HREF="#SEC14">Construct a theory</A>). If set to <CODE>user</CODE> then Aleph expects a user-defined
+predicate <CODE>prove/2</CODE>, the first argument of which is a clause <CODE>C</CODE>,
+and the second is an example <CODE>E</CODE>. <CODE>prove(C,E)</CODE> succeeds if
+example <CODE>E</CODE> is provable using clause <CODE>C</CODE> and the background
+knowledge.
+
+<DT><CODE>set(prooftime,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX122"></A>
+<A ID="IDX123"></A>
+<VAR>V</VAR> is a positive integer or <CODE>inf</CODE> (default <CODE>inf</CODE>). Sets an
+upper bound on the time (in seconds) for testing whether an example
+is covered. Overrides any value set for <CODE>searchtime</CODE>.
+
+<DT><CODE>set(prune_tree,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX124"></A>
+<A ID="IDX125"></A>
+<VAR>V</VAR> is is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+Determines whether rules constructed by the tree learner are subject
+to pessimistic pruning (see section <A HREF="#SEC31">Tree-based theories</A>).
+
+<DT><CODE>set(record,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX126"></A>
+<A ID="IDX127"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+If <CODE>true</CODE> then trace of
+Aleph execution is written to a file.
+The filename is given by <CODE>recordfile</CODE>.
+
+<DT><CODE>set(recordfile,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX128"></A>
+<VAR>V</VAR> is a Prolog atom. Sets the filename to write a trace of execution.
+Only makes sense if <CODE>record</CODE> is set to <CODE>true</CODE>.
+
+<DT><CODE>set(refine,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX129"></A>
+<A ID="IDX130"></A>
+<VAR>V</VAR> is one of: <CODE>user</CODE>, <CODE>auto</CODE>, 
+or <CODE>false</CODE> (default <CODE>false</CODE>). Specifies the nature of
+the customised refinement operator. In all cases, the resulting clauses are
+required to subsume the bottom clause, if one exists. If <CODE>false</CODE> then no
+customisation is assumed and standard operation results.
+If <CODE>user</CODE> then the user specifies a domain-specific refinement
+operator with <CODE>refine/2</CODE> statements. If <CODE>auto</CODE> then an automatic
+enumeration of all clauses in the mode language (see section <A HREF="#SEC8">Mode declarations</A>) is performed.
+The result is a breadth-first branch-and-bound search starting from the
+empty clause.
+This is useful if a bottom clause is either not constructed or is
+constructed lazily. No attempt is made to ensure any kind of optimality
+and the same clauses may result from several different refinement paths.
+Some rudimentary checking can be achieved by setting <CODE>caching</CODE>
+to <CODE>true</CODE>. The user has to ensure the following for
+<CODE>refine</CODE> is set to <CODE>auto</CODE>: (1) the setting to <CODE>auto</CODE> is
+done after the modes and determinations commands, as these are used to
+generate internally a set of clauses that allow enumeration of clauses
+in the language; (2) all arguments that are
+annotated as <STRONG>#T</STRONG> in the modes  contain
+generative definitions for type <STRONG>T</STRONG>. These are called be the
+clauses generated internally to obtain the appropriate constants; and
+(3) the head mode is clearly specified using the <CODE>modeh</CODE> construct.
+
+<DT><CODE>set(resample,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX131"></A>
+<VAR>V</VAR> is an  integer &#62;= 1 or <CODE>inf</CODE> (default <CODE>1</CODE>). Sets the
+number of times an example is resampled when selected by <CODE>induce/0</CODE>
+or <CODE>induce_cover/0</CODE>. That is, is set to some integer N, then the example
+is repeatedly selected N times by <CODE>induce/0</CODE> or <CODE>induce_cover/0</CODE>.
+
+<DT><CODE>set(rls_type,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX132"></A>
+<A ID="IDX133"></A>
+<VAR>V</VAR> is one of: <CODE>gsat</CODE>, <CODE>wsat</CODE>, <CODE>rrr</CODE>, or <CODE>anneal</CODE>.
+Sets the randomised search method to be one of GSAT, WSAT, RRR or
+simulated annealing. Requires <CODE>search</CODE> to be set to <CODE>rls</CODE>,
+and integer values for <CODE>tries</CODE> and <CODE>moves</CODE>.
+See section <A HREF="#SEC28">Randomised search methods</A>.
+
+<DT><CODE>set(rulefile,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX134"></A>
+<VAR>V</VAR> is a Prolog atom. Sets the filename for storing clauses
+found in theory (used by <CODE>write_rules/0</CODE>).
+
+<DT><CODE>set(samplesize,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX135"></A>
+<A ID="IDX136"></A>
+<VAR>V</VAR> is an integer &#62;= 0 (default 0). 
+Sets number of examples selected randomly by the 
+<CODE>induce</CODE> or <CODE>induce_cover</CODE>
+commands. The best clause from the sample is added to the theory.
+A value of 0 turns off random sampling, and the next uncovered example
+in order of appearance in the file of training examples is selected.
+
+<DT><CODE>set(scs_percentile,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX137"></A>
+<A ID="IDX138"></A>
+<VAR>V</VAR> is an number in the range (0,100] (usually an integer). This
+denotes that any clause in the top <VAR>V</VAR>-percentile of clauses are considered
+"good" when performing stochastic clause selection.
+Only meaningful if <CODE>search</CODE> is set to <CODE>scs</CODE>.
+
+<DT><CODE>set(scs_prob,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX139"></A>
+<A ID="IDX140"></A>
+<VAR>V</VAR> is an number in the range [0,1.0). This denotes the minimum probability
+of obtaining a "good" clause when performing stochastic clause selection.
+Only meaningful if <CODE>search</CODE> is set to <CODE>scs</CODE>.
+
+<DT><CODE>set(scs_sample,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX141"></A>
+<A ID="IDX142"></A>
+<VAR>V</VAR> is a positive integer that determines the number of clauses randomly
+selected from the hypothesis space in a clause-level search.
+Only meaningful if <CODE>search</CODE> is set to <CODE>scs</CODE>.
+his overrules
+any samplesizes calculated from settings
+for  <CODE>scs_percentile</CODE> and <CODE>scs_prob</CODE>.
+
+<DT><CODE>set(search,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX143"></A>
+<A ID="IDX144"></A>
+<VAR>V</VAR> is one of: <CODE>bf</CODE>, <CODE>df</CODE>, <CODE>heuristic</CODE>,
+<CODE>ibs</CODE>, <CODE>ils</CODE>, <CODE>rls</CODE>, <CODE>scs</CODE>
+<CODE>id</CODE>, <CODE>ic</CODE>, <CODE>ar</CODE>, or <CODE>false</CODE> (default <CODE>bf</CODE>).
+Sets the search strategy. If <CODE>false</CODE> then no search is performed.
+See section <A HREF="#SEC20">Altering the search</A>.
+
+<DT><CODE>set(searchtime,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX145"></A>
+<A ID="IDX146"></A>
+<VAR>V</VAR> is an integer &#62;= 0 or <CODE>inf</CODE> (default <CODE>inf</CODE>). Sets an
+upper bound on the time (in seconds) for a search.
+
+<DT><CODE>set(skolemvars,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX147"></A>
+<A ID="IDX148"></A>
+<VAR>V</VAR> is an integer (default 10000). Sets the counter for variables
+in non-ground positive examples. Each variable will be replaced by a skolem
+variable that has a unique number which is no smaller than <VAR>V</VAR>. This
+number has to be larger than the number of variables that would otherwise appear
+in a bottom clause.
+
+<DT><CODE>set(splitvars,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX149"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>). If
+set to <CODE>true</CODE> before constructing a bottom clause, then variable
+co-references in the bottom clause are split apart by new variables.
+The new variables can occur at input or output positions of the head literal,
+and only at output positions in body literals. Equality literals
+between new and old variables are inserted into the bottom clause to maintain
+equivalence. It may also result in variable renamed versions of other literals being
+inserted into the bottom clause. All of this increases the search space considerably
+and can make the search explore redundant clauses. The current version also
+elects to perform variable splitting whilst constructing the bottom clause
+(in contrast to doing it dynamically whilst searching). This was to avoid
+unnecessary checks  that could slow down the search when variable splitting was
+not required. This means the bottom clause can be extremely large, and the
+whole process is probably not very practical for large numbers of co-references.
+The procedure has not been rigourously tested to quantify this.
+
+<DT><CODE>set(stage,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX150"></A>
+<VAR>V</VAR> is one of: <CODE>saturation</CODE>, <CODE>reduction</CODE> or <CODE>command</CODE>
+(default <CODE>command</CODE>). Sets the stage of current execution. This is
+normally not user-set, and decided internally.
+
+<DT><CODE>set(store_bottom,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX151"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+Stores bottom clause constructed for an example for future re-use.
+
+<DT><CODE>set(subsample,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX152"></A>
+<A ID="IDX153"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>).
+If <CODE>true</CODE> then uses a sample of the examples (set by value
+assigned to <CODE>subsamplesize</CODE>) to evaluate the utility of a clause.
+
+<DT><CODE>set(subsamplesize,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX154"></A>
+<VAR>V</VAR> is an  integer &#62;= 1 or <CODE>inf</CODE> (default <CODE>inf</CODE>). Sets an
+upper bound on the number of examples sampled to evaluate the utility of
+a clause.
+
+<DT><CODE>set(temperature,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX155"></A>
+<A ID="IDX156"></A>
+<VAR>V</VAR> is a non-zero floating point number. Sets the temperature for randomised search
+using annealing. Requires <CODE>search</CODE> to be set to <CODE>rls</CODE> and
+<CODE>rls_type</CODE> to be set to <CODE>anneal</CODE>.
+
+<DT><CODE>set(test_pos,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX157"></A>
+<A ID="IDX158"></A>
+<VAR>V</VAR> is a Prolog atom or a list of Prolog atoms. Sets the filename or
+list of filenames containing the positive examples for testing.
+No filename extensions are assumed and complete filenames have to be provided.
+
+<DT><CODE>set(test_neg,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX159"></A>
+<A ID="IDX160"></A>
+<VAR>V</VAR> is a Prolog atom or a list of Prolog atoms. Sets the filename or
+list of filenames containing the negative examples for testing.
+No filename extensions are assumed and complete filenames have to be provided.
+
+<DT><CODE>set(threads,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX161"></A>
+<A ID="IDX162"></A>
+<VAR>V</VAR> is an integer &#62;= 1 (default 1). This is experimental and should
+not be changed from the default value until further notice.
+
+<DT><CODE>set(train_pos,-<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX163"></A>
+<A ID="IDX164"></A>
+<VAR>V</VAR> is a Prolog atom or a list of Prolog atoms. Sets the filename or
+list of filenames containing the positive examples.
+If set, no filename extensions
+are assumed and complete filenames have to be provided.
+If not set, it is internally assigned a value after the <CODE>read_all</CODE> command.
+
+<DT><CODE>set(train_neg,-<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX165"></A>
+<A ID="IDX166"></A>
+<VAR>V</VAR> is a Prolog atom or a list of Prolog atoms. Sets the filename or
+list of filenames containing the negative examples.
+If set, no filename extensions
+are assumed and complete filenames have to be provided.
+If not set, it is internally assigned a value after the <CODE>read_all</CODE> command.
+
+<DT><CODE>set(tree_type,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX167"></A>
+<A ID="IDX168"></A>
+<VAR>V</VAR> is one of <CODE>classification</CODE>, <CODE>class_probability</CODE>, 
+<CODE>regression</CODE>, or <CODE>model</CODE> (see (see section <A HREF="#SEC31">Tree-based theories</A>).
+
+<DT><CODE>set(tries,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX169"></A>
+<A ID="IDX170"></A>
+<VAR>V</VAR> is a positive integer. Sets the maximum number of restarts allowed
+for randomised search methods.
+This only makes sense if <CODE>search</CODE> is set to <CODE>rls</CODE>
+and <CODE>rls_type</CODE> is set to an appropriate value.
+
+<DT><CODE>set(typeoverlap,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX171"></A>
+<VAR>V</VAR> is a floating point number in the interval (0.0,1.0]. Used by
+<CODE>induce_modes/0</CODE> to determine if a pair of different types
+should be given the same name. See section <A HREF="#SEC33">Mode learning</A> for more
+details.
+
+<DT><CODE>set(uniform_sample,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX172"></A>
+<A ID="IDX173"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>false</CODE>). Used
+when drawing clauses randomly from the clause-space. If set
+set to <CODE>true</CODE> then clauses are drawn by uniform random selection from
+the space of legal clauses. Since there are usually many more longer
+clauses than shorter ones, this will mean that clauses drawn randomly
+are more likely to be long ones. If set to <CODE>false</CODE> then assumes a
+uniform distribution over clause lengths (up to the maximum length allowed
+by <CODE>clauselength</CODE>). This is not necessarily uniform over legal clauses.
+If random clause selection is done without a bottom clause for guidance
+then this parameter is set to <CODE>false</CODE>.
+
+<DT><CODE>set(updateback,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX174"></A>
+<A ID="IDX175"></A>
+<VAR>V</VAR> is one of: <CODE>true</CODE> or <CODE>false</CODE> (default <CODE>true</CODE>).
+If <CODE>false</CODE> then clauses found by the <CODE>induce</CODE> family are not
+incorporated into the background. This is experimental.
+
+<DT><CODE>set(verbosity,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX176"></A>
+<A ID="IDX177"></A>
+<A ID="IDX178"></A>
+<VAR>V</VAR> is an integer &#62;= 0 (default 1). Sets the level of verbosity. Also
+sets the parameter <CODE>verbose</CODE> to the same value. A value of 0 shows
+very little.
+
+<DT><CODE>set(version,-<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX179"></A>
+<A ID="IDX180"></A>
+<VAR>V</VAR> is the current version of Aleph. This is set internally.
+
+<DT><CODE>set(walk,+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX181"></A>
+<A ID="IDX182"></A>
+<VAR>V</VAR> is a value between <CODE>0</CODE> and <CODE>1</CODE>. It represents
+the random walk probability for the Walksat algorithm.
+
+<DT><CODE>set(+<VAR>P</VAR>,+<VAR>V</VAR>)</CODE>
+<DD>
+Sets any user-defined parameter <VAR>P</VAR> to value <VAR>V</VAR>. This is
+particularly useful when attaching notes with particular experiments,
+as all settings can be written to a file (see <CODE>record</CODE>). For
+example, <CODE>set(experiment,'Run 1 with background B0')</CODE>.
+
+</DL>
+
+
+
+<H2><A ID="SEC20">Altering the search</A></H2>
+<P>
+<A ID="IDX183"></A>
+
+
+<P>
+Aleph allows the basic procedure for theory construction to be
+altered in a number of ways. Besides the <CODE>induce</CODE>
+command, there are several other commands that can be used
+to construct a theory. The <CODE>induce</CODE> family of commands are:
+
+
+
+<OL>
+
+<LI><CODE>induce/0</CODE>. This has already been described in
+
+detail previously (see section <A HREF="#SEC14">Construct a theory</A>);
+
+<LI><CODE>induce_cover/0</CODE>.
+
+<A ID="IDX184"></A>
+This command 
+is very similar to <CODE>induce</CODE>.
+The only difference is that positive examples covered by a clause are
+not removed prior to seeding on a new (uncovered) example. After a
+search with <CODE>induce_cover</CODE> Aleph only removes the
+the examples covered by the best clause are removed from a pool of
+seed examples only. After this, a new example or set of examples
+is chosen from the seeds left, and the process repeats.
+The theories returned by <CODE>induce</CODE> and <CODE>induce_cover</CODE> are dependent
+on the order in which positive examples are presented;
+
+<LI><CODE>induce_max/0</CODE>.
+
+<A ID="IDX185"></A>
+The theory returned by this command is unaffected by the ordering
+of positive examples.  This is because it saturates and reduces every
+example. The search is made more efficient by
+remembering the coverage of the best clause obtained so far for
+each example being generalised. Both <CODE>induce_cover</CODE> and <CODE>induce_max</CODE>
+are slower than <CODE>induce</CODE>, and usually produce clauses with a great
+deal of overlap in coverage. A separate program will have to be
+used to find some subset of these clauses that minimises this
+overlap (see <EM>T-Reduce</EM> in section <A HREF="#SEC37">Related versions and programs</A>).
+
+<LI><CODE>induce_incremental/0</CODE>.
+
+<A ID="IDX186"></A>
+This command constructs a theory in an incremental mode: the
+user is allowed to update the examples and background knowledge.
+This mode of learning is described further in section <A HREF="#SEC29">Incremental construction of theories</A>.
+
+<LI><CODE>induce_clauses/0</CODE>.
+
+<A ID="IDX187"></A>
+This command is simply <CODE>induce/0</CODE> or <CODE>induce_incremental/0</CODE>
+depending on whether the flag <CODE>interactive</CODE> is <CODE>false</CODE> or
+<CODE>true</CODE>.
+
+<LI><CODE>induce_theory/0</CODE>.
+
+<A ID="IDX188"></A>
+This command abandons the clause-by-clause approach to theory
+construction. Instead, search is done at the theory-level. This
+is untested and the current implementation should not be considered
+definitive. See section <A HREF="#SEC30">Theory-level search</A> for more details.
+
+<LI><CODE>induce_tree/0</CODE>.
+
+<A ID="IDX189"></A>
+This command abandons the clause-by-clause approach to theory
+construction. Instead, search is done by constructing a 
+tree using the standard recursive-partitioning approach.
+See section <A HREF="#SEC31">Tree-based theories</A> for more details.
+
+<LI><CODE>induce_constraints/0</CODE>.
+
+<A ID="IDX190"></A>
+This command abandons the search for predictive clauses.
+Instead, search results in all constraints that hold within the
+background knowledge provided.
+See section <A HREF="#SEC32">Constraint learning</A> for more details.
+
+<LI><CODE>induce_modes/0</CODE>.
+
+<A ID="IDX191"></A>
+This command searches for a mode and type assignment that
+is consistent with the background knowledge provided.
+See section <A HREF="#SEC33">Mode learning</A> for more details.
+
+<LI><CODE>induce_features/0</CODE>.
+
+<A ID="IDX192"></A>
+This command searches for boolean features given the
+examples and the background knowledge.
+See section <A HREF="#SEC35">Feature Construction</A> for more details.
+
+</OL>
+
+<P>
+The search for individual clauses (when performed) is principally
+affected by two parameters. One
+sets the search strategy (<CODE>search</CODE>) and the other sets the
+evaluation function (<CODE>evalfn</CODE>).
+
+
+
+
+<H3><A ID="SEC21">Search strategies</A></H3>
+<P>
+<A ID="IDX193"></A>
+
+
+<P>
+A search strategy is set using <CODE>set(search,Strategy)</CODE>.
+The following search strategies apply to the
+clause-by-clause searches conducted by Aleph:
+
+
+<DL COMPACT>
+
+<DT><CODE>ar</CODE>
+<DD>
+<A ID="IDX194"></A>
+<A ID="IDX195"></A>
+Implements a simplified form of the type of association rule
+search conducted by the WARMR system (see L. Dehaspe, 1998, PhD Thesis,
+Katholieke Universitaet Leuven).
+Here, Aleph simply finds all rules that cover at least a pre-specified
+fraction of the positive examples. This fraction is specified
+by the parameter <CODE>pos_fraction</CODE>.
+
+<DT><CODE>bf</CODE>
+<DD>
+<A ID="IDX196"></A>
+<A ID="IDX197"></A>
+Enumerates shorter clauses before longer ones. At a given clauselength,
+clauses are re-ordered based on their evaluation. This is the default
+search strategy;
+
+<DT><CODE>df</CODE>
+<DD>
+<A ID="IDX198"></A>
+<A ID="IDX199"></A>
+Enumerates longer clauses before shorter ones. At a given clauselength,
+clauses are re-ordered based on their evaluation.
+
+<DT><CODE>heuristic</CODE>
+<DD>
+<A ID="IDX200"></A>
+<A ID="IDX201"></A>
+Enumerates clauses in a best-first manner.
+
+<DT><CODE>ibs</CODE>
+<DD>
+<A ID="IDX202"></A>
+<A ID="IDX203"></A>
+Performs an iterative beam search as described by Quinlan and Cameron-Jones, IJCAI-95.
+Limit set by value for <CODE>nodes</CODE> applies to any 1 iteration.
+
+<DT><CODE>ic</CODE>
+<DD>
+<A ID="IDX204"></A>
+<A ID="IDX205"></A>
+Performs search for integrity constraints. Used by <CODE>induce_constraints</CODE>
+(see section <A HREF="#SEC32">Constraint learning</A>)
+
+<DT><CODE>id</CODE>
+<DD>
+<A ID="IDX206"></A>
+<A ID="IDX207"></A>
+Performs an iterative deepening search up to the maximum clause length specified.
+
+<DT><CODE>ils</CODE>
+<DD>
+<A ID="IDX208"></A>
+<A ID="IDX209"></A>
+An iterative <CODE>bf</CODE> search strategy that, starting from 1,  progressively increases the
+upper-bound on the number of occurrences of a predicate symbol in any
+clause. Limit set by value for <CODE>nodes</CODE> applies to any 1 iteration.
+This language-based search was developed by Rui Camacho and is described in
+his PhD thesis.
+
+<DT><CODE>rls</CODE>
+<DD>
+<A ID="IDX210"></A>
+<A ID="IDX211"></A>
+Use of the GSAT, WSAT, RRR and simulated annealing
+algorithms for search in ILP. The choice of these is specified by the parameter
+<CODE>rls_type</CODE> (see section <A HREF="#SEC19">Setting Aleph parameters</A>). GSAT, RRR, and annealing
+all employ random multiple restarts, each of which serves as the
+starting point for local moves in the search space. A limit
+on the number of restarts is specified by the parameter
+<CODE>tries</CODE> and that on the number of moves by <CODE>moves</CODE>.
+Annealing is currently restricted to a using a fixed temperature,
+making it equivalent to an algorithm due to Metropolis. The temperature
+is specified by setting the parameter <CODE>temperature</CODE>. The implementation
+of WSAT requires a "random-walk probability", which is specified by the
+parameter <CODE>walk</CODE>. A walk probability of 0 is equivalent to GSAT.
+More details on randomised search can be found in
+section <A HREF="#SEC28">Randomised search methods</A>.
+
+<DT><CODE>scs</CODE>
+<DD>
+<A ID="IDX212"></A>
+<A ID="IDX213"></A>
+A special case of GSAT that results from repeated random selection of
+clauses from the hypothesis space. The number of clauses is either
+set by <CODE>scs_sample</CODE> or is calculated from the settings for
+<CODE>scs_prob</CODE> and <CODE>scs_percentile</CODE>. These represent: the
+minimum probability of selecting a "good" clause; and the meaning
+of a "good" clause, namely, that it is in the top K-percentile of clauses.
+This invokes GSAT search with <CODE>tries</CODE> set to the sample size
+and <CODE>moves</CODE> set to 0. Clause selection can either be blind or
+informed by some preliminary Monte-Carlo style estimation. This is
+controlled by <CODE>scs_type</CODE>. More details can be found in
+section <A HREF="#SEC28">Randomised search methods</A>.
+
+<DT><CODE>false</CODE>
+<DD>
+No search is performed.
+
+</DL>
+
+
+
+<H3><A ID="SEC22">Evaluation functions</A></H3>
+<P>
+<A ID="IDX214"></A>
+
+
+<P>
+An evaluation function is set using <CODE>set(evalfn,Evalfn)</CODE>.
+The following clause evaluation functions are recognised by Aleph:
+
+
+<DL COMPACT>
+
+ 
+<DT><CODE>accuracy</CODE>
+<DD>
+<A ID="IDX215"></A>
+Clause utility is <CODE>P/(P+N)</CODE>, where <CODE>P</CODE>, <CODE>N</CODE>
+are the number of positive and negative examples covered by the clause.
+
+<DT><CODE>auto_m</CODE>
+<DD>
+<A ID="IDX216"></A>
+Clause utility is the m estimate (see <CODE>mestimate</CODE> below)
+with the value of <CODE>m</CODE> automatically
+set to be the maximum likelihood estimate of the best value of <CODE>m</CODE>.
+
+<DT><CODE>compression</CODE>
+<DD>
+<A ID="IDX217"></A>
+Clause utility is <CODE>P - N - L + 1</CODE>, where <CODE>P</CODE>, <CODE>N</CODE>
+are the number of positive and negative examples covered by the clause, and <CODE>L</CODE>
+the number of literals in the clause.
+
+<DT><CODE>coverage</CODE>
+<DD>
+<A ID="IDX218"></A>
+Clause utility is <CODE>P - N</CODE>, where <CODE>P</CODE>, <CODE>N</CODE> are the number of positive and
+negative examples covered by the clause.
+
+<DT><CODE>entropy</CODE>
+<DD>
+<A ID="IDX219"></A>
+Clause utility is <CODE>p log p + (1-p) log (1-p)</CODE> where <CODE>p = P/(P + N)</CODE> and
+<CODE>P</CODE>, <CODE>N</CODE> are the number of positive and
+negative examples covered by the clause.
+
+<DT><CODE>gini</CODE>
+<DD>
+<A ID="IDX220"></A>
+Clause utility is <CODE>2p(1-p)</CODE> where <CODE>p = P/(P + N)</CODE> and
+<CODE>P</CODE>, <CODE>N</CODE> are the number of positive and
+negative examples covered by the clause.
+
+<DT><CODE>laplace</CODE>
+<DD>
+<A ID="IDX221"></A>
+Clause utility is <CODE>(P+1)/(P+N+2)</CODE>
+where <CODE>P</CODE>, <CODE>N</CODE> are the positive and
+negative examples covered by the clause.
+
+<DT><CODE>mestimate</CODE>
+<DD>
+<A ID="IDX222"></A>
+Clause utility is its m estimate as described in
+S. Dzeroski and I. Bratko (1992), <EM>Handling Noise in Inductive
+Logic Programming</EM>, Proc. Second Intnl. Workshop on Inductive Logic
+Programming, ICOT-TM-1182, Inst. for New Gen Comput Technology, Japan.
+The value of <CODE>m</CODE> is set by <CODE>set(m,M)</CODE>.
+
+<DT><CODE>pbayes</CODE>
+<DD>
+<A ID="IDX223"></A>
+Clause utility is the pseudo-Bayes conditional probability of a clause
+described in J. Cussens (1993), <EM>Bayes and Pseudo-Bayes Estimates
+of Conditional Probability and their Reliability</EM>, ECML-93, Springer-Verlag,
+Berlin.
+
+<DT><CODE>posonly</CODE>
+<DD>
+<A ID="IDX224"></A>
+<A ID="IDX225"></A>
+Clause utility is calculated using the Bayesian score described in
+S. H. Muggleton, (1996), <EM>Learning from positive data</EM>,
+Proc. Sixth Intnl. Workshop on Inductive Logic Programming,
+LNAI 1314, 358-376, Springer-Verlag, Berlin.
+Note that all type definitions are required to be generative for
+this evaluation function and a <CODE>modeh</CODE> declaration is necessary.
+
+<DT><CODE>sd</CODE>
+<DD>
+<A ID="IDX226"></A>
+Clause utility is related to the standard deviation of values
+predicted.  This is only used when constructing regression trees and 
+is not available for use during clause-based search.
+
+<DT><CODE>user</CODE>
+<DD>
+<A ID="IDX227"></A>
+Clause utility is <CODE>-C</CODE>, where <CODE>C</CODE> is the value returned
+by a user-defined cost function. See section <A HREF="#SEC24">User-defined cost specification</A>.
+
+<DT><CODE>wracc</CODE>
+<DD>
+<A ID="IDX228"></A>
+<A ID="IDX229"></A>
+Clause utility is calculated using the weighted relative accuracy function
+described by N. Lavrac, P. Flach and B. Zupan, (1999), 
+<EM>Rule Evaluation Measures: a Unifying View</EM>,
+Proc. Ninth Intnl. Workshop on Inductive Logic Programming,
+LNAI 1634, 174-185, Springer-Verlag, Berlin.
+
+</DL>
+
+
+
+<H3><A ID="SEC23">Built-in and user-defined pruning</A></H3>
+<P>
+<A ID="IDX230"></A>
+
+
+<P>
+Two sorts of pruning can be distinguished within Aleph when
+performing a clause-level search.
+Internal pruning refers to built-in pruning that performs admissible
+removal of clauses from a search. This is currently available
+for the following evaluation functions: auto_m, compression, coverage,
+laplace, mestimate, posonly, and wracc. User-defined prune statements can be written
+to specify the conditions under which a user
+knows for certain that a clause (or its refinements)
+could not possibly be an acceptable hypothesis.
+Such clauses are pruned from the search.
+The "prune" definition is written in the background knowledge
+file (that has extension <TT>`.b'</TT>).  The definition is distinguished
+by the fact that they are all rules of the form:
+
+
+<P>
+<A ID="IDX231"></A>
+
+<PRE>
+
+prune((ClauseHead:-ClauseBody)) :-
+        Body.
+
+</PRE>
+
+<P>
+The following example is from a pharmaceutical
+application that states that every extension of a clause
+representing a "pharmacophore" with six "pieces" is unacceptable,
+and that the search should be pruned at such a clause.
+ 
+
+<PRE>
+prune((Head:-Body)) :-
+        violates_constraints(Body).
+ 
+violates_constraints(Body) :-
+        has_pieces(Body,Pieces),
+        violates_constraints(Body,Pieces).
+ 
+violates_constraints(Body,[_,_,_,_,_,_]).
+
+has_pieces(...) :- 
+</PRE>
+
+<P>
+The use of such pruning can greatly improve Aleph's
+efficiency. They can be seen as a special case of providing distributional
+information about the hypothesis space.
+
+
+
+
+<H3><A ID="SEC24">User-defined cost specification</A></H3>
+<P>
+<A ID="IDX232"></A>
+
+
+<P>
+The use of a user-specified cost function is a fundamental
+construct in statistical decision theory, and provides a general method
+of scoring descriptions. Aleph 
+allows the specification of the cost of a clause.
+The cost statements are written in the background knowledge
+file (that has extension <TT>`.b'</TT>), and are distinguished
+by the fact that they are all rules of the form:
+ 
+<A ID="IDX233"></A>
+
+<PRE>
+cost(Clause,ClauseLabel,Cost):-
+        Body.
+</PRE>
+
+<P>
+where <CODE>ClauseLabel</CODE> is the list <CODE>[P,N,L]</CODE>
+where <CODE>P</CODE> is the number of positive examples covered by the
+clause, <CODE>N</CODE> is the number of negative examples covered by the clause
+<CODE>L</CODE> is the number of literals in the clause.
+
+
+<P>
+It is usually not possible to devise automatically admissible pruning
+strategies for an arbitrary cost function. Thus, when using a user-defined
+cost measure, Aleph places the burden of specifying a pruning
+strategy on the user.
+
+
+
+
+<H3><A ID="SEC25">User-defined constraints</A></H3>
+<P>
+<A ID="IDX234"></A>
+
+
+<P>
+Aleph accepts integrity constraints that should not
+be violated by a hypothesis.
+These are written in the background knowledge file (that has extension
+<TT>`.b'</TT>) and are similar to the integrity constraints in the ILP
+programs Clint and Claudien. The constraints are distinguished
+by the fact that they are all rules of the form:
+ 
+<A ID="IDX235"></A>
+
+<PRE>
+false:-
+         Body.
+</PRE>
+
+<P>
+ 
+where <CODE>Body</CODE> is a set of literals that specify the condition(s) that should
+not be violated by a clause found by Aleph.
+It is usual to use the
+<CODE>hypothesis/3</CODE> (see section <A HREF="#SEC36">Other commands</A>) command
+to obtain the clause currently being considered by Aleph.
+ 
+The following example is from a pharmaceutical
+application that states that hypotheses
+are unacceptable if they have fewer than three "pieces" or
+which do not specify the distances between all pairs of pieces.
+
+
+<P>
+<A ID="IDX236"></A>
+
+<PRE>
+false:-
+        hypothesis(Head,Body,_),
+        has_pieces(Body,Pieces),
+        length(Pieces,N),
+        N =&#60; 2.
+false:-
+        hypothesis(_,Body,_),
+        has_pieces(Body,Pieces),
+        incomplete_distances(Body,Pieces).
+
+</PRE>
+
+<P>
+The use of constraints is another way for
+Aleph
+to obtain interesting hypothesis without negative examples. Ordinarily,
+this will result in a single clause that classifies every
+example as positive. Such clauses can be precluded by constraints.
+Note also that an integrity constraint does not state that a
+refinement of a clause that violates one or more constraints
+will also be unacceptable.
+When constructing clauses in an incremental mode, Aleph can be
+instructed to add a special type of constraint
+to prevent the construction of overly general clauses
+(see section <A HREF="#SEC29">Incremental construction of theories</A>).
+
+
+
+
+<H3><A ID="SEC26">User-defined refinement</A></H3>
+<P>
+<A ID="IDX237"></A>
+Aleph allows a method of specifying the refinement operator to
+be used in a clause-level search. This is done 
+using a Prolog definition for the predicate
+<CODE>refine/2</CODE>.
+The definition specifies the transitions in the
+refinement graph traversed in a
+search.
+The "refine" definition is written in the background knowledge
+file (that has extension ".b").  The definition is distinguished
+by the fact that they are all rules of the form:
+
+
+<P>
+<A ID="IDX238"></A>
+
+
+
+<PRE>
+refine(Clause1,Clause2):-
+           Body.
+</PRE>
+
+<P>
+This specifies that Clause1 is refined to Clause2. The definition
+can be nondeterministic, and the set of refinements for any one
+clause are obtained by repeated backtracking. For any refinement
+Aleph
+ensures that Clause2 implies the current most specific clause. Clause2
+can contain cuts ("!") in its body.
+
+
+<P>
+The following example is from a pharmaceutical
+application that states that searches for a "pharmacophore"
+that consists of 4 "pieces" (each piece is some functional group),
+and associated distances in 3-D space. Auxilliary definitions
+for predicates like member/2 and dist/5 are not shown.
+representing a "pharmacophore" with six "pieces" is unacceptable,
+and that the search should be pruned at such a clause.
+
+
+
+<PRE>
+refine(false,active(A)).
+
+refine(active(A),Clause):-
+        member(Pred1,[hacc(A,B),hdonor(A,B),zincsite(A,B)]),
+        member(Pred2,[hacc(A,C),hdonor(A,C),zincsite(A,C)]),
+        member(Pred3,[hacc(A,D),hdonor(A,D),zincsite(A,D)]),
+        member(Pred4,[hacc(A,E),hdonor(A,E),zincsite(A,E)]),
+        Clause = (active(A):-
+                        Pred1,
+                        Pred2,
+                        dist(A,B,C,D1,E1),
+                        Pred3,
+                        dist(A,B,D,D2,E2),
+                        dist(A,C,D,D3,E3),
+                        Pred4,
+                        dist(A,B,E,D4,E4),
+                        dist(A,C,E,D5,E5),
+                        dist(A,D,E,D6,E6)).
+
+</PRE>
+
+<P>
+To invoke the use of such statements requires
+setting <CODE>refine</CODE> to <CODE>user</CODE>.
+For other settings of <CODE>refine</CODE> see entry for <CODE>refine</CODE>
+in section <A HREF="#SEC19">Setting Aleph parameters</A>.
+
+
+
+
+<H3><A ID="SEC27">Specific-to-general search</A></H3>
+<P>
+<A ID="IDX239"></A>
+
+
+<P>
+Up to early variants of Version 5 has never, in any
+satisfactory manner, been able to perform a
+specific-to-general search (in the sense, say, of Golem or CIGOL): the
+only way to do this was to use a user-defined refinement operator in the
+manner just described, that progressively generalises a clause. For
+example:
+
+
+
+<PRE>
+refine(false,Clause):-
+        !,
+        bottom(Clause).
+
+refine(Clause1,Clause2):-
+        generalise(Clause1,Clause2).
+
+</PRE>
+
+<P>
+(The definition for <CODE>bottom/1</CODE> is available within Aleph. The definition
+for <CODE>generalise/2</CODE> has to be written separately.)
+
+
+<P>
+From Version 5 (time stamp Sun Mar 11 03:25:37 UTC 2007), a slightly more
+interesting approach is possible by setting the values of specific
+parameters. For example, with the following parameter settings:
+
+
+
+<PRE>
+       :- set(samplesize,4).
+       :- set(resample,4).
+       :- set(permute_bottom,true).
+       :- set(nreduce_bottom,true).
+       :- set(search,false).
+
+</PRE>
+
+<P>
+a call to <CODE>induce/0</CODE> will perform a specific-to-general search in the
+following manner: four examples are chosen at random (<CODE>samplesize</CODE> is
+set to <CODE>4</CODE>). Each example is resampled four times (<CODE>resample</CODE> is
+set to <CODE>4</CODE>), resulting in a sequence of 16 trials in which each of
+the four examples appear four times in the sequence. For each entry in the
+sequence, the following steps are performed: (1) The bottom clause is
+constructed with body literals shuffled (<CODE>permute_bottom</CODE> is set to
+<CODE>true</CODE>); (2) The bottom clause is generalised by using the negative
+examples (<CODE>nreduce_bottom</CODE> is set to <CODE>true</CODE>); (3) No further
+search is performed (<CODE>search</CODE> is set to <CODE>false</CODE>) and the
+resulting clause is evaluated.  The best clause is added to the
+theory, the examples covered removed, and the entire process repeated.
+The procedure is akin to, but not the same as that used by Golem. 
+A combination of a specific-to-general and other search strategies
+can be used if <CODE>search</CODE> is not set to <CODE>false</CODE>. In this case,
+a search of lattice of clauses subsuming the negative-reduced bottom
+will be performed using the setting for <CODE>search</CODE>.
+
+
+
+
+<H2><A ID="SEC28">Randomised search methods</A></H2>
+<P>
+<A ID="IDX240"></A>
+
+
+<P>
+The simplest kind of randomised search is the following: sample
+N elements (clauses or theories) from the search space. Score these
+and return the best element. Ordinal optimisation is a technique
+that investigates the loss in optimality resulting from this form
+of search. See:
+
+
+<P>
+<A HREF="http://hrl.harvard.edu/people/faculty/ho/DEDS/OO/OOTOC.html">http://hrl.harvard.edu/people/faculty/ho/DEDS/OO/OOTOC.html</A> 
+
+
+<P>
+A study of the use of this in ILP can be found in:
+A. Srinivasan, <EM>A study of two probabilistic methods for searching
+large spaces with ILP</EM> (under review), available at:
+
+
+<P>
+<A HREF="ftp://ftp.comlab.ox.ac.uk/pub/Packages/ILP/Papers/AS/dami99.ps.gz">ftp://ftp.comlab.ox.ac.uk/pub/Packages/ILP/Papers/AS/dami99.ps.gz</A>
+
+
+<P>
+For a clause-level search, this
+is invoked by setting the parameter <CODE>search</CODE> to <CODE>scs</CODE> (to
+denote "stochastic clause selection"). The number N is either
+set by assigning a value to <CODE>scs_sample</CODE> or calculated automatically
+from settings for <CODE>scs_prob</CODE> and <CODE>scs_percentile</CODE>. If these values
+are denoted "P" and "K" respectively, then the sample size is calculated
+to be <CODE>log(1-P)/log(1-K/100)</CODE>, which denotes the number of clauses
+that have to be sampled before obtaining, with probability at least P, at least
+one clause in the top K-percentile of clauses
+Sampling is further controlled by
+by specifying the setting <CODE>scs_type</CODE> to be one of <CODE>blind</CODE> or <CODE>informed</CODE>. 
+If "blind" then clauses are uniform random selections from the space of all
+legal clauses. If "informed" then they are drawn from a specific distribution
+over clauselengths. This can either be pre-specified (by setting
+<CODE>clauselength_distribution</CODE>) or obtained automatically by a
+Monte-Carlo like scheme that attempts to estimate, for each clause length,
+the probablity of obtaining a clause in the top K-percentile. In either
+case, the resulting distribution over clauselengths is used to first
+decide on the number of literals "l" in the clause. A legal clause with
+"l" literals is then constructed.
+
+
+<P>
+In fact, this simple randomised search is a degenerate form of a
+more general algorithm known as GSAT. Originally proposed within the
+context of determining satisfiability of propositional formulae, the
+basic algorithm is as follows:
+
+
+
+<PRE>
+currentbest:= 0 (<STRONG>comment</STRONG>: ``0'' is a conventional default answer)
+<STRONG>for</STRONG> i = 1 to N <STRONG>do</STRONG> 
+   current:= randomly selected starting point 
+   <STRONG>if</STRONG> current is better than currenbest <STRONG>then</STRONG>
+        currentbest:= current
+   <STRONG>for</STRONG> j = 1 to M <STRONG>do begin</STRONG>
+        next:= best local move from current
+        <STRONG>if</STRONG> next is better than currenbest <STRONG>then</STRONG>
+            currentbest:= next
+        current:= next
+   <STRONG>end</STRONG>
+<STRONG>return</STRONG> currentbest
+</PRE>
+
+<P>
+<CODE>N</CODE> and <CODE>M</CODE> represent the number of tries and moves
+allowed. It is apparent that when searching for clauses,
+a <CODE>M</CODE> value of 0 will result
+in the algorithm mimicking stochastic clause selection as described above.
+A variant of this algorithm called Walksat introduces a further random
+element at the point of selecting <CODE>next</CODE>. This time, a biased coin
+is flipped. If a "head" results then the choice is as per GSAT (that is,
+the best choice amongst the local neighbours), otherwise <CODE>next</CODE>
+is randomly assigned to one of any "potentially good" neighbours.
+Potentially good neighbours are those that <EM>may</EM> lead to a better
+score than the current best score. This is somewhat like
+simulated annealing, where the choice is the best element if that
+improves on the best score. Otherwise, the choice is made according
+to a function that decays exponentially with the difference in
+scores. This exponential decay is usually weighted by a "temperature"
+parameter.
+
+
+<P>
+The randomly selected start clause is usually constructed as follows:
+(1) an example is selected; (2) the bottom clause is constructed for
+the example; (3) a legal clause is randomly drawn from this bottom
+clause. The example may be selected by the user (using
+the <CODE>sat</CODE> command). If bottom clauses are not allowed (by
+setting <CODE>construct_bottom</CODE> to <CODE>false</CODE>) then legal clauses
+are constructed directly from the mode declarations. The clause selected
+is either the result of uniform random selection from all legal clauses,
+or the result of a specific distribution over clauselengths
+(specified by setting <CODE>clauselength_distribution</CODE>).
+The latter is the only method permitted when bottom clauses are not allowed.
+(In that case, if there is no value specified for <CODE>clauselength_distribution</CODE>,
+then a uniform distribution over all allowable lengths 
+is used.)
+
+
+<P>
+RRR refers to the `randomised rapid restarts' as described by 
+F. Zelezny, A. Srinivasan, and D. Page in
+<EM>Lattice Search Runtime Distributions May Be Heavy-Tailed</EM>
+available at:
+
+
+<P>
+<A HREF="ftp://ftp.comlab.ox.ac.uk/pub/Packages/ILP/Papers/AS/rrr.ps.gz">ftp://ftp.comlab.ox.ac.uk/pub/Packages/ILP/Papers/AS/rrr.ps.gz</A>
+
+
+<P>
+In the current implementation,
+RRR stops as soon as a clause with an requisite minimum positive coverage
+(set using <CODE>minpos</CODE>) and acceptable utility is reached (set using <CODE>minscore</CODE>).
+The procedure in the paper above stops as soon as a minimum acceptable
+accuracy is reached. This same effect can be achieved by setting <CODE>evalfn</CODE>
+to <CODE>accuracy</CODE>.
+
+
+<P>
+It is intended that the randomised local search methods
+(GSAT, Walksat, RRR and  annealing) can be used either for clause-level
+search or theory-level search. No equivalent of stochastic clause
+selection is provided for theory-level search: this has to be
+mimicked by using the randomised local search, with appropriate
+settings.
+At the clause
+level, local moves involve either adding or deleting a literal
+from the current clause. Normally, local moves in the clause-space
+would also involve operations on variables (introducing or removing
+variable co-references, associating or disassociating variables to
+constants). These have to accomplished within Aleph by
+the inclusion of an equality predicate with appropriate mode declarations.
+Local moves for a theory-level search
+are described in section <A HREF="#SEC30">Theory-level search</A>.
+
+
+<P>
+Randomised local search
+is invoked within Aleph by setting the parameter <CODE>search</CODE> to <CODE>rls</CODE>. In
+addition, the type of search is specified by setting <CODE>rls_type</CODE>
+to one of <CODE>gsat</CODE>, <CODE>wsat</CODE>, <CODE>rrr</CODE> or <CODE>anneal</CODE>. Walksat requires
+a specification of a biased coin.
+This is done by setting the parameter <CODE>walk</CODE> to a number between
+<CODE>0</CODE> and <CODE>1</CODE>. This represents  an upper bound on the
+probability of obtaining a "tail" with the coin.
+The implementation of simulated annealing
+is very simple and uses a fixed temperature.
+This is done by setting the parameter <CODE>temperature</CODE> to some real value.
+
+
+
+
+<H2><A ID="SEC29">Incremental construction of theories</A></H2>
+<P>
+<A ID="IDX241"></A>
+
+
+<P>
+Most prominent ILP systems are "batch learners": all examples and
+background knowledge are in place <EM>before</EM> learning commences.
+The ILP system then constructs a hypothesis for the examples.
+A less popular, but nevertheless interesting alternative is 
+that of "incremental learning", where examples, background
+and hypothesis are incrementally updated <EM>during</EM> the
+course of learning. Aleph allows such
+an incremental construction of clauses by typing:
+
+
+
+<PRE>
+              induce_incremental.
+</PRE>
+
+<P>
+This results in Aleph repeatedly performing the following steps:
+
+
+
+<OL>
+
+<LI>
+
+<STRONG>Ask user for an example.</STRONG> The default is to use a
+new positive example from previous search. If the user
+responds with Ctrl-d (eof) then search stops. If the
+user responds with "ok." then default is used; otherwise
+the user has to provide a new example (terminated by a full-stop);
+ 
+<LI>
+
+<STRONG>Construct bottom clause for example.</STRONG> Aleph thus expects
+the appropriate mode declarations. These can be added in Step 4;
+
+<LI>
+
+<STRONG>Search.</STRONG> Aleph searches for the best clause;
+
+<LI>
+
+<STRONG>Ask user about best clause.</STRONG> Aleph asks the user about the
+clause <EM>C</EM> returned by the search. At this point the user can
+respond with:
+
+
+<UL>
+<LI><STRONG>ok.</STRONG> Clause <EM>C</EM> is added to the hypothesis;
+
+<LI><STRONG>prune.</STRONG> Statement added to prevent <EM>C</EM> and
+
+any clauses subsumed by it from appearing as the result of future searches;
+<LI><STRONG>overgeneral.</STRONG> Constraint added to prevent <EM>C</EM>
+
+and clauses subsuming it from appearing as the result of future searches;
+<LI><STRONG>overgeneral because not E.</STRONG> <STRONG>E</STRONG> is added as a
+
+negative example;
+<LI><STRONG>overspecific.</STRONG>  <EM>C</EM> is added as a positive example;
+
+<LI><STRONG>overspecific because E.</STRONG>  <STRONG>E</STRONG> is added as a
+
+positive example;
+<LI><STRONG>X.</STRONG>  <STRONG>X</STRONG> is any Aleph command. This can be something
+
+like <CODE>covers</CODE> or <CODE>mode(*,has_car(+train,-car))</CODE>;
+<LI><STRONG>Ctrl-d.</STRONG> Returns to Step 1.
+
+</UL>
+
+</OL>
+
+<P>
+Note: the command <CODE>induce_clauses/0</CODE> with the flag <CODE>interactive</CODE>
+set to <CODE>true</CODE> simply performs the same function as
+<CODE>induce_incremental</CODE>.
+
+
+<P>
+The incremental mode does not preclude the use of prior sets of examples
+or background information. These are provided in the usual way (in files
+with <CODE>.b</CODE>, <CODE>.f</CODE> and <CODE>.n</CODE> suffixes).
+An example of using the incremental learner to construct a program for list
+membership can be found in the <CODE>incremental</CODE> sub-directory in:
+
+
+<P>
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+
+
+
+<H2><A ID="SEC30">Theory-level search</A></H2>
+<P>
+<A ID="IDX242"></A>
+
+
+<P>
+An adequate explanation for a set of examples
+typically requires several clauses. Most ILP systems attempt
+to construct such explanations one clause at a time. The procedure
+is usually an iterative greedy set-covering algorithm that finds the
+best single clause (one that explains or "covers" most unexplained
+examples) on each iteration. While this has been shown to work
+satisfactorily for most problems, it is nevertheless interesting to
+consider implementations that attempt to search directly at the
+"theory-level". In other words, elements of the search space 
+are sets of clauses, each of which can be considered a hypothesis for
+all the examples. The implementation in Aleph of this idea is
+currently at a very rudimentary level, and preliminary experiments
+have not demonstrated great benefits. Nevertheless, the approach,
+with development, could be promising. The implementation within
+Aleph is invoked by the command:
+
+
+
+<PRE>
+              induce_theory.
+</PRE>
+
+<P>
+This conducts a search that moves from one set of
+clauses to another. Given a clause set <EM>S</EM> local moves are
+the result of the following:
+
+
+
+<OL>
+<LI>
+
+<STRONG>Add clause.</STRONG> A clause is added to <EM>S</EM>. This
+is usually a randomly selected legal clause constructed
+in the manner described in section <A HREF="#SEC28">Randomised search methods</A>;
+<LI>
+
+<STRONG>Delete clause.</STRONG> A clause is deleted from <EM>S</EM>;
+<LI>
+
+<STRONG>Add literal.</STRONG> A literal is added to a clause in <EM>S</EM>; and
+<LI>
+
+<STRONG>Delete literal.</STRONG> A literal is deleted from a clause in <EM>S</EM>.
+</OL>
+
+<P>
+As noted in section <A HREF="#SEC28">Randomised search methods</A>, the use of an equality predicate
+with appropriate mode declarations may be needed to achieve variable
+co-references, etc.
+
+
+<P>
+Currently, <CODE>induce_cover</CODE>  starts with an initial set of
+at most <EM>C</EM> clauses, where this number is specified by
+setting the <CODE>clauses</CODE> parameter. Each of these are
+randomly selected legal clauses. <CODE>induce_cover</CODE> then
+performs theory-level search
+either using as search strategy a randomised local search method (obtained
+by setting the <CODE>search</CODE> parameter to <CODE>rls</CODE>: see
+section <A HREF="#SEC28">Randomised search methods</A>),
+or a markov chain monte carlo technique (obtained by setting
+<CODE>search</CODE> to <CODE>mcmc</CODE>). The latter is untested.
+The only evaluation function allowed is <CODE>accuracy</CODE>. For
+theories, this is the number <CODE>(TP+TN)/(TP+TN+FP+FN)</CODE> where
+<CODE>TP,TN</CODE> are are the numbers of positive and negative
+examples correctly classified respectively; <CODE>FP</CODE> is the
+numbers of negative examples incorrectly classified as positive; and
+<CODE>FN</CODE> is the number of positive examples incorrectly classified
+as positive.
+
+
+
+
+<H2><A ID="SEC31">Tree-based theories</A></H2>
+<P>
+<A ID="IDX243"></A>
+
+
+<P>
+The algorithm embodied in <CODE>induce</CODE> can
+be seen as the first-order equivalent of a propositional rule-learning
+algorithms like Clark and Niblett's CN2. There is now a substantial body of
+empirical work (done by researchers in Leuven and Freiburg) demonstrating
+the utility of first-order equivalents of propositional tree-learning procedures.
+Tree-based learning can be seen as a special case of theory learning
+and the implementation in Aleph uses the standard recursive-partitioning
+approach to construct classification, regression, class probability, or
+model trees. Tree-based theory construction is invoked by the command:
+
+
+
+<PRE>
+		induce_tree.
+</PRE>
+
+<P>
+The type of tree constructed is determined by setting <CODE>tree_type</CODE>
+to one of: <CODE>classification</CODE>, <CODE>regression</CODE>, <CODE>class_probability</CODE>,
+or <CODE>model</CODE>.
+The basic procedure attempts to construct a tree to predict the output argument
+in the examples. Note that the mode declarations must specify only a single
+argument as output. Paths from root to leaf constitute clauses.
+Tree-construction is viewed as a refinement operation: any leaf can currently
+be refined (converted into a non-leaf) by extending the corresponding clause (resulting
+in two new leaves). The extension is done using
+Aleph's automatic refinement operator that extends clauses by a single
+literal within the mode language . That is, Aleph sets <CODE>refine</CODE> to <CODE>auto</CODE>. Note
+that using the automatic refinement operator means that the user has to 
+ensure that all arguments that are annotated as <STRONG>#T</STRONG> in the modes contain
+generative definitions for type <STRONG>T</STRONG>.  The <CODE>lookahead</CODE> option allows additions of
+several literals at once. The impurity function is specified by the setting the <CODE>evalfn</CODE> parameter.
+Currently for <CODE>classification</CODE> and <CODE>class_probability</CODE> trees
+<CODE>evalfn</CODE> must be one of <CODE>entropy</CODE> or <CODE>gini</CODE>. For <CODE>regression</CODE>
+trees the evaluation function is automatically set to <CODE>sd</CODE> (standard deviation).
+For <CODE>model</CODE> trees, <CODE>evalfn</CODE> must be one of <CODE>mse</CODE> (mean square error)
+or <CODE>accuracy</CODE>.
+In all cases, the result is always presented a set of rules. Rules for
+<CODE>class_probability</CODE> and <CODE>regression</CODE> trees make their predictions
+probabilistically using the <CODE>random/2</CODE> predicate provided within Aleph.
+
+
+<P>
+In addition, settings for the following parameters are
+relevant: <CODE>classes</CODE>, the list of classes occuring in examples
+provided (for <CODE>classification</CODE> or <CODE>class_probability</CODE> trees only);
+<CODE>dependent</CODE>, for the argument constituting the dependent variable in the examples;
+<CODE>prune_tree</CODE>, for pruning rules from a tree; <CODE>confidence</CODE>,
+for error-based pruning of rules as described by J R Quinlan in the C4.5 book;
+<CODE>lookahead</CODE>, specifying the lookahead for the refinement operator to mitigate
+the horizon effect from zero-gain literals; <CODE>mingain</CODE>, specifying the
+minimum gain required for refinement to proceed; and <CODE>minpos</CODE> specifying
+the minimum number of examples required in a leaf for refinement to proceed.
+
+
+<P>
+Forward pruning is achieved by the
+parameters (<CODE>mingain</CODE>) and <CODE>minpos</CODE>. The former should be set to
+some value greater than 0 and the latter to some value greater than 1. 
+Backward pruning uses error pruning of the final clauses
+in the tree by correcting error estimates obtained from the training data.
+Automatic error-based pruning is achieved by setting the parameter <CODE>prune_tree</CODE>
+to <CODE>auto</CODE>.
+For <CODE>classification</CODE> trees the resulting procedure is identical to the one for rule
+pruning described by Quinlan in C4.5: Programs for Machine Learning, Morgan Kauffmann.
+For <CODE>regression</CODE> trees, error-based pruning results in corrections to the
+sample standard deviation. These corrections assume normality of observed values in a leaf: the
+method has been studied emprically by L. Torgo in  "A Comparative Study of Reliable Error Estimators for
+Pruning Regression Trees".
+Following work by F Provost and P Domingos, pruning is not employed
+for class probability prediction. At this stage, there is no pruning also
+for model trees.
+
+
+<P>
+The prediction at each `leaf' differs for each tree type. For <CODE>classification</CODE>
+trees, prediction is the majority class as estimated from the examples in
+the leaf; for <CODE>regression</CODE> trees prediction is
+a value drawn randomly from a normal distribution with mean and standard
+deviation estimated from the examples in the leaf; for <CODE>class_probability</CODE> trees
+prediction is a value drawn randomly from the (Laplace corrected) discrete
+distribution of classes in the leaf; and for <CODE>model</CODE> trees prediction
+is achieved by a user-defined background predicate (see following).
+
+
+<P>
+Model trees in Aleph are constructed by examining, at each leaf, one or
+more model construction predicates. These predicates are defined as part
+of background knowledge, and can specify different kinds of models For
+example, the predicates may be for linear regression, polynomial regression etc. for
+predicting a continuous variable; a decision tree, logistic regression etc. for
+predicting a nominal variable. For each kind of model, the user has
+to provide a definition for a predicate that
+is able to: (a) construct the model; and (b) predict using
+the model constructed. The process is the same as that for lazy evaluation.
+Each such predicate is specified using the <CODE>model/1</CODE> command. If several
+different predicates are specified, then, at each leaf, each predicate is called
+to construct a model and the predicate that constructs the best model
+(evaluated using the current setting for <CODE>evalfn</CODE>) is returned. This can
+be computationally intensive, but can lead to the construction of fairly
+complex theories, in which different leaves can contain different kinds
+of models (for example, linear regression models in one leaf and quadratic
+regression models in another).
+
+
+<P>
+Tree-learning can be performed interactively, with the user specifying the
+split to be selected. This is done by setting <CODE>interactive</CODE> to <CODE>true</CODE>
+before executing the <CODE>induce_tree</CODE> command.
+
+
+<P>
+An example of using the tree learner
+can be found in the <CODE>tree</CODE> sub-directory in:
+
+
+<P>
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+
+
+
+<H2><A ID="SEC32">Constraint learning</A></H2>
+<P>
+<A ID="IDX244"></A>
+
+
+<P>
+The basic Aleph algorithm constructs
+definite clauses normally intended to be components of a predictive model for
+data. Early ILP work (for example, in the Claudien system)
+demonstrated the value of discovering all non-Horn constraints that hold in a database.
+A similar functionality can be obtained within Aleph using the command:
+
+
+
+<PRE>
+		induce_constraints.
+</PRE>
+
+<P>
+The implementation of these ideas in Aleph uses a naive generate-and-test strategy
+to enumerate all constraints within the background knowledge (for the
+mode language provided). All constraints are of the form:
+
+
+
+<PRE>
+		false:- ...
+</PRE>
+
+<P>
+and are stored in the user-specified <CODE>goodfile</CODE> (the specification of this
+file is mandatory for <CODE>induce_constraints</CODE> to work).
+With appropriate mode settings for <CODE>false</CODE> and <CODE>not</CODE> it is possible
+to identify non-Horn constraints in the same way as Claudien. 
+For example given the background knowledge:
+
+
+
+<PRE>
+		male('Fred').
+		female('Wilma').
+	
+		human('Fred').
+		human('Wilma').
+</PRE>
+
+<P>
+and the mode declarations: 
+
+
+
+<PRE>
+		:- modeh(1,false).
+
+		:- modeb(*,human(-person)).
+		:- modeb(1,male(+person)).
+		:- modeb(1,female(+person)).
+		:- modeb(1,not(male(+person))).
+		:- modeb(1,not(female(+person))).
+</PRE>
+
+<P>
+Aleph identifies the following constraints:
+
+
+
+<PRE>
+
+		false :-
+   			human(A), male(A), female(A).
+		false :-
+   			human(A), female(A), male(A).
+		false :-
+   			human(A), not male(A), not female(A).
+		false :-
+   			human(A), not female(A), not male(A).
+</PRE>
+
+<P>
+After removing redundant constraints (which Aleph does not do), these are
+equivalent to the following: 
+
+
+
+<PRE>
+		false :- human(A), male(A), female(A).
+
+		male(A) ; female(A) :- human(A).
+</PRE>
+
+<P>
+The validity of these constraints can only be guaranteed if the
+background knowledge is assumed to be complete and correct. To
+account for incorrect statements in the background knowledge
+it may sometimes be relevant to alter the <CODE>noise</CODE> setting
+when obtaining constraints which now specifies the number of falsifying
+substitutions tolerated. The <CODE>minacc</CODE> parameter is ignored.
+
+
+<P>
+An example of using the constraints learner
+can be found in the <CODE>constraints</CODE> sub-directory in:
+
+
+<P>
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+
+
+
+<H2><A ID="SEC33">Mode learning</A></H2>
+<P>
+<A ID="IDX245"></A>
+
+
+<P>
+The basic Aleph algorithm assumes modes will be declared by the user
+which, in the past, this has been the source of some difficulty.
+There has been some work (by E. McCreath
+and A. Sharma, Proc of the 8th Australian
+Joint Conf on AI pages 75-82, 1995)
+on automatic extraction of mode and type information from the
+background knowledge provided. The implementation
+of these ideas in Aleph follows these ideas fairly closely and can
+be invoked by the command:
+
+
+
+<PRE>
+		induce_modes.
+</PRE>
+
+<P>
+Given a set of determinations, the procedure works in two parts: (i) finding
+equivalence classes of types; and (ii) finding an input/output
+assignment.
+
+
+<P>
+Unlike the McCreath and Sharma approach,
+types in the same equivalence class are given the same name only if
+they "overlap" significantly (the overlap of type1 with type2
+is the proportion of elements of type1 that are also elements of type2).
+Significantly here means an overlap at least some threshold
+T (set using <CODE>typeoverlap</CODE>, with default 0.95).
+Values of <CODE>typeoverlap</CODE> closer to 1.0 are more conservative, in
+that they require very strong overlap before the elements are called the
+same type.
+Since this may not be perfect, modes are also produced
+for equality statements that re-introduce co-referencing amongst
+differently named types in the same equivalence class.
+The user has to however explicitly include a determination declaration for
+the equality predicate.
+
+
+<P>
+The i/o assignment is not straightforward, as we may be dealing
+with non-functional definitions. The assignment sought here is one
+that maximises the number of input args as this gives the
+largest bottom clause. This assignment is
+is sought by means of a search procedure over mode sequences.
+Suppose we have a mode sequence <CODE>M = &#60;m1,m2,..m\{i-1\</CODE>&#62;} that uses the types T.
+An argument of type t in mode <CODE>m\{i\</CODE>} is an input iff t overlaps
+significantly (used in the same sense as earlier) with some type in T.
+Otherwise the argument is an output.
+The utility of each mode sequence M is f(M) = g(M) + h(M) where
+g(M) is the number of input args in M; and h(M) is a (lower) estimate
+of the number of input args in any mode sequence of which M is a prefix.
+The search strategy adopted is a simple hill-climbing one. Note
+that the procedure as implemented assumes background predicates will
+be generative (which holds when the background knowledge is ground).
+
+
+<P>
+An example of using the mode learner
+can be found in the <CODE>modes</CODE> sub-directory in:
+
+
+<P>
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+
+
+
+<H2><A ID="SEC34">Abductive learning</A></H2>
+<P>
+<A ID="IDX246"></A>
+
+
+<P>
+The basic Aleph algorithm assumes that the examples provided
+are observations of the target predicate to be learned. There
+is, in fact, nothing within the ILP framework that requires this
+to be the case. For example, suppose the following was already
+provided in the background knowledge:
+
+
+
+<PRE>
+                grandfather(X,Y):-
+                     father(X,Z),
+                     parent(Z,Y).
+
+                parent(X,Y):-
+                    father(X,Y).
+
+                father('Fred','Jane').
+
+                mother('Jane','Robert').
+                mother('Jane','Peter').
+</PRE>
+
+<P>
+then the examples:
+
+
+
+<PRE>
+                grandfather('Fred','Robert').
+                grandfather('Fred','Peter').
+</PRE>
+
+<P>
+are clearly not entailed by the background knowledge. Aleph would then
+simply try to learn another clause for <CODE>grandfather/2</CODE>, perhaps
+resulting in something like:
+
+
+
+<PRE>
+                grandfather(X,Y):-
+                     father(X,Z),
+                     mother(Z,Y).
+</PRE>
+
+<P>
+In fact, the job would have just as easily been done, and the result more
+useful, if Aleph could learn the following:
+
+
+
+<PRE>
+                parent(X,Y):-
+                     mother(X,Y).
+</PRE>
+
+<P>
+This requires Aleph to be able to do two things. First, given observations
+of <CODE>grandfather/2</CODE> that are not entailed by the background knowledge,
+generate instances of <CODE>parent/2</CODE> that will allow the observations to be 
+entailed. Second, use the instances of <CODE>parent/2</CODE> that
+were generated to obtain the clause for <CODE>parent/2</CODE> above. The first
+of these steps requires a form of abduction. The second requires generalisation
+in the form of learning. It is the combination of these two steps
+that is called "Abductive Learning" here.
+
+
+<P>
+The basic procedure used by Aleph is a simplified variant of S. Moyle's Alecto
+program. Alecto is described in some detail in S. Moyle,
+"Using Theory Completion to Learn a Navigation Control Program",
+Proceedings of the Twelfth International Conference on ILP (ILP2002),
+S. Matwin and C.A. Sammut (Eds), LNAI 2583, pp 182-197,
+2003.  Alecto does the following: for each positive example,  an
+"abductive explanation" is obtained. This explanation is set of
+ground atoms. The union of abductive explanations from all
+positive examples is formed (this is also a set of ground atoms).
+These are then generalised to give the final theory. The
+ground atoms in an abductive explanation are obtained using
+Yamamoto's SOLD resolution or SOLDR (Skip Ordered Linear resolution for
+Definite clauses).
+
+
+<P>
+Currently, abductive learning is only incorporated within the
+<CODE>induce</CODE> command. If <CODE>abduce</CODE> is set to <CODE>true</CODE> then
+Aleph first tries to obtain the best clause for the observed predicate
+(for example, the best clause for <CODE>grandfather/2</CODE>). Abductive
+explanations are then generated for all predicates marked as being
+abducible (see <CODE>abducible/1</CODE>) and generalisations constructed using
+these. The best generalisation overall is then selected and greedy
+clause identification by <CODE>induce</CODE> repeats with the
+observations left. Care has to be taken to ensure that abductive
+explanations are indeed ground (this can be achieved by using appropriate
+type predicates within the definitions of the abducible
+predicates) and limited to some maximum number (this latter
+requirement is for reasons of efficiency: see setting for
+<CODE>max_abducibles</CODE>).
+
+
+<P>
+It should be evident that abductive learning as described here implements
+a restricted form of theory revision, in which revisions are restricted
+to completing definitions of background predicates other than those
+for which observations are provided. This assumes that the background
+knowledge is correct, but incomplete. In general, if background
+predicates are both incorrect and incomplete, then a more elaborate
+procedure would be required.
+
+
+
+
+<H2><A ID="SEC35">Feature Construction</A></H2>
+<P>
+<A ID="IDX247"></A>
+
+
+<P>
+One promising role for ILP is in the area of feature construction.
+A good review of the use of ILP for this can be found in 
+S. Kramer, N. Lavrac and P. Flach (2001),
+<EM>Propositionalization Approaches to Relational Data Mining</EM>,
+in Relational Data Mining, S. Dzeroski and N. Lavrac (eds.), Springer.
+
+
+<P>
+Aleph uses a simple procedure to construct boolean features. The
+procedure is invoked using the <CODE>induce_features/0</CODE> command.
+This is almost identical to the <CODE>induce_cover/0</CODE> command.
+Recall that <CODE>induce_cover/0</CODE> uses a
+a covering strategy to construct rules that explain the examples (the
+slight twist being that all positive examples are retained
+when evaluating clauses at any given stage).
+The difference with <CODE>induce_features/0</CODE> is that
+all good clauses that are found during the course of constructing such rules
+are stored as new features. A feature stored by Aleph contains two
+bits of information: (1) a number, that acts as a feature identifier; and (2)
+a clause <CODE>(Head:-Body)</CODE>. Here <CODE>Head</CODE> is a literal that
+unifies with any of the examples with the same name and arity as <CODE>Head</CODE> and
+<CODE>Body</CODE> is a conjunction
+of literals. The intent is that the feature is <CODE>true</CODE> for an example
+if and only if the example unifies with <CODE>Head</CODE> and <CODE>Body</CODE> is
+<CODE>true</CODE>. For classification problems, the user has to specify the
+the dependent variable. This is done using <CODE>set(dependent,...)</CODE>.
+
+
+<P>
+The process of finding rules (and the corresponding features) continues until all examples
+are covered by the rules found or the number of features exceeds a pre-defined upper limit
+(controlled by <CODE>set(max_features,...)</CODE>).
+
+
+<P>
+What constitutes a "good clause"
+is dictated by settings for various Aleph parameters. The following
+settings are an example of some parameters that are relevant:
+
+
+
+<PRE>
+                :- set(clauselength,10).
+                :- set(minacc,0.6).
+                :- set(minscore,3).
+                :- set(minpos,3).
+                :- set(noise,50).
+                :- set(nodes,5000).
+                :- set(explore,true).
+                :- set(max_features,20000).
+</PRE>
+
+<P>
+Features found by Aleph can be shown by the <CODE>show(features)</CODE> command.
+Aleph can be used to show the boolean vectors for the train and test examples
+using a combination of <CODE>set(portray_examples,...)</CODE>, <CODE>features/2</CODE>
+appropriate definitions for <CODE>aleph_portray/1</CODE> and <CODE>show(train_pos)</CODE>,
+<CODE>show(train_neg</CODE>) etc. Here is an example of the use
+of <CODE>aleph_portray/1</CODE> for examples in the training set:
+
+
+
+<PRE>
+                aleph_portray(train_pos):-
+                        setting(train_pos,File),
+			show_features(File,positive).
+                aleph_portray(train_neg):-
+                        setting(train_neg,File),
+			show_features(File,negative).
+
+                show_features(File,Class):-
+                        open(File,read,Stream),
+                        repeat,
+			read(Stream,Example),
+                        (Example = end_of_file -&#62; close(Stream);
+                                write_features(Example,Class),
+                                fail).
+
+                write_features(Example,_):-
+                        features(_,(Example:- Body)),
+                        (Body -&#62; write(1), write(' '); write(0), write(' ')),
+                        fail.
+                write_features(_,Class):-
+                        writeq(Class), nl.
+</PRE>
+
+<P>
+If <CODE>portray_examples</CODE> is set to <CODE>true</CODE>, Aleph will 
+call <CODE>aleph_portray(Term)</CODE>, when the command
+<CODE>show(Term)</CODE> is executed (with <CODE>Term</CODE> being one of 
+<CODE>train_pos</CODE>, <CODE>train_neg</CODE>, <CODE>test_pos</CODE> or <CODE>test_neg</CODE>).
+
+
+
+
+<H2><A ID="SEC36">Other commands</A></H2>
+
+<P>
+There are a number of other useful commands and predicates defined
+in Aleph.  These are:
+
+
+<DL COMPACT>
+
+<DT><CODE>rdhyp</CODE>
+<DD>
+<A ID="IDX248"></A>
+Read a hypothesised clause from the user.
+
+<DT><CODE>addhyp</CODE>
+<DD>
+<A ID="IDX249"></A>
+Add current hypothesised clause to theory. If a search is interrupted, then
+the current best hypothesis will be added to the theory.
+
+<DT><CODE>sphyp</CODE>
+<DD>
+<A ID="IDX250"></A>
+Perform Generalised Closed World Specialisation (GCWS) on current
+hypothesis. This can result in the creation of new abnormality
+predicates which define exceptional conditions (see section <A HREF="#SEC38">Notes</A>)
+
+<DT><CODE>addgcws</CODE>
+<DD>
+<A ID="IDX251"></A>
+Add hypothesis constructed by performing GCWS to theory.
+
+<DT><CODE>covers</CODE>
+<DD>
+<A ID="IDX252"></A>
+Show positive examples covered by hypothesised clause.
+
+<DT><CODE>coversn</CODE>
+<DD>
+<A ID="IDX253"></A>
+Show negative examples covered by hypothesised clause.
+
+<DT><CODE>reduce</CODE>
+<DD>
+<A ID="IDX254"></A>
+<A ID="IDX255"></A>
+Run a search on the current bottom clause, which
+can be obtained with the <CODE>sat/1</CODE> command.
+
+<DT><CODE>abducible(+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX256"></A>
+<VAR>V</VAR> is of the form <VAR>N/A</VAR>, where the atom <VAR>N</VAR> is
+the name of the predicate, and <VAR>A</VAR> its arity.
+Specifies that ground atoms with symbol <VAR>N/A</VAR> can be abduced
+if required.
+
+<DT><CODE>bottom(-<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX257"></A>
+<VAR>V</VAR> is the current bottom clause.
+
+<DT><CODE>commutative(+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX258"></A>
+<VAR>V</VAR> is of the form <VAR>N/A</VAR>, where the atom <VAR>N</VAR> is
+the name of the predicate, and <VAR>A</VAR> its arity.
+Specifies that literals with symbol <VAR>N/A</VAR> are commutative.
+
+<DT><CODE>man(-<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX259"></A>
+<VAR>V</VAR> is of location of the on-line manual.
+
+<DT><CODE>symmetric(+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX260"></A>
+<VAR>V</VAR> is of the form <VAR>N/A</VAR>, where the atom <VAR>N</VAR> is
+the name of the predicate, and <VAR>A</VAR> its arity.
+Specifies that literals with symbol <VAR>N/A</VAR> are symmetric.
+
+<DT><CODE>lazy_evaluate(+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX261"></A>
+<A ID="IDX262"></A>
+<VAR>V</VAR> is of the form <VAR>N/A</VAR>, where the atom <VAR>N</VAR> is
+the name of the predicate, and <VAR>A</VAR> its arity.
+Specifies that outputs and constants for literals with
+symbol <VAR>N/A</VAR> are to be evaluated lazily during the
+search. This is particularly useful if the constants required
+cannot be obtained from the bottom clause constructed by using
+a single example. During the search, the literal is called with
+a list containing a pair of lists for each input argument
+representing `positive' and `negative' substitutions obtained for
+the input arguments of the literal.
+These substitutions are obtained by executing the partial
+clause without this literal on the positive and negative examples.
+The user needs to provide a definition capable of processing a call
+with a list of list-pairs in each argument, and how the outputs are
+to be computed from such information.
+For further details see A. Srinivasan and R. Camacho, <EM>Experiments
+in numerical reasoning with ILP</EM>, To appear: Jnl. Logic Programming.
+
+<DT><CODE>model(+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX263"></A>
+<A ID="IDX264"></A>
+<VAR>V</VAR> is of the form <VAR>N/A</VAR>, where the atom <VAR>N</VAR> is
+the name of the predicate, and <VAR>A</VAR> its arity. Specifies
+that predicate <VAR>N/A</VAR> will be used to construct and execute
+models in the leaves of model trees (see section <A HREF="#SEC31">Tree-based theories</A>).
+This automatically results
+in predicate <VAR>N/A</VAR> being lazily evaluated (see <CODE>lazy_evaluate/1</CODE>).
+
+<DT><CODE>positive_only(+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX265"></A>
+<VAR>V</VAR> is of the form <VAR>N/A</VAR>, where the atom <VAR>N</VAR> is
+the name of the predicate, and <VAR>A</VAR> its arity.
+States that only positive substitutions are required during
+lazy evaluation of literals with symbol <VAR>N/A</VAR>. This saves
+some theorem-proving effort.
+
+<DT><CODE>random(<VAR>V</VAR>,+<VAR>D</VAR>)</CODE>
+<DD>
+<A ID="IDX266"></A>
+<VAR>V</VAR> is a random variable from distribution <VAR>D</VAR>.
+<VAR>D</VAR> is the specification of a discrete or normal distribution.
+The discrete distribution is specified as [p1-a,p2-b,...] where "p1" represents
+the probability of drawing element "a", "p2" the probability
+of drawing element "b" and so on. A normal distribution
+with mean "m" and standard deviation "s" is specified by
+the term "normal(m,s)". If <VAR>V</VAR> is bound to a value then
+the predicate succeeds if and only if the value has a
+non-zero probability of occurrence (which is trivially satisfied for
+a normal distribution).
+
+<DT><CODE>sat(+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX267"></A>
+<A ID="IDX268"></A>
+<VAR>V</VAR> is an integer. Builds the bottom clause for positive
+example number <VAR>V</VAR>. Positive examples are numbered from 1, and
+the numbering corresponds to the order of appearance in the <TT>`.f'</TT>
+file.
+
+<DT><CODE>example_saturated(-<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX269"></A>
+<VAR>V</VAR> is a positive example. This is the current example saturated.
+
+<DT><CODE>show(+<VAR>V</VAR>)</CODE>
+<DD>
+<A ID="IDX270"></A>
+<A ID="IDX271"></A>
+Different values of <VAR>V</VAR> result in showing the following.
+
+<DL COMPACT>
+
+<DT><CODE>bottom</CODE>
+<DD>
+Current bottom clause.
+
+<DT><CODE>constraints</CODE>
+<DD>
+Constraints found by <CODE>induce_constraints</CODE>.
+
+<DT><CODE>determinations</CODE>
+<DD>
+Current determination declarations.
+
+<DT><CODE>features</CODE>
+<DD>
+Propositional features constructed from good clauses found so far.
+
+<DT><CODE>gcws</CODE>
+<DD>
+Hypothesis constructed by the <CODE>gcws</CODE> procedure.
+
+<DT><CODE>good</CODE>
+<DD>
+Good clauses found in searches conducted so far
+(good clauses all have a utility above that specified by <CODE>minscore</CODE>).
+
+<DT><CODE>hypothesis</CODE>
+<DD>
+Current hypothesised clause.
+
+<DT><CODE>modes</CODE>
+<DD>
+Current mode declarations (including all modeh and modeb declarations).
+
+<DT><CODE>modehs</CODE>
+<DD>
+Current modeh declarations.
+
+<DT><CODE>modebs</CODE>
+<DD>
+Current modeb declarations.
+
+<DT><CODE>neg</CODE>
+<DD>
+Current negative examples.
+
+<DT><CODE>pos</CODE>
+<DD>
+Current positive examples.
+
+<DT><CODE>posleft</CODE>
+<DD>
+Positive examples not covered by theory so far.
+
+<DT><CODE>rand</CODE>
+<DD>
+Current randomly-generated  examples
+(used when <CODE>evalfn</CODE> is <CODE>posonly</CODE>).
+
+<DT><CODE>search</CODE>
+<DD>
+Current search (requires definition for <CODE>portray(search)</CODE>).
+
+<DT><CODE>settings</CODE>
+<DD>
+Current parameter settings.
+
+<DT><CODE>sizes</CODE>
+<DD>
+Current sizes of positive and negative examples.
+
+<DT><CODE>theory</CODE>
+<DD>
+Current theory constructed.
+
+<DT><CODE>test_neg</CODE>
+<DD>
+Examples in the file associated with the parameter <CODE>test_neg</CODE>.
+
+<DT><CODE>test_pos</CODE>
+<DD>
+Examples in the file associated with the parameter <CODE>test_pos</CODE>.
+
+<DT><CODE>train_neg</CODE>
+<DD>
+Examples in the file associated with the parameter <CODE>train_neg</CODE>.
+
+<DT><CODE>train_pos</CODE>
+<DD>
+Examples in the file associated with the parameter <CODE>train_pos</CODE>.
+
+<DT><CODE>Name/Arity</CODE>
+<DD>
+Current definition of the predicate Name/Arity.
+
+</DL>
+
+<DT><CODE>prove(+<VAR>Clause</VAR>,+<VAR>Example</VAR>)</CODE>
+<DD>
+<A ID="IDX272"></A>
+A user-specified predicate that defines when an example <CODE>Example</CODE>
+is provable using a clause <CODE>Clause</CODE>. <CODE>Clause</CODE> can be the
+special term <CODE>bottom</CODE>, in which case it refers to the current
+bottom clause. Calls to this predicate are only made if
+the flag <CODE>proof_strategy</CODE> is set to <CODE>user</CODE>. Settings
+to flags <CODE>depth</CODE> and <CODE>prooftime</CODE> are ignored.
+
+<DT><CODE>redundant(+<VAR>Clause</VAR>,+<VAR>Lit</VAR>)</CODE>
+<DD>
+<A ID="IDX273"></A>
+A user-specified predicate that defines when a literal <CODE>Lit</CODE>
+is redundant in a clause <CODE>Clause</CODE>. <CODE>Clause</CODE> can be the
+special term <CODE>bottom</CODE>, in which case it refers to the current
+bottom clause. Calls to this predicate are only made if
+the flag <CODE>check_redundant</CODE> is set to <CODE>true</CODE>.
+
+<DT><CODE>modeh(+<VAR>Recall</VAR>,+<VAR>Mode</VAR>)</CODE>
+<DD>
+<A ID="IDX274"></A>
+<VAR>Recall</VAR> is one of: a positive integer or <CODE>*</CODE>. <VAR>Mode</VAR>
+is a mode template as in a <CODE>mode/2</CODE> declaration. Declares
+a mode for the head of a hypothesised clause. Required when
+<CODE>evalfn</CODE> is <CODE>posonly</CODE>.
+
+<DT><CODE>modeb(+<VAR>Recall</VAR>,+<VAR>Mode</VAR>)</CODE>
+<DD>
+<A ID="IDX275"></A>
+<VAR>Recall</VAR> is one of: a positive integer or <CODE>*</CODE>. <VAR>Mode</VAR>
+is a mode template as in a <CODE>mode/2</CODE> declaration. Declares
+a mode for a literal in the body of a hypothesised clause.
+
+<DT><CODE>text(+<VAR>L</VAR>,+<VAR>T</VAR>)</CODE>
+<DD>
+<A ID="IDX276"></A>
+<VAR>L</VAR> is a literal that can appear in the head or body of a clause.
+<VAR>T</VAR> is a list of terms that contain the text to be printed in place
+of the literal. Variables in the list will be co-referenced to
+variables in the literal. For example, <CODE>text(active(X),[X, 'is active'])</CODE>.
+Then the clause <CODE>active(d1)</CODE> will be written as <CODE>d1 is active</CODE>.
+
+<DT><CODE>hypothesis(-<VAR>Head</VAR>,-<VAR>Body</VAR>,-<VAR>Label</VAR>)</CODE>
+<DD>
+<A ID="IDX277"></A>
+<VAR>Head</VAR> is the head of the current hypothesised clause.
+<VAR>Body</VAR> is the body of the current hypothesised clause.
+<VAR>Label</VAR> is the list <CODE>[P,N,L]</CODE> where <CODE>P</CODE> is
+the positive examples covered by the hypothesised clause,
+<CODE>N</CODE> is the negative examples covered by the hypothesised clause,
+and <CODE>L</CODE> is the number of literals in the hypothesised clause,
+
+<DT><CODE>feature(+<VAR>Id</VAR>,+<VAR>(Head:-Body)</VAR>)</CODE>
+<DD>
+<A ID="IDX278"></A>
+Declares a new feature.
+<VAR>Id</VAR> is a feature identifier (usually a number).
+<VAR>Head</VAR> is a literal that can unify with one or more of 
+the examples.  <VAR>Body</VAR> is a conjunction of literals that
+constitutes the feature.
+
+<DT><CODE>features(?<VAR>Id</VAR>,?<VAR>(Head:-Body)</VAR>)</CODE>
+<DD>
+<A ID="IDX279"></A>
+Checks for an existing feature.
+<VAR>Id</VAR> is a feature identifier (usually a number).
+<VAR>Head</VAR> is a literal that can unify with one or more of 
+the examples.  <VAR>Body</VAR> is a conjunction of literals that
+constitutes the feature.
+
+</DL>
+
+
+
+<H1><A ID="SEC37">Related versions and programs</A></H1>
+<P>
+<A ID="IDX280"></A>
+
+
+<P>
+With appropriate settings, Aleph can emulate some the functionality of the following
+programs: P-Progol, CProgol, FOIL, FORS, Indlog, MIDOS, SRT, Tilde and WARMR. Descriptions
+and pointers to these programs are available at:
+
+
+<P>
+<A HREF="http://www-ai.ijs.si/~ilpnet2/systems/">http://www-ai.ijs.si/~ilpnet2/systems/</A> 
+
+
+<P>
+In addition the following programs and scripts are relevant.
+
+
+<DL COMPACT>
+
+<DT><CODE>T-Reduce</CODE>
+<DD>
+<A ID="IDX281"></A>
+<A ID="IDX282"></A>
+T-Reduce is a companion program to Aleph that can
+be used to process the clauses found by the commands <CODE>induce_cover</CODE>
+and <CODE>induce_max</CODE>. This finds a subset of these clauses that explain
+the examples adequately, and have lesser overlap in
+coverage. T-Reduce uses the <STRONG>Yap</STRONG> Prolog compiler.
+A copy of this program is available (without support) at: 
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/treduce.pl">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/treduce.pl</A>
+
+This has not been used for several years and is vulnerable to the
+usual forces of decay that afflict old programs.
+
+<DT><CODE>GUI</CODE>
+<DD>
+<A ID="IDX283"></A>
+<A ID="IDX284"></A>
+A graphical user interface to Aleph has been developed by J. Wielemaker
+and S. Moyle. This is written for SWI-Prolog and uses the XPCE library.
+Details of this can be obtained from S. Moyle
+(sam at comlab dot ox dot ac dot uk).
+
+<DT><CODE>Scripts</CODE>
+<DD>
+<A ID="IDX285"></A>
+<A ID="IDX286"></A>
+There are some scripts available for performing cross-validation with
+Aleph. Here is a copy of a Perl script written by M. Reid
+(mreid at cse dot unsw dot edu dot au):
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/xval_pl.txt">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/xval_pl.txt</A>
+
+S. Konstantopoulos
+(konstant at let dot rug dot nl)
+and colleagues have a shell script and a Python
+script for the same purpose. Copies of these are at:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/xval_sh.txt">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/xval_sh.txt</A>
+
+and
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/xval_py.txt">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/xval_py.txt</A>
+
+</DL>
+
+
+
+<H1><A ID="SEC38">Notes</A></H1>
+<P>
+<A ID="IDX287"></A>
+
+
+<P>
+This section contains ideas and suggestions that have surfaced during the
+development of Aleph and its predecessor programs. The topics themselves are
+in no particular order. They are written in a somewhat stylised manner and
+reflect various personal biases. They should therefore, not be
+considered normative in any way.
+ 
+
+
+
+
+<H2><A ID="SEC39">On the appropriateness of Aleph</A></H2>
+<P>
+<A ID="IDX288"></A>
+
+
+
+<OL>
+<LI>
+
+There are many ILP programs. Aleph is not particularly special.
+<LI>
+
+Check whether the problem needs a relational learning program. Is it clear
+that statistical programs, neural networks, Bayesian nets, tree-learners etc.
+are unsuitable or insufficient?
+<LI>
+
+Aleph's emulation of other systems is at the "ideas" level.
+For example, with a setting of <CODE>search</CODE> to <CODE>heuristic</CODE>, <CODE>evalfn</CODE>
+to <CODE>compression</CODE>, <CODE>construct_bottom</CODE> to <CODE>saturation</CODE>, and <CODE>samplesize</CODE>
+to <CODE>0</CODE>, the command <CODE>induce</CODE> will a construct a theory along the lines
+of the Progol algorithm described by S. Muggleton. This is, however, no
+substitute for the original. If you want an implementation of S. Muggleton's Progol algorithm
+exactly as described in his paper, then Aleph is not suitable for you. Try CProgol instead.
+The same comment applies to other programs listed in section <A HREF="#SEC37">Related versions and programs</A>.
+<LI>
+
+Aleph is quite flexible in that it allows customisation of
+search, cost functions, output-display etc. This allows it to approximate
+the functionality of many other techniques. It could also mean that it
+may not be as efficient as special-purpose implementations. See also:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/ilp_and_aleph.ps">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/ilp_and_aleph.ps</A>
+</OL>
+
+
+
+<H2><A ID="SEC40">On predicate-name clashes with  Aleph</A></H2>
+<P>
+<A ID="IDX289"></A>
+
+
+
+<OL>
+<LI>
+
+You may get into trouble if predicate names in the background knowledge
+clash with those already used within Aleph. This may be benign
+(for example, two different predicates that encode the same
+relation) or malignant (with predicates that have the same name encoding quite
+different things). The list of predicate names already in use can be obtained
+by repeated calls to the <CODE>current_predicate(X)</CODE> goal provided by
+the Prolog engine.
+<LI>
+
+It would be better if Aleph predicates were renamed, or some
+modular approach was adopted. None of this is done so far.
+</OL>
+
+
+
+<H2><A ID="SEC41">On the role of the bottom clause</A></H2>
+<P>
+<A ID="IDX290"></A>
+
+
+
+<OL>
+<LI>
+
+Besides it's theoretical role of anchoring one end of the search space, the
+bottom clause is really useful to introduce constants (these are obtained
+from the seed example), and variable co-references.
+<LI>
+
+If you are not interested in particular constants or the bottom clause introduces
+too many spurious co-references, it may be better not to construct a bottom clause.
+Try using the automatic refinement operator, or write your own refinement operator.
+<LI>
+
+If the bottom clause is too large (&#62; 500 literals), then simply printing it on
+screen takes a long time. Turn this off with setting verbosity to <CODE>0</CODE>.
+<LI>
+
+If the bottom clause is too large (&#62; 500 literals), then you can construct it lazily
+(during the search) by setting the <CODE>construct_bottom</CODE> flag to <CODE>reduction</CODE>.
+</OL>
+
+
+
+<H2><A ID="SEC42">On using Aleph interactively.</A></H2>
+<P>
+<A ID="IDX291"></A>
+
+
+
+<OL>
+<LI>
+
+It is always worth experimenting with Aleph before constructing
+a full theory. The commands <CODE>sat/1</CODE> or <CODE>rsat/0</CODE>, followed by
+the command <CODE>reduce/0</CODE> are useful for this. <CODE>sat(N)</CODE> constructs
+the bottom clause for example number <CODE>N</CODE>. <CODE>rsat</CODE> constructs a
+bottom clause for a randomly selected example. <CODE>reduce</CODE> does a search
+for an acceptable clause.
+<LI>
+
+You can interrupt a search at any time. The command <CODE>addhyp/0</CODE> then adds
+the current best clause to the theory. This has the flavour of anytime-learning.
+
+<LI>
+
+The <CODE>induce_incremental</CODE> command is highly interactive. It requires
+the user to provide examples, and also categorise the result of searches.
+This may prove quite demanding on the user, but has the flavour of
+the kind of search done by a version-space algorithm.
+
+<LI>
+
+Setting <CODE>interactive</CODE> to <CODE>true</CODE> and calling <CODE>induce_clauses</CODE>
+has the same effect as calling <CODE>induce_incremental</CODE>. Trees can
+also be constructed interactively by setting <CODE>interactive</CODE> to <CODE>true</CODE> and
+calling <CODE>induce_tree</CODE>.
+
+</OL>
+
+
+
+<H2><A ID="SEC43">On different ways of constructing a theory</A></H2>
+<P>
+<A ID="IDX292"></A>
+
+
+
+<OL>
+<LI>
+
+The routine way of using <CODE>induce/0</CODE> is often sufficient.
+<LI>
+
+<CODE>induce/0</CODE>, <CODE>induce_cover/0</CODE>, <CODE>induce_max/0</CODE>, <CODE>induce_clauses/0</CODE> and
+<CODE>induce_incremental/0</CODE> encode
+control strategies for clause-level search.
+They will use any user defined refinement
+operators, search and evaluation functions, beam-width restrcitions
+etc that are set. In terms of speed, <CODE>induce/0</CODE> is usually faster
+than <CODE>induce_cover/0</CODE>, which in turn is faster than <CODE>induce_max/0</CODE>.
+The time taken by <CODE>induce_incremental/0</CODE> is not as easily
+characterisable. <CODE>induce_clauses/0</CODE> is simply <CODE>induce/0</CODE>
+or <CODE>induce_incremental/0</CODE> depending on whether the flag
+<CODE>interactive</CODE> is <CODE>false</CODE> or <CODE>true</CODE> respectively.
+<LI>
+
+<CODE>induce_max/0</CODE> results in a set of clauses that is invariant of
+example ordering. Neither <CODE>induce_cover/0</CODE>,
+<CODE>induce/0</CODE> or <CODE>induce_incremental/0</CODE>  have this
+property.
+<LI>
+
+Use the T-Reduce program after <CODE>induce_max/0</CODE> or <CODE>induce_cover/0</CODE>
+to obtain a compact theory for prediction.
+<LI>
+
+You can construct a theory manually by repeatedly using <CODE>sat/1</CODE> (or <CODE>rsat/0</CODE>),
+<CODE>reduce/0</CODE> and <CODE>addhyp/0</CODE>.
+<LI>
+
+You can mitigate the effects of poor choice of seed example in
+the saturation step
+by setting the <CODE>samplesize</CODE> flag.  This sets the number of examples 
+to be selected randomly by
+the <CODE>induce</CODE> or <CODE>induce_cover</CODE> commands.
+Each example seeds a different
+search and the best clause is added to the theory.
+<LI>
+
+If you set <CODE>samplesize</CODE> to <CODE>0</CODE> examples will be selected in the order
+of appearance in the positive examples file.
+This will allow replication of results
+without worrying about variations due to sampling.
+<LI>
+
+The <CODE>induce_tree</CODE> command will construct tree-structured theories.
+<LI>
+
+The <CODE>induce_theory</CODE> command is to be used at your own peril.
+
+</OL>
+
+
+
+<H2><A ID="SEC44">On a categorisation of parameters</A></H2>
+<P>
+<A ID="IDX293"></A>
+
+
+
+<OL>
+<LI>
+
+The following parameters can affect the size of the search space:
+<CODE>i</CODE>, <CODE>clauselength</CODE>, <CODE>nodes</CODE>,
+<CODE>minpos</CODE>, <CODE>minacc</CODE>, <CODE>noise</CODE>,
+<CODE>explore</CODE>, <CODE>best</CODE>, <CODE>openlist</CODE>,
+<CODE>splitvars</CODE>.
+<LI>
+
+The following parameters affect the type of search:
+<CODE>search</CODE>, <CODE>evalfn</CODE>, <CODE>refine</CODE>, <CODE>samplesize</CODE>.
+<LI>
+
+The following parameters have an effect on the speed of execution:
+<CODE>caching</CODE>, <CODE>lazy_negs</CODE>, <CODE>proof_strategy</CODE>,
+<CODE>depth</CODE>, <CODE>lazy_on_cost</CODE>, <CODE>lazy_on_contradiction</CODE>,
+<CODE>searchtime</CODE>, <CODE>prooftime</CODE>.
+<LI>
+
+The following parameters alter the way things are presented to the user:
+<CODE>print</CODE>, <CODE>record</CODE>, <CODE>portray_hypothesis</CODE>,
+<CODE>portray_search</CODE>, <CODE>portray_literals</CODE>, <CODE>verbosity</CODE>,
+<LI>
+
+The following parameters are concerned with testing theories:
+<CODE>test_pos</CODE>, <CODE>test_neg</CODE>, <CODE>train_pos</CODE>, <CODE>train_neg</CODE>.
+</OL>
+
+
+
+<H2><A ID="SEC45">On how the single-clause search is implemented</A></H2>
+<P>
+<A ID="IDX294"></A>
+
+
+
+<OL>
+<LI>
+
+The search for a clause is implemented by a restricted
+form of a general branch-and-bound algorithm.
+A description of the algorithm follows. It is a slight modification
+of that presented by
+C.H. Papadimitriou and K. Steiglitz (1982),
+<EM>Combinatorial Optimisation</EM>, Prentice-Hall, Edgewood-Cliffs, NJ.
+In the code that follows, <EM>activeset</EM> contains the
+set of "live" nodes at any point; the variable <EM>C</EM> is used to hold the
+cost of the best complete solution at any given time.
+
+
+<PRE>
+<STRONG>begin</STRONG>
+    active:= {0}; (<STRONG>comment</STRONG>: ``0'' is a conventional starting point)
+    C:= inf; 
+    currentbest:= anything;
+    <STRONG>while</STRONG> active is not empty <STRONG>do begin</STRONG>
+        remove first node k from active; (<STRONG>comment</STRONG>: k is a branching node)
+        generate the children i=1,...,Nk of node k, and
+            compute corresponding costs Ci and
+                lower bounds on costs Li;
+        <STRONG>for</STRONG> i = 1,...,Nk <STRONG>do</STRONG>
+            <STRONG>if</STRONG> Li &#62;= C <STRONG>then</STRONG> prune child i
+            <STRONG>else begin</STRONG>
+                <STRONG>if</STRONG> child i is a complete solution and Ci &#60; C <STRONG>then begin</STRONG>
+                        C:= Ci, currentbest:= child i;
+                        prune nodes in active with lower bounds more than Ci
+                <STRONG>end</STRONG>
+                add child i to active
+            <STRONG>end</STRONG>
+    <STRONG>end</STRONG>
+<STRONG>end</STRONG>
+</PRE>
+
+<LI>
+
+The algorithm above results in a search tree.
+In Aleph, each node contains a clause.
+<LI>
+
+A number of choices are made in implementing a branch-and-bound algorithm for
+a given problem. Here are how these are made in Aleph:
+(a) <EM>Branch node</EM>. The choice of node to branch on in the activeset
+is based on comparisons of a dual (primary and secondary)
+search key associated with each node. The value of this key depends on the
+search method and evaluation function. For example, with <CODE>search</CODE> set to <CODE>bf</CODE>
+and <CODE>evalfn</CODE> set to <CODE>coverage</CODE> (the default for Aleph),
+the primary and secondary keys are <CODE>-L,P-N</CODE> respectively. Here 
+<CODE>L</CODE> is the number of literals in the clause, and <CODE>P,N</CODE> are the
+positive and negative examples covered by the clause. This ensures clauses with
+fewer literals will be chosen first. They will further be ordered on
+difference in coverage;
+(b) <EM>Branch set</EM>. Children are generated by refinement steps that are either
+built-in (add 1 literal at a time) or user-specified. With built-in
+refinement, loop detection is performed to prevent duplicate
+addition of literals;
+(c) <EM>Lower bounds</EM>. This
+represents the lowest cost that can be achieved at this node and the sub-tree
+below it.  This calculation is dependent on the search method and evaluation function.
+In cases where no easy lower bound is obtainable, it is taken as <CODE>0</CODE> resulting
+in minimal pruning;
+(d) <EM>Restrictions</EM>. The search need not proceed until activeset is empty. It may
+be terminated prematurely by setting the <CODE>nodes</CODE> parameter. Complete solutions
+are taken to be ones that satisfy the language restrictions and any other
+hypothesis-related constraints.
+</OL>
+
+
+
+<H2><A ID="SEC46">On how to reduce the search space</A></H2>
+<P>
+<A ID="IDX295"></A>
+
+
+
+<OL>
+<LI>
+
+Use smaller <CODE>i</CODE> setting or smaller <CODE>clauselength</CODE> or <CODE>nodes</CODE> setting.
+Avoid setting <CODE>splitvars</CODE> to <CODE>true</CODE> (it is not even clear whether
+this works correctly anyway). Try relaxing <CODE>minacc</CODE> or <CODE>noise</CODE> to
+allow clauses with lower accuracy. Set <CODE>minpos</CODE> to some larger value than
+the default. Set a different value to <CODE>best</CODE>.
+<LI>
+
+Write constraints and prune statements.
+<LI>
+
+Use a refinement operator that enumerates a smaller space.
+<LI>
+
+Restrict the language by allowing fewer determinations.
+<LI>
+
+Restrict the  search space by setting beam-width (using parameter <CODE>openlist</CODE>); or
+using an iterative beam-width search (setting <CODE>search</CODE> to <CODE>ibs</CODE>);
+or using randomised local search (setting <CODE>search</CODE> to <CODE>rls</CODE>)
+with an appropriate setting for associated parameters); or
+using Camacho's language search (using parameter
+<CODE>language</CODE> or setting <CODE>search</CODE> to <CODE>ils</CODE>).
+<LI>
+
+Use a time-bounded search by setting <CODE>searchtime</CODE> to some small
+value.
+</OL>
+
+
+
+<H2><A ID="SEC47">On how to use fewer examples</A></H2>
+<P>
+<A ID="IDX296"></A>
+
+
+
+<OL>
+<LI>
+
+It need not be necessary to test on the entire dataset to obtain
+good estimates of the cost of a clause.
+<LI>
+
+Methods like sub-sampling or windowing can be incorporated into
+ILP programs to avoid examining entire datasets. A form of sub-sampling
+is incorporated within Aleph. Windowing can
+be achieved within a general purpose theory-revision program called
+<STRONG>T-Revise</STRONG> which can use any ILP program as its generalisation
+engine (available from Ashwin Srinivasan,
+ashwin at comlab dot ox dot ac dot uk).
+More details on this are available in:
+A. Srinivasan (1999), <EM>A study of two sampling methods for analysing
+large datasets with ILP</EM>, Data Mining and Knowledge Discovery, 3(1):95-123.
+<LI>
+
+Using the <CODE>posonly</CODE> evaluation function will allow construction
+of theories using positive examples only (thus, some savings can be made
+by ignoring negative examples).
+</OL>
+
+
+
+<H2><A ID="SEC48">On  a user-defined view of hypotheses and search</A></H2>
+<P>
+<A ID="IDX297"></A>
+
+
+
+<OL>
+<LI>
+
+User-definitions of <CODE>portray/1</CODE> provide a general mechanism
+of altering the view of the hypotheses and search seen by the user.
+<LI>
+
+There are 3 flags that are used to control portrayal. These are
+<CODE>portray_hypothesis</CODE>, <CODE>portray_search</CODE> and <CODE>portray_literals</CODE>.
+If the first is set to <CODE>true</CODE> then the command <CODE>show(hypothesis)</CODE>
+will execute <CODE>portray(hypothesis)</CODE>. This has to be user-defined.
+If the second flag is set to <CODE>true</CODE> then the command <CODE>show(search)</CODE>
+will execute <CODE>portray(search)</CODE>. This has to be user-defined.
+If the third flag is set to <CODE>true</CODE> then any literal <CODE>L</CODE> in a clause
+constructed during the search will be shown on screen by executing 
+<CODE>portray(L)</CODE>. This has to be user-defined.
+<LI>
+
+Examples of using these predicates can be found in the <CODE>portray</CODE>
+sub-directory in:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+</OL>
+
+
+
+<H2><A ID="SEC49">On numerical reasoning with Aleph</A></H2>
+<P>
+<A ID="IDX298"></A>
+
+
+
+<OL>
+<LI>
+
+There are many programs specialised to accomplish numerical reasoning.
+Aleph is not one of them. Consider parametric techniques,
+regression trees etc. The ILP program <STRONG>FORS</STRONG> is an example of an
+ILP program particularly suited to perform regression like tasks
+(see A. Karalic and I. Bratko (1997), <EM>First-Order Regression</EM>,
+Machine Learning, 26:147-176). The program <STRONG>SRT</STRONG> is a first-order
+variant of a regression tree builder (see S. Kramer (1996),
+<EM>Structural Regression Trees</EM>, Proc. of the 13th
+National Conference on Artificial Intelligence (AAAI-96)), and
+the program <STRONG>Tilde</STRONG> has the capability of performing regression-like
+tasks (see H. Blockeel, L. De Raedt and J. Ramon (1998),
+<EM>Top-down induction of clustering trees</EM>, Proc of the 15th International
+Conference on Machine Learning, pp 55-63). Aleph does 
+have a simple tree-based learner that can construct regression
+trees (see section <A HREF="#SEC31">Tree-based theories</A>).
+
+<LI>
+
+It is possible to attempt guesses at numerical constants that
+add additional literals to the bottom clause. An example of
+how this can be done with a predicate with multiple recall is
+in the Aleph files <CODE>guess.b</CODE>, <CODE>guess.f</CODE>, and
+<CODE>guess.n</CODE> in the <CODE>numbers</CODE> sub-directory in:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+<LI>
+
+Guessing may not always work. The problem may then be amenable to the use
+of the technique of lazy evaluation. Here an
+appropriate constant in literal Li is obtained during the search
+by calling a definition in background knowledge that calculates the
+constant by collecting bindings from pos examples that are
+entailed by the ordered clause  L0, L1, ... Li-1, and the neg
+examples inconsistent with the ordered clause L0, L1, ... Li-1 (ie
+the pos and neg examples "covered" by this clause).
+An example of how this can be done is in the Aleph files
+<CODE>ineq.b</CODE>, <CODE>ineq.f</CODE>, and <CODE>ineq.n</CODE>
+in the <CODE>numbers</CODE> sub-directory in:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+<LI>
+
+The technique of lazy evaluation can be used with more than one input
+argument and to calculate more than one constant. With several input
+arguments, values in lists of substitutions can be paired off. An example
+where it is illustrated how a line can be constructed from a picking two
+such substitution-pairs can be found in the Aleph files
+<CODE>ineq.b</CODE>, <CODE>ineq.f</CODE>, and <CODE>ineq.n</CODE>
+in the <CODE>numbers</CODE> sub-directory in:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip</A>
+
+<LI>
+
+The use of lazy evaluation, in combination with user-defined search
+specifications can result in quite powerful (and complex) clauses. In the
+file:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/mut.b">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/mut.b</A>
+
+is the background knowledge used to construct theories in a subset of
+the "mutagenesis" problem. It illustrates the call to a C function to
+compute linear regression, user-defined refinement operators, and a
+user-defined cost function that forces clauses to be scored on mean-square
+-error (rather than coverage)
+
+</OL>
+
+
+
+<H2><A ID="SEC50">On applications of Aleph</A></H2>
+<P>
+<A ID="IDX299"></A>
+
+
+
+<OL>
+<LI>
+
+Earlier incarnations of Aleph (called P-Progol) have
+been applied to a number of real-world problems.
+Prominent amongst these concern the construction of structure-activity relations
+for biological activity. In particular, the results for mutagenic and carcinogenic
+activity have received some attention.
+Also prominent has the been the use for identifying pharmacophores -- the
+three-dimensional arrangement of functional groups on small molecules
+that enables them to bind to drug targets.
+See:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/applications.html">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/applications.html</A>.
+
+<LI>
+
+Applications to problems in natural language processing have been done by
+James Cussens and others. See:
+
+<A HREF="http://www.cs.york.ac.uk/~jc/">http://www.cs.york.ac.uk/~jc/</A>
+
+</OL>
+
+
+
+<H2><A ID="SEC51">On using Aleph with other techniques</A></H2>
+<P>
+<A ID="IDX300"></A>
+
+
+
+<OL>
+<LI>
+
+There is often a significant advantage in combine the results of
+Aleph with those of established prediction methods.
+<LI>
+
+Three ways of doing this are evident:
+(a) <EM>As background knowledge.</EM> Incorporate other prediction methods as part of
+the background knowledge for Aleph. An example is the use of linear
+regression as a background knowledge;
+(b) <EM>As new features.</EM> Incorporate the results from Aleph
+into an established prediction method. An example is the conversion of Aleph
+derived alerts into "indicator" variables for linear regression; and
+(c) <EM>For outlier analysis.</EM> Use Aleph to explain only those instances
+that are inadequately modelled by established techniques. 
+An example is the use of Aleph to explain the non-linearities left
+after the linear component adequately explained by regression is
+removed.
+</OL>
+
+
+
+<H2><A ID="SEC52">On performing closed-world specialisation with Aleph</A></H2>
+<P>
+<A ID="IDX301"></A>
+
+
+
+<OL>
+<LI>
+
+Generalised Closed-World Specialisation (GCWS) is a way of obtaining
+structured theories in ILP.  Given an overgeneral clause C, GCWS specialises it
+by constructing automatically new "abnormality" predicates
+ that encode exceptions to C, exceptions to those exceptions, etc.
+<LI>
+
+A classic example is provided by the Gregorian Calendar currently in
+use in parts of the world.
+From 45 B.C.E to 1581 C.E the Holy Roman
+Empire subscribed to the Julian calendar commissioned by Julius
+Caesar. This specified that every year that was a multiple
+of $4$ would contain an intercalary day to reconcile the
+calendar with a solar year (that is, one extra day would
+be added).
+This rule is correct up to around one part in a hundred and so up until
+1582 errors could simply be treated as noise.
+In 1582 C.E  Pope Gregory XIII introduced the Gregorian
+calendar. The following corrections were implemented.
+Every fourth year would be an intercalary year except
+every hundredth year. This rule was itself to be overruled every
+four hundredth year, which would be an intercalary year. As
+a set of clauses the Gregorian calendar is:
+
+
+<PRE>
+normal(Y):-
+        not(ab0(Y)).
+ 
+ab0(Y):-
+        divisible(4,Y),
+        not(ab1(Y)).
+ 
+ab1(Y):-
+        divisible(100,Y),
+        not(ab2(Y)).
+ 
+ab2(Y):-
+        divisible(400,Y).
+
+</PRE>
+
+where <CODE>normal</CODE> is a year that does not contain an intercalary day.
+With background knowledge of <CODE>divisible/2</CODE> GCWS would automatically
+specialise the clause:
+
+
+<PRE>
+normal(Y).
+</PRE>
+
+by constructing the more elaborate theory earlier. This involves
+invention of the <CODE>ab0,ab1,ab2</CODE> predicates.
+
+<LI>
+
+See M. Bain, (1991), <EM>Experiments in non-monotonic learning</EM>, Eighth
+International Conference on Machine Learning, pp 380-384, Morgan Kaufmann, CA;
+and A. Srinivasan, S.H. Muggleton, and M. Bain (1992):
+<EM>Distinguishing Noise from Exceptions in Non-Monotonic Learning</EM>,
+Second International Workshop on ILP, for more details of GCWS.
+
+<LI>
+
+The way to use GCWS within Aleph is as follows. First try to learn
+a clause in the standard manner (that is using the <CODE>sat</CODE> and <CODE>reduce</CODE>
+commands). If no acceptable clause is found, decrease the minimum accuracy
+of acceptable clauses (by setting <CODE>minacc</CODE> or <CODE>noise</CODE>). Now do the
+search again. You will probably get an overgeneral clause (that is, one that
+covers more negative examples than preferrable). Now use the <CODE>sphyp</CODE>
+command to specialise this hypothesis. Aleph will repeatedly create
+examples for new abnormality predicates and generalise them until the original
+overgeneral clause does not cover any negative examples. You can then elect
+to add this theory by using the <CODE>addgcws</CODE> command.
+
+<LI>
+
+The implementation of
+GCWS within Aleph is relatively inefficient as it requires creating
+new examples for the abnormality predicates on disk.
+
+</OL>
+
+
+
+<H2><A ID="SEC53">On some basic ideas relevant to ILP</A></H2>
+<P>
+<A ID="IDX302"></A>
+ 
+
+<OL>
+ 
+<LI>
+
+Some basic ideas relevant ILP can be found at:
+
+<A HREF="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/basic.html">http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/basic.html</A>
+
+</OL>
+
+
+
+<H1><A ID="SEC54">Change Logs</A></H1>
+<P>
+<A ID="IDX303"></A>
+ 
+ 
+
+
+<H2><A ID="SEC55">Changes in Version 1</A></H2>
+
+
+<UL>
+<LI>
+
+<STRONG>Wed Nov 10 10:15:44 GMT 1999:</STRONG> fixed bug in bug
+fix of Fri Oct  8 10:06:55 BST 1999.
+<LI>
+
+<STRONG>Mon Oct 25 14:06:07 BST 1999:</STRONG> minor improvement to code for
+stochastic clause selection; added mailing list info in header
+<LI>
+
+<STRONG>Fri Oct  8 10:06:55 BST 1999:</STRONG> fixed bug in <CODE>record_testclause</CODE>
+to add depth bound call to body literals.
+<LI>
+
+<STRONG>Mon Sep 20 09:50:23 BST 1999:</STRONG> fixed bug in <CODE>continue_search</CODE> for
+user defined cost function; fixed bug in stochastic clause selection that
+attempts to select more literals than present in bottom clause.
+</UL>
+
+
+
+<H2><A ID="SEC56">Changes in Version 2</A></H2>
+
+
+<UL>
+<LI>
+
+<STRONG>Fri Mar 31 17:12:52 BST 2000:</STRONG> Some
+predicates called during variable-splitting  did not account for
+change that allows arbitrary terms in mode declarations.
+Changed split_args/4 to split_args/5 to fix bug concerning
+multiple modes for the same predicate.
+<LI>
+
+<STRONG>Thu Mar 23 09:57:15 GMT 2000:</STRONG> Minor fixes. Some
+predicates called during lazy evaluation did not account for
+change that allows arbitrary terms in mode declarations.
+
+<LI>
+
+<STRONG>Fri Jan 28 14:57:32 GMT 2000:</STRONG> Arbitrary terms now
+allowed in mode declarations;  logfile no longer records date
+of trace automatically (a system call to `date' causes Yap to
+crash on some non-Unix systems -- use set(date,...) to record
+date).
+</UL>
+
+
+
+<H2><A ID="SEC57">Changes in Version 3</A></H2>
+
+
+<UL>
+<LI>
+
+<STRONG>Wed May 16 06:22:52 BST 2001:</STRONG>
+
+
+<UL>
+<LI>Changed retractall to retract_all
+
+<LI>Added check for setting(refine,user) in check_auto_refine (reported
+
+by Khalid Khan)
+<LI>Added clause to select_nextbest/2 for RefineType = user
+
+<LI>Fixed call to get_gains in reduce(_) to include StartClause
+
+when using a refinement operator
+<LI>Some calls to idb entries for last_refinement and best_refinement
+
+were incorrectly using key: "search" instead of "aleph"
+<LI>Clause in get_refine_gain and get_refine_gain1 when RefineType \= rls had
+
+variable name clash for variable E. Renamed one of these to Example
+<LI>Changed representation of gains for openlist. This is now the
+
+term [P|S] where P is the primary key and S is the secondary key.
+This used to be converted into a unique number, which required the
+setting of a base. This is no longer required and so removed
+fix_base predicate. Corresponding changes to structure for gains idb
+also implemented by including P and S as first two arguments, and
+to uniq_insert to compare using lexicographically
+<LI>Call to reduce now catches aborts and reinstates the values of
+
+any parameters saved via the use of catch/3
+<LI>Rls search type is now correctly heuristic (and not bf: reported by
+
+David Page and Khalid Khan)
+<LI>Incorporated Filip Zelezny's
+
+corrections to posonly estimate by ensuring that rm_seeds updates atoms_left
+for rand examples. 
+<LI>sample_clauses can now use probability distribution over clauselengths
+
+<LI>Reinstated search `scs' to perform stochastic clause selection
+
+(after Aleph 0 this was being done as a special case of rls before)
+<LI>Removed call to store_cover to fix problem identified by
+
+Stasinos Konstantopoulos when get_hyp_label/2
+calls covers/1 and coversn/1
+<LI>Updated manual to mirror style of Yap's manual and added patches sent
+
+by Stasinos Konstantopoulos
+</UL>
+
+<LI>
+
+<STRONG>Fri May 18 07:44:02 BST 2001:</STRONG>
+Yap was unable to parse calls of the form recorded(openlist,[[K1|K2]|_],_)
+(reported by Khalid Khan).
+Worked around by changing to recorded(openlist,[H|_],_), H= [K1|K2].
+
+<LI>
+
+<STRONG>Wed Jul 25 05:50:12 BST 2001:</STRONG>
+
+<UL>
+<LI>Changed calls to val(ArgNo,Pos). This was causing variable-splitting to fail
+
+<LI>Both input and output variables can now be split in the head literal
+
+<LI>Posonly learning now adds an SLP generator clause for each modeh declaration
+
+<LI>Modes can now contain ground terms
+
+<LI>Restored proper operation of user-defined refinement operator
+
+<LI>Added facility for time-restricted proofs
+
+<LI>Added facility for new computation rule that selects leftmost literals with
+
+	delaying
+</UL>
+
+<LI>
+
+<STRONG>Mon Mar 18 12:49:10 GMT 2002:</STRONG>
+
+<UL>
+<LI>Changed update atoms/2 to check the mode of the ground literal used to produce
+
+	the bottom clause. This means copies of ground literals can now exist,
+        if the corresponding variables are typed differently by the mode declarations.
+        This was prompted by discussions with Mark Rich. 
+<LI>continue_search/3 replaced by discontinue_search/3.
+
+<LI>Added setting for newvars. This bounds the maximum number of new variables that
+
+        can be introduced in the body of a clause
+<LI>Added code developed by Filip Zelezny
+
+        to implement randomised local search using `randomised rapid restarts'.
+<LI>Changed pos_ok/6 to check for minpos constraint for any
+
+        refinement operator r that is such that for a hypothesis H,
+        poscover(r(H)) &#60;= poscover(H). This cannot be guaranteed when
+        search = rls or refine = user. In other situations, the built-in
+        refinement operator that adds literals is used and this
+        property is holds.
+        This was prompted by discussions with James Cussens.
+<LI>Fixed bug in randomised search: rls_nextbest/4 that had args for gain/4 in
+
+	the wrong order.
+<LI>Fixed closed-world specialisation: was not checking for lazy evaluation, also
+
+        changed tmp file names to alephtmp.[fn]
+<LI>subsumes/2 renamed aleph_subsumes/2.
+
+<LI>Changes to lazy evaluation code that allows a set of input bindings
+
+	from an example. This makes multi-instance learning possible.
+<LI>Automatic general-to-specific refinement from modes now ensures that it does
+
+        not generate clauses that would succeed on prune/1 .
+<LI>Built-in local clause moves in randomised search now ensures that it does
+
+        not generate clauses that would succeed on prune/1 .
+<LI>Random sampling of clauses from hypothesis space now returns most general
+
+	clause on failure.
+<LI>Added code check_recursive_calls/0. This allows calls to the positive examples when
+
+        building the bottom clause if recursion is allowed.
+<LI>Changed covers/1 and and coversn/1 to check if being called during induce/0.
+
+<LI>Miscellaneous changes of write/1 to writeq/1.
+
+</UL>
+
+</UL>
+
+
+
+<H2><A ID="SEC58">Changes in Version 4</A></H2>
+
+
+<UL>
+<LI>
+
+<STRONG>Wed Nov 13 16:18:53 GMT 2002:</STRONG>
+
+<UL>
+<LI>Added portability to SWI-Prolog.
+
+<LI>Lazy-evaluation now creates literals identified
+
+	by numbers that are less than 0 (rather than by positive numbers
+	beyond that obtained from the bottom clause).
+<LI>Fixed error in mark_redundant_lits/2 that checked for redundant
+
+	literals in the bottom clause.
+<LI>Avoided overloading of the refine flag by introducing a
+
+	secondary flag refineop that is actually used by Aleph.
+<LI>Avoided overloading of the search flag by introducing a
+
+	secondary flag searchstrat that is actually used by Aleph.
+<LI>Removed defunct flags verbose, computation_rule.
+
+<LI>Added code symmetric_match/2 when checking for symmetric literals.
+
+<LI>Added new flags including minposfrac, minscore, mingain, prune_tree,
+
+	confidence, classes, newvars etc.
+<LI>Changed flags so that noise/minacc can co-exist. Now the
+
+	user's problem to check that these are consistent.
+<LI>Introduced new predicate find_clause/1 to perform basic
+
+	searches (this was previously done by reduce/1).
+<LI>Miscellaneous rewrites of code for checking lang_ok and newvars_ok.
+
+<LI>Miscellaneous rewrites of code for optimising clauses.
+
+<LI>Rationalised pruning code.
+
+<LI>Fixed bug in pos_ok that affected posonly mode.
+
+<LI>Added code for dealing uniformly with
+
+	plus and minus infinities in SWI and Yap.
+<LI>Added code for dealing uniformly with
+
+	alarms in SWI and Yap.
+<LI>Added code for dealing uniformly with
+
+	random number generation in SWI and Yap.
+<LI>Added code for dealing with
+
+	cputime in cygnus (from Mark Reid).
+<LI>Added code for checking flag settings and
+
+	specification of default values.
+<LI>Added code for new evaluation functions entropy, gini, wracc.
+
+<LI>Added code for new search strategy id.
+
+<LI>Added code for showing positive examples left, good clauses, constraints.
+
+<LI>Added code for calculating pos/neg cover of head of clauses. Needed
+
+	for checking minposfrac and evaluating wracc.
+<LI>Added code for write_rules/0 (from Mark Reid) and rewrote
+
+	code for reading input files to be compatible with
+	patches used by Mark Reid and Stasinos Konstantopoulos.
+<LI>Added code in auto_refine to check for tautologies.
+
+<LI>Added code to add lookahead to automatic refinement operator.
+
+<LI>Added code to check whether clauses found by induce
+
+	should be added to the background (controlled
+	by the flag updateback).
+<LI>Added code for generating random vars from normal
+
+	and chi-square distributions.
+<LI>Added code to check that clauses below minpos are not
+
+	added to the theory.
+<LI>Added code for testing theory on sets of files pointed
+
+	to be train_pos, train_neg, test_pos, and test_neg.
+<LI>Added code to store "good" clauses either in a file or in memory.
+
+<LI>Added code for Claudien-style induction of constraints in
+
+	induce_constraints.
+<LI>Added code for Tilde-style induction of trees in
+
+	induce_tree.
+<LI>Added code for McCreath-Sharma induction of modes in
+
+	induce_modes.
+<LI>Added code for generation of propositional boolean features from
+
+	good clauses.
+<LI>Removed code for list_profile/0.
+
+<LI>Removed code for probabilistic refinement operators.
+
+<LI>Removed code for doing pre-computation of background predicates.
+
+<LI>Removed code for Markov-Chain Monte-Carlo search.
+
+</UL>
+
+</UL>
+
+
+
+<H2><A ID="SEC59">Changes in Version 5</A></H2>
+
+
+<UL>
+<LI>
+
+<STRONG>Sun Mar 11 03:25:37 UTC 2007</STRONG>
+<LI>Removed Yap-specific call to erase. This was causing some
+
+	trouble with some versions of Yap.
+<LI>Added code for permuting literals in the bottom clause.
+
+<LI>Added code for negative-based reduction of bottom clause.
+
+<LI>Added code for subsampling examples.
+
+<LI>Added code for call to user-defined proof procedure along
+
+	with <CODE>proof_strategy</CODE> having the value <CODE>user</CODE>.
+<LI>Added flag for resampling.
+
+<LI><CODE>search</CODE> can now have value <CODE>false</CODE>, which
+
+	results in bottom clause being added to theory without
+	further search.
+</UL>
+
+
+<UL>
+<LI>
+
+<STRONG>Sun Jun  4 10:51:31 UTC 2006</STRONG>
+<LI>Removed cut from call_with_depth_limit/3 for SWI
+
+<LI>Fixed bug in gen_layer/2 with negated predicates
+
+<LI>Changed call to portray/1 to aleph_portray/1
+
+<LI>Included value of lookahead into automatic refinement
+
+	in get_user_refinement
+<LI>Included check for LazyOnContra in prove_examples for evalfn=posonly
+
+<LI>Ensured update_gsample correctly updates counts of rand data
+
+<LI>Corrected bug in modes/2 to get Pred before checking for modes
+
+<LI>Corrected code generated for constructing automatic refinement using modes
+
+   to account correctly for multiple mode declarations for the same predicate
+<LI>Corrected copy_modeterms to account for variables in mode declarations
+
+<LI>Added code for induce_features/0
+
+<LI>Changed tree code to allow specification of the dependent variable
+
+</UL>
+
+<LI>
+
+<STRONG>Sun Nov  6 12:49:12 UTC 2005</STRONG>
+
+<UL>
+<LI>Allow <CODE>minacc</CODE> and <CODE>noise</CODE> settings when <CODE>evalfn</CODE> is
+
+	set to <CODE>user</CODE>. Incorporated bug fixes to <CODE>get_max_negs</CODE>
+	reported by Daniel Fredouille.
+<LI>Bug fix reported by Vasili Vrubleuski for removal of commutative
+
+	literals with SWI
+<LI>Inserted code for abduction within the <CODE>induce</CODE> loop
+
+</UL>
+
+
+<UL>
+<LI>
+
+<STRONG>Sun Jun  5 05:51:32 UTC 2005</STRONG>
+
+<UL>
+<LI>Fixed miscellaneous bugs in the code.
+
+<LI>Modified code to generate features correctly
+
+</UL>
+
+<LI>
+
+<STRONG>Sun Oct 10 06:59:50 BST 2004</STRONG>
+@intemize @bullet
+<LI>Fixed code to alter odd behaviour with cut being introduced
+
+	in hypothesised clauses by altering <CODE>gen_nlitnum</CODE>.
+</UL>
+
+<LI>
+
+<STRONG>Wed Jun 30 14:38:44 BST 2004</STRONG>
+
+<UL>
+<LI>Fixed <CODE>posonly</CODE> bug by fixing typo for <CODE>gsamplesize</CODE>.
+
+</UL>
+
+<LI>
+
+<STRONG>Mon Jun  2 15:05:24 BST 2003</STRONG>
+
+<UL>
+<LI>Complete rewrite of the code to remove references to
+
+	internal databases.
+<LI>Preliminary support for concurrent operation on
+
+	shared memory machines (using Prolog threads).
+<LI>Miscellaneous bug fixes in code.
+
+</UL>
+
+<LI>
+
+<STRONG>Wed Jun 30 14:38:44 BST 2004</STRONG>
+
+<UL>
+<LI>Corrections to <CODE>best_value/4</CODE> after discussions
+
+	with James Cussens, Mark Reid and Jude Shavlik.
+<LI>Added <CODE>depth_bound_call</CODE> to cover test in
+
+	<CODE>test_file/2</CODE> (reported by James Cussens).
+<LI>Changed code to ignore settings for <CODE>noise</CODE>
+
+	and <CODE>minacc</CODE> when <CODE>evalfn</CODE> is <CODE>user</CODE>.
+<LI><CODE>discontinue_search</CODE> now fails if <CODE>evalfn</CODE> is
+
+	<CODE>user</CODE>.
+<LI>Added <CODE>interactive</CODE> flag to control interactive
+
+	construction of clauses and trees.
+<LI>Added command <CODE>induce_clauses</CODE>.
+
+<LI>Added code for constructing model trees.
+
+</UL>
+
+</UL>
+
+
+
+<H1><A ID="SEC60">Commands and Parameters Index</A></H1>
+<P>
+Jump to:
+<A HREF="#findex_a">a</A>
+-
+<A HREF="#findex_b">b</A>
+-
+<A HREF="#findex_c">c</A>
+-
+<A HREF="#findex_d">d</A>
+-
+<A HREF="#findex_e">e</A>
+-
+<A HREF="#findex_f">f</A>
+-
+<A HREF="#findex_g">g</A>
+-
+<A HREF="#findex_h">h</A>
+-
+<A HREF="#findex_i">i</A>
+-
+<A HREF="#findex_l">l</A>
+-
+<A HREF="#findex_m">m</A>
+-
+<A HREF="#findex_n">n</A>
+-
+<A HREF="#findex_o">o</A>
+-
+<A HREF="#findex_p">p</A>
+-
+<A HREF="#findex_r">r</A>
+-
+<A HREF="#findex_s">s</A>
+-
+<A HREF="#findex_t">t</A>
+-
+<A HREF="#findex_u">u</A>
+-
+<A HREF="#findex_v">v</A>
+-
+<A HREF="#findex_w">w</A>
+<P>
+<H2><A ID="findex_a">a</A></H2>
+<DIR>
+<LI><A HREF="#IDX30">abduce</A>
+<LI><A HREF="#IDX256">abducible/1</A>
+<LI><A HREF="#IDX215">accuracy</A>
+<LI><A HREF="#IDX251">addgcws/0</A>
+<LI><A HREF="#IDX249">addhyp/0</A>
+<LI><A HREF="#IDX194">ar search</A>
+</DIR>
+<H2><A ID="findex_b">b</A></H2>
+<DIR>
+<LI><A HREF="#IDX32">best</A>
+<LI><A HREF="#IDX196">bf search</A>
+<LI><A HREF="#IDX257">bottom/1</A>
+</DIR>
+<H2><A ID="findex_c">c</A></H2>
+<DIR>
+<LI><A HREF="#IDX34">caching</A>
+<LI><A HREF="#IDX36">check_redundant</A>
+<LI><A HREF="#IDX38">check_useless</A>
+<LI><A HREF="#IDX40">classes</A>
+<LI><A HREF="#IDX41">clauselength</A>
+<LI><A HREF="#IDX43">clauselength_distributionh</A>
+<LI><A HREF="#IDX45">clauses</A>
+<LI><A HREF="#IDX258">commutative/1</A>
+<LI><A HREF="#IDX217">compression</A>
+<LI><A HREF="#IDX47">condition</A>
+<LI><A HREF="#IDX49">confidence</A>
+<LI><A HREF="#IDX51">construct_bottom</A>
+<LI><A HREF="#IDX233">cost/3</A>
+<LI><A HREF="#IDX218">coverage</A>
+<LI><A HREF="#IDX252">covers/0</A>
+<LI><A HREF="#IDX253">coversn/0</A>
+</DIR>
+<H2><A ID="findex_d">d</A></H2>
+<DIR>
+<LI><A HREF="#IDX53">dependent</A>
+<LI><A HREF="#IDX55">depth</A>
+<LI><A HREF="#IDX13">determination/2</A>
+<LI><A HREF="#IDX198">df search</A>
+</DIR>
+<H2><A ID="findex_e">e</A></H2>
+<DIR>
+<LI><A HREF="#IDX219">entropy</A>
+<LI><A HREF="#IDX59">evalfn</A>
+<LI><A HREF="#IDX269">example_saturated/1</A>
+<LI><A HREF="#IDX57">explore</A>
+</DIR>
+<H2><A ID="findex_f">f</A></H2>
+<DIR>
+<LI><A HREF="#IDX235">false/0</A>, <A HREF="#IDX236">false/0</A>
+<LI><A HREF="#IDX278">feature/2</A>
+<LI><A HREF="#IDX279">features/2</A>
+</DIR>
+<H2><A HREF="#findex_g">g</A></H2>
+<DIR>
+<LI><A HREF="#IDX220">gini</A>
+<LI><A HREF="#IDX61">good</A>
+<LI><A HREF="#IDX62">goodfile</A>
+<LI><A HREF="#IDX63">gsamplesize</A>
+<LI><A HREF="#IDX283">GUI</A>
+</DIR>
+<H2><A ID="findex_h">h</A></H2>
+<DIR>
+<LI><A HREF="#IDX200">heuristic search</A>
+<LI><A HREF="#IDX277">hypothesis/3</A>
+</DIR>
+<H2><A ID="findex_i">i</A></H2>
+<DIR>
+<LI><A HREF="#IDX65">i</A>
+<LI><A HREF="#IDX202">ibs search</A>
+<LI><A HREF="#IDX204">ic search</A>
+<LI><A HREF="#IDX206">id search</A>
+<LI><A HREF="#IDX208">ils search</A>
+<LI><A HREF="#IDX19">induce/0</A>
+<LI><A HREF="#IDX187">induce_clauses/0</A>
+<LI><A HREF="#IDX190">induce_constraints/0</A>
+<LI><A HREF="#IDX184">induce_cover/0</A>
+<LI><A HREF="#IDX192">induce_features/0</A>
+<LI><A HREF="#IDX186">induce_incremental/0</A>
+<LI><A HREF="#IDX185">induce_max/0</A>
+<LI><A HREF="#IDX191">induce_modes/0</A>
+<LI><A HREF="#IDX188">induce_theory/0</A>
+<LI><A HREF="#IDX189">induce_tree/0</A>
+<LI><A HREF="#IDX67">interactive</A>
+</DIR>
+<H2><A ID="findex_l">l</A></H2>
+<DIR>
+<LI><A HREF="#IDX69">language</A>
+<LI><A HREF="#IDX221">laplace</A>
+<LI><A HREF="#IDX261">lazy_evaluate/1</A>
+<LI><A HREF="#IDX74">lazy_negs</A>
+<LI><A HREF="#IDX71">lazy_on_contradiction</A>
+<LI><A HREF="#IDX73">lazy_on_cost</A>
+<LI><A HREF="#IDX76">lookahead</A>
+</DIR>
+<H2><A ID="findex_m">m</A></H2>
+<DIR>
+<LI><A HREF="#IDX78">m</A>
+<LI><A HREF="#IDX216">m estimate (automatic m setting)</A>
+<LI><A HREF="#IDX222">m estimate (user set m)</A>
+<LI><A HREF="#IDX259">man/1</A>
+<LI><A HREF="#IDX80">max_abducibles</A>
+<LI><A HREF="#IDX82">max_features</A>
+<LI><A HREF="#IDX84">minacc</A>
+<LI><A HREF="#IDX86">mingain</A>
+<LI><A HREF="#IDX88">minpos</A>
+<LI><A HREF="#IDX90">minposfrac</A>
+<LI><A HREF="#IDX92">minscore</A>
+<LI><A HREF="#IDX10">mode/2</A>
+<LI><A HREF="#IDX275">modeb/2</A>
+<LI><A HREF="#IDX274">modeh/2</A>
+<LI><A HREF="#IDX263">model/1</A>
+<LI><A HREF="#IDX94">moves</A>
+</DIR>
+<H2><A ID="findex_n">n</A></H2>
+<DIR>
+<LI><A HREF="#IDX96">newvars</A>
+<LI><A HREF="#IDX98">nodes</A>
+<LI><A HREF="#IDX100">noise</A>
+<LI><A HREF="#IDX29">noset/0</A>
+<LI><A HREF="#IDX102">nreduce_bottom</A>
+</DIR>
+<H2><A ID="findex_o">o</A></H2>
+<DIR>
+<LI><A HREF="#IDX104">openlist</A>
+<LI><A HREF="#IDX107">optimise_clauses</A>
+</DIR>
+<H2><A ID="findex_p">p</A></H2>
+<DIR>
+<LI><A HREF="#IDX223">pbayes (pseudo-Bayes estimate)</A>
+<LI><A HREF="#IDX109">permute_bottom</A>
+<LI><A HREF="#IDX111">portray_examples</A>
+<LI><A HREF="#IDX113">portray_hypothesis</A>
+<LI><A HREF="#IDX115">portray_literals</A>
+<LI><A HREF="#IDX117">portray_search</A>
+<LI><A HREF="#IDX265">positive_only/1</A>
+<LI><A HREF="#IDX224">posonly (positive only evaluation)</A>
+<LI><A HREF="#IDX119">print</A>
+<LI><A HREF="#IDX120">proof_strategy</A>
+<LI><A HREF="#IDX122">prooftime</A>
+<LI><A HREF="#IDX272">prove/2</A>
+<LI><A HREF="#IDX231">prune/1</A>
+<LI><A HREF="#IDX124">prune_tree</A>
+</DIR>
+<H2><A ID="findex_r">r</A></H2>
+<DIR>
+<LI><A HREF="#IDX266">random/2</A>
+<LI><A HREF="#IDX248">rdhyp/0</A>
+<LI><A HREF="#IDX17">read_all/1</A>
+<LI><A HREF="#IDX126">record</A>
+<LI><A HREF="#IDX128">recordfile</A>
+<LI><A HREF="#IDX254">reduce/0</A>
+<LI><A HREF="#IDX273">redundant/2</A>
+<LI><A HREF="#IDX129">refine</A>
+<LI><A HREF="#IDX238">refine/2</A>
+<LI><A HREF="#IDX131">resample</A>
+<LI><A HREF="#IDX210">rls search</A>
+<LI><A HREF="#IDX132">rls_type</A>
+<LI><A HREF="#IDX134">rulefile</A>
+</DIR>
+<H2><A ID="findex_s">s</A></H2>
+<DIR>
+<LI><A HREF="#IDX135">samplesize</A>
+<LI><A HREF="#IDX267">sat/1</A>
+<LI><A HREF="#IDX285">Scripts</A>
+<LI><A HREF="#IDX212">scs search</A>
+<LI><A HREF="#IDX137">scs_percentile</A>
+<LI><A HREF="#IDX139">scs_prob</A>
+<LI><A HREF="#IDX141">scs_sample</A>
+<LI><A HREF="#IDX226">sd</A>
+<LI><A HREF="#IDX143">search</A>
+<LI><A HREF="#IDX145">searchtime</A>
+<LI><A HREF="#IDX27">set/2</A>
+<LI><A HREF="#IDX28">setting/2</A>
+<LI><A HREF="#IDX270">show/1</A>
+<LI><A HREF="#IDX147">skolemvars</A>
+<LI><A HREF="#IDX250">sphyp/0</A>
+<LI><A HREF="#IDX149">splitvars</A>
+<LI><A HREF="#IDX150">stage</A>
+<LI><A HREF="#IDX151">store_bottom</A>
+<LI><A HREF="#IDX152">subsample</A>
+<LI><A HREF="#IDX154">subsamplesize</A>
+<LI><A HREF="#IDX260">symmetric/1</A>
+</DIR>
+<H2><A ID="findex_t">t</A></H2>
+<DIR>
+<LI><A HREF="#IDX281">T-Reduce</A>
+<LI><A HREF="#IDX155">temperature</A>
+<LI><A HREF="#IDX24">test/4</A>
+<LI><A HREF="#IDX159">test_neg</A>
+<LI><A HREF="#IDX157">test_pos</A>
+<LI><A HREF="#IDX276">text/2</A>
+<LI><A HREF="#IDX161">threads</A>
+<LI><A HREF="#IDX165">train_neg</A>
+<LI><A HREF="#IDX163">train_pos</A>
+<LI><A HREF="#IDX167">tree_type</A>
+<LI><A HREF="#IDX169">tries</A>
+<LI><A HREF="#IDX171">typeoverlap</A>
+</DIR>
+<H2><A ID="findex_u">u</A></H2>
+<DIR>
+<LI><A HREF="#IDX172">uniform_sample</A>
+<LI><A HREF="#IDX174">updateback</A>
+<LI><A HREF="#IDX227">user (cost function)</A>
+</DIR>
+<H2><A ID="findex_v">v</A></H2>
+<DIR>
+<LI><A HREF="#IDX177">verbose</A>
+<LI><A HREF="#IDX176">verbosity</A>
+<LI><A HREF="#IDX179">version</A>
+</DIR>
+<H2><A ID="findex_w">w</A></H2>
+<DIR>
+<LI><A HREF="#IDX181">walk</A>
+<LI><A HREF="#IDX228">wracc</A>
+<LI><A HREF="#IDX22">write_rules/0</A>
+<LI><A HREF="#IDX21">write_rules/1</A>
+</DIR>
+ 
+
+
+<H1><A ID="SEC61">Concept Index</A></H1>
+<P>
+Jump to:
+<A HREF="#cindex_a">a</A>
+-
+<A HREF="#cindex_b">b</A>
+-
+<A HREF="#cindex_c">c</A>
+-
+<A HREF="#cindex_d">d</A>
+-
+<A HREF="#cindex_e">e</A>
+-
+<A HREF="#cindex_f">f</A>
+-
+<A HREF="#cindex_g">g</A>
+-
+<A HREF="#cindex_h">h</A>
+-
+<A HREF="#cindex_i">i</A>
+-
+<A HREF="#cindex_l">l</A>
+-
+<A HREF="#cindex_m">m</A>
+-
+<A HREF="#cindex_n">n</A>
+-
+<A HREF="#cindex_o">o</A>
+-
+<A HREF="#cindex_p">p</A>
+-
+<A HREF="#cindex_r">r</A>
+-
+<A HREF="#cindex_s">s</A>
+-
+<A HREF="#cindex_t">t</A>
+-
+<A HREF="#cindex_u">u</A>
+-
+<A HREF="#cindex_v">v</A>
+-
+<A HREF="#cindex_w">w</A>
+<P>
+<H2><A ID="cindex_a">a</A></H2>
+<DIR>
+<LI><A HREF="#IDX246">Abductive learning</A>
+<LI><A HREF="#IDX175">Adding induced clauses to background</A>
+<LI><A HREF="#IDX31">Allowing abduction</A>
+<LI><A HREF="#IDX299">Applications of Aleph</A>
+<LI><A HREF="#IDX195">Association rule search</A>
+<LI><A HREF="#IDX289">Avoiding predicate-name clashes</A>
+</DIR>
+<H2><A ID="cindex_b">b</A></H2>
+<DIR>
+<LI><A HREF="#IDX8">Background knowledge file</A>
+<LI><A HREF="#IDX3">Basic algorithm</A>
+<LI><A HREF="#IDX106">Beam search</A>
+<LI><A HREF="#IDX197">Breadth-first search strategy</A>
+</DIR>
+<H2><A ID="cindex_c">c</A></H2>
+<DIR>
+<LI><A HREF="#IDX35">Caching clause coverage</A>
+<LI><A HREF="#IDX293">Categorisation of parameters</A>
+<LI><A HREF="#IDX303">Changes in versions</A>
+<LI><A HREF="#IDX60">Changing the evaluation function</A>
+<LI><A HREF="#IDX121">Changing the proof strategy</A>
+<LI><A HREF="#IDX123">Changing the proof time</A>
+<LI><A HREF="#IDX144">Changing the search</A>
+<LI><A HREF="#IDX288">Choice of Aleph</A>
+<LI><A HREF="#IDX42">Clause length restriction</A>
+<LI><A HREF="#IDX108">Clause optimisations</A>
+<LI><A HREF="#IDX142">Clauses sampled in stochastic clause selection</A>
+<LI><A HREF="#IDX48">Conditioning random sample</A>
+<LI><A HREF="#IDX50">Confidence for tree pruning</A>
+<LI><A HREF="#IDX244">Constraint learning</A>
+<LI><A HREF="#IDX234">Constraint specification</A>
+<LI><A HREF="#IDX18">Constructing a theory</A>
+<LI><A HREF="#IDX232">Cost specification</A>
+</DIR>
+<H2><A ID="cindex_d">d</A></H2>
+<DIR>
+<LI><A HREF="#IDX54">Dependent variable argument</A>
+<LI><A HREF="#IDX199">Depth-first search strategy</A>
+<LI><A HREF="#IDX12">Determinations</A>
+<LI><A HREF="#IDX292">Different ways for theory-construction</A>
+<LI><A HREF="#IDX44">Distribution over clauselengths</A>
+</DIR>
+<H2><A ID="cindex_e">e</A></H2>
+<DIR>
+<LI><A HREF="#IDX153">Evaluate examples on a sample of examples</A>
+<LI><A HREF="#IDX23">Evaluating a theory</A>
+<LI><A HREF="#IDX214">Evaluation functions</A>
+<LI><A HREF="#IDX25">Example files</A>
+<LI><A HREF="#IDX58">Exploratory mode</A>
+</DIR>
+<H2><A ID="cindex_f">f</A></H2>
+<DIR>
+<LI><A HREF="#IDX247">Feature Construction</A>
+</DIR>
+<H2><A ID="cindex_g">g</A></H2>
+<DIR>
+<LI><A HREF="#IDX301">Generalised Closed World Specialisation (GCWS)</A>
+<LI><A HREF="#IDX6">Getting started with Aleph</A>
+<LI><A HREF="#IDX138">Good clauses in stochastic clause selection</A>
+<LI><A HREF="#IDX284">Graphical interface</A>
+<LI><A HREF="#IDX105">Greedy search</A>
+</DIR>
+<H2><A ID="cindex_h">h</A></H2>
+<DIR>
+<LI><A HREF="#IDX201">Heuristic search strategy</A>
+</DIR>
+<H2><A ID="cindex_i">i</A></H2>
+<DIR>
+<LI><A HREF="#IDX302">ILP ideas</A>
+<LI><A HREF="#IDX294">Implementation of single-clause search</A>
+<LI><A HREF="#IDX241">Incremental Learning</A>
+<LI><A HREF="#IDX205">Integrity constraints search</A>
+<LI><A HREF="#IDX68">Interactive theory construction</A>
+<LI><A HREF="#IDX291">Interactive use of Aleph</A>
+<LI><A HREF="#IDX203">Iterative beam search strategy</A>
+<LI><A HREF="#IDX207">Iterative deepening search</A>
+<LI><A HREF="#IDX209">Iterative language search strategy</A>
+</DIR>
+<H2><A ID="cindex_l">l</A></H2>
+<DIR>
+<LI><A HREF="#IDX70">Language restriction</A>
+<LI><A HREF="#IDX52">Lazy bottom clause generation</A>
+<LI><A HREF="#IDX72">Lazy coverage evaluation</A>
+<LI><A HREF="#IDX262">Lazy evaluation</A>
+<LI><A HREF="#IDX75">Lazy negative coverage evaluation</A>
+<LI><A HREF="#IDX7">Loading Aleph</A>
+<LI><A HREF="#IDX77">Lookahead for refinement</A>
+</DIR>
+<H2><A ID="cindex_m">m</A></H2>
+<DIR>
+<LI><A HREF="#IDX79">M estimation</A>
+<LI><A HREF="#IDX2">Manual usage</A>
+<LI><A HREF="#IDX46">Maximum clauses for theory-level search</A>
+<LI><A HREF="#IDX97">Maximum existential variables</A>
+<LI><A HREF="#IDX101">Maximum negative coverage</A>
+<LI><A HREF="#IDX99">Maximum nodes searched</A>
+<LI><A HREF="#IDX81">Maximum number of abducibles</A>
+<LI><A HREF="#IDX83">Maximum number of features</A>
+<LI><A HREF="#IDX85">Minimum clause accuracy</A>
+<LI><A HREF="#IDX93">Minimum clause utility</A>
+<LI><A HREF="#IDX91">Minimum fractional positive coverage</A>
+<LI><A HREF="#IDX87">Minimum gain</A>
+<LI><A HREF="#IDX89">Minimum positive coverage</A>
+<LI><A HREF="#IDX9">Mode declarations</A>
+<LI><A HREF="#IDX245">Mode learning</A>
+<LI><A HREF="#IDX264">Model tree construction</A>
+<LI><A HREF="#IDX95">Moves for randomised search</A>
+</DIR>
+<H2><A ID="cindex_n">n</A></H2>
+<DIR>
+<LI><A HREF="#IDX103">Negative example based reduction of bottom clause</A>
+<LI><A HREF="#IDX15">Negative examples file</A>
+<LI><A HREF="#IDX160">Negative examples for testing</A>
+<LI><A HREF="#IDX166">Negative examples for training</A>
+<LI><A HREF="#IDX287">Notes</A>
+<LI><A HREF="#IDX162">Number of concurrent threads</A>
+<LI><A HREF="#IDX298">Numerical reasoning with Aleph</A>
+</DIR>
+<H2><A ID="cindex_o">o</A></H2>
+<DIR>
+<LI><A HREF="#IDX1">Obtaining Aleph</A>
+</DIR>
+<H2><A ID="cindex_p">p</A></H2>
+<DIR>
+<LI><A HREF="#IDX110">Permute order of negative literals in bottom clause</A>
+<LI><A HREF="#IDX297">Portrayal of hypotheses and search</A>
+<LI><A HREF="#IDX14">Positive examples file</A>
+<LI><A HREF="#IDX158">Positive examples for testing</A>
+<LI><A HREF="#IDX164">Positive examples for training</A>
+<LI><A HREF="#IDX225">Positive-only learning</A>
+<LI><A HREF="#IDX112">Pretty printing of examples</A>
+<LI><A HREF="#IDX114">Pretty printing of hypothesis</A>
+<LI><A HREF="#IDX116">Pretty printing of literals</A>
+<LI><A HREF="#IDX118">Pretty printing of search</A>
+<LI><A HREF="#IDX140">Probability of selecting a good clause in stochastic clause selection</A>
+<LI><A HREF="#IDX230">Pruning</A>
+<LI><A HREF="#IDX125">Pruning for tree learning</A>
+</DIR>
+<H2><A ID="cindex_r">r</A></H2>
+<DIR>
+<LI><A HREF="#IDX64">Random sample size</A>
+<LI><A HREF="#IDX182">Random walk probability for Walksat</A>
+<LI><A HREF="#IDX211">Randomised search</A>, <A HREF="#IDX240">Randomised search</A>
+<LI><A HREF="#IDX133">Randomised search types</A>
+<LI><A HREF="#IDX16">Reading input files</A>
+<LI><A HREF="#IDX255">Reducing a single bottom clause</A>
+<LI><A HREF="#IDX295">Reducing the search space</A>
+<LI><A HREF="#IDX5">Reduction</A>
+<LI><A HREF="#IDX37">Redundancy check</A>
+<LI><A HREF="#IDX237">Refinement operator specification</A>
+<LI><A HREF="#IDX130">Refinement operator types</A>
+<LI><A HREF="#IDX280">Related versions and programs</A>
+<LI><A HREF="#IDX170">Restarts for randomised search</A>
+<LI><A HREF="#IDX290">Role of the bottom clause</A>
+</DIR>
+<H2><A ID="cindex_s">s</A></H2>
+<DIR>
+<LI><A HREF="#IDX136">Samples greater than 1</A>
+<LI><A HREF="#IDX268">Saturating a single example</A>
+<LI><A HREF="#IDX4">Saturation</A>
+<LI><A HREF="#IDX20">Saving a theory</A>
+<LI><A HREF="#IDX183">Search commands and options</A>
+<LI><A HREF="#IDX193">Search strategies</A>
+<LI><A HREF="#IDX33">Setting a minimum score</A>
+<LI><A HREF="#IDX26">Setting parameter values</A>
+<LI><A HREF="#IDX271">Show things</A>
+<LI><A HREF="#IDX148">Skolem variable numbering in examples</A>
+<LI><A HREF="#IDX239">Specific-to-general search</A>
+<LI><A HREF="#IDX213">Stochastic clause selection</A>
+</DIR>
+<H2><A ID="cindex_t">t</A></H2>
+<DIR>
+<LI><A HREF="#IDX282">T-Reduce</A>
+<LI><A HREF="#IDX156">Temperature for simulated annealing</A>
+<LI><A HREF="#IDX56">Theorem-proving depth</A>
+<LI><A HREF="#IDX242">Theory-level search</A>
+<LI><A HREF="#IDX146">Time bounded search</A>
+<LI><A HREF="#IDX168">Tree type</A>
+<LI><A HREF="#IDX243">Tree-based theories</A>
+<LI><A HREF="#IDX11">Type specifications</A>
+</DIR>
+<H2><A ID="cindex_u">u</A></H2>
+<DIR>
+<LI><A HREF="#IDX173">Uniform sampling from clause space</A>
+<LI><A HREF="#IDX286">Useful scripts</A>
+<LI><A HREF="#IDX39">Useless literals in bottom</A>
+<LI><A HREF="#IDX300">Using Aleph with other techniques</A>
+<LI><A HREF="#IDX296">Using fewer examples</A>
+</DIR>
+<H2><A ID="cindex_v">v</A></H2>
+<DIR>
+<LI><A HREF="#IDX66">Variable chain depth</A>
+<LI><A HREF="#IDX178">Verbosity</A>
+<LI><A HREF="#IDX180">Version</A>
+</DIR>
+<H2><A ID="cindex_w">w</A></H2>
+<DIR>
+<LI><A HREF="#IDX229">Weighted relative accuracy.</A>
+<LI><A HREF="#IDX127">Writing trace to a file</A>
+</DIR>
+ </body>
+</html>

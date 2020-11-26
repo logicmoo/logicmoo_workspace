@@ -1,0 +1,12 @@
+(note "existential instantiation soundness check")
+
+(thereExists ?X ( FF ?X ) )
+
+( queryyn (FF a ) )
+
+(answer Unproven)
+
+(end_of_file)
+
+
+

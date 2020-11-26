@@ -1,0 +1,13 @@
+
+(note TQA113)
+
+(statementOfPurpose OAPEC "to promote cooperation in the petroleum industry") 
+
+(query (findall ?PURPOSE   (statementOfPurpose OAPEC ?PURPOSE) ) )
+
+(answer "to promote cooperation in the petroleum industry" )
+
+(end_of_file)
+
+
+

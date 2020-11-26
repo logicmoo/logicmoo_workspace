@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Prolog Connector UI Tests
+Bundle-SymbolicName: org.cs3.prolog.connector.ui.tests
+Bundle-Version: 3.2.0.qualifier
+Require-Bundle: org.cs3.pdt.connector,
+ org.junit
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

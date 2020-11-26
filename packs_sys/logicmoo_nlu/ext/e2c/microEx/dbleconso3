@@ -1,0 +1,11 @@
+
+$ repeat(0,_) :- !.
+$ repeat(N,B) :- call(B), minus(N,1,N1), repeat(N1,B).
+
+$ proc1([X|L]) :- repeat(5,write(X)), freeze(L,proc1(L)).
+
+$ proc2([X|L]) :- repeat(5,write(oh)), nl, freeze(L,proc2(L)).
+
+$ produce(N,[N|L]) :- plus(N,1,N1), produce(N1,L).
+
+$ go :- freeze(L,proc1(L)), freeze(L,proc2(L)), produce(1,L).

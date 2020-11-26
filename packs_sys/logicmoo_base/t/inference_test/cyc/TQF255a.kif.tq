@@ -1,0 +1,204 @@
+(note TQF255a)
+
+
+(agent Y2Stage4-AgreementToHoldJointExercises UnitedStatesOfAmerica) 
+
+(eventOutcomes Y2Stage4-IranIncreasesTroopsOnAbuMusa Y2Stage4-AgreementToHoldJointExercises) 
+
+(formulaImplies 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (eventOccursAt ?EXERCISE PersianGulf) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil))) 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil) 
+ (eventOccursAt ?EXERCISE PersianGulf)))) 
+
+(topicOfInfoTransfer Y2Stage4-AgreementToHoldJointExercises 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (eventOccursAt ?EXERCISE PersianGulf) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil)))) 
+
+(agent Y2Stage4-AgreementToHoldJointExercises GulfCooperationCouncil) 
+
+(instance Y2Stage4-AgreementToHoldJointExercises MakingAnAgreement) 
+
+(implies 
+ (and 
+ (instance ?SIT Process) 
+ (inReactionTo ?ACT ?SIT)) 
+ (eventOutcomes ?SIT ?ACT)) 
+
+(instance Y2Stage4-IranIncreasesTroopsOnAbuMusa Process) 
+
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Stage4-IranIncreasesTroopsOnAbuMusa) 
+
+(agent Y2Stage4-AgreementToHoldJointExercises UnitedStatesOfAmerica) 
+
+(instance Y2Stage3-TruckBombingInRiyadh Process) 
+
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Stage3-TruckBombingInRiyadh) 
+
+(formulaImplies 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (eventOccursAt ?EXERCISE PersianGulf) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil))) 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil) 
+ (eventOccursAt ?EXERCISE PersianGulf)))) 
+
+(topicOfInfoTransfer Y2Stage4-AgreementToHoldJointExercises 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (eventOccursAt ?EXERCISE PersianGulf) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil)))) 
+
+(agent Y2Stage4-AgreementToHoldJointExercises GulfCooperationCouncil) 
+
+(instance Y2Stage4-AgreementToHoldJointExercises MakingAnAgreement) 
+
+(implies 
+ (and 
+ (instance ?SIT Process) 
+ (inReactionTo ?ACT ?SIT)) 
+ (eventOutcomes ?SIT ?ACT)) 
+
+(agent Y2Stage4-AgreementToHoldJointExercises UnitedStatesOfAmerica) 
+
+(instance Y2Stage3-TerroristAttack Process) 
+
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Stage3-TerroristAttack) 
+
+(formulaImplies 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (eventOccursAt ?EXERCISE PersianGulf) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil))) 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil) 
+ (eventOccursAt ?EXERCISE PersianGulf)))) 
+
+(topicOfInfoTransfer Y2Stage4-AgreementToHoldJointExercises 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (eventOccursAt ?EXERCISE PersianGulf) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil)))) 
+
+(agent Y2Stage4-AgreementToHoldJointExercises GulfCooperationCouncil) 
+
+(instance Y2Stage4-AgreementToHoldJointExercises MakingAnAgreement) 
+
+(implies 
+ (and 
+ (instance ?SIT Process) 
+ (inReactionTo ?ACT ?SIT)) 
+ (eventOutcomes ?SIT ?ACT)) 
+
+(agent Y2Stage4-AgreementToHoldJointExercises UnitedStatesOfAmerica) 
+
+(eventOutcomes Y2Scenario-IranianNavalExercise Y2Stage4-AgreementToHoldJointExercises) 
+
+(formulaImplies 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (eventOccursAt ?EXERCISE PersianGulf) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil))) 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil) 
+ (eventOccursAt ?EXERCISE PersianGulf)))) 
+
+(topicOfInfoTransfer Y2Stage4-AgreementToHoldJointExercises 
+ (thereExists ?EXERCISE 
+ (and 
+ (instance ?EXERCISE MilitaryExercise) 
+ (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+ (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+ (eventOccursAt ?EXERCISE PersianGulf) 
+ (directingAgent ?EXERCISE GulfCooperationCouncil)))) 
+
+(agent Y2Stage4-AgreementToHoldJointExercises GulfCooperationCouncil) 
+
+(instance Y2Stage4-AgreementToHoldJointExercises MakingAnAgreement) 
+
+(implies 
+ (and 
+ (instance ?SIT Process) 
+ (inReactionTo ?ACT ?SIT)) 
+ (eventOutcomes ?SIT ?ACT)) 
+
+(instance Y2Scenario-IranianNavalExercise Process) 
+
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Scenario-IranianNavalExercise) 
+
+
+(query (findall (?EARLIER-EVENT)
+
+(ist Y2Scenario-AllStagesMt 
+(exists 
+(?PROP) 
+(exists 
+(?EVENT) 
+(and 
+(instance ?EVENT MakingAnAgreement) 
+(agent ?EVENT UnitedStatesOfAmerica) 
+(agent ?EVENT GulfCooperationCouncil) 
+(topicOfInfoTransfer ?EVENT ?PROP) 
+(formulaImplies ?PROP 
+(exists 
+(?EXERCISE) 
+(and 
+(instance ?EXERCISE MilitaryExercise) 
+(directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+(eventOccursAt ?EXERCISE PersianGulf) 
+(directingAgent ?EXERCISE GulfCooperationCouncil)))) 
+(eventOutcomes ?EARLIER-EVENT ?EVENT)))))
+
+))
+
+(answer Y2Stage4-IranIncreasesTroopsOnAbuMusa
+)
+(answer Y2Stage3-TruckBombingInRiyadh
+)
+(answer Y2Stage3-TerroristAttack
+
+)
+(answer Y2Scenario-IranianNavalExercise
+)
+
+(end_of_file)
+

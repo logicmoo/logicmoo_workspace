@@ -1,0 +1,6 @@
+:- ['~/.plrc'].
+:- [chat].
+:- guitracer.
+
+t :-
+	trace, test_chat.

@@ -1,0 +1,62 @@
+planner_task(1, 
+       [se(rocket,r2,[position(r2,paris)]), 
+        se(cargo,c2,[at(c2,london)])],
+
+       [ss(cargo,c1,[at(c1,london)]),
+        ss(cargo,c2,[at(c2,paris)]),
+        ss(cargo,c3,[at(c3,london)]),
+        ss(cargo,c4,[at(c4,paris)]),
+        ss(rocket,r1,[position(r1,paris), fuel_full(r1)]),
+        ss(rocket,r2,[position(r2,london), fuel_full(r2)])
+       ] ).
+
+planner_task(2, 
+       [se(cargo,c2,[at(c2,paris)])],
+
+       [ ss(cargo,c1,[at(c1,jfk)]),
+         ss(cargo,c2,[at(c2,london)]),
+         ss(cargo,c3,[at(c3,paris)]),
+         ss(cargo,c4,[at(c4,london)]),
+         ss(rocket,r1,[position(r1,paris), fuel_full(r1)]),
+         ss(rocket,r2,[position(r2,london), fuel_full(r2)])
+       ] ).
+
+planner_task(3, 
+       [se(cargo,c1,[at(c1,jfk)]), 
+        se(cargo,c3,[at(c3,jfk)])],
+
+       [ ss(cargo,c1,[at(c1,paris)]),
+         ss(cargo,c2,[at(c2,london)]),
+         ss(cargo,c3,[at(c3,london)]),
+         ss(cargo,c4,[at(c4,jfk)]),
+         ss(rocket,r1,[position(r1,paris), fuel_full(r1)]),
+         ss(rocket,r2,[position(r2,london), fuel_full(r2)])
+       ] ).
+
+planner_task(4, 
+       [se(cargo,c1,[at(c1,jfk)]), 
+        se(cargo,c2,[at(c2,paris)])],
+
+       [ ss(cargo,c1,[at(c1,london)]),
+         ss(cargo,c2,[at(c2,london)]),
+         ss(cargo,c3,[at(c3,london)]),
+         ss(cargo,c4,[at(c4,jfk)]),
+         ss(rocket,r1,[position(r1,london), fuel_full(r1)]),
+         ss(rocket,r2,[position(r2,london), fuel_full(r2)])
+       ] ).
+
+
+planner_task(5, 
+       [se(cargo,c1,[at(c1,jfk)]), 
+        se(cargo,c2,[at(c2,paris)]),
+        se(cargo,c3,[at(c3,jfk)]), 
+        se(cargo,c4,[at(c4,paris)])],
+
+       [ ss(cargo,c1,[at(c1,london)]),
+         ss(cargo,c2,[at(c2,london)]),
+         ss(cargo,c3,[at(c3,london)]),
+         ss(cargo,c4,[at(c4,london)]),
+         ss(rocket,r1,[position(r1,london), fuel_full(r1)]),
+         ss(rocket,r2,[position(r2,london), fuel_full(r2)])
+       ] ).
+

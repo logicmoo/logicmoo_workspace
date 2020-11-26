@@ -1,0 +1,73 @@
+#!/usr/bin/env swipl
+%
+%  PFC is ':A' language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Still amodule scoping bug?
+%  was_module(y_p_x_t,[]).
+
+:- include(test_header).
+
+n3(':A',p,':B').
+n3(':B',p,':C'). 
+n3(':C',p,':D').
+n3(':D',p,':C'). 
+n3(':C',p,':B').
+n3(':B',p,':A').
+
+:- mpred_trace_exec.
+
+n3(X,p,Z) <- n3(Z,p,Y),n3(Y,p,X).
+
+:- mpred_why_all(n3(_What,p,':A')).
+
+
+
+/*
+Expected:
+
+n3(':A',p,':A').
+n3(':B',p,':A').
+n3(':C',p,':A').
+n3(':D',p,':A').
+
+*/
+
+end_of_file.
+
+oops at regression.. getting one extra result
+
+
+
+
+
+root@gitlab:/home/prologmud_server/lib/swipl/pack/pfc/n3/sanity_base# swipl -f y_p_x_bwc.pfc
+% /home/prologmud_server/lib/swipl/pack/pfc/n3/sanity_base/y_p_x_bwc.pfc:22
+% mpred_fwc1((n3(_56492, p, _56496)<-n3(_56496, p, _56510), n3(_56510, p, _56492))).
+% mpred_fwc1(bct(n3(_10898, p, _10902), pt(n3(_10902, p, _10916), pt(n3(_10916, p, _10898), rhs([n3(_10898, p, _10902)]))))).
+%       Found positive trigger: bct(n3(_1702,p,_1706),pt(n3(_1706,p,_1720),pt(n3(_1720,p,_1702),rhs([n3(_1702,p,_1706)]))))
+%               body: nonvar(n3(_1702,p,_1706))*->rhs([(n3(_1702,p,_1706):-mpred_bc_only(n3(_1702,p,_1706)))])
+%       RHS-Post1: n3(_1702,p,_1706):-mpred_bc_only(n3(_1702,p,_1706))
+%       Support: bct(n3(_1510,p,_1514),pt(n3(_1514,p,_1528),pt(n3(_1528,p,_1510),rhs([n3(_1510,p,_1514)])))),pt(bct(n3(_1702,p,_1706),pt(n3(_1706,p,_1720),pt(n3(_1720,p,_1702),rhs([n3(_1702,p,_1706)])))),(nonvar(n3(_1702,p,_1706))*->rhs([(n3(_1702,p,_1706):-mpred_bc_only(n3(_1702,p,_1706)))])))
+n3(':B', p, ':A').
+% /home/prologmud_server/lib/swipl/pack/pfc/n3/sanity_base/y_p_x_bwc.pfc:24
+% mpred_fwc1(n3(':C', p, ':A')).
+n3(':C', p, ':A').
+% mpred_fwc1(n3(':A', p, ':A')).
+n3(':A', p, ':A').
+% mpred_fwc1(n3(':B', p, ':B')).
+n3(':B', p, ':A').
+% mpred_fwc1(n3(':B', p, ':D')).
+% mpred_fwc1(n3(':D', p, ':A')).
+n3(':D', p, ':A').
+% mpred_fwc1(n3(':A', p, ':C')).
+% mpred_fwc1(n3(':A', p, ':D')).
+
+ /* found 5 for n3(_320,p,':A').
+ */
+% init_why(after('/home/prologmud_server/lib/swipl/pack/pfc/n3/sanity_base/y_p_x_bwc.pfc')).
+% init_why(program).
+?-
+

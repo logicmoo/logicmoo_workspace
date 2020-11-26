@@ -1,0 +1,130 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+Hierarchical Models
+===================
+In this notebook we translate into Probabilistic Logic Programming the Figaro example from Section 6.1.2 of [A. Pfeffer, Practical Probabilistic Programming](https://www.manning.com/books/practical-probabilistic-programming), pages 177-178.
+</div>
+
+<div class="nb-cell html" name="htm1">
+<p>Author: <a href="mailto:damiano.azzolini@student.unife.it">Damiano Azzolini</a></p>
+</div>
+
+<div class="nb-cell markdown" name="md7">
+Suppose you have a toss of coin, which is one of many coins in a bag, which is one of many bag in a box and each coin into the bag could be biased or not: how to compute the coin average bias and the average fairness probability? In this example the coin's bias depends on a property of the bag: some of the coins are fair (so 50% heads and 50% tails) and some are biased. The bag has a property that represents the probability that any given coin in the bag will be fair. This problem can be represented with a Bayesian network with three layers, one for each level of hierarchy: the first level represents the bag, the second the coins in the bag and the third the tosses (different coin could have different tosses).
+</div>
+
+<div class="nb-cell program" name="p1">
+:- use_rendering(graphviz).
+</div>
+
+<div class="nb-cell query" name="q1">
+X = dot("digraph G { 
+         FairProbability-&gt;Bias1;
+         FairProbability-&gt;Bias2;
+         FairProbability-&gt;Bias3;
+         FairProbability-&gt;Bias4;
+         Bias1-&gt;Toss11;
+         Bias1-&gt;Toss12;
+         Bias1-&gt;Toss13;
+         Bias1-&gt;Toss14;
+         Bias2-&gt;Toss21;
+         Bias3-&gt;Toss31;
+         Bias3-&gt;Toss32;
+         Bias3-&gt;Toss33;
+         Bias3-&gt;Toss34;
+         Bias4-&gt;Toss41;
+         Bias4-&gt;Toss42;
+         Bias4-&gt;Toss43;
+         }").
+</div>
+
+<div class="nb-cell markdown" name="md6">
+Performing Inference
+--------------------
+We use mc_lw_expectation(Query,Evidence,N,Arg,Exp) that computes the expected value of =Arg= in =Query= given that =Evidence= is true. It takes N samples of Arg in Query, weighting each according to the evidence, and returns their weighted average.
+
+We can compute the average fairness probability with
+</div>
+
+<div class="nb-cell query" name="q2">
+mc_lw_expectation(fairProb(P),previous_tosses([[h,t,h,h,t],
+  [h],[t,h,h,h],[h,h,t]]),1000,P,FP).
+</div>
+
+<div class="nb-cell markdown" name="md5">
+and the fourth coin average bias with
+</div>
+
+<div class="nb-cell query" name="q3">
+mc_lw_expectation(real_bias(1,P),previous_tosses([[h,t,h,h,t],
+  [h],[t,h,h,h],[h,h,t]]),1000,P,B).
+</div>
+
+<div class="nb-cell markdown" name="md8">
+Code
+----
+</div>
+
+<div class="nb-cell program" data-background="true" name="p3">
+:- use_module(library(mcintyre)).
+
+:- mc.
+
+:- begin_lpad.
+
+flip(h,P,C,NT):P; flip(t,P,C,NT):1-P.
+bias(_,X): beta(X,2,5).
+fairProb(X): uniform(X,0.0,1.0).
+is_fair(C,P):P;is_biased(C,P):1-P.
+</div>
+
+<div class="nb-cell markdown" name="md3">
+In this example the bias =bias/2= follows a beta distribution with parameters 2 and 5 and the fair probability =fairProb/1= is given by an uniform distribution with parameters 0.0 and 1.0.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p2">
+real_bias(C,Bias):-
+  fairProb(PFair),
+  real_bias_fp(C,PFair,Bias).
+
+real_bias_fp(C,P,0.5):-
+  is_fair(C,P).
+
+real_bias_fp(C,P,Bias):-
+  is_biased(C,P),
+  bias(C,Bias).
+
+
+previous_tosses(Tosses):-
+    previous_tosses_coins(Tosses,1).
+
+previous_tosses_coins([],_).
+previous_tosses_coins([H|T],C):-
+    real_bias(C,Bias),
+    tosses(H,C,1,Bias),
+    C1 is C+1,
+    previous_tosses_coins(T,C1).
+
+tosses([],_C,_NT,_Bias).
+tosses([H|T],C,NT,Bias):-
+    flip(H,Bias,C,NT),
+    NT1 is NT+1,
+    tosses(T,C,NT1,Bias).
+
+
+:- end_lpad.
+</div>
+
+<div class="nb-cell markdown" name="md4">
+=previous_tosses/1= has a list of lists of tosses as input: each sublist represents a different coin and contains the results of consecutive tosses. 
+
+=previous_tosses_coins/2= checks for each coin if it's fair or biased, using the predicate =real_bias/2=, then analyzes every single toss using =tosses/4=. 
+
+=real_bias/2= checks if the coin is biased or not, assuming that the distribution of biased coins into the bags follows a normal distribution. If the coin is fair, it has 50% of probability to land heads and 50% tails; if it's biased, the probability of heads is given by a beta distribution with parameters 2 and 5, and this probability represents its bias. 
+
+=tosses/4= computes the probability of heads or tail using =flip/4=: the coin will land heads with probability equal to bias and tails with probability 1 - bias.
+</div>
+
+</div>
+

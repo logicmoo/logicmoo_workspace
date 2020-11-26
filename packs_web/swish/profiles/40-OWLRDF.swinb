@@ -1,0 +1,57 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+This notebook uses the OWL/RDF Syntax
+</div>
+
+<div class="nb-cell program" data-background="true" data-singleline="true">
+:- use_module(library(trill)).
+
+:- trill. % or :- trillp. or :- tornado.
+
+owl_rdf('
+&lt;?xml version="1.0"?&gt;<br />
+<br />
+&lt;!DOCTYPE rdf:RDF [<br />
+    &lt;!ENTITY owl "http://www.w3.org/2002/07/owl#" &gt;<br />
+    &lt;!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" &gt;<br />
+    &lt;!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" &gt;<br />
+    &lt;!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" &gt;<br />
+    &lt;!ENTITY disponte "https://sites.google.com/a/unife.it/ml/disponte#" &gt;<br />
+]&gt;<br />
+<br />
+<br />
+&lt;rdf:RDF xmlns="http://here.the.IRI.of.your.ontology#"<br />
+     xml:base="http://here.the.IRI.of.your.ontology"<br />
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"<br />
+     xmlns:owl="http://www.w3.org/2002/07/owl#"<br />
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"<br />
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"<br />
+     xmlns:disponte="https://sites.google.com/a/unife.it/ml/disponte#"&gt;<br />
+    &lt;owl:Ontology rdf:about="http://here.the.IRI.of.your.ontology"/&gt;<br />
+    <br />
+<br />
+<br />
+    &lt;!-- <br />
+    ///////////////////////////////////////////////////////////////////////////////////////<br />
+    //<br />
+    // Annotation properties<br />
+    //<br />
+    ///////////////////////////////////////////////////////////////////////////////////////<br />
+     --&gt;<br />
+<br />
+    <br />
+<br />
+<br />
+    &lt;!-- https://sites.google.com/a/unife.it/ml/disponte#probability --&gt;<br />
+<br />
+    &lt;owl:AnnotationProperty rdf:about="&amp;disponte;probability"/&gt;<br />
+<br />
+&lt;/rdf:RDF&gt;
+').
+</div>
+
+<div class="nb-cell query">
+</div>
+
+</div>

@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#"
+     xml:base="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:untitled-ontology-24="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#s -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#s"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#a -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#a">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#s"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#c"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#c -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#c"/>
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#f -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#f"/>
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#g -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#g"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#a"/>
+        <s rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#2"/>
+        <s rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#3"/>
+        <s rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#4"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#c"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#g"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#3 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#3">
+        <rdf:type rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#c"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#f"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#4 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#4">
+        <rdf:type rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#c"/>
+        <rdf:type>
+            <owl:Class>
+                <owl:complementOf rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#g"/>
+            </owl:Class>
+        </rdf:type>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#5 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#5">
+        <rdf:type rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#c"/>
+        <rdf:type>
+            <owl:Class>
+                <owl:complementOf rdf:resource="http://www.semanticweb.org/riccardo/ontologies/2019/11/untitled-ontology-24#f"/>
+            </owl:Class>
+        </rdf:type>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+

@@ -1,0 +1,55 @@
+(note TQD60)
+
+(implies 
+  (and 
+    (instance ?HOSTAGE TakingSomeoneHostage) 
+    (agent ?HOSTAGE ?WHOM)) 
+  (increasesCausally ?HOSTAGE 
+    (thereExists ?RESCUE 
+      (and 
+        (instance ?RESCUE AttackOnTangible) 
+        (maleficiary ?RESCUE ?WHOM))) likelihood))
+
+(instance HYP-TakingSomeoneHostage-34736820 TakingSomeoneHostage) 
+
+(agent HYP-TakingSomeoneHostage-34736820 BahrainiHizballah) 
+
+(increasesCausally #$HYP-TakingSomeoneHostage-34736820 
+  (thereExists ?RESCUE 
+    (and 
+      (instance ?RESCUE AttackOnTangible) 
+      (maleficiary ?RESCUE BahrainiHizballah))) likelihood)
+
+(instance BahrainiHizballah Agent) 
+
+(implies 
+  (instance ?AGT Agent) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?ATTACK 
+        (and 
+          (instance ?ATTACK AttackOnTangible) 
+          (maleficiary ?ATTACK ?AGT))))))
+
+(query (findall ?PROP
+(implies 
+   (and 
+       (agent ?ACT BahrainiHizballah) 
+       (instance ?ACT TakingSomeoneHostage) 
+       (objectActedOn ?ACT ?HOSTAGE) 
+       (citizens UnitedStatesOfAmerica ?HOSTAGE)) 
+   (or 
+       (and 
+           (desires BahrainiHizballah ?PROP) 
+           (decreasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires BahrainiHizballah 
+               (not ?PROP)) 
+           (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list  (thereExists ?RESCUE 
+  (and 
+    (instance ?RESCUE AttackOnTangible) 
+    (maleficiary ?RESCUE BahrainiHizballah)))))
+
+(end_of_file)

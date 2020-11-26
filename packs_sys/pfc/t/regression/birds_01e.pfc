@@ -1,0 +1,155 @@
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% props(Obj,[height(ObjHt)]) == t(height,Obj,ObjHt) == rdf(Obj,height,ObjHt) == t(height(Obj,ObjHt)).
+% padd(Obj,[height(ObjHt)]) == prop_set(height,Obj,ObjHt,...) == ain(height(Obj,ObjHt))
+% [pdel/pclr](Obj,[height(ObjHt)]) == [del/clr](height,Obj,ObjHt) == [del/clr]svo(Obj,height,ObjHt) == [del/clr](height(Obj,ObjHt))
+% keraseall(AnyTerm).
+%
+%                      ANTECEEDANT                                   CONSEQUENT
+%
+%        P =         test nesc true                         assert(P),retract(~P) , enable(P).
+%       ~P =         test nesc false                        assert(~P),retract(P), disable(P).
+%
+%   ~ ~(P) =        rewrite_to \+ ~(P)                      rewrite_to \+ ~(P) 
+%  ~ \+(P) =        rewrite_to     (P)                      rewrite_to     (P) 
+%  \+ ~(P) =        test impossiblity is unknown            retract(~P).
+%    \+(P) =        test P is unknown                       retract(P)
+%
+% Dec 13, 2035
+% Douglas Miles
+
+%  was_module(sanity_birdt,[]).
+
+%# Tests Finin original defeasabilty system is working over 2nd order
+
+:- include(test_header).
+
+:- file_begin(pfc).
+
+(tType(COL)==>{kb_local(COL/2)},% functorDeclares(COL),
+ (t(COL,ext,X)<==>instanceOf(X,COL))).
+  
+tType(tFly).
+tType(tCanary).
+tType(tPenguin).
+tType(tBird).
+
+
+:- mpred_test(predicate_property(tBird(ext,_),dynamic)).
+
+subClassOf(C1,C2)==> (instanceOf(X,C1)==>instanceOf(X,C2)).
+
+subClassOf(tCanary,tBird).
+subClassOf(tPenguin,tBird).
+
+
+
+:- dmsg("chilly is a penguin.").
+tPenguin(ext,iChilly).
+
+:- mpred_test((tBird(ext,iChilly))).
+
+
+:- dmsg("tweety is a canary.").
+tCanary(ext,iTweety).
+
+:- mpred_test((tBird(ext,iTweety))).
+
+:- dmsg("birds fly by default.").
+mdefault(( tBird(ext,X) ==> tFly(ext,X) )).
+
+:- mpred_test((tBird(ext,iTweety))).
+:- mpred_test((tFly(ext,iTweety))).
+
+:- dmsg("make sure chilly can fly").
+:- mpred_test((instanceOf(I,tFly),I=iChilly)).
+
+:- mpred_test((tBird(ext,iTweety))).
+
+:- listing([tFly/2,tBird/2,instanceOf/2]).
+
+
+:- dmsg("make sure tweety can fly (and again chilly)").
+:- mpred_test((tFly(ext,iTweety))).
+:- mpred_test((tFly(ext,iChilly))).
+
+
+never_retract_u(tBird(ext,iChilly)).
+
+
+:- dmsg("penguins do not tFly.").
+tPenguin(ext,X) ==>  ~tFly(ext,X). 
+
+:- dmsg("confirm chilly now cant fly").
+:- mpred_test((\+ tFly(ext,iChilly))).
+:- mpred_test(( ~ tFly(ext,iChilly))).
+
+%= repropigate that chilly was a bird again (actualy this asserts)
+
+tBird(ext,iChilly).
+
+:- listing(tBird/2).
+
+%= the dmsg explains the difference between \+ and ~
+:- dmsg("confirm chilly still does not fly").
+:- mpred_test(( \+ tFly(ext,iChilly))).
+:- dmsg("confirm chilly still cant fly").
+:- mpred_test(( ~  tFly(ext,iChilly))).
+
+/*
+
+% This wounld be a good TMS test it should throw.. but right now it passes wrongly
+tFly(ext,iChilly).
+
+:- dmsg("confirm chilly is flying penguin").
+:- mpred_test(( tFly(ext,iChilly))).
+:- mpred_test(( tPenguin(ext,iChilly))).
+:- mpred_test((\+ ~tFly(ext,iChilly))).
+
+\+ tFly(ext,iChilly). 
+
+:- dmsg("confirm chilly is a normal penguin who cant fly").
+:- mpred_test((\+ tFly(ext,iChilly))).
+
+% fails rightly
+:- mpred_test(( tPenguin(ext,iChilly))).
+
+*/
+
+:- dmsg("chilly is no longer a penguin (hopefly the assertion above about him being a bird wont be removed)").
+
+
+:- debug_logicmoo(_).
+:- mpred_trace_exec.
+:- debug_logicmoo(logicmoo(_)).
+
+:- mpred_test(tBird(ext,iChilly)).
+
+never_retract_u(tBird(ext,iChilly)).
+
+
+~ tPenguin(ext,iChilly).                              
+
+
+:- mpred_test((tBird(ext,iChilly))).
+
+:- mpred_test(( \+ tPenguin(ext,iChilly))).
+
+
+
+:- dmsg("chilly is still a bird").
+:- mpred_test((tBird(ext,iChilly))).
+
+:- dmsg("confirm chilly is flying bird").
+:- mpred_test(( tFly(ext,iChilly))).
+
+:- repropagate(tBird(ext,iChilly)).
+
+:- dmsg("confirm chilly is flying bird").
+:- mpred_test(( tFly(ext,iChilly))).
+:- mpred_test(( \+ tPenguin(ext,iChilly))).
+:- mpred_test(( \+ ~tFly(ext,iChilly))).
+
+
+

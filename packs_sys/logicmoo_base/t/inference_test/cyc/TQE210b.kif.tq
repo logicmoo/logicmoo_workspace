@@ -1,0 +1,62 @@
+(note TQE210b)
+(existant SpecialEnvoyMeetsWithIran 
+ (MonthFn October 
+ (YearFn 1998))) 
+
+(inverse existant temporallyIntersects) 
+
+(implies 
+  (and 
+    (temporallyIntersects ?DATE ?SMALL-EVENT) 
+    (subProcess ?LARGE-EVENT ?SMALL-EVENT)) 
+  (temporallyIntersects ?DATE ?LARGE-EVENT)) 
+
+(temporallyIntersects SpecialEnvoyMeetsWithIran 
+ (MonthFn October (YearFn 1998))) 
+
+(subProcess UNMediationOfIranian-TalibanConflict SpecialEnvoyMeetsWithIran) 
+(mediators UNMediationOfIranian-TalibanConflict UnitedNationsOrganization) 
+
+(temporallyIntersects UNMediationOfIranian-TalibanConflict 
+ (MonthFn October (YearFn 1998))) 
+
+(inReactionTo UNMediationOfIranian-TalibanConflict Iranian-TalibanConflict-1998) 
+(decreases-Generic SpecialEnvoyMeetsWithIran Iranian-TalibanConflict-1998 conflictLevel) 
+(instance Iranian-TalibanConflict-1998 DisputeEvent) 
+(opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+
+(instance UNMediationOfIranian-TalibanConflict 
+ (AttemptingFn ResolveByMediation)) 
+
+(instance SpecialEnvoyMeetsWithIran CooperationEvent) 
+(partnersInCooperation LakhdarBrahimi Iran SpecialEnvoyMeetsWithIran) 
+
+(implies 
+ (partnersInCooperation ?AGT-1 ?AGT-2 ?COOP) 
+ (partnersInCooperation ?AGT-2 ?AGT-1 ?COOP)) 
+
+(queryyn
+(exists 
+  (?DISPUTE) 
+  (exists 
+    (?MEDIATE) 
+    (exists 
+      (?COOPERATE) 
+        (and 
+          (instance ?DISPUTE DisputeEvent) 
+          (opponentsInConflict Iran Taliban ?DISPUTE) 
+          (instance ?MEDIATE 
+            (AttemptingFn ResolveByMediation)) 
+          (inReactionTo ?MEDIATE ?DISPUTE) 
+          (mediators ?MEDIATE UnitedNationsOrganization) 
+          (temporallyIntersects ?MEDIATE (MonthFn October (YearFn 1998))) 
+          (instance ?COOPERATE CooperationEvent) 
+          (subProcess ?MEDIATE ?COOPERATE) 
+          (partnersInCooperation Iran LakhdarBrahimi ?COOPERATE) 
+          (decreases-Generic ?COOPERATE ?DISPUTE conflictLevel))))))
+          
+(answer yes)
+
+(end_of_file)
+
+

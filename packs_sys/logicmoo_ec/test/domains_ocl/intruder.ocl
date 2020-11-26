@@ -1,0 +1,228 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 3.0
+ *
+ *  Author: John Beaven
+ *  Institution: University of Huddersfield
+ *  Date created: Wed Nov 22 12:43:37 GMT 2006
+ *  Date last modified: 2006/12/06 at 02:46:46 PM GMT
+ *  Description:
+ *    Intruder detection system - models burglar, security guards, protected
+ *    assets and system
+ * Object Life History : intruder7.gfx
+ */
+
+domain_name(crimewaveWorld).
+
+% Sorts
+sorts(primitive_sorts,[valuable_item,trigger,system,guard,burglar]).
+
+% Objects
+objects(valuable_item,[diamond,gold,artifact,fave_dvd]).
+objects(trigger,[pressure_pad,motion_detector,trip_wire,laser_chamber,hypno_toad,none]).
+objects(system,[shop_alarm]).
+objects(guard,[bert,fred]).
+objects(burglar,[tom,dick,harry]).
+
+% Predicates
+predicates([
+    protected(valuable_item),
+    protected_by(valuable_item,trigger),
+    triggered(valuable_item),
+    not_protected(valuable_item),
+    gone(valuable_item),
+    active(system),
+    inactive(system),
+    emergency(system),
+    alerted(guard,system),
+    working(guard,system),
+    casing_joint(burglar),
+    expertise(burglar,trigger),
+    caught(burglar),
+    rich(burglar),
+    found_goods(burglar)]).
+
+% Object Class Definitions
+substate_classes(valuable_item,Valuable_item,[
+    [protected(Valuable_item),protected_by(Valuable_item,Trigger)],
+    [triggered(Valuable_item),protected_by(Valuable_item,Trigger)],
+    [not_protected(Valuable_item),protected_by(Valuable_item,Trigger)],
+    [gone(Valuable_item),protected_by(Valuable_item,Trigger)]]).
+substate_classes(system,System,[
+    [active(System)],
+    [inactive(System)],
+    [emergency(System)]]).
+substate_classes(guard,Guard,[
+    [alerted(Guard,System)],
+    [working(Guard,System)]]).
+substate_classes(burglar,Burglar,[
+    [casing_joint(Burglar),expertise(Burglar,Trigger)],
+    [caught(Burglar),expertise(Burglar,Trigger)],
+    [rich(Burglar),expertise(Burglar,Trigger)],
+    [found_goods(Burglar),expertise(Burglar,Trigger)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(reset(Guard,System),
+    % prevail
+    [     se(guard,Guard,[alerted(Guard,System)])],
+    % necessary
+    [     sc(system,System,[emergency(System)]=>[inactive(System)])],
+    % conditional
+    []).
+operator(sound_alarm(Valuable_item,Trigger,System),
+    % prevail
+    [     se(valuable_item,Valuable_item,[triggered(Valuable_item),protected_by(Valuable_item,Trigger)])],
+    % necessary
+    [     sc(system,System,[active(System)]=>[emergency(System)])],
+    % conditional
+    []).
+operator(alert(System,Guard),
+    % prevail
+    [     se(system,System,[emergency(System)])],
+    % necessary
+    [     sc(guard,Guard,[working(Guard,System)]=>[alerted(Guard,System)])],
+    % conditional
+    []).
+operator(back_to_work(Guard,System),
+    % prevail
+    [],
+    % necessary
+    [     sc(guard,Guard,[alerted(Guard,System)]=>[working(Guard,System)])],
+    % conditional
+    []).
+operator(trip_alarm(System,Valuable_item,Trigger,Burglar),
+    % prevail
+    [     se(system,System,[active(System)])],
+    % necessary
+    [     sc(valuable_item,Valuable_item,[protected(Valuable_item),protected_by(Valuable_item,Trigger)]=>[triggered(Valuable_item),protected_by(Valuable_item,Trigger)]),
+     sc(burglar,Burglar,[casing_joint(Burglar),expertise(Burglar,Trigger)]=>[caught(Burglar),expertise(Burglar,Trigger)])],
+    % conditional
+    []).
+operator(reactivate(Guard,System),
+    % prevail
+    [     se(guard,Guard,[working(Guard,System)])],
+    % necessary
+    [     sc(system,System,[inactive(System)]=>[active(System)])],
+    % conditional
+    [     sc(valuable_item,Valuable_item,[triggered(Valuable_item),protected_by(Valuable_item,Trigger)]=>[protected(Valuable_item),protected_by(Valuable_item,Trigger)])]).
+operator(hack_security(System,Valuable_item,Trigger,Burglar),
+    % prevail
+    [     se(system,System,[active(System)])],
+    % necessary
+    [     sc(valuable_item,Valuable_item,[protected(Valuable_item),protected_by(Valuable_item,Trigger)]=>[not_protected(Valuable_item),protected_by(Valuable_item,Trigger)]),
+     sc(burglar,Burglar,[casing_joint(Burglar),expertise(Burglar,Trigger)]=>[found_goods(Burglar),expertise(Burglar,Trigger)])],
+    % conditional
+    []).
+operator(spend(Valuable_item,Trigger,Burglar),
+    % prevail
+    [     se(valuable_item,Valuable_item,[gone(Valuable_item),protected_by(Valuable_item,Trigger)])],
+    % necessary
+    [     sc(burglar,Burglar,[rich(Burglar),expertise(Burglar,Trigger)]=>[casing_joint(Burglar),expertise(Burglar,Trigger)])],
+    % conditional
+    []).
+operator(half_inch(Valuable_item,Trigger,Burglar),
+    % prevail
+    [     se(valuable_item,Valuable_item,[not_protected(Valuable_item),protected_by(Valuable_item,Trigger)])],
+    % necessary
+    [     sc(burglar,Burglar,[found_goods(Burglar),expertise(Burglar,Trigger)]=>[rich(Burglar),expertise(Burglar,Trigger)])],
+    % conditional
+    []).
+operator(disapeared(Valuable_item,Trigger),
+    % prevail
+    [],
+    % necessary
+    [     sc(valuable_item,Valuable_item,[not_protected(Valuable_item),protected_by(Valuable_item,Trigger)]=>[gone(Valuable_item),protected_by(Valuable_item,Trigger)])],
+    % conditional
+    []).
+operator(attempt_rehabilitation(Burglar,TriggerA,TriggerB),
+    % prevail
+    [],
+    % necessary
+    [     sc(burglar,Burglar,[caught(Burglar),expertise(Burglar,TriggerA)]=>[casing_joint(Burglar),expertise(Burglar,TriggerB)])],
+    % conditional
+    []).
+operator(training(Burglar,TriggerA,TriggerB),
+    % prevail
+    [],
+    % necessary
+    [     sc(burglar,Burglar,[casing_joint(Burglar),expertise(Burglar,TriggerA)]=>[casing_joint(Burglar),expertise(Burglar,TriggerB)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(valuable_item,gold,[gone(gold)]),
+     se(burglar,tom,[rich(tom)]),
+     se(burglar,dick,[caught(dick)]),
+     se(burglar,harry,[caught(harry)])],
+    % INIT States
+    [
+     ss(system,shop_alarm,[active(shop_alarm)]),
+     ss(valuable_item,diamond,[protected(diamond),protected_by(diamond,pressure_pad)]),
+     ss(valuable_item,gold,[protected(gold),protected_by(gold,motion_detector)]),
+     ss(valuable_item,artifact,[protected(artifact),protected_by(artifact,trip_wire)]),
+     ss(guard,bert,[working(bert,shop_alarm)]),
+     ss(burglar,tom,[casing_joint(tom),expertise(tom,none)]),
+     ss(burglar,harry,[casing_joint(harry),expertise(harry,none)]),
+     ss(burglar,dick,[casing_joint(dick),expertise(dick,none)])]).
+planner_task(2,
+    % Goals
+    [
+     se(burglar,dick,[caught(dick)]),
+     se(valuable_item,gold,[gone(gold)]),
+     se(valuable_item,diamond,[gone(diamond)]),
+     se(valuable_item,artifact,[gone(artifact)])],
+    % INIT States
+    [
+     ss(system,shop_alarm,[active(shop_alarm)]),
+     ss(guard,bert,[working(bert,shop_alarm)]),
+     ss(burglar,dick,[casing_joint(dick),expertise(dick,none)]),
+     ss(valuable_item,diamond,[protected(diamond),protected_by(diamond,pressure_pad)]),
+     ss(valuable_item,gold,[protected(gold),protected_by(gold,motion_detector)]),
+     ss(valuable_item,artifact,[protected(artifact),protected_by(artifact,trip_wire)]),
+     ss(valuable_item,fave_dvd,[protected(fave_dvd),protected_by(fave_dvd,hypno_toad)])]).
+planner_task(3,
+    % Goals
+    [
+     se(burglar,harry,[rich(harry)]),
+     se(burglar,dick,[caught(dick)]),
+     se(valuable_item,gold,[gone(gold)])],
+    % INIT States
+    [
+     ss(system,shop_alarm,[active(shop_alarm)]),
+     ss(guard,bert,[working(bert,shop_alarm)]),
+     ss(burglar,harry,[casing_joint(harry),expertise(harry,motion_detector)]),
+     ss(burglar,dick,[casing_joint(dick),expertise(dick,motion_detector)]),
+     ss(valuable_item,gold,[protected(gold),protected_by(gold,motion_detector)])]).
+planner_task(4,
+    % Goals
+    [
+     se(valuable_item,gold,[gone(gold)]),
+     se(valuable_item,diamond,[gone(diamond)]),
+     se(valuable_item,artifact,[gone(artifact)]),
+     se(valuable_item,fave_dvd,[gone(fave_dvd)]),
+     se(burglar,harry,[rich(harry)])],
+    % INIT States
+    [
+     ss(system,shop_alarm,[active(shop_alarm)]),
+     ss(valuable_item,diamond,[protected(diamond),protected_by(diamond,pressure_pad)]),
+     ss(valuable_item,gold,[protected(gold),protected_by(gold,motion_detector)]),
+     ss(valuable_item,artifact,[protected(artifact),protected_by(artifact,trip_wire)]),
+     ss(valuable_item,fave_dvd,[protected(fave_dvd),protected_by(fave_dvd,hypno_toad)]),
+     ss(guard,bert,[working(bert,shop_alarm)]),
+     ss(burglar,harry,[casing_joint(harry),expertise(harry,none)])]).

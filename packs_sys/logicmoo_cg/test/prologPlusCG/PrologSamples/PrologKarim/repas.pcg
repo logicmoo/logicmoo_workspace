@@ -1,0 +1,52 @@
+repas(e, p, d) :- entree(e), principal(p), dessert(d).
+
+principal(p) :- poisson(p).
+principal(p) :- viande(p).
+
+entree(salade).
+entree(pates).
+
+poisson(sole).
+poisson(merlan).
+poisson(pageot).
+poisson(thon).
+
+viande(mouton).
+viande(boeuf).
+
+dessert(cake).
+dessert(fruit).
+
+little_sum(1, _x, _y) :- little_successor(_x, _y).
+little_sum(_x1, _y, _z1) :- 
+   little_successor(_x, _x1),
+   little_sum(_x, _y, _z),
+   little_successor(_z, _z1).
+
+little_successor(1,2).
+little_successor(2,3).
+little_successor(3,4).
+little_successor(4,5).
+little_successor(5,6).
+little_successor(6,7).
+little_successor(7,8).
+little_successor(8,9).
+
+repas_leger(e, p, d) :-
+   repas(e, p, d),
+   unites(e, x),
+   unites(p, y),
+   little_sum(x, y, u),
+   unites(d, z),
+   little_sum(z, u, v).
+
+// units avec deux arguments.
+unites(boeuf, 3).
+unites(fruit, 1).
+unites(cake, 5).
+unites(pates, 6).
+unites(mouton, 7).
+unites(radis, 1).
+unites(sole, 2).
+unites(thon, 4).
+

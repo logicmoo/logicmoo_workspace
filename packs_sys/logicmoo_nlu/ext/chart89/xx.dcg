@@ -1,0 +1,26 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% xx.dcg [Chapter  4] A DCG for the language xx, x in {a,b,c}*
+%
+% put first character onto the stack
+x	-->	[a],	x(a).
+x	-->	[b],	x(b).
+x	-->	[c],	x(c).
+% push subsequent characters onto stack
+x(I)	-->	[a],	x(a(I)).
+x(I)	-->	[b],	x(b(I)).
+x(I)	-->	[c],	x(c(I)).
+% copy stack to a new nonterminal
+x(I)	-->	y(I).
+% pop the characters on the top of the stack
+y(a(I))	-->	y(I),	[a].
+y(b(I))	-->	y(I),	[b].
+y(c(I))	-->	y(I),	[c].
+% pop the final character
+y(a)	-->	[a].
+y(b)	-->	[b].
+y(c)	-->	[c].

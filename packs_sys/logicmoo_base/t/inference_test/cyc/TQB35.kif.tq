@@ -1,0 +1,16 @@
+(note TQB35)
+
+(queryyn
+  (consistent 
+    (thereExists ?ACT 
+      (and 
+        (instance ?ACT TerroristAct) 
+        (eventOccursAt ?ACT SaudiArabia) 
+        (directingAgent ?ACT Iraq)))))
+
+(answer Yes)
+
+(end_of_file)
+
+
+

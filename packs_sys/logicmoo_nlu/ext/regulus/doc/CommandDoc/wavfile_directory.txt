@@ -1,0 +1,3 @@
+Relevant to translation applications. If output speech is to be
+produced using recorded wavfiles, points to the directory that holds
+these files.

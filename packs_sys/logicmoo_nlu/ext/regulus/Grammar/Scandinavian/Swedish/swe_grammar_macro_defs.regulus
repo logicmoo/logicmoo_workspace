@@ -1,0 +1,92 @@
+
+macro(agr_vals, [[1, 2, 3], [sing, plur], [real, neutrum]]).
+macro(vform_vals, [[imperative, infinitive, finite, ing, supine, en, en_passive, to, none]]).
+macro(pre_post_type_vals, [[för_sen, none]]).
+macro(default_inv, _Either).
+
+macro(imperative, imperative).
+macro(infinitive, infinitive).
+macro(to, att).
+macro(gerund_or_pseudo_gerund_vform, to).
+macro(perfect_vform, supine).
+macro(pronoun_value_in_unmoved_particle_verb_object, _YOrN).
+
+% "vilken sorts människor" is plural, not singular
+macro(kind_of(Agr, Agr), sorts).
+
+macro(how_wh_degree_mod, hur).
+
+macro(of_prep, av).
+macro(passive_by_prep, av).
+
+macro(partitive_marker, []).
+macro(det_nps_take_partitives, n).
+
+% femton noll noll, tjugo noll fem
+macro(hour_minute_separator_oh_digit, []).
+% femton och tio, arton och tjugo tre
+macro(hour_minute_separator_not_oh_digit, och).
+macro(past_hour, över).
+macro(to_hour, i).
+
+macro(from_start_of_range, från).
+macro(to_start_of_range, till).
+macro(between, mellan).
+macro(and, och).
+
+macro(how_adj_premod, hur).
+
+macro(infinitive_modal_verb(Word, Sem),
+      ( v:[sem=Sem, subcat=nx0vvx1_modal, vform=infinitive, vp_vform=infinitive, passive=_, subj_nform=_,
+	   @takes_no_pps, takes_advp=y] --> Word )).
+
+% Imperative/base = bryt
+% Infinitive = bryta
+% Present = bryter
+% Past = bröt
+% Supine = brutit
+% Pres. part. = brytande
+% Past part. r = bruten
+% Past part. n = brutet
+% Past part. pl/def = brutna
+
+macro(verb([Imp, Inf, Pres, Past, Sup, PresPart, PastPartR, PastPartN, PastPartPl], Sem, Feats), 
+      @verb([Imp, Inf, Pres, Past, Sup, PresPart], Sem, Feats)).
+macro(verb([Imp, Inf, Pres, Past, Sup, PresPart, PastPartR, PastPartN, PastPartPl], Sem, Feats), 
+      @past_participles_for_verb([PastPartR, PastPartN, PastPartPl], Sem, Feats)).
+
+macro(verb([Imp, Inf, Pres, Past, Sup, PresPart], Sem, Feats), 
+      ( v:[sem=Sem, vform=imperative, lexically_passivisable=y, Feats] --> Imp ) ).
+macro(verb([Imp, Inf, Pres, Past, Sup, PresPart], Sem, Feats), 
+      ( v:[sem=Sem, vform=infinitive, lexically_passivisable=y, Feats] --> Inf ) ).
+macro(verb([Imp, Inf, Pres, Past, Sup, PresPart], Sem, Feats), 
+      ( v:[sem=[[tense, present] | Sem], vform=finite, Feats] --> Pres ) ).
+macro(verb([Imp, Inf, Pres, Past, Sup, PresPart], Sem, Feats), 
+      ( v:[sem=[[tense, past] | Sem], vform=finite, lexically_passivisable=y, Feats] --> Past ) ).
+macro(verb([Imp, Inf, Pres, Past, Sup, PresPart], Sem, Feats), 
+      ( v:[sem=Sem, vform=supine, lexically_passivisable=y, Feats] --> Sup ) ).
+macro(verb([Imp, Inf, Pres, Past, Sup, PresPart], Sem, Feats), 
+      ( v:[sem=[[aspect, continuous] | Sem], vform=ing, Feats] --> PresPart ) ).
+
+macro(past_participles_for_verb([PastPartR, PastPartN, PastPartPl], Sem, Feats), 
+      ( v:[sem=Sem, vform=en, agr=sing/\real, Feats] --> PastPartR ) ).
+macro(past_participles_for_verb([PastPartR, PastPartN, PastPartPl], Sem, Feats), 
+      ( v:[sem=Sem, vform=en, agr=sing/\neutrum, Feats] --> PastPartN ) ).
+% Need extra rule to turn this into prenominal definite form
+macro(past_participles_for_verb([PastPartR, PastPartN, PastPartPl], Sem, Feats), 
+      ( v:[sem=Sem, vform=en, agr=plur, Feats] --> PastPartPl ) ).
+
+% Nouns
+
+% Sing indef = bil
+% Plur indef = bilar
+% Sing def = bilen
+% Plur indef = bilarna
+
+macro(indef_only_noun([SingIndef, PlurIndef], Gender, Feats), ( n:[agr=3/\sing/\Gender, def=n | Feats] --> SingIndef ) ).
+macro(indef_only_noun([SingIndef, PlurIndef], Gender, Feats), ( n:[agr=3/\plur/\Gender, def=n | Feats] --> PlurIndef ) ).
+
+macro(noun([SingIndef, PlurIndef, SingDef, PlurDef], Gender, Feats), ( n:[agr=3/\sing/\Gender, def=n | Feats] --> SingIndef ) ).
+macro(noun([SingIndef, PlurIndef, SingDef, PlurDef], Gender, Feats), ( n:[agr=3/\plur/\Gender, def=n | Feats] --> PlurIndef ) ).
+macro(noun([SingIndef, PlurIndef, SingDef, PlurDef], Gender, Feats), ( n:[agr=3/\sing/\Gender, def=y | Feats] --> SingDef ) ).
+macro(noun([SingIndef, PlurIndef, SingDef, PlurDef], Gender, Feats), ( n:[agr=3/\plur/\Gender, def=y | Feats] --> PlurDef ) ).

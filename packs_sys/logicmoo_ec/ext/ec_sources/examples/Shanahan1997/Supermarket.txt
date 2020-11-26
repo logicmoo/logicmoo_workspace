@@ -1,0 +1,106 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Shanahan1997/Supermarket.e
+loading foundations/Root.e
+loading foundations/EC.e
+104 variables and 752 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+1
+2
+3
+4
+5
+Happens(Pull(), 5).
+Happens(Push(), 5).
+6
++Spinning().
+7
+8
+9
+10
+Happens(Pull(), 10).
+Happens(Push(), 10).
+11
+12
+P
+!Happens(Pull(), 0).
+!Happens(Pull(), 1).
+!Happens(Pull(), 11).
+!Happens(Pull(), 12).
+!Happens(Pull(), 2).
+!Happens(Pull(), 3).
+!Happens(Pull(), 4).
+!Happens(Pull(), 6).
+!Happens(Pull(), 7).
+!Happens(Pull(), 8).
+!Happens(Pull(), 9).
+!Happens(Push(), 0).
+!Happens(Push(), 1).
+!Happens(Push(), 11).
+!Happens(Push(), 12).
+!Happens(Push(), 2).
+!Happens(Push(), 3).
+!Happens(Push(), 4).
+!Happens(Push(), 6).
+!Happens(Push(), 7).
+!Happens(Push(), 8).
+!Happens(Push(), 9).
+!ReleasedAt(Backwards(), 0).
+!ReleasedAt(Backwards(), 1).
+!ReleasedAt(Backwards(), 10).
+!ReleasedAt(Backwards(), 11).
+!ReleasedAt(Backwards(), 12).
+!ReleasedAt(Backwards(), 2).
+!ReleasedAt(Backwards(), 3).
+!ReleasedAt(Backwards(), 4).
+!ReleasedAt(Backwards(), 5).
+!ReleasedAt(Backwards(), 6).
+!ReleasedAt(Backwards(), 7).
+!ReleasedAt(Backwards(), 8).
+!ReleasedAt(Backwards(), 9).
+!ReleasedAt(Forwards(), 0).
+!ReleasedAt(Forwards(), 1).
+!ReleasedAt(Forwards(), 10).
+!ReleasedAt(Forwards(), 11).
+!ReleasedAt(Forwards(), 12).
+!ReleasedAt(Forwards(), 2).
+!ReleasedAt(Forwards(), 3).
+!ReleasedAt(Forwards(), 4).
+!ReleasedAt(Forwards(), 5).
+!ReleasedAt(Forwards(), 6).
+!ReleasedAt(Forwards(), 7).
+!ReleasedAt(Forwards(), 8).
+!ReleasedAt(Forwards(), 9).
+!ReleasedAt(Spinning(), 0).
+!ReleasedAt(Spinning(), 1).
+!ReleasedAt(Spinning(), 10).
+!ReleasedAt(Spinning(), 11).
+!ReleasedAt(Spinning(), 12).
+!ReleasedAt(Spinning(), 2).
+!ReleasedAt(Spinning(), 3).
+!ReleasedAt(Spinning(), 4).
+!ReleasedAt(Spinning(), 5).
+!ReleasedAt(Spinning(), 6).
+!ReleasedAt(Spinning(), 7).
+!ReleasedAt(Spinning(), 8).
+!ReleasedAt(Spinning(), 9).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Supermarket: 0 predicates, 0 functions, 3 fluents, 2 events, 16 axioms
+encoding 0.1s
+solution 0.0s
+total 0.3s
+Discrete Event Calculus Reasoner 1.0

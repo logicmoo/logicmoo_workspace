@@ -1,0 +1,42 @@
+;--------------------------------------------------------------------------
+; File     : LCL038-1 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Logic Calculi (Implication/Falsehood 2 valued sentential)
+; Problem  : C0-1 depends on a single axiom
+; Version  : [McC92] axioms.
+; English  : An axiomatisation for the Implication/Falsehood 2 valued 
+;            sentential calculus is {C0-1,C0-2,C0-3,C0-4} 
+;            by Tarski-Bernays. Show that C0-1 can be derived from this 
+;            suspected single axiom.
+
+; Refs     : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+; Source   : [Ove90]
+; Names    : CADE-11 Competition 5 [Ove90]
+;          : THEOREM 5 [LM93]
+
+; Status   : unsatisfiable
+; Rating   : 0.89 v2.2.0, 1.00 v2.0.0
+; Syntax   : Number of clauses    :    3 (   0 non-Horn;   2 unit;   2 RR)
+;            Number of literals   :    5 (   0 equality)
+;            Maximal clause size  :    3 (   1 average)
+;            Number of predicates :    1 (   0 propositional; 1-1 arity)
+;            Number of functors   :    4 (   3 constant; 0-2 arity)
+;            Number of variables  :    6 (   2 singleton)
+;            Maximal term depth   :    4 (   2 average)
+
+; Comments : 
+;          : tptp2X -f kif -t rm_equality:rstfp LCL038-1.p 
+;--------------------------------------------------------------------------
+; condensed_detachment, axiom.
+(or (not (is_a_theorem (implies ?A ?B)))
+    (not (is_a_theorem ?A))
+    (is_a_theorem ?B))
+
+; single_axiom, axiom.
+(or (is_a_theorem (implies (implies (implies ?A ?B) ?C) (implies (implies ?C ?A) (implies ?D ?A)))))
+
+; prove_c0_1, conjecture.
+(or (not (is_a_theorem (implies (implies a b) (implies (implies b c) (implies a c))))))
+
+;--------------------------------------------------------------------------

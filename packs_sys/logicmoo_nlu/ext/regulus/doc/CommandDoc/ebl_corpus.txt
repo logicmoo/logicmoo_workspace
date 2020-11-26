@@ -1,0 +1,17 @@
+Points to the file of training examples used as input to the
+EBL\_\-TREEBANK operation. Intended originally for use for grammar
+specialisation, but can also be used simply to parse a set of examples
+to get information about coverage. The format is sent(Atom), so for
+example a typical line would be
+\begin{verbatim}
+sent('switch off the light').
+\end{verbatim}
+(note the closing period).
+
+If the application compiles multiple top-level specialised grammars,
+the grammars relevant to each example are defined in an optional
+second argument. For example, if a home control domain had separate
+grammars for each room, a typical line in the training file might be
+\begin{verbatim}
+sent('switch off the light', [bedroom, kitchen, living_room]).
+\end{verbatim}

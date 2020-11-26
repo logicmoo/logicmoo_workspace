@@ -1,0 +1,83 @@
+(note TQF127b)
+
+(internationalOrg-MemberCountry LeagueOfArabStates Algeria) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Morocco) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates PalestinianWestBank-and-Gaza) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Comoros-TheNation) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Oman) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Djibouti) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Qatar) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Egypt) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates SaudiArabia) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Iraq) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Somalia) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Jordan-TheNation) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Sudan) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Kuwait) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Syria) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Lebanon) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Tunisia) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Libya) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates UnitedArabEmirates) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Bahrain) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Mauritania) 
+
+(internationalOrg-MemberCountry LeagueOfArabStates Yemen) 
+
+(controllingSuborganizations LeagueOfArabStates CouncilOfTheArabLeague) 
+
+(subOrganizations LeagueOfArabStates JointDefenseCouncil-ArabLeague) 
+(nearestGenlPreds subOrganizations structureMembers) 
+(nearestGenlPreds groupMembers structureMembers) 
+
+(query (findall ?ROLE ?SUB) (and 
+   (?ROLE LeagueOfArabStates ?SUB) 
+   (nearestGenlPreds ?ROLE structureMembers)))
+
+(answer groupMembers Algeria)
+(answer groupMembers Morocco)
+(answer groupMembers PalestinianWestBank-and-Gaza)
+(answer groupMembers Comoros-TheNation)
+(answer groupMembers Oman)
+(answer groupMembers Djibouti)
+(answer groupMembers Qatar)
+(answer groupMembers Egypt)
+(answer groupMembers SaudiArabia)
+(answer groupMembers Iraq)
+(answer groupMembers Somalia)
+(answer groupMembers Jordan-TheNation)
+(answer groupMembers Sudan)
+(answer groupMembers Kuwait)
+(answer groupMembers Syria)
+(answer groupMembers Lebanon)
+(answer groupMembers Tunisia)
+(answer groupMembers Libya)
+(answer groupMembers UnitedArabEmirates)
+(answer groupMembers Bahrain)
+(answer groupMembers Mauritania)
+(answer groupMembers Yemen)
+(answer structureMembers CouncilOfTheArabLeague)
+(answer structureMembers JointDefenseCouncil-ArabLeague)
+
+(end_of_file)
+

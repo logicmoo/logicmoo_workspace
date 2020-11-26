@@ -1,0 +1,8 @@
+// Type hierarchy
+Entity > Animate, Inanimate.
+Animate > Animal, Human.
+Inanimate > Table, Chair, BeerMug.
+
+// Rules
+is_animate(T) :- isSubType(T, Animate).
+is_inanimate(T) :- isSubType(T, Inanimate).

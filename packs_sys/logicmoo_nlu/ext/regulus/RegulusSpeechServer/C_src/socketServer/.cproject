@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="converted.config.1598542400">
+			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+				<buildTargets>
+					<target name="win32" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/cygwin/bin/make.exe</buildCommand>
+						<buildArguments/>
+						<buildTarget>win32</buildTarget>
+						<stopOnError>false</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+				</buildTargets>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+				<pathentry include="C:/Program Files/Microsoft Visual Studio .NET/Vc7/include" kind="inc" path=""/>
+				<pathentry include="C:/Nuance/v8.0.0/include" kind="inc" path="" system="true"/>
+				<pathentry kind="mac" name="WIN32" path="" value=""/>
+				<pathentry kind="mac" name="_MBCS" path="" value=""/>
+				<pathentry kind="mac" name="NDEBUG" path="" value=""/>
+				<pathentry kind="src" path=""/>
+				<pathentry kind="out" path=""/>
+			</storageModule>
+			<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="converted.config.1598542400" moduleId="org.eclipse.cdt.core.settings" name="convertedConfig">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.domsourceindexer" point="org.eclipse.cdt.core.CIndexer"/>
+				</extensions>
+			</storageModule>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+</cproject>

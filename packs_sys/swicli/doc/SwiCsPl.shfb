@@ -1,0 +1,64 @@
+﻿<project schemaVersion="1.6.0.7">
+    <assemblies>
+        <assembly assemblyPath="..\..\..\bin\SwiPlCs.dll" xmlCommentsPath="..\..\..\SwiPlCs.xml" commentsOnly="False" />
+    </assemblies>
+    <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False">The namespace SbsSW.SwiPlCs provides an .NET interface to &lt;a href='http://www.swi-prolog.org' &gt;SWI-Prolog&lt;/a&gt;</namespaceSummaryItem>
+        <namespaceSummaryItem name="SbsSW.DesignByContract" isDocumented="True" />
+        <namespaceSummaryItem name="SbsSW.SwiPlCs" isDocumented="True" />
+        <namespaceSummaryItem name="SbsSW.SwiPlCs.Callback" isDocumented="True" />
+        <namespaceSummaryItem name="SbsSW.SwiPlCs.Exceptions" isDocumented="True" />
+        <namespaceSummaryItem name="SbsSW.SwiPlCs.Streams" isDocumented="True" />
+        <namespaceSummaryItem name="System.Linq.Dynamic" isDocumented="False" />
+    </namespaceSummaries>
+    <additionalContent contentSiteMap=".\sitemap.sitemap" topicFileTransform="">
+        <contentItem sourcePath=".\*.*" destPath="Help\" excludeItems="False" />
+    </additionalContent>
+    <apiFilter>
+        <filter entryType="Namespace" fullName="SbsSW.DesignByContract" isExposed="False" />
+        <filter entryType="Namespace" fullName="SbsSW.SwiPlCs" isExposed="True">
+            <filter entryType="Class" fullName="SbsSW.SwiPlCs.PlMtEngine" filterName="PlMtEngine" isExposed="False" />
+        </filter>
+    </apiFilter>
+    <ProjectSummary>ist in der quelle (class NamespaceDoc) vom namespace SbsSW.SwiPlCs</ProjectSummary>
+    <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter</MissingTags>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <HtmlHelp1xCompilerPath path="" />
+    <HtmlHelp2xCompilerPath path="" />
+    <OutputPath>..\..\SwiPlCs-Documentation\Generated\</OutputPath>
+    <SandcastlePath path="C:\Program Files\Sandcastle\" />
+    <WorkingPath path="" />
+    <CleanIntermediates>False</CleanIntermediates>
+    <KeepLogFile>False</KeepLogFile>
+    <BuildLogFile path="" />
+    <HelpFileFormat>Help1xAndWebsite</HelpFileFormat>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <FrameworkVersion>3.5</FrameworkVersion>
+    <IndentHtml>False</IndentHtml>
+    <Preliminary>False</Preliminary>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <RootNamespaceTitle>SwiPlCs interface</RootNamespaceTitle>
+    <HelpTitle>Swi-cs-pl - A CSharp class library to connect .NET languages with SWI-Prolog</HelpTitle>
+    <HtmlHelpName>SwiCsPlDocumentation</HtmlHelpName>
+    <Language>en-US</Language>
+    <CopyrightHref />
+    <CopyrightText />
+    <FeedbackEMailAddress>Lesta@SBS-Softwaresysteme.de</FeedbackEMailAddress>
+    <FeedbackEMailLinkText>Lesta at SBS-Softwaresysteme.de</FeedbackEMailLinkText>
+    <HeaderText />
+    <FooterText>by Uwe Lesta, SBS-Softwaresysteme GmbH</FooterText>
+    <ProjectLinkType>Local</ProjectLinkType>
+    <SdkLinkType>Msdn</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <PresentationStyle>Prototype</PresentationStyle>
+    <NamingMethod>MemberName</NamingMethod>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <ShowFeedbackControl>True</ShowFeedbackControl>
+    <BinaryTOC>True</BinaryTOC>
+    <IncludeFavorites>True</IncludeFavorites>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <IncludeStopWordList>True</IncludeStopWordList>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <HelpFileVersion>1.1.5990.0</HelpFileVersion>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+</project>

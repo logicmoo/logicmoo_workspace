@@ -1,0 +1,33 @@
+(note TQA99)
+
+
+(greaterThan 
+ (BillionDollars 13.3000) 
+ (BillionDollars 3.50000)) 
+
+(budgetExpenditures SaudiArabia GovernmentMilitaryOrganization 
+ (YearFn 1996) 
+ (BillionDollars 13.3000)) 
+
+(budgetExpenditures Kuwait GovernmentMilitaryOrganization 
+ (YearFn 1996) 
+ (BillionDollars 3.50000)) 
+
+
+(query (findall ?GREATER  (findall ?GREATER-AMT  (findall ?LESSER  (findall ?LESSER-AMT  (findall ?TIME
+ (and 
+ (budgetExpenditures ?GREATER GovernmentMilitaryOrganization ?TIME ?GREATER-AMT) 
+ (budgetExpenditures ?LESSER GovernmentMilitaryOrganization ?TIME ?LESSER-AMT) 
+ (greaterThan ?GREATER-AMT ?LESSER-AMT) 
+ (or 
+ (and 
+ (equals SaudiArabia ?GREATER) 
+ (equals Kuwait ?LESSER)) 
+ (and 
+ (equals Kuwait ?GREATER) 
+ (equals SaudiArabia ?LESSER))))  ))))))
+
+(answer SaudiArabia 13.3000 Kuwait 3.50000 1996)
+
+(end_of_file)
+

@@ -1,0 +1,77 @@
+======================================================================
+GoDiS Libraries README
+
+This distribution contains the GoDiS dialogue move engine and the files
+supporting it, i.e. the GoDiS libraries. It does not contain GoDiS 
+dialogue system(s), but rather the files shared by GoDiS applications. 
+
+To use the GoDiS libraries, Trindikit must be installed. Trindikit 
+can be downloaded from  http://sourceforge.net/projects/trindikit. The 
+latest, possibly unstable, version can also be accessed via anonymous 
+cvs from the same site. Download and unzip, or check out to a nice 
+location and follow the instructions in the Trindikit readme file for 
+instructions on how to build Trindikit.
+
+After installing Trindikit, the environent variable TRINDIKIT must be
+set. Set Trindikit to the full search path of the Trindikit directory, 
+e.g: '/home/david/trindikit-3.2.0'. For compability reasons, TRINDIKIT 
+values like '/home/david/trindikit-3.2.0/dist' will be allowed for a 
+while...
+
+======================================================================
+CONTENTS
+
+general:
+ Files shared by all GoDiS applications, e.g. concurrency settings, 
+ prolog operators and definitions of data types
+
+godis-basic:
+ Information state definition, DME modules, control module and 
+ resource interfaces for the godis-basic dialogue system (IBiS1) 
+ (not very maintained). godis-basic is a very basic version of GoDiS for 
+ information seeking dialogue
+
+godis-grounding:
+ Information state definition, DME modules, control module and 
+ resource interfaces for the godis-grounding dialogue system (IBiS2) 
+ (not very maintained). godis-grounding has the same DM capabilities as 
+ godis-basic, but implements grounding as well
+
+godis-iod:
+ Information state definition, DME modules, control module and 
+ resource interfaces for  godis-iod dialogue systems (quite maintained).
+ godis-iod extends the DM capabilities of godis-grounding by 
+ implementing task and question accommodation. This is probably the 
+ library to use if you should implement a information-seeking-only 
+ GoDiS application
+
+godis-aod:
+ information state definition, DME modules, control module and 
+ resource interfaces for  godis-aod dialogue systems (most maintained).
+ godis-aod extends the DM capabilities of godis-iod with
+ action-oriented dialogue management capabilities. This is currently
+ the most used GoDiS library.
+
+godis-all:
+ to be written
+
+search_paths_all.pl, search_paths_basic.pl, search_paths_grounding.pl, 
+search_paths_iod.pl, search_paths_aod.pl :  
+
+ Assert prolog file search paths and library directories for the 
+ different godis libraries. Consult the proper file for your library of 
+ choice, e.g. like this for godis-aod:
+
+  :- ensure_loaded('$GODIS/search_paths_aod.pl').
+
+ This assumes that the environment variable GODIS has been set to the 
+ GoDiS installation directory
+
+search_paths_common.pl:
+ loaded by the other search_paths-files
+=======================================================================
+USAGE
+
+Check out the godis-apps distribution (available via cvs) to see how 
+GoDiS applications can be built using the GoDiS libraries. Also take
+a look at (VAR ÄR MANUALEN?)

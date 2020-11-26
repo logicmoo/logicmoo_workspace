@@ -1,0 +1,138 @@
+<div class="notebook">
+
+<div class="nb-cell html" name="htm1">
+<script type="text/javascript">
+$.getScript("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"+
+             "?config=TeX-MML-AM_CHTML",function() {MathJax.Hub.Queue(["Typeset",MathJax.Hub]);});
+</script>
+<h2>Red and Blue Hats Puzzle</h2>
+
+<p>From 
+"Aaronson, Scott. Quantum Computing Since Democritus. Cambridge university press, 2013"
+</p><blockquote style="font-size: inherit;" cite="Aaronsobn, Scott. Quantum Computing Since Democritus. Cambridge university press, 2013">
+<p>
+\(n\) people sit in a circle. 
+Each person wears either a red hat or a blue hat, 
+chosen independently and uniformly at random. 
+ Each person can see the hats of all the other 
+  people, but not his/her own hat. 
+  Based only upon what they see, 
+  each person votes on whether or 
+  not the total number of red hats is odd. 
+  Is there a scheme by which the outcome of the 
+  vote is correct with probability greater than \(\frac{1}{2}\)?
+  </p>
+<p>Solution</p>
+<p>Each person decides his/her vote as follows: if the
+number of visible blue hats is larger than the number of visible red
+hats, then vote according to the parity of the number of visible red
+hats. Otherwise, vote the opposite of the parity of the number of
+visible red hats. If the number of red hats differs from the number
+of blue hats by at least 2, then this scheme succeeds with certainty.
+Otherwise, the scheme might fail. However, the probability that the
+number of red hats differs from the number of blue hats by less than
+2 is small – \(O(\frac{1}{\sqrt N})\).
+  </p></blockquote>
+</div>
+
+<div class="nb-cell program" data-background="true" name="p1">
+:- use_module(library(mcintyre)).
+
+:- mc.
+
+:- begin_lpad.
+
+red(N,R):binomial(R,N,0.5).
+
+blu(N,B):-
+    red(N,R),B is N-R.
+
+odd(N):- 
+    red(N,R), 
+    1 =:= R mod 2.
+
+vote_odd(N):- 
+    vote_odd_blu(N,VB),
+    vote_odd_red(N,VR),
+    V is VB+VR,
+    V &gt; N/2.
+
+correct(N):-
+    odd(N),
+    vote_odd(N).
+
+correct(N):-
+    \+ odd(N),
+    \+ vote_odd(N).
+
+vote_odd_blu(N,B):-
+    red(N,R),
+    blu(N,B),
+    VisibleBlu is B-1,
+    VisibleBlu&gt;R,
+    1 =:= R mod 2.
+
+vote_odd_blu(N,0):-
+    red(N,R),
+    blu(N,B),
+    VisibleBlu is B-1,
+    VisibleBlu&gt;R,
+    0 =:= R mod 2.
+
+vote_odd_blu(N,0):-
+    red(N,R),
+    blu(N,B),
+    VisibleBlu is B-1,
+    VisibleBlu =&lt; R,
+    1 =:= R mod 2.
+
+vote_odd_blu(N,B):-
+    red(N,R),
+    blu(N,B),
+    VisibleBlu is B-1,
+    VisibleBlu =&lt; R,
+    0 =:= R mod 2.
+
+vote_odd_red(N,R):-
+    red(N,R),
+    blu(N,B),
+    VisibleRed is R-1,
+    B&gt;VisibleRed,
+    1 =:= VisibleRed mod 2.
+
+vote_odd_red(N,0):-
+    red(N,R),
+    blu(N,B),
+    VisibleRed is R-1,
+    B&gt;VisibleRed,
+    0 =:= VisibleRed mod 2.
+
+vote_odd_red(N,0):-
+    red(N,R),
+    blu(N,B),
+    VisibleRed is R-1,
+    B =&lt; VisibleRed,
+    1 =:= VisibleRed mod 2.
+
+vote_odd_red(N,R):-
+    red(N,R),
+    blu(N,B),
+    VisibleRed is R-1,
+    B =&lt; VisibleRed,
+    0 =:= VisibleRed mod 2.
+
+
+:- end_lpad.
+
+</div>
+
+<div class="nb-cell markdown" name="md2">
+What is the probability that the scheme returns the correct result when there are 10 people?
+</div>
+
+<div class="nb-cell query" name="q1">
+mc_sample(correct(10),1000,Prob).
+</div>
+
+</div>
+

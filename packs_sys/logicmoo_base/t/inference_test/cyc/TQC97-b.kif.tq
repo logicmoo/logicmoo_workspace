@@ -1,0 +1,22 @@
+(note TQC97-b)
+
+
+
+(saleToFractionDuring Algeria NaturalGas France 
+ (YearFn 1998) 
+ (Percent 20)) 
+
+
+
+
+(query (findall (?FRACTION ?TIME)
+
+ (thereExists ?NR 
+ (and 
+ (saleToFractionDuring Algeria NaturalGas France ?TIME ?NR) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent ?NR))))))
+
+(answer 20.0000 1998)
+
+(end_of_file)

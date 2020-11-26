@@ -1,0 +1,13 @@
+(note TQD70)
+
+(agreeingAgents BiologicalAndToxinWeaponsConvention Libya) 
+
+
+(queryyn (agreeingAgents BiologicalAndToxinWeaponsConvention Libya) 
+
+)
+
+(answer Yes
+)
+
+(end_of_file)

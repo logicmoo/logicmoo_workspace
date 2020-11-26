@@ -1,0 +1,80 @@
+(note TQF239a)
+
+(instance CriminalOrganization-001 TransnationalCriminalOrganization) 
+
+(implies 
+  (instance ?CRIMEORG TransnationalCriminalOrganization) 
+  (desires ?CRIMEORG 
+    (thereExists ?WMD 
+      (thereExists ?SMUGGLING 
+        (and 
+          (instance ?SMUGGLING Smuggling) 
+          (instance ?WMD WeaponOfMassDestruction) 
+          (objectActedOn ?SMUGGLING ?WMD) 
+          (agent ?SMUGGLING ?CRIMEORG)))))) 
+
+(implies 
+  (and 
+    (instance ?CRIMEORG TransnationalCriminalOrganization) 
+    (desires ?CRIMEORG 
+      (thereExists ?WMD 
+        (thereExists ?SMUGGLING 
+          (and 
+            (instance ?SMUGGLING Smuggling) 
+            (instance ?WMD WeaponOfMassDestruction) 
+            (objectActedOn ?SMUGGLING ?WMD) 
+            (agent ?SMUGGLING ?CRIMEORG)))))) 
+  (hasAttributes ?CRIMEORG 
+    (ProliferationFn 
+      (OfFn WeaponOfMassDestruction)))) 
+
+(implies 
+  (and 
+    (instance ?CRIMEORG TransnationalCriminalOrganization) 
+    (hasAttributes ?CRIMEORG 
+      (ProliferationFn 
+        (OfFn WeaponOfMassDestruction))))
+  (interestsAgreeForAgentTypeBecause 
+    (DeterrenceFn (OfFn (CrimeFn)))
+    (DeterrenceFn (OfFn (ProliferationFn (OfFn WeaponOfMassDestruction))))
+    (likelihood 
+      (thereExists ?CRIMEORG 
+        (and 
+          (instance ?CRIMEORG TransnationalCriminalOrganization) 
+          (hasAttributes ?CRIMEORG 
+            (ProliferationFn (OfFn WeaponOfMassDestruction)))
+          (desires ?CRIMEORG 
+            (thereExists ?WMD 
+              (thereExists ?SMUGGLING 
+                (and 
+                  (instance ?SMUGGLING Smuggling) 
+                  (instance ?WMD WeaponOfMassDestruction) 
+                  (objectActedOn ?SMUGGLING ?WMD) 
+                  (agent ?SMUGGLING ?CRIMEORG))))))) High) Country))
+
+(query (findall (?BECAUSE)
+  (implies 
+    (and 
+      (instance ?TERRORISTGROUP ?COVERTAGENT) 
+      (subclass ?TERRORISTGROUP CovertAgent)) 
+  (interestsAgreeForAgentTypeBecause 
+    (DeterrenceFn (OfFn (CrimeFn))) 
+    (DeterrenceFn (OfFn (ProliferationFn (OfFn WeaponOfMassDestruction)))) ?BECAUSE Country))))
+
+(answer (list  
+  (likelihood 
+    (thereExists ?CRIMEORG 
+      (and 
+        (instance ?CRIMEORG TransnationalCriminalOrganization) 
+        (hasAttributes ?CRIMEORG 
+          (ProliferationFn (OfFn WeaponOfMassDestruction))) 
+        (desires ?CRIMEORG 
+          (thereExists ?WMD 
+            (thereExists ?SMUGGLING 
+              (and 
+                (instance ?SMUGGLING Smuggling) 
+                (instance ?WMD WeaponOfMassDestruction) 
+                (objectActedOn ?SMUGGLING ?WMD) 
+                (agent ?SMUGGLING ?CRIMEORG))))))) High)))
+
+(end_of_file)

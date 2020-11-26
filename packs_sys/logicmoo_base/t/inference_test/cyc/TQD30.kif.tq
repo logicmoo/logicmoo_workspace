@@ -1,0 +1,193 @@
+(note TQD30)
+
+(implies ?FORMULA 
+ (ist Topic-IranChinaNuclear ?FORMULA)) 
+
+(seller 
+ (SKF-31979460) China-PeoplesRepublic) 
+
+(instance 
+ SKF-31979460 
+ (BuyingFn NuclearProduct)) 
+
+(buyer 
+ SKF-31979460 Iran) 
+
+(infoTransferred 
+ SKF-16813801 Topic-IranChinaNuclear) 
+
+(senderOfInfo 
+ SKF-16813801 Iran) 
+
+(different China-PeoplesRepublic Iran) 
+
+(instance 
+ SKF-16813801 MultiDirectionalCommunication) 
+
+(senderOfInfo 
+ SKF-16813801 China-PeoplesRepublic) 
+
+(exports China-PeoplesRepublic NuclearProduct) 
+
+(subclass NuclearProduct NuclearProduct) 
+
+(implies ?FORMULA 
+ (ist Topic-IranWestGermanyNuclear ?FORMULA)) 
+
+(seller 
+ SKF-19258319 WestGermany) 
+
+(instance 
+ (#$SKF-19258319) 
+ (BuyingFn NuclearProduct)) 
+
+(buyer 
+ SKF-19258319 Iran) 
+
+(infoTransferred 
+ SKF-56469341 Topic-IranWestGermanyNuclear) 
+
+(senderOfInfo 
+ SKF-56469341 Iran) 
+
+(instance 
+ SKF-56469341 MultiDirectionalCommunication) 
+
+(senderOfInfo 
+ SKF-56469341 WestGermany) 
+
+(different WestGermany Iran) 
+
+(exports WestGermany NuclearProduct) 
+
+(subclass NuclearProduct NuclearProduct) 
+(implies ?FORMULA 
+ (ist Topic-IranKazakhstanNuclear ?FORMULA)) 
+
+(seller 
+ SKF-4138640 Kazakhstan) 
+
+(instance 
+ SKF-4138640 
+ (BuyingFn NuclearProduct)) 
+
+(buyer 
+ SKF-4138640 Iran) 
+
+(infoTransferred 
+ SKF-21754697 Topic-IranKazakhstanNuclear) 
+
+(senderOfInfo 
+ SKF-21754697 Iran) 
+
+(instance 
+ SKF-21754697 MultiDirectionalCommunication) 
+
+(senderOfInfo 
+ SKF-21754697 Kazakhstan) 
+
+(different Iran Kazakhstan) 
+
+(exports Kazakhstan NuclearProduct) 
+
+(subclass NuclearProduct NuclearProduct) 
+
+(implies ?FORMULA 
+ (ist Topic-IranArgentinaNuclear ?FORMULA)) 
+
+(seller 
+ SKF-32131746 Argentina) 
+
+(instance 
+ SKF-32131746 
+ (BuyingFn NuclearProduct)) 
+
+(buyer 
+ SKF-32131746 Iran) 
+
+(infoTransferred 
+ SKF-23705812 Topic-IranArgentinaNuclear) 
+
+(senderOfInfo 
+ SKF-23705812 Iran) 
+
+(instance 
+ SKF-23705812 MultiDirectionalCommunication) 
+
+(senderOfInfo 
+ SKF-23705812 Argentina) 
+
+(different Argentina Iran) 
+
+(exports Argentina NuclearProduct) 
+
+(subclass NuclearProduct NuclearProduct) 
+
+(implies ?FORMULA 
+ (ist Topic-IranRussiaNuclear ?FORMULA)) 
+
+(seller 
+ SKF-56842351 Russia) 
+
+(instance 
+ SKF-56842351 
+ (BuyingFn NuclearProduct)) 
+
+(buyer 
+ SKF-56842351 Iran) 
+
+(infoTransferred 
+ SKF-40001071 Topic-IranRussiaNuclear) 
+
+(senderOfInfo 
+ SKF-40001071 Iran) 
+
+(instance 
+ SKF-40001071 MultiDirectionalCommunication) 
+
+(senderOfInfo 
+ SKF-40001071 Russia) 
+
+(different Russia Iran) 
+
+(exports Russia NuclearProduct) 
+
+(subclass NuclearProduct NuclearProduct) 
+
+(query (findall ?COUNTRY 
+
+(thereExists ?COM 
+   (thereExists ?TOPIC 
+       (thereExists ?IM 
+           (thereExists ?BUYING 
+               (and 
+                   (instance ?COM MultiDirectionalCommunication) 
+                   (senderOfInfo ?COM Iran) 
+                   (different Iran ?COUNTRY) 
+                   (subclass ?IM NuclearProduct) 
+                   (senderOfInfo ?COM ?COUNTRY) 
+                   (infoTransferred ?COM ?TOPIC) 
+                   (exports ?COUNTRY ?IM) 
+                   (ist ?TOPIC 
+                       (seller ?BUYING ?COUNTRY)) 
+                   (ist ?TOPIC 
+                       (instance ?BUYING 
+                           (BuyingFn NuclearProduct))) 
+                   (ist ?TOPIC 
+                       (buyer ?BUYING Iran)))))))
+))
+
+(answer China-PeoplesRepublic
+)
+(answer WestGermany
+)
+(answer Kazakhstan
+)
+(answer Argentina
+)
+(answer Russia
+)
+
+
+(end_of_file)
+

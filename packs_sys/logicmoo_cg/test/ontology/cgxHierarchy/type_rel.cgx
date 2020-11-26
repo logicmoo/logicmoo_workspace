@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conceptualgraph editor="CharGer" version="3.6" created="28 oct. 2010 12:57:10" user="Administrateur">
+<graph id="231771308059" owner="0">
+    <type>
+        <label>Proposition</label>
+    </type>
+    <layout>
+        <rectangle x="5.0" y="5.0" width="900.0" height="750.0"/>
+        <color foreground="0,0,175" background="0,0,175"/>
+    </layout>
+    <typelabel id="231771308080" owner="231771308059">
+        <type>
+            <label>Drink</label>
+        </type>
+        <layout>
+            <rectangle x="316.5" y="200.5" width="47.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="231771308067" owner="231771308059">
+        <type>
+            <label>Univ</label>
+        </type>
+        <layout>
+            <rectangle x="258.0" y="123.5" width="42.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <relationlabel id="231771308107" owner="231771308059">
+        <type>
+            <label>agnt2</label>
+        </type>
+        <layout>
+            <rectangle x="443.5" y="269.5" width="49.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </relationlabel>
+    <relationlabel id="231771308096" owner="231771308059">
+        <type>
+            <label>agnt</label>
+        </type>
+        <layout>
+            <rectangle x="442.5" y="192.5" width="41.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </relationlabel>
+    <relationlabel id="231771308089" owner="231771308059">
+        <type>
+            <label>Relation</label>
+        </type>
+        <layout>
+            <rectangle x="449.0" y="99.5" width="68.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </relationlabel>
+    <typelabel id="231771308074" owner="231771308059">
+        <type>
+            <label>Man</label>
+        </type>
+        <layout>
+            <rectangle x="213.0" y="217.5" width="40.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <relationlabel id="231771308103" owner="231771308059">
+        <type>
+            <label>obj</label>
+        </type>
+        <layout>
+            <rectangle x="527.0" y="192.5" width="40.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </relationlabel>
+    <genspeclink id="231771308087" owner="231771308059" label="-" from="231771308080" to="231771308067">
+        <layout>
+            <rectangle x="307.0" y="172.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="231771308084" owner="231771308059" label="-" from="231771308074" to="231771308067">
+        <layout>
+            <rectangle x="253.5" y="180.5" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="231771308115" owner="231771308059" label="-" from="231771308096" to="231771308089">
+        <layout>
+            <rectangle x="470.5" y="156.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="231771308112" owner="231771308059" label="-" from="231771308107" to="231771308096">
+        <layout>
+            <rectangle x="463.0" y="241.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="231771308118" owner="231771308059" label="-" from="231771308103" to="231771308089">
+        <layout>
+            <rectangle x="512.5" y="156.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+</graph>
+
+</conceptualgraph>
+

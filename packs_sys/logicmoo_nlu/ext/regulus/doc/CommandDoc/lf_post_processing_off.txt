@@ -1,0 +1,10 @@
+
+The grammar processing mechanism currently supports three main types
+of semantics: linear, Almost Flat Functional (AFF) and RIACS. For
+AFF and RIACS semantics, the original logical form produced by the
+grammar needs to be post-processed.
+
+This command switches off post-processing of LFs, making it possible
+to examine the original logical form, and is in particular useful when
+you suspect a post-processing bug.
+

@@ -1,0 +1,16 @@
+@mixin spinner($width, $height) {
+  width: 0.9 * $width;
+  height: 0.9 * $height;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: solid 0.1*$height rgba(0, 0, 0, 0.2);
+  border-top-color: #000;
+  animation: spin 1s infinite linear;
+}
+
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}

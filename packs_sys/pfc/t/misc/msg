@@ -1,0 +1,103 @@
+Rich - Here are some experiments with the problem we were discussing.
+Suppose we have the following facts:
+
+     
+     => full_name(finin,'Tim Finin').
+     
+     => host_name(finin,antares).
+     
+     => full_name(robin,'Robin,McEntire').
+     
+     => host_name(fritzson,hamlet).
+     
+
+I first tried representing the user rule and the defaults as follows:
+
+     full_name(User,Name),
+     host_name(User,Host) 
+       =>
+       user(User,Name,Host).
+     
+     full_name(User,unknown) 
+       <= 
+       ~full_name(User,X)/(X\==unknown).
+     
+     host_name(User,unknown) 
+       <= 
+       ~host_name(User,X)/(X\==unknown).
+     
+When I add the rules and facts, I get:
+
+     Adding (u) full_name(finin,Tim Finin)
+     Adding host_name(finin,unknown)
+     Adding user(finin,Tim Finin,unknown)
+     Adding (u) host_name(finin,antares)
+     Adding user(finin,Tim Finin,antares)
+     Removing host_name(finin,unknown).
+     Removing user(finin,Tim Finin,unknown).
+     Adding (u) full_name(robin,Robin,McEntire)
+     Adding host_name(robin,unknown)
+     Adding user(robin,Robin,McEntire,unknown)
+     Adding (u) host_name(fritzson,hamlet)
+     
+In other words, every thing is ok except that I haven't deduced a user
+relation for fritzson, since I don't have the required full_name
+assertion to start the ball rolling.  Now, if I add the following
+backward chaining rule:
+
+    user(User,Name,Host)
+       <=
+      full_name(User,Name),
+      host_name(User,Host).
+
+I can now deduce the user relation for fritzson and any others, in fact:
+
+     | ?- pfc(user(fritzson,FN,HN)).
+     
+     Adding full_name(fritzson,unknown)
+     Adding user(fritzson,unknown,hamlet)
+     FN = unknown,
+     HN = hamlet 
+     
+     | ?- pfcWhy(user(fritzson,unknown,hamlet)).
+     
+     Justifications for user(fritzson,unknown,hamlet):
+     
+         1.1 host_name(fritzson,hamlet)
+         1.2 full_name(fritzson,unknown)
+         1.3 full_name(A,B),host_name(A,C)=>user(A,B,C)
+     
+         2.1 host_name(fritzson,hamlet)
+         2.2 full_name(fritzson,unknown)
+         2.3 user(A,B,C)<=full_name(A,B),host_name(A,C)
+      >> q.
+     
+     yes
+     | ?- pfc(user(mcKay,FN,HN)).
+     
+     Adding full_name(mcKay,unknown)
+     Adding host_name(mcKay,unknown)
+     Adding user(mcKay,unknown,unknown)
+     FN = HN = unknown 
+     
+     | ?- pfcWhy(user(mcKay,unknown,unknown)).
+     
+     Justifications for user(mcKay,unknown,unknown):
+     
+         1.1 host_name(mcKay,unknown)
+         1.2 full_name(mcKay,unknown)
+         1.3 full_name(A,B),host_name(A,C)=>user(A,B,C)
+     
+         2.1 host_name(mcKay,unknown)
+         2.2 full_name(mcKay,unknown)
+         2.3 user(A,B,C)<=full_name(A,B),host_name(A,C)
+      >> 1.1 .
+     
+     Justifications for host_name(mcKay,unknown):
+     
+         1.1 ~host_name(mcKay,A)
+         1.2 host_name(A,unknown)<= ~host_name(A,B)/ (B\==unknown)
+      >> q.
+     
+     yes
+     | ?- 

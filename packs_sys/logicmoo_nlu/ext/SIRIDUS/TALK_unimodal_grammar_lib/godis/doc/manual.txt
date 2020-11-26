@@ -1,0 +1,118 @@
+GoDiS Manual
+Staffan Larsson
+
+This manual is a work in progress.
+
+1. INTRODUCTION
+
+This document is intended as a manual for depeloping applications for
+GoDiS, an Issue-based dialogue system. For an explanation of the
+issue-based theory and its implementation in GoDiS, see Larsson
+(2002).
+
+2. INSTALLATION
+
+This section describes the steps necessary to download and install
+GoDiS and TrindiKit, the toolkit on which GoDiS is built.
+
+2.1 Downloading and installing TrindiKit
+
+TrindiKit can be accessed either via the TrindiKit webpage
+(http://www.ling.gu.se/projekt/trindi//trindikit/), via the TrindiKit
+SourceForge website (http://sourceforge.net/projects/trindikit/), or
+via anonymous CVS from sourceforge. The latter is prefereable if you
+want to get the absolutely latest version; however, the documentation
+is not always up to date and some parts of the toolkit may be
+incomplete. If you want a well-documented release, the first two
+options are preferable.
+
+
+
+
+2.1.1 Accessing TrindiKit via anonymous CVS
+
+To checkout a read-only version of TrindiKit from the SourceForge CVS
+repository, do the following.
+
+* UNIX/LINUX
+
+cvs -d :pserver:anonymous@cvs.trindikit.sourceforge.net:/cvsroot/trindikit login  
+[supply no password if prompted]
+cvs -d :pserver:anonymous@cvs.trindikit.sourceforge.net:/cvsroot/trindikit checkout trindikit
+
+* Windows
+
+Unless you have already done so, download and install a CVS client; we
+prefer TortoiseCVS available at
+
+	 http://www.tortoisecvs.org/
+
+
+
+2.2   Downloading and installing GoDiS
+
+GoDiS currently has no webpage and is only available via anonymous CVS.
+
+3     Getting started
+
+3.1   Running an existing GoDiS application
+
+3.3   Copying and modifying an existing GoDiS application
+
+A good way to get started on your own application is to copy an
+existing application directory and successively replacing the
+application components.
+
+
+
+
+4  The components of a GoDiS application
+
+4.1 The GoDiS specification file
+
+4.2 The start file
+
+4.3 The domain resource
+
+4.5 The device/database resource
+
+4.4 The lexicon resource
+
+4.X The speech recognition grammar resource
+
+
+
+
+
+5 Elements of Issue-based dialogue management
+
+5.3 Dialogue plans
+
+5.1 Information state 
+
+5.2 Dialogue Move Engine
+
+5.2.1 The update module
+
+5.2.2 The selection module
+
+
+
+5.3 Non-DME modules used by GoDiS
+
+This section describes the modules supplied with TrindiKit that are
+used by GoDiS.
+
+5.3.1 Input modules
+
+5.3.2 Interpretation modules
+
+5.3.3 Generation modules
+
+5.3.4 Output modules
+
+
+
+REFERENCES
+
+Larsson, Staffan (2002): Issue-based Dialogue Management.

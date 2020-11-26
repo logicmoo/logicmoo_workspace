@@ -1,0 +1,91 @@
+
+% Declarations
+
+feature_value_space(number_value, [[sing, plur]]).
+feature_value_space(gender_value, [[real, neutrum]]).
+feature_value_space(vform_value, [[imperative, finite]]).
+feature_value_space(vtype_value, [[transitive, vara]]).
+feature_value_space(sem_np_type_value, [[n, location, switchable_light, switchable_nonlight, dimmable]]).
+
+feature(number, number_value).
+feature(gender, gender_value).
+feature(vform, vform_value).
+feature(vtype, vtype_value).
+feature(sem_np_type, sem_np_type_value).
+feature(obj_sem_np_type, sem_np_type_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(utterance, [sem]).
+category(command, [sem]).
+category(yn_question, [sem]).
+category(np, [sem, number, gender, sem_np_type]).
+category(location_pp, [sem]).
+category(noun, [sem, number, gender, sem_np_type]).
+category(verb, [sem, number, vform, vtype, obj_sem_np_type]).
+category(onoff, [sem]).
+category(adjective, [sem, number, gender, sem_np_type]).
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=S] -->
+	(   command:[sem=S] ;
+	    yn_question:[sem=S]
+	).
+
+command:[sem=concat([[utterance_type, command]], Op, Np)] -->
+	verb:[sem=Op, vform=imperative, vtype=transitive, obj_sem_np_type=ObjType],
+	np:[sem=Np, sem_np_type=ObjType].
+
+yn_question:[sem=concat([[utterance_type, query]], Verb, OnOff, Np, Loc)] -->
+	verb:[sem=Verb, vform=finite, vtype=vara, number=N, obj_sem_np_type=n],
+	np:[sem=Np, number=N, number=Num, gender=Gender, sem_np_type=Type],
+	adjective:[sem=OnOff, sem_np_type=Type, number=Num, gender=Gender],
+	?location_pp:[sem=Loc].
+
+np:[sem=concat(Noun, Loc), number=N, gender=Gender, sem_np_type=SemType] -->
+	noun:[sem=Noun, number=N, gender=Gender, sem_np_type=SemType],
+	?location_pp:[sem=Loc].
+
+location_pp:[sem=Loc] -->
+	i,
+	np:[sem=Loc, sem_np_type=location].
+
+% Lexicon
+
+verb:[sem=[[state, vara]], vform=finite, vtype=vara, number=sing\/plur,
+      obj_sem_np_type=n] --> är.
+
+verb:[sem=[[action, tända]], vform=imperative, vtype=transitive, number=sing, 
+	obj_sem_np_type=switchable_light] --> tänd.
+verb:[sem=[[action, släcka]], vform=imperative, vtype=transitive, number=sing, 
+	obj_sem_np_type=switchable_light] --> släck.
+
+verb:[sem=[[action, sätta_på]], vform=imperative, vtype=transitive, number=sing,
+	obj_sem_np_type=switchable_nonlight] --> sätt, på.
+verb:[sem=[[action, stänga_av]], vform=imperative, vtype=transitive, number=sing,
+	obj_sem_np_type=switchable_nonlight] --> stäng, av.
+verb:[sem=[[action, vrid_ner]], vform=imperative, vtype=transitive, number=sing,
+	obj_sem_np_type=dimmable] --> vrid, ner.
+
+noun:[sem=[[device, lampa]], sem_np_type=switchable_light\/dimmable, number=sing, gender=real] --> lampan.
+%noun:[sem=[[device, lampa]], sem_np_type=switchable_light\/dimmable, number=plur, gender=real] --> lamporna.
+noun:[sem=[[device, fläkt]], sem_np_type=switchable_nonlight, number=sing, gender=real] --> fläkten.
+%noun:[sem=[[device, fläkt]], sem_np_type=switchable_nonlight, number=plur, gender=real] --> fläktarna.
+
+noun:[sem=[[location, kök]], sem_np_type=location, number=sing, gender=neutrum] --> köket.
+noun:[sem=[[location, vardagsrum]], sem_np_type=location, number=sing, gender=neutrum] --> vardagsrummet.
+
+adjective:[sem=[[onoff, på]], sem_np_type=switchable_nonlight] --> på.
+adjective:[sem=[[onoff, av]], sem_np_type=switchable_nonlight] --> av.
+
+adjective:[sem=[[onoff, tänd]], number=sing, gender=real, sem_np_type=switchable_light] --> tänd.
+adjective:[sem=[[onoff, tänd]], number=sing, gender=neutrum, sem_np_type=switchable_light] --> tänt.
+adjective:[sem=[[onoff, tänd]], number=plur, sem_np_type=switchable_light] --> tända.
+
+adjective:[sem=[[onoff, släckt]], number=sing, sem_np_type=switchable_light] --> släckt.
+adjective:[sem=[[onoff, släckt]], number=plur, sem_np_type=switchable_light] --> släckta.

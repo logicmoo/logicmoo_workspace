@@ -1,0 +1,111 @@
+(note TQD114)
+
+(goalCategoryForAgent UnitedStatesOfAmerica 
+ (pathState SuezCanal PathOpen) ForeignPolicyGoal) 
+
+(goalCategoryForAgent UnitedStatesOfAmerica 
+ (pathState SuezCanal PathOpen) StrategicNationalInterest) 
+
+(goalCategoryForAgent UnitedStatesOfAmerica 
+ (pathState SuezCanal PathOpen) PoliticalGoal) 
+
+(goalCategoryForAgent UnitedStatesOfAmerica 
+ (pathState SuezCanal PathOpen) StrategicInterest) 
+
+(goalCategoryForAgent UnitedStatesOfAmerica 
+ (pathState SuezCanal PathOpen) AidingAllies) 
+
+(goalCategoryForAgent UnitedStatesOfAmerica 
+ (pathState SuezCanal PathOpen) NationalEconomyGoal) 
+
+(goalCategoryForAgent UnitedStatesOfAmerica 
+ (pathState SuezCanal PathOpen) EconomicGoal) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(subAttribute StrategicNationalInterest StrategicNationalInterest) 
+
+(subAttribute ForeignPolicyGoal StrategicNationalInterest) 
+
+(subAttribute AidingAllies StrategicNationalInterest) 
+
+(subAttribute PoliticalGoal PoliticalGoal) 
+
+(subAttribute ForeignPolicyGoal PoliticalGoal) 
+
+(subAttribute AidingAllies PoliticalGoal) 
+
+(subAttribute StrategicInterest StrategicInterest) 
+
+(subAttribute StrategicNationalInterest StrategicInterest) 
+
+(subAttribute ForeignPolicyGoal StrategicInterest) 
+
+(subAttribute AidingAllies StrategicInterest) 
+
+(subAttribute AidingAllies AidingAllies) 
+
+(implies 
+ (and 
+ (allies ?COUNTRY1 ?COUNTRY2) 
+ (importsThrough ?COUNTRY1 ?PROD ?PATH)) 
+ (goalCategoryForAgent ?COUNTRY2 
+ (pathState ?PATH PathOpen) AidingAllies)) 
+
+(importsThrough Canada PetroleumProduct SuezCanal) 
+
+(allies UnitedStatesOfAmerica Canada) 
+
+(importsThrough UnitedKingdomOfGreatBritainAndNorthernIreland PetroleumProduct SuezCanal) 
+
+(allies UnitedKingdomOfGreatBritainAndNorthernIreland UnitedStatesOfAmerica) 
+
+
+
+
+(implies 
+ (and  
+ (instance ?COUNTRY Country) 
+ (importsThrough ?COUNTRY ?WHATEVER ?PATHWAY)) 
+ (goalCategoryForAgent ?COUNTRY 
+ (pathState ?PATHWAY PathOpen) NationalEconomyGoal)) 
+
+(instance UnitedStatesOfAmerica Country) 
+
+(importsThrough UnitedStatesOfAmerica PetroleumProduct SuezCanal) 
+
+(subAttribute NationalEconomyGoal EconomicGoal) 
+
+(subAttribute ForeignPolicyGoal ForeignPolicyGoal) 
+
+(subAttribute AidingAllies ForeignPolicyGoal) 
+
+(subAttribute ForeignPolicyGoal ForeignPolicyGoal) 
+
+(subAttribute StrategicNationalInterest StrategicNationalInterest) 
+
+(subAttribute ForeignPolicyGoal StrategicNationalInterest) 
+
+(subAttribute AidingAllies StrategicNationalInterest) 
+
+(subAttribute ForeignPolicyGoal ForeignPolicyGoal) 
+
+(subAttribute AidingAllies ForeignPolicyGoal) 
+
+(query (findall ?INTEREST
+ (goalCategoryForAgent UnitedStatesOfAmerica 
+ (pathState SuezCanal PathOpen) ?INTEREST)))
+
+(answer (list ForeignPolicyGoal))
+(answer (list StrategicNationalInterest))
+(answer (list PoliticalGoal))
+(answer (list StrategicInterest))
+(answer (list AidingAllies ))
+(answer (list NationalEconomyGoal))
+(answer (list EconomicGoal))  
+
+(end_of_file)

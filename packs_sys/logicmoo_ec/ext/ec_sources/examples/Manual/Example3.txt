@@ -1,0 +1,75 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Manual/Example3.e
+loading foundations/Root.e
+loading foundations/EC.e
+10 variables and 16 clauses
+relsat solver
+4 models
+---
+model 1:
+0
+Happens(WakeUp(James), 0).
+Happens(WakeUp(Jessie), 0).
+1
++Awake(James).
++Awake(Jessie).
+P
+!ReleasedAt(Awake(James), 0).
+!ReleasedAt(Awake(James), 1).
+!ReleasedAt(Awake(Jessie), 0).
+!ReleasedAt(Awake(Jessie), 1).
+---
+model 2:
+0
+Awake(Jessie).
+Happens(WakeUp(James), 0).
+Happens(WakeUp(Jessie), 0).
+1
++Awake(James).
+P
+!ReleasedAt(Awake(James), 0).
+!ReleasedAt(Awake(James), 1).
+!ReleasedAt(Awake(Jessie), 0).
+!ReleasedAt(Awake(Jessie), 1).
+---
+model 3:
+0
+Awake(Jessie).
+Happens(WakeUp(James), 0).
+1
++Awake(James).
+P
+!Happens(WakeUp(Jessie), 0).
+!ReleasedAt(Awake(James), 0).
+!ReleasedAt(Awake(James), 1).
+!ReleasedAt(Awake(Jessie), 0).
+!ReleasedAt(Awake(Jessie), 1).
+---
+model 4:
+0
+Happens(WakeUp(James), 0).
+1
++Awake(James).
+P
+!Happens(WakeUp(Jessie), 0).
+!ReleasedAt(Awake(James), 0).
+!ReleasedAt(Awake(James), 1).
+!ReleasedAt(Awake(Jessie), 0).
+!ReleasedAt(Awake(Jessie), 1).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Example3: 0 predicates, 0 functions, 1 fluents, 1 events, 3 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

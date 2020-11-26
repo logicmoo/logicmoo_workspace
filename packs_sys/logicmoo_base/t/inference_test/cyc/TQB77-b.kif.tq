@@ -1,0 +1,28 @@
+(note TQB77-b)
+(abort)
+
+(instance HYP-SilkwormMissile-11814302 CruiseMissile) 
+
+(inRegion 
+ (WesternRegionFn ContinentOfEurope) 
+ (WesternRegionFn ContinentOfEurope)) 
+
+(queryyn
+ (thereExists ?FORCE 
+ (thereExists ?TARGET 
+ (and 
+ (instance ?FORCE CruiseMissile) 
+ (inRegion ?TARGET 
+ (WesternRegionFn ContinentOfEurope)WesternRegionFn ContinentOfEurope)) 
+ (consistent 
+ (thereExists ?ACT 
+ (and 
+ (instance ?ACT AttackOnTangible) 
+ (agent ?ACT Bahrain) 
+ (deviceUsed ?ACT ?FORCE) 
+ (damages ?ACT ?TARGET)))))))
+
+(answer No)
+
+(end_of_file)
+

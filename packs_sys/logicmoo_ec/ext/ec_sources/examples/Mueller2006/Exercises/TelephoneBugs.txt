@@ -1,0 +1,278 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Exercises/TelephoneBugs.e
+loading foundations/Root.e
+loading foundations/EC.e
+863 variables and 6466 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Idle(Phone1).
+Idle(Phone2).
+Happens(Dial(Agent1, Phone1, Phone2), 0).
+Happens(Dial(Agent2, Phone2, Phone1), 0).
+1
+Happens(PickUp(Agent1, Phone1), 1).
+Happens(PickUp(Agent2, Phone2), 1).
+2
+-Idle(Phone1).
+-Idle(Phone2).
++DialTone(Phone1).
++DialTone(Phone2).
+Happens(Dial(Agent1, Phone1, Phone2), 2).
+Happens(Dial(Agent2, Phone2, Phone1), 2).
+3
+-DialTone(Phone1).
+-DialTone(Phone2).
++BusySignal(Phone1).
++BusySignal(Phone2).
+Happens(SetDown(Agent1, Phone1), 3).
+Happens(SetDown(Agent2, Phone2), 3).
+4
+-BusySignal(Phone1).
+-BusySignal(Phone2).
++Idle(Phone1).
++Idle(Phone2).
+Happens(PickUp(Agent1, Phone1), 4).
+5
+-Idle(Phone1).
++DialTone(Phone1).
+Happens(Dial(Agent1, Phone1, Phone2), 5).
+Happens(PickUp(Agent2, Phone2), 5).
+6
+-DialTone(Phone1).
+-Idle(Phone2).
++DialTone(Phone2).
++Ringing(Phone1, Phone2).
+P
+!Happens(Dial(Agent1, Phone1, Phone1), 0).
+!Happens(Dial(Agent1, Phone1, Phone1), 1).
+!Happens(Dial(Agent1, Phone1, Phone1), 2).
+!Happens(Dial(Agent1, Phone1, Phone1), 3).
+!Happens(Dial(Agent1, Phone1, Phone1), 4).
+!Happens(Dial(Agent1, Phone1, Phone1), 5).
+!Happens(Dial(Agent1, Phone1, Phone1), 6).
+!Happens(Dial(Agent1, Phone1, Phone2), 1).
+!Happens(Dial(Agent1, Phone1, Phone2), 3).
+!Happens(Dial(Agent1, Phone1, Phone2), 4).
+!Happens(Dial(Agent1, Phone1, Phone2), 6).
+!Happens(Dial(Agent1, Phone2, Phone1), 0).
+!Happens(Dial(Agent1, Phone2, Phone1), 1).
+!Happens(Dial(Agent1, Phone2, Phone1), 2).
+!Happens(Dial(Agent1, Phone2, Phone1), 3).
+!Happens(Dial(Agent1, Phone2, Phone1), 4).
+!Happens(Dial(Agent1, Phone2, Phone1), 5).
+!Happens(Dial(Agent1, Phone2, Phone1), 6).
+!Happens(Dial(Agent1, Phone2, Phone2), 0).
+!Happens(Dial(Agent1, Phone2, Phone2), 1).
+!Happens(Dial(Agent1, Phone2, Phone2), 2).
+!Happens(Dial(Agent1, Phone2, Phone2), 3).
+!Happens(Dial(Agent1, Phone2, Phone2), 4).
+!Happens(Dial(Agent1, Phone2, Phone2), 5).
+!Happens(Dial(Agent1, Phone2, Phone2), 6).
+!Happens(Dial(Agent2, Phone1, Phone1), 0).
+!Happens(Dial(Agent2, Phone1, Phone1), 1).
+!Happens(Dial(Agent2, Phone1, Phone1), 2).
+!Happens(Dial(Agent2, Phone1, Phone1), 3).
+!Happens(Dial(Agent2, Phone1, Phone1), 4).
+!Happens(Dial(Agent2, Phone1, Phone1), 5).
+!Happens(Dial(Agent2, Phone1, Phone1), 6).
+!Happens(Dial(Agent2, Phone1, Phone2), 0).
+!Happens(Dial(Agent2, Phone1, Phone2), 1).
+!Happens(Dial(Agent2, Phone1, Phone2), 2).
+!Happens(Dial(Agent2, Phone1, Phone2), 3).
+!Happens(Dial(Agent2, Phone1, Phone2), 4).
+!Happens(Dial(Agent2, Phone1, Phone2), 5).
+!Happens(Dial(Agent2, Phone1, Phone2), 6).
+!Happens(Dial(Agent2, Phone2, Phone1), 1).
+!Happens(Dial(Agent2, Phone2, Phone1), 3).
+!Happens(Dial(Agent2, Phone2, Phone1), 4).
+!Happens(Dial(Agent2, Phone2, Phone1), 5).
+!Happens(Dial(Agent2, Phone2, Phone1), 6).
+!Happens(Dial(Agent2, Phone2, Phone2), 0).
+!Happens(Dial(Agent2, Phone2, Phone2), 1).
+!Happens(Dial(Agent2, Phone2, Phone2), 2).
+!Happens(Dial(Agent2, Phone2, Phone2), 3).
+!Happens(Dial(Agent2, Phone2, Phone2), 4).
+!Happens(Dial(Agent2, Phone2, Phone2), 5).
+!Happens(Dial(Agent2, Phone2, Phone2), 6).
+!Happens(PickUp(Agent1, Phone1), 0).
+!Happens(PickUp(Agent1, Phone1), 2).
+!Happens(PickUp(Agent1, Phone1), 3).
+!Happens(PickUp(Agent1, Phone1), 5).
+!Happens(PickUp(Agent1, Phone1), 6).
+!Happens(PickUp(Agent1, Phone2), 0).
+!Happens(PickUp(Agent1, Phone2), 1).
+!Happens(PickUp(Agent1, Phone2), 2).
+!Happens(PickUp(Agent1, Phone2), 3).
+!Happens(PickUp(Agent1, Phone2), 4).
+!Happens(PickUp(Agent1, Phone2), 5).
+!Happens(PickUp(Agent1, Phone2), 6).
+!Happens(PickUp(Agent2, Phone1), 0).
+!Happens(PickUp(Agent2, Phone1), 1).
+!Happens(PickUp(Agent2, Phone1), 2).
+!Happens(PickUp(Agent2, Phone1), 3).
+!Happens(PickUp(Agent2, Phone1), 4).
+!Happens(PickUp(Agent2, Phone1), 5).
+!Happens(PickUp(Agent2, Phone1), 6).
+!Happens(PickUp(Agent2, Phone2), 0).
+!Happens(PickUp(Agent2, Phone2), 2).
+!Happens(PickUp(Agent2, Phone2), 3).
+!Happens(PickUp(Agent2, Phone2), 4).
+!Happens(PickUp(Agent2, Phone2), 6).
+!Happens(SetDown(Agent1, Phone1), 0).
+!Happens(SetDown(Agent1, Phone1), 1).
+!Happens(SetDown(Agent1, Phone1), 2).
+!Happens(SetDown(Agent1, Phone1), 4).
+!Happens(SetDown(Agent1, Phone1), 5).
+!Happens(SetDown(Agent1, Phone1), 6).
+!Happens(SetDown(Agent1, Phone2), 0).
+!Happens(SetDown(Agent1, Phone2), 1).
+!Happens(SetDown(Agent1, Phone2), 2).
+!Happens(SetDown(Agent1, Phone2), 3).
+!Happens(SetDown(Agent1, Phone2), 4).
+!Happens(SetDown(Agent1, Phone2), 5).
+!Happens(SetDown(Agent1, Phone2), 6).
+!Happens(SetDown(Agent2, Phone1), 0).
+!Happens(SetDown(Agent2, Phone1), 1).
+!Happens(SetDown(Agent2, Phone1), 2).
+!Happens(SetDown(Agent2, Phone1), 3).
+!Happens(SetDown(Agent2, Phone1), 4).
+!Happens(SetDown(Agent2, Phone1), 5).
+!Happens(SetDown(Agent2, Phone1), 6).
+!Happens(SetDown(Agent2, Phone2), 0).
+!Happens(SetDown(Agent2, Phone2), 1).
+!Happens(SetDown(Agent2, Phone2), 2).
+!Happens(SetDown(Agent2, Phone2), 4).
+!Happens(SetDown(Agent2, Phone2), 5).
+!Happens(SetDown(Agent2, Phone2), 6).
+!ReleasedAt(BusySignal(Phone1), 0).
+!ReleasedAt(BusySignal(Phone1), 1).
+!ReleasedAt(BusySignal(Phone1), 2).
+!ReleasedAt(BusySignal(Phone1), 3).
+!ReleasedAt(BusySignal(Phone1), 4).
+!ReleasedAt(BusySignal(Phone1), 5).
+!ReleasedAt(BusySignal(Phone1), 6).
+!ReleasedAt(BusySignal(Phone2), 0).
+!ReleasedAt(BusySignal(Phone2), 1).
+!ReleasedAt(BusySignal(Phone2), 2).
+!ReleasedAt(BusySignal(Phone2), 3).
+!ReleasedAt(BusySignal(Phone2), 4).
+!ReleasedAt(BusySignal(Phone2), 5).
+!ReleasedAt(BusySignal(Phone2), 6).
+!ReleasedAt(Connected(Phone1, Phone1), 0).
+!ReleasedAt(Connected(Phone1, Phone1), 1).
+!ReleasedAt(Connected(Phone1, Phone1), 2).
+!ReleasedAt(Connected(Phone1, Phone1), 3).
+!ReleasedAt(Connected(Phone1, Phone1), 4).
+!ReleasedAt(Connected(Phone1, Phone1), 5).
+!ReleasedAt(Connected(Phone1, Phone1), 6).
+!ReleasedAt(Connected(Phone1, Phone2), 0).
+!ReleasedAt(Connected(Phone1, Phone2), 1).
+!ReleasedAt(Connected(Phone1, Phone2), 2).
+!ReleasedAt(Connected(Phone1, Phone2), 3).
+!ReleasedAt(Connected(Phone1, Phone2), 4).
+!ReleasedAt(Connected(Phone1, Phone2), 5).
+!ReleasedAt(Connected(Phone1, Phone2), 6).
+!ReleasedAt(Connected(Phone2, Phone1), 0).
+!ReleasedAt(Connected(Phone2, Phone1), 1).
+!ReleasedAt(Connected(Phone2, Phone1), 2).
+!ReleasedAt(Connected(Phone2, Phone1), 3).
+!ReleasedAt(Connected(Phone2, Phone1), 4).
+!ReleasedAt(Connected(Phone2, Phone1), 5).
+!ReleasedAt(Connected(Phone2, Phone1), 6).
+!ReleasedAt(Connected(Phone2, Phone2), 0).
+!ReleasedAt(Connected(Phone2, Phone2), 1).
+!ReleasedAt(Connected(Phone2, Phone2), 2).
+!ReleasedAt(Connected(Phone2, Phone2), 3).
+!ReleasedAt(Connected(Phone2, Phone2), 4).
+!ReleasedAt(Connected(Phone2, Phone2), 5).
+!ReleasedAt(Connected(Phone2, Phone2), 6).
+!ReleasedAt(DialTone(Phone1), 0).
+!ReleasedAt(DialTone(Phone1), 1).
+!ReleasedAt(DialTone(Phone1), 2).
+!ReleasedAt(DialTone(Phone1), 3).
+!ReleasedAt(DialTone(Phone1), 4).
+!ReleasedAt(DialTone(Phone1), 5).
+!ReleasedAt(DialTone(Phone1), 6).
+!ReleasedAt(DialTone(Phone2), 0).
+!ReleasedAt(DialTone(Phone2), 1).
+!ReleasedAt(DialTone(Phone2), 2).
+!ReleasedAt(DialTone(Phone2), 3).
+!ReleasedAt(DialTone(Phone2), 4).
+!ReleasedAt(DialTone(Phone2), 5).
+!ReleasedAt(DialTone(Phone2), 6).
+!ReleasedAt(Disconnected(Phone1), 0).
+!ReleasedAt(Disconnected(Phone1), 1).
+!ReleasedAt(Disconnected(Phone1), 2).
+!ReleasedAt(Disconnected(Phone1), 3).
+!ReleasedAt(Disconnected(Phone1), 4).
+!ReleasedAt(Disconnected(Phone1), 5).
+!ReleasedAt(Disconnected(Phone1), 6).
+!ReleasedAt(Disconnected(Phone2), 0).
+!ReleasedAt(Disconnected(Phone2), 1).
+!ReleasedAt(Disconnected(Phone2), 2).
+!ReleasedAt(Disconnected(Phone2), 3).
+!ReleasedAt(Disconnected(Phone2), 4).
+!ReleasedAt(Disconnected(Phone2), 5).
+!ReleasedAt(Disconnected(Phone2), 6).
+!ReleasedAt(Idle(Phone1), 0).
+!ReleasedAt(Idle(Phone1), 1).
+!ReleasedAt(Idle(Phone1), 2).
+!ReleasedAt(Idle(Phone1), 3).
+!ReleasedAt(Idle(Phone1), 4).
+!ReleasedAt(Idle(Phone1), 5).
+!ReleasedAt(Idle(Phone1), 6).
+!ReleasedAt(Idle(Phone2), 0).
+!ReleasedAt(Idle(Phone2), 1).
+!ReleasedAt(Idle(Phone2), 2).
+!ReleasedAt(Idle(Phone2), 3).
+!ReleasedAt(Idle(Phone2), 4).
+!ReleasedAt(Idle(Phone2), 5).
+!ReleasedAt(Idle(Phone2), 6).
+!ReleasedAt(Ringing(Phone1, Phone1), 0).
+!ReleasedAt(Ringing(Phone1, Phone1), 1).
+!ReleasedAt(Ringing(Phone1, Phone1), 2).
+!ReleasedAt(Ringing(Phone1, Phone1), 3).
+!ReleasedAt(Ringing(Phone1, Phone1), 4).
+!ReleasedAt(Ringing(Phone1, Phone1), 5).
+!ReleasedAt(Ringing(Phone1, Phone1), 6).
+!ReleasedAt(Ringing(Phone1, Phone2), 0).
+!ReleasedAt(Ringing(Phone1, Phone2), 1).
+!ReleasedAt(Ringing(Phone1, Phone2), 2).
+!ReleasedAt(Ringing(Phone1, Phone2), 3).
+!ReleasedAt(Ringing(Phone1, Phone2), 4).
+!ReleasedAt(Ringing(Phone1, Phone2), 5).
+!ReleasedAt(Ringing(Phone1, Phone2), 6).
+!ReleasedAt(Ringing(Phone2, Phone1), 0).
+!ReleasedAt(Ringing(Phone2, Phone1), 1).
+!ReleasedAt(Ringing(Phone2, Phone1), 2).
+!ReleasedAt(Ringing(Phone2, Phone1), 3).
+!ReleasedAt(Ringing(Phone2, Phone1), 4).
+!ReleasedAt(Ringing(Phone2, Phone1), 5).
+!ReleasedAt(Ringing(Phone2, Phone1), 6).
+!ReleasedAt(Ringing(Phone2, Phone2), 0).
+!ReleasedAt(Ringing(Phone2, Phone2), 1).
+!ReleasedAt(Ringing(Phone2, Phone2), 2).
+!ReleasedAt(Ringing(Phone2, Phone2), 3).
+!ReleasedAt(Ringing(Phone2, Phone2), 4).
+!ReleasedAt(Ringing(Phone2, Phone2), 5).
+!ReleasedAt(Ringing(Phone2, Phone2), 6).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+TelephoneBugs: 0 predicates, 0 functions, 6 fluents, 3 events, 41 axioms
+encoding 1.8s
+solution 0.1s
+total 3.3s
+Discrete Event Calculus Reasoner 1.0

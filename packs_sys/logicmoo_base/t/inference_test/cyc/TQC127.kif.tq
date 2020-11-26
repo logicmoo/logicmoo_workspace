@@ -1,0 +1,46 @@
+(note TQc127)
+(subclass BiologicalBomb BiologicalWeapon) 
+
+(subclass 
+ (BiologicalWeaponFn Plague-Bacterium) BiologicalWeapon) 
+
+(subclass 
+ (BiologicalWeaponFn BotulinumToxin) BiologicalWeapon) 
+
+
+(subclass BiologicalWeapon BiologicalWeapon) 
+
+(subclass 
+ (BiologicalWeaponFn RicinToxin) BiologicalWeapon) 
+
+(subclass 
+ (BiologicalWeaponFn BrucellaBacterium) BiologicalWeapon) 
+
+(subclass 
+ (BiologicalWeaponFn Smallpox-Virus) BiologicalWeapon) 
+
+(subclass 
+ (BiologicalWeaponFn Anthrax-Bacterium) BiologicalWeapon) 
+
+
+(subclass 
+ (BiologicalWeaponFn Staphylococcus) BiologicalWeapon) 
+
+
+(query (findall ?TYPES
+
+ (subclass ?TYPES BiologicalWeapon)))
+
+(answer BiologicalBomb)
+(answer  (list (BiologicalWeaponFn Plague-Bacterium)))
+(answer  (list (BiologicalWeaponFn BotulinumToxin)))
+(answer BiologicalWeapon)
+(answer  (list (BiologicalWeaponFn RicinToxin)))
+(answer  (list (BiologicalWeaponFn BrucellaBacterium)))
+(answer (list
+ (BiologicalWeaponFn Smallpox-Virus)))
+(answer  (list (BiologicalWeaponFn Anthrax-Bacterium)))
+(answer (list (BiologicalWeaponFn Staphylococcus)))  
+
+(end_of_file)
+

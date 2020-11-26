@@ -1,0 +1,40 @@
+
+(clause-form (implies (and (isa ?E ?C) (genls ?C ?C2)) (isa ?E ?C2)))
+
+(clause-form (implies (and (isa ?P SymmetricBinaryPredicate) (?P ?X ?Y)) (?P ?Y ?X))                                       )
+(clause-form (implies (and (isa ?P Symmetric ) (?P ?X ?Y)) (?P ?Y ?X))                                                    )
+(clause-form (implies (and (isa ?P SymmetricRelation ) (?P ?X ?Y)) (?P ?Y ?X))                                                    )
+
+(clause-form (implies (and (isa ?P TransitiveRelation ) (?P ?X ?Y) (?P ?Y ?Z) ) (?P ?X ?Z))                                                    )
+  
+(isa genls TransitiveRelation)
+(isa genlInverse SymmetricBinaryPredicate)
+(isa negationInverse SymmetricBinaryPredicate)
+(isa sibling SymmetricBinaryPredicate)
+
+
+(isa BarrelsPerDay UnitMeasure)
+(isa MillionBarrelsPerDay UnitMeasure)
+
+(isa QuotientFn EvaluatableFunction)
+
+(kernel-proc QuotientFn / )
+
+(clause-form (implies (and (genlInverse ?P1 ?P2) (?P1 ?A ?B) ) (?P2 ?B ?A) ))
+(clause-form (implies (and (negationInverse ?P1 ?P2) (?P1 ?A ?B) ) (non (?P2 ?B ?A)) ))
+
+(clause-form (implies (and (genlPreds ?P1 ?P2) (?P1 ?A ?B) )  (?P2 ?A ?B)  )  )
+(clause-form (implies (and (genlPreds ?P1 ?P2) (?P1 ?A ?B ?C) )  (?P2 ?A ?B ?C)  )  )
+(clause-form (implies (and (genlPreds ?P1 ?P2) (?P1 ?A ?B ?C ?D ) )  (?P2 ?A ?B ?C ?D)  )  )
+(clause-form (implies (and (genlPreds ?P1 ?P2) (?P1 ?A ?B ?C ?D ?E ) )  (?P2 ?A ?B ?C ?D ?E)  ))
+                                                                                                    
+
+(clause-form (implies (and  (nth-domain ?P1 1 ?C1) (?P1 ?E1 ?E2) ) (isa ?E1 ?C1)  )     )
+(clause-form (implies (and  (nth-domain ?P1 2 ?C2) (?P1 ?E1 ?E2)) (isa ?E2 ?C2) )     )
+
+(clause-form (implies (and  (nth-subclass ?P1 1 ?C1) (?P1 ?A1 ?A2) ) (genls ?A1 ?C1) ))
+(clause-form (implies (and  (nth-subclass ?P1 2 ?C2) (?P1 ?A1 ?A2)) (genls ?A2 ?C2) ))
+
+(compiler file loaded)
+
+

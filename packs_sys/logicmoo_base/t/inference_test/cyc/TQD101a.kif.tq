@@ -1,0 +1,161 @@
+(note TQD101a)
+
+(contains Algeria RhourdeEl-Baguel-OilField) 
+
+
+
+(instance RhourdeEl-Baguel-OilField OilField) 
+
+
+
+
+(contains Algeria StahOilField) 
+
+
+
+(instance StahOilField OilField) 
+
+
+
+
+(contains Algeria EdjelehOilField) 
+
+
+
+(instance EdjelehOilField OilField) 
+
+
+
+
+(contains Algeria RhourdeCheggaOilField) 
+
+
+
+(instance RhourdeCheggaOilField OilField) 
+
+
+
+
+(contains Algeria TinFouyeTabankortOrdo-OilField) 
+
+
+
+(instance TinFouyeTabankortOrdo-OilField OilField) 
+
+
+
+
+(contains Algeria OuedNoumerOilField) 
+
+
+
+(instance OuedNoumerOilField OilField) 
+
+
+
+
+(contains Algeria HassiMessaoudSouthOilField) 
+
+
+
+(instance HassiMessaoudSouthOilField OilField) 
+
+
+
+
+(contains Algeria HassiMessaoudNorth-OilField) 
+
+
+
+(instance HassiMessaoudNorth-OilField OilField) 
+
+
+
+
+(contains Algeria Zarzaitine-OilField) 
+
+
+
+(instance Zarzaitine-OilField OilField) 
+
+
+
+
+(contains Algeria GuellalaOilField) 
+
+
+
+(instance GuellalaOilField OilField) 
+
+
+
+
+(contains Algeria El-GassiEl-Agreb-OilField) 
+
+
+
+(instance El-GassiEl-Agreb-OilField OilField) 
+
+
+
+
+(contains Algeria HaoudBerkaouibenKahla-OilField) 
+
+
+
+(instance HaoudBerkaouibenKahla-OilField OilField) 
+
+
+
+
+(contains Algeria TiguentourineOilField) 
+
+
+
+(instance TiguentourineOilField OilField) 
+
+
+
+
+(contains Algeria ElAgrebOuestOilField) 
+
+
+
+(instance ElAgrebOuestOilField OilField) 
+
+
+
+
+(contains Algeria MereksenOilField) 
+
+
+
+(instance MereksenOilField OilField) 
+
+
+(inverse contains inRegion) 
+
+
+
+( query (findall ?X (and 
+ (instance ?X OilField) 
+ (inRegion ?X Algeria))  
+))
+
+(answer RhourdeEl-Baguel-OilField )
+(answer StahOilField )
+(answer EdjelehOilField )
+(answer RhourdeCheggaOilField)
+(answer TinFouyeTabankortOrdo-OilField )
+(answer  OuedNoumerOilField)
+(answer  HassiMessaoudSouthOilField)
+(answer  Zarzaitine-OilField)
+(answer GuellalaOilField )
+(answer  HassiMessaoudNorth-OilField)
+(answer El-GassiEl-Agreb-OilField )
+(answer MereksenOilField )
+(answer  ElAgrebOuestOilField)
+(answer  TiguentourineOilField)
+(answer  HaoudBerkaouibenKahla-OilField)
+
+(end_of_file)

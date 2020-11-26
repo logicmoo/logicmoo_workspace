@@ -1,0 +1,27 @@
+// Type-hierarchy
+Universal > Physical.
+Physical > Process, Object.
+Process > Act.
+Act > Persuade, Speak, Eat.
+Object > Animal.
+
+// Catalog of instances
+Animal = Wolf, Lamb.
+
+// Graphs
+
+// The wolf persuades the lamb.
+graph(gr1, [Animal: Wolf]<-agnt-[Persuade]-rcpt->[Animal: Lamb]).
+
+// The lamb speaks to the wolf.
+graph(gr2, [Animal: Lamb]<-agnt-[Speak]-rcpt->[Animal: Wolf]).
+
+// The wolf eats the lamb.
+graph(gr3, [Animal: Wolf]<-agnt-[Eat]-ptnt->[Animal: Lamb]).
+
+
+// Wolf does something in which graph?
+// gr3 USED TO not appear, as it should.
+wolf(I) :- 
+   graph(I, G),
+   branchOfCG([Animal : Wolf]<-agnt-[X], G).

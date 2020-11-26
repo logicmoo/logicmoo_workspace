@@ -1,0 +1,26 @@
+(note TQA109)
+
+(believes Iran 
+ (agent Stage3-SAAttackOnIran SaudiArabia)) 
+
+(existant Stage3-SAAttackOnIran 
+ (DateInSituationFn CalendarDay 29 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(instance Stage3-SAAttackOnIran BombingMission) 
+
+(query (findall ?ACTOR (thereExists ?ACT 
+   (and 
+       (instance ?ACT BombingMission) 
+       (temporallySubsumes 
+           (DateInSituationFn CalendarDay 29 HPKBScenarioConflict) ?ACT) 
+       (believes Iran 
+           (agent ?ACT ?ACTOR)))) )
+)
+
+(answer SaudiArabia )
+
+(end_of_file)
+
+

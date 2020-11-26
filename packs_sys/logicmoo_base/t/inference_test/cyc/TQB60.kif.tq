@@ -1,0 +1,221 @@
+(note TQB60)
+
+(increasesCausally HYP-TakingSomeoneHostage-8555185 
+ (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME Iran))) likelihood) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+ (increasesCausally ?ACT 
+ (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME ?AGT))) likelihood)) 
+
+(believes InternationalCommunity 
+ (agent HYP-TakingSomeoneHostage-8555185 Iran)) 
+
+(implies 
+ (and 
+ (instance ?HOSTAGE TakingSomeoneHostage) 
+ (agent ?HOSTAGE ?COUNTRY-ORG) 
+ (instance ?COUNTRY-ORG Country)) 
+ (believes InternationalCommunity 
+ (agent ?HOSTAGE ?COUNTRY-ORG))) 
+
+(instance HYP-TakingSomeoneHostage-8555185 TakingSomeoneHostage) 
+
+(instance Iran Country) 
+
+(agent HYP-TakingSomeoneHostage-8555185 Iran) 
+
+(implies 
+ (and 
+ (instance ?ACT TakingSomeoneHostage) 
+ (agent ?ACT ?AGT) 
+ (instance ?AGT Country)) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+
+ 
+
+ 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT DontTakeHostages) 
+ (agent ?ACT ?AGT) 
+ (instance ?AGT Country)) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+
+(actionViolatesObligation HYP-TakingSomeoneHostage-8555185 DontTakeHostages) 
+
+(implies 
+ (and 
+ (instance ?HOSTAGE TakingSomeoneHostage) 
+ (agent ?HOSTAGE ?COUNTRY) 
+ (instance ?COUNTRY Country)) 
+ (actionViolatesObligation ?HOSTAGE DontTakeHostages)) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ?OB) 
+ (obligationParts ?WIDE ?OB)) 
+ (actionViolatesObligation ?ACT ?WIDE)) 
+
+(obligationParts DontTakeHostages DontTakeHostages) 
+
+(subrelation agent agent) 
+
+(actionViolatesObligation HYP-TakingSomeoneHostage-8555185 ModernInternationalRelationsCOC) 
+
+(obligationParts ModernInternationalRelationsCOC ModernInternationalRelationsCOC) 
+
+(obligationParts ModernInternationalRelationsCOC DontTakeHostages) 
+
+
+
+
+(increasesCausally HYP-TakingSomeoneHostage-8555185 
+ (powerInRegion-Geopolitical Iran UnitedKingdomOfGreatBritainAndNorthernIreland MediumToVeryHigh) likelihood) 
+
+(implies 
+ (and 
+ (instance ?HOST TakingSomeoneHostage) 
+ (agent ?HOST ?GEOPOL1) 
+ (instance ?GEOPOL1 GeopoliticalEntity) 
+ (objectActedOn ?HOST ?PERSON) 
+ (citizens ?GEOPOL2 ?PERSON) 
+ (instance ?GEOPOL2 GeographicalAgent)) 
+ (increasesCausally ?HOST 
+ (powerInRegion-Geopolitical ?GEOPOL1 ?GEOPOL2 MediumToVeryHigh) likelihood)) 
+
+ 
+
+(instance UnitedKingdomOfGreatBritainAndNorthernIreland GeographicalAgent) 
+
+(citizens UnitedKingdomOfGreatBritainAndNorthernIreland HYP-Person-63614436) 
+
+(objectActedOn HYP-TakingSomeoneHostage-8555185 HYP-Person-63614436) 
+
+(instance Iran GeopoliticalEntity) 
+
+
+
+
+(increasesCausally HYP-TakingSomeoneHostage-8555185 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (maleficiary ?SANCTION Iran))) likelihood) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+ (increasesCausally ?ACT 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (maleficiary ?SANCTION ?AGT))) likelihood)) 
+
+(believes InternationalCommunity 
+ (agent HYP-TakingSomeoneHostage-8555185 Iran)) 
+
+(implies 
+ (and 
+ (instance ?HOSTAGE TakingSomeoneHostage) 
+ (agent ?HOSTAGE ?COUNTRY-ORG) 
+ (instance ?COUNTRY-ORG Country)) 
+ (believes InternationalCommunity 
+ (agent ?HOSTAGE ?COUNTRY-ORG))) 
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT DontTakeHostages) 
+ (agent ?ACT ?AGT) 
+ (instance ?AGT Country)) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+
+(actionViolatesObligation HYP-TakingSomeoneHostage-8555185 DontTakeHostages) 
+
+(implies 
+ (and 
+ (instance ?HOSTAGE TakingSomeoneHostage) 
+ (agent ?HOSTAGE ?COUNTRY) 
+ (instance ?COUNTRY Country)) 
+ (actionViolatesObligation ?HOSTAGE DontTakeHostages)) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ?OB) 
+ (obligationParts ?WIDE ?OB)) 
+ (actionViolatesObligation ?ACT ?WIDE)) 
+
+
+
+(increasesCausally HYP-TakingSomeoneHostage-8555185 
+ (powerInRegion-Geopolitical Iran UnitedKingdomOfGreatBritainAndNorthernIreland HighToVeryHigh) likelihood) 
+
+(implies 
+ (and 
+ (instance ?HOST TakingSomeoneHostage) 
+ (agent ?HOST ?GEOPOL1) 
+ (instance ?GEOPOL1 GeopoliticalEntity) 
+ (objectActedOn ?HOST ?PERSON) 
+ (citizens ?GEOPOL2 ?PERSON) 
+ (instance ?GEOPOL2 GeographicalAgent)) 
+ (increasesCausally ?HOST 
+ (powerInRegion-Geopolitical ?GEOPOL1 ?GEOPOL2 HighToVeryHigh) likelihood)) 
+
+ 
+
+(instance UnitedKingdomOfGreatBritainAndNorthernIreland GeographicalAgent) 
+
+(citizens UnitedKingdomOfGreatBritainAndNorthernIreland HYP-Person-63614436) 
+
+(objectActedOn HYP-TakingSomeoneHostage-8555185 HYP-Person-63614436) 
+
+(instance Iran GeopoliticalEntity) 
+
+
+(query (findall ?PROP
+ (implies 
+ (and 
+ (agent ?ACT Iran) 
+ (instance ?ACT TakingSomeoneHostage) 
+ (citizens UnitedKingdomOfGreatBritainAndNorthernIreland ?HOSTAGE) 
+ (objectActedOn ?ACT ?HOSTAGE)) 
+ (or 
+ (increasesCausally ?ACT ?PROP likelihood) 
+ (decreasesCausally ?ACT ?PROP likelihood)))  ))
+
+(answer (list (thereExists ?BLAME 
+(and 
+(instance ?BLAME Censuring-CommunicationAct  ) 
+(senderOfInfo ?BLAME InternationalCommunity  ) 
+(maleficiary ?BLAME Iran  )))) )
+
+(answer (list (powerInRegion-Geopolitical Iran  
+	UnitedKingdomOfGreatBritainAndNorthernIreland MediumToVeryHigh)) )
+
+(answer (list (thereExists ?SANCTION 
+       (and 
+           (instance ?SANCTION ImposingSanctions) 
+           (maleficiary ?SANCTION Iran)))))
+ 
+(answer (list (powerInRegion-Geopolitical Iran 
+	UnitedKingdomOfGreatBritainAndNorthernIreland HighToVeryHigh)))
+
+
+(end_of_file)
+

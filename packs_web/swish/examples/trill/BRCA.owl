@@ -1,0 +1,2474 @@
+<?xml version="1.0"?>
+
+<!--
+
+Model of risk factor of breast cancer, from
+Klinov, P., Parsia, B.: Optimization and evaluation of reasoning in probabilistic
+description logic: Towards a systematic approach. In: International Semantic Web
+Conference. LNCS, vol. 5318, pp. 213–228. Springer (2008)
+
+/** <examples>
+
+?- prob_instanceOf(\'cancer_ra:WomanUnderLifetimeBRCRisk\',\'cancer_ra:Helen\',Prob).
+?- instanceOf(\'cancer_ra:WomanUnderLifetimeBRCRisk\',\'cancer_ra:Helen\',ListExpl).
+
+?- prob_sub_class(\'WomanAged3040\',\'WomanUnderLifetimeBRCRisk\',Prob).
+?- sub_class(\'WomanAged3040\',\'WomanUnderLifetimeBRCRisk\',ListExpl).
+
+*/
+-->
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY cancer_ra "http://clarkparsia.com/pronto/cancer_ra.owl#" >
+    <!ENTITY bundle "https://sites.google.com/a/unife.it/ml/bundle#" >
+    <!ENTITY disponte "https://sites.google.com/a/unife.it/ml/disponte#" >
+]>
+
+
+<rdf:RDF xmlns="&cancer_ra;"
+     xml:base="http://clarkparsia.com/pronto/cancer_ra.owl#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:cancer_ra="http://clarkparsia.com/pronto/cancer_ra.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:bundle="https://sites.google.com/a/unife.it/ml/bundle#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:disponte="https://sites.google.com/a/unife.it/ml/disponte#">
+    <owl:Ontology rdf:about="file:examples/brc/ontologies/cancer_ra.owl"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://sites.google.com/a/unife.it/ml/disponte#probability -->
+
+    <owl:AnnotationProperty rdf:about="&disponte;probability"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#hasAge -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;hasAge">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&cancer_ra;Age"/>
+        <rdfs:domain rdf:resource="&cancer_ra;Person"/>
+        <rdfs:subPropertyOf rdf:resource="&cancer_ra;hasRiskFactor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#hasGender -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;hasGender">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&cancer_ra;Gender"/>
+        <rdfs:domain rdf:resource="&cancer_ra;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#hasRace -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;hasRace">
+        <rdfs:range rdf:resource="&cancer_ra;Ethnicity"/>
+        <rdfs:domain rdf:resource="&cancer_ra;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#hasRisk -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;hasRisk">
+        <rdfs:domain rdf:resource="&cancer_ra;Person"/>
+        <rdfs:range rdf:resource="&cancer_ra;Risk"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#hasRiskFactor -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;hasRiskFactor">
+        <rdfs:domain rdf:resource="&cancer_ra;Person"/>
+        <rdfs:range rdf:resource="&cancer_ra;RiskFactor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#relatedToDisease -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;relatedToDisease">
+        <rdfs:range rdf:resource="&cancer_ra;Disease"/>
+        <rdfs:domain rdf:resource="&cancer_ra;RiskFactor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#riskCategory -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;riskCategory">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="&cancer_ra;Risk"/>
+        <rdfs:range rdf:resource="&cancer_ra;RiskCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#riskOf -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;riskOf">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&cancer_ra;Disease"/>
+        <rdfs:domain rdf:resource="&cancer_ra;RiskType"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#riskType -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;riskType">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="&cancer_ra;Risk"/>
+        <rdfs:range rdf:resource="&cancer_ra;RiskType"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#willDevelop -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;willDevelop">
+        <rdfs:range rdf:resource="&cancer_ra;Disease"/>
+        <rdfs:domain rdf:resource="&cancer_ra;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#willDevelopInLongTerm -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;willDevelopInLongTerm">
+        <rdfs:range rdf:resource="&cancer_ra;Disease"/>
+        <rdfs:domain rdf:resource="&cancer_ra;Person"/>
+        <rdfs:subPropertyOf rdf:resource="&cancer_ra;willDevelop"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#willDevelopInShortTerm -->
+
+    <owl:ObjectProperty rdf:about="&cancer_ra;willDevelopInShortTerm">
+        <rdfs:range rdf:resource="&cancer_ra;Disease"/>
+        <rdfs:domain rdf:resource="&cancer_ra;Person"/>
+        <rdfs:subPropertyOf rdf:resource="&cancer_ra;willDevelop"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#increaseFactor -->
+
+    <owl:DatatypeProperty rdf:about="&cancer_ra;increaseFactor">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="&cancer_ra;RelativeRiskCategory"/>
+        <rdfs:range rdf:resource="&xsd;decimal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.w3.org/2006/12/owl11#maxExclusive -->
+
+    <owl:DatatypeProperty rdf:about="http://www.w3.org/2006/12/owl11#maxExclusive"/>
+    
+
+
+    <!-- http://www.w3.org/2006/12/owl11#minExclusive -->
+
+    <owl:DatatypeProperty rdf:about="http://www.w3.org/2006/12/owl11#minExclusive"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AbsoluteBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;AbsoluteBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;BRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                        <owl:allValuesFrom rdf:resource="&cancer_ra;AbsoluteRiskCategory"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;BRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AbsoluteRiskCategory -->
+
+    <owl:Class rdf:about="&cancer_ra;AbsoluteRiskCategory">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;RiskCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AfricanAmerican -->
+
+    <owl:Class rdf:about="&cancer_ra;AfricanAmerican">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Ethnicity"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;AshkenaziJew"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AfricanAmericanWoman -->
+
+    <owl:Class rdf:about="&cancer_ra;AfricanAmericanWoman">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRace"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;AfricanAmerican"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AfterMenopause -->
+
+    <owl:Class rdf:about="&cancer_ra;AfterMenopause">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;BeforeMenopause"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Age -->
+
+    <owl:Class rdf:about="&cancer_ra;Age">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Age2030 -->
+
+    <owl:Class rdf:about="&cancer_ra;Age2030">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;AgeUnder50"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age3040"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age4050"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age5060"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age6070"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age70Plus"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;AgeUnder20"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Age3040 -->
+
+    <owl:Class rdf:about="&cancer_ra;Age3040">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;AgeUnder50"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age4050"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age5060"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age6070"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age70Plus"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;AgeUnder20"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Age4050 -->
+
+    <owl:Class rdf:about="&cancer_ra;Age4050">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;AgeUnder50"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age5060"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age6070"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age70Plus"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;AgeUnder20"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Age5060 -->
+
+    <owl:Class rdf:about="&cancer_ra;Age5060">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Age"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age6070"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age70Plus"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Age50Plus -->
+
+    <owl:Class rdf:about="&cancer_ra;Age50Plus">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Age5060"/>
+                    <rdf:Description rdf:about="&cancer_ra;Age6070"/>
+                    <rdf:Description rdf:about="&cancer_ra;Age70Plus"/>
+                </owl:unionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Age"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;AgeUnder50"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Age6070 -->
+
+    <owl:Class rdf:about="&cancer_ra;Age6070">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Age"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;Age70Plus"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Age70Plus -->
+
+    <owl:Class rdf:about="&cancer_ra;Age70Plus">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Age"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AgeUnder20 -->
+
+    <owl:Class rdf:about="&cancer_ra;AgeUnder20">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;AgeUnder50"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AgeUnder50 -->
+
+    <owl:Class rdf:about="&cancer_ra;AgeUnder50">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Age"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Alcohol -->
+
+    <owl:Class rdf:about="&cancer_ra;Alcohol">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AshkenaziJew -->
+
+    <owl:Class rdf:about="&cancer_ra;AshkenaziJew">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Ethnicity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AshkenaziJewishWoman -->
+
+    <owl:Class rdf:about="&cancer_ra;AshkenaziJewishWoman">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRace"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;AshkenaziJew"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanWithBRCAMutation"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.025</disponte:probability>
+        <owl:annotatedSource rdf:resource="&cancer_ra;AshkenaziJewishWoman"/>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;WomanWithBRCAMutation"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#AtypicalHyperplasia -->
+
+    <owl:Class rdf:about="&cancer_ra;AtypicalHyperplasia">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;BenignBreastDisease"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;UsualHyperplasia"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BRCA1Mutation -->
+
+    <owl:Class rdf:about="&cancer_ra;BRCA1Mutation">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;BRCAMutation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BRCA2Mutation -->
+
+    <owl:Class rdf:about="&cancer_ra;BRCA2Mutation">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;BRCAMutation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BRCAMutation -->
+
+    <owl:Class rdf:about="&cancer_ra;BRCAMutation">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;InferredFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BRCRType -->
+
+    <owl:Class rdf:about="&cancer_ra;BRCRType">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;RiskType"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskOf"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;BreastCancer"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;BRCRisk">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Risk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskType"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;BRCRType"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BeforeMenopause -->
+
+    <owl:Class rdf:about="&cancer_ra;BeforeMenopause">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;LateMenopause"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BenignBreastDisease -->
+
+    <owl:Class rdf:about="&cancer_ra;BenignBreastDisease">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;InferredFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BirthControlPills -->
+
+    <owl:Class rdf:about="&cancer_ra;BirthControlPills">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#BreastCancer -->
+
+    <owl:Class rdf:about="&cancer_ra;BreastCancer">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Cancer"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Cancer -->
+
+    <owl:Class rdf:about="&cancer_ra;Cancer">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Disease"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#CarcinomaInSitu -->
+
+    <owl:Class rdf:about="&cancer_ra;CarcinomaInSitu">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;InferredFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Disease -->
+
+    <owl:Class rdf:about="&cancer_ra;Disease">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#EarlyFirstChild -->
+
+    <owl:Class rdf:about="&cancer_ra;EarlyFirstChild">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;LateFirstChild"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#EarlyMenopause -->
+
+    <owl:Class rdf:about="&cancer_ra;EarlyMenopause">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;LateMenopause"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Estrogen -->
+
+    <owl:Class rdf:about="&cancer_ra;Estrogen">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalHormones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#EstrogenProgestin -->
+
+    <owl:Class rdf:about="&cancer_ra;EstrogenProgestin">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Estrogen"/>
+                    <rdf:Description rdf:about="&cancer_ra;Progestin"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalHormones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#EstrogenTestosterone -->
+
+    <owl:Class rdf:about="&cancer_ra;EstrogenTestosterone">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Estrogen"/>
+                    <rdf:Description rdf:about="&cancer_ra;Testosterone"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalHormones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Ethnicity -->
+
+    <owl:Class rdf:about="&cancer_ra;Ethnicity">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#FamilyCancerHistory -->
+
+    <owl:Class rdf:about="&cancer_ra;FamilyCancerHistory">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Female -->
+
+    <owl:Class rdf:about="&cancer_ra;Female">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Gender"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#FirstPeriodBefore12 -->
+
+    <owl:Class rdf:about="&cancer_ra;FirstPeriodBefore12">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Gender -->
+
+    <owl:Class rdf:about="&cancer_ra;Gender">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#HighBoneDensity -->
+
+    <owl:Class rdf:about="&cancer_ra;HighBoneDensity">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;InferredFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#HighBreastDensity -->
+
+    <owl:Class rdf:about="&cancer_ra;HighBreastDensity">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;InferredFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#HighLevelOfEstrogen -->
+
+    <owl:Class rdf:about="&cancer_ra;HighLevelOfEstrogen">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;InferredFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#IncreasedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;IncreasedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;RelativeBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                        <owl:allValuesFrom rdf:resource="&cancer_ra;IncreasedRiskCategory"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;RelativeBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#IncreasedRiskCategory -->
+
+    <owl:Class rdf:about="&cancer_ra;IncreasedRiskCategory">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;RelativeRiskCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#InferredFactor -->
+
+    <owl:Class rdf:about="&cancer_ra;InferredFactor">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;RiskFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#KnownFactor -->
+
+    <owl:Class rdf:about="&cancer_ra;KnownFactor">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;RiskFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#LackOfExercise -->
+
+    <owl:Class rdf:about="&cancer_ra;LackOfExercise">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#LateFirstChild -->
+
+    <owl:Class rdf:about="&cancer_ra;LateFirstChild">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#LateMenopause -->
+
+    <owl:Class rdf:about="&cancer_ra;LateMenopause">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#LifetimeBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;LifetimeBRCRisk">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;AbsoluteBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Male -->
+
+    <owl:Class rdf:about="&cancer_ra;Male">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Gender"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#ModerateDecrease -->
+
+    <owl:Class rdf:about="&cancer_ra;ModerateDecrease">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;ReducedRiskCategory"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;StrongDecrease"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WeakDecrease"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#ModerateIncrease -->
+
+    <owl:Class rdf:about="&cancer_ra;ModerateIncrease">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;IncreasedRiskCategory"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;StrongIncrease"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WeakIncrease"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#ModeratelyIncreasedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;ModeratelyIncreasedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;IncreasedBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                        <owl:allValuesFrom rdf:resource="&cancer_ra;ModerateIncrease"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;IncreasedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#ModeratelyReducedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;ModeratelyReducedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                <owl:allValuesFrom rdf:resource="&cancer_ra;ModerateDecrease"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;ReducedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#MotherAffected -->
+
+    <owl:Class rdf:about="&cancer_ra;MotherAffected">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;FamilyCancerHistory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#MotherAffectedAfterAge60 -->
+
+    <owl:Class rdf:about="&cancer_ra;MotherAffectedAfterAge60">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;MotherAffected"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;MotherAffectedBeforeAge60"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#MotherAffectedBeforeAge60 -->
+
+    <owl:Class rdf:about="&cancer_ra;MotherAffectedBeforeAge60">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;MotherAffected"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#NoBreastfeeding -->
+
+    <owl:Class rdf:about="&cancer_ra;NoBreastfeeding">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#NoChildren -->
+
+    <owl:Class rdf:about="&cancer_ra;NoChildren">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;NoBreastfeeding"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Overweight -->
+
+    <owl:Class rdf:about="&cancer_ra;Overweight">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#OverweightWoman -->
+
+    <owl:Class rdf:about="&cancer_ra;OverweightWoman">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Overweight"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Person -->
+
+    <owl:Class rdf:about="&cancer_ra;Person">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasGender"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;Gender"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PersonUnderRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;PersonUnderRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Person"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Risk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PersonalBRCHistory -->
+
+    <owl:Class rdf:about="&cancer_ra;PersonalBRCHistory">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PostmenopausalHormones -->
+
+    <owl:Class rdf:about="&cancer_ra;PostmenopausalHormones">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PostmenopausalWoman -->
+
+    <owl:Class rdf:about="&cancer_ra;PostmenopausalWoman">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;AfterMenopause"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;PremenopausalWoman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PostmenopausalWomanTakingEstrogen -->
+
+    <owl:Class rdf:about="&cancer_ra;PostmenopausalWomanTakingEstrogen">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;PostmenopausalWoman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Estrogen"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderModeratelyIncreasedBRCRisk"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.67</disponte:probability>
+        <owl:annotatedSource rdf:resource="&cancer_ra;PostmenopausalWomanTakingEstrogen"/>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;WomanUnderModeratelyIncreasedBRCRisk"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PostmenopausalWomanTakingEstrogenAndProgestin -->
+
+    <owl:Class rdf:about="&cancer_ra;PostmenopausalWomanTakingEstrogenAndProgestin">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Estrogen"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Progestin"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalWoman"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.35</disponte:probability>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;PostmenopausalWoman"/>
+        <owl:annotatedSource rdf:resource="&cancer_ra;PostmenopausalWomanTakingEstrogenAndProgestin"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PostmenopausalWomanTakingEstrogenAndTestosterone -->
+
+    <owl:Class rdf:about="&cancer_ra;PostmenopausalWomanTakingEstrogenAndTestosterone">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;PostmenopausalWoman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Estrogen"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Testosterone"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalWoman"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.91</disponte:probability>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;PostmenopausalWoman"/>
+        <owl:annotatedSource rdf:resource="&cancer_ra;PostmenopausalWomanTakingEstrogenAndTestosterone"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PostmenopausalWomanTakingProgestin -->
+
+    <owl:Class rdf:about="&cancer_ra;PostmenopausalWomanTakingProgestin">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;PostmenopausalWoman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Progestin"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.13</disponte:probability>
+        <owl:annotatedSource rdf:resource="&cancer_ra;PostmenopausalWomanTakingProgestin"/>
+        <owl:annotatedProperty rdf:resource="&owl;equivalentClass"/>
+        <owl:annotatedTarget>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;PostmenopausalWoman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Progestin"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PostmenopausalWomanTakingTestosterone -->
+
+    <owl:Class rdf:about="&cancer_ra;PostmenopausalWomanTakingTestosterone">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;PostmenopausalWoman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Testosterone"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.85</disponte:probability>
+        <owl:annotatedSource rdf:resource="&cancer_ra;PostmenopausalWomanTakingTestosterone"/>
+        <owl:annotatedProperty rdf:resource="&owl;equivalentClass"/>
+        <owl:annotatedTarget>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;PostmenopausalWoman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Testosterone"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PostmenopausalWomanWithHighLevelOfEstrogen -->
+
+    <owl:Class rdf:about="&cancer_ra;PostmenopausalWomanWithHighLevelOfEstrogen">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;PostmenopausalWoman"/>
+                    <rdf:Description rdf:about="&cancer_ra;WomanWithHighLevelOfEstrogen"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#PremenopausalWoman -->
+
+    <owl:Class rdf:about="&cancer_ra;PremenopausalWoman">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;BeforeMenopause"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Progestin -->
+
+    <owl:Class rdf:about="&cancer_ra;Progestin">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalHormones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#RadiationExposureDuringYouth -->
+
+    <owl:Class rdf:about="&cancer_ra;RadiationExposureDuringYouth">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;KnownFactor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#ReducedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;ReducedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;RelativeBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;ReducedRiskCategory"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;RelativeBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#ReducedRiskCategory -->
+
+    <owl:Class rdf:about="&cancer_ra;ReducedRiskCategory">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;RelativeRiskCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#RelativeBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;RelativeBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;BRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                        <owl:allValuesFrom rdf:resource="&cancer_ra;RelativeRiskCategory"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;BRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#RelativeRiskCategory -->
+
+    <owl:Class rdf:about="&cancer_ra;RelativeRiskCategory">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;RiskCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Risk -->
+
+    <owl:Class rdf:about="&cancer_ra;Risk">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#RiskCategory -->
+
+    <owl:Class rdf:about="&cancer_ra;RiskCategory">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#RiskFactor -->
+
+    <owl:Class rdf:about="&cancer_ra;RiskFactor">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;relatedToDisease"/>
+                <owl:allValuesFrom rdf:resource="&cancer_ra;Disease"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#RiskType -->
+
+    <owl:Class rdf:about="&cancer_ra;RiskType">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&owl;Thing"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskOf"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Disease"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#SeniorWomanWithMotherBRCAffected -->
+
+    <owl:Class rdf:about="&cancer_ra;SeniorWomanWithMotherBRCAffected">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Class>
+                        <owl:intersectionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                                <owl:someValuesFrom rdf:resource="&cancer_ra;MotherAffected"/>
+                            </owl:Restriction>
+                        </owl:intersectionOf>
+                    </owl:Class>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Age50Plus"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#ShortTermBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;ShortTermBRCRisk">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;AbsoluteBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#StrongDecrease -->
+
+    <owl:Class rdf:about="&cancer_ra;StrongDecrease">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;ReducedRiskCategory"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WeakDecrease"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#StrongIncrease -->
+
+    <owl:Class rdf:about="&cancer_ra;StrongIncrease">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;IncreasedRiskCategory"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WeakIncrease"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#StronglyIncreasedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;StronglyIncreasedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;IncreasedBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                        <owl:allValuesFrom rdf:resource="&cancer_ra;StrongIncrease"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;IncreasedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#StronglyReducedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;StronglyReducedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                <owl:allValuesFrom rdf:resource="&cancer_ra;StrongDecrease"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;ReducedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Testosterone -->
+
+    <owl:Class rdf:about="&cancer_ra;Testosterone">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalHormones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#TwoImmediateRelativesAffected -->
+
+    <owl:Class rdf:about="&cancer_ra;TwoImmediateRelativesAffected">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;FamilyCancerHistory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#UsualHyperplasia -->
+
+    <owl:Class rdf:about="&cancer_ra;UsualHyperplasia">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;BenignBreastDisease"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WeakDecrease -->
+
+    <owl:Class rdf:about="&cancer_ra;WeakDecrease">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;ReducedRiskCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WeakIncrease -->
+
+    <owl:Class rdf:about="&cancer_ra;WeakIncrease">
+        <rdfs:subClassOf rdf:resource="&cancer_ra;IncreasedRiskCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WeakelyIncreasedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WeakelyIncreasedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;IncreasedBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                        <owl:allValuesFrom rdf:resource="&cancer_ra;WeakIncrease"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;IncreasedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WeakelyReducedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WeakelyReducedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;riskCategory"/>
+                <owl:allValuesFrom rdf:resource="&cancer_ra;WeakDecrease"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;ReducedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Woman -->
+
+    <owl:Class rdf:about="&cancer_ra;Woman">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Person"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasGender"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Female"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderLifetimeBRCRisk"/>
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.123</disponte:probability>
+        <owl:annotatedSource rdf:resource="&cancer_ra;Woman"/>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;WomanUnderLifetimeBRCRisk"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAbusingAlcohol -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAbusingAlcohol">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Alcohol"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAged2030 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAged2030">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;Age2030"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderShortTermBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAged3040 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAged3040">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Age3040"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderShortTermBRCRisk"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.112</disponte:probability>
+        <owl:annotatedSource rdf:resource="&cancer_ra;WomanAged3040"/>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;WomanUnderShortTermBRCRisk"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAged4050 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAged4050">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;Age4050"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAged5060 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAged5060">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Age5060"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderShortTermBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAged50Plus -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAged50Plus">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;Age50Plus"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAged6070 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAged6070">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;Age6070"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAged70Plus -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAged70Plus">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;Age70Plus"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAgedUnder20 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAgedUnder20">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;AgeUnder20"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanAgedUnder50 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanAgedUnder50">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasAge"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;AgeUnder50"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanWithRiskFactors"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanExposedToRadiationDuringYouth -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanExposedToRadiationDuringYouth">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;RadiationExposureDuringYouth"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanHavingFirstPeriodBefore12 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanHavingFirstPeriodBefore12">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;FirstPeriodBefore12"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanLackingExercise -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanLackingExercise">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;LackOfExercise"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanTakingBirthControlPills -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanTakingBirthControlPills">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;BirthControlPills"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanTakingEstrogen -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanTakingEstrogen">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;Estrogen"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanTakingPostmenopausalHormones -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanTakingPostmenopausalHormones">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;PostmenopausalHormones"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanTakingProgestin -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanTakingProgestin">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;Progestin"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderAbsoluteBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderAbsoluteBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;AbsoluteBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;BRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderIncreasedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderIncreasedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;WomanUnderBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;IncreasedBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanUnderReducedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderLifetimeBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderLifetimeBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;LifetimeBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderAbsoluteBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderModeratelyIncreasedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderModeratelyIncreasedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;WomanUnderIncreasedBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;ModeratelyIncreasedBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderIncreasedBRCRisk"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanUnderStronglyIncreasedBRCRisk"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanUnderWeakelyIncreasedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderModeratelyReducedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderModeratelyReducedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;ModeratelyReducedBRCRisk"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderReducedBRCRisk"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanUnderStronglyReducedBRCRisk"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanUnderWeakelyReducedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderReducedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderReducedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;WomanUnderBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;ReducedBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderRelativeBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderRelativeBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;RelativeBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderShortTermBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderShortTermBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;ShortTermBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderAbsoluteBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderStronglyIncreasedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderStronglyIncreasedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;WomanUnderIncreasedBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;StronglyIncreasedBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderIncreasedBRCRisk"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanUnderWeakelyIncreasedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderStronglyReducedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderStronglyReducedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;StronglyReducedBRCRisk"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderReducedBRCRisk"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanUnderWeakelyReducedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderWeakelyIncreasedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderWeakelyIncreasedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;WomanUnderIncreasedBRCRisk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;WeakelyIncreasedBRCRisk"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderIncreasedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanUnderWeakelyReducedBRCRisk -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanUnderWeakelyReducedBRCRisk">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasRisk"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;WeakelyReducedBRCRisk"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderReducedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithAtypicalHyperplasia -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithAtypicalHyperplasia">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;AtypicalHyperplasia"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithBRCA1Mutation -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithBRCA1Mutation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;BRCA1Mutation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderLifetimeBRCRisk"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.8</disponte:probability>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;WomanUnderLifetimeBRCRisk"/>
+        <owl:annotatedSource rdf:resource="&cancer_ra;WomanWithBRCA1Mutation"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithBRCA2Mutation -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithBRCA2Mutation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;BRCA2Mutation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithBRCAMutation -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithBRCAMutation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;BRCAMutation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderLifetimeBRCRisk"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanWithRiskFactors"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.85</disponte:probability>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;WomanUnderLifetimeBRCRisk"/>
+        <owl:annotatedSource rdf:resource="&cancer_ra;WomanWithBRCAMutation"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithCarcinomaInSitu -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithCarcinomaInSitu">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;CarcinomaInSitu"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithEarlyFirstChild -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithEarlyFirstChild">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;EarlyFirstChild"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanWithLateFirstChild"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanWithoutChildren"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithEarlyFirstPeriodAndLateMenopause -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithEarlyFirstPeriodAndLateMenopause">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;WomanHavingFirstPeriodBefore12"/>
+                    <rdf:Description rdf:about="&cancer_ra;WomanWithLateMenopause"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithEarlyMenopause -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithEarlyMenopause">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;EarlyMenopause"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalWoman"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithFamilyBRCHistory -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithFamilyBRCHistory">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;FamilyCancerHistory"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithHighBoneDensity -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithHighBoneDensity">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;HighBreastDensity"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithHighBreastDensity -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithHighBreastDensity">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;HighBreastDensity"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithHighLevelOfEstrogen -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithHighLevelOfEstrogen">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;HighLevelOfEstrogen"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithImmediateRelativesBRCAffected -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithImmediateRelativesBRCAffected">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;TwoImmediateRelativesAffected"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithLateFirstChild -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithLateFirstChild">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;LateFirstChild"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+        <owl:disjointWith rdf:resource="&cancer_ra;WomanWithoutChildren"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithLateMenopause -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithLateMenopause">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;LateMenopause"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;PostmenopausalWoman"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithMotherAffectedAfterAge60 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithMotherAffectedAfterAge60">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;MotherAffectedAfterAge60"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanWithMotherBRCAffected"/>
+    </owl:Class>
+    <owl:Axiom>
+        <disponte:probability rdf:datatype="&xsd;decimal">0.9</disponte:probability>
+        <owl:annotatedSource rdf:resource="&cancer_ra;WomanWithMotherAffectedAfterAge60"/>
+        <owl:annotatedTarget rdf:resource="&cancer_ra;WomanWithMotherBRCAffected"/>
+        <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithMotherAffectedBeforeAge60 -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithMotherAffectedBeforeAge60">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                <owl:someValuesFrom rdf:resource="&cancer_ra;MotherAffectedBeforeAge60"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderModeratelyIncreasedBRCRisk"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanWithMotherBRCAffected"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithMotherBRCAffected -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithMotherBRCAffected">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;MotherAffected"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithPersonalBRCHistory -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithPersonalBRCHistory">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;PersonalBRCHistory"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderModeratelyIncreasedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithRiskFactors -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithRiskFactors">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;RiskFactor"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithUsualHyperplasia -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithUsualHyperplasia">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;UsualHyperplasia"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;WomanUnderModeratelyIncreasedBRCRisk"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithoutBreastfeeding -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithoutBreastfeeding">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;NoBreastfeeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#WomanWithoutChildren -->
+
+    <owl:Class rdf:about="&cancer_ra;WomanWithoutChildren">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cancer_ra;Woman"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom rdf:resource="&cancer_ra;NoChildren"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&cancer_ra;hasRiskFactor"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="&cancer_ra;Age3040"/>
+                                    <rdf:Description rdf:about="&cancer_ra;Age4050"/>
+                                    <rdf:Description rdf:about="&cancer_ra;Age50Plus"/>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cancer_ra;Woman"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://clarkparsia.com/pronto/cancer_ra.owl#Helen -->
+
+    <owl:NamedIndividual rdf:about="&cancer_ra;Helen">
+        <rdf:type rdf:resource="&cancer_ra;PostmenopausalWoman"/>
+        <rdf:type rdf:resource="&cancer_ra;Woman"/>
+        <rdf:type rdf:resource="&cancer_ra;WomanAged3040"/>
+        <rdf:type rdf:resource="&cancer_ra;WomanTakingEstrogen"/>
+        <rdfs:label>Helen</rdfs:label>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net -->
+

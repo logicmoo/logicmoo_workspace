@@ -1,0 +1,133 @@
+
+- 
+--------------------- New Integration -------------------------
+
+- Creating a new situation node with content: 
+[Man]<-agnt-[Eat]
+- Pertinent Types and their associated Entry Points in the New CG : 
+
+-   Eat : [[Eat]]
+
+-   Man : [[Man]]
+
+- Integrate the new CS from focus : Eat and using as entry point: [Eat]
+- current ont node: 
+Eat
+- Proceeding the case of MORE_SPECIFIC
+- Integration done for:Eat
+- Integrate the new CS from focus : Man and using as entry point: [Man]
+- current ont node: 
+Man
+- Proceeding the case of MORE_SPECIFIC
+- Compare and proceed with the child: 
+Boy
+- Checking if the new CS has been compared with :
+Boy
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+AIScientist
+- Checking if the new CS has been compared with :
+AIScientist
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+imad
+- Checking if the new CS has been compared with :
+imad
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+michael
+- Checking if the new CS has been compared with :
+michael
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+[Drink : *p1 ] -
+            -obj->[Water],
+            -agnt->[Man]
+- Checking if the new CS has been compared with :
+[Drink : *p1 ] -
+            -obj->[Water],
+            -agnt->[Man]
+- No, not already compared
+- Comparison operation : 
+- The result of the comparison is :UNCOMPARABLE
+- current ont node: 
+[Drink : *p1 ] -
+            -obj->[Water],
+            -agnt->[Man]
+- Compare and proceed with the child: 
+[Drive : *p1 ] -
+            -instr->[Car],
+            -agnt->[Man]
+- Checking if the new CS has been compared with :
+[Drive : *p1 ] -
+            -instr->[Car],
+            -agnt->[Man]
+- No, not already compared
+- Comparison operation : 
+- The result of the comparison is :UNCOMPARABLE
+- current ont node: 
+[Drive : *p1 ] -
+            -instr->[Car],
+            -agnt->[Man]
+- Compare and proceed with the child: 
+Robert
+- Checking if the new CS has been compared with :
+Robert
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+Tinman
+- Checking if the new CS has been compared with :
+Tinman
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+Figaro
+- Checking if the new CS has been compared with :
+Figaro
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+ArtSponsor
+- Checking if the new CS has been compared with :
+ArtSponsor
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+Karim
+- Checking if the new CS has been compared with :
+Karim
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+Samir
+- Checking if the new CS has been compared with :
+Samir
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+Tom
+- Checking if the new CS has been compared with :
+Tom
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+Karl
+- Checking if the new CS has been compared with :
+Karl
+- No, not already compared
+- Comparison operation : 
+- Compare and proceed with the child: 
+Drinker
+- Checking if the new CS has been compared with :
+Drinker
+- No, not already compared
+- Comparison operation : 
+- Integration done for:Man
+- The new CS has been integrated successfully
+- 
+---------------------End of Integration-------------------------

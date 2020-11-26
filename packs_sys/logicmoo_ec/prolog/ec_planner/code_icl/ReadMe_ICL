@@ -1,0 +1,118 @@
+This directory contains code and examples for Version 0.2 of the
+the independent choice logic, but only with choices by nature.
+All code is copyright 1997 David Poole. All rights reserved.
+
+The main program is 'icl_int.tex'. This is both a Latex file and a
+Sicstus Prolog file (it is pretty standard Edinburgh-syntax prolog,
+so it should run on any Prolog system).
+
+The main highlights of this release are:
+
+1. negation as faiure is allowed in the logic program. See "Abducing
+through Negation as Failure:  Stable models within the independent
+choice logic".
+
+2. There are some debugging facilities, in particular facilities for
+tracing programs, traversing proof trees, and automatic detection of
+non-disjoint rules.
+
+3. The search strategy is a complete depth-first search. There is
+nothing remotely sophisticated here.
+
+4. We can handle nature's (random) choices, but can only do prediction
+from an agent's choice. [It does not choose from an agent's
+alternatives].
+
+5. This really only does probabilistic temporal projection. It only
+does expected utility when the rules imply either utility 0 or 1, and
+then the probability of utility=1 is the utility.
+
+6. This assumes that the rules are disjcoint. If they aren't, the
+probabilities won't be correct.
+
+7. For help at any time type "help."
+
+----------------------------------------------------------------
+The files in this directory are:
+icl_int.tex   the independent choice logic interpreter
+blocks1       messy blocks world (no negation as failure)
+blocks2       messy blocks world (no negn as failure) alternate axiomatization
+blocks3       messy blocks world (negn as failure)
+blocks4       messy blocks world (negn as failure) alternate axiomatization
+dtp.pl        robot using the situation calculus
+help          online help file (printed when the "help." command is issued)
+rob_key       robot & key example from "Abducing through negation as failure"
+sexam1        simple example
+sexam2        another simple example
+widget        widget example from "The Independent Choice Logic:..."
+----------------------------------------------------------------
+
+Here is a trace of using this program:
+localhost> prolog
+booting SICStus...please wait
+SICStus 2.1 #2 : Sun Sep 20 16:28:56 PDT 1992
+| ?- compile('icl_int.tex').
+{compiling /MyDisk/David/abduction/AbPlanning/code_icl/icl_int.tex...}
+{/MyDisk/David/abduction/AbPlanning/code_icl/icl_int.tex compiled, 6656 msec 59136 bytes}
+
+yes
+| ?- thcons(blocks4).
+
+yes
+| ?- explain(on(b,a,0+1+1),[],[puton(b,a,0),puton(c,b,0+1)]).
+
+***** Explanation 0 of on(b,a,0+1+1) given [puton(b,a,0),puton(c,b,0+1)]:
+[puton_topple(c,0+1),clamp(b,0+1),puton_success(b,0),puton(b,a,0),puton(c,b,0+1)]
+Prior = 0.00400000000000000059
+
+***** Explanation 1 of on(b,a,0+1+1) given [puton(b,a,0),puton(c,b,0+1)]:
+[puton_drop(c,0+1),puton_success(b,0),puton(b,a,0),puton(c,b,0+1)]
+Prior = 0.12
+
+***** Explanation 2 of on(b,a,0+1+1) given [puton(b,a,0),puton(c,b,0+1)]:
+[puton_success(c,0+1),puton_success(b,0),puton(b,a,0),puton(c,b,0+1)]
+Prior = 0.640000000000000119
+
+Prob( on(b,a,0+1+1) | [puton(b,a,0),puton(c,b,0+1)] ) = 0.764000000000000119
+Runtime: 437 msec.
+
+yes
+| ?- how(on(b,a,0+1+1),[],[puton(b,a,0),puton(c,b,0+1)],0).
+on(b,a,0+1+1) :-
+   1: on(b,a,0+1)
+   2: ~ clipped_on(b,a,0+1)
+|: 1.
+on(b,a,0+1) :-
+   1: puton(b,a,0)
+   2: puton_success(b,0)
+   3: puton_preconds(b,a,0)
+|: 2.
+puton_success(b,0) is assumed.
+on(b,a,0+1) :-
+   1: puton(b,a,0)
+   2: puton_success(b,0)
+   3: puton_preconds(b,a,0)
+|: 3.
+puton_preconds(b,a,0) :-
+   1: clear(b,0)
+   2: clear(a,0)
+   3: b\=a
+   4: b\=table
+|: 1.
+clear(b,0) :-
+   1: ~ somethingon(b,0)
+   2: b\=table
+|: 2.
+b\=table is built-in.
+clear(b,0) :-
+   1: ~ somethingon(b,0)
+   2: b\=table
+|: help.
+Give either a number, up or exit. End command with a Period.
+clear(b,0) :-
+   1: ~ somethingon(b,0)
+   2: b\=table
+|: exit.
+
+no
+| ?- 

@@ -1,0 +1,6 @@
+i -conversion=finite System/sys_domain_player_english.gf
+i -conversion=finite System/sys_domain_player_svenska.gf
+i -conversion=finite System/sys_domain_player_sem.gf
+
+pm -utf8 -utf8id -printer=header | wf sys_domain_player.gfcm
+pm -utf8 -utf8id -printer=cfgm | wf sys_domain_player.cfgm

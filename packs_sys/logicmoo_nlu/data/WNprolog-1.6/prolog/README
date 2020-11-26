@@ -1,0 +1,308 @@
+
+This is the README file for WordNet 1.6
+
+1. About WordNet
+
+WordNet is an online lexical reference system.  Word forms in WordNet
+are represented in their familiar orthography; word meanings are
+represented by synonym sets (synset) - lists of synonymous word forms
+that are interchangeable in some context.  Two kinds of relations are
+recognized: lexical and semantic.  Lexical relations hold between word
+forms; semantic relations hold between word meanings.  
+
+To learn more about WordNet, read "Five Papers on WordNet", available
+via anonymous FTP and in printed form.  A book, "WordNet: An
+Electronic Lexical Database", containing an updated version of "Five
+Papers on WordNet" and additional papers by WordNet users, will be
+available from MIT Press in Spring of 1998.  
+
+Information about WordNet, an online interface, and the various
+WordNet packages are available from our Web site at 
+http://www.cogsci.princeton.edu/~wn/
+
+2. Contacting Us
+
+WordNet was developed at Princeton University's Cognitive Science
+Laboratory by Psychology Professor George Miller.  Ongoing development
+work and WordNet related projects are done by a small group of
+researchers, lexicographers, and systems programmers.  Since our
+resources are VERY limited, we request that you please confine
+correspondence to WordNet topics only.  When reporting a problem,
+please be as specific as possible, stating the computer platform you
+are using, which interface you are using, and the exact error.  The
+more details you can provide, the more likely it is that you will be
+an answer.
+
+Please address all e-mail concerning WordNet to wordnet@princeton.edu.
+
+We maintain a database of "registered" WordNet users.  We use this
+database to send mail to users when necessary (such as announcing a
+new release), and also to help keep track of the number of users we
+have, which in turn helps us with important items such as funding.  If
+you download WordNet, you are encouraged to send e-mail to the address
+above.
+
+In addition to the user database, there is a WordNet user discussion
+group mailing list.  Information on joining the user mailing list
+is in the file README.ml.
+
+We are willing to establishing a 'contrib' directory.  If you have a
+package that you would like to have considered for addition, please
+send e-mail to wordnet@princeton.edu.
+
+3. The WordNet Web Site
+
+We maintain a Web site at http://www.cogsci.princeton.edu/~wn/
+
+From this site users can download WordNet, run a Web interface to
+WordNet, or download "Five Papers on WordNet".  We also maintain links
+to other related projects and online interfaces to WordNet, and an
+extensive (but by no mean complete) bibliography.  We will add links
+to user applications and papers.  Please send e-mail to the above
+address. 
+
+4. WordNet Packages
+
+WordNet Version 1.6 is now available.  See the file CHANGES for
+information about changes from version 1.5.  WordNet 1.5 is no longer
+available. 
+
+Several different WordNet packages are available.  All are available
+from the WordNet FTP site.  The PC and Macintosh packages are also
+available on CD-ROM from MIT Press (Spring 1998).  Visit their Web
+site at http://mitpress.mit.edu for the MIT Press catalog.
+
+Most users require only the database package.  An explanation of each
+package follows.
+
+4.1 Database Package 
+
+The database package is a complete installation for WordNet 1.6 users.
+It includes the 1.6 database files, precompiled binaries for the
+supported platforms specified below, source code for the WordNet
+browsers and library, and documentation.  The other packages are not
+included - they must be downloaded and installed separately.
+
+4.2 Semantic Concordance Package
+
+The semantic concordance package contains three sets of semantically
+tagged Brown Corpus files, statistical information, and the "escort"
+interface precompiled for the Unix and Windows-based PC platforms
+listed below.  Documentation describing the format of the semantic
+concordance files and on using "escort" is included.  The WordNet 1.6
+database is not included and must be downloaded separately.
+
+4.3 Prolog Database Package
+
+The WordNet 1.6 database files are available in a Prolog-readable
+format.  Documentation describing the file format is included.  This
+package is only downloadable in compressed tar file format, although
+once unpackaged it can be used from PC and Macintosh systems since the
+files are in ASCII.
+
+4.4 Sense Map Package 
+
+To help users automatically convert 1.5 noun senses to their
+corresponding 1.6 senses, we provide noun sense mapping information in
+this package.  The sense map package contains files to map polysemous
+and monosemous nouns, and documentation that describes the format of
+these files.  As with the Prolog database, this package is only
+downloadable in compressed tar file format, but the files are also in
+ASCII.
+
+5. Supported Platforms
+
+Precompiled binaries for the WordNet browsers are included in the
+database package for the following platforms.  A precompiled binary
+for "escort" is included in the semantic concordance package for the
+Unix and Windows-based PC platforms.  
+
+Note that these are the platforms that the binaries were compiled on.
+Most should work on newer versions of the operating system.
+
+	Sun SPARC running SunOS 4.1.3
+	Sun SPARC running Solaris 2.5.2
+	SGI running IRIX 5.3
+	PC(486) running Linux kernel 2.0.27
+	PC(Pentium) running Windows/95
+	PC(386) running Windows 3.1
+	PC(386) running DOS
+	PowerMac running MacOS 7.5.1
+
+Source code is included in the database package so users on different
+computer platforms can compile the WordNet library and browsers for
+their system.
+
+6. Disk Space Requirements
+
+The WordNet database package requires approximately 37MB of disk
+space, depending on computer platform.  The sense index (6.1MB) and
+gloss index (5.7MB) files are optional, and can be removed to save
+space.  The database alone requires 22MB of disk space.
+
+The semantic concordance package requires 43MB of disk space.  The
+Prolog package requires 18.6MB of disk space.  The sense map package
+requires 6.7MB of disk space.
+
+7. Obtaining WordNet 1.6 Packages via FTP
+
+We prefer that you FTP the WordNet system via anonymous FTP from one
+of the following FTP sites:
+
+	In the US: ftp.cogsci.princeton.edu [128.112.144.11]
+	In Europe: ftp.ims.uni-stuttgart.de [141.58.127.61]
+
+Anyone who wants to mirror this release on an FTP server should notify
+Princeton in advance.
+
+7.1 FTP Packages
+
+In order to facilitate downloading, some of the packages are available
+as either a single file or a series of smaller files.  If you download
+a package that has been split into smaller files, as indicated by the
+suffix ".tar.gz.aX" where "X" is a lower case letter, you must
+download all of the individual files in the package.  
+
+7.1.1 WordNet Database Packages
+
+Includes WordNet 1.6 database, interfaces, sense index, gloss index,
+interface and library source code, and documentation.
+	
+	wn16.unix.tar.gz	Unix
+	wn16.unix.tar.gz.aX	Unix (split into 512K chunks)
+	wn16pc.exe		PC
+	wn16pcm.*		PC (split into 512K chunks)
+	wn16mac.sea		Macintosh
+
+7.1.2 Semantic Concordance Package
+
+Includes semantic concordance files tagged to WordNet 1.6 database,
+"escort" interface, and documentation.
+
+	semcor16.unix.tar.gz	Unix
+	semcor16.exe		PC
+	semcor16.mac.sea	Macintosh
+
+7.1.3 Prolog Database
+
+Includes WordNet 1.6 database in Prolog-readable format and
+documentation.
+
+	prolog16.tar.gz		All Platforms
+	prolog16.tar.gz.aX	All Platforms (split into 512K chunks)
+
+7.1.4 Sense Map Package
+
+Includes files mapping of 1.5 noun senses to 1.6 senses and
+documentation. 
+
+	snsmap16.tar.gz		All Platforms
+
+7.1.5 "Five Papers on WordNet"
+
+The paper "Five Papers on WordNet" is available in several different
+formats:
+
+	5papers.pdf		PDF file
+	5papers.ps		Postscript file
+	5papers.tar.Z		compress tar file of nroff source
+
+7.1.6 Other Files
+	
+	README			this file
+	CHANGES			changes to WordNet made since version 1.5
+	INSTALL.unix		Unix installation instructions
+	INSTALL.pc		PC installation instructions
+	INSTALL.mac		Macintosh installation instructions
+	
+7.2 Downloading WordNet via FTP
+
+You can download WordNet directly from the Princeton or Stuttgart FTP
+sites or via links on the WordNet Web site.  You should download
+whichever package files you need and the appropriate INSTALL file for
+your system.
+
+	***** REMEMBER TO FTP IN "binary" (or "macbinary") MODE!!! *****
+
+**************************************************************************
+* IF YOU FTP WordNet, PLEASE SEND MAIL TO wordnet@princeton.edu SO WE    *
+* CAN UPDATE OUR RECORDS AND KEEP TRACK OF OUR USERS FOR FUTURE MAILINGS *
+* AND RELEASES.  EVEN IF YOU ARE A CURRENT USER WHO IS UPGRADING, IT IS  *
+* USEFUL TO US TO KNOW THAT YOU HAVE UPGRADED TO 1.6.                    *
+**************************************************************************
+
+7.2.1 Princeton FTP Site
+
+	Host:      ftp.cogsci.princeton.edu [128.112.144.11]
+	Login:     ftp
+	Password:  Your e-mail address
+	Directory: pub/wordnet
+
+7.2.2 Stuttgart Mirror FTP Site
+
+	Host:      ftp.ims.uni-stuttgart.de [141.58.127.61]
+	Login:     ftp
+	Password:  Your e-mail address
+	Directory: /pub/WordNet/1.6
+
+Note: 'ls' sometimes doesn't work properly, 'dir' shows everything.
+
+Due to the size of the WordNet distribution, please restrict
+downloading to time frames outside office hours Central European Time
+(i.e. outside 9 a.m. - 6 p.m.).
+
+All queries regarding the installation of the system, its use and
+maintenance should be made to wordnet@princeton.edu only.
+
+7.2.3 Downloading Compressed Tar File Packages
+
+Some of the packages (those with the extension "tar.gz") have been
+archived with tar and compressed with 'gzip'.  To install a package
+compressed with 'gzip', you need to have 'gzip' (or 'gunzip') on your
+system.  If you don't, you can download it from "prep.ai.mit.edu" or
+one of the numerous FTP sites that mirror the GNU software.
+
+If you download a package that has been split into smaller files, as
+indicated by the suffix ".tar.gz.aX" where "X" is a lower case letter,
+you must download all of the individual files in the package.
+
+Note that some of the compressed tar file packages can be used on PC
+and Macintosh systems once unbundled, however they must be unpackaged
+using the Unix tools 'gunzip' and 'tar'.
+
+7.2.4 Downloading PC Packages
+
+PC packages are distributed as compressed self extracting archives.
+Each package is in a single file.  Simply run the downloaded file to
+unbundle the archive.
+
+7.2.5 Downloading Macintosh Packages
+
+	***** REMEMBER TO FTP IN "macbinary" MODE!!! *****
+
+Macintosh packages are distributed as self-extracting archives.  Each
+package is in a single file.  Simply run the downloaded file to
+unbundle the archive.
+
+8. Installation
+
+The INSTALL files listed below contain instructions for unbundling
+packages on that platform.  You should FTP the appropriate file for
+your platform.
+
+	INSTALL.unix		Unix installation instructions
+	INSTALL.pc		PC installation instructions
+	INSTALL.mac		Macintosh installation instructions
+
+Each package, when unbundled, contains a file, INSTALL, with
+installation instructions for that package.
+
+9. Bugs
+
+Please report all bugs, problems, and WordNet related questions to
+wordnet@princeton.edu. 
+
+As bugs are reported they are logged on the FTP and Web sites, along
+with the action to take, in the file README.bugs.  You should read
+this file and FTP any additional files that are applicable to your
+installation.

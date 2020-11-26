@@ -1,0 +1,72 @@
+(note TQB102)
+
+(temporallySubsumes HPKBScenarioConflict 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+    (DateInSituationFn CalendarDay 20 HPKBScenarioConflict))) 
+
+(implies 
+  (and 
+    (instance ?SIT Situation-Temporal) 
+    (instance ?N PositiveInteger) 
+    (greaterThanOrEqualTo ?N ?M) 
+    (instance ?M PositiveInteger) 
+    (instance ?TYPE CalendarCoveringType) 
+    (subclass ?TYPE Date) 
+    (endingDate ?SIT 
+      (DateInSituationFn ?TYPE ?END ?SIT)) 
+    (greaterThanOrEqualTo ?END ?N)) 
+  (temporallySubsumes ?SIT 
+    (TimeIntervalInclusiveFn 
+      (DateInSituationFn ?TYPE ?M ?SIT) 
+      (DateInSituationFn ?TYPE ?N ?SIT)))) 
+
+(termOfUnit 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+    (DateInSituationFn CalendarDay 20 HPKBScenarioConflict)) 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+    (DateInSituationFn CalendarDay 20 HPKBScenarioConflict))) 
+
+(endingDate HPKBScenarioConflict 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(termOfUnit 
+ (DateInSituationFn CalendarDay 20 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 20 HPKBScenarioConflict)) 
+
+(instance CalendarDay CalendarCoveringType) 
+(instance HPKBScenarioConflict Situation-Temporal) 
+(subclass CalendarDay Date) 
+
+(termOfUnit 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict)) 
+
+(temporallySubsumes HPKBScenarioConflict 
+  (desires SaudiArabia 
+    (thereExists ?EVT 
+      (increasesCausally ?EVT SaudiArabia oilProduction)))) 
+
+(implies 
+  (and 
+    (temporallySubsumes ?BIG-T ?SMALL-T) 
+    (temporallySubsumes ?BIG-T ?PROP)) 
+  (temporallySubsumes ?SMALL-T ?PROP)) 
+
+(queryyn
+  (temporallySubsumes 
+    (TimeIntervalInclusiveFn 
+      (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+      (DateInSituationFn CalendarDay 20 HPKBScenarioConflict))
+    (desires SaudiArabia 
+      (thereExists ?EVT 
+        (increasesCausally ?EVT SaudiArabia oilProduction)))))
+
+(answer Yes)
+
+(end_of_file)
+
+
+

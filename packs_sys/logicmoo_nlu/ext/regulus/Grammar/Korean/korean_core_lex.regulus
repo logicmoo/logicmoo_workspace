@@ -1,0 +1,145 @@
+macro(bni, @k('¤²´Ï', bni, 'POLITE-PRESENT')).
+macro(seubni, @k('½À´Ï', seubni, 'POLITE-PAST')).
+macro(iss, @k('ÀÖ', iss, 'CONNECTIVE')).
+macro(goiss, @k('°íÀÖ', goiss, 'CONNECTIVE')).
+
+macro(consonant_final, [final_sound=consonant]).
+macro(vowel_final, [final_sound=vowel]).
+
+% After consonant
+wa_or_ga:[wa_or_ga_type=wa, preceding_sound=consonant] --> @k('Àº', eun, 'TOPIC').
+% After vowel
+wa_or_ga:[wa_or_ga_type=wa, preceding_sound=vowel] --> @k('´Â', neun, 'TOPIC').
+
+% After consonant
+wa_or_ga:[wa_or_ga_type=ga, preceding_sound=consonant] --> @k('ÀÌ', i, 'SUBJECT').
+% After vowel
+wa_or_ga:[wa_or_ga_type=ga, preceding_sound=vowel] --> @k('°¡', ga, 'SUBJECT').
+
+% After consonant
+wo:[preceding_sound=consonant] --> @k('À»', eul, 'OBJECT').
+% After vowel
+wo:[preceding_sound=vowel] --> @k('¸¦', leul, 'OBJECT').
+
+
+aux_v:[sem=[[tense, continuous_present]], politeness=polite] --> @k('ÀÖ½À´Ï', issseubni, 'be-PRESENT-POLITE').
+aux_v:[sem=[[tense, continuous_past]], politeness=polite] --> @k('ÀÖ¾ú½À´Ï', isseosseubni, 'be-PAST-POLITE').
+
+macro(verb([BasePres, AdjPres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, politeness=base | Feats] --> BasePres )).
+macro(verb([BasePres, AdjPres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)], vform=adjectival, politeness=base | Feats] --> AdjPres )).
+macro(verb([BasePres, AdjPres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, politeness=polite | Feats] --> PolitePres )).
+macro(verb([BasePres, AdjPres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, past], @verb_sem(Sem)], vform=finite, politeness=base | Feats] --> BasePast )).
+macro(verb([BasePres, AdjPres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, past], @verb_sem(Sem)], vform=finite, politeness=polite | Feats] --> PolitePast )).
+macro(verb([BasePres, AdjPres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[ @verb_sem(Sem)], vform=continuous | Feats] --> Contin )).
+
+macro(copula(SubjType, ComplementType),
+      ( copula:[sem=[[tense, present], [verb, ibni]], politeness=polite, 
+		sem_subj_type=SubjType, sem_obj_type=ComplementType] -->
+	  @k('ÀÔ´Ï', ibni, 'BE-POLITE-PRESENT'))).
+macro(copula(SubjType, ComplementType),
+      ( copula:[sem=[[tense, past], [verb, ibni]], politeness=polite, 
+		sem_subj_type=SubjType, sem_obj_type=ComplementType] -->
+	  @k('ÀÌ¾ú½À´Ï', ieossseupni, 'BE-POLITE-PAST'))).
+
+macro(lexical_np(Surface, Sem, Type, FinalSound, SinoOrNative),
+      ( n:[sem= @n_sem(Sem), sem_np_type=Type, sem_no_type=none, final_sound=FinalSound, sino_or_native=SinoOrNative] -->
+	  Surface )).
+
+macro(np_with_no(Surface, Sem, Type1, Type2, FinalSound, SinoOrNative),
+      (n:[sem= @n_sem(Sem), sem_np_type=Type1, sem_no_type=Type2, final_sound=FinalSound, sino_or_native=SinoOrNative] -->
+	  Surface ) ).
+
+macro(np_with_premod(Surface, Sem, Type1, Type2, FinalSound, SinoOrNative),
+      (n:[sem= @n_sem(Sem), sem_np_type=Type1, sem_premod_type=Type2, final_sound=FinalSound, sino_or_native=SinoOrNative] -->
+	  Surface ) ).
+
+macro(prep(Surface, Sem, NPType),
+     (p:[sem=Sem, sem_np_type=NPType] --> Surface )).
+
+macro(sc(Surface, Sem),
+     ( sc:[sem=Sem] --> Surface )).
+
+macro(pp(Surface, Sem),
+      ( pp:[sem=[Sem], sc=n] --> Surface )).
+
+macro(advp(Surface, Sem),
+      (advp:[sem=[Sem]] --> Surface )).
+
+macro(adjp(Surface, Sem, Type, Na),
+      (adjp:[sem=[Sem], sem_subj_type=Type, na=Na] --> Surface )).
+
+macro(number(Value, SinoKoreanSurface, NativeKoreanSurface),
+      ( number:[sem=Value, sino_or_native=sino] --> SinoKoreanSurface ) ).
+macro(number(Value, SinoKoreanSurface, NativeKoreanSurface),
+      ( number:[sem=Value, sino_or_native=native] --> NativeKoreanSurface ) ).
+
+macro(number(Value, SinoKoreanSurface, NativeKoreanSurfaceBase, NativeKoreanSurfacePreNom),
+      ( number:[sem=Value, sino_or_native=sino] --> SinoKoreanSurface ) ).
+macro(number(Value, SinoKoreanSurface, NativeKoreanSurfaceBase, NativeKoreanSurfacePreNom),
+      ( number:[sem=Value, numtype=base, sino_or_native=native] --> NativeKoreanSurfaceBase ) ).
+macro(number(Value, SinoKoreanSurface, NativeKoreanSurfaceBase, NativeKoreanSurfacePreNom),
+      ( number:[sem=Value, numtype=prenom, sino_or_native=native] --> NativeKoreanSurfacePreNom ) ).
+
+macro(interjection(Surface, Value),
+      ( interjection:[sem=[[interjection, Value]]] --> Surface ) ).
+
+macro(spec(Surface, Spec),
+      ( spec:[sem=Spec] --> Surface ) ).
+
+@sc(@k('', myeon, 'if-PARTICLE'), if).
+@sc(@k('', hu, 'after-PARTICLE'), after).
+% Added by Manny. Change to real word!
+@sc(@k('', before, 'before-PARTICLE'), before).
+
+%@number(0, @k('°ø', gong, zero)). 
+@number(1, @k('ÀÏ', il, one), @k('ÇÏ³ª', hana, one), @k('ÇÑ', han, one)).
+@number(2, @k('ÀÌ', i, two), @k('µÑ', dul, two), @k('µÎ', du, two)).
+@number(3, @k('»ï', sam, three), @k('¼Â', ses, three), @k('¼¼', se, three)).
+@number(4, @k('»ç', sa, four), @k('³İ', nes, four), @k('³×', ne, four)).
+@number(5, @k('¿À', o, five), @k('´Ù¼¸', daseos, five)).
+@number(6, @k('À°',  yug, six), @k('¿©¼¸', yeoseos, six)).
+@number(7, @k('Ä¥', chil, seven), @k('ÀÏ°ö', ilgob, seven)).
+@number(8, @k('ÆÈ', pal, eight), @k('¿©´ü', yeodeol, eight)).
+@number(9, @k('±¸', gu, nine), @k('¾ÆÈ©', ahob, nine)).
+@number(10, @k('½Ê', sib, ten), @k('¿­', yeol, ten)).
+@number(11, @k('½ÊÀÏ', sibil, eleven), @k('¿­ÇÏ³ª', yeolhana, eleven), @k('¿­ÇÑ', yeolhan, eleven)).
+@number(12, @k('½ÊÀÌ', sibi, twelve), @k('¿­µÑ', yeoldul, twelve), @k('¿­µÎ', yeoldu, twelve)).
+@number(13, @k('½Ê»ï', sibsam, thirteen), @k('¿­¼Â', yeolses, thirteen), @k('¿­¼¼', yeolse, thirteen)).
+@number(14, @k('½Ê»ç', sibsa, fourteen), @k('¿­³İ', yeolnes, fourteen), @k('¿­³×', yeolne, fourteen)).
+@number(15, @k('½Ê¿À', sibo, fifteen), @k('¿­´Ù¼¸', yeoldaseos, fifteen)).
+@number(16, @k('½ÊÀ°', sibyug, sixteen), @k('¿­¿©¼¸', yeolyeoseos, sixteen)).
+@number(17, @k('½ÊÄ¥', sibchil, seventeen), @k('¿­ÀÏ°ö', yeolilgob, seventeen)).
+@number(18, @k('½ÊÆÈ', sibpal, eightteen), @k('¿­¿©´ü', yeolyeodeol, eightteen)).
+@number(19, @k('½Ê±¸', sibgu, nineteen), @k('¿­¾ÆÈ©', yeolahob, nineteen)).
+@number(20, @k('ÀÌ½Ê', isib, twenty), @k('½º¹°', seumul, twenty)).
+@number(21, @k('ÀÌ½ÊÀÏ', isibil, twenty-one), @k('½º¹°ÇÏ³ª', seumulhana, twenty-one), @k('½º¹°ÇÑ', seumulhan, twenty-one)).
+@number(22, @k('ÀÌ½ÊÀÌ', isibi, twenty-two), @k('½º¹°µÑ', seumuldul, twenty-two), @k('½º¹°µÎ', seumuldu, twenty-two)).
+@number(23, @k('ÀÌ½Ê»ï', isibilsam, twenty-three), @k('½º¹°¼Â', seumulses, twenty-three), @k('½º¹°¼¼', seumulse, twenty-three)).
+@number(24, @k('ÀÌ½Ê»ç', isibsa, twenty-four), @k('½º¹°³İ', seumulnes, twenty-four), @k('½º¹°³×', seumulne, twenty-four)).
+@number(25, @k('ÀÌ½Ê¿À', isibo, twenty-five), @k('½º¹°´Ù¼¸', seumuldaseos, twenty-five)).
+@number(26, @k('ÀÌ½ÊÀ°', isibyug, twenty-six), @k('½º¹°¿©¼¸', seumulyeoseos, twenty-six)).
+@number(27, @k('ÀÌ½ÊÄ¥', isibchil, twenty-seven), @k('½º¹°ÀÏ°ö', seumulilgob, twenty-seven)).
+@number(28, @k('ÀÌ½ÊÆÈ', isibpal, twenty-eight), @k('½º¹°¿©´ü', seumulyeodeol, twenty-eight)).
+@number(29, @k('ÀÌ½Ê±¸', isibgu, twenty-nine), @k('½º¹°¾ÆÈ©', seumulahob, twenty-nine)).
+@number(30, @k('»ï½Ê', samsib, thirty), @k('¼­¸¥', seoreun, thirty)).
+@number(31, @k('»ï½ÊÀÏ', samsibil, thirty-one), @k('¼­¸¥ÇÏ³ª', seoreunhana, thirty-one), @k('¼­¸¥ÇÑ', seoreunhan, thirty-one)).
+@number(32, @k('»ï½ÊÀÌ', isibi, thirty-two), @k('¼­¸¥µÑ', seoreundul, thirty-two), @k('¼­¸¥µÎ', seoreundu, thirty-two)).
+@number(33, @k('»ï½Ê»ï', isibilsam, thirty-three), @k('¼­¸¥¼Â', seoreunses, thirty-three), @k('¼­¸¥¼¼', seoreunse, thirty-three)).
+@number(34, @k('»ï½Ê»ç', isibsa, thirty-four), @k('¼­¸¥³İ', seoreunnes, thirty-four), @k('¼­¸¥³×', seoreunne, thirty-four)).
+@number(35, @k('»ï½Ê¿À', isipbo, thirty-five), @k('¼­¸¥´Ù¼¸', seoreundaseos, thirty-five)).
+@number(36, @k('»ï½ÊÀ°', isibyuk, thirty-six), @k('¼­¸¥¿©¼¸', seoreunyeoseos, thirty-six)).
+@number(37, @k('»ï½ÊÄ¥', isibchil, thirty-seven), @k('¼­¸¥ÀÏ°ö', seoreunilgob, thirty-seven)).
+@number(38, @k('»ï½ÊÆÈ', isibpal, thirty-eight), @k('¼­¸¥¿©´ü', seoreunyeodeol, thirty-eight)).
+@number(39, @k('»ï½Ê±¸', isibgu, thirty-nine), @k('¼­¸¥¾ÆÈ©', seoreunahob, thirty-nine)).
+@number(40, @k('»ç½Ê', samsib, forty), @k('¸¶Èç', seoreun, forty)).
+
+numerical_comparative:[sem=[[numerical_comparative, isang]], @consonant_final] -->
+	@k('ÀÌ»ó', isang, 'more-N').
+% Added by Manny - change to real Korean
+numerical_comparative:[sem=[[numerical_comparative, sukunakutomo]]] --> @k('', sukunakutomo, 'at_least-N').

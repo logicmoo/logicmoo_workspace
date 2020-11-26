@@ -1,0 +1,8 @@
+
+SEP = ;
+OAAJP = ${OAA_HOME}/lib/jar
+NUANCECP = ${NUANCE}/java/vcomsc.jar${SEP}${NUANCE}/java/nsc.jar
+OAACP	= ${OAAJP}/oaa2.jar${SEP}${OAAJP}/antlr-oaa.jar${SEP}${OAAJP}/concurrent-1.3.1.jar${SEP}${OAAJP}/log4j-1.2.7.jar
+FAC	= ${OAA_HOME}/runtime/facilitator/win32/fac.exe
+PACKAGE = asrg_agenda_svenska
+BORG = C:/Program/BORGCalendar

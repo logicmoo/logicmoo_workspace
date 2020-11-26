@@ -1,0 +1,38 @@
+pr5(x) :- pr3(x), pr4(x).
+
+pr4(cst2).
+
+pr3(x) :- pr2(x).
+pr3(x) :- pr1(x).
+
+pr2(cst1).
+pr2(cst2).
+
+pr1(cst3).
+pr1(cst4).
+
+
+BUT(x1, x2, y, z) :- but1(x1, x2), but2(y), but3(z).
+BUT(x, x, y, z) :- but4(x), but5(y, z).
+BUT(y, y, y, z) :- but6(y, z).
+
+but1(x, y) :- but11(x), but12(y).
+but11(1).
+but11(2).
+but12(3).
+but12(4).
+but12(5).
+
+but2(6).
+but2(7).
+but3(8).
+but3(9).
+
+but4(10).
+but4(11).
+but4(12).
+but4(13).
+
+but5(x, y) :- but1(x, y).
+but6(x, y) :- but2(x), but3(y).
+

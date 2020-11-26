@@ -1,0 +1,30 @@
+/* Support login.js
+*/
+
+#login.login  > .logout { display: none; }
+#login.logout > .login  { display: none; }
+#login.logout > .logout { color: green; }
+
+#login .value { margin-left: 5px; }
+
+iframe.login
+{ width: 90%;
+  margin: 0 auto;
+  display: block;
+  height: 30ex;
+}
+
+button.login-cont
+{ margin: 2ex auto 2ex;
+  display: block;
+}
+
+img.profile-picture,
+img.login-with
+{ width: 24px;
+  height: 24px;
+}
+
+div.user-menu.btn-transparent button.dropdown-toggle
+{ opacity: 1.0;
+}

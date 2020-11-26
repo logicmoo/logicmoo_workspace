@@ -1,0 +1,64 @@
+\subsection{Manipulating the Database}
+
+\gloss{add(+P)}
+
+The fact or rule P is added to the database with support coming from
+the user.  If the fact already exists, an additional entry will not be
+made (unlike Prolog).  If the facts already exists with support from
+the user, then a warning will be printed if $pfcWarnings$ is true.
+Add/1 always succeeds.
+
+\gloss{pfc(?P)}
+
+The predicate $pfc/1$ is the proper way to access terms in the \pfc\
+database.  \prolog{pfc(P)} succeeds if \prolog{P} is a term in the
+current pfc database after invoking any backward chaining rules or is
+provable by Prolog.
+
+\gloss{rem(+P)}
+
+The first fact (or rule) unifying with $P$ has its user support
+removed.  $rem/1$ will fail if no there are no \pfc\ added facts or
+rules in the database which match.  If removing the user support from
+a fact leaves it unsupported, then it will be removed from the
+database.
+
+\gloss{rem2(+P}
+
+The first fact (or rule) unifying with $P$ will be removed from the
+database even if it has valid justifications.  $rem/1$ will fail if no
+there are no \pfc\ added facts or rules in the database which match.
+If removing the user support from the fact leaves it unsupported, then
+it will be removed from the database.  If the fact still has valid
+justifications, then a \pfc\ warning message will be printed and the
+justifications removed.
+
+\gloss{pfcReset}.
+
+Resets the \pfc\ database by trying to retract all of the prolog
+clauses which were added by calls to add or by the forward chaining
+mechanism.
+
+% \gloss{pfc\_save\\	pfc\_save(+Id)\\	pfc\_file\_save(+FileSpec)}
+% \gloss{pfc\_restore\\	pfc\_restore(+Id)\\	pfc\_file\_restore(+FileSpec)}
+
+
+\gloss{Term expansions}
+
+\pfc\ defines term expansion procedures for the operators {\em =>},
+{\em <=} and {\em <=>} so that you can have things like the following
+in a file to be consulted
+\example
+foo(X) => bar(X).
+=> foo(1).
+\end{verbatim}\end{quote}
+
+The result will be an expansion to:
+\example
+:- add((foo(X) => bar(X)).
+:- add(foo(1)).
+\end{verbatim}\end{quote}
+
+
+% \gloss{pfcLoad(+File)}
+% \gloss{pfcCompile(+File)}

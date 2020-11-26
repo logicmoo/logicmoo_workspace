@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE VNCLASS SYSTEM "vn_class-3.dtd">
+<VNCLASS ID="hire-13.5.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vn_schema-3.xsd">
+    <MEMBERS>
+        <MEMBER name="hire" wn="hire%2:41:00" grouping="hire.01"/>
+        <MEMBER name="recruit" wn="" grouping=""/>
+        <MEMBER name="employ" wn="employ%2:41:00" grouping="employ.01"/>
+        <MEMBER name="contract" wn="contract%2:41:00" grouping="contract.01"/>
+        <MEMBER name="engage" wn="engage%2:41:01" grouping="engage.02"/>
+        <MEMBER name="take" wn="take%2:40:03" grouping="take.05"/>
+        <MEMBER name="sign" wn="sign%2:41:01" grouping="sign.01"/>
+        <MEMBER name="sign_on" wn="sign_on%2:41:00" grouping=""/>
+        <MEMBER name="sign_up" wn="sign_up%2:41:00" grouping=""/>
+        <MEMBER name="subcontract" wn="subcontract%2:41:00" grouping=""/>
+        <MEMBER name="train" wn="train%2:41:00" grouping="train.01"/>
+        <MEMBER name="enlist" wn="enlist%2:40:00 enlist%2:33:01" grouping="enlist.01 enlist.02"/>
+        <MEMBER name="reinstate" wn="reinstate%2:41:00" grouping="reinstate.01"/>
+    </MEMBERS>
+    <THEMROLES>
+        <THEMROLE type="Agent">
+            <SELRESTRS logic="or">
+                <SELRESTR Value="+" type="animate"/>
+                <SELRESTR Value="+" type="organization"/>
+            </SELRESTRS>
+        </THEMROLE>
+        <THEMROLE type="Theme">
+            <SELRESTRS logic="or">
+                <SELRESTR Value="+" type="animate"/>
+                <SELRESTR Value="+" type="organization"/>
+            </SELRESTRS>
+        </THEMROLE>
+        <THEMROLE type="Attribute">
+            <SELRESTRS/>
+        </THEMROLE>
+    </THEMROLES>
+    <FRAMES>
+        <FRAME>
+            <DESCRIPTION descriptionNumber="0.2" primary="NP V NP" secondary="NP" xtag="0.2"/>
+            <EXAMPLES>
+                <EXAMPLE>I hired two secretaries.</EXAMPLE>
+            </EXAMPLES>
+            <SYNTAX>
+                <NP value="Agent">
+                    <SYNRESTRS/>
+                </NP>
+                <VERB/>
+                <NP value="Theme">
+                    <SYNRESTRS/>
+                </NP>
+            </SYNTAX>
+            <SEMANTICS>
+                <PRED value="cause">
+                    <ARGS>
+                        <ARG type="ThemRole" value="Agent"/>
+                        <ARG type="Event" value="E"/>
+                    </ARGS>
+                </PRED>
+                <PRED bool="!" value="location">
+                    <ARGS>
+                       <ARG type="Event" value="start(E)"/>
+                       <ARG type="ThemRole" value="Theme"/>
+                    </ARGS>
+                </PRED>
+                <PRED value="location">
+                    <ARGS>
+                        <ARG type="Event" value="end(E)"/>
+                        <ARG type="ThemRole" value="Theme"/>
+                    </ARGS>
+                </PRED>
+            </SEMANTICS>
+        </FRAME>
+        <FRAME>
+            <DESCRIPTION descriptionNumber="8.1" primary="NP V NP PP.attribute" secondary="NP-PP; as-PP" xtag="0.2"/>
+            <EXAMPLES>
+                <EXAMPLE>I hired two secretaries as helpers.</EXAMPLE>
+            </EXAMPLES>
+            <SYNTAX>
+                <NP value="Agent">
+                    <SYNRESTRS/>
+                </NP>
+                <VERB/>
+                <NP value="Theme">
+                    <SYNRESTRS/>
+                </NP>
+		<PREP value="as">
+		    <SELRESTRS/>
+		</PREP>
+                <NP value="Attribute">
+                    <SYNRESTRS>
+			<SYNRESTR Value="-" type="sentential"/>
+		    </SYNRESTRS>
+                </NP>
+            </SYNTAX>
+            <SEMANTICS>
+                <PRED value="cause">
+                    <ARGS>
+                        <ARG type="ThemRole" value="Agent"/>
+                        <ARG type="Event" value="E"/>
+                    </ARGS>
+                </PRED>
+                <PRED bool="!" value="location">
+                    <ARGS>
+                       <ARG type="Event" value="start(E)"/>
+                       <ARG type="ThemRole" value="Theme"/>
+                       <ARG type="ThemRole" value="Attribute"/>
+                    </ARGS>
+                </PRED>
+                <PRED value="location">
+                    <ARGS>
+                        <ARG type="Event" value="end(E)"/>
+                        <ARG type="ThemRole" value="Theme"/>
+                        <ARG type="ThemRole" value="Attribute"/>
+                    </ARGS>
+                </PRED>
+            </SEMANTICS>
+        </FRAME>
+    </FRAMES>
+    <SUBCLASSES/>
+</VNCLASS>
+
+
+

@@ -1,0 +1,116 @@
+%------------------------------------------------------------------------------
+% File     : KRS174+1 : TPTP v3.3.0. Released v3.1.0.
+% Domain   : Knowledge Representation (Semantic Web)
+% Problem  : Sets with appropriate extensions are related by unionOf
+% Version  : Especial.
+% English  : 
+
+% Refs     : [Bec03] Bechhofer (2003), Email to G. Sutcliffe
+%          : [TR+04] Tsarkov et al. (2004), Using Vampire to Reason with OW
+% Source   : [Bec03]
+% Names    : positive_unionOf-Manifest003 [Bec03]
+
+% Status   : Theorem
+% Rating   : 0.08 v3.3.0, 0.00 v3.1.0
+% Syntax   : Number of formulae    :   15 (   2 unit)
+%            Number of atoms       :   41 (  11 equality)
+%            Maximal formula depth :    6 (   4 average)
+%            Number of connectives :   30 (   4 ~  ;   2  |;  11  &)
+%                                         (   6 <=>;   7 =>;   0 <=)
+%                                         (   0 <~>;   0 ~|;   0 ~&)
+%            Number of predicates  :    8 (   0 propositional; 1-2 arity)
+%            Number of functors    :    2 (   2 constant; 0-0 arity)
+%            Number of variables   :   22 (   0 singleton;  22 !;   0 ?)
+%            Maximal term depth    :    1 (   1 average)
+
+% Comments : Sean Bechhofer says there are some errors in the encoding of
+%            datatypes, so this problem may not be perfect. At least it's
+%            still representative of the type of reasoning required for OWL.
+%          : tptp2X -f tptp:short KRS174+1.p 
+%------------------------------------------------------------------------------
+fof(cA_substitution_1,axiom,(
+    ! [A,B] : 
+      ( ( A = B
+        & cA(A) )
+     => cA(B) ) )).
+
+fof(cA_and_B_substitution_1,axiom,(
+    ! [A,B] : 
+      ( ( A = B
+        & cA_and_B(A) )
+     => cA_and_B(B) ) )).
+
+fof(cB_substitution_1,axiom,(
+    ! [A,B] : 
+      ( ( A = B
+        & cB(A) )
+     => cB(B) ) )).
+
+fof(cowlNothing_substitution_1,axiom,(
+    ! [A,B] : 
+      ( ( A = B
+        & cowlNothing(A) )
+     => cowlNothing(B) ) )).
+
+fof(cowlThing_substitution_1,axiom,(
+    ! [A,B] : 
+      ( ( A = B
+        & cowlThing(A) )
+     => cowlThing(B) ) )).
+
+fof(xsd_integer_substitution_1,axiom,(
+    ! [A,B] : 
+      ( ( A = B
+        & xsd_integer(A) )
+     => xsd_integer(B) ) )).
+
+fof(xsd_string_substitution_1,axiom,(
+    ! [A,B] : 
+      ( ( A = B
+        & xsd_string(A) )
+     => xsd_string(B) ) )).
+
+fof(axiom_0,axiom,(
+    ! [X] : 
+      ( cowlThing(X)
+      & ~ cowlNothing(X) ) )).
+
+fof(axiom_1,axiom,(
+    ! [X] : 
+      ( xsd_string(X)
+    <=> ~ xsd_integer(X) ) )).
+
+fof(axiom_2,axiom,(
+    ! [X] : 
+      ( cA(X)
+    <=> X = ia ) )).
+
+fof(axiom_3,axiom,(
+    ! [X] : 
+      ( cA_and_B(X)
+    <=> ( X = ib
+        | X = ia ) ) )).
+
+fof(axiom_4,axiom,(
+    ! [X] : 
+      ( cB(X)
+    <=> X = ib ) )).
+
+fof(axiom_5,axiom,(
+    cowlThing(ia) )).
+
+fof(axiom_6,axiom,(
+    cowlThing(ib) )).
+
+fof(the_axiom,conjecture,
+    ( ! [X] : 
+        ( cowlThing(X)
+        & ~ cowlNothing(X) )
+    & ! [X] : 
+        ( xsd_string(X)
+      <=> ~ xsd_integer(X) )
+    & ! [X] : 
+        ( cA_and_B(X)
+      <=> ( cB(X)
+          | cA(X) ) ) )).
+%------------------------------------------------------------------------------

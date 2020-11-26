@@ -1,0 +1,17 @@
+sous_liste(_,[]).
+
+sous_liste([X|Q],[X|H]) :- 
+	sous_liste(Q,H).
+
+sous_liste([_|Q],H) :- 
+	not(egal(Q,[])),
+	sous_liste(Q,H),
+	not(egal(H,[])).
+
+egal(L,L).
+
+not(_P) :-
+	_P,
+	fail.
+
+not(_P).

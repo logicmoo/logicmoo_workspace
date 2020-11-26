@@ -1,0 +1,27 @@
+% -*-Prolog-*-
+
+% Tests if this will lazily define new predicates
+%
+
+:- include(test_header).
+
+:- if((pfc_test_feature(localMt,X=1),X==1)).
+
+:- endif.
+
+
+:- if((pfc_test_feature(mt,X=1),X==1)).
+
+:- endif.
+
+:- set_prolog_flag(retry_undefined, kb_shared).
+
+
+:- \+ a_01.
+
+:- listing(a_01).
+
+:- repropagate(mtHybrid(header_sane)).
+:- listing(header_sane:_).
+
+

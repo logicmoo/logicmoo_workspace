@@ -1,0 +1,130 @@
+(GT [TypeLabel: "Entity"] [TypeLabel: "Block"]
+    ;A block is an entity; )
+.
+(GT [TypeLabel: "Entity"] [TypeLabel: "Hand"]
+    ;A hand is an entity; )
+.
+(GT [TypeLabel: "Entity"] [TypeLabel: "Location"]
+    ;A location is an entity; )
+.
+(GT [TypeLabel: "Act"] [TypeLabel: "Pickup"]
+    ;Pickup is an action; )
+.
+(GT [TypeLabel: "Act"] [TypeLabel: "Putdown"]
+    ;Putdown is an action; )
+.
+(GT [TypeLabel: "Act"] [TypeLabel: "MoveHand"]
+    ;MoveHand is an action; )
+.
+(GT [TypeLabel: "Act"] [TypeLabel: "MoveBlock"]
+    ;MoveBlock is an action; )
+.
+[Entity:'Block'
+    (ATTR [Block*b] [Color])
+    (CHRC ?b [Shape])
+ ;Each block has a color and shape; ]
+.
+[Act:'Pickup'
+    (PTNT [Pickup*p] [Block*b])
+    (INST ?p [Hand*h])
+    (RSLT ?p [Situation: (GRASP ?h ?b)])
+ ;Each block is picked up using a hand; ]
+.
+[Act:'Putdown'
+    (PTNT [Putdown*p] [Block*b])
+    (DEST ?p [Location*l])
+    (INST ?p [Hand])
+    (RSLT ?p [Situation: (Top ?b ?l)])
+ ;Each block is put down at a location from the hand; ]
+.
+[Act:'MoveHand'
+    (DEST [MoveHand*m] [Location*l])
+    (PTNT ?m [Hand*h])
+    (RSLT ?m [Situation: (At ?h ?l)])
+ ;This action moves the hand to a location; ]
+.
+[Act:'MoveBlock'
+    (DEST [MoveBlock*m] [Location*l])
+    (PTNT ?m [Block*b])
+    (INST ?m [Hand])
+    (RSLT ?m [Situation: (At ?b ?l)])
+ ;This action moves the block to a location; ]
+.
+(GT [RelationLabel: "Relation"] [RelationLabel: "At"]
+    ; Relation At ;)
+.
+(GT [RelationLabel: "Relation"] [RelationLabel: "Above"]
+    ; Relation Above ;)
+.
+(GT [RelationLabel: "Relation"] [RelationLabel: "OnTable"]
+    ; Relation OnTable ;)
+.
+(GT [RelationLabel: "Relation"] [RelationLabel: "Top"]
+    ; Relation Top ;)
+.
+(GT [RelationLabel: "Relation"] [RelationLabel: "EmptyHand"]
+    ; Relation EmptyHand ;)
+.
+[Relation:'At'
+    (POS [Entity] [Location])
+ ;An entity is positioned at a location; ]
+.
+[Relation:'Top'
+    (OnTable [Block*b1] [Location])
+    ~[(Above [Block*b2] ?b1)]
+ ;A block on top is at a location and has no blocks above it; ]
+.
+[Relation:'EmptyHand'
+    ~[(GRASP [Hand] [Block])]
+ ;A hand is empty when no blocks are in it; ]
+.
+[Relation:'OnTable'
+    (At [Block*b] [Location])
+    ~[(GRASP [Hand] ?b)]
+ ;A block on the table is at a location and not in the hand; ]
+.
+[Relation:'Above'
+    (OnTable [Block*b1] [Location*l])
+    (OnTable [Block*b2] ?l)
+ ;The first block is above the second block at the same location; ]
+.
+[Block:#1]
+.
+[Block:#2]
+.
+[Block:#3]
+.
+[Hand:#4]
+.
+[Location:#5]
+.
+[Location:#6]
+.
+[Block:@3]
+.
+;Block #1 is red;
+(ATTR [Block:#1] [Color:'Red'])
+.
+;Block #2 is blue;
+(ATTR [Block:#2] [Color:'Blue'])
+.
+;Block #3 is green;
+(ATTR [Block:#3] [Color:'Green'])
+.
+(OnTable [Block:#1] [Location:#5])
+.
+(OnTable [Block:#2] [Location:#6])
+.
+(OnTable [Block:#3] [Location:#5])
+.
+;Block #1 is above block #3, and block #2 is at a different location;
+(Above [Block:#1] [Block:#3])
+.
+;All the blocks are on the table and not in the hand;
+(Emptyhand [Hand:#4])
+.
+[Either: [Or: (ATTR [Block:#1] [Color:'Blue'])]
+         [Or: (ATTR [Block:#2] [Color:'Blue'])]]
+.
+;All blocks are cubical;
+(CHRC [Block:@every] [Shape:'Cubical']) 

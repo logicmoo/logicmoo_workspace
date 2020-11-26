@@ -1,0 +1,21 @@
+(note TQE124b)
+(abort)
+
+(advisorToOn RichardMorningstar BillClinton 
+ (IndustryOfRegionFn OilIndustry CaspianRegion)) 
+
+(implies 
+ (assertedTermFormulas ?TERM ?FORMULA) 
+ (descriptionFormulas ?TERM ?FORMULA)) 
+
+(instance RichardMorningstar Ambassador) 
+
+(query (findall ?DESCRIPTIVE-FORMULA
+(descriptionFormulas RichardMorningstar ?DESCRIPTIVE-FORMULA)))
+
+
+(answer (list (advisorToOn RichardMorningstar BillClinton 
+ (IndustryOfRegionFn OilIndustry CaspianRegion))))
+(answer  (list(instance RichardMorningstar Ambassador)))
+
+(end_of_file)

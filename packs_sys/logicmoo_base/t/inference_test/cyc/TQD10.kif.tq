@@ -1,0 +1,321 @@
+(note TQD10)
+(importFromThroughAmountDuring Italy NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 6.80000e+11)) 
+
+(instance Italy WesternEuropeanCountry) 
+
+ 
+
+
+(importFromThroughAmountDuring Luxembourg NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Luxembourg WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring France NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance France WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Austria NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Austria WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Germany NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Germany WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Ireland-TheNation NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Ireland-TheNation WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Denmark NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Denmark WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Spain NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Spain WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Netherlands NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Netherlands WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Iceland NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Iceland WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Switzerland NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Switzerland WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Norway NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Norway WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring UnitedKingdomOfGreatBritainAndNorthernIreland NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance UnitedKingdomOfGreatBritainAndNorthernIreland WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Belgium NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Belgium WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Portugal NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Portugal WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Finland NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Finland WesternEuropeanCountry) 
+
+
+
+
+(importFromThroughAmountDuring Sweden NaturalGas Algeria Transmed-Pipeline 
+ (YearFn 1997) 
+ (CubicFoot 0)) 
+
+(instance Sweden WesternEuropeanCountry) 
+
+
+
+
+(implies 
+ (and 
+ (subclass ?PRODUCT-TYPE FluidTangibleThing) 
+ (instance ?PIPELINE Pipeline)) 
+ (or 
+ (usesObject ?COUNTRY ?PIPELINE) 
+ (importFromThroughAmountDuring ?COUNTRY ?PRODUCT-TYPE ?COUNTRY2 ?PIPELINE 
+ (YearFn 1997) 
+ (CubicFoot 0)))) 
+
+(not 
+ (usesObject Luxembourg Transmed-Pipeline)) 
+
+(subclass NaturalGas FluidTangibleThing) 
+
+(instance Transmed-Pipeline Pipeline) 
+
+
+(not 
+ (usesObject France Transmed-Pipeline)) 
+
+(not 
+ (usesObject Austria Transmed-Pipeline)) 
+
+(not 
+ (usesObject Germany Transmed-Pipeline)) 
+
+(not 
+ (usesObject Ireland-TheNation Transmed-Pipeline)) 
+
+(not 
+ (usesObject Denmark Transmed-Pipeline)) 
+
+(not 
+ (usesObject Spain Transmed-Pipeline)) 
+
+(not 
+ (usesObject Netherlands Transmed-Pipeline)) 
+
+(not 
+ (usesObject Iceland Transmed-Pipeline)) 
+
+(not 
+ (usesObject Switzerland Transmed-Pipeline)) 
+
+(not 
+ (usesObject Norway Transmed-Pipeline)) 
+
+(not 
+ (usesObject UnitedKingdomOfGreatBritainAndNorthernIreland Transmed-Pipeline)) 
+
+(not 
+ (usesObject Belgium Transmed-Pipeline)) 
+
+(not 
+ (usesObject Portugal Transmed-Pipeline)) 
+
+(not 
+ (usesObject Finland Transmed-Pipeline)) 
+
+(not 
+ (usesObject Sweden Transmed-Pipeline)) 
+
+(not 
+ (and 
+ (instance ?COUNTRY WesternEuropeanCountry) 
+ (usesObject ?COUNTRY Transmed-Pipeline) 
+ (different Italy ?COUNTRY))) 
+
+(instance Luxembourg WesternEuropeanCountry) 
+
+(different Italy Luxembourg) 
+
+
+(instance France WesternEuropeanCountry) 
+
+(different Italy France) 
+
+
+(instance Austria WesternEuropeanCountry) 
+
+(different Austria Italy) 
+
+(instance Germany WesternEuropeanCountry) 
+
+(different Italy Germany) 
+
+
+(instance Ireland-TheNation WesternEuropeanCountry) 
+
+(different Italy Ireland-TheNation) 
+
+(instance Denmark WesternEuropeanCountry) 
+
+(different Italy Denmark) 
+
+
+(instance Spain WesternEuropeanCountry) 
+
+(different Italy Spain) 
+
+(instance Netherlands WesternEuropeanCountry) 
+
+(different Netherlands Italy) 
+
+
+(instance Iceland WesternEuropeanCountry) 
+
+(different Iceland Italy) 
+
+(instance Switzerland WesternEuropeanCountry) 
+
+(different Italy Switzerland) 
+
+(instance Norway WesternEuropeanCountry) 
+
+(different Norway Italy) 
+
+(instance UnitedKingdomOfGreatBritainAndNorthernIreland WesternEuropeanCountry) 
+
+(different UnitedKingdomOfGreatBritainAndNorthernIreland Italy) 
+
+(instance Belgium WesternEuropeanCountry) 
+
+(different Italy Belgium) 
+
+(instance Portugal WesternEuropeanCountry) 
+
+(different Italy Portugal) 
+
+(instance Finland WesternEuropeanCountry) 
+
+(different Italy Finland) 
+
+(instance Sweden WesternEuropeanCountry) 
+
+(different Italy Sweden) 
+
+
+
+
+(query (findall (?AMOUNT ?COUNTRY ?TIME)
+
+ (and 
+ (instance ?COUNTRY WesternEuropeanCountry) 
+ (importFromThroughAmountDuring ?COUNTRY NaturalGas Algeria Transmed-Pipeline ?TIME ?AMOUNT))))
+
+(answer (list 6.80000e+11) (list Italy) (list 1997))
+(answer (list 0) (list Luxembourg) (list 1997))
+(answer (list 0) (list France) (list 1997))
+(answer (list 0) (list Austria) (list 1997))
+(answer (list 0) (list Germany) (list 1997))
+(answer (list 0) (list Ireland) (list 1997))
+(answer (list 0) (list Denmark) (list 1997))
+(answer (list 0) (list Spain) (list 1997))
+(answer (list 0) (list Holland) (list 1997))
+(answer (list 0) (list Iceland) (list 1997))
+(answer (list 0) (list Switzerland) (list 1997))
+(answer (list 0) (list Norway) (list 1997))
+(answer (list 0) (list United Kingdom) (list 1997))
+(answer (list 0) (list Belgium) (list 1997))
+(answer (list 0) (list Portugal) (list 1997))
+(answer (list 0) (list Finland) (list 1997))
+(answer (list 0) (list Sweden) (list 1997))
+ 
+(end_of_file)
+

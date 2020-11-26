@@ -1,0 +1,5 @@
+ex :-
+  load_db("ex1"),
+  list("papa/2"),
+  assertz(papa(titi, tartar), []),
+  save_db("papa/2", "ex1").

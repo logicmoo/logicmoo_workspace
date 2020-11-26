@@ -1,0 +1,17 @@
+(note TQA70)
+
+(internationalOrg-MemberCountry OECD UnitedStatesOfAmerica) 
+
+(subrelation internationalOrg-MemberCountry hasMembers) 
+
+
+(query 
+
+(hasMembers OECD UnitedStatesOfAmerica))
+
+(answer Yes)  
+
+
+(end_of_file)
+
+

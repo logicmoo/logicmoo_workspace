@@ -1,0 +1,86 @@
+%====================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----David Plaisted's SPRFN system.
+%----
+%----Written by Geoff Sutcliffe, November 1992.
+%----Revised by Geoff Sutcliffe, January 1994.
+%====================================================================
+%--------------------------------------------------------------------
+%----Write an atom for sprfn
+output_sprfn_atom(Atom):-
+    (Atom =.. ['$tptp_equal',LHS,RHS] ->
+%----Use the next line for writing equality in prefix notation
+%       write(Atom);
+%----Use the next three lines for writing equality in infix notation
+        (write(LHS),
+           write(' = '),
+           write(RHS));
+    write(Atom)).
+%--------------------------------------------------------------------
+%----Output signed literals, separated and terminated appropriately
+output_sprfn_tail_literals([],_):-
+    write('.'),
+    nl.
+
+output_sprfn_tail_literals([--Atom|RestOfLiterals],
+TerminatorBeforeNL):-
+    write(TerminatorBeforeNL),
+    nl,
+    write('    '),
+    output_sprfn_atom(Atom),
+    output_sprfn_tail_literals(RestOfLiterals,',').
+    
+output_sprfn_tail_literals([++Atom|RestOfLiterals],
+TerminatorBeforeNL):-
+    write(TerminatorBeforeNL),
+    nl,
+    write('    not('),
+    output_sprfn_atom(Atom),
+    write(')'),
+    output_sprfn_tail_literals(RestOfLiterals,',').
+%-------------------------------------------------------------------
+%----Choose a positive literal as head literal, or false otherwise
+output_sprfn_head_atom(Literals,RestOfLiterals):-
+    tptp2X_select(++HeadAtom,Literals,RestOfLiterals),
+    !,
+    output_sprfn_atom(HeadAtom).
+
+output_sprfn_head_atom(Literals,Literals):-
+    write(false).
+%-------------------------------------------------------------------
+%----Output each clause, preceded by a comment with it's name and
+%----status.
+output_each_sprfn_clause([]):-
+    !.
+
+output_each_sprfn_clause([input_clause(Name,Status,Literals)|
+RestOfClauses]):-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_sprfn_head_atom(Literals,RestOfLiterals),
+    output_sprfn_tail_literals(RestOfLiterals,' :-'),
+    nl,
+    output_each_sprfn_clause(RestOfClauses).
+%-------------------------------------------------------------------
+%----Output the clauses, preceded by the problem name as a comment.
+sprfn(sprfn,Clauses,_):-
+    tptp_clauses(Clauses),
+    output_each_sprfn_clause(Clauses).
+
+%----Do nothing for FOF - just leave a comment
+sprfn(sprfn,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in SPRFN'),
+    nl.
+%-------------------------------------------------------------------
+%----Provide information about the SPRFN format
+sprfn_format_information('%','.sprfn').
+%-------------------------------------------------------------------
+%----Provide information about the SPRFN file
+sprfn_file_information(format,sprfn,'SPRFN format').
+%-------------------------------------------------------------------

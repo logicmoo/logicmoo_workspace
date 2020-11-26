@@ -1,0 +1,129 @@
+/* <module>
+% =============================================
+% File 'mpred_builtin.pfc'
+% Purpose: Agent Reactivity for SWI-Prolog
+% Maintainer: Douglas Miles
+% Contact: $Author: dmiles $@users.sourceforge.net ;
+% Version: 'interface' 1.0.0
+% Revision: $Revision: 1.9 $
+% Revised At: $Date: 2002/06/27 14:13:20 $
+% =============================================
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+%
+% props(Obj,[height(ObjHt)]) == t(height,Obj,ObjHt) == rdf(Obj,height,ObjHt) == t(height(Obj,ObjHt)).
+% padd(Obj,[height(ObjHt)]) == prop_set(height,Obj,ObjHt,...) == ain(height(Obj,ObjHt))
+% [pdel/pclr](Obj,[height(ObjHt)]) == [del/clr](height,Obj,ObjHt) == [del/clr]svo(Obj,height,ObjHt) == [del/clr](height(Obj,ObjHt))
+% keraseall(AnyTerm).
+%
+%                      ANTECEEDANT                                   CONSEQUENT
+%
+%         P =         test nesc true                         assert(P),retract(~P) , enable(P).
+%       ~ P =         test nesc false                        assert(~P),retract(P), disable(P)
+%
+%   ~ ~(P) =         test possible (via not impossible)      retract( ~(P)), enable(P).
+%  \+ ~(P) =         test impossiblity is unknown            retract( ~(P))
+%   ~ \+(P) =        same as P                               same as P
+%     \+(P) =        test naf(P)                             retract(P)
+%
+% Dec 13, 2035
+% Douglas Miles
+*/
+
+:- module(sanity_clause,[]).
+
+:- use_module(library(logicmoo_user)).
+
+:- begin_pfc.
+
+%= Test escaping of pfclog/1
+
+q.
+
+pfclog( p:- q ).
+
+:- must(p).
+
+\+ pfclog( p:- q ).
+
+:- must(\+p).
+
+pfclog( p:- q ).
+
+:- must(p).
+
+:- listing(p).
+
+~pfclog( p:- q ).
+
+:- must(\+p).
+
+
+%= Test Another escaping of pfclog/1
+
+t.
+r ==> pfclog( s:- t ).
+
+r.
+
+:- must(s).
+
+:- listing(s).
+
+\+ r.
+
+:- must(\+ s).
+
+%=
+%= Test Another escaping of pfclog/1
+%=
+
+r.
+
+if_missing(y(_),(x(xxx):-r)).
+
+:- must(x(xxx)).
+
+:-listing(_:x).
+
+y(x).
+
+:- must(\+ x(xxx)).
+
+:-listing(_:x).
+
+\+ y(x).
+
+:- must(x(xxx)).
+
+:-listing(_:x).
+
+
+
+%=
+%= Test Another escaping of pfclog/1
+%=
+
+:- mpred_trace_exec.
+:- debug_logicmoo(logicmoo(_)).
+
+r2.
+
+if_missing(y2(_),pfclog(x2(xxx):-r2)).
+
+:- must(x2(xxx)).
+
+:-listing(_:x2).
+
+y2(x).
+
+:- must(\+ x2(xxx)).
+
+\+ y2(x).
+
+:- must(x2(xxx)).
+
+:-listing(_:x2).
+
+

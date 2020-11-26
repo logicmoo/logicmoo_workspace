@@ -1,0 +1,172 @@
+% -*-Prolog-*-
+
+%% meta rules
+
+:- op(1050,xfx,('==>')).
+
+:- dynamic (('==>')/2).
+
+% ops5-like production:
+
+(Lsh ==> Rhs) =>  (Lsh => {Rhs}).
+
+% asserting function(p) cuases p/2 to be treated as a function, i.e.
+% if p(foo,1)) is a fact and we assert p(foo,2), then the forrmer assertion
+% is retracted.
+
+function(P)
+  =>
+  {P =.. [Pred,Arg1,Arg2],
+  P2 =.. [Pred,Arg1,Arg3]},
+  (P,{P2,Arg2 \== Arg3} => {rem2(P2)}).
+
+
+% remove assertions about satisfied goals.
+goal(Goal), Goal =>  {rem2(goal(Goal))}.
+
+% if someone picks up an object, then it is no longer "on" anything.
+hold(Actor,Object) => {rem2(on(Object,_))}.
+
+% objects that aren't being held or on something end up on the floor.
+
+object(Object), 
+~on(Object,X)/(X\==floor),
+~hold(_,Object)
+ =>
+{on(Object,floor);format("~n~w falls to the floor.",[Object])},
+on(Object,floor).
+
+
+% This accomplishes moving an actor from XY1 to XY2, taking a help
+% object along.
+
+goal(moveto(Actor,From,To))
+  =>
+  {rem2(at(Actor,From)),
+   add(at(Actor,To)),
+   (hold(Actor,Object) -> add(at(Object,To)) ; true),
+   rem2(goal(moveto(Actor,From,To)))}.
+   
+
+% if X is reported to be on some new object Obj2, remove the assertion
+% that it was on Obj1.
+
+=> function(at(_,_)).
+
+at(X,Y) => {format("~n~w now at ~w",[X,Y])}.
+
+
+=> function(on(_,_)).
+
+on(X,Y) => {format("~n~w now on ~w",[X,Y])}.
+
+
+
+% monkey and bananas problem in Pfc
+
+% jump to the floor.
+goal(on(Actor,floor)) ==>
+  format("~n~w jumps onto the floor",[Actor]),
+  add(on(Actor,floor)).
+
+goal(on(Actor,X)),
+at(Actor,Loc),
+at(X,Loc),
+~hold(Actor,_)
+  ==>
+  format("~n~w climbs onto ~w.",[Actor,X]),
+  add(on(Actor,X)).
+
+goal(hold(Actor,Object)),
+weight(Object,light),
+at(Object,XY)
+=>
+
+ (~at(Actor,XY)  =>  {add(goal(at(Actor,XY)))}),
+
+ (~on(Object,ceiling),at(Actor,XY)
+  =>
+  {format("~n~w picks up ~w.",[Actor,Object])},
+  {add(hold(Actor,Object))}),
+
+ (on(Object,ceiling), at(ladder,XY)
+  =>
+     (~on(Actor, ladder)
+      =>
+      {format("~n~w wants to climb ladder to get to ~w.",[Actor,Object]),
+       add(goal(on(Actor,ladder)))}),
+
+     (on(Actor,ladder)
+      =>
+      {format("~n~w climbs ladder and grabs ~w.",[Actor,Object]),
+       hold(Actor,Object)})),
+      
+ (on(Object,ceiling), ~at(ladder,XY)
+  =>
+  {format("~n~w wants to move ladder to ~w.",[Actor,XY]),
+  add(goal(move(Actor,ladder,XY)))}).
+
+
+goal(at(Actor,XY)),
+at(Actor,XY2)/(XY \== XY2)
+ =>
+{format("~n~w wants to move from ~w to ~w",[Actor,XY2,XY]),
+ add(goal(moveto(Actor,XY2,XY)))}.
+
+(goal(on(Actor,Object)) ; goal(hold(Actor,Object))),
+at(Object,XY),
+at(Actor,XY),
+hold(Actor,Object2)/(Object2 \== Object)
+  =>
+{format("~n~w releases ~w.",[Actor,Object2]),
+ rem2(hold(Actor,Object2))}.
+
+
+
+goal(move(Actor,Object,Destination)),
+hold(Actor,Object),
+at(Actor,XY)/(XY \== Destination)
+ =>
+goal(moveto(Actor,XY,Destination)).
+
+goal(move(Actor,Object,Destination)),
+~hold(Actor,Object)
+ => 
+goal(hold(Actor,Object)).
+
+
+% predicates to describe what's going on.
+% goal(...
+
+
+% here's how to do it:
+start :-
+
+  add(object(bananas)),
+  add(weight(bananas,light)),
+  add(at(bananas,(9,9))),
+  add(on(bananas,ceiling)),
+
+  add(object(couch)),
+  add(wieght(couch,heavy)),
+  add(at(couch,(7,7))),
+  add(on(couch,floor)),
+
+  add(object(ladder)),
+  add(weight(ladder,light)),
+  add(at(ladder,(4,3))),
+  add(on(ladder,floor)),
+
+  add(object(blanket)),
+  add(weight(blanket,light)),
+  add(at(blanket,(7,7))),
+
+  add(object(monkey)),
+  add(on(monkey,couch)),
+  add(at(monkey,(7,7))),
+  add(hold(monkey,blanket)).
+
+% go. to get started.
+go :- add(goal(hold(monkey,bananas))).
+
+db :- listing([object,at,on,hold,weight,goal]).

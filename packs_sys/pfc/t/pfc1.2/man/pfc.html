@@ -1,0 +1,56 @@
+\documentstyle{article}
+
+\setlength{\parindent}{0in}
+\setlength{\parskip}{.2in}
+
+
+\font\tenu=cmu10 % unslanted italic
+\setlength{\textwidth}{6.5 in}
+\setlength{\oddsidemargin}{0 in}
+\setlength{\evensidemargin}{0 in}
+\setlength{\topmargin}{-37 pt}
+\setlength{\textheight}{9 in}
+
+
+\pagestyle{headings}
+
+\newcommand{\pfc}{$P_{fc}$}
+
+\newcommand{\example}
+   {\begin{quote}
+    \small
+    \setlength{\rightmargin}{0in}
+    \begin{verbatim}}
+
+\newcommand{\figline}{\centerline{\rule{\linewidth}{1pt}}}
+
+
+\newenvironment{compactitemize}
+    {\begin{itemize} \setlength{\itemsep}{-.05in} }{\end{itemize}}
+
+\newcommand{\gloss}[1] {\bigskip {\large\bf {#1}} \smallskip \\ \figline \bigskip}
+\newcommand{\prolog}[1]{{\tt\bf {#1}}}
+
+\begin{document}
+\bibliographystyle{plain}
+\title{\pfc\ User Manual}
+\author{
+  Tim Finin\\
+  Unisys Paoli Research Center \\
+  PO Box 517\\
+  Paoli, PA 19301\\
+  \ \\
+  215-648-7446\\
+  finin@prc.unisys.com}
+\date{\today}
+\maketitle
+
+\tableofcontents
+\clearpage
+\input{intro}
+\input{lang}
+\input{predicates}
+\input{examples}
+\newpage
+\bibliography{/mn2/AI/ai}
+\end{document}

@@ -1,0 +1,55 @@
+(note TQC63)
+
+; English: "What are the agreed mutual member actions of the Organization for the Prohibition of Chemical Weapons (OPCW)?"
+
+(instance OrganizationForTheProhibitionOfChemicalWeapons InternationalOrganization)
+
+; This query contains a bogus use of CycL #$sponsorsAgentInAction, in which the arg3 domain constraint is violated.  How did they do this?  Commented out section below is an attempt at a principled reworking in SUMO; however, Vampir will not bind the string to ?PROP.  Old format left, for now.
+
+;(=>
+;	(and
+;		(instance ?COUNTRY Nation)
+;		(member ?COUNTRY OrganizationForTheProhibitionOfChemicalWeapons))
+;	(exists (?DUTY ?ACT)
+;		(and
+;			(instance ?DUTY Obligation)
+;			(attribute ?PROP ?DUTY)
+;			(realization ?ACT "Ceasing of all weapons as promised in Article 5 of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION."))))
+
+;(query
+;  (forall (?COUNTRY ?DUTY ?ACT)
+;     (=>
+;	(and
+;		(instance ?COUNTRY Nation)
+;		(member ?COUNTRY OrganizationForTheProhibitionOfChemicalWeapons))
+;	(and
+;			(instance ?DUTY Obligation)
+;			(attribute ?PROP ?DUTY)
+;			(realization ?ACT ?PROP))))  )
+
+
+(sponsorsAgentInAction OrganizationForTheProhibitionOfChemicalWeapons OrganizationForTheProhibitionOfChemicalWeapons  "Ceasing of all weapons as promised in Article 5 of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION.")
+
+(sponsorsAgentInAction OrganizationForTheProhibitionOfChemicalWeapons OrganizationForTheProhibitionOfChemicalWeapons "Creating local prohibitions and laws as promised in Article 7, of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION.")
+
+(sponsorsAgentInAction OrganizationForTheProhibitionOfChemicalWeapons OrganizationForTheProhibitionOfChemicalWeapons  "Mutual inspection as promised in Article 5 of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION.")
+
+(sponsorsAgentInAction OrganizationForTheProhibitionOfChemicalWeapons OrganizationForTheProhibitionOfChemicalWeapons "Mutual repairing as promised in Article 4 of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION.")
+
+(statementOfPurpose OrganizationForTheProhibitionOfChemicalWeapons "1. Each State Party to this Convention undertakes never under any circumstances: (a) To develop, produce, otherwise acquire, stockpile or retain chemical weapons, or transfer, directly or indirectly, chemical weapons to anyone (b) To use chemical weapons (c) To engage in any military preparations to use chemical weapons (d) To assist, encourage or induce, in any way, anyone to engage in any activity prohibited to a State Party under this Convention. 2. Each State Party undertakes to destroy chemical weapons it owns or possesses, or that are located in any place under its jurisdiction or control, in accordance with the provisions of this Convention. 3. Each State Party undertakes to destroy all chemical weapons it abandoned on the territory of another State Party, in accordance with the provisions of this Convention. 4. Each State Party undertakes to destroy any chemical weapons production facilities it owns or possesses, or that are located in any place under its jurisdiction or control, in accordance with the provisions of this Convention. 5. Each State Party undertakes not to use riot control agents as a method of warfare.")
+
+
+(query
+	(or
+		(statementOfPurpose OrganizationForTheProhibitionOfChemicalWeapons ?X)
+		(sponsorsAgentInAction OrganizationForTheProhibitionOfChemicalWeapons OrganizationForTheProhibitionOfChemicalWeapons ?X))  )
+
+(answer "Ceasing of all weapons as promised in Article 5 of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION.")
+
+(answer "Creating local prohibitions and laws as promised in Article 7, of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION.")
+
+(answer "Mutual inspection as promised in Article 5 of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION.")
+
+(answer "Mutual repairing as promised in Article 4 of CONVENTION ON THE PROHIBITION OF THE DEVELOPMENT, PRODUCTION, STOCKPILING AND USE OF CHEMICAL WEAPONS AND ON THEIR DESTRUCTION.")
+
+(answer "1. Each State Party to this Convention undertakes never under any circumstances: (a) To develop, produce, otherwise acquire, stockpile or retain chemical weapons, or transfer, directly or indirectly, chemical weapons to anyone (b) To use chemical weapons (c) To engage in any military preparations to use chemical weapons (d) To assist, encourage or induce, in any way, anyone to engage in any activity prohibited to a State Party under this Convention. 2. Each State Party undertakes to destroy chemical weapons it owns or possesses, or that are located in any place under its jurisdiction or control, in accordance with the provisions of this Convention. 3. Each State Party undertakes to destroy all chemical weapons it abandoned on the territory of another State Party, in accordance with the provisions of this Convention. 4. Each State Party undertakes to destroy any chemical weapons production facilities it owns or possesses, or that are located in any place under its jurisdiction or control, in accordance with the provisions of this Convention. 5. Each State Party undertakes not to use riot control agents as a method of warfare.")

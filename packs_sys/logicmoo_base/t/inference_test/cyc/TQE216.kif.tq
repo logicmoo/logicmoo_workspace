@@ -1,0 +1,60 @@
+(note TQE216)
+(goalCategoryForAgent UnitedArabEmirates 
+  (changesQuantityInDirection 
+    (YearFn 1999) UnitedArabEmirates 
+    (Kappa 
+      (?REGION ?FRACTION) 
+      (industryFractionOfGDP ?REGION OilIndustry 
+        (YearFn 1999) ?FRACTION)) Negative) EconomicDiversificationGoal) 
+
+(implies 
+  (and 
+    (subAttribute ?SPEC ?GEN) 
+    (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+  (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent UnitedArabEmirates 
+  (thereExists ?PRIV 
+    (and 
+      (instance ?PRIV PrivatizingAnIndustry) 
+      (fromPossessor ?PRIV UnitedArabEmirates))) NationalEconomyGoal) 
+
+(goalCategoryForAgent UnitedArabEmirates 
+  (thereExists ?PRIV 
+    (and 
+      (instance ?PRIV PrivatizingAnIndustry) 
+      (fromPossessor ?PRIV UnitedArabEmirates))) EconomicGoal) 
+
+
+(query (findall (?ECONOMIC-INTEREST ?ECONOMIC-INTEREST-CATEGORY) 
+  (and 
+    (goalCategoryForAgent UnitedArabEmirates ?ECONOMIC-INTEREST
+      ?ECONOMIC-INTEREST-CATEGORY) 
+    (subAttribute ?ECONOMIC-INTEREST-CATEGORY EconomicGoal))))
+
+(answer (list 
+  (changesQuantityInDirection 
+    (YearFn 1999) UnitedArabEmirates 
+    (Kappa 
+      (?REGION ?FRACTION) 
+      (industryFractionOfGDP ?REGION OilIndustry 
+        (YearFn 1999) ?FRACTION)) Negative)) EconomicDiversificationGoal)
+ 
+(answer (list   (thereExists ?PRIV 
+                   (and 
+                       (instance ?PRIV PrivatizingAnIndustry) 
+                       (fromPossessor ?PRIV UnitedArabEmirates)))) NationalEconomyGoal)
+                       
+(answer (list (thereExists ?PRIV 
+                   (and 
+                       (instance ?PRIV PrivatizingAnIndustry) 
+                       (fromPossessor ?PRIV UnitedArabEmirates)))) NationalEconomyGoal)
+                       
+(answer (list (changesQuantityInDirection 
+                   (YearFn 1999) UnitedArabEmirates 
+                   (Kappa 
+                       (?REGION ?FRACTION) 
+                       (industryFractionOfGDP ?REGION OilIndustry 
+                           (YearFn 1999) ?FRACTION)) Negative)) EconomicDiversificationGoal)
+ 
+ (end_of_file)

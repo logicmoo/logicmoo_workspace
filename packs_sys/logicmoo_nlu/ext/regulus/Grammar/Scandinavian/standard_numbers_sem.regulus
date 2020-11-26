@@ -1,0 +1,9 @@
+
+macro(plus(X, Y), add(X, Y)).
+
+macro(multiply(X, Y), mul(X, Y)).
+
+macro(subtract(X, Y), sub(X, Y)).
+
+macro(divide(X, Y), div(X, Y)).
+

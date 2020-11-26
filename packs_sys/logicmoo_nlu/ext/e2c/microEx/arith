@@ -1,0 +1,44 @@
+
+ %tests sur arithmetique
+
+    %longueur d'une liste
+   $ lg([],0).
+   $ lg([T|Q],N) :- lg(Q,N1), plus(N1,1,N).
+
+    %nombre d'elments d'une liste
+   $ nb_elem([],0).
+   $ nb_elem(X,1) :- atomic(X).
+   $ nb_elem([T|Q],N) :- nb_elem(T,N1), nb_elem(Q,N2), plus(N1,N2,N).
+
+    % arithmetique
+   $ ge(X,Y) :- le(Y,X).
+   $ gt(X,Y) :- lt(Y,X).
+   $ max(X,Y,X) :- le(Y,X).
+   $ max(X,Y,Y) :- lt(X,Y).
+
+    %max d'une liste d'entiers
+   $ max_l([X],X).
+   $ max_l([X|Reste],R) :- max_l(Reste,Maxy), max(X,Maxy,R).
+   $ tmax :- max_l([1,2,3,8,2,4,9,7],X), wf(X).
+
+    %sous-listes de somme S
+   $ sous_som([],0,[]).
+   $ sous_som([N|R],S,[N|SR]) :- minus(S,N,S1), sous_som(R,S1,SR).
+   $ sous_som([N|R],S,SR) :- sous_som(R,S,SR).
+   $ tsous_som :- sous_som([0,1,2,3,4,5,6],8,W), wf(W).
+
+    %pgcd par difference
+   $ pgcd(X,X,X).
+   $ pgcd(X,Y,D) :- lt(X,Y), minus(Y,X,Y1), pgcd(X,Y1,D).
+   $ pgcd(X,Y,D) :- lt(Y,X), minus(X,Y,X1), pgcd(X1,Y,D).
+
+    %un petit essai pour simuler la reversibilite de plus
+   $ plus_s(zero,X,X).
+   $ plus_s(s(X),Y,s(Z)) :- plus_s(X,Y,Z).
+   $ decode(zero,0).
+   $ decode(s(X),R) :- decode(X,R1), plus(R1,1,R).
+   $ code(0,zero) :- ! .
+   $ code(N,s(X)) :- minus(N,1,N1), code(N1,X).
+   $ somme(X,Y,Z) :- code(Z,Z1), plus_s(X1,Y1,Z1),
+                     decode(X1,X), decode(Y1,Y).
+   $ tsomme :- somme(X,Y,12), wb(X), wf(Y).

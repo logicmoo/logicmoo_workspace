@@ -1,0 +1,93 @@
+%====================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the ICOT MGTP system.
+%----
+%----Written by Geoff Sutcliffe, July, 1992.
+%----Revised by Geoff Sutcliffe, January 1994.
+%====================================================================
+%-------------------------------------------------------------------
+%----Output the atoms, separated and terminated as indicated.
+%----First case, there never were any of this sign.
+output_mgtp_atoms([],_,_,_,ToWriteIfNone,Terminator,no):-
+    !,
+    write(ToWriteIfNone),
+    write(Terminator).
+
+%----The last one, if there ever were any
+output_mgtp_atoms([OneAtom],NL,Prefix,_,_,Terminator,yes):-
+    !,
+    (NL == yes ->
+        (nl,
+            write(Prefix));
+        true),
+    write(OneAtom),
+    write(Terminator).
+
+%----More than one, write separated
+output_mgtp_atoms([OneAtom,TwoAtoms|RestOfAtoms],NL,Prefix,
+Separator,_,Terminator,yes):-
+    (NL == yes ->
+        (nl,
+            write(Prefix));
+        true),
+    write(OneAtom),
+    write(Separator),
+    output_mgtp_atoms([TwoAtoms|RestOfAtoms],yes,Prefix,
+Separator,_,Terminator,_).
+%-------------------------------------------------------------------
+%----Extract the atoms of literals with the given sign
+select_mgtp_atoms_with_sign(_,[],[]).
+
+select_mgtp_atoms_with_sign(Sign,[Literal|Rest],[Atom|SelectedRest]):-
+    Literal =.. [Sign,Atom],
+    !,
+    select_mgtp_atoms_with_sign(Sign,Rest,SelectedRest).
+
+select_mgtp_atoms_with_sign(Sign,[_|Rest],SelectedRest):-
+    select_mgtp_atoms_with_sign(Sign,Rest,SelectedRest).
+%-------------------------------------------------------------------
+%----Output signed literals, separated and terminated appropriately
+output_mgtp_literals(Literals,Sign,NL,Prefix,Separator,
+ToWriteIfNone,Terminator,Next_NL):-
+    select_mgtp_atoms_with_sign(Sign,Literals,SignedAtoms),
+    output_mgtp_atoms(SignedAtoms,NL,Prefix,Separator,
+ToWriteIfNone,Terminator,Next_NL).
+%-------------------------------------------------------------------
+%----Output each clause, preceded by a comment with it's name and
+%----status.
+output_each_mgtp_clause([]):-
+    !.
+
+output_each_mgtp_clause([input_clause(Name,Status,Literals)|
+RestOfClauses]):-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    write('('),
+    output_mgtp_literals(Literals,++,no,'','; ','false',') :- ',Next_NL),
+    output_mgtp_literals(Literals,--,Next_NL,'    ',', ','true','.',_),
+    nl,
+    nl,
+    output_each_mgtp_clause(RestOfClauses).
+%-------------------------------------------------------------------
+%----Output the clauses
+mgtp(mgtp,Clauses,_):-
+    tptp_clauses(Clauses),
+    output_each_mgtp_clause(Clauses).
+
+%----Do nothing for FOF - just leave a comment
+mgtp(mgtp,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in MGTP'),
+    nl.
+%-------------------------------------------------------------------
+%----Provide information about the MGTP format
+mgtp_format_information('%','.mgtp').
+%-------------------------------------------------------------------
+%----Provide information about the MGTP file
+mgtp_file_information(format,mgtp,'MGTP format').
+%-------------------------------------------------------------------

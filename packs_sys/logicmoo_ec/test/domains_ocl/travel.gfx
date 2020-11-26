@@ -1,0 +1,221 @@
+<jgx-1.01>
+<model>
+	<a class="state" id="1" val="1" rect="505.0,115.0,62.0,38.0" attr="0">
+		<a class="port" id="2" val="2"/>
+	</a>
+	<a class="state" id="3" val="3" rect="505.0,217.0,62.0,38.0" attr="1">
+		<a class="port" id="4" val="2"/>
+	</a>
+	<a class="transState" id="5" val="4" rect="457.0,175.0,30.0,18.0" attr="2">
+		<a class="port" id="6" val="2"/>
+	</a>
+	<a class="transState" id="7" val="5" rect="559.0,173.0,47.0,18.0" attr="2">
+		<a class="port" id="8" val="2"/>
+	</a>
+	<a class="transitionEdge" id="9" val="2" src="4" tgt="6" pts="521.0,236.0,472.0,184.0" attr="3"/>
+	<a class="transitionEdge" id="10" val="2" src="6" tgt="2" pts="472.0,184.0,522.0,134.0" attr="3"/>
+	<a class="transitionEdge" id="11" val="2" src="2" tgt="8" pts="522.0,134.0,666.5,218.0" attr="3"/>
+	<a class="transitionEdge" id="12" val="2" src="8" tgt="4" pts="666.5,218.0,521.0,236.0" attr="3"/>
+	<a class="transValue" id="13" val="6" rect="505.0,25.0,33.0,18.0" attr="4">
+		<a class="port" id="14" val="2"/>
+	</a>
+	<a class="transitionEdge" id="15" val="2" src="14" tgt="2" pts="521.5,34.0,522.0,134.0" attr="3"/>
+	<a class="transitionEdge" id="16" val="2" src="2" tgt="14" pts="522.0,134.0,521.5,34.0" attr="3"/>
+	<a class="state" id="17" val="7" rect="133.0,217.0,45.0,38.0" attr="5">
+		<a class="port" id="18" val="2"/>
+	</a>
+	<a class="transValue" id="19" val="8" rect="139.0,25.0,33.0,18.0" attr="4">
+		<a class="port" id="20" val="2"/>
+	</a>
+	<a class="transitionEdge" id="21" val="2" src="18" tgt="20" pts="155.5,236.0,155.5,34.0" attr="3"/>
+	<a class="transitionEdge" id="22" val="2" src="20" tgt="18" pts="155.5,34.0,155.5,236.0" attr="3"/>
+	<a class="OneWayMergeEdge" id="23" val="9" src="20" tgt="14" pts="155.5,34.0,521.5,34.0" attr="6"/>
+	<a class="OneWayMergeEdge" id="24" val="10" src="18" tgt="6" pts="155.5,236.0,472.0,184.0" attr="6"/>
+	<a class="OneWayMergeEdge" id="25" val="11" src="18" pts="155.5,236.0,573.0,190.0" attr="6"/>
+	<a class="textNote" id="26" val="12" rect="505.0,263.0,38.0,16.0" attr="7"/>
+	<a class="textNote" id="27" val="13" rect="307.0,263.0,29.0,16.0" attr="7"/>
+	<a class="textNote" id="28" val="14" rect="133.0,269.0,39.0,16.0" attr="7"/>
+	<a class="state" id="29" val="15" rect="330.0,282.0,74.0,38.0" attr="8">
+		<a class="port" id="30" val="2"/>
+	</a>
+	<a class="state" id="31" val="16" rect="342.0,384.0,84.0,38.0" attr="9">
+		<a class="port" id="32" val="2"/>
+	</a>
+	<a class="transState" id="33" val="17" rect="294.0,342.0,40.0,18.0" attr="2">
+		<a class="port" id="34" val="2"/>
+	</a>
+	<a class="transState" id="35" val="18" rect="396.0,342.0,30.0,18.0" attr="2">
+		<a class="port" id="36" val="2"/>
+	</a>
+	<a class="transitionEdge" id="37" val="2" src="32" tgt="34" pts="358.0,403.0,309.0,351.0" attr="3"/>
+	<a class="transitionEdge" id="38" val="2" src="34" tgt="30" pts="309.0,351.0,364.0,301.0" attr="3"/>
+	<a class="transitionEdge" id="39" val="2" src="30" tgt="36" pts="364.0,301.0,380.0,351.0" attr="3"/>
+	<a class="transitionEdge" id="40" val="2" src="36" tgt="32" pts="380.0,351.0,358.0,403.0" attr="3"/>
+	<a class="OneWayMergeEdge" id="41" val="19" src="30" tgt="6" pts="10.0,10.0,20.0,20.0" attr="6"/>
+	<a class="OneWayMergeEdge" id="42" val="20" src="30" tgt="8" pts="10.0,10.0,20.0,20.0" attr="6"/>
+	<a class="OneWayMergeEdge" id="43" val="21" src="18" tgt="34" pts="10.0,10.0,20.0,20.0" attr="6"/>
+	<a class="OneWayMergeEdge" id="44" val="22" src="18" tgt="36" pts="10.0,10.0,20.0,20.0" attr="6"/>
+	<a class="transValue" id="45" val="23" rect="48.0,354.0,33.0,18.0" attr="4">
+		<a class="port" id="46" val="2"/>
+	</a>
+	<a class="transitionEdge" id="47" val="2" src="46" tgt="32" pts="10.0,10.0,20.0,20.0" attr="3"/>
+	<a class="transitionEdge" id="48" val="2" src="32" tgt="46" pts="10.0,10.0,20.0,20.0" attr="3"/>
+	<a class="OneWayMergeEdge" id="49" val="24" src="20" tgt="46" pts="10.0,10.0,20.0,20.0" attr="6"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="c:\Programas\GIPO\gipo\jplan\domains/icons/icoCheque.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="icon" val="c:\Programas\GIPO\gipo\jplan\domains/icons/icoCheque.png"/>
+	</map>
+	<map id="2" pid="0">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="3">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="4" pid="2">
+		<a key="gradientColor" val="0,255,255"/>
+		<a key="bordercolor" val="0,0,255"/>
+	</map>
+	<map id="5" pid="0">
+		<a key="icon" val="c:\Programas\GIPO\gipo\jplan\domains/icons/icoPlane.png"/>
+	</map>
+	<map id="6" pid="3">
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+		<a key="lineEnd" val="1"/>
+	</map>
+	<map id="7">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="autosize" val="true"/>
+		<a key="opaque" val="false"/>
+	</map>
+	<map id="8" pid="0">
+		<a key="icon" val="c:\Programas\GIPO\gipo\jplan\domains/icons/icoPerson.png"/>
+	</map>
+	<map id="9" pid="0">
+		<a key="icon" val="c:\Programas\GIPO\gipo\jplan\domains/icons/icoPerson.png"/>
+	</map>
+</attrs>
+<user>
+	<a key="19">
+		<a key="label" val=""/>
+	</a>
+	<a key="13" val="Bags"/>
+	<a key="24">
+		<a key="label" val=""/>
+	</a>
+	<a key="16">
+		<a key="label" val="personInPlane"/>
+		<a key="ObjectSort" val="person"/>
+		<a key="Property" val="personlocation"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="17">
+		<a key="label" val="getOut"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="3">
+		<a key="label" val="thingOutAt"/>
+		<a key="ObjectSort" val="thing"/>
+		<a key="Property" val="thinglocation"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="21">
+		<a key="label" val="-"/>
+	</a>
+	<a key="5">
+		<a key="label" val="takeOut"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="9">
+		<a key="label" val=""/>
+	</a>
+	<a key="12" val="Things"/>
+	<a key="14" val="Planes"/>
+	<a key="15">
+		<a key="label" val="personOutAt"/>
+		<a key="ObjectSort" val="person"/>
+		<a key="Property" val="personlocation"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="4">
+		<a key="label" val="putIn"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="1">
+		<a key="label" val="thingInBag"/>
+		<a key="ObjectSort" val="thing"/>
+		<a key="Property" val="thinglocation"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="18">
+		<a key="label" val="getIn"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="11">
+		<a key="label" val="-"/>
+	</a>
+	<a key="7">
+		<a key="label" val="atPlace"/>
+		<a key="ObjectSort" val="plane"/>
+		<a key="Property" val="planelocation"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="20">
+		<a key="label" val=""/>
+	</a>
+	<a key="8">
+		<a key="EdgeName" val="loc"/>
+		<a key="label" val="move"/>
+		<a key="ObjectSort" val="plane"/>
+		<a key="ValueSort" val="planelocation"/>
+	</a>
+	<a key="6">
+		<a key="EdgeName" val="loc"/>
+		<a key="label" val="move"/>
+		<a key="ObjectSort" val="thing"/>
+		<a key="ValueSort" val="thinglocation"/>
+	</a>
+	<a key="10">
+		<a key="label" val="%2B"/>
+	</a>
+	<a key="23">
+		<a key="EdgeName" val="loc"/>
+		<a key="label" val="move"/>
+		<a key="ObjectSort" val="person"/>
+		<a key="ValueSort" val="personlocation"/>
+	</a>
+	<a key="22">
+		<a key="label" val="%2B"/>
+	</a>
+	<a key="2" val=""/>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

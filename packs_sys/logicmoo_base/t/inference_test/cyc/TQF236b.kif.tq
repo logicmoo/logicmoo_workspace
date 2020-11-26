@@ -1,0 +1,99 @@
+(note "TQF236b - hypothetical")
+
+(agent HYP-Corruption-Activity-26212139 HYP-CriminalOrganization-4987548) 
+(operatesInRegion HYP-CriminalOrganization-4987548 HYP-GeopoliticalEntity-28714604) 
+(instance HYP-CriminalOrganization-4987548 CriminalOrganization) 
+(instance HYP-Corruption-Activity-26212139 Corruption-Activity) 
+(instance HYP-Corruption-Activity-26212139 Action) 
+
+(implies 
+  (and 
+    (instance ?CORRUPTING Corruption-Activity) 
+    (agent ?CORRUPTING ?CRIME-ORG) 
+    (instance ?CRIME-ORG CriminalOrganization) 
+    (operatesInRegion ?CRIME-ORG ?REGION)) 
+  (increases-Generic ?CORRUPTING 
+    (statusWithAgent-Gradient ?CRIME-ORG 
+      (GovernmentFn ?REGION) Influence High) likelihood)) 
+
+(implies 
+  (and 
+    (instance ?ACTION Action) 
+    (increases-Generic ?ACTION 
+      (statusWithAgent-Gradient ?CRIME-ORG 
+        (GovernmentFn ?REGION) Influence High) likelihood)
+    (agent ?ACTION ?CRIME-ORG) 
+    (instance ?CRIME-ORG CriminalOrganization) 
+    (operatesInRegion ?CRIME-ORG ?REGION)) 
+  (increases-Generic ?ACTION 
+    (not 
+      (thereExists ?BUST 
+        (and 
+          (instance ?BUST #$LawEnforcementActivity) 
+          (maleficiary ?BUST ?CRIME-ORG)))) likelihood)) 
+
+(implies 
+  (instance ?CRIME-ORG CriminalOrganization) 
+  (goalCategoryForAgent ?CRIME-ORG 
+    (not 
+      (thereExists ?BUST 
+        (and 
+          (instance ?BUST #$LawEnforcementActivity) 
+          (maleficiary ?BUST ?CRIME-ORG)))) OrganizationalSecurityGoal))
+
+(implies 
+ (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+ (desires ?AGT ?FORM)) 
+
+(agent HYP-Corruption-Activity-26212139 HYP-CriminalOrganization-4987548) 
+(operatesInRegion HYP-CriminalOrganization-4987548 HYP-GeopoliticalEntity-28714604) 
+(instance HYP-CriminalOrganization-4987548 CriminalOrganization) 
+(instance HYP-Corruption-Activity-26212139 Corruption-Activity) 
+
+(implies 
+  (and 
+    (instance ?CORRUPTING Corruption-Activity) 
+    (agent ?CORRUPTING ?CRIME-ORG) 
+    (instance ?CRIME-ORG CriminalOrganization) 
+    (operatesInRegion ?CRIME-ORG ?REGION)) 
+  (increases-Generic ?CORRUPTING 
+    (statusWithAgent-Gradient ?CRIME-ORG 
+      (GovernmentFn ?REGION) Influence High) likelihood) ) 
+
+(implies 
+  (and 
+    (instance ?CRIME-ORG CriminalOrganization) 
+    (operatesInRegion ?CRIME-ORG ?REGION)) 
+  (goalCategoryForAgent ?CRIME-ORG 
+    (statusWithAgent-Gradient ?CRIME-ORG 
+      (GovernmentFn ?REGION) Influence High) OrganizationalProsperityGoal))
+
+(implies 
+  (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+  (desires ?AGT ?FORM)) 
+
+(query (findall (?MOTIVE)
+  (implies 
+    (and 
+      (instance ?CRIME-ORG CriminalOrganization) 
+      (instance ?CORRUPTING Corruption-Activity) 
+      (agent ?CORRUPTING ?CRIME-ORG) 
+      (operatesInRegion ?CRIME-ORG ?REGION)) 
+    (and 
+      (desires ?CRIME-ORG ?MOTIVE) 
+      (increases-Generic ?CORRUPTING ?MOTIVE likelihood)))))
+
+(answer (list 
+  (not 
+    (thereExists ?BUST 
+      (and 
+        (instance ?BUST #$LawEnforcementActivity) 
+        (maleficiary ?BUST HYP-CriminalOrganization-4987548)))) OrganizationalSecurityGoal))
+
+(answer (list  
+   (increases-Generic HYP-Corruption-Activity-26212139
+     (statusWithAgent-Gradient HYP-CriminalOrganization-4987548
+       (GovernmentFn HYP-GeopoliticalEntity-28714604) Influence High) likelihood)))
+ 
+(end_of_file)
+

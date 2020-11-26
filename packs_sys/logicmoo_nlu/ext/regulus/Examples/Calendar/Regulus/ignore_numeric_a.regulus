@@ -1,0 +1,8 @@
+/* 
+
+Ignore the numeric readings of "a" and "an" meaning "one"
+
+*/
+
+ignore_item(a_as_number).
+ignore_item(an_as_number).

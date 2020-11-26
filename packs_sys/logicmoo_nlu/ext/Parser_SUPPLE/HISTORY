@@ -1,0 +1,8 @@
+v1.0 (06/10/2005)
+=================
+First official release of SUPPLE made to coincide with the publication of the
+IWPT05 short paper. This release is basically the same as the last version
+of BuChart just with cosmetic changes so that it is called SUPPLE and an
+updated build system.  See the GATE user guide for full details:
+
+http://gate.ac.uk/sale/tao/#sec:misc-creole:supple

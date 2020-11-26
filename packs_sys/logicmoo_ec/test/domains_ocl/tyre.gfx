@@ -1,0 +1,521 @@
+<jgx-1.01>
+<model>
+	<a class="state" id="1" val="1" rect="344.0,30.0,91.0,43.0" attr="0">
+		<a class="port" id="2" val="2"/>
+	</a>
+	<a class="state" id="3" val="3" rect="362.0,180.0,73.0,37.0" attr="1">
+		<a class="port" id="4" val="2"/>
+	</a>
+	<a class="state" id="5" val="4" rect="368.0,444.0,80.0,37.0" attr="2">
+		<a class="port" id="6" val="2"/>
+	</a>
+	<a class="state" id="7" val="5" rect="374.0,306.0,68.0,37.0" attr="3">
+		<a class="port" id="8" val="2"/>
+	</a>
+	<a class="transState" id="9" val="6" rect="422.0,96.0,51.0,17.0" attr="4">
+		<a class="port" id="10" val="2"/>
+	</a>
+	<a class="transState" id="11" val="7" rect="302.0,96.0,57.0,17.0" attr="4">
+		<a class="port" id="12" val="2"/>
+	</a>
+	<a class="transitionEdge" id="13" val="2" src="4" tgt="12" pts="368.5,270.5,324.5,164.5" attr="5"/>
+	<a class="transitionEdge" id="14" val="2" src="12" tgt="2" pts="324.5,164.5,389.5,51.5" attr="5"/>
+	<a class="transitionEdge" id="15" val="2" src="2" tgt="10" pts="389.5,51.5,423.5,194.5" attr="5"/>
+	<a class="transitionEdge" id="16" val="2" src="10" tgt="4" pts="423.5,194.5,368.5,270.5" attr="5"/>
+	<a class="state" id="17" val="8" rect="782.0,516.0,79.0,37.0" attr="6">
+		<a class="port" id="18" val="2"/>
+	</a>
+	<a class="state" id="19" val="9" rect="986.0,468.0,73.0,37.0" attr="7">
+		<a class="port" id="20" val="2"/>
+	</a>
+	<a class="state" id="21" val="10" rect="626.0,522.0,67.0,37.0" attr="8">
+		<a class="port" id="22" val="2"/>
+	</a>
+	<a class="transState" id="23" val="11" rect="878.0,582.0,79.0,17.0" attr="4">
+		<a class="port" id="24" val="2"/>
+	</a>
+	<a class="transState" id="25" val="12" rect="878.0,432.0,79.0,17.0" attr="4">
+		<a class="port" id="26" val="2"/>
+	</a>
+	<a class="transState" id="27" val="13" rect="710.0,594.0,85.0,17.0" attr="4">
+		<a class="port" id="28" val="2"/>
+	</a>
+	<a class="transState" id="29" val="14" rect="698.0,480.0,91.0,17.0" attr="4">
+		<a class="port" id="30" val="2"/>
+	</a>
+	<a class="transitionEdge" id="31" val="2" src="20" tgt="24" pts="1022.5,486.5,917.5,590.5" attr="5"/>
+	<a class="transitionEdge" id="32" val="2" src="24" tgt="18" pts="917.5,590.5,821.5,534.5" attr="5"/>
+	<a class="transitionEdge" id="33" val="2" src="18" tgt="26" pts="821.5,534.5,917.5,440.5" attr="5"/>
+	<a class="transitionEdge" id="34" val="2" src="26" tgt="20" pts="917.5,440.5,1022.5,486.5" attr="5"/>
+	<a class="transitionEdge" id="35" val="2" src="18" tgt="30" pts="821.5,534.5,743.5,488.5" attr="5"/>
+	<a class="transitionEdge" id="36" val="2" src="30" tgt="22" pts="743.5,488.5,617.5,564.5" attr="5"/>
+	<a class="state" id="37" val="15" rect="164.0,66.0,46.0,37.0" attr="9">
+		<a class="port" id="38" val="2"/>
+	</a>
+	<a class="state" id="39" val="16" rect="170.0,258.0,46.0,37.0" attr="10">
+		<a class="port" id="40" val="2"/>
+	</a>
+	<a class="state" id="41" val="17" rect="170.0,438.0,46.0,37.0" attr="11">
+		<a class="port" id="42" val="2"/>
+	</a>
+	<a class="transState" id="43" val="18" rect="200.0,216.0,47.0,17.0" attr="4">
+		<a class="port" id="44" val="2"/>
+	</a>
+	<a class="transState" id="45" val="19" rect="86.0,192.0,47.0,17.0" attr="4">
+		<a class="port" id="46" val="2"/>
+	</a>
+	<a class="transState" id="47" val="20" rect="134.0,336.0,47.0,17.0" attr="4">
+		<a class="port" id="48" val="2"/>
+	</a>
+	<a class="transState" id="49" val="21" rect="224.0,378.0,47.0,17.0" attr="4">
+		<a class="port" id="50" val="2"/>
+	</a>
+	<a class="transitionEdge" id="51" val="2" src="42" tgt="48" pts="193.0,402.5,157.5,344.5" attr="5"/>
+	<a class="transitionEdge" id="52" val="2" src="48" tgt="40" pts="157.5,344.5,193.0,276.5" attr="5"/>
+	<a class="transitionEdge" id="53" val="2" src="40" tgt="46" pts="193.0,276.5,109.5,200.5" attr="5"/>
+	<a class="transitionEdge" id="54" val="2" src="46" tgt="38" pts="109.5,200.5,187.0,84.5" attr="5"/>
+	<a class="transitionEdge" id="55" val="2" src="38" tgt="44" pts="187.0,84.5,223.5,224.5" attr="5"/>
+	<a class="transitionEdge" id="56" val="2" src="44" tgt="40" pts="223.5,224.5,193.0,276.5" attr="5"/>
+	<a class="transitionEdge" id="57" val="2" src="40" tgt="50" pts="193.0,276.5,253.5,350.5" attr="5"/>
+	<a class="transitionEdge" id="58" val="2" src="50" tgt="42" pts="253.5,350.5,193.0,402.5" attr="5"/>
+	<a class="transState" id="59" val="22" rect="506.0,342.0,91.0,17.0" attr="4">
+		<a class="port" id="60" val="2"/>
+	</a>
+	<a class="OneWayMergeEdge" id="62" val="23" src="61" tgt="46" pts="743.5,48.5,109.5,200.5" attr="12"/>
+	<a class="OneWayMergeEdge" id="63" val="24" src="61" tgt="44" pts="743.5,48.5,223.5,224.5" attr="12"/>
+	<a class="state" id="64" val="25" rect="698.0,30.0,91.0,37.0" attr="13">
+		<a class="port" id="61" val="2"/>
+	</a>
+	<a class="state" id="65" val="26" rect="776.0,246.0,85.0,37.0" attr="14">
+		<a class="port" id="66" val="2"/>
+	</a>
+	<a class="transState" id="67" val="27" rect="674.0,108.0,79.0,17.0" attr="4">
+		<a class="port" id="68" val="2"/>
+	</a>
+	<a class="transState" id="69" val="28" rect="806.0,114.0,101.0,17.0" attr="4">
+		<a class="port" id="70" val="2"/>
+	</a>
+	<a class="transitionEdge" id="71" val="2" src="66" tgt="68" pts="818.5,264.5,713.5,116.5" attr="5"/>
+	<a class="transitionEdge" id="72" val="2" src="68" tgt="61" pts="713.5,116.5,743.5,48.5" attr="5"/>
+	<a class="transitionEdge" id="73" val="2" src="61" tgt="70" pts="743.5,48.5,856.5,122.5" attr="5"/>
+	<a class="transitionEdge" id="74" val="2" src="70" tgt="66" pts="856.5,122.5,818.5,264.5" attr="5"/>
+	<a class="transState" id="75" val="29" rect="332.0,264.0,47.0,17.0" attr="4">
+		<a class="port" id="76" val="2"/>
+	</a>
+	<a class="transState" id="77" val="30" rect="416.0,264.0,47.0,13.0" attr="4">
+		<a class="port" id="78" val="2"/>
+	</a>
+	<a class="transitionEdge" id="79" val="2" src="4" tgt="76" pts="368.5,270.5,325.5,350.5" attr="5"/>
+	<a class="transitionEdge" id="80" val="2" src="76" tgt="8" pts="325.5,350.5,384.0,444.5" attr="5"/>
+	<a class="transitionEdge" id="81" val="2" src="8" tgt="78" pts="384.0,444.5,427.5,360.5" attr="5"/>
+	<a class="transitionEdge" id="82" val="2" src="78" tgt="4" pts="427.5,360.5,368.5,270.5" attr="5"/>
+	<a class="transState" id="83" val="31" rect="338.0,390.0,47.0,17.0" attr="4">
+		<a class="port" id="84" val="2"/>
+	</a>
+	<a class="transState" id="85" val="32" rect="428.0,378.0,47.0,17.0" attr="4">
+		<a class="port" id="86" val="2"/>
+	</a>
+	<a class="transitionEdge" id="87" val="2" src="8" tgt="84" pts="384.0,444.5,319.5,518.5" attr="5"/>
+	<a class="transitionEdge" id="88" val="2" src="84" tgt="6" pts="319.5,518.5,372.0,606.5" attr="5"/>
+	<a class="transitionEdge" id="89" val="2" src="6" tgt="86" pts="372.0,606.5,445.5,536.5" attr="5"/>
+	<a class="transitionEdge" id="90" val="2" src="86" tgt="8" pts="445.5,536.5,384.0,444.5" attr="5"/>
+	<a class="state" id="91" val="33" rect="602.0,390.0,55.0,37.0" attr="15">
+		<a class="port" id="92" val="2"/>
+	</a>
+	<a class="state" id="93" val="34" rect="602.0,288.0,62.0,37.0" attr="16">
+		<a class="port" id="94" val="2"/>
+	</a>
+	<a class="state" id="95" val="35" rect="614.0,168.0,38.0,37.0" attr="17">
+		<a class="port" id="96" val="2"/>
+	</a>
+	<a class="transState" id="97" val="36" rect="542.0,228.0,57.0,17.0" attr="4">
+		<a class="port" id="98" val="2"/>
+	</a>
+	<a class="transState" id="99" val="37" rect="656.0,234.0,73.0,17.0" attr="4">
+		<a class="port" id="100" val="2"/>
+	</a>
+	<a class="transState" id="101" val="38" rect="698.0,342.0,63.0,17.0" attr="4">
+		<a class="port" id="102" val="2"/>
+	</a>
+	<a class="transitionEdge" id="103" val="2" src="92" tgt="102" pts="629.5,408.5,729.5,350.5" attr="5"/>
+	<a class="transitionEdge" id="104" val="2" src="102" tgt="94" pts="729.5,350.5,633.0,306.5" attr="5"/>
+	<a class="transitionEdge" id="105" val="2" src="94" tgt="60" pts="633.0,306.5,551.5,350.5" attr="5"/>
+	<a class="transitionEdge" id="106" val="2" src="60" tgt="92" pts="551.5,350.5,629.5,408.5" attr="5"/>
+	<a class="transitionEdge" id="107" val="2" src="94" tgt="98" pts="633.0,306.5,570.5,236.5" attr="5"/>
+	<a class="transitionEdge" id="108" val="2" src="98" tgt="96" pts="570.5,236.5,633.0,186.5" attr="5"/>
+	<a class="transitionEdge" id="109" val="2" src="96" tgt="100" pts="633.0,186.5,692.5,242.5" attr="5"/>
+	<a class="transitionEdge" id="110" val="2" src="100" tgt="94" pts="692.5,242.5,633.0,306.5" attr="5"/>
+	<a class="state" id="111" val="39" rect="992.0,270.0,38.0,37.0" attr="18">
+		<a class="port" id="112" val="2"/>
+	</a>
+	<a class="state" id="113" val="40" rect="998.0,78.0,49.0,37.0" attr="19">
+		<a class="port" id="114" val="2"/>
+	</a>
+	<a class="transState" id="115" val="41" rect="938.0,180.0,39.0,17.0" attr="4">
+		<a class="port" id="116" val="2"/>
+	</a>
+	<a class="transState" id="117" val="42" rect="1052.0,186.0,39.0,17.0" attr="4">
+		<a class="port" id="118" val="2"/>
+	</a>
+	<a class="transitionEdge" id="119" val="2" src="112" tgt="116" pts="1011.0,288.5,957.5,188.5" attr="5"/>
+	<a class="transitionEdge" id="120" val="2" src="116" tgt="114" pts="957.5,188.5,1022.5,96.5" attr="5"/>
+	<a class="transitionEdge" id="121" val="2" src="114" tgt="118" pts="1022.5,96.5,1071.5,194.5" attr="5"/>
+	<a class="transitionEdge" id="122" val="2" src="118" tgt="112" pts="1071.5,194.5,1011.0,288.5" attr="5"/>
+	<a class="OneWayMergeEdge" id="123" val="43" src="112" tgt="68" pts="1011.0,288.5,713.5,116.5" attr="12"/>
+	<a class="OneWayMergeEdge" id="124" val="44" src="112" tgt="70" pts="1011.0,288.5,856.5,122.5" attr="12"/>
+	<a class="OneWayMergeEdge" id="125" val="45" src="112" tgt="26" pts="1011.0,288.5,917.5,440.5" attr="12"/>
+	<a class="OneWayMergeEdge" id="126" val="46" src="112" tgt="24" pts="1011.0,288.5,917.5,590.5" attr="12"/>
+	<a class="OneWayMergeEdge" id="127" val="47" src="112" tgt="60" pts="1011.0,288.5,551.5,350.5" attr="12"/>
+	<a class="OneWayMergeEdge" id="128" val="48" src="112" tgt="102" pts="1011.0,288.5,729.5,350.5" attr="12"/>
+	<a class="state" id="129" val="49" rect="372.0,570.0,61.0,37.0" attr="20">
+		<a class="port" id="130" val="2"/>
+	</a>
+	<a class="transState" id="131" val="50" rect="306.0,528.0,75.0,17.0" attr="4">
+		<a class="port" id="132" val="2"/>
+	</a>
+	<a class="transState" id="133" val="51" rect="456.0,528.0,39.0,25.0" attr="4">
+		<a class="port" id="134" val="2"/>
+	</a>
+	<a class="transitionEdge" id="135" val="2" src="6" tgt="132" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="136" val="2" src="132" tgt="130" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="137" val="2" src="130" tgt="134" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="138" val="2" src="134" tgt="6" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="139" val="2" src="22" tgt="28" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="140" val="2" src="28" tgt="18" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="TwoWayMergeEdge" id="141" val="52" src="134" tgt="30" pts="10.0,10.0,20.0,20.0" attr="21"/>
+	<a class="TwoWayMergeEdge" id="142" val="53" src="132" tgt="28" pts="10.0,10.0,20.0,20.0" attr="21"/>
+	<a class="TwoWayMergeEdge" id="143" val="54" src="86" tgt="48" pts="10.0,10.0,20.0,20.0" attr="21"/>
+	<a class="TwoWayMergeEdge" id="144" val="55" src="84" tgt="50" pts="10.0,10.0,20.0,20.0" attr="21"/>
+	<a class="TwoWayMergeEdge" id="145" val="56" src="78" tgt="100" pts="10.0,10.0,20.0,20.0" attr="21"/>
+	<a class="TwoWayMergeEdge" id="146" val="57" src="76" tgt="98" pts="10.0,10.0,20.0,20.0" attr="21"/>
+	<a class="TwoWayMergeEdge" id="147" val="58" src="44" tgt="10" pts="10.0,10.0,20.0,20.0" attr="21"/>
+	<a class="TwoWayMergeEdge" id="148" val="59" src="46" tgt="12" pts="10.0,10.0,20.0,20.0" attr="21"/>
+	<a class="textNote" id="149" val="60" rect="18.0,498.0,343.0,112.0" attr="22"/>
+	<a class="textNote" id="150" val="61" rect="96.0,6.0,175.0,42.0" attr="22"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoHub.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoHub.png"/>
+	</map>
+	<map id="2" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoHub.png"/>
+	</map>
+	<map id="3" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoHub.png"/>
+	</map>
+	<map id="4" pid="0">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="5">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="6" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoWheel.png"/>
+	</map>
+	<map id="7" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoWheel.png"/>
+	</map>
+	<map id="8" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoWheel.png"/>
+	</map>
+	<map id="9" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoNuts.png"/>
+	</map>
+	<map id="10" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoNuts.png"/>
+	</map>
+	<map id="11" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoNuts.png"/>
+	</map>
+	<map id="12" pid="5">
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+	</map>
+	<map id="13" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoWrench.png"/>
+	</map>
+	<map id="14" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoWrench.png"/>
+	</map>
+	<map id="15" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoJack.png"/>
+	</map>
+	<map id="16" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoJack.png"/>
+	</map>
+	<map id="17" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoJack.png"/>
+	</map>
+	<map id="18" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoBoot.png"/>
+	</map>
+	<map id="19" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoBoot.png"/>
+	</map>
+	<map id="20" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoHub.png"/>
+	</map>
+	<map id="21" pid="12">
+		<a key="lineBegin" val="5"/>
+		<a key="lineEnd" val="1"/>
+	</map>
+	<map id="22">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="autosize" val="true"/>
+		<a key="opaque" val="false"/>
+	</map>
+</attrs>
+<user>
+	<a key="60">
+		<a key="label" val="%3Chtml%3E%0A++%3Chead%3E%0A++++%0A++%3C%2Fhead%3E%0A++%3Cbody%3E%0A++++%3Ch2%3E%0A++++++%3Cfont+color%3D%22red%22%3EHub+%3C%2Ffont%3E%0A++++%3C%2Fh2%3E%0A++++%3Cpre%3EThe+hub+really+records+the+state+of%0Athe+entire+hub%2Fwheel+assembly.+Understanding%0Aits+changes+of+state+are+the+key+to+understanding%0Athe+domain.++++++++%3C%2Fpre%3E%0A++%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A"/>
+	</a>
+	<a key="45">
+		<a key="label" val=""/>
+	</a>
+	<a key="50">
+		<a key="label" val="takeOffWheel"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="47">
+		<a key="label" val=""/>
+	</a>
+	<a key="42">
+		<a key="label" val="open"/>
+		<a key="ObjectSort" val="boot"/>
+	</a>
+	<a key="26">
+		<a key="label" val="inBootWrench"/>
+		<a key="ObjectSort" val="wrench"/>
+	</a>
+	<a key="38">
+		<a key="label" val="fetchJack"/>
+		<a key="ObjectSort" val="jack"/>
+	</a>
+	<a key="46">
+		<a key="label" val=""/>
+	</a>
+	<a key="9">
+		<a key="label" val="wheelInBoot"/>
+		<a key="ObjectSort" val="wheel"/>
+	</a>
+	<a key="20">
+		<a key="label" val="putOn"/>
+		<a key="ObjectSort" val="nuts"/>
+	</a>
+	<a key="10">
+		<a key="label" val="onWheel"/>
+		<a key="ObjectSort" val="wheel"/>
+	</a>
+	<a key="12">
+		<a key="label" val="putAwayWheel"/>
+		<a key="ObjectSort" val="wheel"/>
+	</a>
+	<a key="37">
+		<a key="label" val="jackDown"/>
+		<a key="ObjectSort" val="jack"/>
+	</a>
+	<a key="40">
+		<a key="label" val="closed"/>
+		<a key="ObjectSort" val="boot"/>
+	</a>
+	<a key="11">
+		<a key="label" val="fetchWheel"/>
+		<a key="ObjectSort" val="wheel"/>
+	</a>
+	<a key="8">
+		<a key="label" val="haveWheel"/>
+		<a key="ObjectSort" val="wheel"/>
+	</a>
+	<a key="13">
+		<a key="label" val="takeOffWheel"/>
+		<a key="ObjectSort" val="wheel"/>
+	</a>
+	<a key="34">
+		<a key="label" val="haveJack"/>
+		<a key="ObjectSort" val="jack"/>
+	</a>
+	<a key="23">
+		<a key="label" val=""/>
+	</a>
+	<a key="55">
+		<a key="label" val="-+hub"/>
+	</a>
+	<a key="28">
+		<a key="label" val="putAwayWrench"/>
+		<a key="ObjectSort" val="wrench"/>
+	</a>
+	<a key="59">
+		<a key="label" val=""/>
+	</a>
+	<a key="54">
+		<a key="label" val="%2B+hub"/>
+	</a>
+	<a key="35">
+		<a key="label" val="inUse"/>
+		<a key="ObjectSort" val="jack"/>
+	</a>
+	<a key="44">
+		<a key="label" val=""/>
+	</a>
+	<a key="6">
+		<a key="label" val="loosen"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="4">
+		<a key="label" val="upFree"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="53">
+		<a key="label" val="-+hub"/>
+	</a>
+	<a key="25">
+		<a key="label" val="haveWrench"/>
+		<a key="ObjectSort" val="wrench"/>
+	</a>
+	<a key="18">
+		<a key="label" val="loosen"/>
+		<a key="ObjectSort" val="nuts"/>
+	</a>
+	<a key="33">
+		<a key="label" val="inBoot"/>
+		<a key="ObjectSort" val="jack"/>
+	</a>
+	<a key="15">
+		<a key="label" val="tight"/>
+		<a key="ObjectSort" val="nuts"/>
+	</a>
+	<a key="27">
+		<a key="label" val="fetchWrench"/>
+		<a key="ObjectSort" val="wrench"/>
+	</a>
+	<a key="36">
+		<a key="label" val="jackUp"/>
+		<a key="ObjectSort" val="jack"/>
+	</a>
+	<a key="16">
+		<a key="label" val="free"/>
+		<a key="ObjectSort" val="nuts"/>
+	</a>
+	<a key="49">
+		<a key="label" val="upBare"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="51">
+		<a key="label" val="putOnWheel"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="43">
+		<a key="label" val=""/>
+	</a>
+	<a key="5">
+		<a key="label" val="upLoose"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="56">
+		<a key="label" val="-+hub"/>
+	</a>
+	<a key="22">
+		<a key="label" val="putAwayJack"/>
+		<a key="ObjectSort" val="jack"/>
+	</a>
+	<a key="58">
+		<a key="label" val=""/>
+	</a>
+	<a key="17">
+		<a key="label" val="off"/>
+		<a key="ObjectSort" val="nuts"/>
+	</a>
+	<a key="7">
+		<a key="label" val="tighten"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="31">
+		<a key="label" val="remove"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="52">
+		<a key="label" val="%2B+hub"/>
+	</a>
+	<a key="3">
+		<a key="label" val="onGroundLoose"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="29">
+		<a key="label" val="jackUp"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="39">
+		<a key="label" val="open"/>
+		<a key="ObjectSort" val="boot"/>
+	</a>
+	<a key="41">
+		<a key="label" val="close"/>
+		<a key="ObjectSort" val="boot"/>
+	</a>
+	<a key="57">
+		<a key="label" val="%2B+hub"/>
+	</a>
+	<a key="24">
+		<a key="label" val=""/>
+	</a>
+	<a key="48">
+		<a key="label" val=""/>
+	</a>
+	<a key="32">
+		<a key="label" val="putOn"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="1">
+		<a key="label" val="onGroundTight"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="30">
+		<a key="label" val="jackDown"/>
+		<a key="ObjectSort" val="hub"/>
+	</a>
+	<a key="19">
+		<a key="label" val="tighten"/>
+		<a key="ObjectSort" val="nuts"/>
+	</a>
+	<a key="14">
+		<a key="label" val="putOnWheel"/>
+		<a key="ObjectSort" val="wheel"/>
+	</a>
+	<a key="21">
+		<a key="label" val="remove"/>
+		<a key="ObjectSort" val="nuts"/>
+	</a>
+	<a key="61">
+		<a key="label" val="%3Chtml%3E%0A++%3Chead%3E%0A++++%0A++%3C%2Fhead%3E%0A++%3Cbody%3E%0A++++%3Ch2%3E%0A++++++%3Cfont+color%3D%22red%22%3E%5BFlat+Tyre+Domain%5D%3C%2Ffont%3E%0A++++%3C%2Fh2%3E%0A++%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A"/>
+	</a>
+	<a key="2" val=""/>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

@@ -1,0 +1,15 @@
+
+$ teste :- freeze(X,write(1)),freeze(X,write(2)),
+           freeze(Y,write(3)),freeze(Y,write(4)),
+           freeze(Z,write(5)),freeze(Z,write(6)),
+           eq(X,Z), eq(Z,Y),
+           write('jusque la aucun reveil'), nl,
+           frozen_goals,
+           eq(a,X).
+
+% Prolog-II repond 436521
+% Micro_Log3 sans tri au reveil repond 345612
+%            avec tri au reveil repond 123456
+
+$ autre :- freeze(X,write(1)), dif(X,a), eq(X,a).
+$ autreb :- dif(X,a), freeze(X,write(1)), eq(X,a).

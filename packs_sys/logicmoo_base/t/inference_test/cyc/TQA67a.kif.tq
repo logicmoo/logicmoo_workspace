@@ -1,0 +1,37 @@
+(note TQA67a)
+
+
+(subrelation perpetrator agent) 
+
+(different Iraq Israel) 
+
+(instance Iraq IndependentCountry) 
+
+(thereExists ?X (and
+ (temporallySubsumes PersianGulfWar  ?X) 
+
+(agent  ?X Iraq) 
+
+(perpetrator  ?X Iraq) 
+
+(maleficiary  ?X Israel) 
+
+(instance   ?X MilitaryEvent) 
+))
+
+(query (findall ?COUNTRY (thereExists ?ACTION 
+   (and 
+       (instance ?ACTION MilitaryEvent) 
+       (maleficiary ?ACTION Israel) 
+       (instance ?COUNTRY IndependentCountry) 
+       (different Israel ?COUNTRY) 
+       (temporallySubsumes PersianGulfWar ?ACTION) 
+       (agent ?ACTION ?COUNTRY)))  )
+)
+
+(answer Iraq )
+
+(end_of_file)
+
+
+

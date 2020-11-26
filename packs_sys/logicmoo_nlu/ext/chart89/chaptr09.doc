@@ -1,0 +1,733 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Question answering and inference
+
+Here is a translation example set out in an indented format --
+"every hotel chain took over an airline":
+
+    quantifier : all
+    variable : X
+    restriction : arg0 : X
+                  predicate : hotel_chain
+    body : quantifier : exists
+           variable : Y
+           restriction : arg0 : Y
+                         predicate : airline
+           body : arg0 : X
+                  arg1 : Y
+                  predicate : took_over
+
+This translates into:
+
+    all(X,
+        hotel_chain(X),
+        exists(Y,
+               airline(Y),
+               took_over(X,Y)))
+
+When we evaluate a DBQ formulae (as when we invoke a Prolog goal), in
+general we need more than just a true/false result - we need to know
+for what values of the variables the formula can be made true.  It is
+simplest to see this for formulae of the first type (involving simple
+predicates).  Imagine that we have a database about car parts which
+includes information about which firms supply which parts.  We will
+assume that a relation supplies is represented in the database by a
+long list of entries specifying exhaustively who supplies what, as
+follows:
+
+    Who            What
+
+    smith_corp     radiators
+    jones_inc      spark_plugs
+    morgan_bros    radiators
+    jones_inc      batteries
+    smith_corp     tyres
+    morgan_bros    pumps
+
+Questions about this relation can be phrased in DBQ by using the
+predicate supplies.  We will use the first (ARG0) argument position
+associated with supplies to indicate the supplying firm and the second
+(ARG1) position to indicate the type of part.  Then, the following are
+possible DBQ formulae involving this relation:
+
+    supplies(X, radiators)
+    supplies(X, Y)
+
+The result of evaluating the first of these formulae will be the set
+of possible values for X which would result in the formula matching
+something in the database.  We can display these as a set of
+substitutions (assignments of values to variables), just as many
+Prolog systems show assignments to variables after a goal has been
+successfully satisfied.  Here is one way of writing what we get:
+
+    {X=smith_corp; X=morgan_bros}
+
+We use the '=' symbol to indicate the association of a possible value
+with a variable, the ',' symbol to group together associations and ';'
+to separate such groupings.  The result of evaluating the second of
+the formulae will be the set of pairs of values for X and Y that
+result in the formula matching something in the database. In this
+case, the result corresponds to the whole relation represented by:
+
+    {X=smith_corp, Y=radiators;
+     X=jones_inc, Y=spark_plugs;
+     .., }
+
+In general, a DBQ formula involving a predicate and associated
+arguments will be assumed to correspond to a primitive relation, each
+true case of which is explicitly listed in the database.  The
+evaluation of such formulae is dealt with by the database and returns
+the set of possible variable bindings that allow the formula to match
+a true fact recorded there.  Since we are using Prolog, we can simply
+use the Prolog database to do this for us.
+
+Let us now consider the more complex kinds of DBQ formulae.  In
+general, there needs to be a special way of evaluating each kind of
+conjunction and each kind of quantifier.  Consider the and
+conjunction.  We want the truth value of an and proposition to be true
+if and only if each of the two sub propositions is true.  A value of a
+variable will satisfy such a complex proposition only if it satisfies
+both of the subpropositions.  So, here is a way of generating the
+possible substitutions for a conjunction:
+
+    To evaluate and(P1, P2):
+       Let the set of answers computed so far be empty
+       Evaluate P1, to give the set of substitutions S1
+       For each element s1 of S1:
+          Apply s1 to the proposition P2, yielding P2'
+          Evaluate P2', giving the set of substitutions S2
+          For each element s2 of S2:
+             Combine s1 with s2, and add the result to the
+             Set of answers computed so far
+       Return the set of answers computed so far
+
+We have made use here of the operations of applying and combining
+substitutions.  We will illustrate them through an example.  Consider
+the following DBQ formula:
+
+    and(supplies(X, radiators), supplies(X, Y))
+
+Evaluating the first part (supplies(X, radiators)) of the and
+proposition against our database results in the first of the set of
+substitutions given above:
+
+    S1: {X=smith_corp; X=morgan_bros}
+
+Each of these two substitutions is dealt with separately.  First of
+all, the substitution 'X=smith_corp' is considered.  The second part
+of the and proposition is rewritten so that all occurrences of X are
+replaced by smith_corp - this is applying the substitution to the
+formula.  As a result, we now have the following formula:
+
+    supplies(smith_corp, Y)
+
+Evaluating this gives rise to the second set of substitutions:
+
+    S2: {Y=radiators; Y=tyres}
+
+To get possible answers, we combine the elements of S2 one by one with
+the element chosen from S1.  This just means getting the pairs of
+substitutions to pool their information.  So, we get the following two
+answers:
+
+    {X=smith_corp, Y=radiators;
+     X=smith_corp, Y=tyres}
+
+To complete the set of answers, we need to consider the second
+substitution in S1.  Applying this to the second part of the and                     
+proposition gives:
+
+    supplies(morgan_bros, Y)
+
+and evaluating this gives:
+
+    S2: {Y=radiators; Y=pumps}
+
+Once more we combine these substitutions with the one selected from
+S1, this time generating the two answers:
+
+    {X=morgan_bros, Y=radiators;
+     X=morgan_bros, Y=pumps}
+
+Now that we have dealt with all the elements of S1, we can enumerate
+the set of substitutions that result from evaluating the whole
+formula:
+
+    {X=smith_corp,  Y=radiators;
+     X=smith_corp,  Y=tyres;
+     X=morgan_bros, Y=radiators;
+     X=morgan_bros, Y=pumps}
+
+Notice that the algorithm for evaluating an and proposition invokes
+the evaluation algorithm recursively on the parts of the formula.  The
+algorithm will act similarly for other conjunctions and quantifiers.
+The recursion will bottom out every time because each recursive call
+is operating on a smaller piece of formula than the one that invoked
+it.  So, eventually, the recursive calls will cause the evaluation of
+simple predicate formulae, which can be done by the database without
+any further recursive calls.  Notice also that our description of the
+evaluation of an and query can be viewed as a rather abstract
+definition of how Prolog finds all solutions of a conjunction of goals
+- for each way of satisfying the first goal, it attempts the second
+goal with variables having the values that they got from the solution
+of the first goal.  This suggests that we can implement this operation
+straightforwardly in Prolog.
+
+In evaluating a DBQ formula, we will only be interested in
+substitutions for variables that appear outside the formula.  For
+instance, in the and example it was important to remember the possible
+values of X satisfying the first subformula, in order to use them in
+evaluating the second.  Now, the assumption will be made here that a
+quantified formula will never contain variables that are used outside
+(that is, free variables).  So, this means that when a quantified
+formula is evaluated we need only ever produce one of two possible
+answers:
+
+    {}
+    {S}
+
+where S is the empty substitution that assigns values to no variables.
+The first of these answers says that there are no substitutions that                     
+will make this formula true (it corresponds to failure in Prolog),
+whereas the second says that there is a substitution that will make
+the formula true, but it is empty because the formula has no free
+variables (this corresponds to a Prolog goal succeeding but not
+instantiating any variables).  Here is the part of the evaluation
+algorithm dealing with the all and exists quantifiers:
+
+    To evaluate all(V, R, B):
+       Evaluate R, to give the set of substitutions S1
+       If there are none, simply return {S}
+       Otherwise, for each element s1 of S1:
+          apply s1 to the proposition B, yielding B'
+          if B' evaluates to give at least one substitution,
+             continue going through the elements of S1
+          otherwise immediately return {}
+       If you get successfully through all the elements of S1,
+          return {S}
+
+    To evaluate exists(V, R, B):
+       Evaluate R, to give the set of substitutions S1
+       If there are none, simply return {}
+       Otherwise, for each element s1 of S1:
+          apply s1 to the proposition B, yielding B'
+          if B' evaluates to give at least one substitution,
+             immediately return {S}
+          otherwise continue going through the elements of S1
+       If you get through all the elements of S1 without any success,
+          return {}
+
+Intuitively, the all algorithm goes through all the values of the
+variable satisfying the restriction and checks that they satisfy the
+body.  Only if they all satisfy can it return {S} - that is, true.  On
+the other hand, the exists algorithm is content to return {S} if there
+exists any value of the variable that makes both the restriction and
+the body true.  Consider, for example, the evaluation of:
+
+    all(X, supplies(X, radiators), supplies(X, tyres))
+
+given our example database.  The evaluation of the restriction part
+provides the following set of substitutions:
+
+    S1: {X=smith_corp; X=morgan_bros}
+
+Taking the first of these and applying it to the body, we get:
+
+    supplies(smith_corp, tyres)
+
+which evaluates to {S}.  So, we continue with the second substitution
+in S1.  This time, the second formula to be evaluated is:
+
+    supplies(morgan_bros, tyres)
+
+which yields {}.  Because of this, the evaluation of the whole formula
+returns {}.  The evaluation has indicated that 'everyone who supplies
+radiators supplies tyres' is false, because Morgan Bros supplies
+radiators but not tyres.
+
+Notice that the above strategy of evaluating the restriction R in
+order to substitute values into the body B will only work if the
+evaluation of the restriction actually produces substitutions for the
+variable.  Not every DBQ formula will, however, produce substitutions
+for all the variables in it when it is evaluated.  For instance,
+evaluating an 'all' formula, whether or not it is successful, never
+yields any interesting substitutions.  So, in order for query
+evaluation as we have sketched it to work, we must require that a
+restriction formula be one of the following:
+
+(1)  a simple proposition mentioning the variable (e.g. owns(X,Y)
+     mentions X and Y) or
+
+(2)  a conjunction with such a proposition as its first conjunct.
+
+If a DBQ formula is coming from the analysis of an English sentence,
+this restriction is rarely a problem, because most NPs provide via a
+noun a simple proposition about the referent which will appear in the
+restriction part of the relevant DBQ formula.  For instance, 'every
+airline' gives rise to a DBQ formula where the restriction is the
+simple proposition 'airline(X)', where X is the variable quantified
+over in the formula.
+
+We have now sketched out the main components of an evaluation
+algorithm for DBQ formulae.  Put together, these form a recursive
+algorithm for evaluating a formula by recursively evaluating its
+components in particular ways.  The algorithm returns a set of
+substitutions, rather than a truth value, but for a formula with no
+free variables the possible results, {S} and {}, do indicate true and
+false, respectively.  The algorithm as sketched can also be extended
+to handle other conjunctions, logical operators and quantifiers, such
+as or, not, most.
+
+When a DBQ formula is treated as a database query, it is assumed that
+the person posing the query is interested in whether the proposition
+expressed is true or not.  In general, they may be interested in
+knowing for what objects a given proposition is true, as well as
+knowing whether there are such objects.  So, DBQ allows the
+specification of certain extra actions that are to be carried out
+during query evaluation.  Such actions are treated as propositions
+that are always true, but which cause side effects to occur when their
+truth is verified.  The only action we will actually use is that of
+printing out the value of a variable (that makes some proposition
+true).  This will give rise to a DBQ form like
+
+    printout(X)
+
+We really need to introduce a clause into the algorithm for such
+things, as follows:
+
+    To evaluate printout(X):
+                Print out X
+                Return {S}
+
+Of course, to introduce such actions sensibly into our DBQ formulae,
+we need to know when they will be encountered in the evaluation
+process.  Thus, for instance, we want a printout action only to be
+encountered after a particular value has been put in the place of the
+relevant variable.
+
+Writing a Prolog evaluator for DBQ formulae is extremely simple
+because the language is already so close to Prolog.  Normal
+satisfaction of Prolog queries already provides for us the enumeration
+of possible values for variables, and on backtracking Prolog will
+generate all the possibilities.  Of course, in Prolog we do not have
+explicit access to substitutions as datastructures.  We thus have to
+harness the Prolog execution mechanism to ensure that variables are
+instantiated correctly before each goal is attempted.  In conclusion,
+we simply treat a DBQ query like a normal Prolog query and provide
+clauses for the predicates 'and', 'or', 'exists', and so on, as well
+as the various database predicates (like 'supplies').  Here is such an
+evaluator (DBQ.PL) in its entirety:
+
+    and(Prop1,Prop2) :- Prop1, Prop2.
+
+    or(Prop1,Prop2) :-  Prop1; Prop2.
+
+    exists(_,Restriction,Body) :-
+             Restriction,Body, !.
+
+    all(_,Restriction,Body) :-
+     not((Restriction,not(Body))).
+
+    printout(Variable) :-
+            write(Variable), nl.
+
+To evaluate a DBQ query, we then simply invoke it as a Prolog goal,
+for instance:
+
+    ?- all(X,supplies(X,radiators),printout(X)).
+
+If a DBQ query produces more than one possible substitution as its
+result, then we can make it enumerate all the possibilities by causing
+Prolog to backtrack.
+
+We will not pursue the topic of backwards inference further here,                     
+since, if the reader has reasonable intuitions about how Prolog works,
+then, ipso facto, they have an understanding of the nature of
+backwards inference.  If one needs to implement backwards inference,
+and Prolog is the language one is using, then the simplest and most
+straightforward option is just to use Prolog to do the inferencing
+directly, without building a distinct backwards inference engine on
+top of Prolog.  There may, of course, be good reasons (of efficiency,
+say, or control) for doing the latter in a real application, but they
+go beyond the rather modest aims of this chapter.  What is, perhaps,
+surprising, is that one can implement a forwards inference engine in a
+language (Prolog) that works by doing backwards inference.  We put
+some flesh on this observation in the following section.
+
+Implementing forwards inference in Prolog      
+
+In order to distinguish the inference rules that will be used by our
+forwards inference engine from those that Prolog itself accesses
+directly, we will introduce a bit of special syntax so that 'if' can
+stand as the forwards inference counterpart of Prolog's ':-' and 'and'
+as the counterpart of ','.  This is simple to do with a couple of
+operator declarations:
+
+     ?-op(400,xfx,if).
+     ?-op(300,xfy,and).
+
+Thus, instead of writing:
+
+    father(X,Y) :- parent(X,Y), male(X).
+
+and letting Prolog do the inference for us (backwards), we will write:
+
+    father(X,Y) if parent(X,Y) and male(X).
+
+and allow this to be interpreted by our forwards inference program.
+What we have done here is allow Prolog to accept inference rules
+written in exactly the language that we introduced in the previous
+section.  Note that the 'and' operator associates to the right (just
+as Prolog's ',' conjunction operator does), so this:
+
+    sibling(X,Y) if parent(Z,X) and parent(Z,Y) and distinct(X,Y).
+
+is to be understood as:
+
+    sibling(X,Y) if (parent(Z,X) and (parent(Z,Y) and (distinct(X,Y)))).
+
+Here are some more example rules in this format, excerpted from the
+file families.pl:
+
+    brother(X,Y) if sibling(X,Y) and male(X).
+    child(X,Y) if parent(Y,X).
+    child(X,Z) if child(X,Y) and married(Y,Z).
+    child(X,Y) if daughter(X,Y).
+    child(X,Y) if son(X,Y).
+    daughter(X,Y) if female(X) and child(X,Y).
+    female(X) if daughter(X,Y).
+    female(X) if married(X,Y) and male(Y).
+    male(X) if husband(X,Y).
+    male(X) if son(X,Y).
+    married(X,Y) if married(Y,X).
+    married(X,Y) if husband(X,Y).
+    mother(X,Y) if parent(X,Y) and female(X).
+    parent(X,Y) if child(Y,X).
+    parent(X,Y) if parent(X,Z) and sibling(Y,Z).
+    sibling(X,Y) if sibling(Y,X).
+    sister(X,Y) if sibling(X,Y) and female(X).
+    son(X,Y) if male(X) and child(X,Y).
+    wife(X,Y) if female(X) and married(X,Y).
+
+We will similarly represent simple facts (things which are
+unconditionally true) using the predicate 'fact'
+
+    fact(son(charles,elizabeth_ii)).
+    fact(supplies(morgan_bros,tyres)).
+
+Given this format for inference rules and facts, we can now implement
+a simple forwards inference system, whose main predicate is 'add'.
+This predicate takes a simple proposition, which is assumed to contain
+no variables, and adds it as a fact to the database.  If the presence
+of this new fact makes any inference rules apply in new ways, then the
+conclusions of those rules are also added to the database.  This may
+cause more rules to run, and so on.  If the theorem being added is
+already known to be a fact, nothing is done:
+
+    add(Fact) :-
+       fact(Fact), !.
+
+Otherwise, the theorem is asserted to be a fact, and new consequences
+that stem from its addition to the database are found:
+
+    add(Fact) :-
+       assert(fact(Fact)),
+       find_new_consequences(Fact).
+
+To find these new consequences, each inference rule in turn (Theorem
+if Premises) is considered and an attempt is made to match the new
+fact against one of the premises (select(Fact, Premises, Remainder)).
+If this succeeds, then it is necessary to check that the remaining
+premises are all also facts (all_facts(Remainder)), and, if so, draw
+the relevant inference and add the new theorem the database
+(add(Theorem)):
+
+    find_new_consequences(Fact) :-
+       Theorem if Premises,
+       select(Fact,Premises,Remainder),
+       all_facts(Remainder),
+       add(Theorem),
+       fail.
+    find_new_consequences(Fact).
+
+The 'fail' which ends the first clause is there to force Prolog to
+backtrack over all the inference rules, whilst the second clause is
+there to guarantee eventual successful termination, after all the
+inference rules have been tried.
+
+The predicate we have just defined depends crucially on a couple of
+utility predicates, the first of which, 'select', matches a fact
+against a conjoined list of premises and returns the remainder.  If
+the fact exhausts the list of premises, then it returns 'true':
+
+    select(Fact,Fact,true).
+
+Or, if the fact matches the first conjunct, then it returns the
+remaining conjuncts:
+
+    select(Fact,Fact and Facts,Facts).
+
+If it does not match the first conjunct, then it tries to match
+against the other premises, whilst adding the fact that did not match
+to the remainder that will be returned:
+
+    select(Fact1,Fact2 and Facts1,Fact2 and Facts2) :-
+                     select(Fact1,Facts1,Facts2).
+
+The other utility predicate, 'all_facts', simply checks that every
+purported fact in a conjunction of purported facts is really a fact.
+Its definition follows a familiar recursive pattern.  If there are two
+or more facts, check the first, then the rest:
+
+    all_facts(Fact and Facts) :-
+        fact(Fact),
+        all_facts(Facts).
+
+Otherwise, in the case where there is but a single fact, then just
+look it up in the database:
+
+    all_facts(Fact) :-
+        fact(Fact).
+
+Finally, we need to stipulate that 'true' is a fact (so that
+'all_facts(true)' succeeds):
+
+    fact(true).
+
+And, if we want, we can exploit the resources of Prolog so as to
+define some useful predicates in an intuitively reasonable way, for
+example, an identity predicate and its negation:
+
+    fact(equals(X,X)).
+    fact(distinct(X,Y)) :- X \= Y.
+
+In order to experiment with this program, it is convenient to employ a
+loop that allows the user to add facts between each round of
+inferencing.  This is readily done as follows:
+
+    go :- read(Fact), add(Fact), go.
+
+It is also helpful for experimentation to have a tracing facility that
+enables one to see which inference rules are responsible for the
+inferences drawn.  The program FORWARDS.PL in the appendix, whilst
+essentially identical to the code above, incorporates such a facility.
+Here, to illustrate it, is an example of a brief interaction with the
+program.  The user input is prefaced by the prompt '|:', the rest of
+the material being a trace of the inferences being drawn:
+
+    ?- go.
+    |: daughter(mayumi,hans).
+       |- child(mayumi, hans), from daughter(mayumi, hans).
+       |- parent(hans, mayumi), from child(mayumi, hans).
+       |- female(mayumi), from daughter(mayumi, hans).
+    |: son(wolfgang,mariko).
+       |- child(wolfgang, mariko), from son(wolfgang, mariko).
+       |- parent(mariko, wolfgang), from child(wolfgang, mariko).
+       |- male(wolfgang), from son(wolfgang, mariko).
+    |: husband(hans,mariko).
+       |- male(hans), from husband(hans, mariko).
+       |- father(hans, mayumi), from parent(hans, mayumi) and male(hans).
+       |- married(hans, mariko), from husband(hans, mariko).
+       |- child(mayumi, mariko), from child(mayumi, hans)
+          and married(hans, mariko).
+       |- daughter(mayumi, mariko), from female(mayumi)
+          and child(mayumi, mariko).
+       |- parent(mariko, mayumi), from child(mayumi, mariko).
+       |- sibling(mayumi, wolfgang), from parent(mariko, mayumi)
+          and parent(mariko, wolfgang) and distinct(mayumi, wolfgang).
+       |- sibling(wolfgang, mayumi), from sibling(mayumi, wolfgang).
+       |- brother(wolfgang, mayumi), from sibling(wolfgang, mayumi)
+          and male(wolfgang).
+       |- parent(hans, wolfgang), from parent(hans, mayumi)
+          and sibling(wolfgang, mayumi).
+       |- child(wolfgang, hans), from parent(hans, wolfgang).
+       |- son(wolfgang, hans), from male(wolfgang)
+          and child(wolfgang, hans).
+       |- father(hans, wolfgang), from parent(hans, wolfgang)
+          and male(hans).
+       |- sister(mayumi, wolfgang), from sibling(mayumi, wolfgang)
+          and female(mayumi).
+       |- married(mariko, hans), from married(hans, mariko).
+       |- female(mariko), from married(mariko, hans) and male(hans).
+       |- mother(mariko, wolfgang), from parent(mariko, wolfgang)
+          and female(mariko).
+       |- mother(mariko, mayumi), from parent(mariko, mayumi)
+          and female(mariko).
+       |- wife(mariko, hans), from female(mariko) and married(mariko, hans).
+
+Classes and inheritance      
+
+Implementing a simple semantic network in Prolog is straightforward.
+We introduce a predicate 'attr(Entity, Attribute, Value)' so that we
+can stipulate what value particular attributes have for particular
+entities (we will make no distinction between individuals and classes
+in our system -- they both count as entities).  Where an attribute is
+a property that an entity may or may not have, we just use the values
+'yes' and 'no' accordingly.  Thus:
+
+        attr(club_member,sex,female).
+        attr(associate,associate_member,yes).
+        attr(associate,citizenship,non_US).
+        attr(life_member,life_member,yes).
+        attr(life_member,citizenship,'US').
+        attr(kim,over_50,no).
+        attr(jean,over_50,yes).
+        attr(mayumi,over_50,yes).
+        attr(beryl,over_50,no).
+
+We then augment 'attr' with an 'isa' predicate that links up the
+entities into a hierarchy:
+
+      isa(associate,club_member).
+      isa(life_member,club_member).
+      isa(kim,associate).
+      isa(jean,associate).
+      isa(mayumi,life_member).
+      isa(beryl,life_member).
+
+The final component is a predicate 'has_attr' that defines when an
+entity is to count as having a particular attribute-value pair
+associated with it.  This will be the case either when such a pair is
+directly given by the 'attr' predicate:
+
+    has_attr(Entity,Attribute,Value) :-
+        attr(Entity,Attribute,Value).
+
+Or when the entity concerned is linked (by 'isa') to another entity,
+and that entity has the attribute-value pair associated with it:
+
+    has_attr(Entity1,Attribute,Value) :-
+        isa(Entity1,Entity2),
+        has_attr(Entity2,Attribute,Value).
+
+Given this code, here is an exhaustive listing of the conclusions that
+it will allow us to draw from the example network:
+
+    Kim is an associate member.
+    The sex of Kim is female.
+    Kim is not over 50.
+    The citizenship of Kim is non-US.
+
+    Jean is over 50.
+    Jean is an associate member.
+    The sex of Jean is female.
+    The citizenship of Jean is non-US.
+
+    Mayumi is over 50.
+    Mayumi is a life member.
+    The citizenship of Mayumi is US.
+    The sex of Mayumi is female.
+
+    Beryl is a life member.
+    The citizenship of Beryl is US.
+    The sex of Beryl is female.
+    Beryl is not over 50.
+
+The implementation shown, which is to be found in the file
+inherits.pl, works well provided that the network it is given obeys
+the rules of the game: (i) the network has no "isa" cycles (i.e. is a
+DAG), (ii) no entity has a value specified for an attribute that is
+also specified at an ancestral node in the DAG, (iii) whenever there
+is a pair of entities, neither being a descendent of the other but
+with a descendent in common, there is no attribute that both entities
+specify a value for and (iv) no entity is associated locally with more
+than one value for a given attribute.
+
+Plausible inference and defaults      
+
+We can readily convert our earlier inheritance network implementation
+into one which permits information on lower nodes to over-ride that
+inherited from higher nodes.  All we need to do is let the 'has_attr'
+definition check that no lower node information was available for the
+attribute:
+
+    has_attr(Entity,Attribute,Value) :-
+        attr(Entity,Attribute,Value).
+    has_attr(Entity1,Attribute,Value) :-
+        isa(Entity1,Entity2),
+        has_attr(Entity2,Attribute,Value),
+        not_local(Entity1,Attribute).
+
+As can be seen, the only change to the definition is the locality
+check in the penultimate line.  If there is a local value to be found,
+then 'not_local' must fail, and stay failed:
+
+    not_local(Entity,Attribute) :-
+        attr(Entity,Attribute,_), !,
+        fail.
+
+Otherwise, it should succeed:
+
+    not_local(_,_).
+
+That completes the changes required to convert the (absolute)
+inheritance to default inheritance.  For the new program (in
+DEFAULTS.PL) to be useful, we also need an example network that can
+make use of the default behaviour.  Here is such a network, defined,
+as before, solely in terms of 'attr' and 'isa' clauses:
+
+     % Club_member
+           attr(club_member,sex,male).
+           attr(club_member,over_50,yes).
+           attr(club_member,citizenship,'US').
+     % Associate
+       isa(associate,club_member).
+           attr(associate,associate_member,yes).
+           attr(associate,citizenship,non_US).
+     % Life_member
+       isa(life_member,club_member).
+           attr(life_member,life_member,yes).
+           attr(life_member,over_50,no).
+     % Kim
+       isa(kim,associate).
+           attr(kim,over_50,no).
+     % Jean
+       isa(jean,associate).
+           attr(jean,sex,female).
+           attr(jean,citizenship,'US').
+     % Mayumi
+       isa(mayumi,life_member).
+           attr(mayumi,sex,female).
+           attr(mayumi,over_50,yes).
+           attr(mayumi,citizenship,non_US).
+     % Beryl
+       isa(beryl,life_member).
+        attr(beryl,sex,female).
+
+And here is an exhaustive listing of the conclusions (about Kim, Jean,
+Mayumi and Beryl) that can be drawn from this new example network,
+under the intended default inheritance interpretation:
+
+    Kim is an associate member.
+    The sex of Kim is male.
+    Kim is not over 50.
+    The citizenship of Kim is non-US.
+
+    Jean is over 50.
+    Jean is an associate member.
+    The sex of Jean is female.
+    The citizenship of Jean is US.
+
+    Mayumi is over 50.
+    Mayumi is a life member.
+    The citizenship of Mayumi is non-US.
+    The sex of Mayumi is female.                     
+
+    Beryl is a life member.
+    The citizenship of Beryl is US.
+    The sex of Beryl is female.
+    Beryl is not over 50.
+
+Plainly our earlier condition (ii) for (strict) inheritance networks,
+that no entity has an attribute value specified for an attribute that
+is specified at an ancestral node in the dag, no longer applies.
+Indeed, it would defeat the whole point of default inheritance
+networks if we were to maintain it.  However, conditions (iii) and
+(iv), that no pair of entities not in a descendent relationship but
+with a descendent in common that no entity is associated locally with
+more than one value for a given attribute, need to remain in force, if
+attributes are to be guaranteed to have unique values.

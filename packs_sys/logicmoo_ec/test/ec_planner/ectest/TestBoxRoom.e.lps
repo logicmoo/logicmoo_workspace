@@ -1,0 +1,754 @@
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Story1.e',47).
+% From E: 
+% 
+% :-call_pel_directive(translate(unskipped,'/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e.lps')).
+:- call_pel_directive(translate(unskipped,
+                                '/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e.lps')).
+:-include(library('ec_planner/ec_test_incl')).
+:-expects_dialect(lps).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Story1.e',47).
+% From E: 
+% 
+% :-call_pel_directive(translate(begining,'/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e.lps')).
+:- call_pel_directive(translate(begining,
+                                '/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e.lps')).
+% Sat, 10 Oct 2020 15:32:30 GMT File: <stream>(0x559e4b225c00)%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: examples/Mueller2006/Chapter10/MovingNewspaperAndBox.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%;
+%; Copyright (c) 2005 IBM Corporation and others.
+%; All rights reserved. This program and the accompanying materials
+%; are made available under the terms of the Common Public License v1.0
+%; which accompanies this distribution, and is available in
+%; http://www.eclipse.org/legal/cpl-v10.html
+%;
+%; Contributors:
+%; IBM - Initial implementation
+%;
+%; @book{Mueller:2006,
+%;   author = "Erik T. Mueller",
+%;   year = "2006",
+%;   title = "Commonsense Reasoning",
+%;   address = "San Francisco",
+%;   publisher = "Morgan Kaufmann/Elsevier",
+%; }
+%;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',24).
+% include foundations/Root.e
+% From E: 
+% 
+% :-call_pel_directive(include('foundations/Root.e')).
+:- call_pel_directive(include('foundations/Root.e')).
+
+% include foundations/EC.e
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',24).
+% From E: 
+% 
+% :-call_pel_directive(include('foundations/EC.e')).
+:- call_pel_directive(include('foundations/EC.e')).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',27).
+% sort object
+% From E: 
+% 
+% sort(object).
+sort(object).
+
+% sort agent: object
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',27).
+% From E: 
+% 
+% subsort(agent,object).
+subsort(agent,object).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',29).
+% sort physobj: object
+% From E: 
+% 
+% subsort(physobj,object).
+subsort(physobj,object).
+
+% sort room: object
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',29).
+% From E: 
+% 
+% subsort(room,object).
+subsort(room,object).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',32).
+% fluent directlyIn(object,object)
+% From E: 
+% 
+% fluent(directlyIn(object,object)).
+mpred_prop(directlyIn(object,object),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',32).
+fluents([directlyIn/2]).
+
+% fluent inRoom(object,room)
+% From E: 
+% 
+% fluent(inRoom(object,room)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',32).
+mpred_prop(inRoom(object,room),fluent).
+fluents([inRoom/2]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',34).
+% noninertial inRoom
+% From E: 
+% 
+% :-call_pel_directive(noninertial(inRoom)).
+:- call_pel_directive(noninertial(inRoom)).
+%;; executable(move(agent,object,object,object))
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',38).
+% agent Lisa
+% From E: 
+% 
+% t(agent,lisa).
+agent(lisa).
+
+% physobj Box, Newspaper
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',38).
+% From E: 
+% 
+% t(physobj,box).
+physobj(box).
+% From E: 
+% 
+% t(physobj,newspaper).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',38).
+physobj(newspaper).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',40).
+% room Kitchen, LivingRoom
+% From E: 
+% 
+% t(room,kitchen).
+room(kitchen).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',40).
+% From E: 
+% 
+% t(room,livingRoom).
+room(livingRoom).
+%; Sigma
+%; RS10
+% [agent,physobj1,physobj2,room,time]
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',46).
+% HoldsAt(directlyIn(agent,room),time) &
+% HoldsAt(directlyIn(physobj1,room),time) &
+% HoldsAt(inRoom(physobj2,room),time) ->
+% Initiates(move(agent,physobj1,room,physobj2),directlyIn(physobj1,physobj2),time).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Agent,Room),Time) , 
+%      holds_at(directlyIn(Physobj1,Room),Time) , 
+%     holds_at(inRoom(Physobj2,Room),Time)), 
+%    initiates_at(
+%       move(Agent,Physobj1,Room,Physobj2), 
+%       directlyIn(Physobj1,Physobj2), 
+%       Time)).
+ %   [Time].
+move(Agent, Physobj1, Room, Physobj2)initiates directlyIn(Physobj1, Physobj2)if directlyIn(Agent, Room), directlyIn(Physobj1, Room), inRoom(Physobj2, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',46).
+
+ /*  initiated(happens(move(Agent,
+   		       Physobj1,
+   		       Room,
+   		       Physobj2),
+   		  Time_From,
+   		  Time_Until),
+   	  directlyIn(Physobj1,Physobj2),
+   	  [ holds(directlyIn(Agent,Room),Time_From),
+   	    holds(directlyIn(Physobj1,Room),
+   		  Time_From),
+   	    holds(inRoom(Physobj2,Room),Time_From)
+   	  ]).
+ */
+ %  "% =================================".
+
+
+%; RS11
+% [agent,physobj1,physobj2,room,time]
+% HoldsAt(directlyIn(agent,room),time) &
+% HoldsAt(directlyIn(physobj1,room),time) &
+% HoldsAt(inRoom(physobj2,room),time) ->
+% Terminates(move(agent,physobj1,room,physobj2),directlyIn(physobj1,room),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',52).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Agent,Room),Time) , 
+%      holds_at(directlyIn(Physobj1,Room),Time) , 
+%     holds_at(inRoom(Physobj2,Room),Time)), 
+%    terminates_at(
+%       move(Agent,Physobj1,Room,Physobj2), 
+%       directlyIn(Physobj1,Room), 
+%       Time)).
+ %   [Time].
+move(Agent, Physobj1, Room, Physobj2)terminates directlyIn(Physobj1, Room)if directlyIn(Agent, Room), directlyIn(Physobj1, Room), inRoom(Physobj2, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',52).
+
+ /*  terminated(happens(move(Agent,
+   			Physobj1,
+   			Room,
+   			Physobj2),
+   		   Time_From,
+   		   Time_Until),
+   	   directlyIn(Physobj1,Room),
+   	   [ holds(directlyIn(Agent,Room),Time_From),
+   	     holds(directlyIn(Physobj1,Room),
+   		   Time_From),
+   	     holds(inRoom(Physobj2,Room),Time_From)
+   	   ]).
+ */
+ %  "% =================================".
+
+
+%; RS12
+% [agent,physobj1,physobj2,room,time]
+% HoldsAt(directlyIn(agent,room),time) ->
+% Initiates(move(agent,physobj1,physobj2,room),directlyIn(physobj1,room),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',59).
+% From E: 
+% 
+% '->'(
+%    holds_at(directlyIn(Agent,Room),Time), 
+%    initiates_at(
+%       move(Agent,Physobj1,Physobj2,Room), 
+%       directlyIn(Physobj1,Room), 
+%       Time)).
+ %   [Time].
+move(Agent, Physobj1, Physobj2, Room)initiates directlyIn(Physobj1, Room)if directlyIn(Agent, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',59).
+
+ /*  initiated(happens(move(Agent,
+   		       Physobj1,
+   		       Physobj2,
+   		       Room),
+   		  Time_From,
+   		  Time_Until),
+   	  directlyIn(Physobj1,Room),
+   	  [holds(directlyIn(Agent,Room),Time_From)]).
+ */
+ %  "% =================================".
+
+
+%; RS13
+% [agent,physobj1,physobj2,room,time]
+% HoldsAt(directlyIn(agent,room),time) ->
+% Terminates(move(agent,physobj1,physobj2,room),directlyIn(physobj1,physobj2),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',64).
+% From E: 
+% 
+% '->'(
+%    holds_at(directlyIn(Agent,Room),Time), 
+%    terminates_at(
+%       move(Agent,Physobj1,Physobj2,Room), 
+%       directlyIn(Physobj1,Physobj2), 
+%       Time)).
+ %   [Time].
+move(Agent, Physobj1, Physobj2, Room)terminates directlyIn(Physobj1, Physobj2)if directlyIn(Agent, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',64).
+
+ /*  terminated(happens(move(Agent,
+   			Physobj1,
+   			Physobj2,
+   			Room),
+   		   Time_From,
+   		   Time_Until),
+   	   directlyIn(Physobj1,Physobj2),
+   	   [holds(directlyIn(Agent,Room),Time_From)]).
+ */
+ %  "% =================================".
+
+
+%; RS14
+% [agent,room1,room2,time]
+% HoldsAt(directlyIn(agent,room1),time) ->
+% Initiates(move(agent,agent,room1,room2),directlyIn(agent,room2),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',69).
+% From E: 
+% 
+% '->'(
+%    holds_at(directlyIn(Agent,Room1),Time), 
+%    initiates_at(
+%       move(Agent,Agent,Room1,Room2), 
+%       directlyIn(Agent,Room2), 
+%       Time)).
+ %   [Time].
+move(Agent, Agent, Room1, Room2)initiates directlyIn(Agent, Room2)if directlyIn(Agent, Room1).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',69).
+
+ /*  initiated(happens(move(Agent,Agent,Room1,Room2),
+   		  Time_From,
+   		  Time_Until),
+   	  directlyIn(Agent,Room2),
+   	  [holds(directlyIn(Agent,Room1),Time_From)]).
+ */
+ %  "% =================================".
+
+
+%; RS15
+% [agent,room1,room2,time]
+% HoldsAt(directlyIn(agent,room1),time) ->
+% Terminates(move(agent,agent,room1,room2),directlyIn(agent,room1),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',74).
+% From E: 
+% 
+% '->'(
+%    holds_at(directlyIn(Agent,Room1),Time), 
+%    terminates_at(
+%       move(Agent,Agent,Room1,Room2), 
+%       directlyIn(Agent,Room1), 
+%       Time)).
+ %   [Time].
+move(Agent, Agent, Room1, Room2)terminates directlyIn(Agent, Room1)if directlyIn(Agent, Room1).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',74).
+
+ /*  terminated(happens(move(Agent,
+   			Agent,
+   			Room1,
+   			Room2),
+   		   Time_From,
+   		   Time_Until),
+   	   directlyIn(Agent,Room1),
+   	   [holds(directlyIn(Agent,Room1),Time_From)]).
+ */
+ %  "% =================================".
+
+
+%; RS16
+% [agent,physobj,room,time]
+% HoldsAt(directlyIn(agent,room),time) &
+% HoldsAt(directlyIn(physobj,room),time) ->
+% Initiates(move(agent,physobj,room,agent),directlyIn(physobj,agent),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',79).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Agent,Room),Time) , 
+%     holds_at(directlyIn(Physobj,Room),Time)), 
+%    initiates_at(
+%       move(Agent,Physobj,Room,Agent), 
+%       directlyIn(Physobj,Agent), 
+%       Time)).
+ %   [Time].
+move(Agent, Physobj, Room, Agent)initiates directlyIn(Physobj, Agent)if directlyIn(Agent, Room), directlyIn(Physobj, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',79).
+
+ /*  initiated(happens(move(Agent,
+   		       Physobj,
+   		       Room,
+   		       Agent),
+   		  Time_From,
+   		  Time_Until),
+   	  directlyIn(Physobj,Agent),
+   	  [ holds(directlyIn(Agent,Room),Time_From),
+   	    holds(directlyIn(Physobj,Room),Time_From)
+   	  ]).
+ */
+ %  "% =================================".
+
+
+%; RS17
+% [agent,physobj,room,time]
+% HoldsAt(directlyIn(agent,room),time) &
+% HoldsAt(directlyIn(physobj,room),time) ->
+% Terminates(move(agent,physobj,room,agent),directlyIn(physobj,room),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',85).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Agent,Room),Time) , 
+%     holds_at(directlyIn(Physobj,Room),Time)), 
+%    terminates_at(
+%       move(Agent,Physobj,Room,Agent), 
+%       directlyIn(Physobj,Room), 
+%       Time)).
+ %   [Time].
+move(Agent, Physobj, Room, Agent)terminates directlyIn(Physobj, Room)if directlyIn(Agent, Room), directlyIn(Physobj, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',85).
+
+ /*  terminated(happens(move(Agent,
+   			Physobj,
+   			Room,
+   			Agent),
+   		   Time_From,
+   		   Time_Until),
+   	   directlyIn(Physobj,Room),
+   	   [ holds(directlyIn(Agent,Room),Time_From),
+   	     holds(directlyIn(Physobj,Room),
+   		   Time_From)
+   	   ]).
+ */
+ %  "% =================================".
+
+
+%; RS18
+% [agent,physobj,room,time]
+% HoldsAt(directlyIn(physobj,agent),time) &
+% HoldsAt(directlyIn(agent,room),time) ->
+% Initiates(move(agent,physobj,agent,room),directlyIn(physobj,room),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',91).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Physobj,Agent),Time) , 
+%     holds_at(directlyIn(Agent,Room),Time)), 
+%    initiates_at(
+%       move(Agent,Physobj,Agent,Room), 
+%       directlyIn(Physobj,Room), 
+%       Time)).
+ %   [Time].
+move(Agent, Physobj, Agent, Room)initiates directlyIn(Physobj, Room)if directlyIn(Physobj, Agent), directlyIn(Agent, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',91).
+
+ /*  initiated(happens(move(Agent,
+   		       Physobj,
+   		       Agent,
+   		       Room),
+   		  Time_From,
+   		  Time_Until),
+   	  directlyIn(Physobj,Room),
+   	  [ holds(directlyIn(Physobj,Agent),
+   		  Time_From),
+   	    holds(directlyIn(Agent,Room),Time_From)
+   	  ]).
+ */
+ %  "% =================================".
+
+
+%; RS19
+% [agent,physobj,room,time]
+% HoldsAt(directlyIn(physobj,agent),time) &
+% HoldsAt(directlyIn(agent,room),time) ->
+% Terminates(move(agent,physobj,agent,room),directlyIn(physobj,agent),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',97).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Physobj,Agent),Time) , 
+%     holds_at(directlyIn(Agent,Room),Time)), 
+%    terminates_at(
+%       move(Agent,Physobj,Agent,Room), 
+%       directlyIn(Physobj,Agent), 
+%       Time)).
+ %   [Time].
+move(Agent, Physobj, Agent, Room)terminates directlyIn(Physobj, Agent)if directlyIn(Physobj, Agent), directlyIn(Agent, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',97).
+
+ /*  terminated(happens(move(Agent,
+   			Physobj,
+   			Agent,
+   			Room),
+   		   Time_From,
+   		   Time_Until),
+   	   directlyIn(Physobj,Agent),
+   	   [ holds(directlyIn(Physobj,Agent),
+   		   Time_From),
+   	     holds(directlyIn(Agent,Room),Time_From)
+   	   ]).
+ */
+ %  "% =================================".
+
+
+%; Delta
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',104).
+% Happens(move(Lisa,Newspaper,LivingRoom,Box),0).
+% From E: 
+% 
+% happens_at(move(lisa,newspaper,livingRoom,box),0).
+observe move(lisa, newspaper, livingRoom, box)at 0.
+ %  observe([move(lisa,newspaper,livingRoom,box)],0).
+ %  "% =================================".
+
+
+% Happens(move(Lisa,Box,LivingRoom,Lisa),1).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',104).
+% From E: 
+% 
+% happens_at(move(lisa,box,livingRoom,lisa),1).
+observe move(lisa, box, livingRoom, lisa)at 1.
+ %  observe([move(lisa,box,livingRoom,lisa)],1).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',106).
+% Happens(move(Lisa,Lisa,LivingRoom,Kitchen),2).
+% From E: 
+% 
+% happens_at(move(lisa,lisa,livingRoom,kitchen),2).
+observe move(lisa, lisa, livingRoom, kitchen)at 2.
+ %  observe([move(lisa,lisa,livingRoom,kitchen)],2).
+ %  "% =================================".
+
+
+% Happens(move(Lisa,Box,Lisa,Kitchen),3).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',106).
+% From E: 
+% 
+% happens_at(move(lisa,box,lisa,kitchen),3).
+observe move(lisa, box, lisa, kitchen)at 3.
+ %  observe([move(lisa,box,lisa,kitchen)],3).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',108).
+% Happens(move(Lisa,Lisa,Kitchen,LivingRoom),4).
+% From E: 
+% 
+% happens_at(move(lisa,lisa,kitchen,livingRoom),4).
+observe move(lisa, lisa, kitchen, livingRoom)at 4.
+ %  observe([move(lisa,lisa,kitchen,livingRoom)],4).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',110).
+%; Psi
+%; RS1
+% [object,time]
+ % !HoldsAt(directlyIn(object,object),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',112).
+% From E: 
+% 
+% holds_at(not(directlyIn(Object,Object)),Time).
+ %   [Time].
+not directlyIn(Object, Object).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',112).
+
+ /*  l_int(holds(not(directlyIn(Object,Object)),Time_At),
+         []).
+ */
+ %  "% =================================".
+
+
+%; RS2
+% [object1,object2,time]
+% HoldsAt(directlyIn(object1,object2),time) ->
+% !HoldsAt(directlyIn(object2,object1),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',116).
+% From E: 
+% 
+% '->'(
+%    holds_at(directlyIn(Object1,Object2),Time), 
+%    holds_at(not(directlyIn(Object2,Object1)),Time)).
+ %   [Time].
+not directlyIn(Object2, Object1)if directlyIn(Object1, Object2).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',116).
+
+ /*  l_int(holds(not(directlyIn(Object2,Object1)),Time_At),
+         [holds(directlyIn(Object1,Object2),Time_At)]).
+ */
+ %  "% =================================".
+
+
+%; RS3
+% [object1,object2,object3,time]
+% HoldsAt(directlyIn(object1,object2),time) &
+% HoldsAt(directlyIn(object2,object3),time) ->
+% !HoldsAt(directlyIn(object1,object3),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',121).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Object1,Object2),Time) , 
+%     holds_at(directlyIn(Object2,Object3),Time)), 
+%    holds_at(not(directlyIn(Object1,Object3)),Time)).
+ %   [Time].
+not directlyIn(Object1, Object3)if directlyIn(Object1, Object2), directlyIn(Object2, Object3).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',121).
+
+ /*  l_int(holds(not(directlyIn(Object1,Object3)),Time_At),
+         [ holds(directlyIn(Object1,Object2),Time_At),
+   	holds(directlyIn(Object2,Object3),Time_At)
+         ]).
+ */
+ %  "% =================================".
+
+
+%; RS4
+% [object,object1,object2,time]
+% HoldsAt(directlyIn(object,object1),time) &
+% HoldsAt(directlyIn(object,object2),time) ->
+% object1=object2.
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',127).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Object,Object1),Time) , 
+%     holds_at(directlyIn(Object,Object2),Time)), 
+%    Object1=Object2).
+ %   [Time].
+false not equals(Object1, Object2), directlyIn(Object, Object1), directlyIn(Object, Object2).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',127).
+
+ /*  d_pre([ not(equals(Object1,Object2)),
+   	holds(directlyIn(Object,Object1),Time_At),
+   	holds(directlyIn(Object,Object2),Time_At)
+         ]).
+ */
+ %  "% =================================".
+
+
+%; RS7
+% [object,room,time]
+% HoldsAt(directlyIn(object,room),time) ->
+% HoldsAt(inRoom(object,room),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',133).
+% From E: 
+% 
+% '->'(
+%    holds_at(directlyIn(Object,Room),Time), 
+%    holds_at(inRoom(Object,Room),Time)).
+ %   [Time].
+inRoom(Object, Room)if directlyIn(Object, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',133).
+
+ /*  l_int(holds(inRoom(Object,Room),Time_At),
+         [holds(directlyIn(Object,Room),Time_At)]).
+ */
+ %  "% =================================".
+
+
+%; RS8
+% [object1,object2,room,time]
+% HoldsAt(directlyIn(object1,object2),time) &
+% HoldsAt(inRoom(object2,room),time) ->
+% HoldsAt(inRoom(object1,room),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',138).
+% From E: 
+% 
+% '->'(
+%    (holds_at(directlyIn(Object1,Object2),Time) , 
+%     holds_at(inRoom(Object2,Room),Time)), 
+%    holds_at(inRoom(Object1,Room),Time)).
+ %   [Time].
+inRoom(Object1, Room)if directlyIn(Object1, Object2), inRoom(Object2, Room).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',138).
+
+ /*  l_int(holds(inRoom(Object1,Room),Time_At),
+         [ holds(directlyIn(Object1,Object2),Time_At),
+   	holds(inRoom(Object2,Room),Time_At)
+         ]).
+ */
+ %  "% =================================".
+
+
+%; RS9
+% [object,room1,room2,time]
+% HoldsAt(inRoom(object,room1),time) &
+% HoldsAt(inRoom(object,room2),time) ->
+% room1=room2.
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',144).
+% From E: 
+% 
+% '->'(
+%    (holds_at(inRoom(Object,Room1),Time) , 
+%     holds_at(inRoom(Object,Room2),Time)), 
+%    Room1=Room2).
+ %   [Time].
+false not equals(Room1, Room2), inRoom(Object, Room1), inRoom(Object, Room2).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',144).
+
+ /*  d_pre([ not(equals(Room1,Room2)),
+   	holds(inRoom(Object,Room1),Time_At),
+   	holds(inRoom(Object,Room2),Time_At)
+         ]).
+ */
+ %  "% =================================".
+
+
+%; Gamma
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',151).
+% HoldsAt(directlyIn(Lisa,LivingRoom),0).
+% From E: 
+% 
+% holds_at(directlyIn(lisa,livingRoom),0).
+initially directlyIn(lisa, livingRoom).
+ %  initial_state([directlyIn(lisa,livingRoom)]).
+ %  "% =================================".
+
+
+% HoldsAt(directlyIn(Newspaper,LivingRoom),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',151).
+% From E: 
+% 
+% holds_at(directlyIn(newspaper,livingRoom),0).
+initially directlyIn(newspaper, livingRoom).
+ %  initial_state([directlyIn(newspaper,livingRoom)]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',153).
+% HoldsAt(directlyIn(Box,LivingRoom),0).
+% From E: 
+% 
+% holds_at(directlyIn(box,livingRoom),0).
+initially directlyIn(box, livingRoom).
+ %  initial_state([directlyIn(box,livingRoom)]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',155).
+%; added:                                                 
+%; DMILES REMOVED [room1,room2,time] !HoldsAt(inRoom(room1,room2),time).
+%; DMILES REMOVED [room,object,time] !HoldsAt(directlyIn(room,object),time).
+%; entailed:
+
+
+% HoldsAt(directlyIn(Lisa,LivingRoom),5).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',159).
+% From E: 
+% 
+% holds_at(directlyIn(lisa,livingRoom),5).
+holds_at(directlyIn(lisa,livingRoom),5).
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',161).
+% HoldsAt(directlyIn(Box,Kitchen),5).
+% From E: 
+% 
+% holds_at(directlyIn(box,kitchen),5).
+holds_at(directlyIn(box,kitchen),5).
+
+
+% HoldsAt(inRoom(Newspaper,Kitchen),5).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',161).
+% From E: 
+% 
+% holds_at(inRoom(newspaper,kitchen),5).
+holds_at(inRoom(newspaper,kitchen),5).
+
+% completion Happens
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',163).
+% From E: 
+% 
+% :-call_pel_directive(completion(happens_at)).
+:- call_pel_directive(completion(happens_at)).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',166).
+% range time 0 5
+% From E: 
+% 
+% :-call_pel_directive(range(time,0,5)).
+:- call_pel_directive(range(time, 0, 5)).
+
+% range offset 1 1
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',166).
+% From E: 
+% 
+% :-call_pel_directive(range(offset,1,1)).
+:- call_pel_directive(range(offset, 1, 1)).
+%; End of file.
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e',171).
+% From E: 
+% 
+% :-call_pel_directive(translate(ending,'/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e.lps')).
+:- call_pel_directive(translate(ending,
+                                '/pack/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e.lps')).

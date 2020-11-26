@@ -1,0 +1,15 @@
+Relevant to applications which do surface parsing using Alterf; load
+the Alterf surface pattern files. You can then parse in surface mode
+using the {\tt SURFACE} command. The following config file entries
+must be defined:
+\begin{itemize}
+\item {\tt surface\_\-patterns}
+
+\item {\tt tagging\_\-grammar} 
+
+\item {\tt target\_\-model} 
+
+\item {\tt discriminants} 
+
+\item {\tt surface\_\-postprocessing} 
+\end{itemize}

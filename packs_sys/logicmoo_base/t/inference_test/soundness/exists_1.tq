@@ -1,0 +1,11 @@
+(note "Exists Many Variables #1")
+
+(thereExists ?X (thereExists ?Y (thereExists ?Z (and (r ?X) (s ?Y) (t ?Z) (same ?X ?Y) (same ?Y ?Z)))))
+
+(query (thereExists ?X (thereExists ?Y (and (r ?X) (s ?Y) (equals ?X ?Y)))))
+
+
+(answer Unproven)
+
+
+

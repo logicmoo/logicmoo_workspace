@@ -1,0 +1,5 @@
+Relevant to translation applications: remove any currently loaded
+ellipsis rules. These rules will have been compiled by the command
+{\tt COMPILE\_\-ELLIPSIS\_\-PATTERNS} and loaded by the command {\tt
+LOAD\_\-TRANSLATE}.
+

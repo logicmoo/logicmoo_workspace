@@ -1,0 +1,80 @@
+% a circuit diagnosis program for a full adder
+dyn diag(X,Y).
+dyn val(X,Y).
+% to use add in facts about the input of the circuit, such as
+% fact val(in(1, f1), off).
+% fact val(in(2, f1), off).
+% fact val(in(3, f1), off).
+% to get it to explain the output of the circuit do something lik
+%	diag(on, on).
+
+fact gate(x1, xor).
+fact gate(x2, xor).
+fact gate(a1, and).
+fact gate(a2, and).
+fact gate(o1, or).
+
+fact conn(in(1, f1), in(1, x1)).
+fact conn(in(1, f1), in(1, a1)).
+fact conn(in(2, f1), in(2, x1)).
+fact conn(in(2, f1), in(2, a1)).
+fact conn(in(3, f1), in(2, x2)).
+fact conn(in(3, f1), in(1, a2)).
+fact conn(out(1, x1), in(1, x2)).
+fact conn(out(1, x1), in(2, a2)).
+fact conn(out(1, a1), in(2, o1)).
+fact conn(out(1, a2), in(1, o1)).
+fact conn(out(1, x2), out(1, f1)).
+fact conn(out(1, o1), out(2, f1)).
+
+fact val(in(N, Device), anything).
+
+default ok(Device).
+
+fact val(out(1, Device), Out1) <-
+		ok(Device),
+		gate(Device, Type),
+		ttable(Type, In1, In2, Out1),
+		val(in(1, Device), In1),
+		val(in(2, Device), In2).
+
+default faulty(Device).
+
+fact val(out(1, Device), Out1) <-
+		faulty(Device),
+		gate(Device, Type),
+		ttable(Type, In1, In2, Eout),
+		opp(Eout, Out1),
+		val(in(1, Device), In1),
+		val(in(2, Device), In2).
+
+fact n(ok(Device)) <- faulty(Device).
+
+fact opp(on, off).
+fact opp(off, on).
+
+fact ttable(and, on, on, on).
+fact ttable(and, off, anything, off).
+fact ttable(and, anything, off, off).
+fact ttable(or, off, off, off).
+fact ttable(or, on, anything, on).
+fact ttable(or, anything, on, on).
+fact ttable(xor, off, on, on).
+fact ttable(xor, off, off, off).
+fact ttable(xor, on, X, Y) <- opp(X, Y).
+
+fact val(Y, Z) <-
+		ne(Z, anything),
+		conn(X, Y),
+		val(X, Z).
+
+prolog ne(X, Y).
+
+assertz(( ne(X,Y) :- \+ X=Y)).
+
+fact n(val(X, off)) <- val(X, on).
+
+fact diag(Out1, Out2) <-
+	val(out(1, f1), Out1 ),
+	val(out(2, f1), Out2 ).
+

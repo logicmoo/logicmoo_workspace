@@ -1,0 +1,50 @@
+(note TQC108)
+
+(infoTransferred Stage2-USConfirmsAnthraxContamination 
+ (thereExists ?WEAPON 
+ (and 
+ (instrument-Generic Stage2-BWAttackAtRasTannurah ?WEAPON) 
+ (instance ?WEAPON 
+ (BiologicalWeaponFn Anthrax-Bacterium))))) 
+
+(subProcess HPKBScenarioConflict Stage2-BWAttackAtRasTannurah) 
+
+(instance Stage2-BWAttackAtRasTannurah AttackOnTangible) 
+
+(instrument-Generic Stage2-BWAttackAtRasTannurah Stage2-BiologicalWeapon1) 
+
+(instance Stage2-BiologicalWeapon1 WeaponOfMassDestruction) 
+
+(instance Stage2-USConfirmsAnthraxContamination Communicating) 
+
+(senderOfInfo Stage2-USConfirmsAnthraxContamination UnitedStatesOfAmerica) 
+
+
+(query (findall (?FORCE-TYPE) 
+
+ (thereExists ?ACT 
+ (thereExists ?COMM 
+ (thereExists ?FORCE 
+ (thereExists ?USAGENT 
+ (and 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT AttackOnTangible) 
+ (instrument-Generic ?ACT ?FORCE) 
+ (instance ?FORCE WeaponOfMassDestruction) 
+ (instance ?COMM Communicating) 
+ (or 
+ (senderOfInfo ?COMM UnitedStatesOfAmerica) 
+ (and 
+ (senderOfInfo ?COMM ?USAGENT) 
+ (hasAgents UnitedStatesOfAmerica ?USAGENT))) 
+ (infoTransferred ?COMM 
+ (thereExists ?FORCE2 
+ (and 
+ (instrument-Generic ?ACT ?FORCE2) 
+ (instance ?FORCE2 ?FORCE-TYPE)))))))))))
+
+(answer Anthrax-Bacterium)
+
+(end_of_file)
+
+   

@@ -1,0 +1,320 @@
+<jgx-1.01>
+<model>
+	<a class="state" id="1" val="1" rect="108.0,66.0,38.0,37.0" attr="0">
+		<a class="port" id="2" val="2"/>
+	</a>
+	<a class="state" id="3" val="3" rect="108.0,156.0,49.0,37.0" attr="1">
+		<a class="port" id="4" val="2"/>
+	</a>
+	<a class="state" id="5" val="4" rect="108.0,246.0,44.0,37.0" attr="2">
+		<a class="port" id="6" val="2"/>
+	</a>
+	<a class="transState" id="7" val="5" rect="54.0,120.0,39.0,17.0" attr="3">
+		<a class="port" id="8" val="2"/>
+	</a>
+	<a class="transState" id="9" val="6" rect="174.0,126.0,39.0,17.0" attr="3">
+		<a class="port" id="10" val="2"/>
+	</a>
+	<a class="transState" id="11" val="7" rect="60.0,216.0,39.0,17.0" attr="3">
+		<a class="port" id="12" val="2"/>
+	</a>
+	<a class="transState" id="13" val="8" rect="174.0,216.0,39.0,17.0" attr="3">
+		<a class="port" id="14" val="2"/>
+	</a>
+	<a class="transValue" id="15" val="9" rect="108.0,324.0,47.0,13.0" attr="4">
+		<a class="port" id="16" val="2"/>
+	</a>
+	<a class="transitionEdge" id="17" val="2" src="2" tgt="8" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="18" val="2" src="8" tgt="4" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="19" val="2" src="4" tgt="12" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="20" val="2" src="12" tgt="6" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="21" val="2" src="6" tgt="14" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="22" val="2" src="14" tgt="4" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="23" val="2" src="4" tgt="10" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="24" val="2" src="10" tgt="2" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="25" val="2" src="6" tgt="16" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="26" val="2" src="16" tgt="6" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="state" id="27" val="10" rect="270.0,252.0,62.0,37.0" attr="6">
+		<a class="port" id="28" val="2"/>
+	</a>
+	<a class="transValue" id="29" val="11" rect="264.0,324.0,33.0,17.0" attr="4">
+		<a class="port" id="30" val="2"/>
+	</a>
+	<a class="transitionEdge" id="31" val="2" src="28" tgt="30" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="32" val="2" src="30" tgt="28" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="OneWayMergeEdge" id="33" val="12" src="28" tgt="12" pts="289.0,270.5,79.5,224.5" attr="7"/>
+	<a class="OneWayMergeEdge" id="34" val="13" src="28" tgt="14" pts="289.0,270.5,193.5,224.5" attr="7"/>
+	<a class="OneWayMergeEdge" id="35" val="14" src="30" tgt="16" pts="10.0,10.0,20.0,20.0" attr="7"/>
+	<a class="state" id="36" val="15" rect="438.0,252.0,35.0,37.0" attr="8">
+		<a class="port" id="37" val="2"/>
+	</a>
+	<a class="state" id="38" val="16" rect="438.0,162.0,30.0,37.0" attr="9">
+		<a class="port" id="39" val="2"/>
+	</a>
+	<a class="state" id="40" val="17" rect="438.0,72.0,31.0,37.0" attr="10">
+		<a class="port" id="41" val="2"/>
+	</a>
+	<a class="transState" id="42" val="18" rect="378.0,132.0,35.0,17.0" attr="3">
+		<a class="port" id="43" val="2"/>
+	</a>
+	<a class="transState" id="44" val="19" rect="378.0,222.0,34.0,17.0" attr="3">
+		<a class="port" id="45" val="2"/>
+	</a>
+	<a class="transState" id="46" val="20" rect="516.0,228.0,45.0,17.0" attr="3">
+		<a class="port" id="47" val="2"/>
+	</a>
+	<a class="transValue" id="48" val="21" rect="432.0,330.0,33.0,17.0" attr="4">
+		<a class="port" id="49" val="2"/>
+	</a>
+	<a class="transitionEdge" id="50" val="2" src="41" tgt="43" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="51" val="2" src="43" tgt="39" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="52" val="2" src="39" tgt="45" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="53" val="2" src="45" tgt="37" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="54" val="2" src="37" tgt="47" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="55" val="2" src="47" tgt="39" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="56" val="2" src="37" tgt="49" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="57" val="2" src="49" tgt="37" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transValue" id="58" val="22" rect="522.0,138.0,32.0,17.0" attr="11">
+		<a class="port" id="59" val="2"/>
+	</a>
+	<a class="transitionEdge" id="60" val="2" src="39" tgt="59" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="transitionEdge" id="61" val="2" src="59" tgt="41" pts="10.0,10.0,20.0,20.0" attr="5"/>
+	<a class="OneWayMergeEdge" id="62" val="23" src="28" tgt="45" pts="289.0,270.5,397.5,230.5" attr="7"/>
+	<a class="OneWayMergeEdge" id="63" val="24" src="28" tgt="47" pts="289.0,270.5,535.5,236.5" attr="7"/>
+	<a class="OneWayMergeEdge" id="64" val="25" src="30" tgt="49" pts="10.0,10.0,20.0,20.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="65" val="26" src="2" tgt="43" pts="10.0,10.0,20.0,20.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="66" val="27" src="39" tgt="8" pts="10.0,10.0,20.0,20.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="67" val="28" src="39" tgt="10" pts="10.0,10.0,20.0,20.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="68" val="29" src="39" tgt="12" pts="10.0,10.0,20.0,20.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="69" val="30" src="39" tgt="14" pts="10.0,10.0,20.0,20.0" attr="7"/>
+	<a class="textNote" id="70" val="31" rect="444.0,348.0,302.0,97.0" attr="12"/>
+	<a class="textNote" id="71" val="32" rect="246.0,354.0,168.0,112.0" attr="12"/>
+	<a class="textNote" id="72" val="33" rect="24.0,336.0,176.0,112.0" attr="12"/>
+	<a class="TwoWayMergeEdge" id="73" val="34" src="30" tgt="49" pts="280.5,332.5,366.0,360.0,448.5,338.5" attr="13"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoTent.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoTent.png"/>
+	</map>
+	<map id="2" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoTent.png"/>
+	</map>
+	<map id="3" pid="0">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="4" pid="3">
+		<a key="gradientColor" val="0,255,255"/>
+	</map>
+	<map id="5">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="6" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoCar.png"/>
+	</map>
+	<map id="7" pid="5">
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+	</map>
+	<map id="8" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoPerson.png"/>
+	</map>
+	<map id="9" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoPerson.png"/>
+	</map>
+	<map id="10" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV3/bin/jplan/tools/lifeHist/resources/icoPerson.png"/>
+	</map>
+	<map id="11" pid="4">
+		<a key="bordercolor" val="255,0,0"/>
+	</map>
+	<map id="12">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="autosize" val="true"/>
+		<a key="opaque" val="false"/>
+	</map>
+	<map id="13" pid="7">
+		<a key="lineBegin" val="5"/>
+		<a key="lineEnd" val="1"/>
+	</map>
+</attrs>
+<user>
+	<a key="33">
+		<a key="label" val="%3Chtml%3E%0A++%3Chead%3E%0A++++%0A++%3C%2Fhead%3E%0A++%3Cbody%3E%0A++++%3Ch2%3E%0A++++++%3Cfont+color%3D%22red%22%3E%5BTent%5D%3C%2Ffont%3E%0A++++%3C%2Fh2%3E%0A++++%3Cpre%3EThis+is+the+only+element%0Aof+camping+equipment+we+%0Aexplicitly+model.++++++++%3C%2Fpre%3E%0A++++%3Cp%3E%0A++++++%3Cfont+color%3D%22red%22%3ELocation%3C%2Ffont%3E+%5Bwhere+the+tent+is%5D%0A++++%3C%2Fp%3E%0A++%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A"/>
+	</a>
+	<a key="19">
+		<a key="label" val="getIn"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="6">
+		<a key="label" val="putUp"/>
+		<a key="ObjectSort" val="tent"/>
+	</a>
+	<a key="14">
+		<a key="label" val=""/>
+	</a>
+	<a key="10">
+		<a key="label" val="carParked"/>
+		<a key="ObjectSort" val="car"/>
+		<a key="Property" val="carAt"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="20">
+		<a key="label" val="getOut"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="30">
+		<a key="label" val=""/>
+	</a>
+	<a key="28">
+		<a key="label" val=""/>
+	</a>
+	<a key="22">
+		<a key="ValueSort" val="personAt"/>
+		<a key="constraint" val="couple"/>
+		<a key="ObjectSort" val="person"/>
+		<a key="EdgeName2" val="nextLeg"/>
+		<a key="number" val="2"/>
+		<a key="EdgeName" val="next"/>
+		<a key="label" val="walk"/>
+		<a key="ValueSort2" val="walkedStage"/>
+	</a>
+	<a key="4">
+		<a key="label" val="loadedInCar"/>
+		<a key="ObjectSort" val="tent"/>
+		<a key="Property" val="tentAt"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="15">
+		<a key="Property+Type2" val="stage"/>
+		<a key="label" val="inCar"/>
+		<a key="Property+Type" val="loc"/>
+		<a key="Property2" val="walkedStage"/>
+		<a key="Property" val="personAt"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="13">
+		<a key="label" val="-"/>
+	</a>
+	<a key="21">
+		<a key="EdgeName" val="fullyConnected"/>
+		<a key="label" val="drive"/>
+		<a key="ObjectSort" val="person"/>
+		<a key="ValueSort" val="personAt"/>
+	</a>
+	<a key="16">
+		<a key="Property+Type2" val="stage"/>
+		<a key="label" val="fitAt"/>
+		<a key="Property+Type" val="loc"/>
+		<a key="Property2" val="walkedStage"/>
+		<a key="Property" val="personAt"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="23">
+		<a key="label" val="%2B"/>
+	</a>
+	<a key="11">
+		<a key="EdgeName" val="fullyConnected"/>
+		<a key="label" val="drive"/>
+		<a key="ObjectSort" val="car"/>
+		<a key="ValueSort" val="carAt"/>
+	</a>
+	<a key="17">
+		<a key="Property+Type2" val="stage"/>
+		<a key="label" val="tired"/>
+		<a key="Property+Type" val="loc"/>
+		<a key="Property2" val="walkedStage"/>
+		<a key="Property" val="personAt"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="26">
+		<a key="label" val=""/>
+	</a>
+	<a key="1">
+		<a key="label" val="upAt"/>
+		<a key="ObjectSort" val="tent"/>
+		<a key="Property" val="tentAt"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="25">
+		<a key="label" val=""/>
+	</a>
+	<a key="24">
+		<a key="label" val="-"/>
+	</a>
+	<a key="18">
+		<a key="label" val="sleep"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="9">
+		<a key="EdgeName" val="fullyConnected"/>
+		<a key="label" val="drive"/>
+		<a key="ObjectSort" val="tent"/>
+		<a key="ValueSort" val="tentAt"/>
+	</a>
+	<a key="3">
+		<a key="label" val="downAt"/>
+		<a key="ObjectSort" val="tent"/>
+		<a key="Property" val="tentAt"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="29">
+		<a key="label" val=""/>
+	</a>
+	<a key="8">
+		<a key="label" val="unload"/>
+		<a key="ObjectSort" val="tent"/>
+	</a>
+	<a key="32">
+		<a key="label" val="%3Chtml%3E%0A++%3Chead%3E%0A++++%0A++%3C%2Fhead%3E%0A++%3Cbody%3E%0A++++%3Ch2%3E%0A++++++%3Cfont+color%3D%22red%22%3E%5BCar%5D+%3C%2Ffont%3E%0A++++%3C%2Fh2%3E%0A++++%3Cpre%3EUsed+to+ferry+people+and%0Acamping+equipment+from+%0Aplace+to+place.++++++++%3C%2Fpre%3E%0A++++%3Cp%3E%0A++++++%3Cfont+color%3D%22red%22%3ELocation%3C%2Ffont%3E+%5Bloc%5D%0A++++%3C%2Fp%3E%0A++%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A"/>
+	</a>
+	<a key="31">
+		<a key="label" val="%3Chtml%3E%0A++%3Chead%3E%0A++++%0A++%3C%2Fhead%3E%0A++%3Cbody%3E%0A++++%3Ch2%3E%0A++++++%3Cfont+color%3D%22red%22%3E%5BPerson%5D+%3C%2Ffont%3E%0A++++%3C%2Fh2%3E%0A++++%3Cpre%3EIndividual+members+of+the+party++++++++++++%3C%2Fpre%3E%0A++++%3Cp%3E%0A++++++%3Cfont+color%3D%22red%22%3ELocation%3C%2Ffont%3E+%5Bloc%5D%0A++++%3C%2Fp%3E%0A++++%3Cp%3E%0A++++++%3Cfont+color%3D%22red%22%3EStages+Walked%3C%2Ffont%3E+%5Bstage%5D%0A++++%3C%2Fp%3E%0A++++%3Cp%3E%0A++++++%0A++++%3C%2Fp%3E%0A++%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A"/>
+	</a>
+	<a key="27">
+		<a key="label" val=""/>
+	</a>
+	<a key="12">
+		<a key="label" val="%2B"/>
+	</a>
+	<a key="5">
+		<a key="label" val="takeDown"/>
+		<a key="ObjectSort" val="tent"/>
+	</a>
+	<a key="7">
+		<a key="label" val="load"/>
+		<a key="ObjectSort" val="tent"/>
+	</a>
+	<a key="34">
+		<a key="label" val=""/>
+	</a>
+	<a key="2" val=""/>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

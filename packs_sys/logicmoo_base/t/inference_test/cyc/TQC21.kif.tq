@@ -1,0 +1,29 @@
+(note TQC21)
+
+(instance (BillionDollars 10.8300) Money) 
+(instance (BillionDollars 11.4000) Money) 
+
+(exportAmountDuring Libya PartiallyTangibleProduct 
+ (YearFn 1997) 
+ (BillionDollars 11.4000)) 
+
+(exportRevenueFractionDuring Libya PetroleumProduct 
+ (YearFn 1997) 
+ (Percent 95)) 
+
+(implies 
+  (and 
+    (instance ?EXP-VALUE Money) 
+    (exportAmountDuring ?REGION PartiallyTangibleProduct ?TIME ?EXP-VALUE) 
+    (exportRevenueFractionDuring ?REGION ?PRODUCT-TYPE ?TIME ?FRACTION)) 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME 
+    (TimesFn ?EXP-VALUE ?FRACTION))) 
+
+(query (findall (?AMOUNT ?TIME)
+  (and 
+    (exportAmountDuring Libya PetroleumProduct ?TIME ?AMOUNT) 
+    (instance ?AMOUNT Money))))
+
+(answer 10.8300 1997)  
+
+(end_of_file)

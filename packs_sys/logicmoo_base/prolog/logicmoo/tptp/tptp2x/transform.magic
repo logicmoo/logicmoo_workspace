@@ -1,0 +1,154 @@
+%====================================================================
+%----Translation of clauses for Non-Horn Magic-Sets transformation
+%----Translates clauses for execution by hyperresolution with goals 
+%----generated from negative clauses by simulated top-down reasoning; 
+%----a nonunit positive clause can be derived only if all of its 
+%----literals are goals
+%----
+%----Based on
+%---- R. Hasegawa, Y. Ohta, and K. Inoue.  Non-Horn magic sets and
+%---- their relation to relevance testing.  Technical Report ICOT-TR-834,
+%---- ICOT, Tokyo, 1993.
+%----but doesn't use continuation predicates or adornments
+%
+%----Example
+%----  --A  --B  --C  ++D  ++E  ++F
+%----is translated to
+%----  --goal_D  --goal_E  --goal_F  ++goal_A
+%----  --goal_D  --goal_E  --goal_F  --A  ++goal_B
+%----  --goal_D  --goal_E  --goal_F  --A  --B  ++goal_C
+%----  --goal_D  --goal_E  --goal_F  --A  --B  --C  ++D  ++E  ++F
+%
+%----  ++A is handled as a special case; it is translated to
+%----  ++A
+%----instead of
+%----  --goal_A  ++A
+%
+%----For clauses with N negative and P positive literals (N>0)V(P>1)
+%----the translation contains N+1 clauses
+%----  1:   P+1 literals
+%----  i:   P+i literals
+%----  n:   P+N literals
+%----  n+1: 2P+N literals
+%----The translation contains a total of
+%----  (N + 2)(N + 2P + 1)
+%----  -------------------  - 1  literals
+%----            2
+%----
+%----Written by Mark Stickel
+%----Revised by Geoff Sutcliffe, January 1994.
+%====================================================================
+%--------------------------------------------------------------------
+%----Apply a relation to a list of first arguments
+map_list([],_,[]).
+
+map_list([FirstArgument|RestOfArguments],Mapping,
+[MappedFirstArgument|RestOfMappedArguments]):-
+    Query =.. [Mapping,FirstArgument,MappedFirstArgument],
+    Query,
+    map_list(RestOfArguments,Mapping,RestOfMappedArguments).	
+%--------------------------------------------------------------------
+%----Split literals into positive and negative ones
+split_clause([],[],[],[],[]):-
+    !.
+
+split_clause([++Atom|RestOfLiterals],[Atom|RestOfPositiveAtoms],
+NegativeAtoms,[++Atom|RestOfPositiveLiterals],NegativeLiterals):-
+    split_clause(RestOfLiterals,RestOfPositiveAtoms,NegativeAtoms,
+RestOfPositiveLiterals,NegativeLiterals).
+
+split_clause([--Atom|RestOfLiterals],PositiveAtoms,
+[Atom|RestOfNegativeAtoms],PositiveLiterals,[--Atom|
+RestOfNegativeLiterals]):-
+    split_clause(RestOfLiterals,PositiveAtoms,RestOfNegativeAtoms,
+PositiveLiterals,RestOfNegativeLiterals).
+%--------------------------------------------------------------------
+%----Add "goal_" onto the front of the atom's predicate symbol
+make_goal_atom(Atom,Atom1):-
+    Atom =.. [PredicateSymbol|Arguments],
+    name(PredicateSymbol,PredicateSymbolAscii),
+    tptp2X_append("goal_",PredicateSymbolAscii,NewPredicateSymbolAscii),
+    name(NewPredicateSymbol,NewPredicateSymbolAscii),
+    Atom1 =.. [NewPredicateSymbol|Arguments].
+%--------------------------------------------------------------------
+%----Make a literal from an atom
+make_positive_literal(Atom,++Atom).
+
+make_negative_literal(Atom,--Atom).
+%--------------------------------------------------------------------
+%----Makes a positive literal from an atom, adding "goal_" to the
+%----front of the predicate symbol
+make_positive_goal_literal(Atom,PositiveGoalLiteral):-
+    make_goal_atom(Atom,GoalAtom),
+    make_positive_literal(GoalAtom,PositiveGoalLiteral).
+%--------------------------------------------------------------------
+%----Makes a negative literal from an atom, adding "goal_" to the
+%----front of the predicate symbol
+make_negative_goal_literal(Atom,NegativeGoalLiteral):-
+    make_goal_atom(Atom,GoalAtom),
+    make_negative_literal(GoalAtom,NegativeGoalLiteral).
+%--------------------------------------------------------------------
+%----Make a clause for each negative literal
+subgoal_clauses(_,[],[]):-
+    !.
+
+subgoal_clauses(NegativeLiterals,[FirstNegativeAtom|
+RestOfNegativeAtoms],[FirstClause|RestOfClauses]):-
+    make_positive_goal_literal(FirstNegativeAtom,PositiveLiteral),
+    make_negative_literal(FirstNegativeAtom,NegativeLiteral),
+    tptp2X_append(NegativeLiterals,[PositiveLiteral],FirstClause),
+    tptp2X_append(NegativeLiterals,[NegativeLiteral],NewNegativeLiterals),
+    subgoal_clauses(NewNegativeLiterals,RestOfNegativeAtoms,
+RestOfClauses).
+%--------------------------------------------------------------------
+%----Created TPTP input_clauses from the literal sets
+make_TPTP_clauses(_,_,_,[],[]):-
+    !.
+
+make_TPTP_clauses(BaseName,Index,Status,[FirstLiterals|
+RestOfLiterals],[input_clause(ClauseName,Status,FirstLiterals)|
+RestOfClauses]):-
+    concatenate_atoms([BaseName,'_',Index],ClauseName),
+    NewIndex is Index + 1,
+    make_TPTP_clauses(BaseName,NewIndex,Status,RestOfLiterals,
+RestOfClauses).
+%--------------------------------------------------------------------
+%----Convert clauses to sets of magic clauses
+%----Positive atoms are not changed
+nhms_clause(input_clause(Name,Status,[++Atom]),
+[input_clause(Name,Status,[++Atom])]):-
+    !.
+
+%----Other clauses make several clauses
+nhms_clause(input_clause(Name,Status,Literals),MagicClauses):-
+%----Split the negative and positive literals apart, and their atoms
+    split_clause(Literals,PositiveAtoms,NegativeAtoms,
+PositiveLiterals,NegativeLiterals),
+%----Make negative goal literals from the positive atoms
+    map_list(PositiveAtoms,make_negative_goal_literal,
+NegativeGoalLiterals),
+%----Make clause for each negative literal
+    subgoal_clauses(NegativeGoalLiterals,NegativeAtoms,
+MagicLiteralsList),
+    make_TPTP_clauses(Name,1,Status,MagicLiteralsList,MagicClauses0),
+%----Why bother with this? Why not keep the original literals?
+    tptp2X_append(NegativeLiterals,PositiveLiterals,MagicLiterals1),
+    tptp2X_append(NegativeGoalLiterals,MagicLiterals1,MagicLiterals2),
+    tptp2X_append(MagicClauses0,[input_clause(Name,Status,MagicLiterals2)],
+MagicClauses).
+%--------------------------------------------------------------------
+%----Convert each clause and append the output sets
+nhms_clauses([],[]):-
+    !.
+
+nhms_clauses([FirstClause|RestOfClauses],MagicClauses):-
+    nhms_clause(FirstClause,FirstMagicClauses),
+    nhms_clauses(RestOfClauses,RestOfMagicClauses),
+    tptp2X_append(FirstMagicClauses,RestOfMagicClauses,MagicClauses).
+%--------------------------------------------------------------------
+magic(InputClauses,Dictionary,magic,OutputClauses,Dictionary,'+nhms'):-
+    tptp_clauses(InputClauses),
+    nhms_clauses(InputClauses,OutputClauses).
+%--------------------------------------------------------------------
+magic_file_information(transform,magic,'Magic set transformation').
+%--------------------------------------------------------------------

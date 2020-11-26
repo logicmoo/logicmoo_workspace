@@ -1,0 +1,51 @@
+SIT#0 = [Toy :Doll1]-loc->[Location #0]<-loc-[Human #1]-physContact->[Toy :Doll1]
+
+SIT#1 = [Human]-loc->[Location]
+
+SIT#4 = [Table #0]-
+        	-loc->[Location :locC],
+        	-on->[Book]
+
+SIT #9 = [Throw] -
+     		-followedBy->[State],
+     		<-followedBy-[State]
+
+SIT #12 = [Man :Figaro]-loc->[Location :locB]
+
+SIT #13 = [Action #0] -
+         	-agnt->[Man],
+         	-obj->[Object]
+
+SIT #15 = [Man]<-agnt-[Action]
+
+
+SIT #17 = [Location :locA]<-loc-[Girl :Ristin]
+
+
+CTXT: State #0 = 
+	[Location :locB] -
+              	<-loc-[Toy :Doll1]<-physContact-[Man :Figaro]-loc->[Location :locB]
+	[Table #0] -
+        	-on->[Book],
+        	-loc->[Location :locC]
+	[Location :locA]<-loc-[Girl :Ristin]
+	[Clock]<-on-[Wall]
+
+
+CTXT: State #1 = 
+	[Location :locA] -
+              	<-loc-[Toy :Doll1]<-physContact-[Girl :Ristin]-loc->[Location :locA]
+	[Table #0] -
+        	-on->[Book],
+        	-loc->[Location :locC]
+	[Location :locB]<-loc-[Man :Figaro]
+	[Clock]<-on-[Wall]
+
+
+CTXT: Throw #2 =
+	[Throw #0] -
+        	-agnt->[Man :Figaro],
+        	-obj->[Toy :Doll1],
+        	-to->[Girl :Ristin]
+
+

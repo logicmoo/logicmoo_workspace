@@ -1,0 +1,66 @@
+$usepop/pop/contrib/nlp_book/AREADME                   A.Sloman May 1990
+
+Please see the general "DISCLAIMER" in the main Poplog "contrib"
+directory.
+
+The sub-directories of this directory (nlp_book) contain text and
+programs relating to the three books on Natural Language Processing by
+G Gazdar, & C. Mellish (Addison Wesley, 1989.)
+
+    nlp_book/lisp/
+        Lisp version
+
+    nlp_book/pop11/
+        Pop-11 version
+
+    nlp_book/prolog/
+        Prolog version
+
+Please note the Copyright notices.  Noncommercial users may copy, modify,
+or re-distribute the files provided that they leave the copyright notices
+intact and include them in all copies or modified versions.
+
+Extending library search lists
+------------------------------
+Some of the program files contain the "uses" declaration which causes
+library files to be compiled, e.g.
+
+    uses pop_patr;
+
+In order to make this automatically compile the file pop_patr.p it will
+be necessary for users to add the directory to -popuseslist- with the
+following Pop-11 instruction (which could be put in the user's init.p
+file):
+
+    ['$usepop/pop/contrib/nlp_book/pop11' ^^popuseslist] -> popuseslist;
+
+(Please check that the pathname corresponds to the location of the
+contrib directory at your site.)
+
+Doing this will also enable VED commands like
+
+    <ENTER> showlib airlines.p
+
+to get a copy of the program file into the editor.
+
+(See HELP * USES, HELP * VEDSYSFILE, HELP * VEDGETSYSFILE)
+
+Disclaimer
+----------
+NB: The software and documentation in these subdirectories are supplied
+"as is" without any guarantee that they will work under any particular
+versions of these languages, including the Poplog versions, though all
+the code was originally checked in Poplog. There is no guarantee that
+they will be kept up to date if any of the languages evolves.
+
+Note added: 10 Oct 2004: The books are now online
+-------------------------------------------------
+
+The three books (NLP in Pop11, in Prolog, in Lisp, by Gazdar and
+Mellish) are now available online here:
+
+http://www.informatics.sussex.ac.uk/research/nlp/gazdar/nlp-in-pop11/
+
+http://www.informatics.sussex.ac.uk/research/nlp/gazdar/nlp-in-prolog/
+
+http://www.informatics.sussex.ac.uk/research/nlp/gazdar/nlp-in-lisp/

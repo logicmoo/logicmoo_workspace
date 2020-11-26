@@ -1,0 +1,32 @@
+Start Nuance speech resources to enable speech processing from the
+Regulus command-line. The following are required: 
+\begin{itemize}
+
+\item The file {\tt \$REGULUS/scripts/run\_\-license.bat} needs to exist
+and contain a valid invocation of the license manager. Typical
+contents (not a real licence code) might be
+\begin{verbatim}
+nlm C:/Nuance/Vocalizer4.0/license.txt abc12-1234-a-ab12
+\end{verbatim}
+
+\item One of the parameters {\tt translation\_\-rec\_\-params} and {\tt
+dialogue\_\-rec\_\-params} needs to exist, and have an appropriate
+value which specifies the recognition package to use and the Nuance
+parameters to pass the recogniser invocation. A typical value might be
+\begin{verbatim}
+[package=callslt_runtime(recogniser), grammar='.MAIN',
+'rec.Pruning=1600', 'rec.DoNBest=TRUE', 'rec.NumNBest=6',
+'rec.ConfidenceRejectionThreshold=0',
+'ep.EndSeconds=1.5']).
+\end{verbatim}
+
+\item If the application is to use TTS, an appropriate invocation
+to start Vocalizer must be supplied as the value of the parameter
+{\tt tts\_\-command}. A typical value to start the English version
+of Vocalizer 4.0 would be
+\begin{verbatim}
+'vocalizer -num_channels 1 -voice enhancedlaurie 
+-voices_from_disk'
+\end{verbatim}
+
+\end{itemize}

@@ -1,0 +1,27 @@
+% -----------------------------------------------------------------------------
+% Name: AGATHA
+%
+% Collection: equality
+% Description: Equality problems from various sources
+%
+% An equality version of the Agatha puzzle. [JRH]
+%
+% TPTP file created by unknown at 20:05:31 on 19/12/2008.
+% -----------------------------------------------------------------------------
+
+cnf(kill_hate_assumption, axiom,
+    (~killed(X, Y) | hates(X, Y))).
+
+fof(assumptions, axiom,
+    (? [X] : (lives(X) & killed(X, agatha)) &
+     (lives(agatha) & lives(butler) & lives(charles)) &
+     ! [X] : (lives(X) => (X = agatha | X = butler | X = charles)) &
+     ! [X, Y] : (killed(X, Y) => ~ richer(X, Y)) &
+     ! [X] : (hates(agatha, X) => ~ hates(charles, X)) &
+     ! [X] : (X != butler => hates(agatha, X)) &
+     ! [X] : (~ richer(X, agatha) => hates(butler, X)) &
+     ! [X] : (hates(agatha, X) => hates(butler, X)) &
+     ! [X] : ? [Y] : ~ hates(X, Y) & agatha != butler)).
+
+fof(goal, conjecture,
+    (killed(agatha, agatha))).

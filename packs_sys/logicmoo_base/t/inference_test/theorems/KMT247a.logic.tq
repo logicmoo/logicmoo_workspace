@@ -1,0 +1,10 @@
+(note "Kalish & Montague, Theorem 247a")
+
+(exists ?X (implies (F ?X) (G ?X)))
+
+
+(queryyn (or (exists ?X (not (F ?X))) (exists ?X (G ?X))))
+
+(answer Yes)
+
+(end_of_file)

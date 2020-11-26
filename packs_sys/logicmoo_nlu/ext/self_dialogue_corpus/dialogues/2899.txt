@@ -1,0 +1,20 @@
+Who would've ever thought that sports can be scruitinized in such details?
+Well, we do love knowing a lot about sports. We need history, stats, the last time this happened, that happened etc
+But we don't even analyze the inancial markets in such details.
+Of course we do. Balcks scholes equation is a stochastic differential equation that models the options pricing.
+Can we do something similar for the NFL?
+Someone probably already has done it. But what's the point Black Schole equation doesn't work.
+Which is why the LTCM went bankrupt. But if we know why it doesn't work, then we can make it work for the NFL and predict the games.
+Toss a coin, that's the simple version of the Black Scholes. it will win half the time at least
+Haha. You think you're so funny
+Anyway, so the ratings, yeah. It's got some issues, but gives us a great correlation as to who the better player is.
+But better players do not always win the game, so what's the point?
+Ugh, like I said, it's a guideline. That's all. It just feels better than betting blindly.
+Might as well bet blindly, if it only gives you the trends and guidelines.
+No. It helps a lot.
+You know would be cool?
+Oh boy, here we go again
+I want a surface graph of total offense that rate 3 dimensions. Run efficiency, reception efficiency, and one more...
+um... how are you defining the efficiencies?
+Run efficiency would be runs attempted divided by yards gained.
+The NFL already has this. It's called average yards gained by run. For the individual players as well as for the team. Only thignn new would be to put that in a graph. but you can't it's just one number for each

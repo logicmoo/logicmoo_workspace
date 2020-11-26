@@ -1,0 +1,29 @@
+(note TQF226c)
+
+(isomorphicWith 
+ (and PassingUNSC-Resolution598OnIran-IraqWar UN-SecurityCouncil) 
+ (and Y2Stage5-UNSecurityCouncilMeeting UN-SecurityCouncil)) 
+
+
+(query (findall (?PRIMARY-SIMILARITY ?ANALOG)
+
+(thereExists 
+(?UN-FACTS) 
+(thereExists 
+(?Y2-FACTS) 
+(and 
+(findAnalogs -1 Iran-IraqTankerWarMt UN-SecurityCouncil Y2Scenario-AllStagesMt ?ANALOG) 
+(structureMap UN-SecurityCouncil Iran-IraqTankerWarMt ?ANALOG Y2Scenario-AllStagesMt ?UN-FACTS ?Y2-FACTS) 
+(= ?PRIMARY-SIMILARITY 
+(andWhile ?UN-FACTS ?Y2-FACTS)))))))
+
+(answer (list (isomorphicWith 
+ (and PassingUNSC-Resolution598OnIran-IraqWar UN-SecurityCouncil) 
+ (and Y2Stage5-UNSecurityCouncilMeeting UN-SecurityCouncil)) 
+ UN-SecurityCouncil))
+
+
+
+(end_of_file)
+
+

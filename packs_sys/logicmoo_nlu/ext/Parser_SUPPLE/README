@@ -1,0 +1,75 @@
+LICENSING
+=========
+
+  Copyright (c) 2004 NLP Group
+
+  A royalty-free license is granted for the use of this software for
+  NON_COMMERCIAL PURPOSES ONLY. 
+
+  The program is provided "as is" without warranty of any kind, either
+  expressed or implied, including, but not limited to, the implied
+  warranties of merchantability and fitness for a particular purpose.
+  The entire risk as to the quality and performance of the program is
+  with you.  Should the program prove defective, you assume the cost of
+  all necessary servicing, repair or correction.
+
+
+
+USING SUPPLE
+============
+
+See the GATE user guide for details of how to build and use SUPPLE:
+
+http://gate.ac.uk/userguide/sec:parsers:supple
+
+UPGRADING FROM A PREVIOUS VERSION
+=================================
+
+Prior to GATE 3.1, the SUPPLEFile parameter to the SUPPLE processing resource
+was of type java.io.File.  From 3.1 it is of type java.net.URL.  This means
+that if you have any existing saved applications (.gapp files) that contain
+SUPPLE they will have to be updated for the new version.  To update your .gapp
+file, open it in a text editor (it's just an XML document) and search for the
+string "SUPPLEFile".  On Unix/Linux/Mac you should find something like:
+
+<entry>
+  <string>SUPPLEFile</string>
+  <file>/path/to/GATE/plugins/SUPPLE/supple.swi</file>
+</entry>
+
+change <file>...</file> to <string>...</string> and save the .gapp file.
+It should now load into GATE as before.
+
+On Windows, it is slightly more involved: starting from
+
+<entry>
+  <string>SUPPLEFile</string>
+  <file>X:\GATE\plugins\SUPPLE\supple.swi</file>
+</entry>
+
+you need to change <file> into <string> as above, but also prepend "file:/" to
+the path:
+
+<entry>
+  <string>SUPPLEFile</string>
+  <string>file:/X:\GATE\plugins\SUPPLE\supple.swi</string>
+</entry>
+
+
+Contact
+=======
+
+Horacio Saggion
+Department of Computer Science
+University of Sheffield
+saggion@dcs.shef.ac.uk
+Tel:+44-114-222-1947
+Fax:+44-114-222-1810
+
+
+Mark A. Greenwood
+Department of Computer Science
+University of Sheffield
+m.greenwood@dcs.shef.ac.uk
+Tel:+44-114-222-1924
+Fax:+44-114-222-1810

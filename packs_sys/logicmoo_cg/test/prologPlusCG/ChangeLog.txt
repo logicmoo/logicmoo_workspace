@@ -1,0 +1,373 @@
+Release 2.0.11
+==============
+
+Changes over 2.0.10:
+
+- A command-line version was added.  It is invoked like this:
+
+  java -cp classes PrologPlusCG/PrologPlusCGCLI filename.plgCG "goal"
+
+- The rudiments of a test suite were added, using the new command line
+  version.  The test suite only runs on Unix/Linux, but it will
+  hopefully provide a testbed for regression tests in the future.
+
+- Bugfix: concOfCG now works correctly again when first argument is a
+  free variable.  A bug was introduced in 2.0.5 whereby the whole CG
+  would be returned.
+
+- Bugfix: the following used to fail: eq(G, C-dummy->[MyConceptType]),
+  at least when C was bound and G was free.  This was because
+  prolog/UnifyCG.identRef neglected to check whether sRef2 was really
+  a PrologList before casting it as such.
+
+- Bugfix: The following goal used to throw an exception with
+  tests/Romeo1.plgCG: "AllConcepts(I,C), /.".  The problem was solved
+  by checking, at the end of prolog/Resolution.executeQuery(), after
+  Retour_Arriere was invoked, whether Exec_Stack was now empty, as it
+  would be after a cut.
+
+- Bugfix: dif/2 used to do a Unification.Unif_Stack.pop() even when
+  the result was true.  This led to a crash (i.e., an exception) with
+  the following program:
+
+
+father_of(ml(kristian,1940),ml(anders,1965)).
+father_of(ml(kristian,1940),ml(frank,1967)).
+father_of(ml(anders,1965),fm(lise,1990)).
+father_of(ml(anders,1965),fm(inga,1992)).
+father_of(ml(anders,1965),ml(preben,1994)).
+father_of(ml(anders,1965),fm(ann,1996)). 
+father_of(ml(frank,1967),ml(troels,1991)).
+mother_of(fm(maren,1941),ml(anders,1965)).
+mother_of(fm(maren,1941),ml(frank,1967)).
+mother_of(fm(tove,1966),fm(lise,1990)).
+mother_of(fm(tove,1966),fm(inga,1992)).
+mother_of(fm(tove,1996),fm(preben,1994)).
+mother_of(fm(tove,1996),fm(ann,1996)).
+person(_P):- mother_of(_P,_).
+person(_P):- mother_of(_,_P).
+person(_P):- father_of(_P,_).
+person(_P):- father_of(_,_P).
+male(ml(_Mand,_Aar)):- person(ml(_Mand,_Aar)).
+brother_of(_Person,_Bror):- 
+	male(_Bror),
+	mother_of(_Mor,_Person), mother_of(_Mor,_Bror),
+	mother_of(_Far,_Person), mother_of(_Far,_Bror),
+	dif(_Person,_Bror).
+
+- Bugfix: On Win32, when deploying an applet, the directory from which
+  to get the PPCGApplet.jar file was gotten from the "user.dir" system
+  property.  This was not good, since that was variable.  Instead, it
+  is now gotten from PrologPlusCGFrame.strPPCGRootPath.
+
+- PrologPlusCGFrame.strPPCGRootPath has had its "%20" instances
+  replaced by " ".
+
+- AppletDeploymentDialog now gives more specific information when
+  something is wrong with the source file (does not exist, is not a
+  file, or cannot be read, versus just that it is one of these).
+
+- When deploying an applet, information is now given which is
+  appropriate to either "You will now be required to save", or simply
+  "Your program will now be saved."
+
+- Some French comments were translated in English.
+
+- Removed "UP1" output from maxComSuperTypes goal.
+
+- All instances of "PROLOG+CG" strings were changed to "Prolog+CG".
+
+- The full version number (e.g., 2.0.11) now appears where "2.0" used
+  to appear.
+
+- PrologPlusCG.gui.PrologPlusCGFrame now has a public static member
+  called PPCGVersion.  This has been used where the version number
+  appears.
+
+- Fixed Samples/SHRDLU.plgCG so that it compiles again.
+
+
+	
+Release 2.0.10
+==============
+
+Changes over 2.0.9:
+
+	
+- The sources have been heavily refactored, changing almost everything
+  into English.  Also, there is a new package structure:
+
+  - PrologPlusCG
+  - PrologPlusCG.cg
+  - PrologPlusCG.gui
+  - PrologPlusCG.prolog
+
+- There is a new directory structure: The sources are underneath src/,
+  the manual is underneath manual/ and the Samples are underneath
+  Samples/.  The classes are now built so that they are output in
+  classes/.
+
+- The method for getting the directory where the images reside has
+  been changed.  It now gets everything by referring to
+  classes/PrologPlusCG/gui/ImgPrlg.png, then doing
+  getParentFile().getParentFile() until we reach the right directory.
+  Then we add /manual/ and there we are... The manual's index.html is
+  also found this way.
+
+- The default size is now 800x600, and the main frame is maximized
+  upon startup.
+
+- The PPCGApplet.jar file no longer contains the manual or the
+  sources.
+
+- The debugger inside Prolog+CG now actually works.
+
+- Bugfix: The debugger new terminates the execution when it is closed,
+  as well as when the user presses the "stop debug" button.
+
+- Feature enhancement: The main debug window and the debug window
+  showing details now "float" above the main frame.
+
+- Changed build process (Makefile) so that the new structure is
+  accommodated, and so that the version number is now both in the path
+  and in the PPCG-${version}.zip file name.
+
+- Bugfix: It used to be that the icons would not show, and the manual
+  would not display, if PPCG was installed underneath a path with a
+  space in it.  For example, installing underneath "C:\Program Files"
+  would reveal this behavior.  This has been fixed.
+
+
+Release 2.0.9
+=============
+
+Changes over 2.0.8:
+
+- Fixed bug in concat/3: When first argument was free, the results
+  returned were the second argument.
+
+- Redid manual in (PDF)LaTeX / latex2html.
+
+- Did away with saving as .obj files, since: a) The algorithm for
+  finding out when to use it was buggy, and b) it was not an advantage
+  any more with the fast computers of today.  The program now always
+  compiles when the it needs to, instead of loading from an .obj file.
+
+
+Release 2.0.8
+=============
+
+Changes over 2.0.7:
+
+- Translated some of the comments and identifiers from French into
+  English.
+
+- Fixed a bug in Resolution.java: NbreButPred was set wrong.
+
+- Added "minComSuperTypes" and "maxComSubTypes" to Resolution.java and
+  added them to the manual.
+
+- Added "MaxMinTypesInCommon()", "maxComSubTypes()", and
+  "minComSuperTypes()" to HierTypes.java.
+
+
+
+
+Release 2.0.7
+=============
+
+Changes over 2.0.6:
+
+- Added "Unification.Unif_Stack.AddNewElement();" to nl and
+  clearConsole in Resolution.java.  This was necessary, since they add
+  something to the result stack.  Otherwise, their usage would result
+  in an exception being thrown in RetourArriere when the Result_Stack
+  and the Unification.Unif_Stack did not have the same number of
+  elements.
+
+- It is now possible (both in PrologPlusCGApplet.java and in
+  AppletDeploymentDialog.java) to have 0 boxes.
+
+- Gave the manual a complete overhaul, and updated it to reflect the
+  fact that the applet can now have 0 boxes.
+
+- Added a new "concat" operator, and added it to the manual."
+
+
+Release 2.0.6
+=============
+
+Changes over 2.0.5:
+
+- write/1 no longer emits a newline. This makes programs not backwards
+  compatible if they use write!
+
+- There are three new built-in predicates: nl/0 (which emits a
+  newline), writenl/1 (which writes its argument and emits a newline),
+  and clearConsole/0 (which clears the console area).
+
+- write and writenl now treat string parameters specially, also when
+  encapsulated in variables (but not in terms, CGs, concepts, or any
+  other type).  In particular, the beginning and ending "double
+  quotes" are removed before printing.
+
+- Prolog+CG can now be run as a Java applet.
+
+- Added PrologPlusCGFrame.printErrorMessage().
+
+- Used PrologPlusCGFrame.printErrorMessage() whereever an error
+  message was being printed to PrologPlusCGFrame.ConsoleArea.
+
+- Removed "static ArbreInference arbreInfDbg;" from PrologPlusCGFrame,
+  since it was redundant.
+
+- Translated some comments from French to English, and fixed others.
+
+- Fixed exception bugs in PrologPlusCGFrame.onPrgmTxtAreaClick() and
+  PrologPlusCGFrame.onPrgmTxtMsReleased().
+
+
+Release 2.0.5 (October 16, 2004)
+================================
+
+Changes over 2.0.4:
+
+- Fixed bug in Resolution.exec_butPred(): It did not reset
+  pTermRes.Pos to 0 upon failure.  This meant that built-in goals such
+  as branchOfCG, maximalJoin, concOfCG, etc. would not return correct
+  results if they were not satisfied and then tried again.
+
+- Added a feature: concOfCG now performs variable-substitution just
+  like branchOfCG does.  This means that you can do things like
+
+  concOfCG([Proposition = P], _CG)
+
+  and expect P to be set.  This was done by making a CG out of the
+  current concept from _CG, then unifying this CG with the concept
+  from the first argument.  This was done in exec_butPred and
+  re_exec_butPred.
+
+- Anglicized variable names and method names in Resolution.java,
+  CPile_Resl.java, CPile_Unif.java, Unification.java, UnifyCG.java,
+  OperCG.java.
+
+- Did some code cleanup, such as removing redundant semicolons.
+
+- Wrote translations of some of the comments (just so I could
+  understand what was going on).
+
+- Updated the PrologPlusCG/Samples/AAU/macbeth2.plgCG example.
+
+- Added PrologPlusCG/Samples/AAU/Romeo2.plgCG
+
+
+Release 2.0.4 (September 21, 2004)
+==================================
+
+Changes over version 2.0.3:
+
+- The caret in the console window is no longer repositioned to the end
+  all the time.  This makes it easier to select stuff with the mouse
+  and copy it.
+
+- Fixed bug in Compile.java: isIdVar now also recognizes identifiers
+  as variables if they start with an underscore.
+
+- Fixed bug in Compile.java: It used to be that you could have
+  non-atoms in a type hierarchy rule or a catalog-of-instances rule.
+  Now the compiler checks that all elements in the rule-list
+  (including the head) are atoms.
+
+- Fixed bug in PrologPlusCGFrama.java: It used to be that if
+  Compile.java threw a CompileException in the semantic (or
+  code-generating) stage, this was not flagged as an error.  Now the
+  compiler stops instead of just printing the error on standard output
+  and saying everything is OK.
+
+- Now works correctly on Windows even if carriage return is inserted
+  into the program text window.
+
+
+Release 2.0.3 (July 16, 2004)
+=============================
+
+Changes over version 2.0.2:
+
+- You can now copy-paste things from the console area.  Select stuff
+  with the mouse, and hold down the mouse button while pressing
+  Ctrl-C.  Then Ctrl-V to paste again.  This is useful, e.g., when you
+  wish to run the same query over and over again.
+
+  Many thanks to Aldo de Moor for suggesting this change.
+
+
+Release 2.0.2 (July 8, 2004)
+============================
+
+Changes over version 2.0.1:
+
+- Added Prolog1.jpg, Prolog2.jpg, and Prolog3.jpg, which were all
+  missing from the manual.
+
+- Fixed a link in the manual from PPCGSYN.png to ppcgsyn.png.
+
+- Fixed some href's in the manual, and obfuscated Dr. Kabbaj's email
+  address so as to avoid spam-bots harvesting it.
+
+- Bugfix in HTMLFrama.java: Now only activation of links will result
+  in following that link, not enter/exit of the mouse.
+
+- Bugfix in HTMLFrame.java: If one cannot click on the URL (due to,
+  e.g., an IO exception), the URL of the JEditorPane is reset to the
+  manual page, thus handling the situation gracefully.
+
+
+Release 2.0.1 (July 6, 2004)
+============================
+
+Changes over version 2.0:
+
+- Made it compile under Java 1.4.
+
+- Pretty-printed all Java sources.
+
+- Fixed bug: It used to be that you always had to select "New" after
+  starting the program in order not to incur an error when compiling
+  the program you just typed in.  Now you don't need to.
+
+- Fixed an off-by-one error in the line-numbering when compiling:
+  Error messages now report the correct line number, and not the
+  correct number minus 1.
+
+- Fixed bug: Manual can now be shown from within the program, also on
+  Unix platforms.
+
+- Fixed bug: Lower part of the split pane would sometimes not switch
+  to query/console mode after a compile, when one clicked the mouse
+  inside the lower part.  It always does now.
+
+  At the same time, the lower part is no longer switched when clicking
+  the upper part.
+
+  At the same time, the splitter of the split pane is set to the
+  middle when one switches from console to compilation output.  It
+  also repositions to 3/4 of the size when one switches from
+  compilation output to console.  This was because Java 1.4 resized
+  the panes such that the program text area had 0 height.
+
+- Removed "Windows | Clear text area", since it was buggy.
+
+- Added a "Go to line" menu-item to the "Edit" menu.  This is handy
+  when debugging, since you can jump to the line where the compiler
+  had trouble.
+
+- Added a new Samples directory, called "AAU".
+
+- Changed the string "PROLOG+CG" to "PROLOG+CG 2.0" to differentiate
+  it from the new version in Amine.
+
+- Updated the "About" box.
+
+- Converted all .gif files to .png due to patent restrictions.
+
+- Updated manual slightly

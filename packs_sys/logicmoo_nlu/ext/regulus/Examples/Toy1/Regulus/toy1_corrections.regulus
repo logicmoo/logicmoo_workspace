@@ -1,0 +1,9 @@
+
+utterance:[sem=concat([[control, correction]], Utterance)] -->
+	?no, i, (said ; meant),
+	utterance:[sem=Utterance].
+
+utterance:[sem=[[control, undo]]] --> undo.
+
+
+

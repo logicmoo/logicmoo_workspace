@@ -1,0 +1,65 @@
+(note TQF224c)
+
+(isomorphicWith 
+ (and 
+ (purposeInEvent UnitedNationsOrganization Y2Scenario-UNMediationOfConflict 
+ (decreasesImmediatelyCausally Y2Scenario-UNMediationOfConflict Y2ScenarioConflict conflictLevel)) 
+ (opponentsInConflict Iran GulfCooperationCouncil Y2ScenarioConflict) 
+ (firstSubEvents Y2ScenarioConflict Y2Stage1-StatementByAzerbaijaniPresident) 
+ (lastSubEvents Y2ScenarioConflict Y2Stage6-AIOCAnnouncement)) 
+ (and 
+ (purposeInEvent UnitedNationsOrganization UNSendsSpecialEnvoy 
+ (decreasesImmediatelyCausally UNSendsSpecialEnvoy Iranian-TalibanConflict-1998 conflictLevel)) 
+ (opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+ (firstSubEvents Iranian-TalibanConflict-1998 TalibanMilitaryOffensive) 
+ (lastSubEvents Iranian-TalibanConflict-1998 Zolfaghar2-MilitaryExercise))) 
+
+(territoryDisputed AbuMusaConflict-1992 AbuMusaIsland) 
+
+(not 
+ (subProcess Y2ScenarioConflict AbuMusaConflict-1992)) 
+
+(isomorphicWith 
+ (and 
+ (purposeInEvent UnitedNationsOrganization Y2Scenario-UNMediationOfConflict 
+ (decreasesImmediatelyCausally Y2Scenario-UNMediationOfConflict Y2ScenarioConflict conflictLevel)) 
+ (opponentsInConflict Iran GulfCooperationCouncil Y2ScenarioConflict) 
+ (firstSubEvents Y2ScenarioConflict Y2Stage1-StatementByAzerbaijaniPresident) 
+ (lastSubEvents Y2ScenarioConflict Y2Stage6-AIOCAnnouncement)) 
+ (and 
+ (purposeInEvent UnitedNationsOrganization UNSendsSpecialEnvoy 
+ (decreasesImmediatelyCausally UNSendsSpecialEnvoy Iranian-TalibanConflict-1998 conflictLevel)) 
+ (opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+ (firstSubEvents Iranian-TalibanConflict-1998 TalibanMilitaryOffensive) 
+ (lastSubEvents Iranian-TalibanConflict-1998 Zolfaghar2-MilitaryExercise))) 
+
+(territoryDisputed Iran-UAEGulfIslandsDispute AbuMusaIsland) 
+
+(not 
+ (subProcess Y2ScenarioConflict Iran-UAEGulfIslandsDispute)) 
+
+(not 
+ (subProcess Y2ScenarioConflict AbuMusaConflict-1992)) 
+
+(minimizeExtent subProcess) 
+
+(not 
+ (subProcess Y2ScenarioConflict Iran-UAEGulfIslandsDispute)) 
+
+(minimizeExtent subProcess) 
+
+(query (findall ?SITUATION
+(and 
+(situationInvolving AbuMusaIsland ?SITUATION) 
+(findAnalog Y2Scenario-AllStagesMt Y2ScenarioConflict HPKB-RealWorldMt ?SITUATION) 
+(not 
+(subProcess Y2ScenarioConflict ?SITUATION))) 
+))
+
+(answer AbuMusaConflict-1992)
+
+(answer Iran-UAEGulfIslandsDispute)
+
+
+(end_of_file)
+

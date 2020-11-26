@@ -1,0 +1,527 @@
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt02.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt03.wav where is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt04.wav is there a meeting planned in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt05.wav where is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt06.wav	when
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt07.wav is there a meeting planned in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt08.wav will pierrette be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt09.wav will susan be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt10.wav will maria be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt11.wav will marianne be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt12.wav marianne starlander
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt13.wav will marianne santaholma be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt14.wav will marita be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt15.wav will yukie be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt16.wav will nikos be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt17.wav who will be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt18.wav is there a meeting next week
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt19.wav is there a meeting next month
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt20.wav is there a meeting in two months
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt21.wav is there a meeting in march
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt22.wav will there be a meeting in march
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt23.wav will there be a meeting in two months
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt24.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt25.wav will pierrette be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt26.wav what day
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt27.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt28.wav what date
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt29.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt30.wav is the next meeting next week
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt31.wav is the next meeting next month
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt32.wav is the next meeting in july
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt33.wav when is the meeting in maria 's office
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt34.wav what date
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt35.wav what day
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt36.wav on wednesday
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt37.wav who will be at the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt38.wav who will be at the meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt39.wav is there a meeting this month
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt40.wav was there a meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt41.wav is there a meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt42.wav is there a meeting the day after tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt43.wav did manny rayner attend the meeting last month
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt44.wav did manny rayner attend
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt45.wav was there a meeting last month
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt46.wav was there a meeting two months ago
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt47.wav was there a meeting two months ago
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt48.wav was there a meeting in the last two months
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt49.wav what meetings have there been during the last two months
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt50.wav will pierrette be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt51.wav who will be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt52.wav is there a meeting on friday
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt53.wav when is the meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt54.wav will nikos be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt55.wav who will be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt56.wav who will attend
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt57.wav is there a meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt58.wav is there a meeting in june
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt59.wav was there a meeting last may
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt60.wav was there a meeting last may
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt61.wav when were the meetings in two thousand and seven
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt62.wav when is the meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt63.wav when was the last meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt64.wav was yukie nakao there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt65.wav was there a meeting on the fifteenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt66.wav what time
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt67.wav what time is the meeting on the fifteenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt69.wav where is the meeting on fifteenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt70.wav where is the meeting on october fifteenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt71.wav is there a meeting on october fifteenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt72.wav was there a meeting on october fifteenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt73.wav what time
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt74.wav which time
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt75.wav where was the meeting on october fifteenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt76.wav when was the meeting in pierrette 's room
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt77.wav what time was the meeting on october fifteenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt78.wav when was the meeting on october fifteenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt79.wav where is the meeting on october tenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt80.wav is there a meeting on october tenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt81.wav will there be a meeting on october tenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt82.wav what time will be october tenth meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt83.wav will sonia halimi be at the meeting on october tenth
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt01.wav	was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt02.wav	where is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt03.wav	when
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt04.wav	when
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt05.wav	when
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt06.wav	when
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt07.wav	is there a meeting planned in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt08.wav	will pierrette be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt09.wav	is there a meeting planned next week
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt10.wav	is there a meeting next month
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt11.wav	will there be a meeting in march
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt12.wav	which meetings will pierrette be at
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt13.wav	is there a meeting this friday in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt14.wav	is there a meeting that both pierrette bouillon and nikos tsourakis will be at
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt15.wav	is
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt16.wav	was there a meeting in may two thousand and seven
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt17.wav	is there a meeting this month
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt18.wav	are there meetings tomorrow and the day after
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt19.wav	is there a meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt20.wav	is there a meeting the day after tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt21.wav	was manny rayner in a meeting in december
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt22.wav	was there a meeting in december and a meeting in november
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt23.wav	was there a meeting in december
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt24.wav	was there a meeting in november
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt25.wav	was there a meeting with pierrette bouillon
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt26.wav	is there a meeting on friday in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt27.wav	there a meeting with pierrette bouillon and nikos tsourakis
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt28.wav	is there a meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt29.wav	was there a meeting yesterday
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt30.wav	was there a meeting the day before yesterday
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt31.wav	who was at the meeting in july two thousand and seven
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt35.wav	was there a meeting in july two thousand and seven
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt36.wav	was there a meeting in july in two thousand and seven
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt37.wav	where was it
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt38.wav	who was there
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt39.wav	has there been a meeting with yukie nakao
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt41.wav	was the meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt42.wav	was there a meeting on the fifteenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt43.wav	what time were the meetings
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt44.wav	what time was the meeting in pierrette 's room
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt45.wav what time was the meeting in pierrette 's room on the fifteenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt46.wav what time was the meeting in sonia 's room on the fifteenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt47.wav was sonia halimi at the meeting on the tenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt48.wav what time was the meeting on the tenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2008-01-22_11-33-28/utt49.wav was there a meeting on the tenth of october
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt01.wav was there a meeting in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt02.wav who attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt03.wav who attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt04.wav who was there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt05.wav who attended the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt06.wav when did it start
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt07.wav when did the meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt08.wav did marianne attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt09.wav santaholma
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt10.wav when did the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt11.wav when is the next meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-08_22-00-00/utt12.wav who will attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt02.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt03.wav when is it
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt04.wav where is it
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt05.wav who will attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt06.wav will marianne attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt07.wav starlander
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt08.wav was there a meeting in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt09.wav was there a meeting in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt10.wav when did it start
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt11.wav when did it start
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-00-00/utt12.wav did pierrette attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt01.wav was there a meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt02.wav when did it start
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt03.wav when did it end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt04.wav when did it end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt05.wav did pierrette attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt06.wav did marianne attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt07.wav marianne starlander
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt08.wav how about marianne santaholma
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt09.wav did nikos attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt10.wav did nikos attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt11.wav did manny attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt12.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt13.wav where will it be
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt14.wav where is it going to be
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt15.wav is there going to be a meeting in october
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt16.wav in november
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt17.wav how about in december
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt18.wav will there be a meeting in january
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-09_22-30-00/utt19.wav what meetings will there be in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt02.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt03.wav who will be there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt04.wav will marianne be there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt05.wav marianne santaholma
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt06.wav how about marianne starlander
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt07.wav is there a meeting in november
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt08.wav in september
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt09.wav who will be at the meeting on september tenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt10.wav is there a meeting on september tenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt11.wav who will be there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt12.wav what meetings were there in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt13.wav was nikos there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt14.wav was nikos there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt15.wav did nikos attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-23-02/utt16.wav was pierrette there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-27-22/utt01.wav is there a meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-27-22/utt02.wav was there a meeting yesterday
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-27-22/utt03.wav are there any meetings next week
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-15_23-27-22/utt04.wav is there a meeting in september
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt02.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt03.wav where was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt04.wav which people attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt05.wav which people from geneva attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt06.wav what meetings will there be in the next month
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt07.wav what meetings will there be in the next month
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt08.wav where is the first meeting in september
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt09.wav will pierrette attend that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt10.wav will marianne attend it
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt11.wav will marianne santaholma attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt12.wav how about marianne starlander
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt13.wav what meetings have there been in the last ten days
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt14.wav the last three months
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt15.wav what was the last meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-19_21-33-27/utt16.wav what was the last meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt02.wav where was it
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt03.wav who attended the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt04.wav who attended the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt05.wav which people attended the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt06.wav what time did the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt07.wav what time did the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt08.wav what time did the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt09.wav when did the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt10.wav when is the next meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt11.wav who will be there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-20_22-02-31/utt12.wav what meetings are there in the next two months
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt01.wav what meetings were there in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt02.wav who was at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt03.wav which people were at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt04.wav which people attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt05.wav was nikos tsourakis there
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt06.wav will nikos attend a meeting in september
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt07.wav which people will attend that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt08.wav when did the meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt09.wav when is it going to end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt10.wav when does the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt11.wav is there a meeting on september ten
+$REGULUS/Examples/Calendar/corpora/speech/2007-08-22_22-40-16/utt12.wav does that meeting start in the morning
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-19-44/utt01.wav is there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-19-44/utt02.wav is there a meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt01.wav is there a meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt02.wav is there a meeting on wednesday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt03.wav what meetings are there next week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt04.wav who will attend the meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt05.wav when will the meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt06.wav when does it start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt07.wav when does the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt08.wav what meetings are there in the next twenty days
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt09.wav were there any meetings last week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt10.wav were there any meetings last week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt11.wav what meetings were there in the last three months
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt12.wav who attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt13.wav was nikos there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-03_14-30-28/utt14.wav did marianne starlander attend that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt01.wav is there a meeting today
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt02.wav who is attending the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt03.wav who will attend the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt04.wav is elisabeth attending
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt05.wav is elisabeth attending
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt06.wav is marianne attending the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt07.wav starlander
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt08.wav how about santaholma
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt09.wav is there a meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt10.wav will nikos attend that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt11.wav who will attend the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt12.wav when is the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt13.wav when does the meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt14.wav who will attend the meeting on september tenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt15.wav is there a meeting on thursday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt16.wav on friday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt17.wav what meetings are there during the next two weeks
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt18.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt19.wav what meetings have there been during the last three months
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt20.wav who attended the meeting on july ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt21.wav who attended the meeting on july ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt22.wav where was that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt23.wav was the meeting in england
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt24.wav was the meeting in england
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt25.wav was that meeting in england
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt26.wav when did it start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt27.wav when did it end
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt28.wav when did that meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt29.wav which people were there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-09_11-03-03/utt30.wav which meetings has elisabeth attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt01.wav is there a meeting today
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt02.wav when does the meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt03.wav when does the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt04.wav who is at the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt05.wav who is attending the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt06.wav who is going to attend the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt07.wav which people are going to attend the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt08.wav are there any meetings next week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt09.wav are there any meetings next week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt10.wav what meetings are there next week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt11.wav what meetings are there in the next twenty days
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt12.wav are there any meetings next month
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt13.wav was there a meeting yesterday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt14.wav who was at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt15.wav when was the last meeting in england
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt16.wav where was that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt17.wav was the meeting in england
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt18.wav who attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt19.wav which people attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt20.wav was nikos at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt21.wav was marianne at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt22.wav was marianne starlander at the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt23.wav how about marianne santaholma
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt24.wav was there a meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt25.wav was there a meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt26.wav was maria at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt27.wav was nikos at the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt28.wav how about pierrette
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt29.wav was manny there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_11-10-32/utt30.wav did elisabeth attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-10_16-44-37/utt01.wav is there a meeting today
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-14-07/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-14-07/utt02.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-14-07/utt03.wav was there a meeting this week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-14-07/utt04.wav was there a meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-14-07/utt05.wav was there a meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-26-40/utt01.wav was there a meeting in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-26-40/utt02.wav who attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-26-40/utt03.wav who attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-26-40/utt04.wav did nikos attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-26-40/utt05.wav did nikos attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-26-40/utt06.wav how about marianne
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-11_22-26-40/utt07.wav marianne santaholma
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_07-50-25/utt01.wav was there a meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_07-50-25/utt02.wav was there a meeting on september nine
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_07-50-25/utt03.wav on september tenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_07-50-25/utt04.wav when did the meeting on september tenth start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_07-50-25/utt05.wav when did it end
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_07-50-25/utt06.wav which people were at the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-45-07/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-46-59/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-46-59/utt02.wav which people were at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-49-03/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-49-03/utt02.wav did marianne starlander attend the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-49-49/utt01.wav was there a meeting on sunday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-49-49/utt02.wav was pierrette there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-49-49/utt03.wav how about manny
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-49-49/utt04.wav elisabeth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-58-16/utt01.wav were there any meetings in june
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-58-16/utt02.wav were there any meetings in june
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-58-16/utt03.wav how about in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-12_08-58-16/utt04.wav was pierrette there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-13_20-17-17/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-13_20-31-21/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_10-23-22/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_11-00-40/utt02.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-46-17/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-55-38/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-55-38/utt02.wav who attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-55-38/utt03.wav which people attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt01.wav was there a meeting on september nine
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt02.wav when did that meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt03.wav when did it end
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt04.wav was pierrette there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt05.wav how about manny
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt06.wav who attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt07.wav who attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt08.wav which people were there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-14_17-57-44/utt09.wav was marianne santaholma there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_09-53-56/utt01.wav was there a meeting in june
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_09-53-56/utt02.wav was there a meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_09-53-56/utt03.wav who attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt01.wav was there a meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt02.wav who was there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt03.wav who was there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt04.wav who was at the meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt05.wav who was at the meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt06.wav which people were at the meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt07.wav was there a meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt08.wav when was the meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt09.wav was was that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt10.wav which people attended it
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt11.wav what meetings were there in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt12.wav was pierrette at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt13.wav how about manny
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt14.wav which people attended
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt15.wav what time did the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt16.wav what meetings were there in september
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt17.wav who attended the meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt18.wav who was at the meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt19.wav which people were at the meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt20.wav what is pierrette 's email address
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-40-49/utt21.wav what is pierrette 's address
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-46-35/utt01.wav which people attended the meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-46-35/utt02.wav was marianne starlander at the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-46-35/utt03.wav how about marianne santaholma
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-46-35/utt04.wav when did that meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-46-35/utt05.wav what did that meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-16_10-46-35/utt06.wav when did the meeting on september ninth start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt02.wav which people attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt03.wav what meetings have there been in the last three weeks
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt04.wav who was at the meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt05.wav who was at the meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt06.wav did marianne starlander attend that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt07.wav was the meeting in switzerland
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt08.wav was the meeting on september ninth in switzerland
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_11-47-29/utt09.wav what did that meeting start
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_12-01-28/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_12-01-28/utt02.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_12-01-28/utt03.wav was nikos at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_12-01-28/utt04.wav which people were at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_12-52-09/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_12-54-29/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_13-00-12/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-20_13-01-44/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_15-50-17/utt01.wav was there a meeting last week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_15-53-18/utt01.wav was there a meeting last week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_15-54-42/utt01.wav was there a meeting last week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_15-57-30/utt01.wav was there a meeting last week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_16-05-30/utt01.wav was there any meeting last week
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_16-06-47/utt01.wav who was at the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_16-12-00/utt01.wav was pierrette at the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_18-11-54/utt01.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_18-17-36/utt01.wav were there any meetings this month
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_18-22-10/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_18-22-10/utt02.wav can you tell me where the next meeting is
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-24_18-22-10/utt03.wav do you know which people attended the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-26_18-05-21/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-26_18-05-21/utt02.wav when um
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-26_18-05-21/utt03.wav uh do you think there 's going to be a meeting next week maybe
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-23-30/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-23-30/utt02.wav where was that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-23-30/utt03.wav did pierrette attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-33-05/utt01.wav was there a meeting on september ninth
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-33-05/utt02.wav which people were there
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-33-05/utt03.wav what time did the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-33-05/utt04.wav is there any meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-36-06/utt01.wav is there going to be a meeting on tuesday
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-27_13-36-06/utt02.wav were there any meetings in august
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-42-56/utt01.wav what meetings were there in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-44-06/utt01.wav were there any meetings in june
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-44-06/utt02.wav was there a meeting in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-44-06/utt03.wav who attended that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt01.wav when was the last meeting in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt02.wav who was at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt03.wav did nikos tsourakis attend the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt04.wav is there a meeting next month
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt05.wav is there going to be a meeting in october
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt06.wav do you know when the next meeting is going to be
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt07.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt08.wav will there be a meeting in december
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt09.wav do i have a meeting today
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt10.wav is there a meeting today
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt11.wav is there going to be a meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt12.wav is there a meeting tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt13.wav was there a meeting on the ninth of september
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt14.wav who was at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-09-28_13-46-45/utt15.wav who was at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt03.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt04.wav was pierrette there
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt05.wav was marianne there
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt06.wav marianne santaholma
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt07.wav was there a meeting in june
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt08.wav how about in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt09.wav how about in august
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt10.wav was there a meeting in august
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt11.wav in september
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt12.wav who was at the meeting on september tenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt13.wav who was at the meeting on september tenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-03_06-38-00/utt14.wav did marianne starlander attend that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-01-39/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-01-39/utt02.wav who will be at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-02-42/utt01.wav what meetings are there this month
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-02-42/utt02.wav who will attend the meeing in sonia 's room
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-02-42/utt03.wav where is that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-02-42/utt04.wav will nikos be at the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-02-42/utt05.wav will nikos be at the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-02-42/utt06.wav will yukie be there
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-02-42/utt07.wav will yukie be at the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-19-43/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-20-11/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-20-11/utt02.wav who will be at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-20-11/utt03.wav what time does the meeting end
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-20-11/utt04.wav is there a meeting on october sixteenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-04_23-20-11/utt05.wav what meetings are there on october fifteenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-05_23-37-10/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-05_23-37-10/utt02.wav who will be attending that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_00-55-27/utt01.wav when was the last meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_00-55-27/utt02.wav who was at that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_00-55-27/utt03.wav was nikos there
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_00-55-27/utt04.wav was yukie there
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_01-00-11/utt01.wav what meetings were there in september
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_01-00-11/utt02.wav who was at the meeting on september third
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_01-00-11/utt03.wav who was at the meeting on september third
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_01-00-11/utt04.wav which people were at the meeting on september third
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-11_01-00-11/utt05.wav did maria attend that meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt01.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt02.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt03.wav who attended the meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt04.wav where is next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt05.wav when
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt08.wav is there a meeting planned in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt09.wav will pierrette be there
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt11.wav is there a meeting in the next week
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt12.wav is there a meeting in the next week
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt13.wav is there a meeting in the next month
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt14.wav in the next two months
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt15.wav will pierrette bouillon participate in any meetings in the future
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt16.wav will pierrette be attending any meetings in the future
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt17.wav is there a meeting this friday
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt18.wav is there a meeting this friday in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt19.wav are any meetings coming up with pierrette bouillon and nikos tsourakis
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt20.wav will there be any meetings in may two thousand and seven
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt21.wav will there be any meetings in may two thousand seven
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt22.wav are there any meetings scheduled this month
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt23.wav are there any meetings tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt24.wav are there any meetings the day after tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt25.wav are there any meetings for the day after tomorrow
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt26.wav is there a meeting in two days
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt27.wav is there a meeting in two days
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt28.wav which meetings did manny rayner attend in the last month
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt29.wav were there any meetings in the last month
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt30.wav were there any meetings in the last two months
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt32.wav which meetings did pierrette bouillon attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt33.wav which meeting took place on a friday in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt34.wav which meeting took place on a friday in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt35.wav which meeting did pierrette bouillon and nikos tsourakis attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt36.wav which meeting did pierrette bouillon and nikos tsourakis attend
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt37.wav were there any meetings in may
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt38.wav were there any meetings yesterday
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt39.wav were there any meetings the day before yesterday
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt40.wav were there any meetings two days ago
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt41.wav who participated in the meeting on july two thousand and seven
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt42.wav who participated in the meeting in july two thousand seven
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt43.wav who attended the meeting on july two thousand seven
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt44.wav where is the meeting in july
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt45.wav which meetings took place in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt46.wav which one did yukie nakao
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt47.wav which meeting took place in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt48.wav what time was the meeting on october fifteenth
+$REGULUS/Examples/Calendar/corpora/speech/2007-10-22_16-42-00/utt50.wav where was the meeting on october tenth

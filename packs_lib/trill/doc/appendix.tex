@@ -1,0 +1,201 @@
+ 
+\section{Description Logics}
+\label{app:dl}
+In this section, we recall the expressive description logic $\mathcal{ALC}$ \cite{DBLP:journals/ai/Schmidt-SchaussS91}. We refer to 
+\cite{DBLP:journals/ws/LukasiewiczS08} for a detailed description of $\mathcal{SHOIN}(\mathbf{D})$ DL, that is at the basis of OWL DL.
+
+%%ALC
+Let $\mathbf{A}$, $\mathbf{R}$ and $\mathbf{I}$ be sets of \emph{atomic concepts}, \emph{roles} and \emph{individuals}.
+A \emph{role} is an atomic role $R \in \mathbf{R}$. 
+\emph{Concepts} are defined by induction as follows. Each $C \in \mathbf{A}$, $\bot$ and $\top$
+are concepts.
+If $C$, $C_1$ and $C_2$ are concepts and $R \in \mathbf{R}$, then $(C_1\sqcap C_2)$, $(C_1\sqcup C_2 )$, $\neg C$,
+$\exists R.C$, and $\forall R.C$ are concepts. 
+Let $C$, $D$ be concepts,  $R \in \mathbf{R}$ and $a, b \in \mathbf{I}$. 
+An \emph{ABox} $\cA$ is a finite set of \textit{concept membership axioms} $a : C$ and \textit{role membership
+	axioms} $(a, b) : R$, while 
+a \emph{TBox} $\cT$ is a finite set of \textit{concept inclusion axioms} $C\sqsubseteq D$. $C \equiv D$ abbreviates $C \sqsubseteq D$ and $D\sqsubseteq  C$.
+
+A \emph{knowledge base} $\cK = (\cT, \cA)$ consists of a TBox $\cT$ and an ABox $\cA$.
+A KB $\cK$ is assigned a semantics in terms of set-theoretic interpretations $\cI = (\Delta^\cI , \cdot^\cI )$, where $\Delta^\cI$ is a non-empty \textit{domain} and $\cdot^\cI$ is the \textit{interpretation function} that assigns  an element in $\Delta ^\cI$ to each $a \in \mathbf{I}$, a subset of $\Delta^\cI$ to each $C \in \mathbf{A}$ and a subset of $\Delta^\cI \times \Delta^\cI$ to each $R \in \mathbf{R}$.
+
+\section{DISPONTE}
+\label{app:disponte}
+In the field of Probabilistic Logic Programming (PLP for short) many proposals have been presented. 
+An effective and popular approach is the Distribution Semantics \cite{DBLP:conf/iclp/Sato95}, which underlies many PLP languages such as
+PRISM~\cite{DBLP:conf/iclp/Sato95,DBLP:journals/jair/SatoK01},
+Independent Choice Logic  \cite{Poo97-ArtInt-IJ}, Logic Programs with Annotated Disjunctions \cite{VenVer04-ICLP04-IC} and ProbLog \cite{DBLP:conf/ijcai/RaedtKT07}.
+Along this line, many reserchers proposed to combine probability theory with Description Logics (DLs for short) \cite{DBLP:journals/ws/LukasiewiczS08,DBLP:conf/rweb/Straccia08}.
+DLs are at the basis of the Web Ontology Language (OWL for short), a family of knowledge representation formalisms used for modeling information
+of the Semantic Web
+
+TRILL follows the DISPONTE \cite{RigBelLamZese12-URSW12,Zese17-SSW-BK} semantics to compute the probability of queries.
+DISPONTE applies the distribution semantics \cite{DBLP:conf/iclp/Sato95} of probabilistic logic programming to DLs. 
+A program following this semantics defines a probability distribution over normal logic programs
+called \emph{worlds}. Then the distribution is extended to queries and the probability of a query is obtained by marginalizing the joint distribution of the query and the programs.
+
+In DISPONTE, a \emph{probabilistic knowledge base} $\cK$ is a set of \emph{certain axioms} or \emph{probabilistic axioms} in which each axiom is independent evidence.
+Certain axioms take the form of regular DL axioms while probabilistic axioms are
+$p::E$
+where $p$ is a real number in $[0,1]$ and $E$ is a DL axiom. 
+
+The idea of DISPONTE is to associate independent Boolean random variables to the probabilistic axioms. 
+To obtain a \emph{world}, we include every formula obtained from a certain axiom. 
+For each probabilistic axiom, we decide whether to include it or not in $w$.
+A world therefore is a non probabilistic KB that can be assigned a semantics in the usual way.
+A query is entailed by a world if it is true in every  model of the world.
+
+The probability $p$ can be interpreted as an \emph{epistemic probability}, i.e., as the degree of our belief in axiom $E$. 
+For example, a probabilistic concept membership axiom
+$
+p::a:C
+$
+means that we have degree of belief $p$ in $C(a)$.
+A probabilistic concept inclusion axiom of the form
+$
+p::C\sqsubseteq D
+$
+represents our belief in the truth of $C \sqsubseteq D$ with probability $p$. 
+
+Formally, an \emph{atomic choice} is a couple $(E_i,k)$ where $E_i$ is the $i$th probabilistic axiom  and $k\in \{0,1\}$. 
+$k$ indicates whether $E_i$ is chosen to be included in a world ($k$ = 1) or not ($k$ = 0). 
+A \emph{composite choice} $\kappa$ is a consistent set of atomic choices, i.e.,  $(E_i,k)\in\kappa, (E_i,m)\in \kappa$ implies $k=m$ (only one decision is taken for each formula). 
+The probability of a composite choice $\kappa$  is 
+$P(\kappa)=\prod_{(E_i,1)\in \kappa}p_i\prod_{(E_i, 0)\in \kappa} (1-p_i)$, where $p_i$ is the probability associated with axiom $E_i$.
+A \emph{selection} $\sigma$ is a total composite choice, i.e., it contains an atomic choice $(E_i,k)$ for every 
+probabilistic axiom  of the probabilistic KB. 
+A selection $\sigma$ identifies a theory $w_\sigma$ called  a \emph{world} in this way:
+$w_\sigma=\cC\cup\{E_i|(E_i,1)\in \sigma\}$ where $\cC$ is the set of certain axioms. Let us indicate with $\mathcal{S}_\cK$ the set of all selections and with $\mathcal{W}_\cK$ the set of all worlds.
+The probability of a world $w_\sigma$  is 
+$P(w_\sigma)=P(\sigma)=\prod_{(E_i,1)\in \sigma}p_i\prod_{(E_i, 0)\in \sigma} (1-p_i)$.
+$P(w_\sigma)$ is a probability distribution over worlds, i.e., $\sum_{w\in \mathcal{W}_\cK}P(w)=1$.
+
+We can now assign probabilities to queries. 
+Given a world $w$, the probability of a query $Q$ is defined as $P(Q|w)=1$ if $w\models Q$ and 0 otherwise.
+The probability of a query can be defined by marginalizing the joint probability of the query and the worlds, i.e.
+$P(Q)=\sum_{w\in \mathcal{W}_\cK}P(Q,w)=\sum_{w\in \mathcal{W}_\cK} P(Q|w)p(w)=\sum_{w\in \mathcal{W}_\cK: w\models Q}P(w)$.
+
+\begin{example}
+	\label{people+petsxy}
+	\begin{small}
+		Consider the following KB, inspired by the \texttt{people+pets} ontology  \cite{ISWC03-tut}:
+		{\center $0.5\ \ ::\ \ \exists hasAnimal.Pet \sqsubseteq NatureLover\ \ \ \ \ 0.6\ \ ::\ \ Cat\sqsubseteq Pet$\\
+			$(kevin,tom):hasAnimal\ \ \ \ \ (kevin,\fluffy):hasAnimal\ \ \ \ \ tom: Cat\ \ \ \ \ \fluffy: Cat$\\}
+		\noindent The KB indicates that the individuals that own an animal which is a pet are nature lovers with a 50\% probability and that $kevin$ has the animals 
+		$\fluffy$ and $tom$.  Fluffy and $tom$ are cats and cats are pets with probability 60\%.
+		We associate a Boolean variable to each axiom as follow
+		%\begin{small}
+		$F_1 = \exists hasAnimal.Pet \sqsubseteq NatureLover$, $F_2=(kevin,\fluffy):hasAnimal$, $F_3=(kevin,tom):hasAnimal$, $F_4=\fluffy: Cat$, $F_5=tom: Cat$ and $F_6= Cat\sqsubseteq Pet$.
+		%\end{small}.
+		
+		
+		The KB has four worlds and the query axiom $Q=kevin:NatureLover$ is true in one of them, the one corresponding to the selection 
+		$
+		\{(F_1,1),(F_2,1)\}
+		$.
+		The probability of the query is $P(Q)=0.5\cdot 0.6=0.3$.
+	\end{small}
+\end{example}
+
+\begin{example}
+	\label{people+pets_comb}
+	\begin{small}
+		Sometimes we have to combine knowledge from multiple, untrusted sources, each one with a different reliability. 
+		Consider a KB similar to the one of Example \ref{people+petsxy} but where we have a single cat, $\fluffy$.
+		{\center $\exists hasAnimal.Pet \sqsubseteq NatureLover\ \ \ \ \ (kevin,\fluffy):hasAnimal\ \ \ \ \ Cat\sqsubseteq Pet$\\}
+		
+		\noindent and there are two sources of information with different reliability that provide the information that $\fluffy$ is a cat. 
+		On one source the user has a degree of belief of 0.4, i.e., he thinks it is correct with a 40\% probability,  
+		while on the other source he has a degree of belief 0.3. %, i.e. he thinks it is correct with a 30\% probability. 
+		The user can reason on this knowledge by adding the following statements to his KB:
+		{\center$0.4\ \ ::\ \ \fluffy: Cat\ \ \ \ \ 0.3\ \ ::\ \ \fluffy: Cat$\\}
+		The two statements represent independent evidence on $\fluffy$ being a cat. We associate $F_1$ ($F_2$) to the first (second) probabilistic axiom.
+		
+		The query axiom $Q=kevin:NatureLover$ is true in 3 out of the 4 worlds, those corresponding to the selections 
+		$
+		\{ \{(F_1,1),(F_2,1)\},
+		\{(F_1,1),(F_2,0)\},
+		\{(F_1,0),(F_2,1)\}\}
+		$. 
+		So 
+		$P(Q)=0.4\cdot 0.3+0.4\cdot 0.7+ 0.6\cdot 0.3=0.58.$
+		This is reasonable if the two sources can be considered as independent. In fact,  the probability comes from the  disjunction of two
+		independent Boolean random variables with probabilities respectively 0.4 and 0.3: 
+		$
+		P(Q) = P(X_1\vee X_2) = P(X_1)+P(X_2)-P(X_1\wedge X_2)
+		= P(X_1)+P(X_2)-P(X_1)P(X_2)
+		= 0.4+0.3-0.4\cdot 0.3=0.58
+		$
+	\end{small}
+\end{example}
+
+\section{Inference}
+\label{app:inf}
+Traditionally, a reasoning algorithm decides  whether an axiom is entailed or not by a KB by refutation: the  axiom $E$ is entailed if $\neg E$ has no model
+in the KB.
+Besides deciding whether an axiom is entailed by a KB, we want to find also explanations for the axiom, in order to compute the probability of the axiom.
+
+\subsection{Computing Queries Probability}
+The problem of finding  explanations for a query
+has been investigated by various authors \cite{DBLP:conf/ijcai/SchlobachC03,DBLP:journals/ws/KalyanpurPSH05,DBLP:conf/semweb/KalyanpurPHS07,Kalyanpurphd,extended_tracing,Zese17-SSW-BK}.
+It was called  \emph{axiom pinpointing} in 
+\cite{DBLP:conf/ijcai/SchlobachC03}  and considered as a non-standard reasoning service useful for tracing derivations and debugging ontologies. 
+In particular, in \cite{DBLP:conf/ijcai/SchlobachC03} the authors define \emph{minimal axiom sets}  (\emph{MinAs} for short).
+\begin{definition}[MinA]
+	Let $\cK$ be a knowledge base and $Q$ an
+	axiom that follows from it, i.e., 
+	$\cK \models Q$. We call a set 
+	$M\subseteq \cK$ a
+	\emph{minimal axiom set} or \emph{MinA} for $Q$ in $\cK$ if 
+	$M \models Q$ and it is minimal
+	w.r.t. set inclusion.
+\end{definition}  
+\noindent The problem of enumerating all MinAs is called \textsc{min-a-enum}.
+\textsc{All-MinAs($Q,\cK$)} is the set of all MinAs for query $Q$ in knowledge base $\cK$.
+
+A \emph{tableau} is a graph where each node represents an
+individual $a$ and is labeled with the set of concepts $\cL(a)$ it belongs to. Each
+edge $\langle a, b\rangle$ in the graph is labeled with the set of roles to which the couple
+$(a, b)$ belongs. Then, a set of  consistency preserving tableau
+expansion rules are repeatedly applied until a clash (i.e., a contradiction) is detected or a clash-free
+graph is found to which no more rules are applicable. A clash is for example a
+couple $(C, a)$ where $C$ and $\neg C$ are present in the label of a node, i.e. ${C, \neg C} \subseteq \cL(a)$.
+
+Some expansion rules are non-deterministic, i.e., they generate
+a finite set of tableaux. Thus the algorithm keeps a set of tableaux that is
+consistent if there is any tableau in it that is consistent, i.e., that is clash-free.
+Each time a clash is detected in a tableau $G$, the algorithm stops applying rules
+to $G$. Once every tableau in $T$ contains a clash or no more expansion rules
+can be applied to it, the algorithm terminates. If all the tableaux in the final
+set $T$ contain a clash, the algorithm returns unsatisfiable as no model can be
+found. Otherwise, any one clash-free completion graph in $T$ represents a possible
+model for the concept and the algorithm returns satisfiable.
+
+To compute the probability of a query, the explanations must be made mutually exclusive, so
+that the probability of each individual explanation is computed and summed
+with the others. To do that we assign independent Boolean random variables to the axioms contained in the explanations and defining 
+the Disjunctive Normal Form (DNF) Boolean formula $f_K$ which models the set of explanations. Thus
+$
+f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}\overline{X_{i}}
+$
+where $\mathbf{X}=\{X_{i}|(E_i,k)\in\kappa,\kappa\in K\}$ is the set of Boolean random variables.
+We can now translate $f_K$ to a Binary Decision Diagram (BDD), from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.
+
+
+In \cite{DBLP:journals/jar/BaaderP10,DBLP:journals/logcom/BaaderP10} the authors consider the problem of finding a \emph{pinpointing formula} instead of 
+\textsc{All-MinAs($Q,\cK$)}.
+The pinpointing formula is a monotone Boolean formula in which each Boolean variable corresponds to an axiom of the KB. This formula is built using 
+the variables and the conjunction and disjunction connectives. It compactly encodes the set of all MinAs.
+Let's assume that each axiom $E$ of a KB $\cK$ is associated with a propositional variable, indicated with $var(E)$. The set of all propositional variables is indicated with $var(\cK )$.
+A valuation $\nu$ of a monotone Boolean formula is the set of propositional variables that are true. For a valuation $\nu \subseteq var(\cK)$, let $\cK_{\nu} := \{t \in \cK |var(t)\in\nu\}$.
+\begin{definition}[Pinpointing formula]
+	Given a query $Q$ and a KB $\cK$, a monotone Boolean formula $\phi$ over $var(\cK)$ is called a \emph{pinpointing formula} for $Q$ if for every valuation $\nu \subseteq var(\cK)$ it holds that $\cK_{\nu} \models Q$ iff
+	$\nu$ satisfies $\phi$.
+	
+\end{definition}
+In Lemma 2.4 of \cite{DBLP:journals/logcom/BaaderP10} the authors proved that the set of all MinAs can be obtained by transforming the pinpointing formula into a Disjunctive Normal Form Boolean formula~(DNF) and removing disjuncts implying other disjuncts. 
+
+Irrespective of which representation of the explanations we choose, a DNF or a general pinpointing formula, we can apply knowledge compilation and \textit{transform it into a Binary Decision Diagram (BDD)}, 
+from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.
+
+We refer to \cite{Zese17-SSW-BK,ZesBelRig16-AMAI-IJ} for a detailed description of the two methods.

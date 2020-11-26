@@ -1,0 +1,14 @@
+(note "Kalish & Montague, Theorem 2",Hypothetical)
+
+  (instance ?X Dog) 
+
+(queryyn 
+  (implies 
+    (instance ?X Fish) 
+    (instance ?X Dog))
+)
+
+(answer Yes)
+
+(end_of_file)
+

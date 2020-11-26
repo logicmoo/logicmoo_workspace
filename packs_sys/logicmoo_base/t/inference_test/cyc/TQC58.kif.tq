@@ -1,0 +1,67 @@
+(note TQC58)
+
+(increasesCausally HYP-AttackOnTangible-47477681 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION KuwaitiHizballah))) likelihood) 
+
+(instance KuwaitiHizballah Agent) 
+
+(implies 
+ (instance ?AGT Agent) 
+ (desires ?AGT 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT)))))) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT2) 
+ (instance ?AGT2 Agent) 
+ (agent ?ATTACK ?AGT1)) 
+ (increasesCausally ?ATTACK 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION ?AGT1))) likelihood)) 
+
+(instance HYP-AttackOnTangible-47477681 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-47477681 KuwaitiHizballah) 
+
+(instance CityOfKuwaitCity Agent) 
+
+(maleficiary HYP-AttackOnTangible-47477681 CityOfKuwaitCity) 
+
+(instance HYP-AttackOnTangible-47477681 AttackOnTangible) 
+
+
+
+
+(query (findall (?ACT ?PROP)
+
+ (implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK CityOfKuwaitCity) 
+ (agent ?ATTACK KuwaitiHizballah)) 
+ (or 
+ (and 
+ (desires KuwaitiHizballah ?PROP) 
+ (decreasesCausally ?ACT ?PROP likelihood)) 
+ (and 
+ (desires KuwaitiHizballah 
+ (not ?PROP)) 
+ (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer HYP-AttackOnTangible-47477681 (list  (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION KuwaitiHizballah))) ))  
+
+(end_of_file)
+

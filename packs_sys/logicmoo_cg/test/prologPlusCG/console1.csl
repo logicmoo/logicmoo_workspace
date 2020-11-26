@@ -1,0 +1,39 @@
+************************************************
+         PROLOG+CG, Version 3.0, 2004         
+             (c) Dr. Adil KABBAJ              
+                  Amine Group             
+************************************************
+
+?- loadOntology("C:\Amine\AmineCourant\src\aminePlatform\classes\aminePlatform\samples\ontology\Souris2.xml").
+yes
+?- consult(["DynamicOntologySample.pcg"]).
+yes
+?- ask([Cat]<-agnt-[Action]-obj->[Mouse], [Cat, Action, Mouse]).
+The description is : MORE_SPECIFIC than 
+null
+The description is : EQUAL than 
+[Action #0] -
+         -obj->[Mouse],
+         -agnt->[Cat]
+The description is : MORE_GENERAL than 
+[Eat #0] -
+      -obj->[Mouse],
+      -agnt->[Cat]
+The description is : MORE_GENERAL than 
+[Hunt #0] -
+       -obj->[Mouse],
+       -agnt->[Cat]
+The description is : EQUAL than 
+[Action #0] -
+         -obj->[Mouse],
+         -agnt->[Cat]
+The description is : MORE_GENERAL than 
+[Eat #0] -
+      -obj->[Mouse],
+      -agnt->[Cat]
+The description is : MORE_GENERAL than 
+[Hunt #0] -
+       -obj->[Mouse],
+       -agnt->[Cat]
+ yes
+?- 

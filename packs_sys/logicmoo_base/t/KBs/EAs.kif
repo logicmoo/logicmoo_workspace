@@ -1,0 +1,125 @@
+ (implies (and (natFunction ?NAT ?FUNCTION) (resultIsa ?FUNCTION ?COL)) (isa ?NAT ?COL))
+
+(implies (physicalPartTypes ?BIG ?SMALL) (relationAllExists physicalParts ?BIG ?SMALL))
+
+(implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa4-1 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?DEP-INS ?ANY-ARG-2 ?ANY-ARG-3 ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG2 ?UNIV-COL) (relationExistsMinAll ?SLOT ?EXIST-COL ?UNIV-COL ?NUM) 
+(termOfUnit ?ARG (SKF-56807125 ?ARG2 ?EXIST-COL ?NUM ?SLOT ?UNIV-COL (IntervalMinFn ?NUM)))) (isa ?ARG ?EXIST-COL))
+
+  (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa2-5 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?INDEP-INS ?ANY-ARG-3 ?ANY-ARG-4 ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+(implies (and (isa ?COL ?TYPE-COL) (typeGenls ?TYPE-COL ?GENL)) (genls ?COL ?GENL))
+
+ (not (and (negationPreds ?NEG-PRED ?PRED) (?NEG-PRED ?ARG1) (?PRED ?ARG1)))
+
+ (not (and (negationPreds ?NEG-PRED ?PRED) (?NEG-PRED ?ARG1 ?ARG2 ?ARG3) (?PRED ?ARG1 ?ARG2 ?ARG3)))
+
+  (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa4-3 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?ANY-ARG-2 ?DEP-INS ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (not (and (negationPreds ?NEG-PRED ?PRED) (?NEG-PRED ?ARG1 ?ARG2 ?ARG3 ?ARG4 ?ARG5) (?PRED ?ARG1 ?ARG2 ?ARG3 ?ARG4 ?ARG5)))
+
+ (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa5-4 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?ANY-ARG-2 ?ANY-ARG-3 ?DEP-INS ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG1 ?UNIV-COL) (relationExistsAll ?SLOT ?EXIST-COL ?UNIV-COL) (termOfUnit ?ARG (SKF-13352259 ?ARG1 ?EXIST-COL ?SLOT ?UNIV-COL))) (?SLOT ?ARG ?ARG1))
+
+(implies (and (isa ?ARG1 ?UNIV-COL) (relationAllExistsMin ?SLOT ?UNIV-COL ?EXIST-COL ?NUM) (termOfUnit ?ARG (SKF-26730082 ?ARG1 ?EXIST-COL ?NUM ?SLOT ?UNIV-COL (IntervalMinFn ?NUM)))) (?SLOT ?ARG1 ?ARG))
+
+ (implies (and (isa ?PRED BinaryPredicate) (requiredArg1Pred ?COL ?PRED) (isa ?INS-1 ?COL) (termOfUnit ?INS-20024 (SKF-33462840 ?INS-1 ?COL ?PRED))) (?PRED ?INS-1 ?INS-20024))
+
+ (implies (and (isa ?ARG1 ?UNIV-COL) (relationAllExists ?SLOT ?UNIV-COL ?EXIST-COL) (termOfUnit ?ARG (SKF-7310435 ?ARG1 ?EXIST-COL ?SLOT ?UNIV-COL))) (isa ?ARG ?EXIST-COL))
+
+ (implies (and (isa ?ARG1 ?UNIV-COL) (relationAllExistsMax ?SLOT ?UNIV-COL ?EXIST-COL ?NUM) (termOfUnit ?ARG (SKF-18510550 ?ARG1 ?EXIST-COL ?NUM ?SLOT ?UNIV-COL (IntervalMaxFn ?NUM)))) (isa ?ARG ?EXIST-COL))
+
+ (implies (and (isa ?ARG2 ?UNIV-COL) (relationExistsCountAll ?SLOT ?EXIST-COL ?UNIV-COL ?NUM) (termOfUnit ?ARG10030 (SKF-55308482 ?SLOT ?EXIST-COL ?UNIV-COL ?NUM ?ARG2 ?NUM))) (?SLOT ?ARG10030 ?ARG2))
+
+ (implies (and (isa ?ARG2 ?UNIV-COL) (relationExistsCountAll ?SLOT ?EXIST-COL ?UNIV-COL ?NUM) (termOfUnit ?ARG10030 (SKF-55308482 ?SLOT ?EXIST-COL ?UNIV-COL ?NUM ?ARG2 ?NUM))) (isa ?ARG10030 ?EXIST-COL))
+
+ (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa1-3 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?INDEP-INS ?ANY-ARG-2 ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG2 ?UNIV-COL) (relationExistsMinAll ?SLOT ?EXIST-COL ?UNIV-COL ?NUM) (termOfUnit ?ARG (SKF-56807125 ?ARG2 ?EXIST-COL ?NUM ?SLOT ?UNIV-COL (IntervalMinFn ?NUM)))) (?SLOT ?ARG ?ARG2))
+
+ (not (and (negationInverse ?GEN-PRED ?PRED) (?GEN-PRED ?ARG2 ?ARG1) (?PRED ?ARG1 ?ARG2)))
+
+ (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa2-3 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?INDEP-INS ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (relationAll ?PRED ?COL) (isa ?OBJ ?COL)) (?PRED ?OBJ))
+
+ (implies (and (isa ?ARG2 ?UNIV-COL) (relationExistsMaxAll ?SLOT ?EXIST-COL ?UNIV-COL ?NUM) (termOfUnit ?ARG (SKF-5248057 ?ARG2 ?EXIST-COL ?NUM ?SLOT ?UNIV-COL (IntervalMaxFn ?NUM)))) (isa ?ARG ?EXIST-COL))
+
+ (implies (and (isa ?INDEP-INS ?INDEP-COL) (?PRED ?DEP-INS ?INDEP-INS) (interArgIsa2-1 ?PRED ?INDEP-COL ?DEP-COL)) (isa ?DEP-INS ?DEP-COL))
+
+(implies (and (isa ?INS1 ?COL1) (relationAllInstance ?PRED ?COL1 ?INS2)) (?PRED ?INS1 ?INS2))
+
+  (implies (and (isa ?INDEP-INS ?INDEP-COL) (?PRED ?INDEP-INS ?DEP-INS) (interArgIsa1-2 ?PRED ?INDEP-COL ?DEP-COL)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (genlPreds ?PRED ?GENL-PRED) (?PRED ?ARG1 ?ARG2 ?ARG3 ?ARG4 ?ARG5)) (?GENL-PRED ?ARG1 ?ARG2 ?ARG3 ?ARG4 ?ARG5))
+
+  (not (and (negationPreds ?NEG-PRED ?PRED) (?NEG-PRED ?ARG1 ?ARG2) (?PRED ?ARG1 ?ARG2)))
+
+(not (and (isa ?OBJ ?COL1) (isa ?OBJ ?COL2) (disjointWith ?COL1 ?COL2)))
+
+ (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa3-2 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?DEP-INS ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG1 ?UNIV-COL) (relationAllExists ?SLOT ?UNIV-COL ?EXIST-COL) (termOfUnit ?ARG (SKF-7310435 ?ARG1 ?EXIST-COL ?SLOT ?UNIV-COL))) (?SLOT ?ARG1 ?ARG))
+
+(implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa3-1 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?DEP-INS ?ANY-ARG-2 ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG1 ?UNIV-COL) (relationAllExistsMax ?SLOT ?UNIV-COL ?EXIST-COL ?NUM) (termOfUnit ?ARG (SKF-18510550 ?ARG1 ?EXIST-COL ?NUM ?SLOT ?UNIV-COL (IntervalMaxFn ?NUM)))) (?SLOT ?ARG1 ?ARG))
+
+(implies (and (isa ?PRED BinaryPredicate) (requiredArg2Pred ?COL ?PRED) (isa ?INS-1 ?COL) (termOfUnit ?INS-20022 (SKF-66403611 ?INS-1 ?COL ?PRED))) (?PRED ?INS-20022 ?INS-1))
+
+(implies (and (genlPreds ?PRED ?GENL-PRED) (?PRED ?ARG1 ?ARG2 ?ARG3 ?ARG4)) (?GENL-PRED ?ARG1 ?ARG2 ?ARG3 ?ARG4))
+
+ (implies (and (?PRED ?ARG1) (genlPreds ?PRED ?GENL-PRED)) (?GENL-PRED ?ARG1))
+
+(implies (and (natFunction ?NAT ?FUNCTION) (resultGenl ?FUNCTION ?COL)) (genls ?NAT ?COL))
+
+ (implies (relationAllExists physicalParts ?OBJ-TYPE ?PART-TYPE) (physicalPartTypes ?OBJ-TYPE ?PART-TYPE))
+
+  (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa5-1 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?DEP-INS ?ANY-ARG-2 ?ANY-ARG-3 ?ANY-ARG-4 ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG1 ?UNIV-COL) (relationAllExistsCount ?SLOT ?UNIV-COL ?EXIST-COL ?NUM) (termOfUnit ?ARG296 (SKF-45030807 ?SLOT ?UNIV-COL ?EXIST-COL ?NUM ?ARG1 ?NUM))) (?SLOT ?ARG1 ?ARG296))
+
+(implies (and (isa ?OBJ ?SUBSET) (genls ?SUBSET ?SUPERSET)) (isa ?OBJ ?SUPERSET))
+
+  (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa5-2 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?DEP-INS ?ANY-ARG-3 ?ANY-ARG-4 ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa2-4 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?INDEP-INS ?ANY-ARG-3 ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+(implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa4-5 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?ANY-ARG-2 ?ANY-ARG-3 ?INDEP-INS ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+  (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa4-2 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?DEP-INS ?ANY-ARG-3 ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG2 ?UNIV-COL) (relationExistsMaxAll ?SLOT ?EXIST-COL ?UNIV-COL ?NUM) (termOfUnit ?ARG (SKF-5248057 ?ARG2 ?EXIST-COL ?NUM ?SLOT ?UNIV-COL (IntervalMaxFn ?NUM)))) (?SLOT ?ARG ?ARG2))
+
+ (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa1-4 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?INDEP-INS ?ANY-ARG-2 ?ANY-ARG-3 ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG1 ?UNIV-COL) (relationAllExistsCount ?SLOT ?UNIV-COL ?EXIST-COL ?NUM) (termOfUnit ?ARG296 (SKF-45030807 ?SLOT ?UNIV-COL ?EXIST-COL ?NUM ?ARG1 ?NUM))) (isa ?ARG296 ?EXIST-COL))
+
+  (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa1-5 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?INDEP-INS ?ANY-ARG-2 ?ANY-ARG-3 ?ANY-ARG-4 ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (not (and (negationPreds ?NEG-PRED ?PRED) (?NEG-PRED ?ARG1 ?ARG2 ?ARG3 ?ARG4) (?PRED ?ARG1 ?ARG2 ?ARG3 ?ARG4)))
+
+ (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa5-3 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?ANY-ARG-2 ?DEP-INS ?ANY-ARG-4 ?INDEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (genlPreds ?PRED ?GENL-PRED) (?PRED ?ARG1 ?ARG2)) (?GENL-PRED ?ARG1 ?ARG2))
+
+ (implies (and (genlInverse ?PRED ?GEN-PRED) (?PRED ?ARG1 ?ARG2)) (?GEN-PRED ?ARG2 ?ARG1))
+
+(implies (and (isa ?ARG1 ?UNIV-COL) (relationAllExistsMin ?SLOT ?UNIV-COL ?EXIST-COL ?NUM) (termOfUnit ?ARG (SKF-26730082 ?ARG1 ?EXIST-COL ?NUM ?SLOT ?UNIV-COL (IntervalMinFn ?NUM)))) (isa ?ARG ?EXIST-COL))
+
+  (implies (and (isa ?INS2 ?COL2) (relationInstanceAll ?PRED ?INS1 ?COL2)) (?PRED ?INS1 ?INS2))
+
+  (implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa3-4 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?ANY-ARG-2 ?INDEP-INS ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (isa ?ARG1 ?UNIV-COL) (relationExistsAll ?SLOT ?EXIST-COL ?UNIV-COL) (termOfUnit ?ARG (SKF-13352259 ?ARG1 ?EXIST-COL ?SLOT ?UNIV-COL))) (isa ?ARG ?EXIST-COL))
+
+(implies (and (isa ?INDEP-INS ?INDEP-COL) (interArgIsa3-5 ?PRED ?INDEP-COL ?DEP-COL) (?PRED ?ANY-ARG-1 ?ANY-ARG-2 ?INDEP-INS ?ANY-ARG-4 ?DEP-INS)) (isa ?DEP-INS ?DEP-COL))
+
+ (implies (and (genlPreds ?PRED ?GENL-PRED) (?PRED ?ARG1 ?ARG2 ?ARG3)) (?GENL-PRED ?ARG1 ?ARG2 ?ARG3))
+
+ (implies (and (isa ?AGENT ?AGENT_TYPE) (pointOfContact-Types ?AGENT_TYPE ?CONTLOC_TYPE ?BLDG_TYPE) (termOfUnit ?BLDG (SKF-42008932 ?AGENT ?AGENT_TYPE ?BLDG_TYPE ?CONTLOC_TYPE))) (isa ?BLDG ?BLDG_TYPE))
+
+  (implies (and (isa ?AGENT ?AGENT_TYPE) (pointOfContact-Types ?AGENT_TYPE ?CONTLOC_TYPE ?BLDG_TYPE) (termOfUnit ?BLDG (SKF-42008932 ?AGENT ?AGENT_TYPE ?BLDG_TYPE ?CONTLOC_TYPE))) (pointOfContact ?AGENT ?CONTLOC_TYPE ?BLDG))
+

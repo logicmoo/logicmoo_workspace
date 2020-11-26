@@ -1,0 +1,1008 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xpdl2:Package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:database="http://www.tibco.com/XPD/database1.0.0" xmlns:eaijava="http://www.tibco.com/XPD/EAIJava1.0.0" xmlns:email="http://www.tibco.com/XPD/email1.0.0" xmlns:iProcessExt="http://www.tibco.com/XPD/iProcessExt1.0.0" xmlns:simulation="http://www.tibco.com/xpd/Simulation1.0.1" xmlns:xpdExt="http://www.tibco.com/XPD/xpdExtension1.0.0" xmlns:xpdl2="http://www.wfmc.org/2008/XPDL2.1" xsi:schemaLocation="http://www.wfmc.org/2008/XPDL2.1 http://www.wfmc.org/standards/bpmnxpdl_31.xsd" Id="_zfBBUCJ7Ed6Bb7U0gwQb5Q" xpdExt:DisplayName="ProcessPackage" Name="ProcessPackage">
+  <xpdl2:PackageHeader xpdExt:Language="es_ES">
+    <xpdl2:XPDLVersion>2.1</xpdl2:XPDLVersion>
+    <xpdl2:Vendor>TIBCO</xpdl2:Vendor>
+    <xpdl2:Created>2009-04-06</xpdl2:Created>
+    <xpdl2:Description></xpdl2:Description>
+    <xpdl2:Documentation></xpdl2:Documentation>
+    <xpdl2:CostUnit>EUR</xpdl2:CostUnit>
+  </xpdl2:PackageHeader>
+  <xpdl2:RedefinableHeader PublicationStatus="UNDER_REVISION">
+    <xpdl2:Author>arturogf</xpdl2:Author>
+    <xpdl2:Version>1.0</xpdl2:Version>
+  </xpdl2:RedefinableHeader>
+  <xpdl2:Participants>
+    <xpdl2:Participant Id="_Gur7MCJ8Ed6Bb7U0gwQb5Q" xpdExt:DisplayName="Emilio" Name="Emilio">
+      <xpdl2:ParticipantType Type="HUMAN"/>
+      <xpdl2:Description xpdExt:DocumentationURL="http://www.ugr.es">hello</xpdl2:Description>
+      <xpdl2:ExtendedAttributes>
+        <xpdl2:ExtendedAttribute Name="Lane" Value="Training"/>
+        <xpdl2:ExtendedAttribute Name="ParticipantSimulationData"><simulation:ParticipantSimulationData>
+            <simulation:Instances>1</simulation:Instances>
+            <simulation:TimeUnitCost>
+              <simulation:Cost>0.8333333333333334</simulation:Cost>
+              <simulation:TimeDisplayUnit>HOUR</simulation:TimeDisplayUnit>
+            </simulation:TimeUnitCost>
+          </simulation:ParticipantSimulationData></xpdl2:ExtendedAttribute>
+      </xpdl2:ExtendedAttributes>
+    </xpdl2:Participant>
+    <xpdl2:Participant Id="_7yIgAC2dEd6Wn-O8OIbV0g" xpdExt:DisplayName="JAB" Name="JAB">
+      <xpdl2:ParticipantType Type="HUMAN"/>
+      <xpdl2:ExtendedAttributes>
+        <xpdl2:ExtendedAttribute Name="Lane" Value="GraphicDesign"/>
+        <xpdl2:ExtendedAttribute Name="ParticipantSimulationData"><simulation:ParticipantSimulationData>
+            <simulation:Instances>1</simulation:Instances>
+            <simulation:TimeUnitCost>
+              <simulation:Cost>0.8333333333333334</simulation:Cost>
+              <simulation:TimeDisplayUnit>HOUR</simulation:TimeDisplayUnit>
+            </simulation:TimeUnitCost>
+          </simulation:ParticipantSimulationData></xpdl2:ExtendedAttribute>
+      </xpdl2:ExtendedAttributes>
+    </xpdl2:Participant>
+    <xpdl2:Participant Id="_9KvRsC2dEd6Wn-O8OIbV0g" xpdExt:DisplayName="Storres" Name="Storres">
+      <xpdl2:ParticipantType Type="HUMAN"/>
+      <xpdl2:ExtendedAttributes>
+        <xpdl2:ExtendedAttribute Name="Lane" Value="Authoring"/>
+        <xpdl2:ExtendedAttribute Name="ParticipantSimulationData"><simulation:ParticipantSimulationData>
+            <simulation:Instances>1</simulation:Instances>
+            <simulation:TimeUnitCost>
+              <simulation:Cost>0.8333333333333334</simulation:Cost>
+              <simulation:TimeDisplayUnit>HOUR</simulation:TimeDisplayUnit>
+            </simulation:TimeUnitCost>
+          </simulation:ParticipantSimulationData></xpdl2:ExtendedAttribute>
+      </xpdl2:ExtendedAttributes>
+    </xpdl2:Participant>
+    <xpdl2:Participant Id="_9SLWcC2dEd6Wn-O8OIbV0g" xpdExt:DisplayName="Arturo" Name="Arturo">
+      <xpdl2:ParticipantType Type="HUMAN"/>
+      <xpdl2:ExtendedAttributes>
+        <xpdl2:ExtendedAttribute Name="Lane" Value="Administration"/>
+        <xpdl2:ExtendedAttribute Name="ParticipantSimulationData"><simulation:ParticipantSimulationData>
+            <simulation:Instances>1</simulation:Instances>
+            <simulation:TimeUnitCost>
+              <simulation:Cost>0.8333333333333334</simulation:Cost>
+              <simulation:TimeDisplayUnit>HOUR</simulation:TimeDisplayUnit>
+            </simulation:TimeUnitCost>
+          </simulation:ParticipantSimulationData></xpdl2:ExtendedAttribute>
+      </xpdl2:ExtendedAttributes>
+    </xpdl2:Participant>
+    <xpdl2:Participant Id="_-nGiAC2dEd6Wn-O8OIbV0g" xpdExt:DisplayName="FMoreno" Name="FMoreno">
+      <xpdl2:ParticipantType Type="HUMAN"/>
+      <xpdl2:ExtendedAttributes>
+        <xpdl2:ExtendedAttribute Name="Lane" Value="Quality"/>
+        <xpdl2:ExtendedAttribute Name="ParticipantSimulationData"><simulation:ParticipantSimulationData>
+            <simulation:Instances>1</simulation:Instances>
+            <simulation:TimeUnitCost>
+              <simulation:Cost>0.8333333333333334</simulation:Cost>
+              <simulation:TimeDisplayUnit>HOUR</simulation:TimeDisplayUnit>
+            </simulation:TimeUnitCost>
+          </simulation:ParticipantSimulationData></xpdl2:ExtendedAttribute>
+      </xpdl2:ExtendedAttributes>
+    </xpdl2:Participant>
+    <xpdl2:Participant Id="_HLm5sC2eEd6Wn-O8OIbV0g" xpdExt:DisplayName="Miguel" Name="Miguel">
+      <xpdl2:ParticipantType Type="HUMAN"/>
+      <xpdl2:ExtendedAttributes>
+        <xpdl2:ExtendedAttribute Name="Lane" Value="Formatting"/>
+        <xpdl2:ExtendedAttribute Name="ParticipantSimulationData"><simulation:ParticipantSimulationData>
+            <simulation:Instances>1</simulation:Instances>
+            <simulation:TimeUnitCost>
+              <simulation:Cost>0.8333333333333334</simulation:Cost>
+              <simulation:TimeDisplayUnit>HOUR</simulation:TimeDisplayUnit>
+            </simulation:TimeUnitCost>
+          </simulation:ParticipantSimulationData></xpdl2:ExtendedAttribute>
+      </xpdl2:ExtendedAttributes>
+    </xpdl2:Participant>
+  </xpdl2:Participants>
+  <xpdl2:DataFields>
+    <xpdl2:DataField Id="_1Ge18DiWEd6Wn-O8OIbV0g" xpdExt:DisplayName="ImageOptimization" Name="ImageOptimization" ReadOnly="false">
+      <xpdl2:DataType>
+        <xpdl2:BasicType Type="BOOLEAN"/>
+      </xpdl2:DataType>
+      <xpdl2:InitialValue/>
+    </xpdl2:DataField>
+  </xpdl2:DataFields>
+  <xpdl2:Pools>
+    <xpdl2:Pool Id="_3GooQCJ7Ed6Bb7U0gwQb5Q" xpdExt:DisplayName="CEVUG" Name="CEVUG" BoundaryVisible="true" Process="_zfAaQCJ7Ed6Bb7U0gwQb5Q">
+      <xpdl2:Lanes>
+        <xpdl2:Lane Id="_3GpPUCJ7Ed6Bb7U0gwQb5Q" xpdExt:DisplayName="Training" Name="Training">
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo Height="324.0"/>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Lane>
+        <xpdl2:Lane Id="_jZWUEC2ZEd6Wn-O8OIbV0g" xpdExt:DisplayName="Authoring" Name="Authoring">
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="128,155,183" Height="300.0" IsVisible="true"/>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Lane>
+        <xpdl2:Lane Id="_jDG-UC2ZEd6Wn-O8OIbV0g" xpdExt:DisplayName="Formatting" Name="Formatting">
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="128,155,183" Height="300.0" IsVisible="true"/>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Lane>
+        <xpdl2:Lane Id="_iuYEcC2ZEd6Wn-O8OIbV0g" xpdExt:DisplayName="GraphicDesign" Name="GraphicDesign">
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="128,155,183" Height="302.0" IsVisible="true"/>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Lane>
+        <xpdl2:Lane Id="_iSsOAC2ZEd6Wn-O8OIbV0g" xpdExt:DisplayName="Administration" Name="Administration">
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="128,155,183" Height="300.0" IsVisible="true"/>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Lane>
+        <xpdl2:Lane Id="_hd-MgC2ZEd6Wn-O8OIbV0g" xpdExt:DisplayName="Quality" Name="Quality">
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="128,155,183" Height="300.0" IsVisible="true"/>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Lane>
+      </xpdl2:Lanes>
+      <xpdl2:NodeGraphicsInfos>
+        <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="223,179,0" IsVisible="true"/>
+      </xpdl2:NodeGraphicsInfos>
+    </xpdl2:Pool>
+  </xpdl2:Pools>
+  <xpdl2:WorkflowProcesses>
+    <xpdl2:WorkflowProcess Id="_zfAaQCJ7Ed6Bb7U0gwQb5Q" xpdExt:DisplayName="ProcessPackage-Process" Name="ProcessPackageProcess">
+      <xpdl2:ProcessHeader>
+        <xpdl2:Description></xpdl2:Description>
+      </xpdl2:ProcessHeader>
+      <xpdl2:FormalParameters>
+        <xpdl2:FormalParameter Id="_dHs1cDlCEd6Wn-O8OIbV0g" Name="Optimize" Mode="INOUT" Required="false" xpdExt:DisplayName="Optimize">
+          <xpdl2:DataType>
+            <xpdl2:BasicType Type="BOOLEAN"/>
+          </xpdl2:DataType>
+        </xpdl2:FormalParameter>
+      </xpdl2:FormalParameters>
+      <xpdl2:Activities>
+        <xpdl2:Activity Id="_3GpPUSJ7Ed6Bb7U0gwQb5Q" Name="StartEvent" xpdExt:DisplayName="Start Event">
+          <xpdl2:Event>
+            <xpdl2:StartEvent Trigger="None"/>
+          </xpdl2:Event>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="StartSimulationData"><simulation:StartSimulationData NumberOfCases="100">
+                <simulation:Duration>
+                  <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:StartSimulationData></xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="65.0" LaneId="_3GpPUCJ7Ed6Bb7U0gwQb5Q" Width="40.0">
+              <xpdl2:Coordinates XCoordinate="68.0" YCoordinate="85.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_3GpPUiJ7Ed6Bb7U0gwQb5Q" Name="EndEvent" xpdExt:DisplayName="End Event">
+          <xpdl2:Event>
+            <xpdl2:EndEvent Result="None"/>
+          </xpdl2:Event>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="48.0" LaneId="_iSsOAC2ZEd6Wn-O8OIbV0g" Width="69.0">
+              <xpdl2:Coordinates XCoordinate="850.0" YCoordinate="222.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_HMve8C2aEd6Wn-O8OIbV0g" Name="TrainingAuthors" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Training Authors" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_RcHsoJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_RcHsoZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="76.0" LaneId="_3GpPUCJ7Ed6Bb7U0gwQb5Q" Width="110.0">
+              <xpdl2:Coordinates XCoordinate="177.0" YCoordinate="85.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+          <xpdExt:DurationCalculation>
+            <xpdExt:Hours></xpdExt:Hours>
+          </xpdExt:DurationCalculation>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_TDRoEC2aEd6Wn-O8OIbV0g" Name="FIRST" xpdExt:DisplayName="FIRST">
+          <xpdl2:Route GatewayType="Parallel"/>
+          <xpdl2:TransitionRestrictions>
+            <xpdl2:TransitionRestriction>
+              <xpdl2:Split Type="Parallel">
+                <xpdl2:TransitionRefs>
+                  <xpdl2:TransitionRef Id="_so4wUC2aEd6Wn-O8OIbV0g"/>
+                  <xpdl2:TransitionRef Id="_zU1q8C2aEd6Wn-O8OIbV0g"/>
+                </xpdl2:TransitionRefs>
+              </xpdl2:Split>
+            </xpdl2:TransitionRestriction>
+          </xpdl2:TransitionRestrictions>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="SplitSimulationData">
+<simulation:SplitSimulationData>
+                <simulation:ParameterDeterminedSplit>true</simulation:ParameterDeterminedSplit>
+                <simulation:SplitParameter ParameterId=""/>
+              </simulation:SplitSimulationData>
+</xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="45.0" LaneId="_3GpPUCJ7Ed6Bb7U0gwQb5Q" Width="43.0">
+              <xpdl2:Coordinates XCoordinate="176.0" YCoordinate="174.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_lM_mgC2aEd6Wn-O8OIbV0g" Name="TrainingTutorsLMS" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Training Tutors LMS" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_SL4VoJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_SL4VoZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="64.0" LaneId="_3GpPUCJ7Ed6Bb7U0gwQb5Q" Width="144.0">
+              <xpdl2:Coordinates XCoordinate="542.0" YCoordinate="175.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_vtP5MC2aEd6Wn-O8OIbV0g" Name="ContentAuthoring" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Content Authoring" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_TyFecJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_TyFecZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="76.0" LaneId="_jZWUEC2ZEd6Wn-O8OIbV0g" Width="105.0">
+              <xpdl2:Coordinates XCoordinate="176.0" YCoordinate="66.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_1LviMC2aEd6Wn-O8OIbV0g" Name="ContentProcessing" IsATransaction="false" xpdExt:DisplayName="Content Processing" xpdExt:Visibility="Public" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_WX0xoJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_WX0xoZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="75.0" LaneId="_jDG-UC2ZEd6Wn-O8OIbV0g" Width="105.0">
+              <xpdl2:Coordinates XCoordinate="176.0" YCoordinate="62.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:AssociatedParameters>
+            <xpdExt:AssociatedParameter FormalParam="ImageOptimization" Mode="OUT" Mandatory="false">
+              <xpdl2:Description></xpdl2:Description>
+            </xpdExt:AssociatedParameter>
+          </xpdExt:AssociatedParameters>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_DzxikC2bEd6Wn-O8OIbV0g" Name="MediaNeeds" xpdExt:DisplayName="MediaNeeds">
+          <xpdl2:Route GatewayType="Exclusive" MarkerVisible="true" ExclusiveType="Data"/>
+          <xpdl2:TransitionRestrictions>
+            <xpdl2:TransitionRestriction>
+              <xpdl2:Split Type="Exclusive" ExclusiveType="Data">
+                <xpdl2:TransitionRefs>
+                  <xpdl2:TransitionRef Id="_MqY98C2bEd6Wn-O8OIbV0g"/>
+                  <xpdl2:TransitionRef Id="_Zcwi0DlEEd6Wn-O8OIbV0g"/>
+                </xpdl2:TransitionRefs>
+              </xpdl2:Split>
+            </xpdl2:TransitionRestriction>
+          </xpdl2:TransitionRestrictions>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="SplitSimulationData">
+<simulation:SplitSimulationData>
+                <simulation:ParameterDeterminedSplit>true</simulation:ParameterDeterminedSplit>
+                <simulation:SplitParameter ParameterId="Optimize"/>
+              </simulation:SplitSimulationData>
+</xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="63.0" LaneId="_jDG-UC2ZEd6Wn-O8OIbV0g" Width="80.0">
+              <xpdl2:Coordinates XCoordinate="108.0" YCoordinate="162.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_FnC3AC2bEd6Wn-O8OIbV0g" Name="Optimization" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Optimization" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_YUfSoJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_YUfSoZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="64.0" LaneId="_iuYEcC2ZEd6Wn-O8OIbV0g" Width="96.0">
+              <xpdl2:Coordinates XCoordinate="53.0" YCoordinate="58.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_GIeJEC2bEd6Wn-O8OIbV0g" Name="Creation" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Creation" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_Y19oAJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_Y19oAZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="64.0" LaneId="_iuYEcC2ZEd6Wn-O8OIbV0g" Width="96.0">
+              <xpdl2:Coordinates XCoordinate="224.0" YCoordinate="58.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_T6V9gC2bEd6Wn-O8OIbV0g" Name="MediaComplete" xpdExt:DisplayName="MediaComplete">
+          <xpdl2:Route GatewayType="Exclusive" MarkerVisible="true" ExclusiveType="Data"/>
+          <xpdl2:TransitionRestrictions>
+            <xpdl2:TransitionRestriction>
+              <xpdl2:Join Type="Exclusive" ExclusiveType="Data"/>
+            </xpdl2:TransitionRestriction>
+          </xpdl2:TransitionRestrictions>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="SplitSimulationData">
+<simulation:SplitSimulationData>
+                <simulation:ParameterDeterminedSplit>true</simulation:ParameterDeterminedSplit>
+                <simulation:SplitParameter ParameterId=""/>
+              </simulation:SplitSimulationData>
+</xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="42.0" LaneId="_iuYEcC2ZEd6Wn-O8OIbV0g" Width="40.0">
+              <xpdl2:Coordinates XCoordinate="187.0" YCoordinate="164.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_dJMSsC2bEd6Wn-O8OIbV0g" Name="CSS" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="CSS" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_Zgqx4JgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_Zgqx4ZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="64.0" LaneId="_iuYEcC2ZEd6Wn-O8OIbV0g" Width="96.0">
+              <xpdl2:Coordinates XCoordinate="362.0" YCoordinate="58.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_dqbXgC2bEd6Wn-O8OIbV0g" Name="FlashAnimation" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Flash Animation" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_aAp5gJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_aAp5gZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="64.0" LaneId="_iuYEcC2ZEd6Wn-O8OIbV0g" Width="118.0">
+              <xpdl2:Coordinates XCoordinate="506.0" YCoordinate="58.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_5M6cIC2bEd6Wn-O8OIbV0g" Name="Revisions" xpdExt:DisplayName="Revisions">
+          <xpdl2:Route GatewayType="Parallel"/>
+          <xpdl2:TransitionRestrictions>
+            <xpdl2:TransitionRestriction>
+              <xpdl2:Split Type="Parallel">
+                <xpdl2:TransitionRefs>
+                  <xpdl2:TransitionRef Id="_F24NUC2cEd6Wn-O8OIbV0g"/>
+                  <xpdl2:TransitionRef Id="_lRk5oC2cEd6Wn-O8OIbV0g"/>
+                </xpdl2:TransitionRefs>
+              </xpdl2:Split>
+            </xpdl2:TransitionRestriction>
+          </xpdl2:TransitionRestrictions>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="SplitSimulationData">
+<simulation:SplitSimulationData>
+                <simulation:ParameterDeterminedSplit>true</simulation:ParameterDeterminedSplit>
+                <simulation:SplitParameter ParameterId=""/>
+              </simulation:SplitSimulationData>
+</xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="45.0" LaneId="_iuYEcC2ZEd6Wn-O8OIbV0g" Width="43.0">
+              <xpdl2:Coordinates XCoordinate="612.0" YCoordinate="260.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_ByULsC2cEd6Wn-O8OIbV0g" Name="AuthorRevision" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Author Revision" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_UWsAUJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_UWsAUZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="65.0" LaneId="_jZWUEC2ZEd6Wn-O8OIbV0g" Width="112.0">
+              <xpdl2:Coordinates XCoordinate="593.0" YCoordinate="112.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_kHj9kC2cEd6Wn-O8OIbV0g" Name="QualityRevision" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Quality Revision" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_btG0QJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_btG0QZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="10"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="90.0" LaneId="_hd-MgC2ZEd6Wn-O8OIbV0g" Width="96.0">
+              <xpdl2:Coordinates XCoordinate="612.0" YCoordinate="101.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_tq8YUC2cEd6Wn-O8OIbV0g" Name="Done" xpdExt:DisplayName="Done">
+          <xpdl2:Route GatewayType="Inclusive"/>
+          <xpdl2:TransitionRestrictions>
+            <xpdl2:TransitionRestriction>
+              <xpdl2:Join Type="Inclusive"/>
+            </xpdl2:TransitionRestriction>
+          </xpdl2:TransitionRestrictions>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="SplitSimulationData">
+<simulation:SplitSimulationData>
+                <simulation:ParameterDeterminedSplit>true</simulation:ParameterDeterminedSplit>
+                <simulation:SplitParameter ParameterId=""/>
+              </simulation:SplitSimulationData>
+</xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="63.0" LaneId="_iuYEcC2ZEd6Wn-O8OIbV0g" Width="43.0">
+              <xpdl2:Coordinates XCoordinate="668.0" YCoordinate="260.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_JWD0gC2dEd6Wn-O8OIbV0g" Name="AssemblyLMS" IsATransaction="false" xpdExt:Visibility="Private" xpdExt:DisplayName="Assembly LMS" xpdExt:RequireNewTransaction="false">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskUser Implementation="Unspecified">
+                <xpdl2:Performers>
+                  <xpdl2:Performer>-defined-in-Activity-Performer-</xpdl2:Performer>
+                </xpdl2:Performers>
+                <xpdl2:MessageIn Id="_OVghAJgMEd6wwZdXo6L4tw"/>
+                <xpdl2:MessageOut Id="_OVghAZgMEd6wwZdXo6L4tw"/>
+              </xpdl2:TaskUser>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="20"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="81.0" LaneId="_jDG-UC2ZEd6Wn-O8OIbV0g" Width="96.0">
+              <xpdl2:Coordinates XCoordinate="805.0" YCoordinate="151.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Offer="OfferAll" xpdExt:Strategy="SYSTEM_DETERMINED"/>
+            <xpdExt:WorkItemPriority InitialPriority="50"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_N_xKkC2dEd6Wn-O8OIbV0g" Name="END_FIRST" xpdExt:DisplayName="END_FIRST">
+          <xpdl2:Route GatewayType="Inclusive"/>
+          <xpdl2:TransitionRestrictions>
+            <xpdl2:TransitionRestriction>
+              <xpdl2:Join Type="Inclusive"/>
+            </xpdl2:TransitionRestriction>
+          </xpdl2:TransitionRestrictions>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="SplitSimulationData">
+<simulation:SplitSimulationData>
+                <simulation:ParameterDeterminedSplit>true</simulation:ParameterDeterminedSplit>
+                <simulation:SplitParameter ParameterId=""/>
+              </simulation:SplitSimulationData>
+</xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="42.0" LaneId="_iuYEcC2ZEd6Wn-O8OIbV0g" Width="40.0">
+              <xpdl2:Coordinates XCoordinate="804.0" YCoordinate="123.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_nmQckC2dEd6Wn-O8OIbV0g" Name="Registration" xpdExt:Visibility="Private" xpdExt:DisplayName="Registration">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskService Implementation="Unspecified">
+                <xpdl2:MessageIn Id="_nmQckS2dEd6Wn-O8OIbV0g"/>
+                <xpdl2:MessageOut Id="_nmQcki2dEd6Wn-O8OIbV0g"/>
+              </xpdl2:TaskService>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="5"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="64.0" LaneId="_iSsOAC2ZEd6Wn-O8OIbV0g" Width="96.0">
+              <xpdl2:Coordinates XCoordinate="727.0" YCoordinate="150.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Strategy="SYSTEM_DETERMINED"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+        <xpdl2:Activity Id="_oY9r4C2dEd6Wn-O8OIbV0g" Name="Notification" xpdExt:Visibility="Private" xpdExt:DisplayName="Notification">
+          <xpdl2:Implementation>
+            <xpdl2:Task>
+              <xpdl2:TaskService Implementation="Unspecified">
+                <xpdl2:MessageIn Id="_oY9r4S2dEd6Wn-O8OIbV0g"/>
+                <xpdl2:MessageOut Id="_oY9r4i2dEd6Wn-O8OIbV0g"/>
+              </xpdl2:TaskService>
+            </xpdl2:Task>
+          </xpdl2:Implementation>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="ActivitySimulationData"><simulation:ActivitySimulationData>
+                <simulation:Duration>
+                  <simulation:BasicDistribution>
+                    <simulation:ConstantRealDistribution ConstantValue="5.0"/>
+                  </simulation:BasicDistribution>
+                </simulation:Duration>
+                <simulation:DisplayTimeUnit>MINUTE</simulation:DisplayTimeUnit>
+              </simulation:ActivitySimulationData></xpdl2:ExtendedAttribute>
+            <xpdl2:ExtendedAttribute Name="Duration" Value="5"/>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:NodeGraphicsInfos>
+            <xpdl2:NodeGraphicsInfo BorderColor="0,0,128" FillColor="255,219,74" Height="64.0" LaneId="_iSsOAC2ZEd6Wn-O8OIbV0g" Width="96.0">
+              <xpdl2:Coordinates XCoordinate="856.0" YCoordinate="150.0"/>
+            </xpdl2:NodeGraphicsInfo>
+          </xpdl2:NodeGraphicsInfos>
+          <xpdExt:ActivityResourcePatterns>
+            <xpdExt:AllocationStrategy xpdExt:Strategy="SYSTEM_DETERMINED"/>
+          </xpdExt:ActivityResourcePatterns>
+        </xpdl2:Activity>
+      </xpdl2:Activities>
+      <xpdl2:Transitions>
+        <xpdl2:Transition Id="_HMve8S2aEd6Wn-O8OIbV0g" xpdExt:DisplayName="" Name="" From="_3GpPUSJ7Ed6Bb7U0gwQb5Q" To="_HMve8C2aEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_UHp2MC2aEd6Wn-O8OIbV0g" Name="" From="_HMve8C2aEd6Wn-O8OIbV0g" To="_TDRoEC2aEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_so4wUC2aEd6Wn-O8OIbV0g" Name="" From="_TDRoEC2aEd6Wn-O8OIbV0g" To="_lM_mgC2aEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="21.343824832999907" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_zU1q8C2aEd6Wn-O8OIbV0g" Name="" From="_TDRoEC2aEd6Wn-O8OIbV0g" To="_vtP5MC2aEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="51.92764480818946" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_5x51AC2aEd6Wn-O8OIbV0g" Name="" From="_vtP5MC2aEd6Wn-O8OIbV0g" To="_1LviMC2aEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="33.14917127071823" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_K8wXcC2bEd6Wn-O8OIbV0g" Name="" From="_1LviMC2aEd6Wn-O8OIbV0g" To="_DzxikC2bEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="0.0" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_MqY98C2bEd6Wn-O8OIbV0g" Name="" From="_DzxikC2bEd6Wn-O8OIbV0g" To="_GIeJEC2bEd6Wn-O8OIbV0g">
+          <xpdl2:Condition Type="OTHERWISE"/>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="TransitionSimulationData"><simulation:TransitionSimulationData>
+                <simulation:ParameterDeterminedCondition>true</simulation:ParameterDeterminedCondition>
+                <simulation:StructuredCondition>
+                  <simulation:ParameterId>Optimize</simulation:ParameterId>
+                  <simulation:Operator>=</simulation:Operator>
+                  <simulation:ParameterValue></simulation:ParameterValue>
+                </simulation:StructuredCondition>
+              </simulation:TransitionSimulationData></xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="48.781231420920214" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="83.125" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_p8aGgC2bEd6Wn-O8OIbV0g" Name="" From="_dJMSsC2bEd6Wn-O8OIbV0g" To="_dqbXgC2bEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="10.3125" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_6sbHEC2bEd6Wn-O8OIbV0g" Name="" From="_dqbXgC2bEd6Wn-O8OIbV0g" To="_5M6cIC2bEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo">
+              <xpdl2:Coordinates XCoordinate="11.0" YCoordinate="171.0"/>
+              <xpdl2:Coordinates XCoordinate="-67.0" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="73.78123142092021" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="34.065934065934066" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_F24NUC2cEd6Wn-O8OIbV0g" Name="" From="_5M6cIC2bEd6Wn-O8OIbV0g" To="_ByULsC2cEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="0.0" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_KLmK0C2cEd6Wn-O8OIbV0g" Name="" From="_FnC3AC2bEd6Wn-O8OIbV0g" To="_T6V9gC2bEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="45.625" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_QcaBkC2cEd6Wn-O8OIbV0g" Name="" From="_GIeJEC2bEd6Wn-O8OIbV0g" To="_T6V9gC2bEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo">
+              <xpdl2:Coordinates XCoordinate="-10.0" YCoordinate="75.0"/>
+              <xpdl2:Coordinates XCoordinate="43.0" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="25.862068965517242" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="24.0625" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_TgHDIC2cEd6Wn-O8OIbV0g" Name="" From="_T6V9gC2bEd6Wn-O8OIbV0g" To="_dJMSsC2bEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="50.0" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="34.6875" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_lRk5oC2cEd6Wn-O8OIbV0g" Name="" From="_5M6cIC2bEd6Wn-O8OIbV0g" To="_kHj9kC2cEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="51.21914962273543" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="__15s4C2cEd6Wn-O8OIbV0g" Name="" From="_ByULsC2cEd6Wn-O8OIbV0g" To="_tq8YUC2cEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="9.03954802259887" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="0.0" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_AqNesC2dEd6Wn-O8OIbV0g" Name="" From="_kHj9kC2cEd6Wn-O8OIbV0g" To="_tq8YUC2cEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="13.709677419354838" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="48.781231420920214" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_MNDPwC2dEd6Wn-O8OIbV0g" Name="" From="_tq8YUC2cEd6Wn-O8OIbV0g" To="_JWD0gC2dEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="23.78123142092021" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="60.16949152542372" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_Ps4MoC2dEd6Wn-O8OIbV0g" Name="" From="_lM_mgC2aEd6Wn-O8OIbV0g" To="_N_xKkC2dEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo">
+              <xpdl2:Coordinates XCoordinate="255.0" YCoordinate="438.0"/>
+              <xpdl2:Coordinates XCoordinate="45.0" YCoordinate="-444.0"/>
+              <xpdl2:Coordinates XCoordinate="255.0" YCoordinate="662.0"/>
+              <xpdl2:Coordinates XCoordinate="45.0" YCoordinate="-220.0"/>
+              <xpdl2:Coordinates XCoordinate="256.0" YCoordinate="881.0"/>
+              <xpdl2:Coordinates XCoordinate="46.0" YCoordinate="-1.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="6.730769230769231" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="25.0" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_WqkXgC2dEd6Wn-O8OIbV0g" Name="" From="_JWD0gC2dEd6Wn-O8OIbV0g" To="_N_xKkC2dEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition"/>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_yb4iUC2dEd6Wn-O8OIbV0g" Name="" From="_N_xKkC2dEd6Wn-O8OIbV0g" To="_nmQckC2dEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.StartAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="47.562504014314484" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="70.57072336085477" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_381pcC2dEd6Wn-O8OIbV0g" Name="" From="_nmQckC2dEd6Wn-O8OIbV0g" To="_oY9r4C2dEd6Wn-O8OIbV0g">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_5fr8QC2dEd6Wn-O8OIbV0g" Name="" From="_oY9r4C2dEd6Wn-O8OIbV0g" To="_3GpPUiJ7Ed6Bb7U0gwQb5Q">
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+        <xpdl2:Transition Id="_Zcwi0DlEEd6Wn-O8OIbV0g" Name="" From="_DzxikC2bEd6Wn-O8OIbV0g" To="_FnC3AC2bEd6Wn-O8OIbV0g">
+          <xpdl2:Condition Type="CONDITION">
+<xpdl2:Expression/>
+</xpdl2:Condition>
+          <xpdl2:ExtendedAttributes>
+            <xpdl2:ExtendedAttribute Name="TransitionSimulationData"><simulation:TransitionSimulationData>
+                <simulation:ParameterDeterminedCondition>true</simulation:ParameterDeterminedCondition>
+                <simulation:StructuredCondition>
+                  <simulation:ParameterId>Optimize</simulation:ParameterId>
+                  <simulation:Operator>=</simulation:Operator>
+                  <simulation:ParameterValue>true</simulation:ParameterValue>
+                </simulation:StructuredCondition>
+              </simulation:TransitionSimulationData></xpdl2:ExtendedAttribute>
+          </xpdl2:ExtendedAttributes>
+          <xpdl2:ConnectorGraphicsInfos>
+            <xpdl2:ConnectorGraphicsInfo BorderColor="0,0,128" ToolId="XPD.ConnectionInfo"/>
+            <xpdl2:ConnectorGraphicsInfo ToolId="XPD.EndAnchorPosition">
+              <xpdl2:Coordinates XCoordinate="85.9375" YCoordinate="0.0"/>
+            </xpdl2:ConnectorGraphicsInfo>
+          </xpdl2:ConnectorGraphicsInfos>
+        </xpdl2:Transition>
+      </xpdl2:Transitions>
+      <xpdl2:ExtendedAttributes>
+        <xpdl2:ExtendedAttribute Name="WorkflowProcessSimulationData">
+<simulation:WorkflowProcessSimulationData>
+            <simulation:ParameterDistribution ParameterId="Optimize">
+              <simulation:EnumerationValue Value="true" WeightingFactor="10.0"/>
+              <simulation:EnumerationValue Value="false" WeightingFactor="10.0"/>
+            </simulation:ParameterDistribution>
+          </simulation:WorkflowProcessSimulationData>
+</xpdl2:ExtendedAttribute>
+        <xpdl2:ExtendedAttribute Name="Destination" Value="Simulation"/>
+      </xpdl2:ExtendedAttributes>
+    </xpdl2:WorkflowProcess>
+  </xpdl2:WorkflowProcesses>
+  <xpdl2:ExtendedAttributes>
+    <xpdl2:ExtendedAttribute Name="CreatedBy" Value="TIBCO Business Studio"/>
+    <xpdl2:ExtendedAttribute Name="FormatVersion" Value="7"/>
+  </xpdl2:ExtendedAttributes>
+</xpdl2:Package>

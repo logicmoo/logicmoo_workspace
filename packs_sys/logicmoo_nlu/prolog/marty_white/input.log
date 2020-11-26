@@ -1,0 +1,3608 @@
+
+==== ADVENTURE INPUT, Sat Sep 29 10:19:28 2018
+
+==== ADVENTURE INPUT, Sat Sep 29 10:20:20 2018
+
+==== ADVENTURE INPUT, Sat Sep 29 10:20:42 2018
+
+==== ADVENTURE INPUT, Sat Sep 29 10:21:50 2018
+>n
+>s
+>look screendoor
+
+==== ADVENTURE INPUT, Sat Sep 29 10:23:44 2018
+>s
+>look at screendoor
+
+==== ADVENTURE INPUT, Sat Sep 29 10:25:01 2018
+>s
+>look at screendoor
+>look screendoor
+>quit
+
+==== ADVENTURE INPUT, Sat Sep 29 10:27:25 2018
+>quit
+
+==== ADVENTURE INPUT, Sat Sep 29 10:27:34 2018
+>
+>look
+>examine shelf
+>examine floyd
+>recollect
+>say hello
+>look it
+>look
+>examine player
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 10:53:47 2018
+
+==== ADVENTURE INPUT, Sat Sep 29 10:53:53 2018
+>
+
+==== ADVENTURE INPUT, Sat Sep 29 10:54:38 2018
+>look table
+
+==== ADVENTURE INPUT, Sat Sep 29 10:56:11 2018
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 10:56:36 2018
+>make.
+>examine shelf
+
+==== ADVENTURE INPUT, Sat Sep 29 11:14:08 2018
+
+==== ADVENTURE INPUT, Sat Sep 29 11:03:26 2018
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:00:51 2018
+>examine screendoor
+>examine(shelf).
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:06:17 2018
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:07:05 2018
+>act(floyd,look).
+>examine(shelf)
+>examine(shelf)
+>examine(shelf)
+>examine(shelf)
+>examine(shelf)
+>examine(shelf)
+>look
+>examine table
+>examine(screendoor)
+>open screendoor
+>look
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:03:36 2018
+>act(floyd,look).
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:06:30 2018
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:17:27 2018
+>
+>look
+>w
+>look videocamera
+
+==== ADVENTURE INPUT, Sat Sep 29 11:14:56 2018
+>s
+>n
+>e
+>look
+> examine(shovel)
+>look
+>s
+>save
+>wait
+>
+>
+>look
+>make
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:19:04 2018
+
+==== ADVENTURE INPUT, Sat Sep 29 11:23:51 2018
+>look at screen door
+>open screen door
+
+==== ADVENTURE INPUT, Sat Sep 29 11:22:24 2018
+>look at screendoor
+>look at screen door
+>make
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:21:50 2018
+>look at screendoor
+>
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:19:48 2018
+>s
+>e
+>n
+>look at screendoor
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:20:48 2018
+>
+>
+>look at screedoor
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:19:37 2018
+>make.
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:42:51 2018
+>look at the screen door.
+>open screen door
+>open screendoor
+>look at the screen door.
+>look at the screen door.
+>examine screendoor
+>s
+>look
+>s
+>n
+>w
+>w
+>s
+>e
+>n
+>e
+>w
+>s
+>
+>look at rock
+>look at rock
+>n
+>n
+>d
+>d
+>look
+>take shovel
+
+==== ADVENTURE INPUT, Sat Sep 29 11:38:14 2018
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:40:26 2018
+>s
+>look at the screen door.
+>look at the screen door.
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 11:39:20 2018
+> look at screendoor
+> look at screen door
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 12:39:18 2018
+
+==== ADVENTURE INPUT, Sat Sep 29 12:43:09 2018
+>state.
+
+==== ADVENTURE INPUT, Sat Sep 29 12:42:31 2018
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 12:43:43 2018
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 12:50:12 2018
+>make.
+
+==== ADVENTURE INPUT, Sat Sep 29 12:50:50 2018
+>make.
+>make.
+>listing.
+>state
+>look under table
+>l
+>look table
+>take lamp
+>i
+>break box
+>help
+>hit box
+>look
+>look on table
+>look table
+>take bowl
+>take splinters
+>i
+>s
+>open screendoor
+>n
+>s
+>take mushroom
+>eat mushroom
+>look
+>take rock
+>throw rock
+>dig hole
+>i
+>s
+>look
+>n
+>w
+>w
+>look
+>w
+>s
+>s
+>n
+>e
+>e
+>w
+>w
+>w
+>e
+>e
+>w
+>b
+>n
+>look shelf
+> look shelf
+>examine shelf
+>s
+>n
+>d
+>take shovel
+>u
+>s
+>s
+>dig hole
+>look
+>take hole
+>take dirt
+>i
+>ope bag
+>open bag
+>examine bag
+>take coins
+>s
+>n
+>n
+>put dirt on shelf
+>look 
+>look shelf
+>take dirt
+>s
+>w
+>x videocammera
+>x videocamera
+>hit videocamera
+>look
+>take broken_videocam
+>take broken_videocamera
+>take videocamera
+>s
+>e
+>n
+>n
+>e
+>n
+>e
+>n
+>e
+>n
+>s
+>s
+>examine hole
+>put dirt in hole
+>look
+>kiss flyde
+>kiss floyd
+>look
+>quit
+
+==== ADVENTURE INPUT, Sat Sep 29 13:01:09 2018
+>s
+>state
+>make.
+>make.
+>make.
+>make
+>make.
+>list
+>state
+>switch on videocamera
+>w
+>memories
+>s
+>s
+>w
+>bug
+>make.
+>s
+>s
+>s
+>
+>s
+>s
+>e
+>l
+>l
+>l
+>l
+>l
+>l
+>l
+>l
+>l
+>l
+>l
+
+==== ADVENTURE INPUT, Sat Sep 29 13:10:04 2018
+>s
+>s
+>s
+>s
+>s
+>s
+>s
+>s
+>go under table
+>p
+
+==== ADVENTURE INPUT, Tue Oct  2 02:15:22 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 02:15:32 2018
+>
+>
+>
+>
+>wait
+>[A
+>wait
+>make.
+
+==== ADVENTURE INPUT, Tue Oct  2 08:31:02 2018
+>i
+
+==== ADVENTURE INPUT, Tue Oct  2 08:34:46 2018
+>s
+>s
+
+==== ADVENTURE INPUT, Tue Oct  2 09:14:03 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 09:14:29 2018
+>
+>wait
+>wait
+>wait
+>wait
+>wait
+>wait
+>wait
+>wait
+>wait
+>wait
+>wait
+>wait
+>wait
+>prolog
+
+==== ADVENTURE INPUT, Tue Oct  2 10:32:01 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 10:32:30 2018
+>s
+>s
+>look
+>make
+>make
+>s
+>n
+>prolog
+>look
+>make.
+
+==== ADVENTURE INPUT, Tue Oct  2 10:36:04 2018
+>s
+>
+>make
+>s
+>n
+>s
+>s
+>make
+>s
+>n
+>state
+>make
+>istate
+>state
+>
+>make.
+>prolog
+>make.
+>make
+>wait
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 10:42:37 2018
+>make
+>
+>make
+>
+>
+>make.
+>
+>
+>make
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>make
+>make
+>
+>
+>
+>make
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>make
+
+==== ADVENTURE INPUT, Tue Oct  2 10:50:07 2018
+>
+>s
+>
+>istate
+>look
+>iprops
+>istate
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 11:14:43 2018
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 11:16:02 2018
+>look
+
+==== ADVENTURE INPUT, Tue Oct  2 11:35:26 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 11:35:54 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 11:43:08 2018
+>s
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 11:47:40 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 11:48:02 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 11:53:50 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 12:46:46 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 12:48:01 2018
+>
+>
+>look
+
+==== ADVENTURE INPUT, Tue Oct  2 12:49:29 2018
+>istate
+
+==== ADVENTURE INPUT, Tue Oct  2 12:52:25 2018
+>n
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 12:55:32 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 12:57:01 2018
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:08:12 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:10:49 2018
+>
+>s
+
+==== ADVENTURE INPUT, Tue Oct  2 13:23:59 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>make
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:25:07 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:25:57 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:26:38 2018
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:27:49 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:30:53 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:38:34 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:39:14 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:39:27 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:43:54 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:46:26 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:48:06 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:48:42 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:51:52 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:52:14 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:53:09 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:54:18 2018
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 13:55:04 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 13:58:29 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 14:00:09 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 14:09:09 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Tue Oct  2 14:11:14 2018
+
+==== ADVENTURE INPUT, Tue Oct  2 14:11:39 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>s
+>look
+>n
+>quit
+
+==== ADVENTURE INPUT, Tue Oct  2 14:17:46 2018
+>[3~
+>
+>
+>s
+>open screendoor
+>close screendoor
+>make
+>open screendoor
+>x screendoor
+
+==== ADVENTURE INPUT, Tue Oct  2 15:14:17 2018
+>open screendoor
+>x screendoor
+>x screendoor
+>x screendoor
+>x screendoor
+>x screendoor
+>x screendoor
+>x screendoor
+>x screendoor
+>x screendoor
+>make
+>open screendoor
+>close screendoor
+
+==== ADVENTURE INPUT, Tue Oct  2 15:33:04 2018
+>look screendoor
+>open screendoor
+
+==== ADVENTURE INPUT, Tue Oct  2 15:34:39 2018
+>open screendoor
+
+==== ADVENTURE INPUT, Fri Aug 16 13:56:26 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:24:32 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:25:38 2013
+>n
+
+==== ADVENTURE INPUT, Fri Aug 16 14:27:16 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:32:33 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:33:08 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:33:55 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:34:21 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:38:58 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:39:11 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:40:05 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:49:26 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 14:55:04 2013
+
+==== ADVENTURE INPUT, Fri Aug 16 15:05:01 2013
+>s
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>s
+>look
+>x mushroom
+>
+>
+>
+>
+>n
+>s
+>look
+>eat mushroom
+> eat mushroom
+>istate
+
+==== ADVENTURE INPUT, Fri Aug 16 15:11:16 2013
+>
+>
+>prolog
+
+==== ADVENTURE INPUT, Fri Aug 16 17:09:33 2013
+
+==== ADVENTURE INPUT, Thu Oct  4 10:43:42 2018
+
+==== ADVENTURE INPUT, Thu Oct  4 10:45:15 2018
+>
+>prolog.
+>prolog
+>prolog
+
+==== ADVENTURE INPUT, Thu Oct  4 10:52:53 2018
+>make.
+>make
+>make.
+>prolog.
+>prolog
+
+==== ADVENTURE INPUT, Thu Oct  4 10:56:51 2018
+>prolog
+
+==== ADVENTURE INPUT, Thu Oct  4 11:05:52 2018
+
+==== ADVENTURE INPUT, Thu Oct  4 11:06:31 2018
+
+==== ADVENTURE INPUT, Thu Oct  4 11:07:32 2018
+>prolog
+>prolog
+
+==== ADVENTURE INPUT, Thu Oct  4 11:22:05 2018
+>prolog
+>
+
+==== ADVENTURE INPUT, Thu Oct  4 11:38:05 2018
+>make
+
+==== ADVENTURE INPUT, Thu Oct  4 11:40:02 2018
+>make
+>make.
+>
+>make
+>make.
+>make
+>make.
+>make
+>
+>make
+>make.
+>make
+>make
+
+==== ADVENTURE INPUT, Thu Oct  4 11:53:07 2018
+>
+>
+>
+>
+>
+>
+>
+>
+>say hello Friend
+>make
+>
+>make
+>mke
+>make
+
+==== ADVENTURE INPUT, Thu Oct  4 12:12:21 2018
+>
+>say
+>look
+>s
+>show
+>make
+>make.
+
+==== ADVENTURE INPUT, Thu Oct  4 12:15:02 2018
+>make
+
+==== ADVENTURE INPUT, Thu Oct  4 12:15:28 2018
+>make
+
+==== ADVENTURE INPUT, Thu Oct  4 12:18:14 2018
+
+==== ADVENTURE INPUT, Thu Oct  4 12:21:44 2018
+>threads.
+>make
+>make.
+>
+>make
+>
+>llsadf
+>make.
+>sdf
+>sya hi there
+>say hi there
+>whereami
+>whereami
+>
+>whereami
+>whoami
+>model
+>model
+>memory
+>
+
+==== ADVENTURE INPUT, Thu Oct  4 12:42:25 2018
+
+==== ADVENTURE INPUT, Thu Oct  4 12:45:15 2018
+>model
+>model floyd
+>w
+>e
+>e
+>w
+>model
+>memory
+>
+>memory
+>
+>
+>
+>
+>
+>
+>memory
+>emote like it
+>emote likes  it
+>make.
+>make.
+>make
+
+==== ADVENTURE INPUT, Thu Oct  4 13:53:44 2018
+>s
+>s
+
+==== ADVENTURE INPUT, Thu Oct  4 18:57:31 2018
+
+==== ADVENTURE INPUT, Fri Oct  5 05:56:30 2018
+
+==== ADVENTURE INPUT, Fri Oct  5 06:00:37 2018
+>make.
+>make.,
+>make.
+>s
+>s
+>e
+>w
+>prolog.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:23:11 2018
+
+==== ADVENTURE INPUT, Fri Oct  5 08:24:00 2018
+>prolog.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:26:36 2018
+>make.
+>make.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:34:10 2018
+>make.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:35:13 2018
+>make.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:35:41 2018
+>make.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:37:01 2018
+>make.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:37:37 2018
+>make.
+>prolog.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:41:20 2018
+>prolog.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:47:12 2018
+>prolog.
+
+==== ADVENTURE INPUT, Fri Oct  5 08:48:55 2018
+>prolog
+
+==== ADVENTURE INPUT, Fri Oct  5 08:51:32 2018
+>prolog.
+
+==== ADVENTURE INPUT, Sat Oct  6 23:16:48 2018
+>s
+
+==== ADVENTURE INPUT, Sat Oct  6 23:19:48 2018
+>s
+>
+
+==== ADVENTURE INPUT, Sat Oct  6 23:20:29 2018
+>s
+
+==== ADVENTURE INPUT, Sat Oct  6 23:32:04 2018
+>
+>
+
+==== ADVENTURE INPUT, Sun Oct  7 00:14:59 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 00:17:41 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 00:18:24 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 00:20:20 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 00:21:05 2018
+>s
+
+==== ADVENTURE INPUT, Sun Oct  7 00:26:40 2018
+>s
+>dig hole
+>
+>
+
+==== ADVENTURE INPUT, Sun Oct  7 00:28:10 2018
+>
+>
+>
+>
+>s
+>dig hole
+>
+
+==== ADVENTURE INPUT, Sun Oct  7 00:29:40 2018
+>s
+>
+>
+>s
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 00:31:13 2018
+>s
+>s
+>look
+>take mushroom
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>s
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 00:36:58 2018
+>s
+>
+>
+>
+>
+>
+>
+>
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 00:39:04 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 00:48:25 2018
+>s
+>s
+>s
+
+==== ADVENTURE INPUT, Sun Oct  7 00:48:43 2018
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Sun Oct  7 00:49:30 2018
+>s
+>look
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 00:55:15 2018
+>s
+>
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 00:58:59 2018
+>
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 01:03:38 2018
+>
+>
+>git hole
+
+==== ADVENTURE INPUT, Sun Oct  7 01:06:19 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 01:20:30 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 01:21:41 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 01:22:11 2018
+>s
+
+==== ADVENTURE INPUT, Sun Oct  7 01:22:40 2018
+>s
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 01:23:37 2018
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 01:25:28 2018
+>
+>
+>
+>
+>look
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 01:26:05 2018
+>dig hole
+
+==== ADVENTURE INPUT, Sun Oct  7 01:27:47 2018
+>[adv].
+>dig hole
+>s
+>
+>dig hole
+>where is shovel
+>who is shovel
+>
+>make.
+>s
+>s
+>go
+>go s
+>s
+>n
+>go n
+>go s
+>
+>.
+>go south
+>
+>say hi
+>say hi there
+>make.
+
+==== ADVENTURE INPUT, Sun Oct  7 02:00:34 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:01:27 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:01:48 2018
+>s
+>dig hole
+>
+
+==== ADVENTURE INPUT, Sun Oct  7 02:17:05 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:19:57 2018
+>s
+>say hi
+>
+
+==== ADVENTURE INPUT, Sun Oct  7 02:53:18 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:56:40 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:56:58 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:59:24 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:59:40 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:59:48 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 02:59:55 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 03:04:36 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 03:09:13 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 03:12:32 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 03:13:00 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 03:16:10 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 03:16:43 2018
+>s
+>
+>look
+>take rook
+>take rock
+>where is shovel
+>s
+>look
+>n
+>n
+>s
+>w
+>e
+>e
+>look
+>d
+>look
+>w
+>e
+>n
+>e
+>n
+>e
+>n
+>e
+>n
+>e
+>n
+>e
+>n
+>e
+>n
+>s
+>look
+
+==== ADVENTURE INPUT, Sun Oct  7 03:20:41 2018
+>look
+>s
+>n
+>look
+>n
+>help
+>look
+
+==== ADVENTURE INPUT, Sun Oct  7 03:24:50 2018
+
+==== ADVENTURE INPUT, Sun Oct  7 03:25:07 2018
+>s
+>look
+>
+>s
+>s
+>s
+>memory
+>memory floyd
+>where is floyd
+>where is floyd
+>where is floyd
+>
+>
+>prolog.
+
+==== ADVENTURE INPUT, Sun Oct  7 03:41:11 2018
+>look
+>s
+
+==== ADVENTURE INPUT, Sun Oct  7 03:43:45 2018
+>s
+
+==== ADVENTURE INPUT, Sun Oct  7 03:44:04 2018
+>s
+>s
+>
+
+==== ADVENTURE INPUT, Sun Oct  7 18:34:35 2018
+>s
+>n
+>i
+>inventory
+>inv
+>open bag
+>
+>
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 08:15:48 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 08:16:37 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 08:16:59 2018
+>s
+>s
+>
+>
+>
+>
+>
+>memory
+>
+>memory floyd
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 09:42:02 2018
+>memory
+
+==== ADVENTURE INPUT, Mon Oct  8 09:49:10 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 09:51:08 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 10:00:30 2018
+>make.
+>make.
+>s
+>
+>
+>make.
+>
+>
+>look
+>s
+>memory
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 10:36:27 2018
+>s
+>d
+>n
+>dig hole
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 10:52:46 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 10:58:17 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 11:33:38 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 11:36:44 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 11:36:54 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 11:41:01 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 11:57:54 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 12:01:47 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 19:14:34 2018
+>trace.
+>make.
+>prolog
+
+==== ADVENTURE INPUT, Mon Oct  8 19:16:07 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 19:18:14 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 19:18:49 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 19:19:10 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 19:21:50 2018
+>s
+>make.
+>s
+>n
+>look
+>e
+>look
+>n
+>n
+>take camera
+>take videocamera
+>make.
+>take videocamera
+>look
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 19:28:54 2018
+>s
+>n
+>s
+>take mushroom
+
+==== ADVENTURE INPUT, Mon Oct  8 19:30:32 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 19:33:25 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 19:35:22 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 19:35:54 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 19:38:09 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 19:38:56 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 19:40:36 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 19:44:54 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 19:47:46 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 19:48:36 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 19:50:44 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 19:54:58 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 19:55:45 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 19:57:41 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 19:58:08 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 19:59:45 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:01:40 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:06:05 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:07:34 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:09:50 2018
+>
+>
+>s
+>s
+>look
+>n
+>model
+>n
+>
+>s
+>make.
+>d
+>make.
+>prolog
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:14:15 2018
+>
+>
+>
+>s
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:15:41 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 20:16:33 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 20:18:58 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:20:31 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 20:20:51 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 20:21:09 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 20:21:50 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 20:23:10 2018
+>
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:23:42 2018
+>
+>
+>
+>
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 20:26:45 2018
+>
+>
+>
+>
+>
+>d
+>
+>s
+>dig
+>dig hole
+>make.
+>dig hole
+
+==== ADVENTURE INPUT, Mon Oct  8 20:28:36 2018
+>
+>
+>
+>s
+>dig hole
+
+==== ADVENTURE INPUT, Mon Oct  8 20:29:48 2018
+>
+>
+>
+>
+>s
+>dig hole
+>make.
+>look
+>take dirt
+
+==== ADVENTURE INPUT, Mon Oct  8 20:32:37 2018
+>
+>
+>
+>
+>s
+>dig hole
+>look
+>take dirt
+>
+>
+>
+>s
+>
+>w
+>n
+>look
+>model
+>state
+>istate
+>prolog
+>istate
+>prolog.
+>
+>
+>
+>
+>s
+>make.
+>s
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>s
+>n
+>look at screen
+>look
+>look on table
+>look at screendoor
+>look screendoor
+>x screendoor
+>x screendoor
+>s
+>x screendoor
+>make
+
+==== ADVENTURE INPUT, Mon Oct  8 21:12:29 2018
+>s
+>s
+>
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 21:12:51 2018
+>
+>
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 21:13:08 2018
+>look
+>make.
+
+==== ADVENTURE INPUT, Mon Oct  8 21:13:52 2018
+>s
+>look
+>
+>s
+>say hi there
+>make.
+>make.
+>say hi there
+
+==== ADVENTURE INPUT, Mon Oct  8 21:17:03 2018
+>say hi
+
+==== ADVENTURE INPUT, Mon Oct  8 21:17:16 2018
+>say hi
+
+==== ADVENTURE INPUT, Mon Oct  8 21:18:48 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 21:18:57 2018
+>say hi
+
+==== ADVENTURE INPUT, Mon Oct  8 21:20:14 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 21:20:19 2018
+>say hi
+>make
+
+==== ADVENTURE INPUT, Mon Oct  8 21:29:27 2018
+>s
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 21:29:34 2018
+>
+>s
+>look
+
+==== ADVENTURE INPUT, Mon Oct  8 21:30:23 2018
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 21:30:28 2018
+>s
+>
+>
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 21:31:20 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 21:31:22 2018
+>s
+>
+>
+>look
+>
+>
+>make
+>
+>memory
+>s
+>
+>
+>
+>n
+>s
+>look screendoor
+>x screendoor
+>
+>make
+>s
+>x screendoor
+>
+>make
+> make
+> x screendoor
+>make.
+>
+> x screendoor
+>make
+>make
+>
+>s
+> x screendoor
+>
+>look
+>make
+>
+>d
+>make
+>make
+> x screendoor
+
+==== ADVENTURE INPUT, Mon Oct  8 21:43:20 2018
+>x screendoor.
+
+==== ADVENTURE INPUT, Mon Oct  8 21:43:41 2018
+>
+>[1: player1] ==> x
+
+==== ADVENTURE INPUT, Mon Oct  8 21:44:21 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 21:44:28 2018
+>
+>
+> x screendoor
+
+==== ADVENTURE INPUT, Mon Oct  8 21:57:03 2018
+>
+>
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 21:57:19 2018
+>s
+>
+>x screendoor
+>x fff
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 22:02:13 2018
+>
+>make.
+
+==== ADVENTURE INPUT, Mon Oct  8 22:03:03 2018
+>
+>
+
+==== ADVENTURE INPUT, Mon Oct  8 22:03:33 2018
+>make
+>make
+
+==== ADVENTURE INPUT, Mon Oct  8 22:05:02 2018
+>s
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 22:05:44 2018
+>s
+>n
+>make
+>make
+
+==== ADVENTURE INPUT, Mon Oct  8 22:07:08 2018
+>s
+>n
+>w
+>memory videocamera
+
+==== ADVENTURE INPUT, Mon Oct  8 22:09:45 2018
+>s
+>x screendoor
+>s
+>say hi
+
+==== ADVENTURE INPUT, Mon Oct  8 22:10:35 2018
+>s
+>say hi
+
+==== ADVENTURE INPUT, Mon Oct  8 22:11:31 2018
+>say hi
+
+==== ADVENTURE INPUT, Mon Oct  8 22:12:58 2018
+>look
+>say hi
+
+==== ADVENTURE INPUT, Mon Oct  8 22:14:49 2018
+>say hi
+>memory floyd
+>s
+>n
+>n
+>memory floyd
+>make
+>s
+>s
+>memory videorecorder
+
+==== ADVENTURE INPUT, Mon Oct  8 22:18:54 2018
+>memory
+>memory videocamera
+
+==== ADVENTURE INPUT, Mon Oct  8 22:19:19 2018
+>s
+>n
+>n
+>w
+>e
+>e
+>look
+>u
+>e
+>w
+>memory floyd
+>n
+>w
+>e
+>escape
+>s
+>w
+>x videocamera
+>memory videocamera
+
+==== ADVENTURE INPUT, Mon Oct  8 22:27:25 2018
+>memory videocamera
+
+==== ADVENTURE INPUT, Mon Oct  8 22:28:47 2018
+>memory floyd
+>memory videocamera
+
+==== ADVENTURE INPUT, Mon Oct  8 22:32:08 2018
+>say hi
+
+==== ADVENTURE INPUT, Mon Oct  8 22:32:50 2018
+>say hi
+>ask hi
+>s
+>take mushroom
+
+==== ADVENTURE INPUT, Mon Oct  8 22:47:53 2018
+>s
+>take self
+>s
+>s
+>open screendoor
+>make.
+>make
+
+==== ADVENTURE INPUT, Mon Oct  8 22:58:59 2018
+>s
+
+==== ADVENTURE INPUT, Mon Oct  8 23:00:12 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 23:01:17 2018
+
+==== ADVENTURE INPUT, Mon Oct  8 23:02:25 2018
+>s
+>say hi
+>s
+>w
+>e
+>r
+
+==== ADVENTURE INPUT, Mon Oct  8 23:05:07 2018
+>s
+>r
+>o0k
+>s
+>where floyd
+>who floyd
+>make
+>s
+>e
+>e
+>x videocamera
+>make
+
+==== ADVENTURE INPUT, Mon Oct  8 23:19:21 2018
+>s
+>e
+>e
+>make.
+>say hi
+>ask floyd to look
+>s
+>look
+>ask floyd to look
+>make
+>make
+>make
+>ask floyd to look
+>look
+>n
+>w
+>e
+>e
+>w
+>n
+>ask floyd to look
+>make
+>ask floyd to look
+>ask floyd to look
+> ask floyd to wait
+>memory floyd
+>s
+>look
+>ok
+>e
+>w
+>w
+>s
+>look
+>open screendoor
+>x screendoor
+>close screendoor
+>x screendoor
+>jump
+>s
+>jump
+>model
+>n
+>n
+>make
+>make
+>look
+>d
+>look
+>look
+>take shovel
+>u
+>s
+>s
+>take mushroom
+>dir hole
+>dig hole
+>look
+>s
+>n
+>put shovel under table
+>look
+>look under table
+>look table
+>x table
+>ask floyd x table
+>model
+>take shovel
+>look at table
+>look table
+>take lamp
+>b
+>n
+>d
+>light lamp
+>look
+>u
+>d
+>u
+>look
+>s
+>s
+>s
+>s
+>w
+>e
+>dig east
+>n
+>e
+>look
+>n
+>quit
+
+==== ADVENTURE INPUT, Mon Oct  8 23:54:47 2018
+>s
+>path
+>s
+>n
+>s
+>path kitchen
+>n
+>n
+>s
+>take lamp
+>n
+
+==== ADVENTURE INPUT, Tue Oct  9 05:56:28 2018
+>b
+>n
+>s
+>n
+>make
+>look
+>s
+>n
+>s
+>light lamp
+>n
+>look
+>s
+>n
+>i
+>s
+>i
+>take lamp
+>n
+>look
+>make.
+>make.
+>make.
+>make
+>make.
+>make.
+>make
+>make
+>s
+>n
+>look
+>s
+>w
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 09:16:09 2018
+>s
+>n
+
+==== ADVENTURE INPUT, Tue Oct  9 09:16:23 2018
+>s
+>e
+>make
+>make
+>make
+
+==== ADVENTURE INPUT, Tue Oct  9 09:22:19 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:25:39 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:26:14 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:28:06 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:28:29 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:29:14 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:29:52 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:33:03 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:35:09 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:36:06 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:38:40 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:39:22 2018
+>s
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 09:41:00 2018
+>look
+>s
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 09:42:44 2018
+>s
+>look
+>make
+
+==== ADVENTURE INPUT, Tue Oct  9 09:45:16 2018
+>s
+>make
+>s
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 09:45:57 2018
+>s
+>model
+>istate
+>prolog.
+>prolog
+
+==== ADVENTURE INPUT, Tue Oct  9 09:49:10 2018
+>look
+>s
+>make
+
+==== ADVENTURE INPUT, Tue Oct  9 09:52:34 2018
+>s
+>make
+
+==== ADVENTURE INPUT, Tue Oct  9 09:54:27 2018
+
+==== ADVENTURE INPUT, Tue Oct  9 09:55:12 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:57:08 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 09:58:03 2018
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 09:58:49 2018
+>s
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 10:00:02 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:01:24 2018
+>s
+>s
+>look
+>s
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 10:01:59 2018
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 10:04:12 2018
+
+==== ADVENTURE INPUT, Tue Oct  9 10:04:51 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:08:17 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:09:47 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:10:58 2018
+>s
+>make
+
+==== ADVENTURE INPUT, Tue Oct  9 10:14:36 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:17:11 2018
+
+==== ADVENTURE INPUT, Tue Oct  9 10:17:24 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:20:10 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:21:02 2018
+>make
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:25:35 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:26:55 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:28:37 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:29:10 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:29:26 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:30:05 2018
+>s
+>s
+>s
+>go s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:32:02 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:35:56 2018
+
+==== ADVENTURE INPUT, Tue Oct  9 10:36:11 2018
+>s
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:39:21 2018
+
+==== ADVENTURE INPUT, Tue Oct  9 10:40:15 2018
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:40:58 2018
+
+==== ADVENTURE INPUT, Tue Oct  9 10:41:14 2018
+>s
+>s
+>look
+>s
+
+==== ADVENTURE INPUT, Tue Oct  9 10:43:06 2018
+
+==== ADVENTURE INPUT, Tue Oct  9 10:43:38 2018
+>s
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 10:46:04 2018
+>s
+>s
+>look
+
+==== ADVENTURE INPUT, Tue Oct  9 10:49:37 2018
+>istate
+
+==== ADVENTURE INPUT, Wed Oct 10 02:44:56 2018
+>s
+>state
+>istate
+
+==== ADVENTURE INPUT, Wed Oct 10 02:48:40 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 02:51:11 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 02:51:07 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 02:53:32 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 02:53:45 2018
+>s
+>istate
+
+==== ADVENTURE INPUT, Wed Oct 10 02:57:13 2018
+>istate
+
+==== ADVENTURE INPUT, Wed Oct 10 02:59:06 2018
+>istate
+
+==== ADVENTURE INPUT, Wed Oct 10 02:59:43 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 03:02:39 2018
+>s
+>istate
+
+==== ADVENTURE INPUT, Wed Oct 10 03:06:50 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 03:07:03 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 03:07:38 2018
+>s
+>make.
+
+==== ADVENTURE INPUT, Wed Oct 10 03:08:42 2018
+>s
+
+==== ADVENTURE INPUT, Wed Oct 10 03:09:26 2018
+>s
+>look
+>istate
+
+==== ADVENTURE INPUT, Wed Oct 10 03:12:56 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 03:13:30 2018
+>s
+>state
+>s
+>s
+>w
+>e
+>s
+>n
+>state
+
+==== ADVENTURE INPUT, Wed Oct 10 03:15:30 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 03:15:54 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 03:16:04 2018
+>s
+>make
+
+==== ADVENTURE INPUT, Wed Oct 10 03:50:40 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 03:50:57 2018
+>s
+>s
+>s
+>s
+>s
+>s
+>state
+
+==== ADVENTURE INPUT, Wed Oct 10 03:54:53 2018
+>s
+>s
+>w
+>e
+>r
+>n
+>state
+
+==== ADVENTURE INPUT, Wed Oct 10 03:57:00 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:07:10 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:08:08 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:09:11 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:10:16 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:11:36 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:12:33 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:22:28 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:24:06 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:24:44 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:28:50 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:30:16 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:30:58 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:34:48 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:39:39 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:40:04 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:40:40 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:42:14 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:46:34 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:48:24 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:55:50 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:56:14 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 05:56:34 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:01:38 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:03:32 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:04:08 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:28:14 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:28:55 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:29:07 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:29:22 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:30:48 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:35:42 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:37:22 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:37:36 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:40:39 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 06:42:52 2018
+
+==== ADVENTURE INPUT, Wed Oct 10 17:04:43 2018
+
+==== ADVENTURE INPUT, Thu Oct 11 07:54:52 2018
+
+==== ADVENTURE INPUT, Thu Oct 11 07:57:19 2018
+
+==== ADVENTURE INPUT, Thu Oct 11 07:59:02 2018
+>s
+>s
+>s
+
+==== ADVENTURE INPUT, Thu Oct 11 08:05:34 2018
+
+==== ADVENTURE INPUT, Thu Oct 11 08:05:52 2018
+>s
+>look
+
+==== ADVENTURE INPUT, Thu Oct 11 08:25:30 2018
+
+==== ADVENTURE INPUT, Thu Oct 11 08:26:20 2018
+
+==== ADVENTURE INPUT, Thu Oct 11 08:26:34 2018
+>s
+>s
+>n
+>n
+>look
+
+==== ADVENTURE INPUT, Thu Oct 11 08:28:26 2018
+>n
+>n
+>look
+
+==== ADVENTURE INPUT, Thu Oct 11 08:28:42 2018
+>s
+>n
+>n
+>look
+
+==== ADVENTURE INPUT, Thu Oct 11 08:31:15 2018
+>s
+>n
+>n
+>look
+>s
+>s
+>s
+>s
+>look
+
+==== ADVENTURE INPUT, Thu Oct 11 09:15:41 2018
+>model
+>state
+
+==== ADVENTURE INPUT, Thu Oct 11 13:23:01 2018
+>s
+>s
+
+==== ADVENTURE INPUT, Thu Oct 11 13:24:17 2018
+>s
+>make.
+>s
+>n
+>s
+
+==== ADVENTURE INPUT, Thu Oct 11 13:25:53 2018
+
+==== ADVENTURE INPUT, Thu Oct 11 13:26:14 2018
+>s
+>n
+>n
+>n
+
+==== ADVENTURE INPUT, Thu Oct 11 13:26:40 2018
+>s
+>b
+>b
+>n
+
+==== ADVENTURE INPUT, Thu Oct 11 13:26:59 2018
+>s
+>b
+>n
+>n
+
+==== ADVENTURE INPUT, Thu Oct 11 14:51:58 2018
+>s
+>n
+>n
+>n
+>n
+>s
+
+==== ADVENTURE INPUT, Thu Oct 11 14:52:10 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 00:21:24 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 00:25:18 2018
+>s
+>n
+>n
+>n
+>look
+>n
+>look
+>n
+>n
+>n
+>l
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 00:27:12 2018
+>n
+>n
+>n
+>n
+>look
+
+==== ADVENTURE INPUT, Fri Oct 12 00:28:54 2018
+>n
+>n
+>l
+>s
+>n
+>n
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 00:37:07 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 00:39:02 2018
+>make.
+
+==== ADVENTURE INPUT, Fri Oct 12 00:39:25 2018
+>make.
+>n
+>s
+>auto
+>auto
+>auto
+>make.
+
+==== ADVENTURE INPUT, Fri Oct 12 01:12:39 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:14:24 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:16:56 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:18:55 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:23:25 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:23:41 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 01:27:57 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:28:23 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:28:33 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:30:25 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:31:11 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 01:31:50 2018
+>s
+>n
+>n
+>look
+>look
+>s
+>auto
+>auto
+
+==== ADVENTURE INPUT, Fri Oct 12 01:56:05 2018
+>s
+>a
+>s
+>say hi
+
+==== ADVENTURE INPUT, Fri Oct 12 10:16:05 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 11:26:22 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 11:26:38 2018
+>make.
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 11:28:43 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 11:30:01 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 11:31:57 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 11:34:37 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 11:37:18 2018
+>make.
+
+==== ADVENTURE INPUT, Fri Oct 12 11:40:28 2018
+>make.
+
+==== ADVENTURE INPUT, Fri Oct 12 11:41:42 2018
+>make.
+>make.
+>make
+
+==== ADVENTURE INPUT, Fri Oct 12 12:00:39 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 12:01:19 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 12:05:02 2018
+>make
+>make.
+>d
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 12:07:21 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 12:08:39 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 12:09:14 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 12:12:30 2018
+>look
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 13:09:58 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 13:10:32 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 18:11:11 2018
+>say hi
+>memory
+>look spatial
+>memory
+>s
+>make
+>s
+>n
+
+==== ADVENTURE INPUT, Fri Oct 12 18:22:38 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 18:23:47 2018
+>\s
+
+==== ADVENTURE INPUT, Fri Oct 12 18:25:08 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 18:26:48 2018
+>s
+>n
+>l
+>say hi
+>ok
+>e
+>w
+>look on table
+
+==== ADVENTURE INPUT, Fri Oct 12 18:28:43 2018
+>s
+>look mushroom
+>look at mushroom
+>make
+>look at mushroom
+
+==== ADVENTURE INPUT, Fri Oct 12 18:33:08 2018
+>s
+>look at mustroom
+>look at mushroom
+>make.
+>s
+>n
+>n
+>w
+>look
+>look spatial
+
+==== ADVENTURE INPUT, Fri Oct 12 18:35:18 2018
+>look visual
+
+==== ADVENTURE INPUT, Fri Oct 12 18:35:50 2018
+>listing
+>listen
+>listen to player1
+>make
+>make
+
+==== ADVENTURE INPUT, Fri Oct 12 19:03:07 2018
+>s
+>look
+>memory
+>n
+>memory
+>s
+>s
+>w
+>look
+>look visually
+>prolog.
+
+==== ADVENTURE INPUT, Fri Oct 12 19:12:22 2018
+>prolog
+
+==== ADVENTURE INPUT, Fri Oct 12 20:01:22 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:04:17 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 20:05:49 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 20:07:33 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 20:09:19 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 20:11:09 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 20:17:25 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:19:47 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:20:32 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:22:18 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:22:45 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:24:57 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:25:03 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:27:43 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:28:34 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:28:54 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:29:37 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:30:43 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:31:49 2018
+>look
+>n
+>s
+>make
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 20:34:34 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:35:09 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 20:35:43 2018
+>look
+
+==== ADVENTURE INPUT, Fri Oct 12 20:36:58 2018
+>make.
+>s
+>n
+>look
+
+==== ADVENTURE INPUT, Fri Oct 12 20:38:47 2018
+>look
+>make
+>look
+
+==== ADVENTURE INPUT, Fri Oct 12 20:39:27 2018
+>make.
+
+==== ADVENTURE INPUT, Fri Oct 12 20:40:17 2018
+>look
+>s
+>n
+>look
+>look spatial
+
+==== ADVENTURE INPUT, Fri Oct 12 20:41:13 2018
+>s
+>look
+>s
+>n
+>n
+>d
+
+==== ADVENTURE INPUT, Fri Oct 12 20:41:54 2018
+>s
+>l
+>look
+>n
+
+==== ADVENTURE INPUT, Fri Oct 12 20:45:39 2018
+>look
+>look *
+>n
+>look
+>model
+>s
+>n
+>look
+
+==== ADVENTURE INPUT, Fri Oct 12 20:52:55 2018
+>s
+>l
+
+==== ADVENTURE INPUT, Fri Oct 12 20:53:21 2018
+>look
+>sdsd
+>make
+>look
+>s
+>look
+>listen
+>see
+>model
+>model floyd
+>memory floyd
+>l
+>n
+>n
+>s
+>n
+>look
+>say hi
+>model
+>state
+
+==== ADVENTURE INPUT, Fri Oct 12 21:02:46 2018
+>state
+>look
+>s
+>s
+>m
+
+==== ADVENTURE INPUT, Fri Oct 12 21:06:04 2018
+>s
+>w
+>look
+>s
+>m
+>n
+>memory
+>state
+>make
+>cls
+>make
+>make
+
+==== ADVENTURE INPUT, Fri Oct 12 21:10:12 2018
+>cls
+>make
+>helt
+>halt
+
+==== ADVENTURE INPUT, Fri Oct 12 21:10:56 2018
+>make
+>s
+>s
+>look
+>make
+>i
+>s
+>n
+>n
+
+==== ADVENTURE INPUT, Fri Oct 12 21:28:07 2018
+>s
+>n
+>n
+>d
+>u
+>look
+>look
+>look
+>s
+>s
+>n
+>n
+>n
+>d
+>listen
+>hear
+>d
+>yu
+>u
+>d
+>take shovel
+>look
+>i
+>up
+>s
+>s
+>dig hole
+
+==== ADVENTURE INPUT, Fri Oct 12 21:35:07 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 21:40:30 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 21:41:46 2018
+>s
+>u
+>s
+>n
+>n
+>look
+>s
+>n
+>look
+>d
+>look
+>look
+>make
+>make
+>make
+
+==== ADVENTURE INPUT, Fri Oct 12 21:49:37 2018
+>sd
+>s
+>take shovel
+>make
+>look
+>s
+>n
+>l
+
+==== ADVENTURE INPUT, Fri Oct 12 21:51:12 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 21:51:28 2018
+>s
+>state
+>l
+>x mushroom
+>props mushroom
+>i
+>wear watch
+>n
+>look table
+>x table
+>make
+>make
+>make
+>l
+>make
+>l
+>x
+>look
+>make
+>x
+>i
+>q
+>x
+>halt
+
+==== ADVENTURE INPUT, Fri Oct 12 22:36:51 2018
+>ls
+>threads.
+>statistics.
+
+==== ADVENTURE INPUT, Fri Oct 12 22:37:25 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 22:37:44 2018
+>make.
+>s
+>s
+>n
+>look at table
+>x table
+>emote say hi
+
+==== ADVENTURE INPUT, Fri Oct 12 22:42:41 2018
+>emote say hi
+
+==== ADVENTURE INPUT, Fri Oct 12 22:45:18 2018
+>say hi
+>emoter say hi
+>emote say hi
+
+==== ADVENTURE INPUT, Fri Oct 12 22:49:31 2018
+>say hi
+>emote say hi
+>look
+>n
+>s
+>n
+>make
+>make
+
+==== ADVENTURE INPUT, Fri Oct 12 23:12:24 2018
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 23:20:55 2018
+>s
+>s
+>state
+
+==== ADVENTURE INPUT, Fri Oct 12 23:22:28 2018
+>s
+>state
+>w
+>n
+>w
+>say hi
+>state
+>make.
+>has_sense(Sense)
+>s
+>w
+>s
+>n
+>s
+>w
+>s
+>make.
+>n
+>s
+>w
+>look
+>memory
+>state
+>make
+>memory
+>state
+>s
+
+==== ADVENTURE INPUT, Fri Oct 12 23:55:29 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 23:56:08 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 23:58:15 2018
+
+==== ADVENTURE INPUT, Fri Oct 12 23:58:34 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:01:21 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:02:58 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:04:44 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:05:33 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:11:28 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:12:12 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:39:51 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:40:38 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:41:21 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:44:01 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:55:18 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:55:47 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 00:59:34 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:11:47 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:12:28 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:13:09 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:15:42 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:16:13 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:18:17 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:30:09 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:30:21 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:32:49 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:41:02 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:44:49 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:45:19 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:45:51 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:47:36 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:49:04 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:53:03 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:53:24 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:55:31 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:58:12 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 01:59:34 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:00:27 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:03:33 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:06:38 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:12:17 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:17:47 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:18:13 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:18:32 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:21:01 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:21:58 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:22:17 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:23:33 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:24:09 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:25:41 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:30:06 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:31:09 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:31:25 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:33:25 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:37:44 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:38:44 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:42:57 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:45:32 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:46:44 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:48:34 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:49:43 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:53:27 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:55:55 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:57:55 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 02:59:08 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:00:10 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:00:30 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:00:49 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:01:05 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:02:07 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:05:38 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:08:04 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:09:56 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:11:07 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:12:43 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:15:35 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:16:47 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:18:40 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:19:36 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:20:25 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:22:37 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:22:46 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:26:46 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:30:31 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:31:02 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:31:26 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:31:53 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:37:52 2018
+>s
+
+==== ADVENTURE INPUT, Sat Oct 13 03:38:27 2018
+>s
+>look
+
+==== ADVENTURE INPUT, Sat Oct 13 03:39:03 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:39:35 2018
+>s
+>look
+>n
+>n
+>n
+>cls
+>state
+
+==== ADVENTURE INPUT, Sat Oct 13 03:42:10 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:43:15 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:45:17 2018
+>s
+>state
+
+==== ADVENTURE INPUT, Sat Oct 13 03:46:35 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:47:58 2018
+>s
+>state
+
+==== ADVENTURE INPUT, Sat Oct 13 03:49:05 2018
+>s
+>state
+
+==== ADVENTURE INPUT, Sat Oct 13 03:51:02 2018
+>s
+>n
+>n
+>s
+>d
+>state
+
+==== ADVENTURE INPUT, Sat Oct 13 03:55:26 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:57:36 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 03:59:25 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 04:00:19 2018
+
+
+um let me give you another example
+explosion some a's arbys no bees arrays
+therefore all laser rays okay it's
+invalid it's not a valid mood of assault
+ism but the premises are inconsistent
+okay so people work in this logistic
+tradition were working with a para
+consistent logic so logic in ancient
+Greece is power consistent logic in the
+19th century of power consistent where
+did the idea that contradiction supply
+everything come from in the history of
+philosophy well the earliest reference I
+know is in Paris in the 12th century
+where a logician called william s wausau
+discovered or invented the argument we
+now call Louis independent argument or
+Duns Scotus argument or the argument for
+explosion okay and then that was used by
+some people in the Middle Ages and then
+got quietly forgotten after the demise
+of logic and the rise of humanism so you
+know things come and things go in the
+history of the logic we teach there is
+no cumulative progress ok so does czajka
+tokens change yes certainly does it
+change a cuter fashion no ok so let's
+move on to the second question and logic
+can be revised now can it be revised
+rationally well if you look at the
+history of logic then it seems pretty
+clear that revisions weren't always
+rational so they've been three great
+periods in history of Western logic
+ancient Greece medieval universities and
+late nineteenth a later century and
+sometimes what happens is stuff gets
+forgotten ok so with the rise of
+humanism in the 15th 16th century the
+great advances and midi of logic all
+forgotten and all that people could
+remember after that was the kind of bow
+arise form with perdition logic that you
+getting cancer logic for example so um I
+don't think this was a rational change
+it's just that scholasticism fell out of
+favor
+and are you know the logic just got
+paedon to oblivion because of that so
+sometimes the changes in the history of
+logica tokens have not been for rational
+reasons okay but it beggars belief to
+suppose that all the changes that have
+occurred occurs occurred for merely
+sociological reasons of this kind so for
+example the are change that we know most
+about I guess is the change that gives
+rise to classical logic around the end
+of the 19th century be in the 20th
+century so tradition logic that is the
+logic you find in textbooks in the 19th
+century was replaced by the logical
+Frager and Russell okay um did this
+happen for sociological reasons was it
+just the Aristotle fell out of favor
+well you'd better think not okay because
+most of you here will think that
+mathematical logic was a great advance
+on traditional logic and I think that's
+right okay ah why will I come back that
+in a second but it's clear that logic
+adore Cannes is revised rationally
+sometimes okay so that's the answer to
+the second question so how okay and for
+once in my life I find myself largely on
+the same page as Tim on this issue which
+is kind of scary but hey so what what is
+the logic of tokens well it has a
+canonical application namely the canons
+of reasoning or the norms of reasoning
+or how to reason correctly and every
+ladka tokens is effectively a theory of
+the correct norms of reasoning or
+correct ways to reason okay so if you
+look at intuitionistic logic it will
+tell you one story about the correct
+norms of reasoning if you look at
+classical logic I'll tell you another
+each of those gives you in a certain
+sense are a theory of the correct way to
+proceed when your reason
+okay what is the theory a theory of more
+precisely well I'm glad to say that here
+I do disagree with him because he
+explicitly distanced himself from the
+thought that theories about a theory of
+validity okay for me logica Dawkins is
+centrally a theory of validity so when
+we reason we recently mathematics we
+reason in law we reason in science
+because we aren't reasoning formal
+languages no one reasons your formal
+languages we reason in vernacular but we
+make inferences you know we look at the
+consequence of our views and see whether
+they're right or wrong and validity is
+the core notion here okay when you give
+a theory of validity a logical tokens
+what you're trying to do is get this
+story about validity right what follows
+from what and more importantly why now
+how do you choose between competing
+theories well here I think I do agree
+with pretty much with Tim we've got all
+these criteria for theory choice which
+we apply whenever we theorize okay we
+theorize in metaphysics in science in
+logic immorality and in the end we
+choose the theories of most rational and
+the most rational is I think the
+probably the theory that performs best
+on the various criteria of theory choice
+things like simplicity fruitfulness and
+of course one of the most crucial
+criteria is adequacy to the data okay
+you want the theory which gives the best
+adequacy to the data you've got and you
+might say what counts as data and logic
+and I'll tell you I'm going to tell you
+by just looking at how you apply this
+account on one particular case study
+which is the rise of classical logic
+which we met just now so the revolution
+in logic at the end of the 19th century
+is driven by mathematics okay 19th
+century is the time when mathematicians
+were worrying about the rigor of their
+subject so they figured out what
+infinitesimal
+were what rationals were in some circles
+but they want to know what numbers whole
+numbers were and in the process of that
+they had to look very very carefully
+about the canons of correct reasoning
+because the old syllogistic was just not
+up to the job you couldn't do what the
+mathematicians were doing in syllogistic
+so the data that a theory of real it had
+answer to just said you know
+Aristotelian logic is hopeless we need
+something which tells us more about more
+kinds of inferences and so classical
+logic was born however it was clear that
+classical logic was so much better at
+giving an account of a lot of the
+inferences that get made for example in
+mathematics that Aristotelian logic was
+swept away and it was replaced by much
+better much stronger theory this is
+precisely a case of the replacement of
+one theory of validity by another one
+where the theory that was the later
+theory was selected precisely because it
+was much better on all the most of the
+criteria a theory choice and especially
+adequacy to the data and classical logic
+does a pretty good job of accounting for
+the inferences that get used in
+classical mathematics let's give it that
+okay that was it home that's where it
+came from does it do such a good job of
+accounting for correct reasoning in
+other areas to do with paradox to do
+with non classical mathematics to do
+with tents to do with the conditional ok
+so with vagueness it's not at all
+obvious that it does such a good job of
+accounting for inference for validity in
+those areas and I think this is the
+strength of non classical objects why
+they have a strength namely that they
+address some of these problems that
+arise when you try to apply classical
+logic outside it's sort of standard air
+as it were and worry about other things
+and I think when you start to look at
+that it's not so obvious that classical
+logic is stronger than the other
+contenders
+Up next
+
+
+
+==== ADVENTURE INPUT, Sat Oct 13 04:00:52 2018
+>s
+>s
+>n
+>n
+>de
+>d
+>u
+>s
+>s
+>look
+>memeory
+>memory
+>memory floyd
+>cls.
+>memory floyd
+>cls
+
+==== ADVENTURE INPUT, Sat Oct 13 17:09:47 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 17:11:34 2018
+
+==== ADVENTURE INPUT, Sat Oct 13 17:13:00 2018

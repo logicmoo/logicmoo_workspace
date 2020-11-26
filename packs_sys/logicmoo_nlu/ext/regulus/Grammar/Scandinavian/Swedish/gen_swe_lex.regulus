@@ -1,0 +1,620 @@
+
+include('$REGULUS/Grammar/Scandinavian/gen_lex.regulus').
+include('$REGULUS/Grammar/Scandinavian/gen_content_word_macros.regulus').
+include('$REGULUS/Grammar/Scandinavian/Swedish/swe_content_word_macros.regulus').
+
+macro(thing_type, (\(agent\/numeric\/date\/time\/unit\/timeunit\/frequency\/none))).
+
+% Interjections
+
+interjection:[@yes_features] --> ja.
+interjection:[@no_features] --> nej.
+interjection:[@yes_features] --> det, stämmer.
+
+interjection:[@yes_features] --> okej.
+
+interjection:[@correction_features] --> ?nej, jag, sa.
+interjection:[@correction_features] --> ?nej, i, menade.
+
+% Politeness
+
+politeness:[@thank_you_post_features] --> tack.
+politeness:[@thank_you_post_features] --> tack, så, mycket.
+
+politeness:[sem= @politeness_sem(sorry), politeness_pos=pre, stype=imp\/ynq\/whq\/none] --> ursäkta.
+
+politeness:[@salutation_features(hej)] --> hej.
+politeness:[@salutation_features(hej_hej)] --> hej, hej.
+politeness:[@salutation_features(hejsan)] --> hejsan.
+politeness:[@salutation_features(tjänare)] --> tjänare.
+politeness:[@salutation_features(tjena)] --> tjena.
+politeness:[@salutation_features(tja)] --> tja.
+politeness:[@salutation_features(hallå)] --> hallå.
+politeness:[@salutation_features(god_morgon)] --> (god, morgon).
+politeness:[@salutation_features(god_afton)] --> (god, afton).
+politeness:[@salutation_features(god_dag)] --> (god, dag).
+politeness:[@salutation_features(god_kväll)] --> (god, kväll).
+politeness:[@salutation_features(hej_då)] --> hej, då.
+politeness:[@salutation_features(trevlig_helg)] --> (trevlig, helg).
+politeness:[@salutation_features(skål)] --> skål.
+
+politeness:[@conj_intro_features] --> och.
+
+% NP intro and after
+
+np_after:[] --> också.
+
+% [din jävla idiot/ditt jävla får] 
+
+you_intro:[agr=real] --> din.
+you_intro:[agr=neutrum] --> ditt.
+
+% "ni grabbar"
+
+you_np_intro:[case=subj] --> ni.
+you_np_intro:[sem=ni, case=nonsubj] --> er.
+
+% Comp
+
+comp:[@embedded_dcl_comp_features] --> att.
+comp:[@embedded_q_features] --> om.
+comp:[@embedded_q_features] --> huruvida.
+
+% Verbs
+
+@modal_verb(ska, [[tense, future]]).
+@modal_verb(skulle, @modal_sem(skulle)).
+@modal_verb(kan, @modal_sem(kan)).
+@modal_verb(kunde, @modal_sem(kunde)).
+@modal_verb(borde, @modal_sem(borde)).
+@modal_verb(måste, @modal_sem(måste)).
+@modal_verb(må, @modal_sem(må)).
+
+@modal_verb(brukar, [[tense, present], [modal, bruka]]).
+@modal_verb(brukade, [[tense, past], [modal, bruka]]).
+
+@infinitive_modal_verb(kunna, @modal_sem(kan)).
+
+@aux_have_verb(ha, infinitive, _AnyAgr, [[aspect, perfect]]).
+@aux_have_verb(har, finite, _AnyAgr, [[tense, present], [aspect, perfect]]).
+@aux_have_verb(hade, finite, _AnyAgr, [[tense, past], [aspect, perfect]]).
+
+v:[sem=[[tense, future]],
+   subcat=nx0vvx1_modal, vform=finite, vp_vform=to, passive=_,
+   @takes_no_pps, takes_advp=n, subj_nform=_, can_be_gerund=n] --> kommer.
+
+macro(be_verb(Sem, Feats),
+      @verb([var, vara, är, var, varit, varande], Sem, Feats)).
+
+@verb([finnas, finnas, finns, fanns, funnits, xxx],
+      [@verb_sem(existential, there_is)],
+      [subcat=nx0vnx1_there_is, subj_nform=there, obj_sem_n_type= agent\/(@thing_type), takes_advp=y,
+       takes_loc_pp=y, takes_time_pp=y, takes_date_pp=y]).
+
+@verb([bli, bli, blir, blev, blivit, blivande],
+      [],
+      [subcat=nx0vvx1_passive, passive=y, @takes_no_pps]).
+
+macro(verb_like_vill_göra(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vvx1_modal,vp_vform=infinitive, @takes_no_pps])).
+
+@verb_like_vill_göra([vilja, vilja, vill, ville, velat, xxx], [ @verb_sem(modal, vilja)]).
+@verb_like_vill_göra([få, få, får, fick, fått, xxx], [ @verb_sem(modal, få)]).
+
+% Prepositions
+
+@preposition(på, on_date, [date, date], []).
+@preposition(under, during, [date, date\/timeunit], []).
+@preposition(runt, around_date, [date, date], []).
+@preposition(runt, around_time, [time, time], []).
+@preposition(före, before_date, [date, date], []).
+@preposition(före, before_time, [time, time], []).
+@preposition(efter, after_date, [date, date], []).
+@preposition(efter, after_time, [time, time], []).
+@preposition(av, av_att, [from, action], []).
+
+% "Mellan" is unusual in requiring a plural NP
+p_with_agr:[sem= @prep_sem(between_dates), agr=plur, sem_pp_type=date, obj_sem_n_type=date] --> mellan.
+p_with_agr:[sem= @prep_sem(between_times), agr=plur, sem_pp_type=time, obj_sem_n_type=time] --> mellan.
+
+% "för ... sen"
+p:[sem= @prep_sem(för_sen), postposition=n, pre_post_type=för_sen, sem_pp_type=time, obj_sem_n_type=timeunit] --> för.
+p:[sem=[], postposition=y, pre_post_type=för_sen] --> sen.
+p:[sem=[], postposition=y, pre_post_type=för_sen] --> sedan.
+
+% Subordinating conjunctions
+
+@sc(om, om, [time], (s\/vp), []).
+@sc(när, när, [time], (s\/vp), []).
+@sc(medan, medan, [time], (s\/vp), []).
+@sc(innan, innan, [time], (s\/vp), []).
+@sc((efter, det, att), efter_det_att, [time], (s\/vp), []).
+@sc(sen, sen, [time], (s\/vp), []).
+
+% PPs
+
+@lexical_pp(här, [loc, här], [loc], []).
+@lexical_pp(där, [loc, där], [loc], []).
+
+@lexical_pp(idag, [date, idag], [date], []).
+@lexical_pp(igår, [date, igår], [date], []).
+@lexical_pp(imorgon, [date, imorgon], [date], []).
+
+@wh_pp(var, [loc, var], [loc], []).
+@wh_pp(när, [time, när], [time], []).
+@wh_pp(hur, [manner, hur], [attribution], []).
+@wh_pp((hur, mycket), [manner, hur_mycket], [attribution], []).
+@wh_pp(varför, [reason, varför], [attribution], []).
+@wh_pp(vart, [to, var], [to], []).
+@wh_pp(varifrån, [from, var], [from], []).
+@wh_pp((hur, länge), [duration, hur_länge], [duration], []).
+
+macro(day_of_week_noun(Words, Sem),
+      @noun(Words, real, [day, Sem], [date], [@takes_no_pps, takes_det_type=(def\/indef\/quant\/ordinal\/null)])).
+
+@day_of_week_noun([måndag, måndagar, måndagen, måndagarna], måndag).
+@day_of_week_noun([tisdag, tisdagar, tisdagen, tisdagarna], tisdag).
+@day_of_week_noun([onsdag, onsdagar, onsdagen, onsdagarna], onsdag).
+@day_of_week_noun([torsdag, torsdagar, torsdagen, torsdagarna], torsdag).
+@day_of_week_noun([fredag, fredagar, fredagen, fredagarna], fredag).
+@day_of_week_noun([lördag, lördagar, lördagen, lördagarna], lördag).
+@day_of_week_noun([söndag, söndagar, söndagen, söndagarna], söndag).
+
+% As in "en gång i veckan"
+n:[sem= @noun_sem(frequency, gång), agr=sing/\real, def=n, sem_n_type=timeunit, takes_frequency_pp=y, takes_det_type=(numeric\/quant)] --> gång.
+n:[sem= @noun_sem(frequency, gång), agr=plur/\real, def=n, sem_n_type=timeunit, takes_frequency_pp=y, takes_det_type=(numeric\/quant)] --> gånger.
+
+% Pronouns
+
+%@personal_pronoun(Suface, Sem, Agr, Case).
+@personal_pronoun(du, du, 2/\sing/\real, subj).
+@personal_pronoun(dig, du, 2/\sing/\real, nonsubj).
+@personal_pronoun(ni, ni, 2/\real, subj).
+@personal_pronoun(er, ni, 2/\real, nonsubj).
+@personal_pronoun(jag, jag, 1/\sing/\real, subj).
+@personal_pronoun(mig, jag, 1/\sing/\real, nonsubj).
+@personal_pronoun(vi, vi, 1/\plur, subj).
+@personal_pronoun(oss, vi, 1/\plur, nonsubj).
+@personal_pronoun(han, han, 3/\sing/\real, subj).
+@personal_pronoun(hon, hon, 3/\sing/\real, subj).
+@personal_pronoun(honom, han, 3/\sing/\real, nonsubj).
+@personal_pronoun(henne, hon, 3/\sing/\real, nonsubj).
+@personal_pronoun(man, man, 3/\sing/\real, subj).
+
+labelled_item(den_pronoun,(
+@non_personal_pronoun(den, den, 3/\sing/\real, _SubjOrNonsubj)			   
+)).
+labelled_item(det_pronoun,(
+@non_personal_pronoun(det, det, 3/\sing/\neutrum, _SubjOrNonsubj)			   
+)).
+labelled_item(de_pronoun,(
+@personal_or_non_personal_pronoun(de, de, 3/\plur, subj)
+)).
+labelled_item(dem_pronoun,(
+@personal_or_non_personal_pronoun(dem, de, 3/\plur, nonsubj)
+)).
+
+@wh_personal_pronoun(vem, vem, 3/\real, (subj\/nonsubj)).
+@wh_non_personal_pronoun(vad, vad, 3/\real, (subj\/nonsubj)).
+% Var kommer du ifrån?
+@wh_non_personal_pronoun(var, var, 3/\real, (nonsubj)).
+
+@relative_pronoun(som, Any, (subj\/nonsubj)).
+
+@inherent_reflexive_pronoun(mig, 1/\sing).
+@inherent_reflexive_pronoun(dig, 2/\sing).
+@inherent_reflexive_pronoun(er, 2/\plur).
+@inherent_reflexive_pronoun(sig, 3).
+@inherent_reflexive_pronoun(oss, 1/\plur).
+
+% NPs
+
+% Impersonal "there" subject
+@impersonal_there_subject(det).
+
+@not_personal_quantified_pronoun(något, 3/\sing/\neutrum, något).
+@not_personal_quantified_pronoun(allt, 3/\sing/\neutrum, allt).
+@not_personal_quantified_pronoun(inget, 3/\sing/\neutrum, inget).
+
+@personal_quantified_pronoun(någon, 3/\sing/\real, någon).
+@personal_quantified_pronoun(alla, 3/\plur, alla).
+@personal_quantified_pronoun(ingen, 3/\sing/\real, ingen).
+
+% Dets
+
+d:[sem=def_sing, agr=sing/\real, article=y, wh=n, det_type=def, def=y, prenumber=n] --> den.
+d:[sem=def_sing, agr=sing/\neutrum, article=y, wh=n, det_type=def, def=y, prenumber=n] --> det.
+d:[sem=def_plur, agr=plur, article=y, wh=n, det_type=def, def=y, prenumber=y] --> de.
+d:[sem=denna, agr=sing, wh=n, det_type=def, def=y, prenumber=n, can_be_np=y] --> denna.
+d:[sem=detta, agr=sing, wh=n, det_type=def, def=y, prenumber=n, can_be_np=y] --> detta.
+d:[sem=dessa, agr=plur, wh=n, det_type=def, def=y, prenumber=n, can_be_np=y] --> dessa.
+d:[sem=den_här, agr=sing/\real, wh=n, det_type=def, def=y, prenumber=n, can_be_np=y] --> (den, här).
+d:[sem=den_där, agr=sing/\real, wh=n, det_type=def, def=y, prenumber=n, can_be_np=y] --> (den, där).
+d:[sem=den_här, agr=sing/\neutrum, wh=n, det_type=def, def=y, prenumber=n, can_be_np=y] --> (det, här).
+d:[sem=den_där, agr=sing/\neutrum, wh=n, det_type=def, def=y, prenumber=n, can_be_np=y] --> (det, där).
+
+d:[sem=samma, agr=_Any, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=y] --> samma.
+
+d:[sem=nästa, agr=_Any, wh=n, det_type=ordinal, def=y, prenumber=y] --> nästa.
+d:[sem=senaste, agr=sing/\real, wh=n, det_type=ordinal, def=y, prenumber=y] --> (den, senaste).
+d:[sem=senaste, agr=sing/\neutrum, wh=n, det_type=ordinal, def=y, prenumber=y] --> (det, senaste).
+d:[sem=senaste, agr=plur, wh=n, det_type=ordinal, def=y, prenumber=y] --> (de, senaste).
+d:[sem=förra, agr=_Any, wh=n, det_type=ordinal, def=y, prenumber=y] --> förra.
+
+d:[sem=en, agr=sing/\real, article=y, wh=n, det_type=indef, def=n, prenumber=n] --> en.
+d:[sem=en, agr=sing/\neutrum, article=y, wh=n, det_type=indef, def=n, prenumber=n] --> ett.
+
+d:[sem=någon, agr=sing/\real, wh=n, det_type=quant, def=n, can_be_np=n, prenumber=n] --> något.
+d:[sem=någon, agr=sing/\neutrum, wh=n, det_type=quant, def=n, can_be_np=n, prenumber=n] --> någon.
+d:[sem=några, agr=plur, wh=n, det_type=quant, def=n, can_be_np=n, prenumber=n] --> några.
+
+d:[sem=mera, agr=plur, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=y] --> mera.
+d:[sem=en_till, agr=sing/\real, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=y] --> en, till.
+d:[sem=en_till, agr=sing/\neutrum, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=y] --> ett, till.
+d:[sem=några_till, agr=sing/\neutrum, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=y] --> några, till.
+
+d:[sem=ingen, agr=sing/\real, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=n] --> ingen.
+d:[sem=ingen, agr=sing/\neutrum, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=n] --> inget.
+d:[sem=inga, agr=plur, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=n] --> inga.
+
+d:[sem=ena, agr=sing, wh=n, det_type=quant, def=y, prenumber=n, can_be_np=n] --> ena.
+d:[sem=båda, agr=plur, wh=n, det_type=quant, def=y, prenumber=n, can_be_np=n] --> båda.
+d:[sem=alla, agr=plur, wh=n, det_type=quant, def=y, prenumber=y, can_be_np=y] --> alla.	
+d:[sem=samtliga, agr=plur, wh=n, det_type=quant, def=y, prenumber=y, can_be_np=y] --> samtliga.	
+d:[sem=varje, agr=sing, wh=n, det_type=quant, def=y, prenumber=y, can_be_np=n] --> varje.
+d:[sem=alla_de, agr=plur, wh=n, det_type=quant, def=y, prenumber=y, can_be_np=n] --> alla, de.
+d:[sem=flera, agr=plur, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=y] --> flera.
+d:[sem=lite, agr=sing, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=y] --> lite.
+d:[sem=mera, agr=sing, wh=n, det_type=quant, def=n, prenumber=n, can_be_np=y] --> mera.
+
+d:[sem=vilken, agr=sing/\real, wh=y, det_type=quant, prenumber=n, can_be_np=y] --> vilken.
+d:[sem=vilken, agr=sing/\neutrum, wh=y, det_type=quant, prenumber=n, can_be_np=y] --> vilket.		
+d:[sem=vilken, agr=plur, wh=y, det_type=quant, prenumber=n, can_be_np=y] --> vilka.
+d:[sem=hur_många, agr=plur, wh=y, det_type=quant, prenumber=n, can_be_np=y] --> hur, många.
+d:[sem=hur_mycket, agr=sing, wh=y, det_type=quant, prenumber=n, can_be_np=y] --> hur, mycket.
+
+% Possessives
+
+@possessive(min, jag, real, agent).
+@possessive(mitt, jag, neutrum, agent).
+@possessive(mina, jag, plur, agent).
+
+@possessive(din, du, real, agent).
+@possessive(ditt, du, neutrum, agent).
+@possessive(dina, du, plur, agent).
+
+@possessive(hans, han, _AnyAgr, agent).
+
+@possessive(hennes, hon, _AnyAgr, agent).
+
+@possessive(dess, den, _AnyAgr, agent).
+
+@possessive(er, ni, real, agent).
+@possessive(ert, ni, neutrum, agent).
+@possessive(era, ni, plur, agent).
+
+@possessive(vår, ni, real, agent).
+@possessive(vårt, ni, neutrum, agent).
+@possessive(våra, ni, plur, agent).
+
+@possessive(deras, de, _AnyAgr, @thing_type).
+
+% Negation adverbs
+
+@adverb(inte, [polarity, negative], [temporal], [advpos=postv, main_clause=y]).
+@adverb(inte, [polarity, negative], [temporal], [advpos=prev, main_clause=n]).
+
+% Numcompares (stupid name, but I can't think of a better one)
+
+numcompare:[sem=minst] --> minst.
+numcompare:[sem=som_mest] --> som, mest.
+numcompare:[sem=mer_än] --> mer, än.
+numcompare:[sem=mindre_än] --> mindre, än.
+numcompare:[sem=inte_mer_än] --> inte, mer, än.
+numcompare:[sem=inte_mindre_än] --> inte, mindre, än.
+
+% Conj
+
+conj:[] --> och.
+conj:[] --> eller.
+
+% Numbers
+
+number:[sem=0, num_type=zero,time_type=none,agr=plur] --> noll.
+number:[sem=1, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=sing/\real] --> en.
+number:[sem=1, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=sing/\neutrum] --> ett.
+number:[sem=2, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> två.
+number:[sem=3, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> tre.
+number:[sem=4, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> fyra.
+number:[sem=5, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> fem.
+number:[sem=6, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> sex.
+number:[sem=7, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> sju.
+number:[sem=8, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> åtta.
+number:[sem=9, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> nio.
+number:[sem=10, num_type=ten,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/minute\/second,agr=plur] --> tio.
+number:[sem=11, num_type=teen,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/minute\/second,agr=plur] --> elva.
+number:[sem=12, num_type=teen,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/minute\/second,agr=plur] --> tolv.
+number:[sem=12, num_type=teen,time_type=none,agr=plur] --> (ett, dussin).
+number:[sem=13, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> tretton.
+number:[sem=14, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> fjorton.
+number:[sem=15, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> femton.
+number:[sem=16, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> sexton.
+number:[sem=17, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> sjutton.
+number:[sem=18, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> arton.
+number:[sem=19, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> nitton.
+number:[sem=20, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> tjugo.
+number:[sem=30, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> trettio.
+number:[sem=40, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtio.
+number:[sem=50, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtio.
+number:[sem=60, num_type='20_to_99',time_type=none\/none,agr=plur] --> sextio.
+number:[sem=70, num_type='20_to_99',time_type=none\/none,agr=plur] --> sjuttio.
+number:[sem=80, num_type='20_to_99',time_type=none\/none,agr=plur] --> åttio.
+number:[sem=90, num_type='20_to_99',time_type=none\/none,agr=plur] --> nittio.
+
+number:[sem=0, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,noll.
+number:[sem=1, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,one.
+number:[sem=2, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,två.
+number:[sem=3, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,tre.
+number:[sem=4, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,fyra.
+number:[sem=5, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,fem.
+number:[sem=6, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,sex.
+number:[sem=7, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,sju.
+number:[sem=8, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,åtta.
+number:[sem=9, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> noll,nio.
+number:[sem=21, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur/\real] --> tjugoen.
+number:[sem=21, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur/\neutrum] --> tjugoett.
+number:[sem=22, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> tjugotvå.
+number:[sem=23, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> tjugotre.
+number:[sem=24, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> tjugofyra.
+number:[sem=24, num_type='20_to_99',time_type=none,agr=plur] --> (två, dussin).
+number:[sem=25, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> tjugofem.
+number:[sem=26, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> tjugosex.
+number:[sem=27, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> tjugosju.
+number:[sem=28, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> tjugoåtta.
+number:[sem=29, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> tjugonio.
+number:[sem=31, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur/\real] --> trettioen.
+number:[sem=31, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur/\neutrum] --> trettioett.
+number:[sem=32, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> trettiotvå.
+number:[sem=33, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> trettiotre.
+number:[sem=34, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> trettiofyra.
+number:[sem=35, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> trettiofem.
+number:[sem=36, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> trettiosex.
+number:[sem=37, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> trettiosju.
+number:[sem=38, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> trettioåtta.
+number:[sem=39, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> trettionio.
+number:[sem=40, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtio,fyra,zero.
+number:[sem=41, num_type='20_to_99',time_type=none\/minute\/second,agr=plur/\real] --> fyrtioen.
+number:[sem=41, num_type='20_to_99',time_type=none\/minute\/second,agr=plur/\neutrum] --> fyrtioett.
+number:[sem=42, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtiotvå.
+number:[sem=43, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtiotre.
+number:[sem=44, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtiofyra.
+number:[sem=45, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtiofem.
+number:[sem=46, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtiosex.
+number:[sem=47, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtiosju.
+number:[sem=48, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtioåtta.
+number:[sem=49, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fyrtionio.
+number:[sem=51, num_type='20_to_99',time_type=none\/minute\/second,agr=plur/\real] --> femtioen.
+number:[sem=51, num_type='20_to_99',time_type=none\/minute\/second,agr=plur/\neutrum] --> femtioett.
+number:[sem=52, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtiotvå.
+number:[sem=53, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtiotre.
+number:[sem=54, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtiofyra.
+number:[sem=55, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtiofem.
+number:[sem=56, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtiosex.
+number:[sem=57, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtiosju.
+number:[sem=58, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtioåtta.
+number:[sem=59, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> femtionio.
+number:[sem=60, num_type='20_to_99',time_type=none,agr=plur] --> sextio,sex,zero.
+number:[sem=61, num_type='20_to_99',time_type=none,agr=plur/\real] --> sextioen.
+number:[sem=61, num_type='20_to_99',time_type=none,agr=plur/\neutrum] --> sextioett.
+number:[sem=62, num_type='20_to_99',time_type=none,agr=plur] --> sextiotvå.
+number:[sem=63, num_type='20_to_99',time_type=none,agr=plur] --> sextiotre.
+number:[sem=64, num_type='20_to_99',time_type=none,agr=plur] --> sextiofyra.
+number:[sem=65, num_type='20_to_99',time_type=none,agr=plur] --> sextiofem.
+number:[sem=66, num_type='20_to_99',time_type=none,agr=plur] --> sextiosex.
+number:[sem=67, num_type='20_to_99',time_type=none,agr=plur] --> sextiosju.
+number:[sem=68, num_type='20_to_99',time_type=none,agr=plur] --> sextioåtta.
+number:[sem=69, num_type='20_to_99',time_type=none,agr=plur] --> sextionio.
+number:[sem=70, num_type='20_to_99',time_type=none,agr=plur] --> sjuttio,sju,zero.
+number:[sem=71, num_type='20_to_99',time_type=none,agr=plur/\real] --> sjuttioen.
+number:[sem=71, num_type='20_to_99',time_type=none,agr=plur/\neutrum] --> sjuttioett.
+number:[sem=72, num_type='20_to_99',time_type=none,agr=plur] --> sjuttiotvå.
+number:[sem=73, num_type='20_to_99',time_type=none,agr=plur] --> sjuttiotre.
+number:[sem=74, num_type='20_to_99',time_type=none,agr=plur] --> sjuttiofyra.
+number:[sem=75, num_type='20_to_99',time_type=none,agr=plur] --> sjuttiofem.
+number:[sem=76, num_type='20_to_99',time_type=none,agr=plur] --> sjuttiosex.
+number:[sem=77, num_type='20_to_99',time_type=none,agr=plur] --> sjuttiosju.
+number:[sem=78, num_type='20_to_99',time_type=none,agr=plur] --> sjuttioåtta.
+number:[sem=79, num_type='20_to_99',time_type=none,agr=plur] --> sjuttionio.
+number:[sem=81, num_type='20_to_99',time_type=none,agr=plur/\real] --> åttioen.
+number:[sem=81, num_type='20_to_99',time_type=none,agr=plur/\neutrum] --> åttioett.
+number:[sem=82, num_type='20_to_99',time_type=none,agr=plur] --> åttiotvå.
+number:[sem=83, num_type='20_to_99',time_type=none,agr=plur] --> åttiotre.
+number:[sem=84, num_type='20_to_99',time_type=none,agr=plur] --> åttiofyra.
+number:[sem=85, num_type='20_to_99',time_type=none,agr=plur] --> åttiofem.
+number:[sem=86, num_type='20_to_99',time_type=none,agr=plur] --> åttiosex.
+number:[sem=87, num_type='20_to_99',time_type=none,agr=plur] --> åttiosju.
+number:[sem=88, num_type='20_to_99',time_type=none,agr=plur] --> åttioåtta.
+number:[sem=89, num_type='20_to_99',time_type=none,agr=plur] --> åttionio.
+number:[sem=91, num_type='20_to_99',time_type=none,agr=plur/\real] --> nittioen.
+number:[sem=91, num_type='20_to_99',time_type=none,agr=plur/\neutrum] --> nittioett.
+number:[sem=92, num_type='20_to_99',time_type=none,agr=plur] --> nittiotvå.
+number:[sem=93, num_type='20_to_99',time_type=none,agr=plur] --> nittiotre.
+number:[sem=94, num_type='20_to_99',time_type=none,agr=plur] --> nittiofyra.
+number:[sem=95, num_type='20_to_99',time_type=none,agr=plur] --> nittiofem.
+number:[sem=96, num_type='20_to_99',time_type=none,agr=plur] --> nittiosex.
+number:[sem=97, num_type='20_to_99',time_type=none,agr=plur] --> nittiosju.
+number:[sem=98, num_type='20_to_99',time_type=none,agr=plur] --> nittioåtta.
+number:[sem=99, num_type='20_to_99',time_type=none,agr=plur] --> nittionio.
+
+macro(year(Year, Surface),
+      (number:[sem=Year, num_type=four_plus_figure, time_type=year, agr=plur] --> Surface)).
+
+% Just list a few years around the present, since they are easy to confuse
+@year(1997, (nitton, hundra, nittio, sju)).
+@year(1998, (nitton, hundra, nittio, åtta)).
+@year(1999, (nitton, hundra, nittio, nio)).
+@year(2000, (två, thousand)).
+@year(2001, (två, två, tusen, ett)).
+@year(2002, (två, två, tusen, två)).
+@year(2003, (två, två, tusen, tre)).
+@year(2004, (två, två, tusen, fyra)).
+@year(2005, (två, två, tusen, fem)).
+@year(2006, (två, två, tusen, sex)).
+@year(2007, (två, två, tusen, sju)).
+@year(2008, (två, två, tusen, åtta)).
+@year(2009, (två, två, tusen, nio)).
+@year(2010, (två, två, tusen, tio)).
+
+
+% Ordinals
+
+ordinal:[sem=1, num_type=digit,time_type=none\/dayofmonth] --> första.
+ordinal:[sem=2, num_type=digit,time_type=none\/dayofmonth] --> andra.
+ordinal:[sem=3, num_type=digit,time_type=none\/dayofmonth] --> tredje.
+ordinal:[sem=4, num_type=digit,time_type=none\/dayofmonth] --> fjärde.
+ordinal:[sem=5, num_type=digit,time_type=none\/dayofmonth] --> femte.
+ordinal:[sem=6, num_type=digit,time_type=none\/dayofmonth] --> sjätte.
+ordinal:[sem=7, num_type=digit,time_type=none\/dayofmonth] --> sjunde.
+ordinal:[sem=8, num_type=digit,time_type=none\/dayofmonth] --> åttonde.
+ordinal:[sem=9, num_type=digit,time_type=none\/dayofmonth] --> nionde.
+ordinal:[sem=10, num_type=ten,time_type=none\/dayofmonth] --> tionde.
+ordinal:[sem=11, num_type=teen,time_type=none\/dayofmonth] --> elfte.
+ordinal:[sem=12, num_type=teen,time_type=none\/dayofmonth] --> tolfte.
+ordinal:[sem=13, num_type=teen,time_type=none\/dayofmonth] --> trettonde.
+ordinal:[sem=14, num_type=teen,time_type=none\/dayofmonth] --> fjortonde.
+ordinal:[sem=15, num_type=teen,time_type=none\/dayofmonth] --> femtonde.
+ordinal:[sem=16, num_type=teen,time_type=none\/dayofmonth] --> sextonde.
+ordinal:[sem=17, num_type=teen,time_type=none\/dayofmonth] --> sjuttonde.
+ordinal:[sem=18, num_type=teen,time_type=none\/dayofmonth] --> artonde.
+ordinal:[sem=19, num_type=teen,time_type=none\/dayofmonth] --> nittonde.
+ordinal:[sem=20, num_type='20_to_99',time_type=none\/dayofmonth] --> tjungonde.
+ordinal:[sem=21, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugoförsta.
+ordinal:[sem=22, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugoandra.
+ordinal:[sem=23, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugotredje.
+ordinal:[sem=24, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugofjärde.
+ordinal:[sem=25, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugofemte.
+ordinal:[sem=26, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugosjätte.
+ordinal:[sem=27, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugosjunde.
+ordinal:[sem=28, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugoåttonde.
+ordinal:[sem=29, num_type='20_to_99',time_type=none\/dayofmonth] --> tjugonionde.
+ordinal:[sem=30, num_type='20_to_99',time_type=none\/dayofmonth] --> trettionde.
+ordinal:[sem=31, num_type='20_to_99',time_type=none\/dayofmonth] --> trettioförsta.
+ordinal:[sem=40, num_type='20_to_99',time_type=none] --> fyrtionde.
+ordinal:[sem=50, num_type='20_to_99',time_type=none] --> femtionde.
+ordinal:[sem=60, num_type='20_to_99',time_type=none] --> sextionde.
+ordinal:[sem=70, num_type='20_to_99',time_type=none] --> sjuttionde.
+ordinal:[sem=80, num_type='20_to_99',time_type=none] --> åttionde.
+ordinal:[sem=90, num_type='20_to_99',time_type=none] --> nittionde.
+ordinal:[sem=32, num_type='20_to_99',time_type=none] --> trettioandra.
+ordinal:[sem=33, num_type='20_to_99',time_type=none] --> tretti,tredje.
+ordinal:[sem=34, num_type='20_to_99',time_type=none] --> trettiofjärde.
+ordinal:[sem=35, num_type='20_to_99',time_type=none] --> trettiofemte.
+ordinal:[sem=36, num_type='20_to_99',time_type=none] --> trettiosjätte.
+ordinal:[sem=37, num_type='20_to_99',time_type=none] --> trettiosjunde.
+ordinal:[sem=38, num_type='20_to_99',time_type=none] --> trettioåttonde.
+ordinal:[sem=39, num_type='20_to_99',time_type=none] --> trettionionde.
+ordinal:[sem=41, num_type='20_to_99',time_type=none] --> fyrtioförsta.
+ordinal:[sem=42, num_type='20_to_99',time_type=none] --> fyrtioandra.
+ordinal:[sem=43, num_type='20_to_99',time_type=none] --> fyrtiotredje.
+ordinal:[sem=44, num_type='20_to_99',time_type=none] --> fyrtiofjärde.
+ordinal:[sem=45, num_type='20_to_99',time_type=none] --> fyrtiofemte.
+ordinal:[sem=46, num_type='20_to_99',time_type=none] --> fyrtiosjätte.
+ordinal:[sem=47, num_type='20_to_99',time_type=none] --> fyrtiosjunde.
+ordinal:[sem=48, num_type='20_to_99',time_type=none] --> fyrtioåttonde.
+ordinal:[sem=49, num_type='20_to_99',time_type=none] --> fyrtionionde.
+ordinal:[sem=51, num_type='20_to_99',time_type=none] --> femtioförsta.
+ordinal:[sem=52, num_type='20_to_99',time_type=none] --> femtioandra.
+ordinal:[sem=53, num_type='20_to_99',time_type=none] --> femtiotredje.
+ordinal:[sem=54, num_type='20_to_99',time_type=none] --> femtiofjärde.
+ordinal:[sem=55, num_type='20_to_99',time_type=none] --> femtiofemte.
+ordinal:[sem=56, num_type='20_to_99',time_type=none] --> femtiosjätte.
+ordinal:[sem=57, num_type='20_to_99',time_type=none] --> femtiosjunde.
+ordinal:[sem=58, num_type='20_to_99',time_type=none] --> femtioåttonde.
+ordinal:[sem=59, num_type='20_to_99',time_type=none] --> femtionionde.
+ordinal:[sem=61, num_type='20_to_99',time_type=none] --> sextioförsta.
+ordinal:[sem=62, num_type='20_to_99',time_type=none] --> sextioandra.
+ordinal:[sem=63, num_type='20_to_99',time_type=none] --> sextiotredje.
+ordinal:[sem=64, num_type='20_to_99',time_type=none] --> sextiofjärde.
+ordinal:[sem=65, num_type='20_to_99',time_type=none] --> sextiofemte.
+ordinal:[sem=66, num_type='20_to_99',time_type=none] --> sextiosjätte.
+ordinal:[sem=67, num_type='20_to_99',time_type=none] --> sextiosjunde.
+ordinal:[sem=68, num_type='20_to_99',time_type=none] --> sextioåttonde.
+ordinal:[sem=69, num_type='20_to_99',time_type=none] --> sextionionde.
+ordinal:[sem=71, num_type='20_to_99',time_type=none] --> sjuttioförsta.
+ordinal:[sem=72, num_type='20_to_99',time_type=none] --> sjuttioandra.
+ordinal:[sem=73, num_type='20_to_99',time_type=none] --> sjuttiotredje.
+ordinal:[sem=74, num_type='20_to_99',time_type=none] --> sjuttiofjärde.
+ordinal:[sem=75, num_type='20_to_99',time_type=none] --> sjuttiofemte.
+ordinal:[sem=76, num_type='20_to_99',time_type=none] --> sjuttiosjätte.
+ordinal:[sem=77, num_type='20_to_99',time_type=none] --> sjuttiosjunde.
+ordinal:[sem=78, num_type='20_to_99',time_type=none] --> sjuttioåttonde.
+ordinal:[sem=79, num_type='20_to_99',time_type=none] --> sjuttionionde.
+ordinal:[sem=81, num_type='20_to_99',time_type=none] --> åttioförsta.
+ordinal:[sem=82, num_type='20_to_99',time_type=none] --> åttioandra.
+ordinal:[sem=83, num_type='20_to_99',time_type=none] --> åttiotredje.
+ordinal:[sem=84, num_type='20_to_99',time_type=none] --> åttiofjärde.
+ordinal:[sem=85, num_type='20_to_99',time_type=none] --> åttiofemte.
+ordinal:[sem=86, num_type='20_to_99',time_type=none] --> åttiosjätte.
+ordinal:[sem=87, num_type='20_to_99',time_type=none] --> åttiosjunde.
+ordinal:[sem=88, num_type='20_to_99',time_type=none] --> åttioåttonde.
+ordinal:[sem=89, num_type='20_to_99',time_type=none] --> åttionionde.
+ordinal:[sem=91, num_type='20_to_99',time_type=none] --> nittioförsta.
+ordinal:[sem=92, num_type='20_to_99',time_type=none] --> nittioandra.
+ordinal:[sem=93, num_type='20_to_99',time_type=none] --> nittiotredje.
+ordinal:[sem=94, num_type='20_to_99',time_type=none] --> nittiofjärde.
+ordinal:[sem=95, num_type='20_to_99',time_type=none] --> nittiofemte.
+ordinal:[sem=96, num_type='20_to_99',time_type=none] --> nittiosjätte.
+ordinal:[sem=97, num_type='20_to_99',time_type=none] --> nittiosjunde.
+ordinal:[sem=98, num_type='20_to_99',time_type=none] --> nittioåttonde.
+ordinal:[sem=99, num_type='20_to_99',time_type=none] --> nittionionde.
+
+% Months
+
+month:[sem=1] --> january.
+month:[sem=2] --> february.
+month:[sem=3] --> march.
+month:[sem=4] --> april.
+month:[sem=5] --> may.
+month:[sem=6] --> june.
+month:[sem=7] --> july.
+month:[sem=8] --> august.
+month:[sem=9] --> september.
+month:[sem=10] --> october.
+month:[sem=11] --> november.
+month:[sem=12] --> december.
+
+% Times
+
+timeprefix:[sem=any, allows_minutes=n] --> klockan.
+
+minute:[sem=1, minute_type=to_or_past] --> en, minut.
+minute:[sem=2, minute_type=to_or_past] --> två, ?minuter.
+minute:[sem=3, minute_type=to_or_past] --> tre, ?minuter.
+minute:[sem=4, minute_type=to_or_past] --> fyra, ?minuter.
+minute:[sem=5, minute_type=to_or_past] --> fem, ?minuter.
+minute:[sem=6, minute_type=to_or_past] --> sex, ?minuter.
+minute:[sem=7, minute_type=to_or_past] --> sju, ?minuter.
+minute:[sem=8, minute_type=to_or_past] --> åtta, ?minuter.
+minute:[sem=9, minute_type=to_or_past] --> nio, ?minuter.
+minute:[sem=10, minute_type=to_or_past] --> tio, ?minuter.
+minute:[sem=11, minute_type=to_or_past] --> elva, ?minuter.
+minute:[sem=12, minute_type=to_or_past] --> tolv, ?minuter.
+minute:[sem=13, minute_type=to_or_past] --> tretton, ?minuter.
+minute:[sem=14, minute_type=to_or_past] --> fjorton, ?minuter.
+minute:[sem=15, minute_type=to_or_past] --> femton, ?minuter.
+minute:[sem=15, minute_type=to_or_past] --> kvart.
+minute:[sem=16, minute_type=to_or_past] --> sexton, ?minuter.
+minute:[sem=17, minute_type=to_or_past] --> sjutton, ?minuter.
+minute:[sem=18, minute_type=to_or_past] --> arton, ?minuter.
+minute:[sem=19, minute_type=to_or_past] --> nitton, ?minuter.
+minute:[sem=20, minute_type=to_or_past] --> tjugo, ?minuter.
+minute:[sem=21, minute_type=to_or_past] --> tjugo, en, ?minuter.
+minute:[sem=22, minute_type=to_or_past] --> tjugo, två, ?minuter.
+minute:[sem=23, minute_type=to_or_past] --> tjugo, tre, ?minuter.
+minute:[sem=24, minute_type=to_or_past] --> tjugo, fyra, ?minuter.
+minute:[sem=25, minute_type=to_or_past] --> tjugo, fem, ?minuter.
+minute:[sem=26, minute_type=to_or_past] --> tjugo, sex, ?minuter.
+minute:[sem=27, minute_type=to_or_past] --> tjugo, sju, ?minuter.
+minute:[sem=28, minute_type=to_or_past] --> tjugo, åtta, ?minuter.
+minute:[sem=29, minute_type=to_or_past] --> tjugo, nio, ?minuter.
+

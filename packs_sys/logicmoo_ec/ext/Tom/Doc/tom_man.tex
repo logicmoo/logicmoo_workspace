@@ -1,0 +1,429 @@
+\chapter{Hallo World}
+
+This module is an input filter for the \ProCom{} system. It implements the
+translation of multi-modal formulae into first order formulae of a
+constraint logic with terms representing the paths. Together with the
+translation, several techniques are used in order to increase the efficiency
+of the prover. This was achieved by decreasing the complexity of the terms
+and formulae. The main techniques are antiprenexing and a generalised
+skolemisation. All the details are discussed in an accompanying paper
+(which is still to be written though).
+
+The formulae are expected to be in an input file and written in a language
+to be defined. This filter produces a matrix from the formula which in turn
+is an input for the \ProCom{} system and a descriptor set for the particular
+problem.
+ 
+After the translation, we normalised the path terms mentioned above using
+an algorithm implemented by Gilbert Boyreau, Caen University, France.
+Due to the strategy of Prolog of liking consecutive clauses, we had to
+put all translated clauses in a database and to write them out at the very
+end of the filter predicate.
+
+The translation is carried out according to a suggestion in
+
+\begin{center}
+Fran\c{c}oise Clerin-Debart\\
+{\em Th\'eories \'equationelles et de contraintes pour la d\'emonstration
+automatique en logique multi-modale}\\
+PhD Thesis, Caen University, France, 1992
+\end{center}
+
+Modal axioms can be specified in several forms, which will be explained below.
+These axiomes will be either coded as clauses or descriptors will be generated.
+In the latter case, the prover will be forced to use the generated set of
+descriptors rather than the standard descriptors. The choice of which axioms
+to code as descriptors and which to leave as clauses has been made from
+experimenting. Thus, it is not guaranteed that always the best choice will
+be made. Maybe that in later versions a switch will be provided to determine
+the degree of how many of the axioms to generate as descriptors.
+Generally, it can be said that axioms, which are Prolog facts, will be left
+as clauses, and thus in the matrix, and all other axioms will be coded as
+descriptors.
+
+\subsection*{The input language}
+
+Here, we want to present the input language. For more details, we refer the
+reader to the exact definition of the operators
+below. Table~\ref{table:input.language} provides an overview of all the
+defined operators.
+
+\makevertother
+\begin{table}[htp]
+\begin{center}
+\begin{tabular}{l|l|l|l}
+Sign & Notation & Arity & Example \\ \hline
+\(\wedge\) & {\tt \_ and \_} & 2 & {\tt p(X) and q(Y)} \\
+\(\vee\) & {\tt \_ or \_} & 2 & {\tt p(X) or q(Y)} \\
+\(\neg \) & {\tt not \_} & 1 & {\tt not p(X)} \\
+\(\to\) & {\tt \_ implies \_} & 2 & {\tt p(X) implies q(Y)} \\
+\(\leftrightarrow\) & {\tt \_ equivalent \_} & 2 & {\tt p(X) equivalent q(Y)} \\
+\(\forall\) & {\tt forall \_ : \_} & 2 & {\tt forall X : p(X)} \\
+\(\exists\) & {\tt exists \_ : \_} & 2 & {\tt exists X : p(X)} \\
+\(\Box\) & {\tt box \_} & 1 & {\tt box p(X)} \\
+\(\Box\) & {\tt box \_ : \_} & 2 & {\tt box a : p(X)} \\
+\(\Diamond\) & {\tt diamond \_} & 1 & {\tt diamond p(X)} \\
+\(\Diamond\) & {\tt diamond \_ : \_} & 2 & {\tt diamond a : p(X)} \\
+\end{tabular}
+\end{center}
+\caption{\label{table:input.language} The input language of the filter {\tt
+tom}}
+\end{table}
+\makevertactive
+
+The exact precedence of the operators can be seen in the listing of the module
+below. It can be seen, that disjunction and conjunction are defined as infix
+operators and all the other are prefix operators. The arity of 2 for the
+quantifiers seems to be confusing but we have to indicate the variable that
+we are quantifying and the formula over which we are quantifying. The same
+applies to the modal operators of arity 2. However, the first argument for
+this operator is not a variable but a sort of the modality. The modal
+operators of arity 1 are merely thought for the monomodal case, where no
+sort specification is required.
+
+Three more syntactical remarks have to be made:
+\begin{enumerate}
+\item During the translation, constraints for the variables ranging over
+      labels are introduced. These constraints are named {\tt \$Rmod\_} and
+      a term representing the sort of the constraint. This term is usually
+      a lower case letter but can be anything.
+
+      Hence, the user is not advised to use function or predicate symbols
+      with the same name. Otherwise, the system will be extremely puzzled
+      (and the user by the result).
+\item It has been noted in the literature, that rigid and flexible symbols
+      (this refers to function, predicate, and constant symbols equally)
+      have to be distinguished syntactically. Our choice was to prepend such
+      symbols with a {\tt \$R}.
+\item As any term beginning with a Dollar sign is interpreted as a variable
+      by Prolog, the terms from above have to be quoted in single quotes.
+\end{enumerate}
+
+The choice we made in the syntax was totally arbitrary, of course.
+
+\subsection*{Controlling the behaviour}
+
+There are six {\sf Protop} options to control the behaviour of the filter {\tt
+tom}. These options are given in table~\ref{table:protop.tom.options}.
+
+\makevertother
+\begin{table}[htp]
+\begin{center}
+\begin{tabular}{l|l|l}
+ & option name & currently recognised values \\ \hline
+1. & {\tt 'Tom:method'} & {\tt constraints}, \underline{{\tt inference}} \\
+2. & {\tt 'Tom:merging\_predicate'} & {\tt off}, \underline{{\tt
+merge\_clauses}} \\
+3. & {\tt 'Tom:normal\_form'} & {\tt off}, \underline{{\tt
+negation\_normal\_form}} \\
+4. & {\tt 'Tom:special\_path\_term'} & {\tt off}, \underline{{\tt
+normalize\_path}} \\
+5. & {\tt 'Tom:special\_unification'} & {\tt off}, \underline{{\tt
+normalize\_unify\_a1}} \\
+6. & {\tt 'Tom:log\_file'} & {\tt off}, \underline{{\tt on}} \\
+(7.) & ({\tt 'Tom:theory\_optimization'}) & ({\tt off}, \underline{{\tt on}})
+\end{tabular}
+\end{center}
+\caption{\label{table:protop.tom.options} Options for {\tt tom} in {\sf Protop}}
+\end{table}
+\makevertactive
+
+The default values for the options are underlined and will be overridden by
+specifications in the actual problem. The options will be explained in due
+course.
+
+There are three ways of coding problem specific knowledge:
+\begin{enumerate}
+\item Using the command {\tt \# modal\_standard\_theory(}{\em
+      theory\_name,sort}\/{\tt )}, a whole theory can be specified.
+
+      All options are set according to the particular requirements of this
+      logic. For instance, a suitable unification algorithm will be specified
+      to be used.
+
+      At the moment, only the logic KD and S4 are recognised. This is due to
+      the fact that no more implementation of unification algorithms were
+      available. However, it is very easy to extend the framework provided for
+      more logics. It is aimed at providing a proof tool for all normal modal
+      logics or even certain temporal logics.
+
+      The user is encouraged to use the above command whenever possible.
+
+      \begin{description}
+	\item[Example:] \begin{verbatim} # modal_standard_theory(s4,a)
+	                \end{verbatim}
+
+	      This specifies the accessibility relation {\tt a} as being
+	      reflexive, transtitive, serial, and normal.
+
+      \end{description}
+
+\item The command {\tt \# modal\_axiom\_schema(}{\em schema,sort}\/{\tt )}
+      specifies one particular modal axiom schema. As there is no global
+      overview of all specified axioms, a unification and/or a preprocessing
+      of the path terms prior to unification is to be set by the options {\tt
+      'Tom:special\_unification} and {\tt 'Tom:special\_path\_term'}
+      respectively.
+
+      This variant requires more care than the first one but is certainly mor
+      suitable fro own experiments.
+
+      \begin{description}
+        \item[Example:] \begin{verbatim} # modal_axiom_schema(transitive,s).
+	                \end{verbatim}
+
+	This specifies the accessibility relation {\tt s} as being
+	transitive. Recognised values are {\tt interaction}, {\tt transitive}
+	({\tt 4} alternatively), {\tt euclidean} ({\tt 5} alternatively), {\tt
+	reflexive} ({\tt t} alternatively), and {\tt total}.
+      \end{description}
+
+
+\item The third command {\tt \# modal\_axiom\_formula(}{\em
+      formula}\/{\tt )} is used to specify a formula as being an axiom.
+
+      The user can specify any formula in form of a Prolog clause. However,
+      he has to take care of the conventions from above regarding the names
+      of the constraint predicates, variables, etc. This clause is put
+      straight into the matrix. No checks of correctness or whatever will
+      be carried out! The responsibility is entirely up to the user. Therefore
+      it is not encouraged to use this option.
+
+      \begin{description}
+	\item[Example:]
+      \begin{verbatim}
+      # modal_axiom_formula('$Rmod_s'(A + B) :-
+          '$Rmod_s'(A), '$Rmod_s'(B)).
+      \end{verbatim}
+
+      This example simply says that you have a label {\tt A + B} of type
+      {\tt s} if you have labels {\tt A} and {\tt B} of type {\tt s}.
+      \end{description}
+
+\end{enumerate}
+
+The seventh option, {\tt 'Tom:theory\_optimization'}, is only defined if the
+method {\tt constraints} is chosen in the option {\tt 'Tom:method'}. The value
+of this option is paramount to any further treatment of the constaints.
+
+The options {\tt 'Tom:merging\_predicate'}, {\tt 'Tom:normal\_form'}, as well
+as the options {\tt
+'Tom:special\_path\_term'} and {\tt 'Tom:special\_unification'} contain as
+values names of predicates if they are not set to {\tt off}. The convention
+will be explained by the example of the option {\tt 'Tom:normal\_form'}.
+If this option is set to {\tt normalize\_path}, it is expected that a file
+{\tt normalize\_path.pl} can be found. This file must contain a predicate {\tt
+normalize\_path}. The arity of this predicate is 2. The
+table~\ref{table:predicate.arities} provides an overview of the requires
+arities of the predicates in the options.
+
+\makevertother
+\begin{table}[htp]
+\begin{center}
+\begin{tabular}{l|c}
+option name & arity of the predicate \\ \hline
+{\tt 'Tom:merging\_predicate'} & 3 \\
+{\tt 'Tom:normal\_form'} & 2 \\
+{\tt 'Tom:special\_path\_term} & 2 \\
+{\tt 'Tom:special\_unification} & 2
+\end{tabular}
+\end{center}
+\caption{\label{table:predicate.arities} Arities for predicates specified by
+the options}
+\end{table}
+\makevertactive
+
+The last argument of these predicates is the output argument. When merging
+clause lists, we need two input arguments for this predicate. All other
+options need one input argument only.
+
+\subsection*{Examples}
+
+Having introduced the input language and discussed syntactic restrictions,
+we want to give examples of how to use the filter. For instance, the
+modal logic formula \(\Box_a (w(a) \vee \neg w(a))\) would be written as
+{\tt box a : ( w('\$Ra') or not w('\$Ra'))}. 
+
+It can be seen that the letter {\tt a} carries two meanings which is not
+necessarily the case in the formulation of a problem. On the one hand,
+the letter {\tt a} behind the box operator stands for the sort of the modal
+operator. On the other hand, it stands for a logical constant. As this constant
+is rigid, it is written as {\tt '\$Ra'}. Otherwise, the usual conventions of
+bracketing apply.
+
+As it was mentioned earlier, there are different ways of specifying the modal
+axioms:
+
+\begin{enumerate}
+\item {\tt \# modal\_standard\_theory(}{\em theory\_name,sort}\/{\tt )}
+      is used to specify a whole standard theory for a sort.
+
+\item {\tt \# modal\_axiom\_schema(}{\em schema,sort}\/{\tt )} is used to
+      specify a particular axiom schema to be used.
+
+\item {\tt \# modal\_axiom\_formula(}{\em formula}\/{\tt )} is used to specify
+      a formula as being an axiom.
+
+\end{enumerate}
+
+Any other statement beginning with a {\tt \#} sign are not understood by the
+filter. Hence, it is assumed that this statement is not intended for the
+filter and teh entire line will be put into the output file as it came.
+
+It is important to write the full stop at the end of any line - we are
+writing Prolog after all. Comments are to be in lines beginning with
+{\tt \%}, the usual Prolog comment sign.
+
+Having introduced all the syntactic details, we can give an example. We
+produce a stripped-down version of the wise men puzzle, which is a classical
+example for constraint logic programming in this context.
+
+The following formulae are the facts known:
+      \[ \Box_a \Box_b w(a)\]
+      \[ \neg \Box_a w(a)\]
+Moreover, the relation \(b\) is known to be reflexive.
+
+The input file looks as follows:
+
+\begin{verbatim}
+box a : box b : w('$Ra').
+not (box a: w('$Ra')).
+
+# modal_axiom_schema(reflexive,b).
+\end{verbatim}
+
+The result of the translation using the {\tt constraints} method is:
+
+\begin{verbatim}
+w(A + B, '$Ra')
+           //: '$Rmod_b'(B)  , '$Rmod_a'(A) .
+
+-(w('$kolemPath1'(0), '$Ra')).
+
+
+# begin(constraint_theory).
+'$Rmod_a'('$kolemPath1'(0)).
+'$Rmod_b'(0).
+# end(constraint_theory).
+\end{verbatim}
+
+
+...
+
+The second method, {\tt inference}, gave the following result:
+
+\begin{verbatim}
+'$Rmod_a'('$kolemPath1'(0)).
+
+'$Rmod_b'(0).
+
+w(B + A, '$Ra') :-
+        '$Rmod_a'(B),
+        '$Rmod_b'(A).
+
+-(w('$kolemPath1'(0), '$Ra')).
+\end{verbatim}
+
+The descriptor set for this particular problem is:
+
+{\small
+\begin{verbatim}
+:- module('wise2c.x_descriptors').
+
+:- compile(library(capri)).
+:- lib(literal).
+:- lib(matrix).
+make_pred(C, B, A) :-
+        C =.. [E, D],
+        functor(D, G, F),
+        functor(H, G, F),
+        (
+            E = --
+        ->
+            I = ++
+        ;
+            (
+        	E = ++
+            ->
+        	I = --
+            )
+        ),
+        A =.. [I, H],
+        B =.. [E, H].
+
+look_for_entry(D, C, B, A) :-
+        make_pred(D, C, B),
+        'Clause'(B, E, A).
+
+descriptor((proof(reduction(C, B -> A))),
+        template(B, goal),
+        call(make_pred(B, D, A)),
+        template(A, path(C)),
+        constructor(normalize_unify_a1(B, D)))).
+
+descriptor((proof(connection(C, B -> A)),
+        template(B, goal),
+        call(look_for_entry(B, D, A, C)),
+        constructor(normalize_unify_a1(B, D)),
+        template(A, extension(C)))).
+
+\end{verbatim}
+}
+
+The sample run for this example is as follows:
+
+{\small
+\begin{verbatim}
+upwards> protop
+
+		--- Welcome to ProTop (1.51) ---
+
+ProTop -> input_filter = tom.
+ok.
+ProTop -> prove('wise2.easy').
+tom_ops.pl compiled traceable 0 bytes in 0.02 seconds
+./tom.pl   compiled traceable 21548 bytes in 0.35 seconds
+merge_clauses.pl compiled traceable 1712 bytes in 0.03 seconds
+negation_normal_form.pl compiled traceable 6428 bytes in 0.07 seconds
+tom_inference.pl compiled traceable 7000 bytes in 0.08 seconds
+normalize_path.pl compiled traceable 1708 bytes in 0.02 seconds
+% Input filter tom:  350 ms 
+4 clauses read in 67 ms 
+/u/home/procom/ProCom/capri.pl compiled traceable 0 bytes in 0.03 seconds
+./wise2.easy_descriptors compiled traceable 2956 bytes in 0.08 seconds
+--- ProCom: CaPrI module wise2.easy_descriptors loaded.
+
+% All negative clauses are considered as goals.
+complete_goals: 0 ms 
+connection_graph: 67 ms 
+
+Compile time:  1s 633 ms 
+...prover.pl compiled optimized 18868 bytes in 0.22 seconds
+% Depth = 1
+% Depth = 2
+Runtime 33 ms
+
+%| Proof with goal clause 4
+%|	 connection
+%|	 3 - 1
+%|	 --(w('$kolemPath1'(0), '$Ra')) -> ++(w('$kolemPath1'(0) + 0, '$Ra'))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  2 - 1
+%|	 |  --('$Rmod_b'(0)) -> ++('$Rmod_b'(0))
+ok.
+ProTop -> 
+\end{verbatim}
+}
+
+The meaning of descriptors is not subject of this documentation but the
+reader is referred to the documentation of the entire \ProCom{} system:
+
+\begin{center}
+Gerd Neugebauer\\
+\ProCom{}/{\sf CaPrI} and the Shell {\sf ProTop} --- A User's Guide\\
+IMN, HTWK Leipzig,1994
+\end{center}
+

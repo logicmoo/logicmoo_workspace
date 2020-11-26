@@ -1,0 +1,38 @@
+donnee(4, jjj).
+donnee(5, hhh).
+donnee(6, kkkk).
+
+data(10, kkk).
+data(20, ddd).
+data(30, ffff).
+data(40, rrrr).
+
+datum(x) :-
+ donnee(x, _).
+datum(x) :-
+  data(x, _).
+
+ex1(m) :-	
+   forall(a, datum(a), L),
+   moyenne(L, m), /.
+
+ex2(m) :-
+   forall(a, datum(a), L),
+   length(L, n),
+   somme(L, 0, s),
+   val(m, div(s, n)), /.
+
+moyenne(L, m) :-
+   longueur(L, n),
+   somme(L, 0, s),
+   val(m, div(s, n)), /.
+
+somme((x|L), s1, s2) :-
+   val(s3, add(x, s1)),
+   somme(L, s3, s2), /.
+somme((), s, s).
+
+longueur((_|L), s) :-
+   longueur(L, i),
+   val(s, add(i, 1)), /.
+longueur((), 0).

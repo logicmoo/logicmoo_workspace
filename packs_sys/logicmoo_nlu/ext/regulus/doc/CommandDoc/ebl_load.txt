@@ -1,0 +1,5 @@
+Load current specialised Regulus grammar in DCG and left-corner
+form. Same as the {\tt LOAD} command, but for the specialised grammar. 
+
+The specialised grammar is taken from the setting of the {\tt
+ebl\_\-regulus\_\-component\_\-grammar} if it is defined.

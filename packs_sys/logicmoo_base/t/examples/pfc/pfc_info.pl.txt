@@ -1,0 +1,308 @@
+<center>
+<h1>
+Pfc -- a package for forward chaining in Prolog
+</h1>
+
+<h4> Introduction </h4>
+
+Prolog, like most logic programming languages, offers backward
+chaining as the only reasoning scheme.  It is well known that sound
+and complete reasoning systems can be built using either exclusive
+backward chaining or exclusive forward chaining.  Thus, this is not a
+theoretical problem.  It is also well understood how to ``implement''
+forward reasoning using an exclusively backward chaining system and
+vice versa.  Thus, this need not be a practical problem.  In fact,
+many of the logic-based languages developed for AI applications allow
+one to build systems with both forward and backward chaining rules.
+
+<p>
+
+There are, however, some interesting and important issues which need
+to be addresses in order to provide the Prolog programmer with a
+practical, efficient, and well integrated facility for forward
+chaining.  This document describes such a facility, Pfc , which we
+have implemented in standard Prolog.
+
+<p>
+
+A somewhat more complete <a
+href="http://www.cs.umbc.edu/~finin/pfc/pfcman.pdf"> users
+manual</a> is available, as is some information on how to <a
+href="http://www.cs.umbc.edu/~finin/pfc/download.shtml"> get the
+software </a> and how to <a
+href="http://www.cs.umbc.edu/~finin/pfc/using.shtml"> use it at UMBC
+</a>.
+
+<p>
+
+<h4> The basic idea </h4>
+
+The Pfc system is a package that provides a forward reasoning
+capability to be used together with conventional Prolog programs.  The
+Pfc inference rules are Prolog terms which are asserted as facts into
+the regular Prolog database.  For example, here is a file of Pfc rules
+and facts which are appropriate for the ubiquitous kinship domain.
+
+<blockquote>
+<pre>
+spouse(X,Y) <=> spouse(Y,X).
+spouse(X,Y),gender(X,G1),{otherGender(G1,G2)}
+     =>gender(Y,G2).
+gender(P,male) <=> male(P).
+gender(P,female) <=> female(P).
+parent(X,Y),female(X) <=> mother(X,Y).
+parent(X,Y),parent(Y,Z) => grandparent(X,Z).
+grandparent(X,Y),male(X) <=> grandfather(X,Y).
+grandparent(X,Y),female(X) <=> grandmother(X,Y).
+mother(Ma,Kid),parent(Kid,GrandKid)
+      =>grandmother(Ma,GrandKid).
+grandparent(X,Y),female(X) <=> grandmother(X,Y).
+parent(X,Y),male(X) <=> father(X,Y).
+mother(Ma,X),mother(Ma,Y),{X\==Y}
+     =>sibling(X,Y).
+</pre></blockquote>
+
+
+<p>
+
+The Pfc package allows one to define forward chaining rules and to
+add ordinary Prolog assertions into the database in such a way as to
+trigger any of the Pfc rules that are satisfied.  An example of a
+simple Pfc rule is:
+
+<blockquote><pre>
+gender(P,male) => male(P)
+</pre></blockquote>
+
+This rule states that whenever the fact unifying with
+<tt>gender(P,male)</tt> is added to the database, then the fact
+<tt>male(P)</tt>is true.  If this fact is not already in the database,
+it will be added.  In any case, a record will be made that the
+validity of the fact <tt>male(P)</tt>depends, in part, on the validity
+of this forward chaining rule and the fact which triggered it.  To
+make the example concrete, if we add <tt>gender(john,male)$, then the
+fact <tt>male(john)</tt>will be added to the database unless it was
+already there.
+
+<p>
+
+In order to make this work, it is necessary to use the predicate <i>
+add/1</i> rather than <i> assert/1 </i> in order to assert Pfc rules and
+any facts which might appear in the lhs of a Pfc rule.  
+
+
+<h4> Backward-Chaining Pfc Rules </h4>
+
+Pfc includes a special kind of backward chaining rule which is used
+to generate all possible solutions to a goal that is sought in the
+process of forward chaining.  Suppose we wished to define the <i>
+ancestor</i> relationship as a Pfc rule.  This could be done as:
+
+<blockquote><pre>
+parent(P1,P2) => ancestor(P1,P2).
+parent(P1,P2), ancestor(P2,P3) => ancestor(P1,P3).
+</pre></blockquote>
+
+However, adding these rules will generate a large number of
+assertions, most of which will never be needed.  An alternative is to
+define the <i> ancestor</i> relationship by way of backward chaining
+rules which are invoked whenever a particular ancestor relationship is
+needed.  In Pfc, this need arises whenever facts matching the
+relationship are sought while trying a forward chaining rule.
+
+<blockquote><pre>
+ancestor(P1,P2) <= {\+var(P1)}, parent(P1,X), ancestor(X,P2).
+ancestor(P1,P2) <= {var(P1),\+var(P2)}, parent(X,P2), ancestor(P2,X).
+</pre></blockquote>
+
+<h4> Negation </h4>
+
+We sometimes want to draw an inference from the absence of some
+knowledge.  For example, we might wish to encode the default rule that
+a person is assumed to be male unless we have evidence to the
+contrary:
+
+<blockquote><pre>
+person(P), ~female(P) => male(P).
+</pre></blockquote>
+
+A lhs term preceded by a <tt>\sim</tt>is satisfied only if <i> no</i> fact in
+the database unifies with it.  Again, the Pfc system records a
+justification for the conclusion which, in this case, states that it
+depends on the absence of the contradictory evidence.  The behavior of
+this rule is demonstrated in the following dialogue:
+
+<blockquote><pre>
+?- add(person(P), ~female(P) => male(P)).
+yes
+?- add(person(alex)).
+yes
+?- male(alex).
+yes
+?- add(female(alex)).
+yes
+?- male(alex)
+no
+</pre></blockquote>
+
+
+<h4> Procedural Interpretation </h4>
+
+Note that the procedural interpretation of a Pfc rule is that the
+conditions in the lhs are checked <i> from left to right</i>.  One
+advantage to this is that the programmer can chose an order to the
+conditions in a rule to minimize the number of partial instantiations.
+
+<p>
+
+Another advantage is that it allows us to write rules like the
+following:
+
+<blockquote><pre>
+at(Obj,Loc1),at(Obj,Loc2)/{Loc1\==Loc2} 
+   => {remove(at(Obj,Loc1))}.
+</pre></blockquote>
+
+Although the declarative reading of this rule can be questioned, its
+procedural interpretation is clear and useful:
+
+<blockquote>
+If an object is known to be at location <tt>Loc1</tt>and an assertion is
+added that it is at some location <tt>Loc2$, distinct from <tt>Loc1$, then
+the assertion that it is at <tt>Loc1</tt>should be removed.
+</blockquote>
+
+<h4> The Right Hand Side </h4>
+
+The examples seen so far have shown a rules rhs as a single
+proposition to be ``added'' to the database.  The rhs of a Pfc rule
+has some richness as well.  The rhs of a rule is a conjunction of
+facts to be ``added'' to the database and terms enclosed in brackets
+which represent conditions/actions which are executed.  As a simple
+example, consider the conclusions we might draw upon learning that one
+person is the mother of another:
+
+<blockquote><pre>
+mother(X,Y) =>
+  female(X),
+  parent(X,Y),
+  adult(X).
+</pre></blockquote>
+
+As another example, consider a rule which detects bigamists and sends
+an appropriate warning to the proper authorities:
+
+<blockquote><pre>
+spouse(X,Y), spouse(X,Z), {Y\==Z} => 
+   bigamist(X), 
+   {format("~N~w is a bigamist, married
+      to both ~w and ~w~n",[X,Y,Z])}.
+</pre></blockquote>
+
+Each element in the rhs of a rule is processed from left to right ---
+assertions being added to the database with appropriate support and
+conditions being satisfied.  If a condition can not be satisfied, the
+rest of the rhs is not processed.
+
+We would like to allow rules to be expressed as bi-conditional in so
+far a possible.  Thus, an element in the lhs of a rule should have an
+appropriate meaning on the rhs as well.  What meaning should be
+assigned to the conditional fact construction (e.g. <tt>P/Q$) which can
+occur in a rules lhs?  Such a term in the rhs of a rule is
+interpreted as a <i> conditioned assertion</i>. Thus the assertion <tt>P/Q</tt>
+will match a condition <tt>P\prime</tt>in the lhs of a rule only if <tt>P</tt>and
+<tt>P\prime</tt>unify and the condition <tt>Q</tt>is satisfiable.  For example,
+consider the rules that says that an object being located at one place
+is reason to believe that it is not at any other place:
+
+<blockquote><pre>
+at(X,L1) => not(at(X,L2))/L2\==L1
+</pre></blockquote>
+
+Note that a <i> conditioned assertion</i> is essentially a Horn clause.
+We would express this fact in Prolog as the backward chaining rule:
+
+<blockquote><pre>
+not(at(X,L2)) :- at(X,L1),L1\==L2.
+</pre></blockquote>
+
+The difference is, of course, that the addition of such a conditioned
+assertion will trigger forward chaining whereas the assertion of a new
+backward chaining rule will not.
+
+<h4> The Truth Maintenance System </h4>
+
+As discussed in the previous section, a forward reasoning system has
+special needs for some kind of <i> truth maintenance system</i>.  The
+Pfc system has a rather straightforward TMS system which records
+justifications for each fact deduced by a Pfc rule.  Whenever a fact
+is removed from the database, any justifications in which it plays a
+part are also removed.  The facts that are justified by a removed
+justification are checked to see if they are still supported by some
+other justifications.  If they are not, then those facts are also
+removed.
+
+Such a TMS system can be relatively expensive to use and is not needed
+for many applications.  Consequently, its use and nature are optional
+in Pfc and are controlled by the predicate <tt>pfcTmsMode/1</tt>.  The
+possible cases are three:
+
+<ul>
+
+
+
+<p><li> <tt>pfcTmsMode(full)</tt>- The fact is removed unless it has
+<i> well founded support}</i> (WFS).  A fact has WFS if it is supported
+by the <tt>user</tt>or by <tt>God</tt>or by a justification all of
+whose justificees have WFS.
+
+
+<p><li> <tt>pfcTmsMode(local)</tt>- The fact is removed if it has no
+supporting justifications.
+
+<p><li> <tt>pfcTmsMode(none)</tt>-  The fact is never removed. 
+
+</ul>
+
+A fact is considered to be supported by <tt>God</tt>if it is found in the
+database with no visible means of support.  That is, if Pfc
+discovers an assertion in the database that can take part in a forward
+reasoning step, and that assertion is not supported by either the user
+or a forward deduction, then a note is added that the assertion is
+supported by <tt>God</tt>.  This adds additional flexibility in interfacing
+systems employing Pfc to other Prolog applications.
+
+<p>
+
+For some applications, it is useful to be able to justify actions
+performed in the rhs of a rule.  To allow this, Pfc supports the
+idea of declaring certain actions to be <i> undoable </i> and provides
+the user with a way of specifying methods to undo those actions.
+Whenever an action is executed in the rhs of a rule and that action is
+undoable, then a record is made of the justification for that action.
+If that justification is later invalidated (e.g. through the
+retraction of one of its justificees) then the support is checked for
+the action in the same way as it would be for an assertion.  If the
+action does not have support, then Pfc trys each of the methods it
+knows to undo the action until one of them succeeds.
+
+<p>
+
+In fact, in Pfc , one declares an action as undoable just by
+defining a method to accomplish the undoing.  This is done via the
+predicate <tt>pfcUndo/2</tt>.  The predicate <tt>pfcUndo(A1,A2)</tt>is
+true if executing <tt>A2</tt>is a possible way to undo the execution of
+ <tt>A1</tt>.  For example, we might want to couple an assertional
+representation of a set of graph nodes with a graphical display of
+them through the use of Pfc rules:
+
+<blockquote><pre>
+at(N,XY) => {displayNode(N,XY)}.
+arc(N1,N2) => {displayArc(N1,N2}.
+
+pfcUndo(displayNode(N,XY),eraseNode(N,XY)).
+pfcUndo(displayArc(N1,N2),eraseArc(N1,N2)).
+</pre></blockquote>
+
+
+

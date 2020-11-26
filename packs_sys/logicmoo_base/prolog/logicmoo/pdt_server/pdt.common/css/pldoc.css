@@ -1,0 +1,97 @@
+/* $Id$
+
+   CSS for PlDoc, the SWI-Prolog source documentation system
+   Author: Jan Wielemaker
+   Copying: Public domain
+
+   For a tutorial on CSS, see
+   <http://www.htmldog.com/guides/cssbeginner/selectors/>
+*/
+
+
+/*
+ modified for display in editor hovers. mainly reduced indenting and font size.
+ copied a lot from the jdt hover css.
+*/
+
+/* Font definitions */
+
+body, h1, h2, h3, h4, h5, h6, p, table, td, caption, th, ul, ol, dl, li, dd, dt
+{font-family: sans-serif; font-size: 10pt; text-indent: 0 }
+pre				
+{ font-family: monospace; 
+  font-size: 8pt
+
+}
+
+/* Margins */
+body	     { overflow: auto; margin-top: 0; margin-bottom: 4; /*margin-left: 1;*/ margin-right: 0 }
+h1           { margin-top: 5; margin-bottom: 1 }	
+h2           { margin-top: 25; margin-bottom: 3 }
+h3           { margin-top: 20; margin-bottom: 3 }
+h4           { margin-top: 20; margin-bottom: 3 }
+h5           { margin-top: 0; margin-bottom: 0 }
+p            { margin-top: 10px; margin-bottom: 10px }
+pre	         { margin-left: 6 }
+ul	         { margin-top: 0; margin-bottom: 10 }
+li	         { margin-top: 0; margin-bottom: 0 } 
+li p	     { margin-top: 0; margin-bottom: 0 } 
+ol	         { margin-top: 0; margin-bottom: 10 }
+dl	         { margin-top: 0; margin-bottom: 10 }
+dt	         { margin-top: 0; margin-bottom: 0; font-weight: bold }
+dd	         { margin-top: 0; margin-bottom: 0 }
+
+/* Styles and colors */
+a:link	     { color: #0000FF }
+a:hover	     { color: #000080 }
+a:visited    { text-decoration: underline }
+h4           { font-style: italic }
+strong	     { font-weight: bold }
+em	         { font-style: italic }
+var	         { font-style: italic }
+th	         { font-weight: bold }
+
+
+h1.file, h1.module
+{ background-color: #b9daff
+}
+
+dd.defbody
+{ margin-bottom: 1em;
+  margin-left:1em;
+	text-indent:1em
+}
+
+
+.arglist
+{ font-style: italic
+}
+
+.pred .det
+{ font-weight: bold
+}
+
+dt.tag
+{ font-weight: bold
+}
+
+dl.tags dd
+{ margin-left:1em; text-indent:0em
+}
+
+dt.error, dt.warn
+{ font-weight: bold;
+  color: red;
+}
+
+.tags
+{ font-size: 80%
+}
+
+.argdescr
+{ padding-left: 1em
+}
+
+table.paramlist * td
+{ vertical-align: top
+}

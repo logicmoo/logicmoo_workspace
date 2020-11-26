@@ -1,0 +1,12 @@
+(thereExists ?X (thereExists ?Y (thereExists ?Z  (and (r ?X) (s ?Y) (t ?Z) (same ?X ?Y) (same ?Y ?Z)))))
+
+
+(query (thereExists ?X (and (r ?X) (s ?X))))
+
+(answer Yes)
+
+ 
+
+
+
+

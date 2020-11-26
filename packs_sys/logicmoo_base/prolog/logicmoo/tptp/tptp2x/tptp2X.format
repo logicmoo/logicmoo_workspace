@@ -1,0 +1,715 @@
+%==============================================================================
+%----Procedures for format modules to use
+%----
+%----Extracted by Geoff Sutcliffe, September 1998.
+%==============================================================================
+%------------------------------------------------------------------------------
+tptp2X_tab(N):-
+    N =< 0,
+    !.
+
+tptp2X_tab(N):-
+    write(' '),
+    N1 is N - 1,
+    tptp2X_tab(N1).
+%------------------------------------------------------------------------------
+output_indent(Indent,AlreadyIndented):-
+    ActualIndent is Indent - AlreadyIndented,
+    tptp2X_tab(ActualIndent).
+%------------------------------------------------------------------------------
+%----Output : or := separator for a format
+output_defn_type_separator_for_format(Format,Separator,TypeOrDefn):-
+    concatenate_atoms([Format,'_output_separator'],FormatSeparatorPredicate),
+    FormatSeparatorQuery =.. [FormatSeparatorPredicate,Separator,TypeOrDefn],
+    FormatSeparatorQuery.
+%------------------------------------------------------------------------------
+%----Call format specific code for reformating atoms
+output_variable_for_format(Format,Language,Variable,Indent,AlreadyIndented):-
+    tptp2X_member(Format,[tptp,lf]),
+    !,
+    concatenate_atoms([Format,'_output_variable'],FormatVariablePredicate),
+    FormatVariableQuery =.. [FormatVariablePredicate,Language,Variable,Indent,
+AlreadyIndented],
+    FormatVariableQuery.
+
+output_variable_for_format(Format,_,Variable,_,_):-
+    output_variable_for_format(Format,Variable).
+
+output_variable_for_format(Format,Variable):-
+%----Make query
+    concatenate_atoms([Format,'_output_variable'],FormatAtomPredicate),
+    FormatAtomQuery =.. [FormatAtomPredicate,Variable],
+    FormatAtomQuery.
+%------------------------------------------------------------------------------
+%----Call format specific code for reformating atoms
+%----THF case where formating must continue inside
+output_atom_for_format(Format,Language,Atom,Indent,AlreadyIndented,
+ConnectiveAbove):-
+    tptp2X_member(Format,[tptp,lf]),
+    !,
+    concatenate_atoms([Format,'_output_atom'],FormatAtomPredicate),
+    FormatAtomQuery =.. [FormatAtomPredicate,Language,Atom,Indent,
+AlreadyIndented,ConnectiveAbove],
+    FormatAtomQuery.
+
+output_atom_for_format(Format,Language,Atom,_,_,_):-
+    output_atom_for_format(Format,Language,Atom).
+
+output_atom_for_format(Format,Language,Atom):-
+%----Make query
+    concatenate_atoms([Format,'_output_atom'],FormatAtomPredicate),
+    FormatAtomQuery =.. [FormatAtomPredicate,Language,Atom],
+    FormatAtomQuery.
+%------------------------------------------------------------------------------
+%----Merge variables and lists of variables
+merge_quantified_variables([H1|T1],[H2|T2],Variables):-
+    !,
+    tptp2X_append([H1|T1],[H2|T2],Variables).
+
+merge_quantified_variables(V,[H|T],[V,H|T]):-
+    !.
+
+merge_quantified_variables([H|T],V,Variables):-
+    !,
+    tptp2X_append([H|T],[V],Variables).
+
+merge_quantified_variables(V1,V2,[V1,V2]).
+%------------------------------------------------------------------------------
+two_part_variable_not_flat_second_part(Variable):-
+    Variable =.. [_,_,SecondPart],
+    tptp_flat_binary_formula(SecondPart,_),
+    !,
+    fail.
+
+two_part_variable_not_flat_second_part(Variable):-
+    Variable =.. [_,_,Literal],
+    tptp_atomic_formula(Literal),
+    !,
+    fail.
+
+two_part_variable_not_flat_second_part(Variable):-
+    Variable =.. [_,_,_].
+%------------------------------------------------------------------------------
+output_quantified_variable_separator(FirstVariable,SecondVariable,Separator,
+Indent):-
+    (   two_part_variable_not_flat_second_part(FirstVariable)
+    ;   two_part_variable_not_flat_second_part(SecondVariable)
+    ),
+    !,
+    write(Separator),
+    nl,
+    output_indent(Indent,0).
+
+output_quantified_variable_separator(_,_,Separator,_):-
+    write(Separator).
+%------------------------------------------------------------------------------
+%----Output the quantified variables
+%----Single variables, maybe var or atomic
+output_quantified_variables(Format,Language,OneVariable,_,Indent,
+AlreadyIndented):-
+    looks_like_a_variable(OneVariable),
+    !,
+    output_variable_for_format(Format,Language,OneVariable,Indent,
+AlreadyIndented).
+
+%----List of one variable
+output_quantified_variables(Format,Language,[OneVariable],_,Indent,
+AlreadyIndented):-
+    !,
+    output_variable_for_format(Format,Language,OneVariable,Indent,
+AlreadyIndented).
+
+%----List of more variables
+output_quantified_variables(Format,Language,[FirstVariable,SecondVariable|
+RestOfVariables],Separator,Indent,AlreadyIndented):-
+    !,
+    output_variable_for_format(Format,Language,FirstVariable,Indent,
+AlreadyIndented),
+    output_quantified_variable_separator(FirstVariable,SecondVariable,
+Separator,Indent),
+    output_quantified_variables(Format,Language,[SecondVariable|
+RestOfVariables],Separator,Indent,Indent).
+
+%----Output quantified variables with formatting
+output_quantified_variables(Format,Language,Prefix,Variables,Separator,Suffix,
+Indent,_):-
+    write(Prefix),
+    tptp2X_atom_length(Prefix,PrefixLength),
+    NewIndent is Indent + PrefixLength,
+    output_quantified_variables(Format,Language,Variables,Separator,NewIndent,
+NewIndent),
+    write(Suffix).
+%------------------------------------------------------------------------------
+%----Check if a quantified formula, in a specified format
+quantified_formula(Format,QuantifiedFormula,Quantifier,Variables,Formula,
+FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+FormulaSuffix):-
+%----Make query to see if this is a quantified formula
+    concatenate_atoms([Format,'_quantified_formula'],FormulaQueryPredicate),
+    FormulaQuery =.. [FormulaQueryPredicate,QuantifiedFormula,Quantifier,
+Variables,Formula],
+    FormulaQuery,
+%----Make query to see how to write the formula
+    concatenate_atoms([Format,'_quantified_format'],FormatQueryPredicate),
+    FormatQuery =.. [FormatQueryPredicate,FormulaPrefix,VariablesPrefix,
+VariablesSeparator,VariablesSuffix,FormulaSuffix],
+    FormatQuery.
+%------------------------------------------------------------------------------
+%----Check if a binary formula, in a specified format
+binary_formula(Format,BinaryFormula,Connective,LHS,RHS,FormulaPrefix,
+ConnectivePrefix,ConnectiveSuffix,FormulaSuffix):-
+%----Make query to see if this is a binary formula
+    concatenate_atoms([Format,'_binary_formula'],FormulaQueryPredicate),
+    FormulaQuery =.. [FormulaQueryPredicate,BinaryFormula,Connective,LHS,RHS],
+    FormulaQuery,
+%----Make query to see how to write the formula
+    concatenate_atoms([Format,'_binary_format'],FormatQueryPredicate),
+    FormatQuery =.. [FormatQueryPredicate,FormulaPrefix,ConnectivePrefix,
+ConnectiveSuffix,FormulaSuffix],
+    FormatQuery.
+%------------------------------------------------------------------------------
+%----Check if a unary formula, in a specified format
+unary_formula(Format,UnaryFormula,Connective,Formula,FormulaPrefix,
+ConnectiveSuffix,FormulaSuffix):-
+%----Make query to see if this is a unary formula
+    concatenate_atoms([Format,'_unary_formula'],FormulaQueryPredicate),
+    FormulaQuery =.. [FormulaQueryPredicate,UnaryFormula,Connective,Formula],
+    FormulaQuery,
+%----Make query to see how to write the formula
+    concatenate_atoms([Format,'_unary_format'],FormatQueryPredicate),
+    FormatQuery =.. [FormatQueryPredicate,FormulaPrefix,ConnectiveSuffix,
+FormulaSuffix],
+    FormatQuery.
+%------------------------------------------------------------------------------
+%----Simplify quantified formulae
+%DEBUG output_formula(Format,Language,Formula,Indent,AlreadyIndented,ConnectiveAbove):-nl,write('OF--- '),display(Formula),nl,fail.
+
+output_formula(Format,Language,QuantifiedQuantifiedFormula,Indent,
+AlreadyIndented,ConnectiveAbove):-
+%----Check if this format wants merged variables
+    tptp2X_member(Format,[tptp,oldtptp,otter]),
+%----Check if there is a nested quantifier the same
+    quantified_formula(tptp,QuantifiedQuantifiedFormula,Quantifier,
+Variables1,QuantifiedFormula,_,_,_,_,_),
+    quantified_formula(tptp,QuantifiedFormula,Quantifier,
+Variables2,Formula,_,_,_,_,_),
+    !,
+%----Merge the variables into one list
+    merge_quantified_variables(Variables1,Variables2,Variables),
+    NewQuantification =.. [Quantifier,Variables],
+    NewQuantifiedFormula =.. [:,NewQuantification,Formula],
+%----Try agains with the new formula
+    output_formula(Format,Language,NewQuantifiedFormula,Indent,AlreadyIndented,
+ConnectiveAbove).
+
+output_formula(Format,Language,QuantifiedManyVarsFormula,Indent,AlreadyIndented,
+ConnectiveAbove):-
+%----Check if this format wants separated variables
+    tptp2X_member(Format,[lf]),
+%----Check if there is a nested quantifier the same
+    quantified_formula(tptp,QuantifiedManyVarsFormula,Quantifier,
+[OneVariable,TwoVariables|MoreVariables],QuantifiedFormula,_,_,_,_,_),
+    !,
+    InnerQuantifier =.. [Quantifier,[TwoVariables|MoreVariables]],
+    InnerFormula =.. [:,InnerQuantifier,QuantifiedFormula],
+    OuterQuantifier =.. [Quantifier,[OneVariable]],
+    QuantifiedOneVarFormula =.. [:,OuterQuantifier,InnerFormula],
+    output_formula(Format,Language,QuantifiedOneVarFormula,Indent,
+AlreadyIndented,ConnectiveAbove).
+
+%----Write a quantified formula
+output_formula(Format,Language,QuantifiedFormula,Indent,AlreadyIndented,
+ConnectiveAbove):-
+%----Check if a quantified formula
+    quantified_formula(tptp,QuantifiedFormula,_,_,_,_,_,_,_,_),
+    !,
+%----Get information for the specified format
+    quantified_formula(Format,QuantifiedFormula,Quantifier,Variables,
+Formula,FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+FormulaSuffix),
+    output_indent(Indent,AlreadyIndented),
+%----If below an @ or = then ()
+    (   tptp2X_member(ConnectiveAbove,['@','=',':='])
+   ->   (   write('( '),
+            FormulaIndent is Indent + 2
+        )
+    ;   FormulaIndent is Indent
+    ),
+    write(FormulaPrefix),
+    tptp2X_atom_length(FormulaPrefix,FormulaPrefixLength),
+    write(Quantifier),
+    tptp2X_atom_length(Quantifier,QuantifierLength),
+    write(VariablesPrefix),
+    tptp2X_atom_length(VariablesPrefix,VariablesPrefixLength),
+    VariableIndent is FormulaIndent + FormulaPrefixLength + QuantifierLength +
+VariablesPrefixLength,
+    output_quantified_variables(Format,Language,Variables,VariablesSeparator,
+VariableIndent,VariableIndent),
+    write(VariablesSuffix),
+%----If a literal formula then no nl, just output it HMMMM, not so nice
+    (   tptp_atomic_formula(Formula)
+    ->  (   NewIndent is FormulaIndent + 2,
+            output_formula(Format,Language,Formula,NewIndent,NewIndent,
+Quantifier)
+        )
+    ;   (   nl,
+%----If a quantified formula then no extra indent
+            (   quantified_formula(Format,Formula,_,_,_,_,_,_,_,_)
+            ->  NewIndent is FormulaIndent
+            ;   NewIndent is FormulaIndent + 2
+            ),
+%----Output the (non-literal) formula
+            output_formula(Format,Language,Formula,NewIndent,0,Quantifier)
+        )
+    ),
+    write(FormulaSuffix),
+    (   tptp2X_member(ConnectiveAbove,['@','=',':='])
+   ->   write(' )')
+    ;   true
+    ).
+
+%----Write a binary formula 
+output_formula(Format,Language,BinaryFormula,Indent,AlreadyIndented,
+ConnectiveAbove):-
+%----Check if a binary formula
+    binary_formula(tptp,BinaryFormula,_,_,_,_,_,_,_),
+    !,
+%----Get information for the specified format
+    binary_formula(Format,BinaryFormula,Connective,LHS,RHS,PrefixBracket,
+ConnectivePrefix,ConnectiveSuffix,SuffixBracket),
+%----Get information for the specified format
+    output_indent(Indent,AlreadyIndented),
+    name(Connective,ConnectiveASCII),
+    tptp2X_length(ConnectiveASCII,ConnectiveLength),
+%----If in a sequence of associative, then no brackets or indent. 
+    (   (   (   Connective == ConnectiveAbove,
+%----Omit brackets for associative operators
+                tptp_associative_binary_connective(Connective)
+            )
+%----Outermost never needs brackets
+            ;   ConnectiveAbove == outermost
+        )
+    ->  (   ConnectiveIndent is Indent + 1 - ConnectiveLength - 2,
+            NewIndent is Indent,
+            NewAlreadyIndented is Indent
+        )
+    ;   (   write(PrefixBracket),
+%----Indent further if not the same as the last connective
+            ConnectiveIndent is Indent + 1 - ConnectiveLength,
+            NewIndent is Indent + 2,
+            NewAlreadyIndented is Indent + 2
+        )
+    ),
+%----Use none for left ()ed right associative connectives, to force ()s
+    (   (   tptp_right_associative_binary_connective(Connective),
+            binary_formula(tptp,LHS,Connective,_,_,_,_,_,_)
+        )
+    ->  FakeLHSConnectiveAbove = none
+    ;   FakeLHSConnectiveAbove = Connective
+    ),
+    output_formula(Format,Language,LHS,NewIndent,NewAlreadyIndented,
+FakeLHSConnectiveAbove),
+%----Write connective on next line except for a flat situation
+    (   (   tptp_flat_binary_connnective(Connective),
+            tptp_flat_binary_formula(RHS,_RHSConnective),
+            \+ quantified_formula(tptp,LHS,_,_,_,_,_,_,_,_)
+        )
+    ->  write(' ')
+    ;   (   nl,
+            output_indent(ConnectiveIndent,0))
+    ),
+    write(ConnectivePrefix),
+    write(Connective),
+    write(ConnectiveSuffix),
+%----Use none for right ()ed left associative connectives, to force ()s
+    (   (   tptp_left_associative_binary_connective(Connective),
+            binary_formula(tptp,RHS,Connective,_,_,_,_,_,_)
+        )
+    ->  FakeRHSConnectiveAbove = none
+    ;   FakeRHSConnectiveAbove = Connective
+    ),
+    output_formula(Format,Language,RHS,NewIndent,NewAlreadyIndented,
+FakeRHSConnectiveAbove),
+    (   (   (   Connective == ConnectiveAbove,
+                tptp_associative_binary_connective(Connective)
+            )
+            ;   ConnectiveAbove == outermost
+        )
+    ->  true
+    ;   write(SuffixBracket)
+    ).
+
+%----Infix negated equality becomes inequality
+output_formula(tptp,Language,~'$tptp_equal'(LHS,RHS),Indent,AlreadyIndented,
+ConnectiveAbove):-
+    !,
+    output_formula(tptp,Language,'$tptp_not_equal'(LHS,RHS),Indent,
+AlreadyIndented,ConnectiveAbove).
+
+%----Write a DLF (for now) dereference
+output_formula(_,dlf,&(Atom),_,_,_):-
+    name(Atom,[36|_]),
+    !,
+    write('&('),
+    write(Atom),
+    write(')').
+
+output_formula(_,dlf,&(Atom),_,_,_):-
+    !,
+    write('&'),
+    write(Atom).
+
+%----Write a DLF complement
+output_formula(_,dlf,-(Class),Indent,AlreadyIndented,ConnectiveAbove):-
+    !,
+    write('-'),
+    ( atomic(Class)
+   -> write(Class)
+    ; output_formula(_,dlf,Class,Indent,AlreadyIndented,ConnectiveAbove) 
+    ).
+
+%----Write a DLF separator
+output_formula(Format,Language,'#'(Prefix),Indent,_,ConnectiveAbove):-
+    !,
+    output_formula(Format,Language,Prefix,Indent,Indent,ConnectiveAbove),
+    write('#').
+
+output_formula(Format,Language,'#'(LHS,RHS),Indent,_,ConnectiveAbove):-
+    !,
+    output_formula(Format,Language,LHS,Indent,Indent,ConnectiveAbove),
+    write('#'),
+    output_formula(Format,Language,RHS,Indent,Indent,ConnectiveAbove).
+
+%----Write a unary formula
+output_formula(Format,Language,UnaryFormula,Indent,AlreadyIndented,
+ConnectiveAbove):-
+    unary_formula(tptp,UnaryFormula,_,_,_,_,_),
+    !,
+%----Get information for the specified format
+    unary_formula(Format,UnaryFormula,Connective,Formula,FormulaPrefix,
+ConnectiveSuffix,FormulaSuffix),
+    output_indent(Indent,AlreadyIndented),
+    write(FormulaPrefix),
+    tptp2X_atom_length(FormulaPrefix,FormulaPrefixLength),
+%----If below an @ or = then ()l otherwise things go wrong with ! and ?
+    (   tptp2X_member(ConnectiveAbove,['@','='])
+   ->   (   write('( '),
+            FormulaIndent is Indent + 2
+        )
+    ;   FormulaIndent is Indent
+    ),
+    write(Connective),
+    tptp2X_atom_length(Connective,ConnectiveLength),
+    write(ConnectiveSuffix),
+    tptp2X_atom_length(ConnectiveSuffix,ConnectiveSuffixLength),
+%----THF requires all unary formulae to () their bodies, which sucks because
+%----negated atoms are ()ed, which fucks up clauses. Further, my parsers
+%----don't need the ()s for quantified, but some do so put them in.
+%----Put '~' in list for THF
+    (   (   Language == thf
+        ;   quantified_formula(Format,Formula,_,_,_,_,_,_,_,_)
+        )
+    ->  (   write('( '),
+            BracketIndent = 2,
+            FakeConnective = outermost )
+    ;   (   BracketIndent = 0,
+            FakeConnective = Connective
+        )
+    ),
+    NewIndent is FormulaIndent + ConnectiveLength + 1 + BracketIndent,
+    AlreadyIndented1 is FormulaIndent + FormulaPrefixLength + ConnectiveLength +
+ConnectiveSuffixLength + BracketIndent,
+%----Use outermost to suppress inner ()s now that all negated get ()s here
+%----Change Connective back to outermost for THF
+    output_formula(Format,Language,Formula,NewIndent,AlreadyIndented1,
+FakeConnective),
+    write(FormulaSuffix),
+%----See comment above
+    (   (   Language = thf
+        ;   quantified_formula(Format,Formula,_,_,_,_,_,_,_,_)
+        )
+    ->  write(' )')
+    ;   true
+    ),
+    (   tptp2X_member(ConnectiveAbove,['@','='])
+   ->   write(' )')
+    ;   true
+    ).
+
+%----Definitions and types
+%----If the definition is flat, do all on one line
+output_formula(Format,Language,TwoPart,Indent,AlreadyIndented,
+_ConnectiveAbove):-
+    tptp2X_member(Format,[tptp,lf]),
+    nonvar(TwoPart),
+    TwoPart =.. [:=,Symbol,Definition],
+    tptp_flat_binary_formula(Definition,_),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    output_atom_for_format(Format,Language,Symbol),
+    output_defn_type_separator_for_format(Format,':=',Definition),
+    write(' '),
+    NewIndent is Indent + 2,
+    output_formula(Format,Language,Definition,NewIndent,NewIndent,outermost).
+
+%----If the type is flat and it's a constant, do all on one line
+output_formula(Format,Language,TwoPart,Indent,AlreadyIndented,
+_ConnectiveAbove):-
+    tptp2X_member(Format,[tptp,lf]),
+    nonvar(TwoPart),
+    TwoPart =.. [Separator,Symbol,Type],
+    tptp2X_member(Separator,[':',':=','<<','>>']),
+    atomic(Symbol),
+    tptp_flat_type(Type,BinaryTypeConnective),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    output_atom_for_format(Format,Language,Symbol),
+    output_defn_type_separator_for_format(Format,Separator,Type),
+    write(' '),
+    NewIndent is Indent + 2,
+    (   BinaryTypeConnective == '@'
+    ->  StartLevel = none
+    ;   StartLevel = outermost
+    ),
+    output_formula(Format,Language,Type,NewIndent,NewIndent,StartLevel).
+
+%----If a type or definition is not flat, do on next line
+output_formula(Format,Language,TwoPart,Indent,AlreadyIndented,ConnectiveAbove):-
+    tptp2X_member(Format,[tptp,lf]),
+    nonvar(TwoPart),
+    TwoPart =.. [Separator,Symbol,TypeOrDefn],
+    tptp2X_member(Separator,[':=',':','<<','>>']),
+    !,
+%----If after a quantifier then go to new line
+    (   tptp_quantifier(ConnectiveAbove) ->
+        (   nl,
+            output_indent(Indent,0)
+        )
+    ;   output_indent(Indent,AlreadyIndented)
+    ),
+%----Always () non-atomic LHS of a type defn.
+%    (   tptp_atomic_formula(Symbol)
+%    ->  LHRIndent is Indent
+%    ;   (   write('( '),
+%            LHRIndent is Indent + 2
+%        )
+%    ),
+%    output_formula(Format,Language,Symbol,LHRIndent,LHRIndent,Separator),
+%    (   tptp_atomic_formula(Symbol)
+%    ->  true
+%    ;   write(' )')
+%    ),
+    output_formula(Format,Language,Symbol,Indent,Indent,Separator),
+    output_defn_type_separator_for_format(Format,Separator,TypeOrDefn),
+    nl,
+    RHSIndent is Indent + 2,
+    output_formula(Format,Language,TypeOrDefn,RHSIndent,0,none).
+
+%----Tuples
+output_formula(_,_,[],Indent,AlreadyIndented,_):-
+    !,
+    output_indent(Indent,AlreadyIndented),
+    write('[ ]').
+
+output_formula(Format,Language,[FirstFormula|RestOfFormulae],Indent,
+AlreadyIndented,_ConnectiveAbove):-
+%     (   (   ConnectiveAbove == outermost
+%         ;   ConnectiveAbove == none
+%         ;   ConnectiveAbove == '-->'
+%         )
+%     ->  output_indent(Indent,AlreadyIndented)
+%     ;   (   nl,
+%             output_indent(Indent,0)
+%         )
+%     ),
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 2,
+    write('[ '),
+    output_formula(Format,Language,FirstFormula,NewIndent,NewIndent,none),
+    output_rest_of_tuple(Format,Language,FirstFormula,RestOfFormulae,
+NewIndent,NewIndent),
+    write(' ]').
+
+%----Write an atomic formula
+output_formula(Format,Language,Atom,Indent,AlreadyIndented,ConnectiveAbove):-
+    output_indent(Indent,AlreadyIndented),
+    output_atom_for_format(Format,Language,Atom,Indent,Indent,ConnectiveAbove).
+%------------------------------------------------------------------------------
+output_rest_of_tuple(_,_,_,[],_,_).
+
+output_rest_of_tuple(Format,Language,PrintedFormula,[FirstFormula|
+RestOfFormulae],Indent,AlreadyIndented):-
+    tptp_atomic_formula(PrintedFormula),
+    tptp_atomic_formula(FirstFormula),
+    !,
+    write(', '),
+    output_formula(Format,Language,FirstFormula,Indent,AlreadyIndented,none),
+    output_rest_of_tuple(Format,Language,FirstFormula,RestOfFormulae,Indent,
+AlreadyIndented).
+
+output_rest_of_tuple(Format,Language,_,[FirstFormula|RestOfFormulae],Indent,_):-
+    write(','),
+    nl,
+    output_formula(Format,Language,FirstFormula,Indent,0,none),
+    output_rest_of_tuple(Format,Language,FirstFormula,RestOfFormulae,Indent,
+Indent).
+%------------------------------------------------------------------------------
+%----Output a formula in the genric TPTP form, paramterized for actual
+%----format
+output_generic_formula(Format,Language,Formula):-
+%----Start with no last connective, to omit brackets on binary formulae
+    output_formula(Format,Language,Formula,4,0,none_outermost).
+%------------------------------------------------------------------------------
+%----Simplify quantified formulae
+output_prefix_formula(Format,QuantifiedQuantifiedFormula,Indent,
+AlreadyIndented,ConnectiveAbove):-
+%----Check if this format wants merged variables
+    tptp2X_member(Format,[]),
+%----Check if there is a nested quantifier the same
+    quantified_formula(tptp,QuantifiedQuantifiedFormula,Quantifier,
+Variables1,QuantifiedFormula,_,_,_,_,_),
+    quantified_formula(tptp,QuantifiedFormula,Quantifier,
+Variables2,Formula,_,_,_,_,_),
+    !,
+%----Merge the variables into one list
+    merge_quantified_variables(Variables1,Variables2,Variables),
+    NewQuantification =.. [Quantifier,Variables],
+    NewQuantifiedFormula =.. [:,NewQuantification,Formula],
+%----Try agains with the new formula
+    output_prefix_formula(Format,NewQuantifiedFormula,Indent,AlreadyIndented,
+ConnectiveAbove).
+
+%----Unsimplify quantified formulae
+output_prefix_formula(Format,QuantifiedFormula,Indent,AlreadyIndented,
+ConnectiveAbove):-
+%----Check if this format wants separated variables
+    tptp2X_member(Format,[oscar,smt]),
+%----Check if there are several quantified variables
+    quantified_formula(tptp,QuantifiedFormula,Quantifier,[V1,V2|
+RestOfVariables],Formula,_,_,_,_,_),
+    !,
+%----Separate the variables 
+    InnerQuantification =.. [Quantifier,[V2|RestOfVariables]],
+    InnerQuantifiedFormula =.. [:,InnerQuantification,Formula],
+    NewQuantification =.. [Quantifier,[V1]],
+    NewQuantifiedFormula =.. [:,NewQuantification,InnerQuantifiedFormula],
+%----Try agains with the new formula
+    output_prefix_formula(Format,NewQuantifiedFormula,Indent,AlreadyIndented,
+ConnectiveAbove).
+
+%----Write a quantified formula
+output_prefix_formula(Format,QuantifiedFormula,Indent,AlreadyIndented,_):-
+%----Check if it is quantified
+    quantified_formula(tptp,QuantifiedFormula,_,_,_,_,_,_,_,_),
+    !,
+%----Get data for this format
+    quantified_formula(Format,QuantifiedFormula,Quantifier,Variables,
+Formula,FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+FormulaSuffix),
+    output_indent(Indent,AlreadyIndented),
+    write(FormulaPrefix),
+    tptp2X_atom_length(FormulaPrefix,FormulaPrefixLength),
+    write(Quantifier),
+    tptp2X_atom_length(Quantifier,QuantifierLength),
+    write(VariablesPrefix),
+    tptp2X_atom_length(VariablesPrefix,VariablesPrefixLength),
+    NewAlreadyIndented is Indent + FormulaPrefixLength + QuantifierLength +
+VariablesPrefixLength,
+    output_quantified_variables(Format,unknown,Variables,VariablesSeparator,
+Indent,NewAlreadyIndented),
+    write(VariablesSuffix),
+%----If a literal formula then no nl, just output it HMMMM, not so nice
+    (   tptp_atomic_formula(Formula)
+    ->  output_prefix_formula(Format,Formula,Indent,Indent,Quantifier)
+    ;   (   nl,
+%----If a quantified formula then no extra indent
+            (   quantified_formula(tptp,Formula,_,_,_,_,_,_,_,_)
+            ->  NewIndent is Indent
+            ; NewIndent is Indent + 2
+            ),
+%----Output the (non-literal) formula
+            output_prefix_formula(Format,Formula,NewIndent,0,Quantifier))),
+    write(FormulaSuffix).
+
+%----Write a binary formula 
+output_prefix_formula(Format,BinaryFormula,Indent,AlreadyIndented,
+ConnectiveAbove):-
+%----Check if it is binary
+    binary_formula(tptp,BinaryFormula,TPTPConnective,_,_,_,_,_,_),
+    !,
+%----Get data for this format
+    binary_formula(Format,BinaryFormula,Connective,LHS,RHS,PrefixBracket,
+ConnectivePrefix,ConnectiveSuffix,SuffixBracket),
+    (   (   ConnectiveAbove == Connective,
+            tptp_associative_binary_connective(TPTPConnective)
+        ) ->
+        (   output_indent(Indent,AlreadyIndented),
+            output_prefix_formula(Format,LHS,Indent,Indent,none),
+            nl,
+            output_prefix_formula(Format,RHS,Indent,0,Connective)
+        )
+    ;   (   output_indent(Indent,AlreadyIndented),
+            NewIndent is Indent + 4,
+            Connective == '' ->
+                (   output_prefix_formula(Format,LHS,NewIndent,NewIndent,none),
+                    NewAlreadyIndented is NewIndent - 1,
+                    output_prefix_formula(Format,RHS,NewIndent,
+NewAlreadyIndented,Connective)
+                )
+            ;   (   write(PrefixBracket),
+                    write(ConnectivePrefix),
+%----No connective prefix now, do by length
+                    tptp2X_atom_length(Connective,ConnectiveLength),
+                    (   ConnectiveLength >= 3 ->
+                        (   ConnectivePreSpace = 0,
+                            ConnectivePostSpace = 1
+                        )
+                        ;   (   ConnectiveLength == 2 ->
+                                (   ConnectivePreSpace = 0,
+                                    ConnectivePostSpace = 1
+                                )
+                            ;   (   ConnectivePreSpace = 1,
+                                    ConnectivePostSpace = 1
+                                )
+                            )
+                    ),
+                    tptp2X_tab(ConnectivePreSpace),
+                    write(Connective),
+                    tptp2X_tab(ConnectivePostSpace),
+                    write(ConnectiveSuffix),
+                    NewIndent is Indent + 4,
+                    output_prefix_formula(Format,LHS,NewIndent,NewIndent,none),
+                    nl,
+                    NewAlreadyIndented = 0,
+                    output_prefix_formula(Format,RHS,NewIndent,
+NewAlreadyIndented,Connective),
+                    write(SuffixBracket)
+                )
+        )
+    ).
+
+%----Write a unary formula
+output_prefix_formula(Format,UnaryFormula,Indent,AlreadyIndented,_):-
+%----Check if it is unary
+    unary_formula(tptp,UnaryFormula,_,_,_,_,_),
+    !,
+%----Get data for this format
+    unary_formula(Format,UnaryFormula,Connective,Formula,FormulaPrefix,
+ConnectiveSuffix,FormulaSuffix),
+    output_indent(Indent,AlreadyIndented),
+    write(FormulaPrefix),
+    write(Connective),
+    write(ConnectiveSuffix),
+    NewIndent is Indent + 4,
+    output_prefix_formula(Format,Formula,NewIndent,NewIndent,Connective),
+    write(FormulaSuffix).
+
+%----Write an atomic formula
+output_prefix_formula(Format,Atom,Indent,AlreadyIndented,_):-
+    output_indent(Indent,AlreadyIndented),
+    output_atom_for_format(Format,unknown,Atom).
+%------------------------------------------------------------------------------
+%----Output a formula in the generic form, paramterized for actual format
+output_generic_prefix_formula(Format,Formula):-
+    output_prefix_formula(Format,Formula,4,0,outermost).
+%------------------------------------------------------------------------------

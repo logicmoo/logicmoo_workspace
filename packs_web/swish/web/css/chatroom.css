@@ -1,0 +1,149 @@
+/*
+Content resizing and scrolling of teh chatroom is based on
+https://blogs.msdn.microsoft.com/kurlak/2015/02/20/filling-the-remaining-height-of-a-container-while-handling-overflow-in-css-ie8-firefox-chrome-safari/
+*/
+
+div.chatroom
+{ width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  display: table;
+}
+
+div.chatroom span.glyphicon.menu
+{ position: absolute;
+  font-size: 1.5em;
+  top: 5px;
+  right: 5px;
+  opacity: 0.2;
+}
+
+div.chatroom span.glyphicon.menu:hover
+{ opacity: 0.8;
+}
+
+div.chat-conversation
+{ width: 100%;
+  display:table-row;
+  height: 100%;
+}
+
+div.chat-outer-wrapper
+{ display: table-cell;
+  height: 100%
+}
+
+div.chat-inner-wrapper
+{ height: 100%;
+  position: relative;
+  overflow: auto;
+}
+
+div.chat-content-wrapper
+{ position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+div.chat-content:
+{
+}
+
+table.chat-input
+{ width: 100%;
+}
+
+td.chat-send
+{ text-align: right;
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+td.chat-send > div
+{ display:flex;
+}
+
+td.chat-text
+{ width: 100%;
+  padding: 0px 5px;
+}
+
+table.chat-input textarea
+{ resize: vertical;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #888;
+  border-radius: 5px;
+}
+
+div.chatroom div.chat-message
+{ position:relative;
+  font-size: 90%;
+  margin-right: 10%;
+  margin-left: 5px;
+  margin-bottom: 1ex;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 3px 5px;
+}
+
+div.chatroom div.chat-message.self
+{ margin-right: 5px;
+  margin-left: 10%;
+}
+
+div.chat-message div.avatar-container
+{ position: absolute;
+  margin-top: 0px;
+  top: 0px;
+  right: 0px;
+  border-radius: 5px;
+}
+
+span.chat-sender
+{ font-weight: bold;
+  color: #4888be;
+}
+
+span.chat-time
+{ font-family: italic;
+  color: #4888be;
+}
+
+span.chat-sender::after
+{ content: ": ";
+}
+
+span.commit-message
+{ color: #060;
+}
+
+span.no-commit-message
+{ font-size: 80%; color: #f80;
+}
+
+/* Tooltip styling */
+
+.chat-message .tooltip
+{ z-index: 5000;
+  position: fixed;
+}
+
+.chat-message .tooltip-inner
+{ background: #ffd;
+  padding: 5px 5px;
+  border: 1px solid #888;
+  border-radius: 5px;
+}
+
+.chat-message .tooltip-inner pre.cm-s-prolog
+{ padding: 0px 5px;
+  background: transparent;
+  border: 0px;
+  margin: 0px;
+}

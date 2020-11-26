@@ -1,0 +1,11 @@
+Entity > Physical, Abstract.
+Physical > Object, Process, Property.
+Object > Animate, Inanimate.
+Animate > HumanBeing, Animal, Plant.
+Property > Juvenile, Adult, Gender.
+Gender > Male, Female.
+HumanBeing > Man, Woman, Boy, Girl.
+Adult > Man, Woman.
+Juvenile > Boy, Girl.
+Male > Man, Boy.
+Female > Woman, Girl.

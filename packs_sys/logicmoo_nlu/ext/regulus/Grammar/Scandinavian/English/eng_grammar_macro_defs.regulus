@@ -1,0 +1,104 @@
+
+macro(agr_vals, [[1, 2, 3], [sing, plur]]).
+macro(vform_vals, [[base, imperative, finite, ing, en, en_passive, to, none]]).
+macro(pre_post_type_vals, [[none]]).
+macro(default_inv, n).
+
+macro(imperative, base).
+macro(infinitive, base).
+macro(to, to).
+macro(gerund_or_pseudo_gerund_vform, ing).
+macro(perfect_vform, en).
+macro(pronoun_value_in_unmoved_particle_verb_object, n).
+
+% "what kind/sort of people" is plural, not singular
+macro(kind_of(Agr, Agr), (kind, of)).
+macro(kind_of(Agr, Agr), (sort, of)).
+% "kinds/sorts of person/people"
+macro(kind_of((3/\plur), Agr), (kinds, of)).
+macro(kind_of((3/\plur), Agr), (sorts, of)).
+
+macro(how_wh_degree_mod, how).
+
+macro(of_prep, of).
+macro(passive_by_prep, by).
+
+macro(partitive_marker, of).
+macro(det_nps_take_partitives, y).
+
+macro(hour_minute_separator_oh_digit, []).
+macro(hour_minute_separator_not_oh_digit, []).
+macro(past_hour, past).
+macro(to_hour, to).
+
+macro(from_start_of_range, from).
+macro(to_start_of_range, to).
+macro(between, between).
+macro(and, and).
+
+macro(how_adj_premod, how).
+
+%----------------------------------------------------------------
+
+macro(noun([Sing, Plur], Feats), ( n:[agr=3/\sing, Feats] --> Sing ) ).
+macro(noun([Sing, Plur], Feats), ( n:[agr=3/\plur, Feats] --> Plur ) ).
+
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=Sem, vform=base, Feats] --> PresNot3S ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=[[tense, present] | Sem], agr=(\(3/\sing)), vform=finite, Feats] --> PresNot3S ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=[[tense, present] | Sem], agr=3/\sing, vform=finite, Feats] --> Pres3S ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=[[tense, past] | Sem], vform=finite, Feats] --> Past ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=Sem, vform=en, Feats] --> Perfect ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=[[aspect, continuous] | Sem], vform=ing, Feats] --> Ing ) ).
+
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=Sem, vform=base, takes_advp=y, Feats] --> be ) ).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[tense, present] | Sem], agr=(1/\sing), vform=finite, takes_advp=y, Feats] --> ( am ; '\'m' ) ) ).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[tense, present] | Sem], agr=(3/\sing), vform=finite, takes_advp=y, Feats] --> ( is ; '\'s' ) ) ).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[tense, present] | Sem], agr=(2\/plur), vform=finite, takes_advp=y, Feats] --> ( are ; '\'re' ) ) ).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[tense, past] | Sem], agr=((1\/3)/\sing), vform=finite, takes_advp=y, Feats] --> was ) ).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[tense, past] | Sem], agr=(2\/plur), vform=finite, takes_advp=y, Feats] --> were ) ).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=Sem, agr=_, vform=en, takes_advp=y, Feats] --> been ) ).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[aspect, continuous] | Sem], agr=_, vform=ing, takes_advp=y, Feats] --> being ) ).
+
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, present] | Sem], agr=(1/\sing), vform=finite, inv=n, takes_advp=y, Feats] --> ( ( am, not ) ; ( '\'m', not ) ) )).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, present] | Sem], agr=(1/\sing), vform=finite, inv=y, takes_advp=y, Feats] --> 'aren''t' )).
+
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, present] | Sem], agr=(3/\sing), vform=finite, inv=n, takes_advp=y, Feats] --> ( ( is, not ) ; 'isn''t' ) )).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, present] | Sem], agr=(3/\sing), vform=finite, inv=y, takes_advp=y, Feats] --> 'isn''t' )).
+
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, present] | Sem], agr=(2\/plur), vform=finite, inv=n, takes_advp=y, Feats] --> ( ( are, not ) ; 'aren''t' ) )).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, present] | Sem], agr=(2\/plur), vform=finite, inv=y, takes_advp=y, Feats] --> 'aren''t' )).
+
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, past] | Sem], agr=((1\/3)/\sing), vform=finite, inv=n, takes_advp=y, Feats] --> ( ( was, not ) ; 'wasn''t' ) )).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, past] | Sem], agr=((1\/3)/\sing), vform=finite, inv=y, takes_advp=y, Feats] --> 'wasn''t' )).
+
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, past] | Sem], agr=(2\/plur), vform=finite, inv=n, takes_advp=y, Feats] --> ( ( were, not ) ; 'weren''t' ) )).
+macro(be_verb(Sem, Feats), 
+      ( v:[sem=[[polarity, negative], [tense, past] | Sem], agr=(2\/plur), vform=finite, inv=y, takes_advp=y, Feats] --> 'weren''t' )).
+
+macro(frequency_np(Sem, Surface),
+      (np:[sem=[[frequency, Sem]], agr=3, wh=n, sem_n_type=timeunit, takes_post_mods=y, takes_frequency_pp=y,
+	   gapsin=GIn, gapsout=GIn, pronoun=n] --> Surface)).
+

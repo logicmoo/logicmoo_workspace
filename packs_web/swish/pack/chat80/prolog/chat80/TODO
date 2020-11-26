@@ -1,0 +1,7 @@
+* Normalisation of clauses that are lost in the compiler:
+
+	- (a | b)   --> (a ; b)
+	- (a, b), c --> a, b, c.
+	- a :- true --> a.
+
+  I.e. the unify_clause code.

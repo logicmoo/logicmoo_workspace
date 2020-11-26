@@ -1,0 +1,51 @@
+// Utterance-template example
+//
+// Available in the AAU directory as Utterance-template.plgCG
+//
+// Ulrik Petersen
+// Created: mid-September, 2003
+// Last update: September 18, 2003
+//
+
+
+// Type hierarchy
+Entity > Physical, Abstract.
+Abstract > Proposition, Manner.
+Proposition > Property.
+Property > Beautiful, Fast.
+Manner > Awedly.
+Physical > Act, Object.
+Object >Person, Shawl, Car.
+Act > Utterance.
+
+// Catalog of instances
+Person = Susan, Farhana, Sadia, Mark, Marzia, Mudhaffar.
+
+// Template examples
+
+// Susan says to Farhana: "Sadia's shawl is beautiful."
+graph(uttr1, [Utterance]-
+                        -AGNT->[Person: Susan],
+                        -RCPT->[Person: Farhana],
+                        -THME->[Proposition = [Shawl]-
+                                                         -POSS->[Person: Sadia],
+                                                         -CHRC->[Beautiful]
+                                        ]).
+
+// Mark says awedly to Marzia: "Mudhaffar's car is fast."
+graph(uttr2, [Utterance]-
+                        -AGNT->[Person: Mark],
+                        -RCPT->[Person: Marzia],
+                        -MANR->[Awedly],
+                        -THME->[Proposition = [Car]-
+                                                         -POSS->[Person: Mudhaffar],
+                                                         -CHRC->[Fast]  
+                                         ]).
+
+// Example of a rule
+
+// Speaker (S) taks to Hearer (H) in graph with label L
+Talks(S,H,L) :- graph(L, G), 
+                         branchOfCG([Utterance]-AGNT->[Person: S], G),
+                         branchOfCG([Utterance]-RCPT->[Person: H], G).
+ 

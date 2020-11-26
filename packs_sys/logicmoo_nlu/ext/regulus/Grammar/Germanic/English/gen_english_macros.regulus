@@ -1,0 +1,126 @@
+
+%VERBS --------------------------------------------------------------------------------------
+
+%BASE VERB MACRO
+
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=Sem, vform=base\/inf, Feats] --> PresNot3S ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+( v:[sem=Sem, vform=imp, Feats] --> PresNot3S ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=[[tense, present] | Sem], agr=(\(3/\sing)), vform=finite, Feats] --> PresNot3S ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=[[tense, present] | Sem], agr=3/\sing, vform=finite, Feats] --> Pres3S ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=[[tense, past] | Sem], vform=finite, Feats] --> Past ) ).
+macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      ( v:[sem=Sem, vform=participle, Feats] --> Perfect ) ).
+      %macro(verb([PresNot3S, Pres3S, Past, Perfect, Ing], Sem, Feats), 
+      %( v:[sem=[[aspect, continuous] | Sem], vform=ing, Feats] --> Ing ) ).
+
+% VARIATIONS
+
+%----------------------------------------------------------
+
+% Intransitive
+% e.g. "John sleeps"
+%
+% @v_intransitive([sleep, sleeps, slept, slept, sleeping],
+%                 [action, sleep], [agent], [takes_time_pp=y, takes_frequency_pp=y, takes_duration_pp=y]).
+
+macro(v_intransitive(SurfaceForms, [SemType, SemConstant], [SubjSem], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0v,
+	    subj_sem_n_type=SubjSem,
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Transitive
+% e.g. "John drinks coffee" or "coffee is drunk by John"
+%
+% @v_transitive([drink, drinks, drank, drunk, drinking],
+%               [action, drink], [agent, substance], [takes_time_pp=y, takes_duration_pp=y]).
+
+macro(v_transitive(SurfaceForms, [SemType, SemConstant], [SubjSem, ObjSem], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1,
+	     subj_sem_n_type=SubjSem,
+	     obj_sem_n_type=ObjSem,
+	    OtherFeats])).
+%----------------------------------------------------------
+
+% Ditransitive
+% e.g. "bright light gives you headaches" or "you are given headaches by bright light"
+%
+% @v_ditransitive([give, gives, gave, given, giving],
+%                 [action, give], [cause\/action, symptom, agent], [])
+
+macro(v_ditransitive(SurfaceForms, [SemType, SemConstant], [SubjSem, ObjSem, IndObjSem], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1nx2,
+	     subj_sem_n_type=SubjSem,
+	     obj_sem_n_type=ObjSem, 
+	     indobj_sem_n_type=IndirObjSem |
+	    OtherFeats])).
+
+%NOUNS ---------------------------------------------------------------------------------------
+
+% Standard macros for nouns
+
+%----------------------------------------------------------
+
+macro(noun([Sing, Plural], [SemType, SemConstant], Ntype, Feats), ( 	n:[sem=@noun_sem(SemType, SemConstant), agr=3/\sing, case=_, gender=none,nform=normal, sem_n_type=NType] --> Sing ) ).
+macro(noun([Sing, Plural], [SemType, SemConstant], Ntype, Feats), ( 	n:[sem=@noun_sem(SemType, SemConstant), agr=3/\plur, case=_, gender=none,nform=normal, sem_n_type=NType] --> Plural ) ).
+
+% Noun with both singular and plural forms
+% 
+% @noun([headache, headaches],
+%       [symptom, headache], [symptom], [takes_det_type=null\/def\/indef, takes_loc_pp=y]).
+/*
+macro(noun(SurfaceForms, [SemType, SemConstant], [SortalType], OtherFeats),
+      @noun(SurfaceForms,
+	    [sem = @noun_sem(SemType, SemConstant),
+	     sem_n_type = SortalType |
+	    OtherFeats])).
+*/
+%----------------------------------------------------------
+
+% Noun with just singular or just plural
+%
+% @uninflected_noun(work,
+%                   [loc, work], [loc], sing, [takes_det_type=null]).
+
+macro(uninflected_noun(SurfaceForm, Sem, Ntype, Agr, OtherFeats),
+      ( n:[sem = @noun_sem(SemType, SemConstant),
+	   agr = Agr,
+	   sem_n_type = NType,
+	  OtherFeats] --> SurfaceForm )).
+
+%DETERMINERS -------------------------------------------------------------------------------------
+
+macro(def_det([Form], Sem, DetType, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]],det_type=DetType, def=def | Feats] --> Form)).
+macro(def_det([Form], Sem, DetType, Feats), (d:[agr=3/\plur, sem=[[quant,Sem]], det_type=DetType, def=def | Feats] --> Form)).
+
+macro(indef_det([Form], Sem, DetType, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]],det_type=DetType, def=indef | Feats] --> Form)).
+macro(indef_det([Form], Sem, DetType, Feats), (d:[agr=3/\plur, sem=[[quant,Sem]], det_type=DetType, def=indef | Feats] --> Form)).
+
+%COMPLEMENTIZER ------------------------------------------------------------------------------------
+
+macro(comp([Comp], Sem, Feats), (c:[sem=Sem] --> Comp)).
+
+%ADVERB-----------------------------------------------------------------------------------------------
+/*
+macro(temp_adv([Adv], Sem, Feats), (adv:[sem=[Sem], advtype=temp, takes_temp_advp=y, takes_manner_advp=y, Feats] --> Adv)).
+*/
+% Standard macro for adverbs
+%
+% @adverb(always, [freq, always], [temporal], [advpos=prev\/postv])
+
+macro(adverb(SurfaceForm, [SemType, SemConstant], [SortalType], OtherFeats),
+      ( adv:[sem= @adv_sem(SemType, SemConstant),
+	     adv_type=SortalType |
+	    OtherFeats] --> SurfaceForm)).

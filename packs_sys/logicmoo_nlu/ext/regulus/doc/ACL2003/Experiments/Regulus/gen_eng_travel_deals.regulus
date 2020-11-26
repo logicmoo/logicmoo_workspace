@@ -1,0 +1,246 @@
+
+% top_utterance_UserCommand
+
+% Intro consisting of interjection + politeness word - TravelDeals rule
+% [no thanks] i want a flight
+utterance_intro:[sem= @yesno_and_politeness_sem(YesNo, Politeness), stype=SType] -->
+interjection:[sem=YesNo, interjection_type=yn, stype=SType],
+politeness:[sem=Politeness, politeness_pos=pre, stype=SType].
+
+% Intro consisting of y/n interjection + non-y/n interjection - TravelDeals rule
+% [yes back]
+utterance_intro:[sem= @yesno_and_interjection_sem(YesNo, Interjection), stype=SType] -->
+interjection:[sem=YesNo, interjection_type=yn, stype=SType],
+interjection:[sem=Interjection, interjection_type=(\(yn)), stype=SType].
+
+% Politness coda - TravelDeals rule
+% i want a flight [please]
+utterance_coda:[sem=Sem, stype=SType] -->
+politeness:[sem=Sem, politeness_pos=post, stype=SType].
+
+% vp_v_np_np - TravelDeals rule
+% ditransitive alternation
+% give it to me
+vp:[sem= @vp_v_np_np_sem(Verb, NP1, NP2),
+    @vbar_feats_for_vp(Feats), 
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut] -->
+vbar:[sem=Verb,
+      subcat=nx0vnx1x2, 
+      @vbar_feats_for_vp(Feats),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem,
+      obj_def=ObjDef, obj_syn_type=ObjSynType, indobj_def=IndObjDef, indobj_syn_type=IndObjSynType], 
+np:[sem=NP1, wh=n, nform=normal, sem_n_type=IndObjSem, def=IndObjDef, syn_type=IndObjSynType,
+    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GNext, case=nonsubj],
+np:[sem=NP2, wh=n, nform=normal, sem_n_type=ObjSem, def=ObjDef, syn_type=ObjSynType, 
+    takes_post_mods=n, @takes_no_pps, gapsin=GNext, gapsout=GOut, case=nonsubj].
+
+% vp_v_to_vp - TravelDeals rule
+% verbs that take embedded infinitives
+% want to go to flight deck
+vp:[sem= @vp_v_to_vp_sem(Verb, VP), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut] -->
+vbar:[sem=Verb, @vbar_feats_for_vp(Feats), @subj_feats_for_vp(Subj), 
+      subcat=nx0vvx1_to, vp_vform=V1, vp_passivised=n], 
+to,
+vp:[sem=VP, inv=n, vform=V1, passivised=n, @subj_feats_for_vp(Subj), takes_post_mods=n, 
+    gapsin=GIn, gapsout=GOut].
+
+% adjective post modifier - TravelDeals rule
+post_mods:[sem= @mods_adjp_mods_sem(Adj, Mods), gap=n, post_mod_type=nominal,
+           takes_gap_mod=Gap, n_of_mod_type=OfType, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut] -->
+adjp:[sem=Adj, adjpos=postnom, wh=n, subj_sem_n_type=SubjType, gap=n, gapsin=null, gapsout=null],
+post_mods:[sem=Mods, post_mod_type=nominal,
+           takes_gap_mod=n, n_of_mod_type=OfType, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut]. 
+
+% v+ing vp post modifiers - TravelDeals rule
+% e.g. flights leaving from London
+post_mods:[sem= @mods_mod_mods_sem( @rel_s_sem( @np_vp_sem( @rel_pron_sem, @unspecified_tense_sem(VP))), Mods), 
+           gap=n, post_mod_type=nominal\/ellipsis,
+           takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut] -->
+vp:[sem=VP, inv=n, subj_nform=normal, vform=ing, takes_post_mods=n, gapsin=null, gapsout=null],
+post_mods:[sem=Mods, post_mod_type=nominal,
+           takes_gap_mod=n, n_of_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut]. 
+
+% from PP mod - TravelDeals rule
+% e.g. flights [from Stansted]
+@post_mods_pp_rule(from, 
+                   [Loc, y, To, With, Duration, Date, Time, Attrib, About, Cost, PassiveBy], 
+                   [Loc, n, To, With, Duration, Date, Time, Attrib, About, Cost, PassiveBy]).
+
+
+% with PP mod - TravelDeals rule
+% e.g. trips [with three star accommodation]
+@post_mods_pp_rule(with, 
+                   [Loc, From, To, y, Duration, Date, Time, Attrib, About, Cost, PassiveBy], 
+                   [Loc, From, To, n, Duration, Date, Time, Attrib, About, Cost, PassiveBy]).
+
+% date PP mod - TravelDeals rule
+% e.g. flights [in june]
+@post_mods_pp_rule(date, 
+                   [Loc, From, To, With, Duration, y, Time, Attrib, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, n, Time, Attrib, About, Cost, PassiveBy]).
+
+% about PP mod - TravelDeals rule
+% e.g. tell me [about trips to barbados]
+@post_mods_pp_rule(about, 
+                   [Loc, From, To, With, Duration, Date, Time, Attrib, y, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Date, Time, Attrib, n, Cost, PassiveBy]).
+
+% cost PP mod - TravelDeals rule
+% e.g. give me trips [under five hundred pounds]
+@post_mods_pp_rule(cost, 
+                   [Loc, From, To, With, Duration, Date, Time, Attrib, About, y, PassiveBy], 
+                   [Loc, From, To, With, Duration, Date, Time, Attrib, About, n, PassiveBy]).
+
+% Special version for the case of "between", which requires a plural NP - TravelDeals rule
+% e.g. flights [between june ten and july ten]
+pp:[sem= @pp_p_np_sem(P, NP), wh=y\/n, wh=Wh, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GOut, conj=n] -->
+	p_with_agr:[sem=P, postposition=n, sem_pp_type=PPType, def=Def, agr=Agr, obj_sem_n_type=NPType], 
+	np:[sem=NP, agr=Agr, nform=normal, wh=Wh, sem_n_type=NPType, def=Def, 
+            takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj].
+
+% date NP as PP - TravelDeals rule
+% e.g. flights [this week]
+pp:[sem= @pp_np_duration_sem(NP), wh=y\/n, wh=Wh, sem_pp_type=duration, gap=n, gapsin=GIn, gapsout=GIn, conj=Conj] -->
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=timeunit, takes_post_mods=n, @takes_no_pps, 
+            gapsin=GIn, gapsout=GIn, pronoun=n, conj=Conj].
+
+% Conjoined PPs - TravelDeals rules
+% e.g. flights [from Heathrow and from Stansted]
+
+pp:[sem= @conj_list_sem(and, Sem), wh=Wh, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GIn, conj=y] -->
+	ppconj:[sem=Sem, wh=Wh, sem_pp_type=PPType].
+
+ppconj:[sem= @conjlist_item_item_sem(PP1, PP2), wh=Wh, sem_pp_type=PPType] -->
+	pp:[sem=PP1, wh=Wh, sem_pp_type=PPType, gap=n, gapsin=null, gapsout=null, conj=n],
+	conj:[], 
+	pp:[sem=PP2, wh=Wh, sem_pp_type=PPType, gap=n, gapsin=null, gapsout=null, conj=n].
+
+ppconj:[sem= @conjlist_item_conjlist_sem(PP, Conj), wh=Wh, sem_pp_type=PPType] -->
+	pp:[sem=PP, wh=Wh, sem_pp_type=PPType, gap=n, gapsin=null, gapsout=null, conj=n],
+	ppconj:[sem=Conj, wh=Wh, sem_pp_type=PPType].
+
+% np_name
+% Name as NP - TravelDeals rule
+% e.g. flights to [barbados]
+np:[sem= @np_name_sem(Name), agr=Agr, wh=n, nform=normal, sem_n_type=Type, def=y, conj=n, 
+    gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=n, n_of_mod_type=none, @takes_no_pps, syn_type=name] -->
+name:[sem=Name, agr=Agr, sem_n_type=Type].
+
+% np_date
+% Date as NP - TravelDeals rule
+% e.g. flights after [june ten]
+np:[sem= @np_date_sem(Date), agr=3/\sing, wh=n, nform=normal, sem_n_type=date, def=y,
+    conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=n, n_of_mod_type=none, @takes_no_pps, syn_type=special] -->
+date:[sem=Date].
+
+% Prenominal adj modifier - TravelDeals rule
+% e.g. [cheap flights]
+nbar:[sem= @nbar_adj_nbar_sem(Adj, N), agr=Agr, sem_n_type=Type, 
+      @takes_pps(PPs), 
+      n_pre_mod_type=none, n_post_mod_type=PostModType, n_of_mod_type=OfMod,
+      takes_det_type=DetType] -->
+adjp:[sem=Adj, gap=n, adjpos=prenom, subj_sem_n_type=Type, gapsin=null, gapsout=null],
+nbar:[sem=N, agr=Agr, sem_n_type=Type, 
+      @takes_pps(PPs), 
+      n_post_mod_type=PostModType, n_of_mod_type=OfMod,
+      takes_det_type=DetType].
+
+% Compound formed of name followed by NBAR - TravelDeals rule
+% e.g. [barbados holidays]
+nbar:[sem= @nbar_name_nbar_sem(N1, N2), agr=Agr, sem_n_type=Type, 
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod,
+      takes_det_type=DetType] -->
+name:[sem=N1, can_be_premod=y, sem_n_type=PreModType],
+nbar:[sem=N2, agr=Agr, sem_n_type=Type, 
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod,
+      takes_det_type=DetType].
+
+% ADJP as NBAR - TravelDeals rule
+% e.g. I want [three star]
+nbar:[sem= @nbar_adjp_sem(Adj), sem_n_type=SubjType, @takes_pps(PPs), n_pre_mod_type=none, n_post_mod_type=none, n_of_mod_type=none] -->
+adjp:[sem=Adj, wh=n, conj=n, adjpos=prenom, subj_sem_n_type=SubjType, @takes_pps(PPs), 
+      gap=n, gapsin=null, gapsout=null].
+
+% Conjoined ADJP - TravelDeals rule
+% I want [three star or four star] accommodation
+adjp:[sem= @conj_list_sem(adj_and, [Adj1, Adj2]), wh=n, conj=y, adjpos=AdjPos, subj_sem_n_type=SubjType, @takes_pps(PPs), 
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+adj:[sem=Adj1, adjpos=AdjPos, subj_sem_n_type=SubjType, @takes_pps(PPs)],
+conj:[],
+adj:[sem=Adj2, adjpos=AdjPos, subj_sem_n_type=SubjType, @takes_pps(PPs)].
+
+%----------------------------------------------------------------------
+
+% Month rules - all TravelDeals
+
+% "june"
+
+date:[sem= @date_month_sem(Month)] -->
+month:[sem=Month].
+
+% "first june"
+
+date:[sem= @date_day_month_sem(Day, Month)] -->
+ordinal:[sem=Day, time_type=dayofmonth],
+month:[sem=Month].
+
+% "the first of june"
+
+date:[sem= @date_day_month_sem(Day, Month)] -->
+the,
+ordinal:[sem=Day, time_type=dayofmonth],
+?of,
+month:[sem=Month].
+
+% "june first"
+
+date:[sem= @date_day_month_sem(Day, Month)] -->
+month:[sem=Month],
+?the,
+ordinal:[sem=Day, time_type=dayofmonth].
+
+% "june one"
+
+date:[sem= @date_day_month_sem(Day, Month)] -->
+month:[sem=Month],
+number:[sem=Day, time_type=dayofmonth].
+
+% D composed of comparative phrase and number - TravelDeals rule
+% e.g. [at least seven] nights
+d:[sem= @det_numcompare_number_sem(D, N), agr=Agr, wh=n, det_type=numeric, prenumber=n, can_be_np=y, syn_type=number] -->
+numcompare:[sem=D], 
+number:[sem=N, agr=Agr, num_type=(\(oh_digit\/a))].
+
+% Exact multiple of 100 - Travel Deals rule
+% e.g. flight under [five hundred] pounds
+number:[sem= @number_number_hundred_sem(N), num_type=hundred] -->
+number:[sem=N, num_type=(digit\/teen)],
+hundred.
+
+% Lexical entry - put it here, since it belongs with the number rules
+number:[sem=100, num_type=hundred] --> a, hundred.
+
+% Three figure number - Travel Deals rule
+% e.g. two hundred and fifty, six hundred twenty five
+number:[sem= @number_h_tu_sem(Hundreds, TensAndUnits), num_type=three_figure] -->
+number:[sem=Hundreds, num_type=hundred],
+?and,
+number:[sem=TensAndUnits, num_type=digit\/ten\/teen\/'20_to_99'].
+
+% Conjoined number as D - TravelDeals rule
+% e.g. [seven or fourteen] nights
+d:[sem= @det_number_conj_number_sem(N1, N2), agr=Agr2, wh=n, det_type=numeric, prenumber=n, can_be_np=y, syn_type=conj_np] -->
+number:[sem=N1, num_type=(\(oh_digit\/a)), agr=Agr1],
+conj:[],
+number:[sem=N2, num_type=(\(oh_digit\/a)), agr=Agr2].
+

@@ -1,0 +1,22 @@
+% Factorielle a partir de Shapiro p127
+
+   $ fact(0,1) :- !.
+   $ fact(N,R) :- minus(N,1,N1), fact(N1,R1), mult(N,R1,R).
+
+   $ fact1(N,R) :- facto1(N,1,R).
+   $ facto1(0,R,R) :- !.
+   $ facto1(N,T,R) :- mult(T,N,T1), minus(N,1,N1), facto1(N1,T1,R).
+   $ tfact :- fact(7,X), wb(X).
+   $ tfact1 :- facto1(7,1,R), wb(R).
+
+% Puissance a partir de Malpas p337
+
+   $ puis(0,0,1) :- !
+   $ puis(X,0,1).
+   $ puis(X,1,X).
+   $ puis(X,N,R) :- puis_it(X,N,1,R).
+   $ puis_it(X,0,R,R) :- !.
+   $ puis_it(X,N,R0,R) :- minus(N,1,N1),
+                          mult(R0,X,R1),
+                          puis_it(X,N1,R1,R).
+   $ tpuis :- puis(2,10,X), write(X).

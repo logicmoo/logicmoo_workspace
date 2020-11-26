@@ -1,0 +1,9 @@
+
+ignore_feature(takes_duration_pp).
+ignore_feature(takes_passive_by_pp).
+ignore_feature(vp_passivised).
+ignore_feature(n_of_mod_type).
+ignore_feature(advpos).
+ignore_feature(takes_advp).
+ignore_feature(passivised).
+ignore_feature(passive_subj).

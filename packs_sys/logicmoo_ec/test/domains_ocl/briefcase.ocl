@@ -1,0 +1,130 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: Doris Liu
+ *  Institution: University of Huddersfield
+ *  Date created: 2000
+ *  Date last modified: 2005/07/05 at 03:31:59 PM BST
+ *  Description:
+ *    This is a standard briefcase world with a two moveable containers the
+ *    briefcase itself and a suitcase. There are two locations, home and
+ *    the office and three object to be moved between the locations, the
+ *    pay cheque the dictionary and the business suit. The suit is only
+ *    capable of fitting in to the suitcase the other objects can be moved in
+ *    either container. This simple domain illustrates the use of conditional
+ *    transitions.
+ */
+
+domain_name(briefcase).
+
+% Sorts
+sorts(primitive_sorts,[bag,thing,place]).
+
+% Objects
+objects(bag,[briefcase,suitcase]).
+objects(thing,[cheque,suit,dictionary]).
+objects(place,[home,office]).
+
+% Predicates
+predicates([
+    at_bag(bag,place),
+    at_thing(thing,place),
+    inside(thing,bag),
+    outside(thing),
+    fits_in(thing,bag)]).
+
+% Object Class Definitions
+substate_classes(bag,Bag,[
+    [at_bag(Bag,Place)]]).
+substate_classes(thing,Thing,[
+    [at_thing(Thing,Place),inside(Thing,Bag),fits_in(Thing,Bag)],
+    [at_thing(Thing,Place),outside(Thing)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    fits_in(cheque,briefcase),
+    fits_in(dictionary,briefcase),
+    fits_in(cheque,suitcase),
+    fits_in(dictionary,suitcase),
+    fits_in(suit,suitcase)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+inconsistent_constraint([at_bag(X,P),at_bag(X,R),ne(P,R)]).
+inconsistent_constraint([at_thing(X,P),at_thing(X,R),ne(P,R)]).
+inconsistent_constraint([inside(Thing,B),inside(Thing,B1),ne(B,B1)]).
+inconsistent_constraint([inside(Thing,B),outside(Thing)]).
+inconsistent_constraint([inside(T,B),at_bag(B,P),at_thing(T,P1),ne(P1,P)]).
+
+% Operators
+operator(move(X,A,B),
+    % prevail
+    [],
+    % necessary
+    [     sc(bag,X,[at_bag(X,A),ne(A,B)]=>[at_bag(X,B)])],
+    % conditional
+    [     sc(thing,T,[at_thing(T,A),inside(T,X),fits_in(T,X)]=>[at_thing(T,B),inside(T,X)])]).
+operator(put_in(X,A,T),
+    % prevail
+    [     se(bag,X,[at_bag(X,A)])],
+    % necessary
+    [     sc(thing,T,[at_thing(T,A),outside(T)]=>[at_thing(T,A),inside(T,X),fits_in(T,X)])],
+    % conditional
+    []).
+operator(take_out(X,A,T),
+    % prevail
+    [     se(bag,X,[at_bag(X,A)])],
+    % necessary
+    [     sc(thing,T,[at_thing(T,A),inside(T,X)]=>[at_thing(T,A),outside(T)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(bag,briefcase,[at_bag(briefcase,office)])],
+    % INIT States
+    [
+     ss(bag,briefcase,[at_bag(briefcase,home)]),
+     ss(thing,cheque,[at_thing(cheque,home),inside(cheque,briefcase)]),
+     ss(thing,dictionary,[at_thing(dictionary,home),inside(dictionary,briefcase)])]).
+planner_task(2,
+    % Goals
+    [
+     se(bag,briefcase,[at_bag(briefcase,office)]),
+     se(thing,cheque,[at_thing(cheque,office),outside(cheque)])],
+    % INIT States
+    [
+     ss(bag,briefcase,[at_bag(briefcase,home)]),
+     ss(thing,cheque,[at_thing(cheque,home),inside(cheque,briefcase)]),
+     ss(thing,dictionary,[at_thing(dictionary,home),outside(dictionary)])]).
+planner_task(3,
+    % Goals
+    [
+     se(thing,dictionary,[at_thing(dictionary,home),inside(dictionary,briefcase)])],
+    % INIT States
+    [
+     ss(bag,briefcase,[at_bag(briefcase,office)]),
+     ss(thing,cheque,[at_thing(cheque,office),inside(cheque,briefcase)]),
+     ss(thing,dictionary,[at_thing(dictionary,home),outside(dictionary)])]).
+planner_task(4,
+    % Goals
+    [
+     se(bag,briefcase,[at_bag(briefcase,office)]),
+     se(thing,dictionary,[at_thing(dictionary,office)]),
+     se(thing,cheque,[at_thing(cheque,home)])],
+    % INIT States
+    [
+     ss(bag,briefcase,[at_bag(briefcase,home)]),
+     ss(thing,cheque,[at_thing(cheque,home),inside(cheque,briefcase)]),
+     ss(thing,dictionary,[at_thing(dictionary,home),outside(dictionary)])]).

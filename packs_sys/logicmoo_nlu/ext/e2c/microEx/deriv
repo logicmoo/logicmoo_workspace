@@ -1,0 +1,30 @@
+% La derivation
+
+ $ der(x,1).
+ $ der(X,0) :- number(X).
+ $ der(plus(X,Y),plus(Dx,Dy)) :- der(X,Dx), der(Y,Dy).
+ $ der(mult(X,Y),plus(mult(X,Dy),mult(Dx,Y))) :-der(X,Dx), der(Y,Dy).
+ 
+ $ simpl(X,X) :- atomic(X).
+ $ simpl(plus(X,Y),R) :- simpl(X,Xs), simpl(Y,Ys),
+                         si(plus(Xs,Ys),R).
+ $ simpl(mult(X,Y),R) :- simpl(X,Xs), simpl(Y,Ys), 
+                         si(mult(Xs,Ys),R).
+
+ $ si(plus(X,0),X) :- !.
+ $ si(plus(0,X),X) :- !.
+ $ si(plus(X,Y),R) :- number(X), number(Y), !, plus(X,Y,R).
+ $ si(mult(X,1),X) :- !.
+ $ si(mult(1,X),X) :- !.
+ $ si(mult(X,0),0) :- !.
+ $ si(mult(0,X),0) :- !.
+ $ si(mult(X,Y),R) :- number(X), number(Y), !, mult(X,Y,R).
+ $ si(X,X).
+
+ $ derive(X,R) :- der(X,Dx), simpl(Dx,R).
+
+ $ tderive :- expr(E,Ef), write(Ef), derive(E,R), tab(4), wf(R).
+       $ expr(plus(mult(3,x),2),'3x+2').
+       $ expr(plus(plus(mult(x,x),mult(3,x)),5),'x*x+3x+5').
+       $ expr(mult(plus(mult(x,x),mult(3,x)),0), '(x*x+3x+5)*0').
+

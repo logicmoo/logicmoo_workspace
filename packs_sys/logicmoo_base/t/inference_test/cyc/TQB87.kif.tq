@@ -1,0 +1,27 @@
+(note TQB87)
+
+(budgetExpenditureFractionOfGDP UnitedArabEmirates GovernmentMilitaryOrganization 
+ (YearFn 1994) 
+ (Percent 4.30000)) 
+
+(budgetExpenditureFractionOfGDP UnitedArabEmirates GovernmentMilitaryOrganization 
+ (YearFn 1995) 
+ (Percent 4.30000)) 
+
+(query
+(findall ?FRACTION (findall ?TIME
+ (thereExists ?NR 
+ (and 
+ (budgetExpenditureFractionOfGDP UnitedArabEmirates GovernmentMilitaryOrganization ?TIME ?NR) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent ?NR)))))))
+
+(answer 4.30000 1994)
+
+
+
+(end_of_file)
+
+
+
+

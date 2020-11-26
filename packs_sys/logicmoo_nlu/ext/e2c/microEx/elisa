@@ -1,0 +1,40 @@
+
+ % Micro_Eliza (inspire de Shapiro p232)
+ %
+ % lire_liste importe de mlg.lireliste
+ 
+   $ elisa :- lire_liste(Ph), elisa1(Ph).
+   $ elisa1([bye]) :- !, reply([vous,me,devez,700,francs]).
+   $ elisa1(Ph) :- pattern(Stimulus,Reponse),
+                   match(Stimulus,Dico,Ph),
+                   match(Reponse,Dico,Out),
+                   reply(Out), 
+                   lire_liste(Ph1), !,
+                   elisa1(Ph1).
+
+   $ match([N|Pat],Dico,Target) :- number(N),
+                                   lookup(N,Dico,Gauche),
+                                   conc(Gauche,Droite,Target),
+                                   match(Pat,Dico,Droite).
+   $ match([Mot|Pat],Dico,[Mot|Target]) :- atom(Mot),
+                                           match(Pat,Dico,Target).
+   $ match([],D,[]).
+   $ lookup(Key,[[Key,Value]|Dic],Value).
+   $ lookup(Key,[[Key1,Value1]|Dic],Value) :- neq(Key,Key1),
+                                              lookup(Key,Dic,Value).
+
+   $ pattern([je,suis,1],[depuis,combien,de,temps,etes,vous,1]).
+   $ pattern([1,vous,me,2],[pourquoi,pensez,vous,que,je,vous,2]).
+   $ pattern([j,aime,1],[quelqu,un,de,votre,famille,aime,t,il,1]).
+   $ pattern([je,me,sens,1],[vous,sentez,vous,souvent,1]).
+   $ pattern([1,X,2],[parlez,moi,plus,en,detail,de,votre,X])
+                                                    :- important(X).
+   $ pattern([1],[soyez,plus,explicite]).
+
+   $ important(mere).
+   $ important(pere).
+   $ important(fils).
+   $ important(fille).
+
+   $ reply([]) :- nl.
+   $ reply([T|Q]) :- wb(T), reply(Q).

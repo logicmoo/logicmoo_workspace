@@ -1,0 +1,13 @@
+% (goal[primary_market][situation:(raise[primary_market][money_value*x1])(of?x1[capital])])
+cgc(197,simple,'primary_market',[fs(num,sing)],[]).
+cgc(199,simple,'primary_market',[fs(num,sing)],[]).
+cgc(200,simple,'money_value',[fs(num,sing)],[]).
+cgc(202,simple,'capital',[fs(num,sing)],[]).
+cg(201,[cgr(raise, [199, 200], _),
+        cgr(of, [200, 202], _)], [],
+        
+        [fs(kind,body_of_context)]).
+cgc(198,complex,situation,[201],[]).
+cg(203,[cgr(goal, [197, 198], _)], 
+        [],
+        [fs(kind,normal)]).

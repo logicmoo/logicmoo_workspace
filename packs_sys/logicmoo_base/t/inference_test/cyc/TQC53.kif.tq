@@ -1,0 +1,85 @@
+(note TQC53)
+(increasesCausally HYP-MilitaryAttack-4452716 
+ (economicStability 
+ (EconomicSystemFn Iran) Low) likelihood) 
+
+(desires SaudiArabia 
+ (economicStability 
+ (EconomicSystemFn Iran) Low)) 
+
+(increasesCausally HYP-MilitaryAttack-4452716 
+ (politicalStability Iran Low) likelihood) 
+
+(desires SaudiArabia 
+ (politicalStability Iran Low)) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIOCHEM) 
+ (instance ?BIOCHEM ChemicalWeapon) 
+ (eventOccursAt ?ATTACK ?REGION) 
+ (inRegion ?REGION ?COUNTRY) 
+ (instance ?COUNTRY GeographicalAgent)) 
+ (increasesCausally ?ATTACK 
+ (politicalStability ?COUNTRY Low) likelihood)) 
+
+(instance HYP-MilitaryAttack-4452716 MilitaryAttack) 
+
+(subclass MilitaryAttack AttackOnTangible) 
+
+(instance Iran GeographicalAgent) 
+
+(inRegion HYP-SomethingExisting-37141228 Iran) 
+
+(eventOccursAt HYP-MilitaryAttack-4452716 HYP-SomethingExisting-37141228) 
+
+(deviceUsed HYP-MilitaryAttack-4452716 HYP-ChemicalWeapon-65056192) 
+
+(instance HYP-ChemicalWeapon-65056192 ChemicalWeapon) 
+
+
+
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIOCHEM) 
+ (instance ?BIOCHEM ChemicalWeapon) 
+ (eventOccursAt ?ATTACK ?REGION) 
+ (inRegion ?REGION ?COUNTRY) 
+ (instance ?COUNTRY GeographicalAgent)) 
+ (increasesCausally ?ATTACK 
+ (economicStability 
+ (EconomicSystemFn ?COUNTRY) Low) likelihood)) 
+
+
+(query (findall ?PROP
+
+ (implies 
+ (and 
+ (agent ?ACT SaudiArabia) 
+ (instance ?ACT MilitaryAttack) 
+ (eventOccursAt ?ACT ?TARGET) 
+ (inRegion ?TARGET Iran) 
+ (deviceUsed ?ACT ?FORCE) 
+ (instance ?FORCE ChemicalWeapon) 
+ (startsAfterStartingOf ?ACT 
+ (DateInSituationFn CalendarDay 16 HPKBScenarioConflict))) 
+ (or 
+ (and 
+ (desires SaudiArabia ?PROP) 
+ (increasesCausally ?ACT ?PROP likelihood)) 
+ (and 
+ (desires SaudiArabia 
+ (not ?PROP)) 
+ (decreasesCausally ?ACT ?PROP likelihood))))))  
+
+(answer (list 
+ (economicStability 
+ (EconomicSystemFn Iran) Low)))
+
+(answer (list 
+ (politicalStability Iran Low)))
+
+(end_of_file)

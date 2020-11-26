@@ -1,0 +1,30 @@
+(note TQA16)
+
+(instance 
+ (MillionBarrelsPerDay 8.94758) Rate) 
+
+(productionAmountDuring SaudiArabia PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 8.94758)) 
+
+(instance 
+ (MillionBarrelsPerDay 10.6000) Rate) 
+
+(productionCapacityDuring SaudiArabia PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 10.6000)) 
+
+(query (findall (?FRACTION ?MAX ?RATE ?TIME)
+  (and 
+    (productionCapacityDuring SaudiArabia PetroleumProduct ?TIME ?MAX) 
+    (productionAmountDuring SaudiArabia PetroleumProduct ?TIME ?RATE) 
+    (instance ?MAX Rate) 
+    (instance ?RATE Rate) 
+    (evaluate ?FRACTION 
+      (QuotientFn ?RATE ?MAX)))))	      
+
+(answer 0.844111 10.6000 8.94758 1995)
+
+(end_of_file)
+
+

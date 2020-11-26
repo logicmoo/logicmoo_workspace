@@ -1,0 +1,49 @@
+
+/*
+First, however, let's make sure a simple call to the foreign function works:
+
+  cffi-user> (foreign-funcall "curl_easy_setopt"
+                 :pointer *easy-handle*
+                 curl-option :nosignal :long 1 curl-code)
+  => 0
+foreign-funcall, despite its surface simplicity, can be used to call any C function. Its first argument is a string, naming the function to be called. Next, for each argument, we pass the name of the C type, which is the same as in defcfun, followed by a Lisp object representing the data to be passed as the argument. The final argument is the return type, for which we use the curl-code type defined earlier.
+
+defcfun just puts a convenient façade on foreign-funcall.1 Our earlier call to curl-global-init could have been written as follows:
+
+  cffi-user> (foreign-funcall "curl_global_init" :long 0 curl-code)
+  => 0
+
+*/
+
+
+  (define-foreign-library libcurl
+    (:darwin (:or "libcurl.3.dylib" "libcurl.dylib"))
+    (:unix (:or "libcurl.so.3" "libcurl.so"))
+    (t (:default "libcurl")))
+   
+  (use-foreign-library libcurl)
+
+
+  ;;; A CURLcode is the universal error code.  curl/curl.h says
+  ;;; no return code will ever be removed, and new ones will be
+  ;;; added to the end.
+  (defctype curl-code :int)
+   
+  ;;; Initialize libcurl with FLAGS.
+  (defcfun "curl_global_init" curl-code
+    (flags :long))
+
+  (defcfun "curl_easy_init" :pointer)
+   
+  (defcfun "curl_easy_cleanup" :void
+    (easy-handle :pointer))
+
+  
+    (defcenum curl-option
+      (:noprogress 43)
+      (:nosignal 99)
+      (:errorbuffer 10010)
+      (:url 10002))
+
+
+ (foreign-funcall "curl_global_init" :long 0 curl-code)

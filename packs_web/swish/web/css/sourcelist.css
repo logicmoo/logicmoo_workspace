@@ -1,0 +1,57 @@
+div.sourcelist
+{ margin: auto;
+  width: 90%;
+}
+
+div.sourcelist span.dropdown-icon
+{ margin-left: 5px;
+}
+
+div.search-footer > button > label
+{ margin-left: 5px;
+  margin-right: 5px;
+}
+
+div.search-footer
+{ text-align: center;
+}
+
+div.sourcelist div.search-results {
+  margin-top: 1em;
+  position: relative;
+  min-height: 150px;
+}
+
+div.search-no-results {
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+}
+
+div.loading {
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background-image: url("../icons/loading.gif");
+  background-size: 64px;
+  background-repeat: no-repeat;
+  background-position: 50% 100px;
+}
+
+span.no-search-results-warning {
+  background: #fee;
+  color: #b44;
+}
+
+td.tags span.tag {
+  padding: 0px 2px;
+  border-radius: 3px;
+  margin-right: 5px;
+  background: #d7fbff;
+}

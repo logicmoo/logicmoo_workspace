@@ -1,0 +1,3 @@
+Invoking this command forces the {\tt EBL\_\-TREEBANK} command to reparse the
+whole of the training corpus. By default, it attempts to reuse old analyses when
+it considers that they should be reliable.

@@ -1,0 +1,29 @@
+(note TQD44)
+
+(implies 
+ (subclass ?ATTACK WeaponOfMassDestructionAttack) 
+ (internationalAcceptabilityOf ?ATTACK VeryLow)) 
+
+(subclass BiologicalAttack WeaponOfMassDestructionAttack) 
+
+(implies 
+ (and 
+ (internationalAcceptabilityOf ?ACTIONTYPE ?ATTRIB) 
+ (behaviorCapable ?AGENT ?ACTIONTYPE agent)) 
+ (viabilityOfAsForeignPolicyTool ?AGENT ?ACTIONTYPE ?ATTRIB)) 
+
+(internationalAcceptabilityOf BiologicalAttack VeryLow) 
+
+(behaviorCapable Iran BiologicalAttack agent) 
+
+(viabilityOfAsForeignPolicyTool Iran BiologicalAttack VeryLow) 
+
+(query 
+(viabilityOfAsForeignPolicyTool Iran BiologicalAttack ?LEVEL)
+)
+
+(answer VeryLow
+)
+
+(end_of_file)
+

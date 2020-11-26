@@ -1,0 +1,175 @@
+(note TQA10-b)
+
+;; Transliterator Assertions 
+;;(surface-word CycSystemRealNumber Quantity )
+;;(surface-word TemporalThing TimeDuration )
+;;(surface-word CycFormula Formula )
+;;(surface-word ScalarInterval  UnitOfMeasure)
+;;(surface-word TemporalThing TimeDuration )
+
+(subclass FlowRate UnitOfMeasure)
+(subclass BarrelsPerDay UnitOfMeasure)
+(subclass MillionBarrelsPerDay UnitOfMeasure)
+(instance productionAmountDuring Predicate)
+(instance Object Class)
+(subclass NonNegativeScalarInterval ScalarInterval)
+
+;;(instance ProductType Collection)
+(subclass ProductType Collection)
+
+(range BarrelsPerDay FlowRate) 
+(range MillionBarrelsPerDay FlowRate) 
+(range MillionBarrelsPerDay ScalarInterval) 
+(range BarrelsPerDay ScalarInterval) 
+
+(domain BarrelsPerDay 1 CycSystemRealNumber)
+(domain MillionBarrelsPerDay 1 CycSystemRealNumber)
+(domain productionAmountDuring 3 TemporalThing)
+(domain productionAmountDuring 1 Object)
+(domain productionAmountDuring 4 NonNegativeScalarInterval)
+(domain productionAmountDuring 2 ProductType)
+(domain YearFn 1 Integer)
+
+(range YearFn TemporalThing)
+
+; Merge: (range YearFn Year)
+
+(domain supplyFromThroughAmountDuring 6 ScalarInterval)
+(domain supplyFromThroughAmountDuring 3 Object)
+(domain supplyFromThroughAmountDuring 2 Collection)
+(domain supplyFromThroughAmountDuring 1 Object)
+(domain supplyFromThroughAmountDuring 4 Object)
+(domain supplyFromThroughAmountDuring 5 TemporalThing)
+(domain thereExists 1 CycELVariable)
+(domain thereExists 2 CycFormula)
+(domain evaluate 1 Thing)
+(domain evaluate 2 Thing)
+(domain QuantityConversionFn 2 ScalarInterval)
+(domain QuantityConversionFn 1 UnitOfMeasure)
+(instance Percent UnitOfMeasure)
+(range QuotientFn ScalarInterval)
+(domain QuotientFn 1 ScalarInterval)
+(domain QuotientFn 2 ScalarInterval)
+
+(instance PlanetEarth Object)
+(instance PetroleumProduct Collection)
+(instance Kirkuk-CeyhanPipeline Object)
+(subclass PersianGulfCountry Object)
+(instance PetroleumProduct ProductType)
+(subclass NonNegativeScalarInterval ScalarInterval)
+ 
+(productionAmountDuring Kuwait PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 2.16000)) 
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Kuwait Kirkuk-CeyhanPipeline 
+ (YearFn 1997) 
+ (BarrelsPerDay 0)) 
+
+(instance Kuwait PersianGulfCountry) 
+
+(productionAmountDuring Iran PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 3.66000)) 
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Iran Kirkuk-CeyhanPipeline 
+ (YearFn 1997) 
+ (BarrelsPerDay 0)) 
+
+(instance Iran PersianGulfCountry) 
+
+(productionAmountDuring Qatar PetroleumProduct 
+ (YearFn 1996) 
+ (BarrelsPerDay 561000)) 
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Qatar Kirkuk-CeyhanPipeline 
+ (YearFn 1996) 
+ (BarrelsPerDay 0)) 
+
+(instance Qatar PersianGulfCountry) 
+
+(productionAmountDuring Oman PetroleumProduct 
+ (YearFn 1997) 
+ (BarrelsPerDay 894000)) 
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Oman Kirkuk-CeyhanPipeline 
+ (YearFn 1997) 
+ (BarrelsPerDay 0)) 
+
+(instance Oman PersianGulfCountry) 
+
+(productionAmountDuring UnitedArabEmirates PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 2.48000)) 
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct UnitedArabEmirates Kirkuk-CeyhanPipeline 
+ (YearFn 1997) 
+ (BarrelsPerDay 0)) 
+
+(instance UnitedArabEmirates PersianGulfCountry) 
+
+(productionAmountDuring SaudiArabia PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 9.00000)) 
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct SaudiArabia Kirkuk-CeyhanPipeline 
+ (YearFn 1997) 
+ (BarrelsPerDay 0)) 
+
+(instance SaudiArabia PersianGulfCountry) 
+
+(productionAmountDuring Bahrain PetroleumProduct 
+ (YearFn 1996) 
+ (BarrelsPerDay 46000)) 
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Bahrain Kirkuk-CeyhanPipeline 
+ (YearFn 1996) 
+ (BarrelsPerDay 0)) 
+
+(instance Bahrain PersianGulfCountry) 
+
+
+(instance 
+ (MillionBarrelsPerDay 1.20000) FlowRate) 
+
+(productionAmountDuring Iraq PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 1.20000)) 
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Iraq Kirkuk-CeyhanPipeline 
+ (YearFn 1997) 
+ (BarrelsPerDay 684000))
+
+(instance Iraq PersianGulfCountry) 
+
+(query 
+(findall ( ?COUNTRY ?FRACTION ?TIME)  
+ (and 
+   (instance ?COUNTRY PersianGulfCountry) 
+   (thereExists ?KIRKUK-CEYHAN-OIL-AMOUNT 
+       (thereExists ?TOTAL-OIL-AMOUNT 
+           (and 
+               (instance ?TOTAL-OIL-AMOUNT FlowRate) 
+               (productionAmountDuring ?COUNTRY PetroleumProduct ?TIME ?TOTAL-OIL-AMOUNT) 
+               (supplyFromThroughAmountDuring PlanetEarth PetroleumProduct ?COUNTRY Kirkuk-CeyhanPipeline ?TIME ?KIRKUK-CEYHAN-OIL-AMOUNT) 
+               (evaluate ?FRACTION 
+                   (QuantityConversionFn Percent (QuotientFn ?KIRKUK-CEYHAN-OIL-AMOUNT ?TOTAL-OIL-AMOUNT )
+		   )
+		   )
+		   )
+		   )
+		   ))))
+
+(answer Kuwait 0 1997 )
+(answer Iran 0 1997 )
+(answer Qatar 0 1996 )
+(answer Oman  0 1997 )
+(answer SaudiArabia 0 1997 )
+(answer Iraq 57.0000 1997 )
+(answer Bahrain 0 1996 )
+(answer UnitedArabEmirates 0 1997 )
+
+
+(end_of_file)
+
+

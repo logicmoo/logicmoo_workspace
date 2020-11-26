@@ -1,0 +1,44 @@
+(note TQA22)
+
+(agent HYP-NavalBlockade-11027009 Iran) 
+
+(maleficiary HYP-NavalBlockade-11027009 Kuwait) 
+
+(causes-SitProp HYP-NavalBlockade-11027009 
+ (quantityChangeFunction HYP-NavalBlockade-11027009 PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (priceChargedFor PlanetEarth PetroleumProduct ?PRICE)) NetIncreasingFunction)) 
+
+(implies 
+ (and 
+ (instance ?BLOCKADE NavalBlockade) 
+ (maleficiary ?BLOCKADE ?COUNTRY) 
+ (instance ?COUNTRY Country) 
+ (exports ?COUNTRY ?PRODUCT-TYPE)) 
+ (causes-SitProp ?BLOCKADE 
+ (quantityChangeFunction ?BLOCKADE ?PRODUCT-TYPE 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (priceChargedFor PlanetEarth ?PRODUCT-TYPE ?PRICE)) NetIncreasingFunction ) )) 
+
+(exports Kuwait PetroleumProduct) 
+
+(instance Kuwait Country) 
+
+(instance HYP-NavalBlockade-11027009 NavalBlockade) 
+
+(query   (findall (?CAUSE ?EFFECT-PERIOD ?FUNCTION ?RELN) (and 
+   (instance ?CAUSE NavalBlockade) 
+   (agent ?CAUSE Iran) 
+   (maleficiary ?CAUSE Kuwait) 
+   (causes-SitProp ?CAUSE 
+       (quantityChangeFunction ?EFFECT-PERIOD PetroleumProduct ?RELN ?FUNCTION))) ))
+
+(answer HYP-NavalBlockade-1102700 HYP-NavalBlockade-1102700  NetIncreasingFunction (list (Kappa 
+ (?PRODUCT ?PRICE) 
+ (priceChargedFor PlanetEarth ?PRODUCT-TYPE ?PRICE))) )
+
+(end_of_file)
+
+

@@ -1,0 +1,132 @@
+(note TQF223e)
+
+(implies 
+ (and 
+ (subAttribute ?IDEOLOGY ActionGuidingIdeology) 
+ (goalCategoryForAgent ?AGENT ?GOAL ?IDEOLOGY)) 
+ (goalImportance ?AGENT ?GOAL HighToVeryHigh)) 
+
+(goalCategoryForAgent Taliban 
+ (portionOf MiddleEasternCountry 
+ (TheSetOf ?COUNTRY 
+ (religionOfRule ?COUNTRY SunniIslam)) ActionGuidingIdeology)) 
+
+(goalImportance Taliban 
+ (portionOf MiddleEasternCountry 
+ (TheSetOf ?COUNTRY 
+ (religionOfRule ?COUNTRY SunniIslam)) HighToVeryHigh) )
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+(opponentsInConflict Iran Taliban Iranian-TalibanBackgroundConflict) 
+
+(implies 
+ (and 
+ (instance ?COMBATANT-1 Organization) 
+ (opponentsInConflict ?COMBATANT-1 ?COMBATANT-2 ?CONFLICT)) 
+ (goalCategoryForAgent ?COMBATANT-1 
+ (failureForAgents ?CONFLICT ?COMBATANT-2) StrategicInterest)) 
+
+(opponentsInConflict Taliban Iran Iranian-TalibanBackgroundConflict) 
+
+(implies 
+ (and 
+ (subAttribute ?STRATEGIC-INTEREST StrategicInterest) 
+ (goalCategoryForAgent ?AGENT ?GOAL ?STRATEGIC-INTEREST)) 
+ (goalImportance ?AGENT ?GOAL HighToVeryHigh)) 
+
+(goalCategoryForAgent Taliban 
+ (failureForAgents Iranian-TalibanBackgroundConflict Iran) StrategicInterest) 
+
+(goalImportance Taliban 
+ (failureForAgents Iranian-TalibanBackgroundConflict Iran) HighToVeryHigh) 
+
+(opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+
+(implies 
+ (and 
+ (instance ?COMBATANT-1 Organization) 
+ (opponentsInConflict ?COMBATANT-1 ?COMBATANT-2 ?CONFLICT)) 
+ (goalCategoryForAgent ?COMBATANT-1 
+ (failureForAgents ?CONFLICT ?COMBATANT-2) StrategicInterest)) 
+
+(opponentsInConflict Taliban Iran Iranian-TalibanConflict-1998) 
+
+(implies 
+ (and 
+ (subAttribute ?STRATEGIC-INTEREST StrategicInterest) 
+ (goalCategoryForAgent ?AGENT ?GOAL ?STRATEGIC-INTEREST)) 
+ (goalImportance ?AGENT ?GOAL HighToVeryHigh)) 
+
+(goalCategoryForAgent Taliban 
+ (failureForAgents Iranian-TalibanConflict-1998 Iran) StrategicInterest) 
+
+(goalImportance Taliban 
+ (failureForAgents Iranian-TalibanConflict-1998 Iran) HighToVeryHigh) 
+
+(opponentsInConflict Iran Taliban Iranian-TalibanBorderClashes) 
+
+(implies 
+ (and 
+ (instance ?COMBATANT-1 Organization) 
+ (opponentsInConflict ?COMBATANT-1 ?COMBATANT-2 ?CONFLICT)) 
+ (goalCategoryForAgent ?COMBATANT-1 
+ (failureForAgents ?CONFLICT ?COMBATANT-2) StrategicInterest)) 
+
+(instance Taliban Organization) 
+
+(opponentsInConflict Taliban Iran Iranian-TalibanBorderClashes) 
+
+(implies 
+ (and 
+ (subAttribute ?STRATEGIC-INTEREST StrategicInterest) 
+ (goalCategoryForAgent ?AGENT ?GOAL ?STRATEGIC-INTEREST)) 
+ (goalImportance ?AGENT ?GOAL HighToVeryHigh)) 
+
+(goalCategoryForAgent Taliban 
+ (failureForAgents Iranian-TalibanBorderClashes Iran) StrategicInterest) 
+
+(goalImportance Taliban 
+ (failureForAgents Iranian-TalibanBorderClashes Iran) HighToVeryHigh) 
+
+(opponentsInConflict Iran Taliban CompetitionForPipelineStakes-Iran-Taliban) 
+
+(implies 
+ (and 
+ (instance ?COMBATANT-1 Organization) 
+ (opponentsInConflict ?COMBATANT-1 ?COMBATANT-2 ?CONFLICT)) 
+ (goalCategoryForAgent ?COMBATANT-1 
+ (failureForAgents ?CONFLICT ?COMBATANT-2) StrategicInterest)) 
+
+(opponentsInConflict Taliban Iran CompetitionForPipelineStakes-Iran-Taliban) 
+
+(implies 
+ (and 
+ (subAttribute ?STRATEGIC-INTEREST StrategicInterest) 
+ (goalCategoryForAgent ?AGENT ?GOAL ?STRATEGIC-INTEREST)) 
+ (goalImportance ?AGENT ?GOAL HighToVeryHigh)) 
+
+(goalCategoryForAgent Taliban 
+ (failureForAgents CompetitionForPipelineStakes-Iran-Taliban Iran) StrategicInterest) 
+
+(goalImportance Taliban 
+ (failureForAgents CompetitionForPipelineStakes-Iran-Taliban Iran) HighToVeryHigh) 
+
+(query (findall (?MOTIVATION)
+(goalImportance Taliban ?MOTIVATION HighToVeryHigh)))
+
+(answer   (portionOf MiddleEasternCountry  (TheSetOf ?COUNTRY 
+(religionOfRule ?COUNTRY SunniIslam))))
+
+(answer   (failureForAgents Iranian-TalibanBackgroundConflict Iran))
+
+(answer   (failureForAgents Iranian-TalibanConflict-1998 Iran))
+
+(answer  (failureForAgents Iranian-TalibanBorderClashes Iran) )
+
+(answer  (failureForAgents CompetitionForPipelineStakes-Iran-Taliban Iran)) 
+
+(end_of_file)
+

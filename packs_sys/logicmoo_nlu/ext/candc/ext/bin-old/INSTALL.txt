@@ -1,0 +1,62 @@
+
+To install gSOAP, unpack the archive. You will get the files:
+
+INSTALL.txt	this file
+README.txt
+license.pdf	gSOAP public license
+soapcpp2	executable gSOAP 2 compiler
+soapdoc2.html	documentation for gSOAP 2
+soapdoc2.pdf	documentation for gSOAP 2
+stdsoap2.h	header file for stdsoap2.c[pp]
+stdsoap2.c	library and gSOAP runtime
+stdsoap2.cpp	library (identical to stdsoap2.c)
+
+If any of the above files is missing, please contact us:
+	http://www.cs.fsu.edu/~engelen/soapcontact.html
+
+Examples are included. Also a Linux/Unix Makefile is included.
+
+ck.h ckclient.cpp ckserver.cpp:		 Cookie client and server example
+dime.h dimeclt.cpp dimesrv.cpp:		 Image client and server with DIME
+glossary.h glossary.cpp:		 Glossary client
+googleapi.h googleapi.c			 Google Web API client
+listing.h listing.cpp:			 XMethod service listing client
+localtime.h localtime.c:		 Get localtime DOC/LIT client example
+lu.h lumat.cpp luclient.cpp luserver.cpp:Linear solver example client+server
+magic.h magicclient.cpp magicserver.cpp: Magic Squares client and server
+magic.h mtmagicserver.cpp:		 Multi-threaded Magic Squares server
+mybubble.h mybubble.c:			 MyBubble client
+polymorph.h polymorph.cpp:		 Polymorphic object exchange
+quote.h quote.c				 Get delayed stock quote
+quote2.h quote2.c			 Get delayed stock quote (SOAP messages)
+quote3.h quote3.cpp			 Get delayed stock quote (Stock class)
+quotex.h quotex.cpp:			 Combined client/server example
+ssl.h sslclient.c sslserver.c:		 SSL example (requires OpenSSL)
+uddi.h uddi.cpp:			 UDDI client
+whois.h whois.cpp:			 Who-is example client
+
+To build the example services and clients, type "make". See
+	http://www.cs.fsu.edu/~engelen/soapexamples.html
+for more details and explanations of these examples.
+
+Two multi-threaded stand-alone SOAP servers are included in the Linux/Unix
+distributions:
+
+mtmagicserver	MT magic square server (type 'make mtmagicserver.cgi')
+sslserver	example SSL-secure SOAP server (client code: sslclient)
+
+To try the SSL-secure SOAP server, install OpenSSL and change the occurrences
+of "linprog2.cs.fsu.edu" in sslclient.c and sslserver.c to the machine name
+(or machine IP) you are using. Example .pem files are included but you need to
+create your own .pem files (see OpenSSL documentation).
+
+The sslclient and sslserver codes can then be build as follows:
+
+soapcpp2 -c ssl.h
+gcc -DWITH_OPENSSL -o sslclient sslclient.c stdsoap2.c soapC.c soapClient.c -lssl -lcrypto
+gcc -DWITH_OPENSSL -o sslserver sslserver.c stdsoap2.c soapC.c soapServer.c -lssl -lcrypto -lpthread
+
+Disclaimer: We cannot guarantee that all client examples can connect to third
+party Web services when these services are down or have been removed.
+
+For Windows users, the archive includes a samples directory, see README.txt

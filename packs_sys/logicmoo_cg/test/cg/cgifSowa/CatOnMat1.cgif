@@ -1,0 +1,2 @@
+/* ontology required (to load first): aminePlatform/samples/ontology/ManOntology2.xml */
+[Cat: *x] [Mat: *y] (On ?x ?y)

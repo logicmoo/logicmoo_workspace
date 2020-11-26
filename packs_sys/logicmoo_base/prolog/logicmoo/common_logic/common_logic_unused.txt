@@ -1,0 +1,128 @@
+%= Compute normal forms for SHOIQ formulae.
+%= Skolemize SHOI<Q> formula.
+%=
+%= Copyright (C) 1999 Anthony A. Aaby <aabyan@wwc.edu>
+%= Copyright (C) 2006-2007 Stasinos Konstantopoulos <stasinos@users.sourceforge.net>
+%= Douglas R. Miles <logicmoo@gmail.com>
+%=
+%= This program is free software; you can redistribute it and/or modify
+%= it under the terms of the GNU General Public License as published by
+%= the Free Software Foundation; either version 2 of the License, or
+%= (at your option) any later version.
+%=
+%= This program is distributed in the hope that it will be useful,
+%= but WITHOUT ANY WARRANTY; without even the implied warranty of
+%= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%= GNU General Public License for more details.
+%=
+%= You should have received a copy of the GNU General Public License along
+%= with this program; if not, write to the Free Software Foundation, Inc.,
+%= 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+%= FORMULA SYNTAX
+%=
+%= dlnot(A)
+%= dland(F, F)
+%= dlor(F, F)
+%= dlimplies(F, F)
+%= dlequiv(F, F)
+%=    all(X,A)
+%=    exists(X,A)
+%=    atleast(X,N,A)
+%=    atmost(X,N,A)
+
+
+:- module(dbase_i_kif, 
+          [ % nnf/2, pnf/3,pnf/2, cf/3,
+          tsn/0,
+          op(300,fx,'~'),
+          op(600,xfx,'=>'),
+          op(650,xfx,'<=>'),
+          op(350,xfx,'xor'),
+          op(400,yfx,'&'),  
+          op(500,yfx,'v')
+        ]). 
+
+:-multifile(use_kif_expansion/0).
+:-thread_local(use_kif_expansion/0).
+%user:term_expansion(H ,CE):-kif_term_expansion(H,CE),((H)\=@=CE,dmsg(kif_term_expansion(H,CE))).
+%user:goal_expansion(H ,CE):-kif_goal_expansion(H,CE),((H)\=@=CE,dmsg(kif_goal_expansion(H,CE))).
+
+
+use_kif_term(B):- use_kif_expansion;kif_hook(B);kif_pred_head(B).
+
+kif_head_expansion(B,CE):- use_kif_term(B),kif_term_expansion(B,CE).
+
+:-export(kif_clause_expansion/3).
+kif_clause_expansion(H,B,OUT):- kif_head_expansion(H,HH),
+  must(kif_goal_expansion(B,BB)),!,OUT=(HH:-BB).
+
+kif_term_expansion(H,H):-not(compound(H)),!.
+kif_term_expansion(M:H,M:HH):-!,kif_goal_expansion(H,HH).
+kif_term_expansion((H:-B),CE):- (use_kif_expansion;kif_hook(H)), !,kif_clause_expansion(H,B,CE),((H:-B)\=@=CE,dmsg(kif_clause_expansion(H,B,CE))).
+kif_term_expansion((:-B),(:-CE)):- !,kif_goal_expansion(B,CE).
+kif_term_expansion([CA|RGS],CEARGS):-!,maplist(kif_arg_expansion,[CA|RGS],CEARGS).
+kif_term_expansion(B,CE):-kif_goal_expansion(B,CE).
+
+kif_arg_expansion(H,H):-not(compound(H)),!.
+kif_arg_expansion(H,H):-!.
+
+get_meta_args(C,MP):- predicate_property(C,meta_predicate(MP)),!.
+get_meta_args(C,MP):- C=..[F|ARGS],functor(C,F,A),get_meta_args(C,F,A,ARGS,MPARGS),MP=..[F|MPARGS].
+
+get_meta_args(_,module,_,_ARGS,_MPARGS):-!,fail.
+get_meta_args(_,_,A,_ARGS,MPARGS):- A>2,!,length(MPARGS,A).
+
+meta_term_expansion(_,B,B):-not(compound(B)),!.
+meta_term_expansion(M,B,C):-member(M,[+,-,?]),!,kif_arg_expansion(B,C),!.
+% [^,:] 
+meta_term_expansion(_,B,C):-arg(1,B,IsVar),is_ftVar(IsVar),kif_arg_expansion(B,C),!.
+meta_term_expansion(M,B,C):-number(M),!,kif_goal_expansion(B,C),!.
+meta_term_expansion(_,B,C):-kif_term_expansion(B,C),!.
+
+kif_goal_expansion(H,H):-not(compound(H)),!.
+kif_goal_expansion(not(B),not(CE)):- !,kif_goal_expansion(B,CE).
+kif_goal_expansion(M:(B),M:(CE)):- !,kif_goal_expansion(B,CE).
+kif_goal_expansion('@'(B , M),'@'(CE , M)):- !,kif_goal_expansion(B,CE).
+kif_goal_expansion((H , B),(HH , BB)):-!,kif_goal_expansion(H,HH),kif_goal_expansion(B,BB).
+kif_goal_expansion((H ; B),(HH ; BB)):-!,kif_goal_expansion(H,HH),kif_goal_expansion(B,BB).
+kif_goal_expansion((H -> B ; C),(HH -> BB ; CC)):-!,kif_goal_expansion(H,HH),kif_goal_expansion(B,BB),kif_goal_expansion(C,CC).
+kif_goal_expansion(C,CEO):- C =..[F|ARGS],
+   kif_goal_args_expansion(C,F,ARGS,CEO),!.
+   
+
+kif_goal_args_expansion(C,F,ARGS,CEO):- get_meta_args(C,MP),!,MP=..[F|MARGS],maplist(meta_term_expansion,MARGS,ARGS,CEARGS),!,CEO=..[F|CEARGS].
+kif_goal_args_expansion(_,F,ARGS,CEO):- maplist(kif_arg_expansion,ARGS,CEARGS),
+                         CE=..[F|CEARGS],
+                          logical_pos_maybe(F,CE,CEO).
+
+
+each_subterm00(B, A):- A=B;(compound(B), (functor(B,A,_);((arg(_, B, C), each_subterm00(C, A))))).
+
+
+:-meta_predicate(gshow_call(0)).
+:-export(gshow_call/1).
+
+
+add_mi(_Caller,G,O):- prolog_load_context(source,File),
+   source_location(File,_),trace,source_location(File,_),
+   not(quietly((each_subterm00(G,ST),atom(ST),member(ST,[show_call,show_gcall])))), get_functor(G,F,A),!,use_gcall(F,A),!,
+    not(dont_use_gcall(F,A)),!, O=gshow_call(G),!. % dmsg(expanded(G)).
+
+logical_pos_maybe(_,A,A):-!.
+
+dont_use_gcall(dont_use_gcall,2).
+dont_use_gcall(gshow_call,1).
+dont_use_gcall(show_call,1).
+dont_use_gcall(_,1).
+dont_use_gcall(F,A):-functor(G,F,A),predicate_property(G,meta_predicate(_)).
+dont_use_gcall(goal_expansion,2).
+use_gcall(_,2).
+gshow_call(C):-show_call_failure(C).
+
+user:goal_expansion(true,writeq(true)):-!.
+%user:goal_expansion(V,V):-not(compound(V)),!.
+%user:goal_expansion(G,O):-source_file(G,File),add_mi(file(File),G,O).
+
+
+

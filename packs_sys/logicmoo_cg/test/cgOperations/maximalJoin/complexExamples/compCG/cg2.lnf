@@ -1,0 +1,6 @@
+[Begin]-
+   -srce->[Proposition = [Press]-
+                            -obj->[Key],
+                            -manr->[Fast],
+                            -agnt->[Person]],
+   -agnt->[Man]

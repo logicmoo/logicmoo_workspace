@@ -1,0 +1,40 @@
+AddKnowlegdeFoodAt(_Food, _FoodPosition, _Quantity ) :- 
+	Environment( Food ):: [Food = _Food] -locatedIn-> [Position = _FoodPosition],
+	AddQuantityOfFoodAt(_Food, _FoodPosition, _Quantity),!.
+AddKnowlegdeFoodAt(_Food, _FoodPosition, _Quantity ) :-
+	asserta(Environment( Food ):: [Food = _Food ] -
+		-locatedIn-> [Position = _FoodPosition ],
+		-exists->[Quantity = _Quantity ],[]),!.
+
+AddQuantityOfFoodAt(_Food, _FoodPosition, _Quantity) :- 
+	Environment( Food ):: [Food = _Food] -
+		-locatedIn-> [Position = _FoodPosition],
+		-exists->[Quantity = _OldQuantity ],
+	_NewQuantity is _Quantity + _OldQuantity,
+	myRetract(Environment( Food ):: [Food = _ ] -
+		-locatedIn-> [Position = _ ],
+		-exists->[Quantity = _ ]),
+	asserta(Environment( Food ):: [Food = _Food ] -
+		-locatedIn-> [Position = _FoodPosition ],
+		-exists-> [Quantity = _NewQuantity ],[]).
+
+SuppressQuantityOfFoodAt( _Food, _FoodPosition, _Quantity):-
+	Environment( Food ):: [Food = _Food] -
+		-locatedIn-> [Position = _FoodPosition],
+		-exists->[Quantity = _OldQuantity ],
+	SupOrEqual(_OldQuantity,_Quantity),
+	_NewQuantity is _OldQuantity -  _Quantity,
+	myRetract(Environment( Food ):: [Food = _Food ] -
+		-locatedIn-> [Position = _FoodPosition ],
+		-exists->[Quantity = _ ]),
+	asserta(Environment( Food ):: [Food = _Food ] -
+		-locatedIn-> [Position = _FoodPosition ],
+		-exists->[Quantity = _NewQuantity ],[]).
+
+verifyNullQuantity(_Food, _FoodPosition ) :-
+	Environment( Food ):: [Food = _Food] -
+		-locatedIn-> [Position = _FoodPosition],
+		-exists->[Quantity = 0 ],
+	myRetract(Environment( Food ):: [Food = _Food ] -
+		-locatedIn-> [Position = _FoodPosition ]).
+verifyNullQuantity(_Food, _FoodPosition).

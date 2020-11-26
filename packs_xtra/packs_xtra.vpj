@@ -1,0 +1,316 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+	Version="10.0"
+	VendorName="SlickEdit"
+	WorkingDir=".">
+	<Config
+		Name="Release"
+		OutputFile=""
+		CompilerConfigName="Latest Version">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec CmdLine='"packs_xtra.exe"'/>
+			</Target>
+		</Menu>
+	</Config>
+	<CustomFolders>
+		<Folder
+			Name="Source Files"
+			Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl"/>
+		<Folder
+			Name="Header Files"
+			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if"/>
+		<Folder
+			Name="Resource Files"
+			Filters="*.ico;*.cur;*.dlg"/>
+		<Folder
+			Name="Bitmaps"
+			Filters="*.bmp"/>
+		<Folder
+			Name="Other Files"
+			Filters="">
+		</Folder>
+	</CustomFolders>
+	<Files AutoFolders="DirectoryView">
+		<Folder Name="logicmoo_nlu">
+			<Folder Name="prolog">
+				<Folder Name="e2c">
+					<F N="logicmoo_nlu/prolog/e2c/e2c-new.ke"/>
+					<F N="logicmoo_nlu/prolog/e2c/e2c.ke"/>
+					<F N="logicmoo_nlu/prolog/e2c/e2c.pl"/>
+					<F N="logicmoo_nlu/prolog/e2c/f.p"/>
+					<F N="logicmoo_nlu/prolog/e2c/kb_interface.pl"/>
+					<F N="logicmoo_nlu/prolog/e2c/ner-utils.subl"/>
+					<F N="logicmoo_nlu/prolog/e2c/osim.lisp"/>
+					<F N="logicmoo_nlu/prolog/e2c/prologmud.lisp"/>
+					<F N="logicmoo_nlu/prolog/e2c/remove-instances.lisp"/>
+					<F N="logicmoo_nlu/prolog/e2c/renames.lisp"/>
+				</Folder>
+				<Folder Name="pldata">
+					<Folder Name="plkb7166">
+						<F N="logicmoo_nlu/prolog/pldata/plkb7166/add_header.script"/>
+						<F N="logicmoo_nlu/prolog/pldata/plkb7166/dir.header"/>
+						<F N="logicmoo_nlu/prolog/pldata/plkb7166/kb7166.pl"/>
+						<F N="logicmoo_nlu/prolog/pldata/plkb7166/kb7166_pt7_constant_renames.pl"/>
+						<F N="logicmoo_nlu/prolog/pldata/plkb7166/kb7166_pt7_constant_renames_NEW.pl"/>
+						<F N="logicmoo_nlu/prolog/pldata/plkb7166/sumo_renames.pl"/>
+					</Folder>
+					<F N="logicmoo_nlu/prolog/pldata/clex_iface.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/clex_lexicon_user1.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/current_renames.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/el_assertions.pl.hide"/>
+					<F N="logicmoo_nlu/prolog/pldata/kb_7166.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/mworld0_declpreds.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/nldata_BRN_WSJ_LEXICON.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/nldata_cycl_pos0.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/nldata_dictionary_some01.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/README.txt"/>
+					<F N="logicmoo_nlu/prolog/pldata/tiny_kb.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/trans_header.pl"/>
+					<F N="logicmoo_nlu/prolog/pldata/transform_dump.pl"/>
+				</Folder>
+			</Folder>
+		</Folder>
+		<Folder Name="logicmoo_packages">
+			<Folder Name="prolog">
+				<Folder Name="pakcs">
+					<Folder Name="2ndHome/.cpm">
+						<Folder Name="packages">
+							<Folder Name="abstract-curry-2.0.0">
+								<Folder Name="src">
+									<Folder Name="AbstractCurry">
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/abstract-curry-2.0.0/src/AbstractCurry/Build.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/abstract-curry-2.0.0/src/AbstractCurry/Files.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/abstract-curry-2.0.0/src/AbstractCurry/Pretty.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/abstract-curry-2.0.0/src/AbstractCurry/Select.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/abstract-curry-2.0.0/src/AbstractCurry/Transform.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/abstract-curry-2.0.0/src/AbstractCurry/Types.curry"/>
+									</Folder>
+								</Folder>
+								<Folder Name="test">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/abstract-curry-2.0.0/test/Rev.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/abstract-curry-2.0.0/test/TestAbstractCurry.curry"/>
+								</Folder>
+							</Folder>
+							<Folder Name="cass-2.0.0">
+								<Folder Name="examples">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/examples/NonDetTest.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/examples/Rev.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/examples/RootReplacedTest.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/examples/UsingCASS.curry"/>
+								</Folder>
+								<Folder Name="src">
+									<Folder Name="CASS">
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/Configuration.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/Dependencies.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/Doc.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/FlatCurryDependency.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/Main.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/Registry.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/Server.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/ServerFormats.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/ServerFunctions.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/Worker.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-2.0.0/src/CASS/WorkerFunctions.curry"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="cass-analysis-2.0.0">
+								<Folder Name="src">
+									<Folder Name="Analysis">
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/Demandedness.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/Deterministic.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/Files.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/Groundness.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/HigherOrder.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/Indeterministic.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/Logging.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/ProgInfo.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/RequiredValue.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/RequiredValues.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/RightLinearity.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/RootReplaced.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/SensibleTypes.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/SolutionCompleteness.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/Termination.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/TotallyDefined.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/Types.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/TypeUsage.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/cass-analysis-2.0.0/src/Analysis/UnsafeModule.curry"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="clp-pakcs-1.0.0">
+								<Folder Name="examples">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Circuit.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Circuit_old.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Magicseries.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Magicseries_old.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Mortgage.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Mortgage_old.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Queens.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Queens_old.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/SMM.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/SMM_old.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Sudoku.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/examples/Sudoku_old.curry"/>
+								</Folder>
+								<Folder Name="src">
+									<Folder Name="CLP">
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/src/CLP/FD.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/src/CLP/R.curry"/>
+									</Folder>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/src/CLPFD.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/clp-pakcs-1.0.0/src/CLPR.curry"/>
+								</Folder>
+							</Folder>
+							<Folder Name="csv-1.0.0">
+								<Folder Name="src">
+									<Folder Name="Text">
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/csv-1.0.0/src/Text/CSV.curry"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="currydoc-2.0.0">
+								<Folder Name="src">
+									<Folder Name="CurryDoc">
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/AnaInfo.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/CDoc.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/Config.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/Files.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/Html.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/Main.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/Options.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/Read.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/currydoc-2.0.0/src/CurryDoc/TeX.curry"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="flatcurry-2.0.0">
+								<Folder Name="src">
+									<Folder Name="FlatCurry">
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/Compact.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/Files.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/FlexRigid.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/Goodies.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/Pretty.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/Read.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/Show.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/Types.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/src/FlatCurry/XML.curry"/>
+									</Folder>
+								</Folder>
+								<Folder Name="test">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/test/rev.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/test/TestFlatCurryGoodies.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/flatcurry-2.0.0/test/TestFlatCurryXML.curry"/>
+								</Folder>
+							</Folder>
+							<Folder Name="global-variables-1.0.0">
+								<Folder Name="src">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/global-variables-1.0.0/src/GlobalVariable.curry"/>
+								</Folder>
+								<Folder Name="test">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/global-variables-1.0.0/test/TestGlobalVariable.curry"/>
+								</Folder>
+							</Folder>
+							<Folder Name="html-2.0.0">
+								<Folder Name="examples">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/html-2.0.0/examples/RevDup.curry"/>
+								</Folder>
+								<Folder Name="src">
+									<Folder Name="HTML">
+										<Folder Name="Styles">
+											<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/html-2.0.0/src/HTML/Styles/Bootstrap3.curry"/>
+										</Folder>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/html-2.0.0/src/HTML/Base.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/html-2.0.0/src/HTML/CategorizedList.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/html-2.0.0/src/HTML/CgiServer.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/html-2.0.0/src/HTML/LaTeX.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/html-2.0.0/src/HTML/Parser.curry"/>
+									</Folder>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/html-2.0.0/src/HtmlCgi.curry"/>
+								</Folder>
+							</Folder>
+							<Folder Name="markdown-2.0.0">
+								<Folder Name="src">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/markdown-2.0.0/src/Markdown.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/markdown-2.0.0/src/ProcessMarkdown.curry"/>
+								</Folder>
+							</Folder>
+							<Folder Name="transbooleq-2.0.0">
+								<Folder Name="examples">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/transbooleq-2.0.0/examples/Expressions.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/transbooleq-2.0.0/examples/Grep.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/transbooleq-2.0.0/examples/Half.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/transbooleq-2.0.0/examples/Last.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/transbooleq-2.0.0/examples/Various.curry"/>
+								</Folder>
+								<Folder Name="src">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/transbooleq-2.0.0/src/BindingOpt.curry"/>
+								</Folder>
+							</Folder>
+							<Folder Name="wl-pprint-0.0.1">
+								<Folder Name="src">
+									<Folder Name="Text">
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/wl-pprint-0.0.1/src/Text/Pretty.curry"/>
+										<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/wl-pprint-0.0.1/src/Text/PrettyImpl.curry"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="xml-2.0.0">
+								<Folder Name="examples">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/xml-2.0.0/examples/XmlMatching.curry"/>
+								</Folder>
+								<Folder Name="src">
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/xml-2.0.0/src/XML.curry"/>
+									<F N="logicmoo_packages/prolog/pakcs/2ndHome/.cpm/packages/xml-2.0.0/src/XmlConv.curry"/>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
+		<F
+			N="*.*"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".*/;e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+	</Files>
+</Project>

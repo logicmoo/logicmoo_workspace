@@ -1,0 +1,3 @@
+Relevant to translation applications. Points to a file of recognition
+judgements. You should not normally edit this file directly, but
+update it using the command UPDATE\_\-RECOGNITION\_\-JUDGEMENTS.

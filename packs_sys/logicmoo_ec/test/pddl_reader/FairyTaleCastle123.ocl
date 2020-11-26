@@ -1,0 +1,218 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 3.0
+ *
+ *  Author: none
+ *  Institution: null
+ *  Date created: null
+ *  Date last modified: 2011/07/23 at 03:25:29 PM PDT
+ *  Description:
+ */
+
+domain_name(fairytalecastle).
+
+% Sorts
+sorts(primitive_sorts,[special,couch,table,chest,seating,open_container,open_close_container,treasury,drawing_room,container_object,player,room,sword,dragon,worm,frog,golden,black,red,brown,yellow,white,silver,green,colour,apple,necklace,crown,key,castle,seat,couchleg,climbable,edible,takeable,west_exit,east_exit,south_exit,north_exit,exit,wall,small,ugly,wooden,generic_container,weapon,not_so_easy_to_kill,easy_to_kill,property,object,locked_unlocked,open_closed]).
+
+% Objects
+
+% Predicates
+
+% Object Class Definitions
+substate_classes(takeable,Takeable,[
+    [accessible(Takeable),no_inventory_object(Takeable),has_location(Takeable,Y),not_inventory_object(Takeable)],
+    [accessible(Takeable),inventory_object(Takeable),not_no_inventory_object(Takeable),not_has_location(Takeable,Y)],
+    [accessible(Takeable),no_inventory_object(Takeable),not_inventory_object(Takeable)],
+    [accessible(Takeable),inventory_object(Takeable),not_no_inventory_object(Takeable)],
+    [inventory_object(Takeable),accessible(Takeable),not_has_location(Takeable,Y)],
+    [accessible(Takeable),has_location(Takeable,Y),not_inventory_object(Takeable)],
+    [inventory_object(Takeable),alive(Takeable),accessible(Takeable),not_no_inventory_object(Takeable),not_has_location(Takeable,Y)],
+    [accessible(Takeable),not_inventory_object(Takeable),no_inventory_object(Takeable),has_location(Takeable,Y),not_alive(Takeable)]]).
+substate_classes(top,Top,[
+    [has_detail(Top,X),not_no_has_detail(Top,X)],
+    [not_has_detail(Top,X),no_has_detail(Top,X)],
+    [has_location(Top,X),not_accessible(Top),no_accessible(Top)],
+    [has_location(Top,X),accessible(Top),not_no_accessible(Top)],
+    [has_location(Top,X),accessible(Top),no_here(Top),not_no_accessible(Top)],
+    [has_location(Top,X),no_here(Top),not_accessible(Top),no_accessible(Top)]]).
+substate_classes(generic_container,Generic_container,[
+    [here(Generic_container)],
+    [accessible(Generic_container)],
+    [here(Generic_container),not_no_here(Generic_container),accessible(Generic_container),not_no_accessible(Generic_container)],
+    [not_here(Generic_container),no_here(Generic_container),not_accessible(Generic_container),no_accessible(Generic_container)],
+    [accessible(Generic_container),open(Generic_container)],
+    [closed(Generic_container)],
+    [no_accessible(Generic_container)]]).
+substate_classes(object,Object,[
+    [inventory_object(Object),not_no_inventory_object(Object),not_has_location(Object,Y)],
+    [not_inventory_object(Object),no_inventory_object(Object),has_location(Object,Y)]]).
+substate_classes(easy_to_kill,Easy_to_kill,[
+    [alive(Easy_to_kill),accessible(Easy_to_kill),not_no_accessible(Easy_to_kill)],
+    [not_alive(Easy_to_kill),not_accessible(Easy_to_kill),no_accessible(Easy_to_kill)]]).
+substate_classes(weapon,Weapon,[
+    [inventory_object(Weapon)]]).
+substate_classes(not_so_easy_to_kill,Not_so_easy_to_kill,[
+    [alive(Not_so_easy_to_kill),accessible(Not_so_easy_to_kill),not_no_accessible(Not_so_easy_to_kill)],
+    [accessible(Not_so_easy_to_kill),not_alive(Not_so_easy_to_kill),no_accessible(Not_so_easy_to_kill)]]).
+substate_classes(agent,Agent,[
+    [accessible()],
+    [not_accessible()]]).
+substate_classes(open_close_container,Open_close_container,[
+    [closed(Open_close_container),unlocked(Open_close_container),accessible(Open_close_container),not_open(Open_close_container)],
+    [unlocked(Open_close_container),accessible(Open_close_container),not_closed(Open_close_container),open(Open_close_container)],
+    [open(Open_close_container),accessible(Open_close_container),not_closed(Open_close_container)],
+    [accessible(Open_close_container),closed(Open_close_container),not_open(Open_close_container)],
+    [locked(Open_close_container),accessible(Open_close_container),not_unlocked(Open_close_container)],
+    [accessible(Open_close_container),not_locked(Open_close_container),unlocked(Open_close_container)],
+    [closed(Open_close_container),unlocked(Open_close_container),accessible(Open_close_container),not_locked(Open_close_container)],
+    [closed(Open_close_container),accessible(Open_close_container),locked(Open_close_container),not_unlocked(Open_close_container)]]).
+substate_classes(key,Key,[
+    [inventory_object(Key),fits_in(Key,X)]]).
+substate_classes(edible,Edible,[
+    [inventory_object(Edible),no_has_detail(Edible,Y),not_nirvana(Edible),not_no_inventory_object(Edible),accessible(Edible),not_no_accessible(Edible)],
+    [no_has_detail(Edible,Y),nirvana(Edible),not_inventory_object(Edible),no_inventory_object(Edible),not_accessible(Edible),no_accessible(Edible)]]).
+substate_classes(seating,Seating,[
+    [accessible(Seating),no_here(Seating),not_here(Seating)],
+    [accessible(Seating),here(Seating),not_no_here(Seating)],
+    [here(Seating),has_location(Seating,Y),not_no_here(Seating)],
+    [has_location(Seating,Y),no_here(Seating),not_here(Seating)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(take_patient(X),
+    % prevail
+    [],
+    % necessary
+    [     sc(takeable,X,[accessible(X),no_inventory_object(X),has_location(X,Y),not_inventory_object(X)]=>[accessible(X),inventory_object(X),not_no_inventory_object(X),not_has_location(X,Y)])],
+    % conditional
+    []).
+operator(take_patient(X,Y),
+    % prevail
+    [],
+    % necessary
+    [     sc(takeable,X,[accessible(X),no_inventory_object(X),not_inventory_object(X)]=>[accessible(X),inventory_object(X),not_no_inventory_object(X)]),
+     sc(top,Y,[has_detail(Y,X),not_no_has_detail(Y,X)]=>[not_has_detail(Y,X),no_has_detail(Y,X)])],
+    % conditional
+    []).
+operator(drop_patient(X,Y),
+    % prevail
+    [     se(generic_container,Y,[here(Y)])],
+    % necessary
+    [     sc(object,X,[inventory_object(X),not_no_inventory_object(X),not_has_location(X,Y)]=>[not_inventory_object(X),no_inventory_object(X),has_location(X,Y)])],
+    % conditional
+    []).
+operator(put_patient(X,Y),
+    % prevail
+    [     se(generic_container,Y,[accessible(Y)])],
+    % necessary
+    [     sc(takeable,X,[inventory_object(X),accessible(X),not_has_location(X,Y)]=>[accessible(X),has_location(X,Y),not_inventory_object(X)])],
+    % conditional
+    []).
+operator(throw_patient_target(X),
+    % prevail
+    [],
+    % necessary
+    [     sc(takeable,X,[inventory_object(X),alive(X),accessible(X),not_no_inventory_object(X),not_has_location(X,Y)]=>[accessible(X),not_inventory_object(X),no_inventory_object(X),has_location(X,Y),not_alive(X)])],
+    % conditional
+    []).
+operator(kill_patient(X),
+    % prevail
+    [],
+    % necessary
+    [     sc(easy_to_kill,X,[alive(X),accessible(X),not_no_accessible(X)]=>[not_alive(X),not_accessible(X),no_accessible(X)])],
+    % conditional
+    []).
+operator(kill_patient_instr(X,Y,ImpliedAgent),
+    % prevail
+    [     se(weapon,Y,[inventory_object(Y)])],
+    % necessary
+    [     sc(not_so_easy_to_kill,X,[alive(X),accessible(X),not_no_accessible(X)]=>[accessible(X),not_alive(X),no_accessible(X)]),
+     sc(agent,ImpliedAgent,[accessible()]=>[not_accessible()])],
+    % conditional
+    []).
+operator(open_patient(X),
+    % prevail
+    [],
+    % necessary
+    [     sc(open_close_container,X,[closed(X),unlocked(X),accessible(X),not_open(X)]=>[unlocked(X),accessible(X),not_closed(X),open(X)])],
+    % conditional
+    []).
+operator(close_patient(X),
+    % prevail
+    [],
+    % necessary
+    [     sc(open_close_container,X,[open(X),accessible(X),not_closed(X)]=>[accessible(X),closed(X),not_open(X)])],
+    % conditional
+    []).
+operator(unlock_patient_instr(X,Y),
+    % prevail
+    [     se(key,Y,[inventory_object(Y),fits_in(Y,X)])],
+    % necessary
+    [     sc(open_close_container,X,[locked(X),accessible(X),not_unlocked(X)]=>[accessible(X),not_locked(X),unlocked(X)])],
+    % conditional
+    []).
+operator(lock_patient_instr(X,Y),
+    % prevail
+    [     se(key,Y,[inventory_object(Y),fits_in(Y,X)])],
+    % necessary
+    [     sc(open_close_container,X,[closed(X),unlocked(X),accessible(X),not_locked(X)]=>[closed(X),accessible(X),locked(X),not_unlocked(X)])],
+    % conditional
+    []).
+operator(eat_patient(X),
+    % prevail
+    [],
+    % necessary
+    [     sc(edible,X,[inventory_object(X),no_has_detail(X,Y),not_nirvana(X),not_no_inventory_object(X),accessible(X),not_no_accessible(X)]=>[no_has_detail(X,Y),nirvana(X),not_inventory_object(X),no_inventory_object(X),not_accessible(X),no_accessible(X)])],
+    % conditional
+    []).
+operator(sitdown_patient(X,Y),
+    % prevail
+    [],
+    % necessary
+    [     sc(seating,X,[accessible(X),no_here(X),not_here(X)]=>[accessible(X),here(X),not_no_here(X)]),
+     sc(generic_container,Y,[here(Y),not_no_here(Y),accessible(Y),not_no_accessible(Y)]=>[not_here(Y),no_here(Y),not_accessible(Y),no_accessible(Y)])],
+    % conditional
+    []).
+operator(standup_patient(X,Y),
+    % prevail
+    [],
+    % necessary
+    [     sc(seating,X,[here(X),has_location(X,Y),not_no_here(X)]=>[has_location(X,Y),no_here(X),not_here(X)]),
+     sc(generic_container,Y,[not_here(Y),no_here(Y),not_accessible(Y),no_accessible(Y)]=>[here(Y),not_no_here(Y),accessible(Y),not_no_accessible(Y)])],
+    % conditional
+    []).
+operator(access(X,Z),
+    % prevail
+    [     se(generic_container,X,[accessible(X),open(X)])],
+    % necessary
+    [     sc(top,Z,[has_location(Z,X),not_accessible(Z),no_accessible(Z)]=>[has_location(Z,X),accessible(Z),not_no_accessible(Z)])],
+    % conditional
+    []).
+operator(unaccess_first(Z,X),
+    % prevail
+    [     se(generic_container,X,[closed(X)])],
+    % necessary
+    [     sc(top,Z,[accessible(Z),has_location(Z,X),not_no_accessible(Z)]=>[has_location(Z,X),not_accessible(Z),no_accessible(Z)])],
+    % conditional
+    []).
+operator(unaccess_recursion(X,Z),
+    % prevail
+    [     se(generic_container,X,[no_accessible(X)])],
+    % necessary
+    [     sc(top,Z,[has_location(Z,X),accessible(Z),no_here(Z),not_no_accessible(Z)]=>[has_location(Z,X),no_here(Z),not_accessible(Z),no_accessible(Z)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks

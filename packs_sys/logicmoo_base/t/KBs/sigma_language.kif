@@ -1,0 +1,700 @@
+
+
+;; ========================================================
+;;  Result Isa/Genls
+;; ========================================================
+;; (surface-macro (genls ?C1 ?C2) (and (intensional-subclass ?C1 ?C2) ( implies (isa ?E ?C1) (isa ?E ?C2)  ) )  )
+;;(expansionAxiom (genls ?C1 ?C2) (intensional-subclass ?C1 ?C2)   )
+;;(surface-macro (subclass-of ?C1 ?C2) (and (intensional-subclass ?C1 ?C2)  ( implies (instance-of ?E ?C1) (instance-of ?E ?C2)  ) ) )
+;;(expansionAxiom (subclass-of ?C1 ?C2) (intensional-subclass ?C1 ?C2)   )
+
+;(surface-macro (resultIsa (Fn ?FunctName ?UNK2) ?Class) (and (isa ?FunctName Function) (isa (Fn ?FunctName ?UNK2) ?Class) ) )
+;(surface-macro (resultIsa ?FunctName ?Class) (and (isa ?FunctName Function) (isa (Fn ?FunctName ?UNK2) ?Class) ) )
+;(surface-macro (resultGenl (Fn ?FunctName ?UNK2) ?Class) (and (isa ?FunctName Function) (genls (Fn ?FunctName ?UNK2) ?Class) ) )
+;(surface-macro (resultGenl ?FunctName ?Class) (and (isa ?FunctName Function) (genls  (Fn ?FunctName ?UNK2) ?Class) ) )
+
+
+;; ========================================================
+;;  Except When 
+;; ========================================================
+															      
+(surface-macro (exceptWhen ?Cond (implies ?Ante ?Cons )) (implies (and (non ?Cond ) ?Ante ) ?Cons ))			      
+(surface-macro (exceptWhen ?Cond ?Truth) (implies (non ?Cond) ?Truth ))
+
+;; ========================================================
+;; Constant CLassification Predicates
+;; ========================================================
+
+
+;(surface-macro (isa ?Pred Collection) (isa ?Pred Class) )
+;(surface-macro (isa ?Pred Individual) (isa ?Pred Individual) )
+;(surface-macro (isa ?Pred Predicate) (isa ?Pred Predicate) )
+;(surface-macro (isa ?Pred Function) (isa ?Pred Function) )
+;(surface-macro (isa ?Pred LogicalConnective) (isa ?Pred LogicalConnective) )
+;(surface-macro (isa ?Pred Microtheory) (isa ?Pred Microtheory) )
+;(surface-macro (isa ?Pred AttributeValue) (isa ?Pred AttributeValue) )
+;(surface-macro (isa ?Pred Quantifier) (isa ?Pred Quantifier) )
+
+
+ 
+
+;; ========================================================
+;; Ontological Set Existance Predicates  Temporarily Sets Collections and Classes will the same treatment
+;; ========================================================
+;;(surface-macro  (genlInverse ?Pred1 ?Pred1) (reflexive_args ?Pred1) )
+;;(surface-macro  (isa ?E ?Set) (isa ?E ?Set) )
+(surface-macro  (elementOf ?E ?Set) (isa ?E ?Set) )
+(surface-macro (subsetOf ?S1 ?S2) (genls ?S1 ?S2) )
+;;(surface-macro  (genls ?S1 ?S2) (genls ?S1 ?S2) )
+(surface-macro (TheSetOf ?Entity ?FormulaA ?Set) (setof ?Entity ?FormulaA ?Set) )
+;;                                      SetOrCollection 
+;;                                    SiblingDisjointAttributeType 
+;;                                    coExtensional 
+;;                                   genlInverse 
+;;                                    disjointWith 
+;;                                    conceptuallyRelated 
+;;                                    SiblingDisjointCollection 
+;;                                    siblingDisjointExceptions
+;;
+                                             
+;; ========================================================
+;; Valence Predicates
+;; ========================================================
+;;(surface-macro (arity ?ARG ?Num) (functsymbol ?ARG ?Num) )
+(surface-macro (arityMax ?ARG ?Num) (functsymbol ?ARG ?Num) )
+(surface-macro (arityMin ?ARG ?Num) (functsymbol ?ARG ?Num) )
+
+;; ========================================================
+;; Relation Interaction Predicates
+;; ========================================================
+(surface-macro (isa ?Pred ReflexiveBinaryPredicate) (and (functsymbol ?Pred 2) (and (isa ?Pred reflexive) (isa ?Pred Predicate) (isa ?Pred ReflexiveRelation))) )
+                                   
+
+
+;(surface-macro (isa ?P1 ReflexiveRelation)  (implies (?P1 ?B ?A) (?P1 ?A ?B)) )
+                                                                                                                                                                                                                                      
+;;(surface-macro (genlInverse ?P1 ?P2)  (and (implies (?P2 ?B ?A) (?P1 ?A ?B)) (implies (?P1 ?B ?A) (?P2 ?A ?B))))
+                                                                                                              
+
+;; ========================================================
+;; Arg-Domain/Mode Predicates
+;; ========================================================
+;;(surface-macro (backchainForbidden ?Pred) (chain_mode ?Pred (must_be_bound_before_call must_be_bound_before_call must_be_bound_before_call must_be_bound_before_call must_be_bound_before_call must_be_bound_before_call must_be_bound_before_call must_be_bound_before_call must_be_bound_before_call must_be_bound_before_call)) )
+
+;;                                      RelationArgFn 
+;;                                      RelationArgSetFn 
+;;                                      scopingArg 
+;;                                      constrainsArg 
+;;                                      FunctionToArg 
+;;                                      ScopingRelation 
+;;                                      interArgResultGenl 
+;;                                      RelationArgsListFn 
+;;                                      requiredArg1Pred 
+;;                                      requiredArg2Pred
+                                                                       
+
+;; ========================================================
+;; Browser Only Predicates are Ignored By the Compilers
+;; ========================================================
+
+( browser-only documentation )
+( browser-only exampleAssertions )
+( browser-only exampleNATs )											  
+( browser-only arg1Format )
+( browser-only arg2Format )
+( browser-only arg3Format )
+( browser-only arg4Format )
+( browser-only arg5Format )
+( browser-only arg6Format )
+( browser-only arg7Format )
+( browser-only arg8Format )
+( browser-only arg9Format )
+( browser-only argFormat )
+( browser-only Cyc-BasedProject )
+( browser-only CycConstant )
+( browser-only CycExpression )
+( browser-only CycFormula )
+( browser-only CycIndexedTerm )
+( browser-only CycLAssertionDirection )
+( browser-only Cyclist )
+( browser-only cyclisprovenotes )
+( browser-only CyclistsMt )
+( browser-only CycSystemAtom )
+( browser-only CycSystemInteger )
+( browser-only prettyName )
+( browser-only CycSystemKeyword )
+( browser-only CycSystemList )
+( browser-only CycSystemRealNumber )
+( browser-only CycSystemString )
+( browser-only CycSystemSymbol )
+( browser-only CycTerm )
+( browser-only constantID )
+( browser-only constanprovename )
+( browser-only substring )
+( browser-only myCreationPurpose )
+( browser-only myCreationSecond )
+( browser-only myCreationTime )
+( browser-only myCreator )
+( browser-only substring-CaseInsensitive )
+( browser-only SetTheFormat )
+( browser-only evaluateAtEL )
+( browser-only sharedNotes )
+( browser-only genFormat )
+( browser-only Guest )
+( browser-only HumanCyclist )
+( browser-only genKeyword )
+( browser-only DocumentationConstant )
+( browser-only ELFormulaTemplate )
+( browser-only elInverse )
+( browser-only ELRelation )
+( browser-only ELTemplate )
+( browser-only equalStrings-CaseInsensitive )
+( browser-only equalSymbols )
+( browser-only EverythingPSC )
+( browser-only genMassNoun )
+( browser-only oldConstanprovename )
+( browser-only PATR-Specification )
+( browser-only genPreferredKeyword )
+( browser-only comment )
+( browser-only Format )
+( browser-only indexicalReferent )
+( browser-only InferencePSC )
+( browser-only LinguisticAVM )
+( browser-only stringSubword )
+( browser-only ListTheFormat )
+
+;; ========================================================
+;; Not implemented Predicates are Ignored By the Compilers
+;; ========================================================
+   
+;( not-implemented abnormal )
+;( not-implemented afterAdding )
+;( not-implemented afterRemoving )
+;( not-implemented arityMin )
+;( not-implemented assertedFormula )
+;( not-implemented assertedPredicateArg )
+;( not-implemented Assertion )
+;( not-implemented Backward-AssertionDirection )
+;( not-implemented Code-AssertionDirection )
+;( not-implemented consistent )
+;( not-implemented defnIff )
+;( not-implemented defnNecessary )
+;( not-implemented defnSufficient )
+;( not-implemented different )
+;( not-implemented differentSymbols )
+;( not-implemented DimensionlessUnitOfMeasure )
+;( not-implemented distributesOutOfArg )
+;( not-implemented exceptFor )
+;( not-implemented expansion )
+;( not-implemented expansionDefn )
+( not-implemented fanOutArg )
+;( not-implemented formulaImplies )
+;( not-implemented Forward-AssertionDirection )
+;( not-implemented Function-Denotational )
+;( not-implemented InferenceRelatedBookkeepingPredicate )
+;( not-implemented IrreflexiveBinaryPredicate )
+;( not-implemented KnowledgeBase )
+;( not-implemented MeaningInSystemFn )
+;( not-implemented minimize )
+;( not-implemented natArgument )
+;( not-implemented natArgumentsEqual )
+;( not-implemented nearestCommonGenls )
+;( not-implemented nearestCommonIsa )
+;( not-implemented nearestCommonSpecs )
+;( not-implemented nearestDifferentGenls )
+;( not-implemented nearestDifferentIsa )
+;( not-implemented nearestGenls )
+;( not-implemented nearestIsa )
+;( not-implemented negationAttribute )
+;( not-implemented NonNegativeScalarInterval )
+;( not-implemented nthLargestElement )
+;( not-implemented nthSmallestElement )
+;( not-implemented opaqueArgument )
+;( not-implemented overlappingExternalConcept )
+;( not-implemented preservesGenlsInArg )
+;( not-implemented quantityIntersects )
+;( not-implemented quantitySubsumes )
+;( not-implemented quotedArgument )
+;( not-implemented quotedCollection )
+;( not-implemented Maximum )
+;( not-implemented relationExpansion )
+;( not-implemented RelationExpressionArityFn )
+;( not-implemented resultGenlArg )
+;( not-implemented resultIsaArg )
+;( not-implemented RuleTemplate )
+;( not-implemented ruleTemplateDirection )
+;( not-implemented salientAssertions )
+;( not-implemented ScalarInterval )
+;( not-implemented ScalarPointValue )
+;( not-implemented instanceElementType )
+;( not-implemented SingleEntry )
+;( not-implemented synonymousExternalConcept )
+;( not-implemented termDependsOn )
+;( not-implemented TheList )
+;( not-implemented TheSet )
+;( not-implemented TheTerm )
+;( not-implemented TLAssertionFn )
+;( not-implemented TLReifiedNatFn )
+;( not-implemented TLVariableFn )
+;( not-implemented transitiveViaArg )
+;( not-implemented Unity )
+;( not-implemented unknownFormula )
+
+
+;; ====================================================================================
+;;  Surface Words Trasliterate First Before surface-macro rules fire
+;; ====================================================================================
+
+(surface-word => implies )
+
+(surface-word AssignmentFn Fn )
+
+(surface-word holds apply )
+
+(surface-word <=> equiv )
+(surface-word equivalent equiv )
+(surface-word Equivalent equiv )
+(surface-word Implies implies )
+(surface-word And and )
+(surface-word arity valence )
+(surface-word Arity valence )
+
+(surface-word Or or )
+(surface-word thereExists exists )
+(surface-word ThereExists exists )
+(surface-word Exists exists )
+(surface-word ForEach all )
+(surface-word ForAll all )
+(surface-word forAll all )
+(surface-word forall all )
+(surface-word False fail )
+(surface-word True true )
+(surface-word subclass subclass-of )
+(surface-word genls subclass-of )
+(surface-word Genls subclass-of )
+(surface-word argIsa nth-domain )
+(surface-word isa instance-of )
+(surface-word Always and )
+(surface-word Never non )
+(surface-word never non )
+(surface-word Not non )
+(surface-word not non )
+(surface-word TheEmptySet nil )
+(surface-word genlPreds subrelation-of )
+(surface-word Thing Entity )
+(surface-word entity Entity )
+(surface-word equals equal )
+(surface-word = equal )
+(surface-word same equal )
+(surface-word termOfUnit equal )
+(surface-word TermOfUnit equal )
+(surface-word Collection Class )
+(surface-word genlInverse ReflexivePredicateTo )
+
+
+(surface-word sibling siblings )
+(surface-word Goals Goal )
+(surface-word goals Goal )
+(surface-word goal Goal )
+(surface-word nec and )
+
+
+(non-compiled (Fn ?F ?L))
+
+
+
+;; ====================================================================================
+;;  Surface Atoms Trasliterate Last  surface-macro rules fire but before surface-macros fire
+;; ====================================================================================
+
+(surface-atom Collection Class )
+(surface-atom genls subclass-of )
+(surface-atom genlPreds subrelation-of )
+
+;; ====================================================================================
+;;  Single arity Predicates are combined 
+;; ====================================================================================
+
+(surface-single-arity true)
+(surface-single-arity query)
+(surface-single-arity non)
+
+(surface-multiple-arity implies)
+(surface-multiple-arity equiv)
+(surface-multiple-arity PlusFn)
+(surface-multiple-arity +)
+(surface-multiple-arity QuotientFn)
+(surface-multiple-arity /)
+(surface-multiple-arity TimesFn)
+(surface-multiple-arity *)
+(surface-multiple-arity DifferenceFn)
+(surface-multiple-arity -)
+(surface-multiple-arity and)
+(surface-multiple-arity or)
+(surface-multiple-arity Xor)
+
+										      
+;; ====================================================================================
+;;  surface-quantifiers alow lists to be used in the variable possitions
+;; ====================================================================================
+
+(surface-quantifier Exists)
+(surface-quantifier exists)
+(surface-quantifier ThereExists)
+(surface-quantifier thereExists)
+(surface-quantifier All)
+(surface-quantifier all)
+(surface-quantifier forall)
+(surface-quantifier forAll)
+(surface-quantifier findall)
+(surface-quantifier findAll)
+(surface-quantifier Some)						   
+
+;; ====================================================================================
+;;  surface-macros allow languages to tranliterated to a common language
+;; ====================================================================================
+
+;; Some Math
+(surface-macro (AbsoluteValueFn ?ARG) (abs ?ARG) )
+(surface-macro (PerFn ?ARG) (/ ?ARG 100) )
+(surface-macro (Percent ?ARG) (* ?ARG 100) )
+(surface-macro (Integer ?ARG) (integer ?ARG) )
+(surface-macro (RealNumber ?ARG) (numeric ?ARG) )
+(surface-macro (RoundUpFn ?ARG) (floor ?ARG) )
+(surface-macro (PositiveInteger ?ARG) (and (integer ?ARG) (> ?ARG 0)) )
+(surface-macro (NonNegativeInteger ?ARG) (and (integer ?ARG) (>= ?ARG 0)) )
+(surface-macro (NegativeInteger ?ARG) (and (integer ?ARG) (< ?ARG 0)) )
+(surface-macro (RoundDownFn ?ARG) (floor ?ARG 0) )
+(surface-macro (RoundUpFn ?ARG) (floor ?ARG 1) )
+
+(surface-macro (RoundClosestFn ?ARG) (floor ?ARG 0.5) )
+
+(surface-macro (<= ?C ?A) (implies ?A ?C) )
+;; Some CycL 
+(surface-macro (isa ?Pred UnaryFunction) (and (Arity ?Pred 1) (isa ?Pred Function)) )					       
+(surface-macro (isa ?Pred UnaryPredicate) (and (Arity ?Pred 1) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred UnaryRelation) (and (Arity ?Pred 1) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred BinaryFunction) (and (Arity ?Pred 2) (isa ?Pred Function)) )				       
+(surface-macro (isa ?Pred BinaryPredicate) (and (Arity ?Pred 2) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred BinaryRelation) (and (Arity ?Pred 2) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred TernaryFunction) (and (Arity ?Pred 3) (isa ?Pred Function)) )
+(surface-macro (isa ?Pred TernaryPredicate) (and (Arity ?Pred 3) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred TernaryRelation) (and (Arity ?Pred 3) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred QuaternaryFunction) (and (Arity ?Pred 4) (isa ?Pred Function)) )
+(surface-macro (isa ?Pred QuaternaryPredicate) (and (Arity ?Pred 4) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred QuaternaryRelation) (and (Arity ?Pred 4) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred QuintaryFunction) (and (Arity ?Pred 5) (isa ?Pred Function)) )							    
+(surface-macro (isa ?Pred QuintaryPredicate) (and (Arity ?Pred 5) (isa ?Pred Predicate)) )
+(surface-macro (isa ?Pred QuintaryRelation) (and (Arity ?Pred 5) (isa ?Pred Predicate)) )
+
+
+;; ========================================================
+;; ContextPredicates
+;; ========================================================
+
+;;(surface-macro (genlMt ?P1 ?P2) (genMt ?P1 ?P2) )
+(surface-macro (ist ?Context_atom ?FormulaA) (subquery ?Context_atom ?FormulaA) )
+
+(surface-instance ProblemSolvingCntxt ContextPredicate )
+(surface-instance BookkeepingMt  ContextPredicate )
+(surface-instance definingMt  ContextPredicate )
+(surface-instance QueryMt  ContextPredicate )
+(surface-instance BroadMicrotheory  ContextPredicate )
+(surface-instance mtInferenceFunction  ContextPredicate )
+(surface-instance HypotheticalContext  ContextPredicate ) 
+ 
+
+;; ========================================================
+;; relation Quantification Predicates
+;; ========================================================
+            
+(surface-quantifier relationAllExists)
+(surface-quantifier relationAllExistsCount)
+(surface-quantifier relationAllExistsMax)
+(surface-quantifier relationAllExistsMin)
+(surface-quantifier relationAllInstance)
+(surface-quantifier relationInstanceAll)
+(surface-quantifier relationExistsAll)
+(surface-quantifier relationExistsCountAll)
+(surface-quantifier relationExistsMaxAll)
+(surface-quantifier relationExistsMinAll)
+
+;; xx
+
+;; ========================================================
+;; Equivalency Predicates
+;; ========================================================
+                                     
+;;                                       genlAttributes 
+;;                                       termOfUnit 
+;;                                       equals 
+;;                                       equiv 
+;;                                       evaluate 
+;;                                       evaluationDefn 
+;;                                       formulaEquiv 
+;;                                       Kappa
+
+
+
+
+
+;; ========================================================
+;; Slot/Skolem Predicates
+;; ========================================================
+
+;(surface-macro (exists ?X) (isa ?X Individgual) )
+(surface-macro (SkolemFunctionFn ?X) (skolemize ?X) )
+(surface-macro (SkolemFunction ?X) (skolemize ?X) )
+;;                                       SkolemFuncN 
+;;                                       SkolemFuncNFn 
+;;                                      skolemizeForward
+
+
+                                                                                              
+;; ========================================================
+;; Temporal and Ordinality Predicates
+;; ========================================================
+(surface-macro (followingIntervalType ?Attrib1 ?Attrib2) (subsequent-ordinal ?Attrib1 ?Attrib2) )
+(surface-macro (followingValue ?Attrib1 ?Attrib2) (subsequent-ordinal ?Attrib1 ?Attrib2) )
+;;                   IntervalEntry 
+;;                   IntervalMaxFn 
+;;                   IntervalMinFn
+
+
+;; ========================================================
+;; Veracity Predicates
+;; ========================================================
+;;                        notAssertible 
+;;                        trueFormula 
+;;                        trueRule 
+;;                        TruthFunction 
+;;                        notAssertibleCollection
+ 
+
+
+
+;;;;(surface-macro  (implies (?Pred2|?ARGS) (?Pred1|?ARGS)) (subsumed_relation ?Pred1 ?Pred2) )
+;;;;(surface-macro  (implies (isa ?P1 Set2) (isa ?P1 Set1)) (genls Set2 Set1) )
+
+;;                                      Average 
+;;                                      Minimum 
+;;                                      minQuantValue 
+;;                                      greaterThan 
+;;                                    greaterThanOrEqualTo 
+;;                                    FunctionTheMathematicalType 
+;;                                    integerBetween 
+;;                                    maxQuantValue 
+;;                                    MaxRangeFn 
+;;                                    MinRangeFn 
+;;                                    multiplicationUnits 
+;;                                    PlusAll 
+;;                                    pointQuantValue 
+;;                                    unitMultiplicationFactor 
+;;                                    UnitOfMeasure 
+;;                                    SubAbs 
+;;                                    ?Set-Mathematical 
+
+
+
+;; ====================================================================================
+;; surface-instance allows the transiterator and sometimes the surface a way of recognising the language
+;; ====================================================================================
+
+   
+
+(surface-instance equiv EquivalancyConnective )
+(surface-instance implies ImplicationConnective )                                                                                                                       
+(surface-instance equiv PropositionalConnective )
+(surface-instance implies PropositionalConnective )                                                                                                                       
+                                                                                                                   
+(surface-instance query PropositionalConnective )
+(surface-instance subquery PropositionalConnective )
+(surface-instance ist PropositionalConnective )
+(surface-instance believe PropositionalConnective )
+(surface-instance proven PropositionalConnective )
+(surface-instance keStrongSuggestion PropositionalConnective )
+(surface-instance goals PropositionalConnective )
+(surface-instance all UniversalQuantifier )
+(surface-instance no UniversalQuantifier )
+(surface-instance neg NegConnective )
+(surface-instance non NegConnective )
+(surface-instance no NegConnective )
+(surface-instance '~' NegConnective )
+(surface-instance '-' NegConnective )
+(surface-instance not NegConnective )
+(surface-instance and ConjunctiveConnective )
+
+(surface-instance or DisjunctiveConnective )
+(surface-instance xor DisjunctiveConnective )
+(surface-instance exists ExistentualQuantifier )
+(surface-instance findall ExistentualQuantifier )
+(surface-instance findall Quantifier )
+(surface-instance some ExistentualQuantifier )
+
+(surface-instance DateInSituationFn Function )
+
+(surface-instance Fn ReifiableTerm )
+(surface-instance rf ReifiableTerm )
+(surface-instance nth-domain DomainConstraintPredicate )
+(surface-instance nth-subclass DomainConstraintPredicate )
+(surface-instance functsymbol DomainConstraintPredicate )
+(surface-instance isa InvolvedInDomainConstraintPredicate )
+(surface-instance Fn InvolvedInDomainConstraintPredicate )
+(surface-instance int_query ReifiableTerm )
+
+(surface-instance true Predicate )
+
+;; ====================================================================================
+;; surface-subclass is the taxonomic pair that allows the parent child relation
+;; ====================================================================================
+			 
+( surface-subclass BinaryConnective Connective )
+( surface-subclass Connective Quantifier )
+( surface-subclass Connective PropositionalConnective )
+( surface-subclass Connective NegConnective )
+( surface-subclass Connective ConjunctiveConnective )
+( surface-subclass Connective DisjunctiveConnective )
+( surface-subclass Junctive ConjunctiveConnective )
+( surface-subclass Junctive DisjunctiveConnective )
+( surface-subclass Connective ImplicationConnective )
+( surface-subclass Connective EquivalancyConnective )
+( surface-subclass Predicate DomainConstraintPredicate )
+( surface-subclass Predicate InvolvedInDomainConstraintPredicate )
+( surface-subclass Function ReifiableTerm )
+   
+;; ====================================================================================
+;;  surface-classes allow for
+;;  RelationExpression Foo to be turned into instance-of Foo RelationExpression
+;;  Mondiac Instances
+;; ====================================================================================
+
+(surface-class Class  )
+(surface-class Collection  )
+(surface-class TransitiveBinaryPredicate  )
+(surface-class VariableArityRelation  )
+(surface-class SymmetricBinaryPredicate  )
+(surface-class FixedArityRelation  )
+(surface-class natFunction  )
+(surface-class ExceptionRelation  )
+(surface-class EvaluatableFunction  )
+(surface-class EvaluatableRelationship  )
+(surface-class CollectionDenotingFunction  )
+(surface-class CommutativeRelation  )
+(surface-class AssociativeRelation  )
+(surface-class AntiSymmetricBinaryPredicate  )
+(surface-class AntiTransitiveBinaryPredicate  )
+(surface-class AsymmetricBinaryPredicate  )
+(surface-class BookkeepingPredicate  )
+(surface-class DistributingMetaKnowledgePredicate  )
+(surface-class DefaultMonotonicPredicate  )
+(surface-class RelationExpression  )
+(surface-class Relationship  )
+(surface-class ReifiableFunction  )
+(surface-class completeExtentKnown  )
+(surface-class completeCollectionExtent  )
+(surface-class extentCardinality  )
+(surface-class minimizeExtent  )
+(surface-class ReifiableNAT  )
+(surface-class ReifiableTerm  )
+
+
+;; Arg Genls Isa Macros
+   
+( surface-macro (argsIsa ?Pred ?Class) (nth-domain ?Pred ?UNK ?Class) )   
+
+( surface-macro (arg1Isa ?Pred ?Class) (nth-domain ?Pred 1 ?Class) )
+( surface-macro (arg2Isa ?Pred ?Class) (nth-domain ?Pred 2 ?Class) )
+( surface-macro (arg3Isa ?Pred ?Class) (nth-domain ?Pred 3 ?Class) )
+( surface-macro (arg4Isa ?Pred ?Class) (nth-domain ?Pred 4 ?Class) )
+( surface-macro (arg5Isa ?Pred ?Class) (nth-domain ?Pred 5 ?Class) )
+( surface-macro (arg6Isa ?Pred ?Class) (nth-domain ?Pred 6 ?Class) )
+( surface-macro (arg7Isa ?Pred ?Class) (nth-domain ?Pred 7 ?Class) )
+( surface-macro (arg8Isa ?Pred ?Class) (nth-domain ?Pred 8 ?Class) )
+( surface-macro (arg9Isa ?Pred ?Class) (nth-domain ?Pred 9 ?Class) )
+
+( surface-macro (argsisa ?Pred ?Class) (nth-subclass ?Pred ?UNK ?Class) )
+( surface-macro (arg1isa ?Pred ?Class) (nth-domain ?Pred 1 ?Class) )
+( surface-macro (arg2isa ?Pred ?Class) (nth-domain ?Pred 2 ?Class) )
+( surface-macro (arg3isa ?Pred ?Class) (nth-domain ?Pred 3 ?Class) )
+( surface-macro (arg4isa ?Pred ?Class) (nth-domain ?Pred 4 ?Class) )
+( surface-macro (arg5isa ?Pred ?Class) (nth-domain ?Pred 5 ?Class) )
+( surface-macro (arg6isa ?Pred ?Class) (nth-domain ?Pred 6 ?Class) )
+( surface-macro (arg7isa ?Pred ?Class) (nth-domain ?Pred 7 ?Class) )
+( surface-macro (arg8isa ?Pred ?Class) (nth-domain ?Pred 8 ?Class) )
+( surface-macro (arg9isa ?Pred ?Class) (nth-domain ?Pred 9 ?Class) )
+
+( surface-macro (argsGenls ?Pred ?Class) (nth-subclass ?Pred ?UNK ?Class) )
+( surface-macro (arg1Genl ?Pred ?Class) (nth-subclass ?Pred 1 ?Class) )
+( surface-macro (arg2genls ?Pred ?Class) (nth-subclass ?Pred 2 ?Class) )
+( surface-macro (arg2Genl ?Pred ?Class) (nth-subclass ?Pred 2 ?Class) )
+( surface-macro (arg3Genl ?Pred ?Class) (nth-subclass ?Pred 3 ?Class) )
+( surface-macro (arg4Genl ?Pred ?Class) (nth-subclass ?Pred 4 ?Class) )
+( surface-macro (arg5Genl ?Pred ?Class) (nth-subclass ?Pred 5 ?Class) )
+( surface-macro (arg6Genl ?Pred ?Class) (nth-subclass ?Pred 6 ?Class) )
+( surface-macro (arg7Genl ?Pred ?Class) (nth-subclass ?Pred 7 ?Class) )
+( surface-macro (arg8Genl ?Pred ?Class) (nth-subclass ?Pred 8 ?Class) )
+( surface-macro (arg9Genl ?Pred ?Class) (nth-subclass ?Pred 9 ?Class) )
+
+( surface-macro (interArgResultIsa ?Pred ArgN ?Class1 ?Class2) (and (isa ?Pred Function) (implies (functsymbol ?Pred Arity) (nth-domain-related ?Pred ArgN Arity ?Class1 ?Class2))) )
+
+( surface-macro (interArgResultGenl ?Pred ArgN ?Class1 ?Class2) (and (isa ?Pred Function) (implies (functsymbol ?Pred Arity) (nth-domain-related ?Pred ArgN Arity ?Class1 ?Class2))))
+
+
+                                                   
+
+( surface-macro (interArgIsa ?Pred ?N1 ?Class1 ?N2 ?Class2) (nth-domain-related ?Pred ?N1 ?N2 ?Class1 ?Class2) )
+( surface-macro (interArgIsa1-2 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 1 2 ?Class1 ?Class2) )
+( surface-macro (interArgIsa1-3 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 1 3 ?Class1 ?Class2) )
+( surface-macro (interArgIsa1-4 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 1 4 ?Class1 ?Class2) )
+( surface-macro (interArgIsa1-5 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 1 5 ?Class1 ?Class2) )
+( surface-macro (interArgIsa1-6 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 1 6 ?Class1 ?Class2) )
+( surface-macro (interArgIsa2-2 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 2 2 ?Class1 ?Class2) )
+( surface-macro (interArgIsa2-3 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 2 3 ?Class1 ?Class2) )
+( surface-macro (interArgIsa2-4 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 2 4 ?Class1 ?Class2) )
+( surface-macro (interArgIsa2-5 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 2 5 ?Class1 ?Class2) )
+( surface-macro (interArgIsa2-6 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 2 6 ?Class1 ?Class2) )
+( surface-macro (interArgIsa3-2 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 3 2 ?Class1 ?Class2) )
+( surface-macro (interArgIsa3-3 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 3 3 ?Class1 ?Class2) )
+( surface-macro (interArgIsa3-4 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 3 4 ?Class1 ?Class2) )
+( surface-macro (interArgIsa3-5 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 3 5 ?Class1 ?Class2) )
+( surface-macro (interArgIsa3-6 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 3 6 ?Class1 ?Class2) )
+( surface-macro (interArgIsa4-2 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 4 2 ?Class1 ?Class2) )
+( surface-macro (interArgIsa4-3 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 4 3 ?Class1 ?Class2) )
+( surface-macro (interArgIsa4-4 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 4 4 ?Class1 ?Class2) )
+( surface-macro (interArgIsa4-5 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 4 5 ?Class1 ?Class2) )
+( surface-macro (interArgIsa4-6 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 4 6 ?Class1 ?Class2) )
+( surface-macro (interArgIsa5-2 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 5 2 ?Class1 ?Class2) )
+( surface-macro (interArgIsa5-3 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 5 3 ?Class1 ?Class2) )
+( surface-macro (interArgIsa5-4 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 5 4 ?Class1 ?Class2) )
+( surface-macro (interArgIsa5-5 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 5 5 ?Class1 ?Class2) )
+( surface-macro (interArgIsa5-6 ?Pred ?Class1 ?Class2) (nth-domain-related ?Pred 5 6 ?Class1 ?Class2) )
+
+( surface-macro (interArgReln1-2 ?Pred Relation) (nth-relation-exists ?Pred 1 2 Relation) )
+( surface-macro (interArgReln1-3 ?Pred Relation) (nth-relation-exists ?Pred 1 3 Relation) )
+( surface-macro (interArgReln1-4 ?Pred Relation) (nth-relation-exists ?Pred 1 4 Relation) )
+( surface-macro (interArgReln1-5 ?Pred Relation) (nth-relation-exists ?Pred 1 5 Relation) )
+( surface-macro (interArgReln1-6 ?Pred Relation) (nth-relation-exists ?Pred 1 6 Relation) )                                                  
+( surface-macro (interArgReln2-2 ?Pred Relation) (nth-relation-exists ?Pred 2 2 Relation) )
+( surface-macro (interArgReln2-3 ?Pred Relation) (nth-relation-exists ?Pred 2 3 Relation) )
+( surface-macro (interArgReln2-4 ?Pred Relation) (nth-relation-exists ?Pred 2 4 Relation) )
+( surface-macro (interArgReln2-5 ?Pred Relation) (nth-relation-exists ?Pred 2 5 Relation) )
+( surface-macro (interArgReln2-6 ?Pred Relation) (nth-relation-exists ?Pred 2 6 Relation) )
+( surface-macro (interArgReln3-2 ?Pred Relation) (nth-relation-exists ?Pred 3 2 Relation) )
+( surface-macro (interArgReln3-3 ?Pred Relation) (nth-relation-exists ?Pred 3 3 Relation) )
+( surface-macro (interArgReln3-4 ?Pred Relation) (nth-relation-exists ?Pred 3 4 Relation) )
+( surface-macro (interArgReln3-5 ?Pred Relation) (nth-relation-exists ?Pred 3 5 Relation) )
+( surface-macro (interArgReln3-6 ?Pred Relation) (nth-relation-exists ?Pred 3 6 Relation) )
+( surface-macro (interArgReln4-2 ?Pred Relation) (nth-relation-exists ?Pred 4 2 Relation) )
+( surface-macro (interArgReln4-3 ?Pred Relation) (nth-relation-exists ?Pred 4 3 Relation) )
+( surface-macro (interArgReln4-4 ?Pred Relation) (nth-relation-exists ?Pred 4 4 Relation) )
+( surface-macro (interArgReln4-5 ?Pred Relation) (nth-relation-exists ?Pred 4 5 Relation) )
+( surface-macro (interArgReln4-6 ?Pred Relation) (nth-relation-exists ?Pred 4 6 Relation) )
+( surface-macro (interArgReln5-2 ?Pred Relation) (nth-relation-exists ?Pred 5 2 Relation) )
+( surface-macro (interArgReln5-3 ?Pred Relation) (nth-relation-exists ?Pred 5 3 Relation) )
+( surface-macro (interArgReln5-4 ?Pred Relation) (nth-relation-exists ?Pred 5 4 Relation) )
+( surface-macro (interArgReln5-5 ?Pred Relation) (nth-relation-exists ?Pred 5 5 Relation) )
+( surface-macro (interArgReln5-6 ?Pred Relation) (nth-relation-exists ?Pred 5 6 Relation) )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(end_of_file)
+

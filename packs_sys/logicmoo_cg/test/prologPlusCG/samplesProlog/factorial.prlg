@@ -1,0 +1,4 @@
+// fac(0) = 1
+// fac(N) = N * fac(N - 1), N > 0
+fac(0,1).
+fac(N,F) :- N > 0, M is N - 1, fac(M,F1), F is N * F1.

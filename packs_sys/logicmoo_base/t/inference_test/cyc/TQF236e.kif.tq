@@ -1,0 +1,44 @@
+(note TQF236e)
+
+(agent HYP-Smuggling-39801900 HYP-TransnationalCriminalOrganization-56896271) 
+(instance HYP-TransnationalCriminalOrganization-56896271 TransnationalCriminalOrganization) 
+(instance HYP-Smuggling-39801900 CriminalAct) 
+(subrelation agent agent)
+
+(implies 
+  (and 
+    (instance ?CRIME CriminalAct) 
+    (instance ?MOB TransnationalCriminalOrganization) 
+    (agent ?CRIME ?MOB)) 
+  (increases-Generic ?CRIME 
+    (thereExists ?INCREASE 
+      (increases-Generic ?INCREASE ?MOB totalValueOfAssets)) likelihood)) 
+
+(implies 
+  (instance ?MOB TransnationalCriminalOrganization) 
+  (goalCategoryForAgent ?MOB 
+    (thereExists ?INCREASE 
+      (increases-Generic ?INCREASE ?MOB totalValueOfAssets)) EconomicGoal))
+
+(implies 
+  (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+  (desires ?AGT ?FORM)) 
+
+(query (findall ?MOTIVE 
+  (implies 
+    (and 
+      (instance ?CRIME-ORG TransnationalCriminalOrganization) 
+      (instance ?SMUGGLE Smuggling) 
+      (agent ?SMUGGLE ?CRIME-ORG) 
+      (transportees ?SMUGGLE ?MERCHANDISE) 
+      (instance ?MERCHANDISE PartiallyTangibleProduct)) 
+    (and 
+      (desires ?CRIME-ORG ?MOTIVE) 
+      (increases-Generic ?SMUGGLE ?MOTIVE likelihood)))))
+
+(answer (list  
+  (thereExists ?INCREASE 
+    (increases-Generic ?INCREASE HYP-TransnationalCriminalOrganization-56896271 totalValueOfAssets))))
+
+(end_of_file)
+

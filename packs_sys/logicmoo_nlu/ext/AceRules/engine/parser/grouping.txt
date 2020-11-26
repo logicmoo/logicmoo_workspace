@@ -1,0 +1,128 @@
+---+ Grouping (and more)
+
+*|This file is out of date and needs to be updated!|*
+
+This document describes the grouping and skolemization steps of the AceRules parser.
+
+The grouping and subsequent processing is divided into these steps:
+
+1. Template collection (= pattern collection)
+2. Predicate Grouping
+3. Grouping check
+4. Skolemization
+5. Rule creation
+
+_|
+Note: The terms "template" and "pattern" are used synonymously. I should clean up this discrepancy.
+|_
+
+As an example, we take the following program:
+
+==
+Everyone who does not have a car has a bike.
+John has a bike.
+==
+
+The DRS after condensation looks like this:
+
+==
+[]
+pred_mod(unspecified, have, v(John), A, [])-2
+object(v(John), atomic, named(John), person, cardinality, count_unit, eq, 1, B)-2
+object(A, atomic, bike, object, cardinality, count_unit, eq, 1, C)-2
+   []
+   object(D, E, F, person, G, H, I, J, K)-1
+      NOT
+      []
+      pred_mod(unspecified, have, D, L, [])-1
+      object(L, atomic, car, object, cardinality, count_unit, eq, 1, M)-1
+   =>
+   []
+   pred_mod(unspecified, have, D, N, [])-1
+   object(N, atomic, bike, object, cardinality, count_unit, eq, 1, O)-1
+==
+
+---++ Template Collection
+
+As a first step, we need to collect the templates that define which predicates need to be grouped. The following predicates
+are stored as templates:
+
+1. Predicates that occur in the "then"-part of a rule.
+2. Predicates that occur inside of negation (strong negation or negation as failure).
+
+For the sake of simplicity, we collect also templates that contain only one predicate. Every variable inside of a template that
+does not occur outside of the template is replaced by a skolem term gv(N), where N is a unique number ("gv" stands for "group variable").
+For our example, we get two templates (each of which consists of two predicates):
+
+==
+[pred_mod(unspecified, have, A, gv(0), []), object(gv(0), atomic, car, object, cardinality, count_unit, eq, 1, gv(1))]
+[pred_mod(unspecified, have, A, gv(2), []), object(gv(2), atomic, bike, object, cardinality, count_unit, eq, 1, gv(3))]
+==
+
+_|
+Bug: A template is actually a set of predicates, but we represent it as a list. This could cause problems.
+One solution could be to sort the predicates.
+|_
+
+---++ Predicate Grouping
+
+All the predicates that match a template are now grouped (also the predicates that do not occur in the "then"-part of a rule or inside
+of negation). The matching predicates are wrapped into a group/1-predicate. The predicates are unified with (a copy of) the template.
+For our example, we get:
+
+==
+[]
+group([pred_mod(unspecified, have, v(John), gv(2), []), object(gv(2), atomic, bike, object, cardinality, count_unit, eq, 1, gv(3))])-2
+object(v(John), atomic, named(John), person, cardinality, count_unit, eq, 1, A)-2
+   []
+   object(B, C, D, person, E, F, G, H, I)-1
+      NOT
+      []
+      group([pred_mod(unspecified, have, B, gv(0), []), object(gv(0), atomic, car, object, cardinality, count_unit, eq, 1, gv(1))])-1
+   =>
+   []
+   group([pred_mod(unspecified, have, B, gv(2), []), object(gv(2), atomic, bike, object, cardinality, count_unit, eq, 1, gv(3))])-1
+==
+
+_|
+Bug: An error should be raised if there are multiple concurrently matching templates. This is not the case at the moment and it can lead
+to strange results in some special cases.
+|_
+
+
+---++ Grouping Check
+
+Next, we check whether the grouping was actually correct. If there are gv(_) terms outside of a group/1-predicate then the program
+had an invalid structure and an error is raised. For the example above, everything is correct.
+
+
+---++ Skolemization
+
+All the existentially quanified variables are unified with a skolem term v(N), where N is a unique number. This is necessary
+because we want to handle the rules and facts as independent Prolog terms (Prolog does not have global variables). For our example,
+only one variable has to be skolemized:
+
+==
+[]
+group([pred_mod(unspecified, have, v(John), gv(2), []), object(gv(2), atomic, bike, object, cardinality, count_unit, eq, 1, gv(3))])-2
+object(v(John), atomic, named(John), person, cardinality, count_unit, eq, 1, v(0))-2
+   []
+   object(A, B, C, person, D, E, F, G, H)-1
+      NOT
+      []
+      group([pred_mod(unspecified, have, A, gv(0), []), object(gv(0), atomic, car, object, cardinality, count_unit, eq, 1, gv(1))])-1
+   =>
+   []
+   group([pred_mod(unspecified, have, A, gv(2), []), object(gv(2), atomic, bike, object, cardinality, count_unit, eq, 1, gv(3))])-1
+==
+
+
+---++ Rule Creation
+
+Finally, the DRS can directly be mapped to the AceRules rule format. For our example, we get:
+
+==
+group([pred_mod(unspecified, have, A, gv(2), []), object(gv(2), atomic, bike, object, cardinality, count_unit, eq, 1, gv(3))]) <- [object(A, B, C, person, D, E, F, G, H), -group([pred_mod(unspecified, have, A, gv(0), []), object(gv(0), atomic, car, object, cardinality, count_unit, eq, 1, gv(1))])].
+group([pred_mod(unspecified, have, v('John'), gv(2), []), object(gv(2), atomic, bike, object, cardinality, count_unit, eq, 1, gv(3))]).
+object(v('John'), atomic, named('John'), person, cardinality, count_unit, eq, 1, v(0)).
+==

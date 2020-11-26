@@ -1,0 +1,2156 @@
+;;;{{{DOC
+;;; -*- Mode: LISP; Package: CYC; Syntax: ANSI-Common-Lisp -*-
+;;
+;; Copyright (c) 2000 - 2006 Cycorp, Inc.  All rights reserved.
+;;
+;; @module: iterative-template-parser
+;;
+;; Features : Cyc-NL Cyc-RTP
+;;
+;; @owner rck
+;;
+;; 2000/10/11
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; the recursive template parser
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; External interface:
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; File organization:
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;}}}EDOC
+
+(in-package "CYC")
+
+(cvs-id "$Id: iterative-template-parser.lisp 126640 2008-12-04 13:39:36Z builder $")
+
+;;===================================================================
+;; Algorithm Outline
+;; =================
+;;
+;; Have two datastructures, a work set, implemented as a queue, and a
+;; solution set, which can be a stack/list. The items on the work set
+;; look as follows:
+;;
+;;    [ ParentLink   ]
+;;    [ Component    ]
+;;    [ Assertion    ]
+;;    [ True Span    ]
+;;    [ new parse    ]
+;;    [ children     ]
+;;    [ permutations ] 
+;;
+;; Initially, we take the parsing results we get from the call to
+;; template-parse on the top level and we populate node items and push
+;; them onto the queue.
+;;
+;; Until queue empty
+;;   Pop the front of the queue
+;;   if has #$TheResultOfParsing in it
+;;      if ungrammatical (no NP, VP, etc.) -> discard
+;;      template parse string with category
+;;      if result NIL 
+;;         if NPTemplate 
+;;            push onto solution set 
+;;         else
+;;            discard
+;;      else  
+;;         construct a new node item
+;;         push onto queue   
+;;   else
+;;      push onto solution set
+;;   endif 
+;;
+;; At the end of Pass 1, all valid sub pieces are in the solution
+;; set. We can now make a 2nd pass over the solution set and produce
+;; additional solutions by subsitution.
+;;
+;; Furthermore, since we have proceeded in a breath-first fashion, we
+;; can now simply move in the reverse order of generation and apply
+;; the following algorithm:
+;;
+;;   until the list is empty
+;;     pop first node
+;;     if childless
+;;        permutations <- new parse 
+;;     else
+;;        for each child
+;;            for each permutation of child
+;;                substitute permutation of child and self
+;;        store result as self's permutations
+;;     endif
+;;     pushnew self onto result set
+;;     pushnew premutations onto result set
+;;     repeat
+;;         
+;;===================================================================
+
+;;; @Section generic #$SyntacticNode stuff
+;;; @todo @export to syntactic-node.lisp or something
+(defparameter-public *kb-node-gathering-mode?* nil
+  "If non-nil, only create nodes, with a basic (#$isa NODE WHATEVER), and return lists of the things you would assert so they can be saved up for later")
+
+(defparameter-public *kb-node-reify-as-functions?* nil
+  "If non-nil, new nodes will be #$CycSyntacticNodeFns, not simply #$SyntacticNodes. @note this is just a stub at the moment")
+
+(define-private kb-node-analyze-category (category into-mt)
+  "@param OBJECT - presumed to be a spec of #$SyntacticNode or #$ParsingTemplateCategory, or an #$NLPhraseType
+   @param MICROTHEORY - from which to run the KB queries analyzing the category
+   @return (list NODE-TYPE LINGUISTIC-CATEGORY) - depending on the object passed in
+   @example passing #$SyntacticNodeOfNPCategory, #$NPTemplate, or #$NounPhrase should all return (list #$SyntacticNodeOfNPCategory #$NounPhrase)"
+  (pcond ((null category)
+	  (ret nil))
+	 ((cnot (mt-in-any-mt? into-mt))
+	  (ret nil)))
+  (clet ((node-type nil)
+	 (ling-cat nil))
+    (pcond ((genl? category #$SyntacticNode into-mt)
+	    (csetq node-type category)
+	    (csetq ling-cat (first (ask-variable '?CAT `(#$relationAllInstance #$syntacticNodeCategory ,category ?CAT) into-mt))))
+	   ((genl? category #$ParsingTemplateCategory #$TemplateParsingMt)
+	    (clet ((types (ask-variable '?TYPE `(#$and (#$genls ,category ?TEMPLATE-TYPE)
+						       (#$nlPhraseTypeForTemplateCategory ?TYPE ?TEMPLATE-TYPE)) #$RKFParsingMt)))
+	      (csetq ling-cat (first types))  ;; @note rashly assume this predicate is functional in arg2
+	      (clet ((node-types (ask-variable '?NODE `(#$relationAllInstance #$syntacticNodeCategory ?NODE ,ling-cat) into-mt)))
+		(csetq node-type (fif (singleton? node-types) (first node-types) #$SyntacticNode)))))
+	   ((isa? category #$NLPhraseType into-mt)
+	    (csetq ling-cat category)
+	    (clet ((node-types2 (ask-variable '?NODE `(#$relationAllInstance #$syntacticNodeCategory ?NODE ,ling-cat) into-mt)))
+	      (csetq node-type (fif (singleton? node-types2) (first node-types2) #$SyntacticNode))))
+	   ((genls? category #$NLWordForm into-mt)
+	    (csetq ling-cat category)
+	    (csetq node-type #$SyntacticNode))
+	   (t (ret nil))) ;; otherwise don't know what to do
+    (ret (list node-type ling-cat))
+    ))
+
+(defparameter-private *kb-node-internal-counter* 0)
+(define-protected reset-kb-node-internal-counter ()
+  (csetq *kb-node-internal-counter* 0)
+  (ret *kb-node-internal-counter*))
+
+(define-protected next-available-kb-node (type mt &optional label)
+  "@param STRINGP ; to be used in the name
+   @return \"Node-STRINGP-#\", where # is the lowest number >= *kb-node-internal-counter* for which a #$Node-StringP-# doesn't already exist"
+  (clet ((kb-node nil))
+    (while (null kb-node)
+      (csetq kb-node (hypothesize-parse-tree-element type mt))
+      (pwhen (cand kb-node label)
+	(fi-rename-int kb-node (format nil "Node-~A-~D" label *kb-node-internal-counter*))
+	(cinc *kb-node-internal-counter*)))
+    (ret kb-node)))
+  
+(define-protected new-syntactic-functional-node (into-mt &optional (category #$NLPhrase) label)
+  "@param MICOTHEORY
+   @param #$SententialConstituentType or STRINGP ; the newly created node's #$syntacticNodeCategory, defaults to #$NLPhrase
+   @return value1 the node which was created
+           value2 if *kb-node-gathering-mode?* is non-nil, will return the (ordered) list of gafs which would flesh out the node"
+  (check-type-if-present *kb-node-internal-counter* non-negative-integer-p)
+  (cdestructuring-bind (node-type linguistic-category) (kb-node-analyze-category category into-mt)
+    (clet ((node-string nil)
+	   (kb-node nil)
+	   (instructions nil))
+      (pcond ((stringp label)
+	      (csetq node-string label))
+	     ((eql node-type #$SyntacticNode-MatrixClause)
+	      (csetq node-string "Root"))
+	     ((null linguistic-category)
+	      (csetq node-string "Unrecognized"))
+	     ((proper-list-p linguistic-category)
+	      (cdestructuring-bind (func cat) linguistic-category
+		(csetq node-string (format nil "~A~A" (substring (fort-to-string cat) 2 3)
+					   (fif (eql func #$PhraseFn) "P" "Bar")))))
+	     (t (csetq node-string (substring (fort-to-string linguistic-category) 2))))
+      (pwhen *rtp-trace-aggressively?*
+	(warn "*** creating a ~A node, of type ~A and cat ~A" node-string node-type linguistic-category))
+      (csetq kb-node (next-available-kb-node node-type into-mt node-string))
+      (pwhen kb-node
+	(pwhen (isa? linguistic-category #$SententialConstituentType into-mt)
+	  ;; @note will happily assert categories for choice nodes, in case we want that later
+	  (clet ((cat-gaf (list #$syntacticNodeCategory kb-node linguistic-category)))
+	    (pif *kb-node-gathering-mode?*
+		 (cpush cat-gaf instructions)
+		 (fi-assert-int cat-gaf into-mt))))
+	(ret (values kb-node (reverse instructions))))))
+  (ret (values nil nil)))
+
+(define-private new-syntactic-choice-node (into-mt &optional options (category #$SyntacticChoiceNode) (label "Choice"))
+  (cmultiple-value-bind (kb-node gafs) (new-syntactic-functional-node into-mt category label)
+    (cdolist (this-opt options)
+      (pwhen (isa? this-opt #$SyntacticNode into-mt)
+	(clet ((daughter-gaf (list #$optionNodes kb-node this-opt)))
+	  (pif *kb-node-gathering-mode?*
+	       (cpush daughter-gaf gafs)
+	       (fi-assert-int daughter-gaf into-mt)))))
+    (ret (values kb-node (reverse gafs)))))
+
+(define-protected kb-nodes-kill (mt)
+  "@param MICROTHEORY
+   @return the number of constants killed via this function - #$SyntacticNodes, #$CycTokenizations, etc"
+  (clet ((kills 0))
+    (cdolist (col (list #$SyntacticNode #$SyntacticChoiceNode #$CycParseTree #$CycTokenization #$CycParsingToken))
+      (do-all-fort-instances (node col mt)
+	(pwhen (fi-kill-int node)
+	  (cinc kills))))
+    (ret kills)))
+
+(define-protected kill-syntactic-node-tree (self)
+  (with-all-mts
+    ;; @note these can probably be collapsed into a single #$dominantNode scan but I am paranoid
+    (do-gaf-arg-index (ass self :index 1 :predicate #$syntacticDescendants)
+      (kill-syntactic-node-tree (formula-arg2 (assertion-formula ass))))
+    (do-gaf-arg-index (ass self :index 1 :predicate #$optionNodes)
+      (kill-syntactic-node-tree (formula-arg2 (assertion-formula ass)))))
+  (ret (fi-kill-int self)))
+
+(defmacro-protected with-new-syntactic-kb-node ((node mt &key category options choice (source #$CycRecursiveTemplateParser)) &body body)
+  (with-temp-vars (choice-cat)
+    (ret `(clet ((,choice-cat ,category))
+	    (pwhen (cand ,choice (null ,choice-cat))
+	      (csetq ,choice-cat #$SyntacticChoiceNode))
+	    (clet ((,node (fif ,choice
+			       (new-syntactic-choice-node ,mt ,options ,choice-cat)
+			       (new-syntactic-functional-node ,mt ,category))))
+	      (pwhen (fort-p ,source)
+		(fi-assert-int (list #$syntacticNodeCreator
+				     (list #$InstanceWithRelationFromFn
+					   (list #$ProgramCopyFn ,source)
+					   #$partOfIBT #$Cyc)
+				     ,node) ,mt))
+	      ,@body)))))
+
+(defmacro-protected with-new-syntactic-kb-node-w/gafs ((node mt new-gafs old-gafs &key category options choice (source #$CycRecursiveTemplateParser)) &body body)
+  (with-temp-vars (test-gaf choice-cat)
+    (ret `(clet ((*kb-node-gathering-mode?* t)
+		 (,choice-cat ,category))
+	    (pwhen (cand ,choice (null ,choice-cat))
+	      (csetq ,choice-cat #$SyntacticChoiceNode))
+	    (cmultiple-value-bind (,node ,new-gafs) (fif ,choice
+							 (new-syntactic-choice-node ,mt ,options ,choice-cat)
+							 (new-syntactic-functional-node ,mt ,category))
+	      (pwhen (fort-p ,source)
+		(fi-assert-int (list #$syntacticNodeCreator
+				     (list #$InstanceWithRelationFromFn
+					   (list #$ProgramCopyFn ,source)
+					   #$partOfIBT #$Cyc)
+				     ,node) ,mt))
+	      (cdolist (,test-gaf ,new-gafs)
+		(cpush ,test-gaf ,old-gafs))
+	      ,@body)))))
+
+(define-protected syntactic-option-node-p (term)
+  (clet ((true? nil))
+    (with-all-mts
+      (csetq true? (boolean (gather-gaf-arg-index term 2 #$optionNodes))))
+    (ret true?)))
+
+(define-cb-link-method :syntactic-node-toolkit (term)
+  "Provide quickie links for excluding the node as an option, or for reinstating it"
+  (with-all-mts
+    (pif (gather-gaf-arg-index term 2 #$excludedOptionNodes)
+	 (frame-link
+	  (html-format "restore-syntactic-option&~A" (cb-fort-identifier term))
+	  (html-princ "[Restore Syntactic Option]"))
+	 (frame-link
+	  (html-format "exclude-syntactic-option&~A" (cb-fort-identifier term))
+	  (html-princ "[Exclude Syntactic Option]"))))
+  (ret nil))
+
+(define-html-handler exclude-syntactic-option (id)
+  (clet ((this-node (cb-guess-fort id))
+	 (assertion nil)
+	 (result nil))
+    (with-all-mts
+      (csetq assertion (first (gather-gaf-arg-index this-node 2 #$optionNodes)))
+      (pwhen assertion
+	(csetq result (fi-assert-int (list #$excludedOptionNodes (formula-arg1 (assertion-formula assertion)) this-node) (assertion-mt assertion)))))
+    (ret result)))
+
+(define-html-handler restore-syntactic-option (id)
+  (clet ((this-node (cb-guess-fort id))
+	 (assertion nil)
+	 (result nil))
+    (with-all-mts
+      (csetq assertion (first (gather-gaf-arg-index this-node 2 #$excludedOptionNodes)))
+      (pwhen assertion
+	(csetq result (fi-unassert-int (assertion-formula assertion) (assertion-mt assertion)))))
+    (ret result)))
+
+;;; end @export
+;;; @note I think I've weaned out all the stuff above this point that depend on what comes after - guess we'll find out when I actually do the split
+
+(defparameter-private *last-itp-state-created* nil)
+
+(defparameter-private *rtp-graphing-filter* :rtp)
+
+(defparameter-protected *rtp-trace-aggressively?* nil
+  "force hordes of rtp-related debugging info to be printed to the console?")
+
+(defparameter-public *rtp-kb-parse-mt* nil
+  "If this is a microtheory, then build a tree of #$SyntacticNodes in this mt while doing the parse")
+
+(define-private asserting-trees? ()
+  "Should the system try to assert parse-trees into the KB?"
+  (ret (boolean *rtp-kb-parse-mt*)))
+
+(defparameter-private *rtp-exhaustive-kb-parse?* nil  ;; @note this is just a stub for now
+  "If t, create KB nodes at every step along the way, even for doomed parses/spans. If nil, wait until the end on produce only useful stuff.")
+
+(defparameter-public *rtp-reify-doomed-parses?* nil
+  "If a parse is (heuristically) identified as doomed, assert #$excludedOptionNodes if this is t, otherwise block it from the KB")
+
+(defparameter-public *rtp-latest-kb-parse-tree* nil
+  "A global for storing the #$CycParseTree, if any, produced during the last call to @see itp-sequel")
+(defmacro-protected while-saving-rtp-parse-into-kb (&body body)
+  (ret `(clet ((*rtp-latest-kb-parse-tree* :save))
+	  ,@body)))
+(define-protected save-rtp-kb-parse-if-desired (node)
+  (pwhen (eql *rtp-latest-kb-parse-tree* :save)
+    (csetq *rtp-latest-kb-parse-tree* node)
+    (ret node)))
+(define-protected get-rtp-kb-parse-node ()
+  (ret *rtp-latest-kb-parse-tree*))
+(define-protected get-and-erase-rtp-kb-parse-node ()
+  (clet ((node *rtp-latest-kb-parse-tree*))
+    (csetq *rtp-latest-kb-parse-tree* nil)
+    (ret node)))
+
+(defglobal-private *rtp-component-tokenizations* (new-dictionary 'equal)
+  "Cache the tokenizations of various join-template-component-p, result-of-parsing-formula?, etc")
+
+(defparameter-private *rtp-relevant-tokenization* nil
+  "Stored in a global to avoid an explosive number of arglist extensions")
+
+(defmacro-private with-the-rtp-parse-tokenization ((save-here offset) &body body)
+  "@param OBJECT ; to store the result of @see setting-parse-root-node
+   @param TOKENIZATION ; defaults to *rtp-relevant-tokenization*"
+  (ret `(with-parse-tokenization (*rtp-relevant-tokenization* :offset ,offset)
+	  (pif (asserting-trees?)
+	       (progn (setting-parse-root-node (,save-here)
+			,@body))
+	       (progn ,@body)))))
+
+(define-private rtp-component-tokenization (component &optional (mt *rtp-kb-parse-mt*))
+  "@param STRINGP, JOIN-TEMPLATE-COMPONENTS-P, or RESULT-OF-PARSING-FORMULA?
+   @param MICROTHEORY ; defaults to *rtp-kb-parse-mt*
+   @return a #$CycTokenization corresponding to that component
+   @note if this has to create the tokenization, it will arrange for things like #$tokenizationInputString"
+  (punless (cor (stringp component)
+		(join-template-components-p component)
+		(result-of-parsing-formula? component))
+    (ret nil))
+  (clet ((tokenization (dictionary-lookup *rtp-component-tokenizations* component)))
+    (punless (valid-constant? tokenization)
+      (with-clean-fi-error-state
+	(clet ((input-string nil))
+	  (pcond ((stringp component)
+		  (csetq input-string component))
+		 ((join-template-components-p component)
+		  (csetq input-string (join-template-components-word-list component)))
+		 ((result-of-parsing-formula? component)
+		  (csetq input-string (result-of-parsing-words component))))
+	  (pwhen (asserting-trees?)
+	    (csetq tokenization (hypothesize-parse-tree-element #$CycTokenization *rtp-kb-parse-mt*))
+	    (dictionary-enter *rtp-component-tokenizations* component tokenization)
+	    (pwhen (cand tokenization input-string)
+	      (fi-assert-int (list #$tokenizationInputString tokenization input-string) mt))
+	    (clet (num)
+	      (cdolist-numbered (word n (rkf-ch-string-tokenize input-string))
+		(csetq num (1+ n))
+		(clet ((kb-token (hypothesize-parse-tree-element #$CycParsingToken *rtp-kb-parse-mt*)))
+		  (fi-assert-int (list #$tokenString kb-token word) mt)
+		  (fi-assert-int (list #$nthTokenInTokenization tokenization num kb-token) mt)))
+	      (fi-assert-int (list #$numberOfTokensInTokenization tokenization num) mt))))))
+    (ret tokenization)))
+
+(define-public rtp-parse-exp (sentence &optional (category #$STemplate) (syntax-mt *rtp-syntactic-mt*) (semantics-mt *rkf-mt*))
+  "The experimental version of itp-sequel.  This should be used for in-house testing, since it
+   clears all the caches that might need to be cleared."
+  (reset-all-rtp-datastructure-caches)
+  (ret (itp-sequel sentence category syntax-mt semantics-mt)))
+
+(define-public rtp-parse-exp-w/vpp (sentence &optional (category #$STemplate) (syntax-mt *rtp-syntactic-mt*) (semantics-mt *rkf-mt*))
+  "The experimental version of itp-sequel that calls the vp-parser.  This should be used for in-house testing, since it clears all the caches that might need to be cleared."
+  (clet (answers)
+    (reset-all-rtp-datastructure-caches)
+    (clet ((*perform-vp-parser-expansion* t))
+      (csetq answers (itp-sequel sentence category syntax-mt semantics-mt)))
+    (ret answers)))
+
+(define-public rtp-parse-w/vpp (sentence &optional (category #$STemplate) (syntax-mt *rtp-syntactic-mt*) (semantics-mt *rkf-mt*))
+  "entry point to template parser that calls the vp-parser.  Note that this does not clear
+   all caches before doing the parse, in contrast to @xref rtp-parse-exp-w/vpp"
+  (clet (answers)
+    (clet ((*perform-vp-parser-expansion* t))
+      (csetq answers (itp-sequel sentence category syntax-mt semantics-mt)))
+    (ret answers)))
+
+(define-public itp-sequel ( sentence &optional (category #$STemplate) (syntax-mt *rtp-syntactic-mt*) (semantics-mt *rkf-mt*))
+  "@return (values ANSWERS . possibly a #$CycParseTree)"
+  (clet ((answers nil)
+	 (the-cyc-parse-tree nil))
+    (clet ((*rtp-semantic-mt* (fif semantics-mt 
+				     semantics-mt
+				     #$InferencePSC))
+	   (*rtp-syntactic-mt* syntax-mt)
+	   (*rtp-relevant-tokenization* (rtp-component-tokenization sentence)))
+      (with-mt *rtp-syntactic-mt*
+	(punless (genl? category #$ParsingTemplateCategory)
+	  (warn "~S is not a template category~%" category)))
+      (clet ((state (new-itp-state sentence category)))
+	(csetq *last-itp-state-created* state)
+	(prime-itp-pump state syntax-mt)
+	(expand-itp-state-completely state syntax-mt)
+	(csetq answers (cat-itp state))
+	(pwhen (cand (asserting-trees?) (cnot *rtp-exhaustive-kb-parse?*)) ;; @note -exhaustive- is always false at the moment
+	  (csetq the-cyc-parse-tree (reify-itp state))
+	  (pwhen (cand the-cyc-parse-tree *rtp-relevant-tokenization*)
+	    (fi-assert-int `(#$parseTreeOfTokenization ,the-cyc-parse-tree ,*rtp-relevant-tokenization*) *rtp-kb-parse-mt*))
+	  (save-rtp-kb-parse-if-desired the-cyc-parse-tree))
+	(destroy-itp-state state)))
+    ;; simplify the #$AssemblePhraseFn uses away
+    (csetq answers (rkf-ch-simplify-assemble-phrases answers))
+    (punless (eq *rtp-return-style* :assertion)
+      ;; delete any possible duplicates -- never happens with categorized
+      (csetq answers (delete-duplicate-tp-results answers)))
+    (ret (values answers the-cyc-parse-tree))))
+
+(define-public categorized-rtp-parse-exp (sentence &optional (category #$STemplate) 
+						   (syntax-mt *rtp-syntactic-mt*) 
+						   (semantics-mt *rkf-mt*))
+  "The experimental version of categorized-itp-sequel.  This should be used for in-house testing, since it
+   clears all the caches that might need to be cleared."
+  (reset-all-rtp-datastructure-caches)
+  (ret (categorized-itp-sequel sentence category syntax-mt semantics-mt)))
+
+(define-public 
+    categorized-itp-sequel (sentence &optional (category #$STemplate) 
+                                     (syntax-mt *rtp-syntactic-mt*) 
+                                     (semantics-mt *rkf-mt*))
+  "returns the assertions with each parse"
+  (clet (result)
+    (clet ((*rtp-return-style* :assertion))
+      (csetq result (itp-sequel sentence category syntax-mt semantics-mt)))
+    (ret result)))
+        
+(define-private delete-duplicate-tp-results (answers)
+  (clet (result)
+    (cdolist (answer answers)
+      (cpush (list (first answer) (delete-duplicates (second answer) #'equal)) result))
+    (ret (nreverse result))))
+
+
+(define-public itp-rewrite ( sentence &optional (category #$STemplate) (syntax-mt *rtp-syntactic-mt*) (semantics-mt *rkf-mt*))
+  "return just the rewrites of a given input, instead of all of the possible parses"
+  (ret (rewrites-only (itp-sequel sentence category syntax-mt semantics-mt))))
+
+(define-private rewrites-only (answers)
+  "filter all the non-rewrite out of a set of answers from the template-parser
+   @param ANSWERS list; a list of parsing results, in the format output by ITP-SEQUEL
+   @return list; a list of parsing results, in the format output by ITP-SEQUEL"
+  (clet (result
+	 rewrites)
+    (cdolist (answer answers)
+      (csetq rewrites (rewrites-helper (second answer)))
+      (pwhen rewrites (cpush (list (first answer) rewrites) result)))
+    (ret (nreverse result))))
+
+(define-private rewrites-helper (answers)
+  "remove all sentences that don't start with #$RewriteSequenceFn.
+   @param ANSWERS list; a list of CycL sentences
+   @return list; a list of CycL sentences, a subset of ANSWERS"
+  (clet (result)
+    (cdolist (answer answers)
+      (pwhen (eq (formula-arg0 answer) #$RewriteSequenceFn)
+	(cpush answer result)))
+  (ret (nreverse result))))
+
+
+
+;;;{{{DOC
+;;; @section: ITP Node Helper Functions
+;;;}}}EDOC
+
+(define-protected itp-nuke-syntactic-nodes (&optional (mt #$ToyParseTreeMt-FullSentences))
+  (ret (kb-nodes-kill mt)))
+
+(defstruct (itp-node (:print-function print-itp-node))
+  ;; number of the node as created
+  id
+  ;; the parent of this node, NIL for root
+  parent
+  ;; the component that is being analyzed 
+  component
+  ;; the [absolute] span within the original sentence
+  span
+  ;; the semantics of the new parse that resulted
+  new-parse
+  ;; the assertion that made this parse succeed
+  assertion
+  ;; the children of that new parse
+  children
+  ;; permutations of this component when substituted with the children
+  permutations
+  ;; the #$SyntacticNode representing this itp node, if any, in the KB
+  syntactic-node
+  ;; dictionary of (component-> (#$SyntacticChoiceNode list-of-children-of-this-component))
+  syntactic-choices
+  )
+
+(define-private print-itp-node ( itp-node stream depth)
+  (ignore depth)
+  (print-unreadable-object ( itp-node stream :type t :identity t)
+    (princ (itp-node-id itp-node) stream)
+    (princ " " stream)
+    (princ (itp-node-component itp-node) stream)
+    (pif *rtp-trace-aggressively?*
+	 (format stream "~%")
+	 (princ " " stream))
+    (prin1 (itp-node-new-parse itp-node) stream)
+    (princ " " stream)
+    (prin1 (itp-node-syntactic-node itp-node) stream))
+  (ret itp-node))
+
+(define-protected construct-itp-node ( parent span component assertion id)
+  (clet ((self (make-itp-node)))
+    (csetf (itp-node-id self) id)
+    (csetf (itp-node-parent self) parent)
+    (csetf (itp-node-span self) span)
+    (csetf (itp-node-component self) component)
+    (csetf (itp-node-assertion self) assertion)
+    (csetf (itp-node-new-parse self) nil)
+    (csetf (itp-node-children self) nil)
+    (csetf (itp-node-permutations self) nil)
+    (csetf (itp-node-syntactic-node self) nil)
+    (csetf (itp-node-syntactic-choices self) nil)
+    (ret self)))
+
+(define-protected add-itp-node-child ( self child &optional kb-node)
+  (clet ((children (itp-node-children self)))
+    (cpush child children)
+    (csetf (itp-node-children self) children))
+  (pwhen kb-node
+    (csetf (itp-node-syntactic-node child) kb-node)
+    (pwhen (asserting-trees?)
+      (clet ((parental-node (itp-node-syntactic-node self)))
+	(pwhen parental-node
+	  (syntactic-node-add-dtr parental-node kb-node nil *rtp-kb-parse-mt*)))))
+  (ret self))
+
+(define-protected itp-node-create-initial-head (self gene-pool cat)
+  "@param ITP-NODE-P
+   @param LISTP ; presumably a subset of node's children
+   @param CATEGORY
+   @return new ITP-NODE-P covering the span preceding the list of children
+   @note this function assumes that if self's span is (X ... Y ... Z), then the children passed to it
+         cover just Y ... Z, and that we want a node covering X ... Y-1"
+  (check-type self itp-node-p)
+  (check-type gene-pool proper-list-p)
+  (clet ((my-node (itp-node-syntactic-node self))
+	 (new-itp-node nil)
+	 (the-span (initial-span-gap self gene-pool)))
+    (pwhen (null my-node)
+      (ret nil))
+    (ignore the-span) ;; @todo something with this
+    (with-new-syntactic-kb-node (head-node *rtp-kb-parse-mt* :category cat)
+      (syntactic-node-add-head-dtr my-node head-node nil *rtp-kb-parse-mt*)
+      ;; @todo add the string
+      (csetq new-itp-node (construct-itp-node self (itp-node-span self) cat nil nil)))
+    (ret new-itp-node)))
+
+(define-private itp-node-get-legitimate-children (self)
+  "@param ITP-NODE-P
+   @return a subset of its children which are deemed (potentially) useful"
+  (clet ((valid-children nil))
+    (cdolist (this-child (itp-node-children self))
+      (clet ((the-parse (itp-node-new-parse this-child)))
+	(pcond ((vp-parse-from-psp? the-parse)
+		(cpush this-child valid-children))
+	       ((itp-node-get-legitimate-children this-child)
+		(cpush this-child valid-children))
+	       ((cnot (cor (result-of-parsing-formula? the-parse)
+			   (cand (isa-in-any-mt? (formula-arg0 the-parse) #$NLFunction)
+				 (cnot (isa-in-any-mt? (formula-arg0 the-parse) #$NLTaggedTermDenotingFunction)))
+			   (eql (result-of-parsing-category (itp-node-component this-child)) #$VPTemplate)))
+		(cpush this-child valid-children)))))
+    (pwhen (cand (proper-list-p valid-children)
+		 (cnot (full-span-coverage? self valid-children)))
+      (clet ((my-parse (itp-node-new-parse self))
+	     (my-component (itp-node-component self)))
+	(pwhen (cor (join-template-components-p my-parse)
+		    (eql (formula-arg0 my-parse) #$TheRNPParse)) ;; presently make no attempt to fill in the gaps for these cases
+	  (ret nil))
+	(pwhen (cand (result-of-parsing-formula? my-component)
+		     (verb-phrasal-template-category? (result-of-parsing-category my-component)))
+	  (clet ((vbars (ask-variable '?VBAR `(#$and (#$memberOfList ?CHILD ,(cons #$TheList (mapcar 'itp-node-syntactic-node valid-children)))
+						    (#$syntacticDaughters ?VBAR ?CHILD)
+						    (#$syntacticNodeCategory ?VBAR (#$PhraseFn-Bar1 #$Verb))) #$EverythingPSC))
+		 (head-itp-node nil)
+		 (my-kb-node nil))
+	    (pwhen (singleton? vbars)
+	      (csetq my-kb-node (first vbars))
+	      (csetf (itp-node-syntactic-node self) my-kb-node)
+	      (clet ((head-verb (ask-variable '?V `(#$and (#$syntacticDaughters ,my-kb-node ?V)
+							  (#$syntacticNodeCategory ?V #$Verb)) #$EverythingPSC)))
+		(pwhen (singleton? head-verb)
+		  (csetq head-itp-node (construct-itp-node self (itp-node-span self) #$Verb nil nil))
+		  (csetf (itp-node-syntactic-node head-itp-node) (first head-verb)))))
+	    ;; note that the itp-node should always have been created, if the original PSP parse was successful
+	    (pwhen (cand (null head-itp-node)
+			 (extended-vbar-template-category? (result-of-parsing-category my-component))
+			 (null (ask-variable '?NODE `(#$and (#$syntacticNodeNthDaughter ,(itp-node-syntactic-node self) 1 ?NODE)
+							    (#$syntacticNodeCategory ?NODE #$Verb)) #$EverythingPSC)))
+	      (csetq head-itp-node (itp-node-create-initial-head self valid-children #$Verb)))
+	    (pwhen (itp-node-p head-itp-node)
+	      (csetf (itp-node-new-parse head-itp-node) (formula-arg0 my-parse))
+	      (cpush head-itp-node valid-children))))))
+    (ret valid-children)))
+
+(define-private itp-node-get-dominance-gafs (self)
+  "@param ITP-NODE-P
+   @return a list of gafs establishing its syntactic-choices in the KB"
+  (pwhen (itp-node-syntactic-choices self)
+    (clet ((gafs nil)
+	   (my-node (itp-node-syntactic-node self)))
+      (punless my-node
+	(ret nil))
+      (do-dictionary (component node-and-children (itp-node-syntactic-choices self))
+	(ignore component)
+	;; @todo push the rename through
+	(cpush (list #$optionNodes my-node (first node-and-children)) gafs))
+      (ret gafs))))
+
+(define-private itp-node-clear-syntactic-choices (self &optional cat)
+  "@param ITP-NODE-P
+   @optional spec of #$ParsingTemplateCategory - e.g., #$VPTemplate or #$RTPVBarTemplate.
+             if present, just initialize components using this (and its specs)
+   @note wipes out the subset of syntactic-choices relevant to category (i.e., the whole thing if no category)
+   @todo consider killing the choice nodes in the KB"
+  (pwhen (itp-node-syntactic-choices self)
+    (pif cat
+	 (cdolist (key (dictionary-keys (itp-node-syntactic-choices self)))
+	   (pwhen (genl? key cat #$TemplateParsingMt)
+	     (dictionary-enter (itp-node-syntactic-choices self) key nil)))
+	 (csetf (itp-node-syntactic-choices self) (new-dictionary 'eql))))
+  (ret nil))
+
+(define-private itp-node-initialize-syntactic-choices (self &optional cat)
+  "@param ITP-NODE-P
+   @optional spec of #$ParsingTemplateCategory - e.g., #$VPTemplate or #$RTPVBarTemplate.
+             if present, just initialize components using this (and its specs)
+   @return value 1: whether any #$SyntacticChoiceNodes should be created
+           value 2: if so, any definitional gafs needed to establish them
+   @note calls @see itp-node-initialize-syntactic-choices"
+  (clet ((offspring (new-dictionary 'eql)) ;; holding cell
+	 (valid-children (itp-node-get-legitimate-children self))
+	 (return-gafs nil))
+    ;; wipe out - @todo consider killing choice nodes
+    (itp-node-clear-syntactic-choices self cat)
+    ;; gather the kids around the fire, focusing on cat, if any
+    (cdolist (this-child valid-children)
+      (clet ((this-comp (itp-node-component this-child)))
+	(pwhen (result-of-parsing-formula? this-comp)
+	  (clet ((raw-cat (result-of-parsing-category this-comp))
+		 (high-cat (result-of-parsing-highest-category this-comp cat)))
+	    (pwhen (cor (null cat)
+			(genl-in-any-mt? raw-cat cat)) ;; grep components for cat, if present
+;	      (warn " !!! entering as ~A: ~S" high-cat this-child)
+	      (dictionary-enter offspring high-cat (cons this-child (dictionary-lookup offspring high-cat))))))))
+    ;; @note if the ambiguity is merely semantic, then offspring will have 1 key with multiple values
+    ;; @example "Jim eats bones" -> two RTPVbarTemplate parses, one with #$eatsWillingly, the other with #$eatsWillingly-Instance
+    ;; @example "Jim is blue" -> two distinct parses, one for [NP blue], the other for [AP blue]
+    (pwhen (length> (dictionary-keys offspring) 1)
+      (clet ((new-nodes nil))
+	(do-dictionary (category kids offspring)
+	  (with-new-syntactic-kb-node-w/gafs (node *rtp-kb-parse-mt* ignore-this return-gafs :category category)
+	    (dictionary-enter (itp-node-syntactic-choices self) category (cons node kids))
+	    (cpush node new-nodes)))
+	(with-new-syntactic-kb-node-w/gafs (choice-node *rtp-kb-parse-mt* ignore-this return-gafs :choice t
+							:options new-nodes)
+	  (syntactic-node-add-dtr (itp-node-syntactic-node self) choice-node nil *rtp-kb-parse-mt*))))
+    (ret (values t return-gafs))))
+
+(define-protected itp-choice-node-for-component (self key-component)
+  "@param ITP-NODE-P ; whose syntactic-choices to check
+   @param COMPONENT ; to search for
+   @return the #$SyntacticChoiceNode ; if any"
+  (pwhen (itp-node-syntactic-choices self)
+    (do-dictionary (this-component node-and-references (itp-node-syntactic-choices self))
+      (pwhen (equal this-component key-component)
+	(ret (values (first node-and-references) (cdr node-and-references))))))
+  (ret (values nil nil))) ;; C build paranoia
+
+(define-private itp-node-find-or-initialize-syntactic-choices (self component)
+  "@param ITP-NODE-P
+   @param COMPONENT ; to search for, and initialize if needed
+   @return (values #$SyntacticChoiceNode if any ; gafs to assert later, if any"
+  (clet ((the-node (itp-choice-node-for-component self component))
+	 (the-gafs nil))
+    (punless the-node
+      (cmultiple-value-bind (init? gafs) (itp-node-initialize-syntactic-choices self (fwhen (result-of-parsing-formula? component)
+										       (result-of-parsing-highest-category component)))
+	(pwhen init?
+	  (csetq the-node (itp-choice-node-for-component self component)))
+	(pwhen gafs (csetq the-gafs gafs))))
+    (ret (values the-node the-gafs))))
+
+(define-private itp-node-tokenization (self)
+  "@param ITP-NODE-P
+   @return the results of @see rtp-component-tokenization (itp-node-new-parse NODE)"
+  (ret (rtp-component-tokenization (itp-node-new-parse self))))
+
+(define-private itp-node-equal? ( one other )
+  (ret (cand (equal (itp-node-span other)
+                    (itp-node-span one))
+             (equal (itp-node-component one)
+                    (itp-node-component other))
+             (equal (itp-node-new-parse one)
+                    (itp-node-new-parse other)))))
+
+(define-private find-or-create-itp-node-syntactic-node (itp-node into-mt &optional category parent)
+  "@param ITP-NODE-P
+   @param MICROTHEORY
+   @param #$SententialConstituentType ; optional, a newly created node's #$syntacticNodeCategory
+   @param #$SyntacticNode ; optional itp-node, presumed to be this one's parent, for #$syntacticDaughters
+   @return ; if the ITP node already had a #$SyntacticNode, return it. Otherwise, if the mt is valid,
+             create a #$SyntacticNode in the mt and return it
+   @note this is relevant only to on-the-fly reification, which we aren't doing right now"
+  (pwhen (null itp-node)
+    (ret nil))
+  (clet ((old-node (itp-node-syntactic-node itp-node)))
+    (pwhen old-node
+      (ret old-node)))
+  (punless (mt-in-any-mt? into-mt)
+    (ret nil))
+  (clet ((kb-node (new-syntactic-functional-node into-mt category)))
+    (pif kb-node
+	 (progn (csetf (itp-node-syntactic-node itp-node) kb-node)
+		(pwhen (itp-node-p parent)
+		  (clet ((parent-kb-node (itp-node-syntactic-node parent)))
+		    (pwhen (isa? parent-kb-node #$SyntacticNode into-mt)
+		      (syntactic-node-add-dtr parent-kb-node kb-node nil into-mt)))))
+	 (warn "*** RTP *** Couldn't create KB node for ~A in ~A" itp-node into-mt))))
+
+;;;{{{DOC
+;;; @section: Functions for individual Operations
+;;;}}}EDOC
+
+(defstruct (itp-state (:print-function print-itp-state))
+  ;; node-sequence
+  sequence
+  ;; parsing style 
+  complete-parses-only
+  ;; a queue containing the work set
+  work-set
+  ;; the solution set
+  ;; all the nodes that parse completely
+  solution-set
+  ;; the sentence being worked on
+  sentence
+  ;; the starting category being worked on
+  category
+  ;; look-aside cache for already proven solutions
+  cache
+  ;; a dictionary of known PSP charts for this sentence
+  psp-charts
+  ;; the mt in which we're building a #$SyntacticNode tree, if any
+  working-mt
+  )
+
+(define-private print-itp-state ( itp-state stream depth)
+  (ignore depth)
+  (print-unreadable-object ( itp-state stream :type t :identity t)
+    (format stream "Work: ~D Solution: ~D KB Mt: ~A" 
+            (p-queue-size (itp-state-work-set itp-state))
+            (length (itp-state-solution-set itp-state))
+	    (itp-state-working-mt itp-state)))
+  (ret itp-state))
+
+
+
+(define-protected new-itp-state ( sentence &optional 
+                                           (category #$STemplate) 
+                                           (complete-parses-only T)) 
+  (clet ((state (make-itp-state)))
+    (csetf (itp-state-sequence state) 0)
+    (csetf (itp-state-complete-parses-only state) complete-parses-only)
+    (csetf (itp-state-sentence state) sentence)
+    (csetf (itp-state-category state) category)
+    (csetf (itp-state-cache state) (new-dictionary #'equalp))
+    (csetf (itp-state-work-set state) (create-p-queue nil 'itp-node-max-child-span-length '>))
+    (csetf (itp-state-solution-set state) nil)
+    (csetf (itp-state-psp-charts state) (new-itp-state-psp-chart-dictionary))
+    (csetf (itp-state-working-mt state) *rtp-kb-parse-mt*)
+    (ret state)))
+
+(define-protected destroy-itp-state (state)
+  (clear-dictionary (itp-state-cache state))
+  (clet ((chart-dictionary (itp-state-psp-charts state)))
+    (do-dictionary (chart-span chart chart-dictionary)
+      (ignore chart-span)
+      (destroy-psp-chart chart))
+    (clear-dictionary chart-dictionary))
+  (ret :destroyed))
+
+
+(define-memoized new-itp-state-psp-chart-dictionary () (:test 'eq)
+		"allow us to re-use dictionaries between parses"
+  (ret (new-dictionary)))
+
+(define-private add-to-itp-solution ( state solution)
+  "A solution vindicates the parent as well."
+  (clet ((current solution)
+         (solutions (itp-state-solution-set state)))
+    (while (itp-node-p current)
+      (cpushnew current solutions #'equalp)
+      (csetq current (itp-node-parent current)))
+    (csetf (itp-state-solution-set state) solutions)
+    (ret state)))
+
+
+(define-private memoize-itp-attempt ( state node )
+  "Remember that someone is already attempting to solve this problem."
+  (clet ((cache (itp-state-cache state))
+         (key (itp-node-component node)))
+    (punless (null key)
+      ; only memoize intermediate nodes
+      (dictionary-pushnew cache key node)))
+  (ret state))
+
+
+(define-private is-a-known-itp-attempt? (state problem)
+  "Check the cache if some node is already working on this
+   problem."
+  (clet ((cache (itp-state-cache state))
+         (hit (dictionary-lookup cache problem)))
+    (ret hit)))
+
+
+(define-protected prime-itp-pump ( itp-state mt )
+  (clet ((parses (categorizing-template-parse 
+                  (itp-state-sentence itp-state)
+                  mt
+                  (itp-state-category itp-state)
+                  (itp-state-complete-parses-only itp-state)))
+	 (undo-extension-trace? nil))
+    #+Allegro
+    (pwhen (cand *rtp-trace-aggressively?*
+		 (cnot (member? 'extend-itp-state (cl:trace))))
+      (cl:trace extend-itp-state)
+      (csetq undo-extension-trace? nil))
+    #-Allegro
+    (ignore undo-extension-trace?)
+    (cdolist (parse parses)
+      (clet ((span (first parse))
+             (possibles (second parse)))
+        (cdolist (possible possibles)
+          (clet ((formula (first possible))
+                 (assertion (second possible)))
+	    (extend-itp-state itp-state span NIL formula assertion)))))
+    #+Allegro
+    (pwhen undo-extension-trace?
+      (cl:untrace extend-itp-state)))
+  (ret itp-state))
+
+(defparameter-private *extend-itp-state-analyze-assertion?* nil)
+  
+(define-protected extend-itp-state (state span old-formula new-parse assertion
+                                          &optional parent psp-node-if-any graph-type)
+  (ignore graph-type)
+  (check-type state itp-state-p)
+  (punless (null parent)
+    (check-type parent itp-node-p))
+  (clet ((id   (itp-state-sequence state))
+         (node (construct-itp-node parent span old-formula assertion id)))
+    (csetf (itp-node-new-parse node) new-parse)
+    (csetf (itp-node-syntactic-node node) psp-node-if-any)
+    ;; @note when *rtp-exhaustive-kb-parse?* is nil, as is presently always the case, this clet reduces to the original (pwhen (null parent) (add-itp-node-child parent node)
+    (clet ((into-mt (fwhen *rtp-exhaustive-kb-parse?* (itp-state-working-mt state))))
+      (pif (null parent)
+	   (pwhen into-mt
+	     (clet ((kb-node (find-or-create-itp-node-syntactic-node node into-mt #$SyntacticNode-MatrixClause)))
+	       (pwhen (cand kb-node (result-of-parsing-formula? old-formula))
+		 (fi-assert-int (list #$syntacticNodeString kb-node (result-of-parsing-words old-formula)) into-mt))))
+	   ;; else (there is a parent)
+	   (clet ((child-kb-node nil))
+	     (pwhen into-mt
+	       ;; look for a pre-existing node so we don't create N nodes for a parse with N ambiguities
+	       ;; @note haven't looked for the function I should be using now (csetq child-kb-node (itp-node-syntactic-child-matching parent old-formula))
+	       (punless child-kb-node
+		 (clet ((category (fif (cand *extend-itp-state-analyze-assertion?* (assertion-p assertion))
+				       (formula-arg1 (assertion-formula assertion))
+				       assertion)))
+		   (pwhen (cand (cnot (assertion-p category)) ; don't break the genl? check
+				(genl? category #$ParsingTemplateCategory #$TemplateParsingMt))
+		     ;; if we identified a category for this node, create the KB version and assign text to it
+		     (csetq child-kb-node (new-syntactic-functional-node into-mt category))
+		     (pwhen (cand child-kb-node (result-of-parsing-formula? old-formula))
+		       (fi-assert-int (list #$syntacticNodeString child-kb-node (result-of-parsing-words old-formula)) into-mt))))))
+	     (add-itp-node-child parent node child-kb-node))))
+    ;; ... end @note
+    (p-enqueue node (itp-state-work-set state))
+    (cinc id)
+    (csetf (itp-state-sequence state) id)
+    (memoize-itp-attempt state node)
+    (ret node)))
+
+(define-protected extend-itp-state-multiple (state span formula answers parent)
+  (check-type state itp-state-p)
+  (check-type parent itp-node-p)
+  (clet ((solution (first answers))
+         (subspan  (first solution))
+         (subparses (second solution))
+         absolute-span listy-span)
+    (pif (eq (first span) #$TheList)
+         (csetq listy-span span)
+         (csetq listy-span (cons #$TheList span)))
+    (csetq absolute-span (compute-correct-span listy-span subspan))
+    (adjust-the-spans subparses absolute-span)
+    (clet ((kb-node nil))
+      (ignore kb-node)
+      (cdolist (parse subparses)
+	(clet ((form (first parse))
+	       (assertion (second parse))
+	       (undo-extension-trace? nil))
+	  (punless (cand (listp form)
+			 (member formula form #'equalp))
+	    #+Allegro
+	    (pwhen (cand *rtp-trace-aggressively?*
+			 (cnot (member? 'extend-itp-state (cl:trace))))
+	      (cl:trace extend-itp-state)
+	      (csetq undo-extension-trace? t))
+	    #-Allegro
+	    (ignore undo-extension-trace?)
+	    (clet ((*extend-itp-state-analyze-assertion?* t))
+	      (extend-itp-state state absolute-span formula form assertion parent))
+	    #+Allegro
+	    (pwhen undo-extension-trace? (cl:untrace extend-itp-state)))))))
+  (ret state))
+
+(defparameter-private *npparse-graph-type* "R")
+
+(define-private extend-itp-state-by-ps-parse ( state span component psp-parse parent pos-of-parse)
+  "Take this PS parse and add it to the results of the template parse."
+  (clet ((real-span (fif (eq (first span) #$TheList) (cdr span) span))
+         interpretations
+	 (psp-node-if-any (first psp-parse))
+         node)
+    (pif (cor (null psp-node-if-any)
+	      (fort-p psp-node-if-any)) ;; did we actually get a node back from the psp code?
+	 (cpop psp-parse)
+	 (csetq psp-node-if-any nil))
+    (cdolist (meaning psp-parse)
+      (clet ((formula  (nart-expand meaning))
+	     (adjusted-formula (adjust-the-spans formula real-span)))
+        (cpushnew adjusted-formula interpretations #'equal)))
+    ;;    (format t "interpretations = ~S~%" interpretations)
+    ;;    (csetq interpretations (reverse interpretations))
+    (cdolist (interpretation interpretations)
+      (csetq node (extend-itp-state state 
+				    real-span 
+				    component 
+				    interpretation 
+				    pos-of-parse
+				    parent
+				    psp-node-if-any
+				    *npparse-graph-type*))
+      (pwhen *rtp-exhaustive-kb-parse?*
+	(clet ((kb-node (itp-node-syntactic-node node))
+	       (into-mt (itp-state-working-mt state)))
+	  (pwhen (cand kb-node into-mt)
+	    ;; @todo is #$viableProposedMeaning safe to assume?
+	    ;; @note this will bomb a lot on VP and S nodes due to resultOfParsing non-wffness. this is fine.
+	    (fi-assert-int (list #$proposedMeaning kb-node (list #$SubLQuoteFn interpretation)) into-mt))))
+;;;  (format t "itp-state-children = ~%")
+;;;  (cdolist (node (queue-elements (itp-state-work-set state)))
+;;;    (format t "~S~%" node))
+      ) ; true end of cdolist
+    (ret node)))
+
+
+(defparameter-private *trace-itp-state-expansion* nil)
+
+
+(define-protected expand-itp-state ( state mt )
+  "This is the key loop of the ITP state. It performs one iteration
+   by getting a working set element and motioning it onto either the
+   solution set or discarding it."
+  #+Allegro
+  (pwhen *rtp-trace-aggressively?*
+    (cl:trace extend-itp-state-by-ps-parse)
+    (cl:trace categorizing-template-parse)
+    (cl:trace itp-find-or-create-appropriate-chart)
+    (cl:trace itp-ps-get-cycls-for-phrase)
+    (cl:trace itp-ps-parse-vbar))
+  (clet ((current (p-dequeue (itp-state-work-set state)))
+         (span    (itp-node-span current))
+         (formula (itp-node-new-parse current))
+         (components (rkf-ch-gather-parsing-surrogates formula))
+         (parts 0)
+         (good  0)                     
+         listy-span)
+    (pwhen *trace-itp-state-expansion*
+      (format t "Expanding itp-node ~A:~%    ~S~%" current
+              (itp-node-new-parse current)))
+    (punless (null components)
+      (pif (eq (first span) #$TheList)
+	   (csetq listy-span span)
+           (csetq listy-span (cons #$TheList span))))
+    (cdolist (component components)
+      (clet ((words    (result-of-parsing-words component))
+             (subspan  (result-of-parsing-span  component))
+             (category (result-of-parsing-category component)))
+        (cinc parts)
+        (pcond
+	 ;;if this is something that we know can't be handled by another parser, 
+	 ;;consider it done
+	 ((cand 
+	   ;;(cnot (surrogate-multi-word-component? component))
+	   ;;the commented out line is subsumed by the new line below.  It's not
+	   ;;clear why the below line wasn't used in the first place.    daves 9/2001
+	   (cnot (result-of-parsing-formula? component))
+	   (cor
+	    (cnot (cor
+		   (verbal-template-category? category) ;;verbs have wierd non-terminal only unary rules
+		   (number-template-category? category)
+		   (cand *perform-np-parser-expansion* ;;np we want to parse with np parser
+			 (cor 
+			  (adjectival-category? category) 
+			  (nominal-category? category)))))
+	    (cand ;;single word NP's go back to lexicon
+	     (nominal-category? category)
+	     (cnot *perform-np-parser-expansion*))))
+          (cinc good))
+         (t      
+          (clet ((cache (is-a-known-itp-attempt? state component)))
+            (pcond
+             ((cand cache
+                    (cnot (eq cache current)))
+	      (cdolist (known-node cache)
+		(add-itp-node-child current known-node))
+	      (cinc good))
+             ((cor (null cache)
+                   (eq cache current))
+	      ;;              (pwhen (is-good-grammar? formula words category)
+	      (clet ((answers (categorizing-template-parse words mt category))
+		     (absolute-span (compute-correct-span listy-span subspan)))
+		(pwhen answers
+		  (progn
+		    (extend-itp-state-multiple state absolute-span 
+					       component answers current)))
+		(pcond
+		 ((nominal-category? category)
+		  #+Cyc-NL
+		  (pwhen *perform-np-parser-expansion*
+		    (pcase category
+		      (#$NBarTemplate
+		       (pwhen (appropriate-span-for-nbar-parsing? words subspan)
+			 (with-psp-chart (itp-find-or-create-appropriate-chart state subspan words mt)
+			   (clet ((*npp-use-nl-tags?* nil)
+				  (parses (itp-ps-get-cycls-for-phrase 
+					   words span '(#$PhraseFn-Bar1 #$Noun)
+					   :any nil *rtp-syntactic-mt*)))
+			     (extend-itp-state-by-ps-parse
+			      state absolute-span component parses current #$NBarTemplate)))))
+		      (#$NPTemplate
+		       (pwhen (appropriate-span-for-np-parsing? words subspan)
+			 (with-psp-chart (itp-find-or-create-appropriate-chart state subspan words mt)
+			   (clet ((np-parses
+				   (itp-ps-get-cycls-for-phrase words span #$NounPhrase
+								:any nil *rtp-syntactic-mt*)))
+			     (extend-itp-state-by-ps-parse 
+			      state absolute-span component np-parses current #$NPTemplate)))))))
+		  (cinc good))
+		 ((predicative-adjp-template-category? category)
+		  #+Cyc-NL
+		  (pwhen *perform-vp-parser-expansion*
+		    (clet ((psp-node-if-any nil)
+			   (adjp-parses nil))
+		      (with-psp-chart (itp-find-or-create-appropriate-chart state subspan words mt)
+			(with-the-rtp-parse-tokenization (psp-node-if-any (first span))
+			  (csetq adjp-parses (ps-parse-predicative-adjp words (pred-for-category category) (get-default-psp-lexicon *rtp-syntactic-mt*))))
+			(cpush psp-node-if-any adjp-parses)
+			(extend-itp-state-by-ps-parse state absolute-span component adjp-parses current category))))
+		  (cinc good))
+		 ((vbar-template-category? category)
+		  #+Cyc-NL
+		  (pwhen (cand *perform-vp-parser-expansion* (appropriate-span-for-vbar-parsing? words subspan))
+		    (with-psp-chart (itp-find-or-create-appropriate-chart state subspan words mt)
+		      (clet ((vp-parses 
+			      (itp-ps-parse-vbar words span category *rtp-syntactic-mt*)))
+			(extend-itp-state-by-ps-parse
+			 state absolute-span component vp-parses current category))))
+		  (cinc good))
+		 ((number-template-category? category)
+		  #+Cyc-NL
+		  (clet ((number-parses 
+			  (list (string-to-interval (fif (english-ordinal-number-string-p words) (english-ordinal-string-to-cardinal-string words) words)))))
+		    (extend-itp-state-by-ps-parse
+		     state absolute-span component number-parses current category))
+		  (cinc good))
+		 )
+
+		))))))))
+    #+Allegro
+    (pwhen *rtp-trace-aggressively?*
+      (cl:untrace extend-itp-state-by-ps-parse)
+      (cl:untrace categorizing-template-parse)
+      (cl:untrace itp-find-or-create-appropriate-chart)
+      (cl:untrace itp-ps-get-cycls-for-phrase)
+      (cl:untrace itp-ps-parse-vbar))
+    ;; either we have matched all or it was trivially true due to no subcomponents
+    (pwhen (= good parts)
+      (add-to-itp-solution state current)))
+  (ret state))
+
+(defparameter-protected *possible-nps* nil "a list of strings that might be NPs, to be sent in externally")
+
+(define-private appropriate-span-for-np-parsing? (words subspan)
+  "should we try to call the PSP on WORDS/SUBSPAN?  The current implementation limits the PSP to only work on NPs on a list
+   that is provided from the outside"
+  (ignore subspan)
+  (pwhen *possible-nps*
+    (ret (member? words *possible-nps* 'equalp)))
+  (ret t))
+
+(define-private appropriate-span-for-vbar-parsing? (words subspan)
+  "@stub"
+  (ignore words subspan)
+  (ret t))
+
+(define-private appropriate-span-for-nbar-parsing? (words subspan)
+  "@stub"
+  (ignore subspan words)
+  (ret t))
+
+(define-memoized itp-ps-get-cycls-for-phrase (words span category pos-pred non-trivial? mt)
+  (:test #'equalp)
+  (clet (ans
+	 (psp-node-if-any nil))
+    (clet ((*psp-return-mode* *psp-return-mode*)
+	   (lexicon (get-default-psp-lexicon mt)))
+      (with-the-rtp-parse-tokenization (psp-node-if-any (first span))
+	(csetq ans (ps-get-cycls-for-phrase words category pos-pred non-trivial? lexicon))))
+    (ret (cons psp-node-if-any ans))))
+
+(define-memoized itp-ps-parse-vbar (words span &optional category mt) 
+  (:test #'equalp)
+  (clet ((pos-pred (pred-for-category category))
+	 (gap-type (gap-type-for-category category))
+	 (psp-node-if-any nil)
+	 ans)
+    (clet ((*psp-return-mode* *psp-return-mode*))
+      (with-the-rtp-parse-tokenization (psp-node-if-any (first span))
+	(csetq ans (ps-parse-vbar words pos-pred (get-default-psp-lexicon mt) gap-type))))
+    (ret (cons psp-node-if-any ans))))
+
+(define-private itp-find-or-create-appropriate-chart (state span-with-the-list words lex-mt)
+  "@param STATE itp-state
+   @param SPAN-WITH-THE-LIST naut; (#$TheList NUM1 NUM2...NUMN)
+   @param WORDS string
+   @return psp-chart
+   find a chart that covers all the words in SPAN-WITH-THE-LIST
+   note: store the spans in the dictionary without #$TheList"
+  (clet ((chart-dictionary (itp-state-psp-charts state))
+	 (span (rest span-with-the-list))
+	 result)
+    (do-dictionary (chart-span chart chart-dictionary result)
+      ;;@note dbp - Should check (PSP-CHART-GAP-TYPE CHART) here.
+      (pwhen (itp-subspan? span chart-span)
+	(csetq result chart)))
+    (punless result
+      (csetq result (get-chart-from-extra-psp-charts words)))
+    (punless result
+      (clet ((new-chart (psp-chart-for-string words (get-default-psp-lexicon lex-mt) :none nil)))
+	(dictionary-enter (itp-state-psp-charts state)
+			  (copy-list span) new-chart)
+	(csetq result new-chart)))
+    (rtp-trace-out 1 "length of chart for ~S = ~S~%" words (psp-edge-count result))
+    (ret result)
+    ))
+
+(define-private get-chart-from-extra-psp-charts (string)
+  (clet ((good-chart))
+    (csome (chart *psp-extra-charts* good-chart)
+      (pwhen (psp-find-string-in-chart string chart)
+	(csetq good-chart chart)))
+    (ret good-chart)))
+
+(define-private itp-subspan? (subspan superspan)
+  (ret (search subspan superspan)))
+
+(define-private gap-type-for-category (cat)
+  "This function presently only used in the course of calls to the VP-parser
+   @param CAT fort
+   @return keyword; the type of gap to be found in the VP"
+  (punless (indexed-term-p cat)
+    (ret nil))
+  (clet (result)
+    (with-mt *rtp-syntactic-mt*
+      (csetq result (fpred-value cat #$gapTypeForTemplateCategory 2 1)))
+    (punless result
+      (ret :none))
+    (ret result)))
+
+(define-private pred-for-category (cat)
+  "This function presently only used in the course of calls to the VP-parser
+   @param CAT fort
+   @return cycl-predicate; the pos-predicate that corresponds to the template-category CAT"
+  (punless (indexed-term-p cat)
+    (ret nil))
+  (clet (result)
+    (with-mt *rtp-syntactic-mt*
+      (csetq result (fpred-value cat #$posPredForTemplateCategory 2 1)))
+    (punless result
+      (warn "sent a weird category (~S) to pred-for-category (the vp-parser)~%" cat)
+      (ret #$verbStrings))
+    (ret result)))
+
+
+(define-protected rtp-cat-for-pred (pred)
+  "given a particular pos-pred PRED, return the template-category that best 
+   corresponds to PRED-form words
+   @param PRED predicate
+   @return instance of #$ParsingTemplateCategory"
+  (punless (fort-p pred)
+    (ret nil))
+  (clet (result)
+    (with-mt *rtp-syntactic-mt*
+      (csetq result 
+	     
+	     (fpred-value pred #$posPredForTemplateCategory 1 2)))
+    (punless result
+      (warn "sent a non-categorized pred (~S) to RTP-CAT-FOR-PRED~%" pred)
+      )
+    (ret result)))
+
+(define-protected rtp-cat-for-pos (pos)
+  "given a particular part-of-speech POS, return the template-category that best 
+   corresponds to POS words
+   @param POS fort
+   @return instance of #$ParsingTemplateCategory"
+  (punless (fort-p pos)
+    (ret nil))
+  (pcase pos
+    (#$Noun (ret #$NPTemplate))
+    (otherwise
+     (clet (result)
+       (with-mt *rtp-syntactic-mt*
+	 (csetq result
+		(fpred-value pos #$posForTemplateCategory 1 2)))
+       (punless result
+	 (warn "sent un-categorized category ~s to RTP-CAT-FOR-POS~%" pos)
+	 )
+       (ret result)))))
+
+(define-protected pos-for-rtp-cat (cat)
+  "given a particular template-parser category CAT, return the POS that best 
+   corresponds to CAT constituents
+   @param CAT instance of #$ParsingTemplateCategory
+   @return pos; a fort"
+  (punless (fort-p cat)
+    (ret nil))
+  (pcase cat
+    (#$NPTemplate (ret #$Noun))
+    (otherwise
+     (clet (result)
+       (with-mt *rtp-syntactic-mt*
+	 (csetq result
+		(fpred-value cat #$posForTemplateCategory 2 1)))
+       (punless result
+	 (warn "sent un-categorized category ~s to RTP-CAT-FOR-POS~%" cat)
+	 )
+       (ret result)))))
+
+(define-protected best-rtp-cat-for-preds (preds)
+  "@hack shouldn't just return the first one..."
+  (clet (result)
+    (csome (pred preds result)
+      (csetq result (rtp-cat-for-pred pred)))
+    (ret result)))
+
+(define-cached verb-phrasal-template-category? (category) (16)
+  "@param CATEGORY atom; ostensibly a ParsingTemplateCategory"
+  (ret (cand (verbal-template-category? category)
+	     (cnot (genl-in-any-mt? category #$STemplate)))))
+
+(define-cached verbal-template-category? (category) (16)
+  "@param CATEGORY atom; ostensibly a ParsingTemplateCategory"
+  (punless (indexed-term-p category)
+    (ret nil))
+  (clet (result)
+    (with-mt *rtp-syntactic-mt* 
+      (csetq result (pred-values category #$posForTemplateCategory 2 1)))
+  (ret (member? #$Verb result))))
+
+(define-cached vbar-template-category? (category) (16)
+  "@param CATEGORY atom; ostensibly a ParsingTemplateCategory"
+  (punless (indexed-term-p category)
+    (ret nil))
+  (clet (result)
+    (with-mt *rtp-syntactic-mt* 
+      (csetq result (genl? category #$VBarTemplate)))
+    (ret result)))
+
+(define-cached rtp-vbar-template-category? (category) (16)
+  "@param CATEGORY atom; ostensibly a #$RTP*VBarTemplate"
+  (punless (indexed-term-p category)
+    (ret nil))
+  (clet (result)
+    (with-mt #$RTPVBarTemplateMt
+      (do-gaf-arg-index-values (template category 1 :index 2 :predicate #$assertTemplate-Reln)
+	(pwhen (genl? template #$VPTemplate)
+	  (csetq result t))))
+    (ret result)))
+
+(define-private extended-vbar-template-category? (category)
+  (ret (cor (vbar-template-category? category)
+	    (rtp-vbar-template-category? category))))
+
+(define-cached predicative-adjp-template-category? (category) (16)
+  "@param CATEGORY atom; ostensibly a ParsingTemplateCategory"
+  (punless (indexed-term-p category)
+    (ret nil))
+  (clet (result)
+    (with-mt *rtp-syntactic-mt* 
+      (csetq result (genl? category #$AdjPTemplate-Predicative)))
+    (ret result)))
+
+(define-cached nominal-category? (category) (16)
+  "@param CATEGORY atom; ostensibly a ParsingTemplateCategory"
+  (punless (indexed-term-p category)
+    (ret nil))
+  (clet (result)
+    (with-mt *rtp-syntactic-mt* 
+      (csetq result (pred-values category #$posForTemplateCategory 2 1)))
+  (ret (member? #$Noun result))))
+
+(define-cached adjectival-category? (category) (16)
+  "@param CATEGORY atom; ostensibly a ParsingTemplateCategory"
+  (punless (indexed-term-p category)
+    (ret nil))
+  (clet (result)
+    (with-mt *rtp-syntactic-mt* 
+      (csetq result (pred-values category #$posForTemplateCategory 2 1)))
+  (ret (member? #$Adjective result))))
+
+(define-private number-template-category? (category)
+  (ret (member? category '(#$NumberTemplate #$OrdinalTemplate))))
+
+
+(define-private verbal-category? (word-cat)
+  "@param WORD-CAT instance of #$SpeechPart"
+  (ret (genl-pos? word-cat #$Verb *rtp-syntactic-mt*)))
+
+
+(define-protected expand-itp-state-completely (state mt ) 
+  (while (plusp (p-queue-size (itp-state-work-set state)))
+    (expand-itp-state state mt))
+  (ret state))
+
+(define-private itp-node-max-child-span-length (node)
+  (clet ((biggest-kid (extremal (rkf-ch-gather-parsing-surrogates (itp-node-new-parse node)) '> 'result-of-parsing-span-length)))
+    (pif biggest-kid
+	 (ret (result-of-parsing-span-length biggest-kid))
+	 (ret 0))))
+
+(define-private itp-output-sorting-function ( item ) 
+  (clet ((span (first item)))
+    (ret (+ (* (length span) 100) (first span)))))
+
+(defparameter-private *compute-top-level-form-only* NIL
+  "Do not even attempt to compute beyond the first level parse. Makes
+   it equivalent to template-parse only.")
+(defparameter-private *compute-all-resolvable-expansions* NIL
+  "When T, expand even those items that could be left as resolvable by
+   other harvesting methods, i.e. NPTemplate, NumberTemplates, etc.")
+
+(deflexical-private *inform-about-pruned-templates* nil)
+(defparameter-private *set-of-attempted-subparses* nil)
+
+
+
+(define-protected compute-correct-span (absolute relative) 
+  "Take the relative span, given the absolute span, and map it into
+   absolute coordinates again. Thus, for absolute (2 3 4), the span
+   (1) should come back as (3). The relative span can be TheList
+   or not."
+  (clet ((offset (second absolute))
+         new-span)
+    (clet ((numeric-part (fif (eq (first relative) #$TheList) (cdr relative) relative))
+           (numeric-base (cdr absolute)))
+      (pwhen (search numeric-part numeric-base) ;;this one is fine
+        (ret relative)))
+    ;; no, it needs work
+    (cdolist (position relative)
+      (pif (numberp position)
+           (cpush (+ offset position) new-span)
+           (cpush position new-span)))
+    (ret (nreverse new-span))))
+
+
+(define-protected adjust-the-spans ( formula span &optional (span-test 'is-this-a-thelist-span?))
+  "Extract the #$TheList spans and adjust the numbers in them to the
+   correct settings, using the span passed in as the base value."
+  (clet ((lists (tree-gather formula span-test))
+	 (base-span (fif (is-this-a-thelist-span? span)
+			 (rest span)
+			 span)))
+    (cdolist (a-span lists)
+      (clet ((spot a-span))
+        (cdolist (number a-span)
+          (pwhen (numberp number)
+	    (clet ((index (nth number base-span)))
+	      (punless (null index)
+		(nsubst index number spot))))
+          (csetq spot (cdr spot)))))
+    (ret formula)))
+
+(define-private is-this-a-thelist-span? (obj)
+  (punless (cand (consp obj)
+		 (eq (car obj) #$TheList)
+		 )
+    (ret nil))
+  (cdolist (part (cdr obj))
+    (punless (fixnump part)
+      (ret nil)))
+  (ret t))
+
+(define-private is-this-a-numeric-span? (obj)
+  (punless (consp obj)
+    (ret nil))
+  (cdolist (part obj)
+    (punless (fixnump part)
+      (ret nil)))
+  (ret t))
+
+(define-private dependent-span-coverage (dependents)
+   "@param LIST of ITP-NODE-P, IS-THIS-A-THELIST-SPAN?, and/or IS-THIS-A-NUMERIC-SPAN? @todo don't just ignore others
+    @return SPAN ; the possibly-fragmented span covered by the specified dependent(s)"
+   (clet ((dep-coverage (new-set))
+	  (dep-span nil))
+     ;; @todo make a faster version of this
+     (cdolist (this-dep dependents)
+       (pcond ((itp-node-p this-dep)
+	       (csetq dep-span (itp-node-span this-dep)))
+	      ((is-this-a-thelist-span? this-dep)
+	       (csetq dep-span (cdr this-dep)))
+	      ((is-this-a-numeric-span? this-dep)
+	       (csetq dep-span this-dep))) ; otherwise ignore it
+       (cdolist (n dep-span)
+	 (set-add n dep-coverage)))
+     (ret (sort (set-element-list dep-coverage) '<))))
+
+(define-protected initial-span-gap (self dependents)
+  "@param ITP-NODE-P ; whose full span we care about
+   @param LIST of ITP-NODE-P, IS-THIS-A-THELIST-SPAN?, and/or IS-THIS-A-NUMERIC-SPAN? @todo don't just ignore others
+   @return SPAN ; the initial span not covered by the specified dependent(s)"
+  (check-type self itp-node-p)
+  (clet ((dep-coverage (dependent-span-coverage dependents))
+	 (initial-span nil)
+	 (span-known? nil))
+    (csome (n (itp-node-span self) span-known?)
+      (pif (member? n dep-coverage)
+	   (csetq span-known? t)
+	   (cpush n initial-span)))
+    (ret (reverse initial-span))))
+
+(define-protected full-span-coverage? (self dependents)
+  "@param ITP-NODE-P ; can some combination of dependents cover self's span?
+   @param LIST of ITP-NODE-P, IS-THIS-A-THELIST-SPAN?, and/or IS-THIS-A-NUMERIC-SPAN? @todo don't just ignore others
+   @return BOOLEANP ; could some combination provide coverage - let others worry about which combinations are 'wff'"
+  (check-type self itp-node-p)
+  (ret (fast-sets-equal? (itp-node-span self) (dependent-span-coverage dependents))))
+
+(deflexical-private *ternary-quant-fns* nil "The ternary NL quantification functions. Derived from the KB; presently just '(#$NLQuantFn-3 #$NLDefinitenessFn-3)")
+
+(define-private get-ternary-quant-fns ()
+  (pwhen (null *ternary-quant-fns*)
+    (clet ((the-fns (ask-variable '?FUNC '(#$and (#$isa ?FUNC #$NLTaggedTermDenotingFunction) (#$isa ?FUNC #$TernaryFunction)) #$EverythingPSC)))
+      (pif the-fns
+	   (csetq *ternary-quant-fns* the-fns)
+	   (csetq *ternary-quant-fns* :none))))
+  (punless (eql *ternary-quant-fns* :none)
+    (ret *ternary-quant-fns*)))
+
+(define-private is-this-a-quant-fn? (obj)
+  (punless (consp obj)
+    (ret nil))
+  (pwhen (member? (first obj) (get-ternary-quant-fns))
+    (ret t))
+  (ret nil))
+
+(define-protected surrogate-multi-word-component? (surrogate)
+  "If the span of the span in (#$TheResultOfParsing <string> (#$TheList ...)  
+   <category>) is bigger than 2, it is a multi-word."
+  (ret (< 2 (length (third surrogate)))))
+
+
+;;{@DOC
+;;
+;; Categorizing Template Parse Support
+;;
+;;}@EDOC
+
+(define-protected reify-itp (&optional (state *last-itp-state-created*))
+  "@param ITP-STATE-P ; starting point
+   Do a depth-first walkdown of the parse tree to find lists of #$Syntactic(Choice)Nodes to enter into the KB."
+  (check-type *rtp-kb-parse-mt* mt-in-any-mt?)
+  ;; @hack since the mt is not permanently in the KB for some reason
+  (punless (fi-assert-int (list #$genlMt *rtp-kb-parse-mt* (first-of *parse-tree-mt* #$ParseTreeSandboxMt)) #$UniversalVocabularyMt)
+    (warn "Couldn't find a parse-tree mt to be a genls of ~A -- some assertions may bomb out accordingly" *rtp-kb-parse-mt*))
+  (clet ((good-roots nil))
+    (cdolist (this-root (itp-state-solution-set state))
+      (punless (itp-node-parent this-root)
+	(clet ((undo-assert-trace? nil))
+	  #+Allegro
+	  (pwhen (cand *rtp-trace-aggressively?*
+		       (cnot (member? 'fi-assert-int (cl:trace))))
+	    (cl:trace fi-assert-int)
+	    (csetq undo-assert-trace? t))
+	  #-Allegro
+	  (ignore undo-assert-trace?)
+	  (clet ((instructions (reify-itp-int this-root))
+		 (more-instructions nil))
+	    (pwhen instructions
+	      (pcond ((null good-roots)
+		      (csetq good-roots this-root))
+		     ((itp-node-p good-roots)
+		      (with-new-syntactic-kb-node (new-node *rtp-kb-parse-mt* :choice t
+							    :options (mapcar 'itp-node-syntactic-node (list this-root good-roots)))
+			(csetq good-roots new-node)))
+		     (t (with-new-syntactic-kb-node (new-node *rtp-kb-parse-mt*)
+			  (syntactic-node-add-dtr new-node (itp-node-syntactic-node this-root) nil *rtp-kb-parse-mt*)))))
+	    (cdolist (this-gaf instructions)
+	      (fi-assert-int this-gaf *rtp-kb-parse-mt*))
+	    (cdolist (this-gaf more-instructions)
+	      (fi-assert-int this-gaf *rtp-kb-parse-mt*)))
+	  #+Allegro
+	  (pwhen undo-assert-trace?
+	    (cl:untrace fi-assert-int)))))
+    (punless good-roots
+      (ret nil))
+    (ret (create-parse-tree-with-root-node (fif (itp-node-p good-roots)
+						(itp-node-syntactic-node good-roots)
+						good-roots)
+					   *rtp-kb-parse-mt*))))
+
+(define-protected reify-itp-int (self)
+  ;; This function recurses through the ITP chart, creating/reifying ITP nodes in the KB as necessary
+  ;; (i.e., when they weren't generated via the PSP), and stitching together proposed meanings
+  ;; for VPs and Ss out of their constituents.
+  ;; For each node, first reify that node if necessary - determining whether it needs to be a choice
+  ;; node, hooking it up to the parent, assigning the appropriate words' strings, and so on.
+  ;; When recursion emerges to the root level - i.e., when the semantics are to joinTemplateComponents
+  ;; the subject and object - replace the (presumed) :SUBJECTs or #$TheSentenceSubjects in the
+  ;; VP's meaning with each possibility for the subject NP.
+  (clet ((itp-leaf? (cand (null (itp-node-children self)) (null (itp-node-syntactic-node self))))
+	 (valid-children (funless itp-leaf? (itp-node-get-legitimate-children self)))
+	 (these-instructions nil))
+    (pwhen (cand (null valid-children)
+		 (cnot itp-leaf?))
+      (ret nil))
+    (clet ((my-component (itp-node-component self))
+	   (my-category (fwhen (result-of-parsing-formula? my-component) (result-of-parsing-category my-component)))
+	   (my-real-parent (itp-node-parent self))
+	   (my-kb-parent nil)
+	   (my-kb-node (itp-node-syntactic-node self))
+	   (my-meaning (itp-node-new-parse self)))
+      (pwhen (null my-category)		; presume it's a (possibly embedded) sentence
+	(csetq my-category (fif my-real-parent #$SyntacticNode-Sentential #$SyntacticNode-MatrixClause)))
+      (pwhen my-real-parent
+	(csetq my-kb-parent (itp-choice-node-for-component my-real-parent my-component))
+	;; @note avoid double processing during first-of -- maddening during debugging
+	(punless my-kb-parent
+	  (csetq my-kb-parent (itp-node-syntactic-node my-real-parent))))
+      (pwhen (itp-node-p my-real-parent)
+	(csome (other-child (itp-node-get-legitimate-children my-real-parent) my-kb-node)
+	  (punless (equal other-child self)
+	    (pwhen (equal (itp-node-component self) (itp-node-component other-child))
+	      (csetq my-kb-node (itp-node-syntactic-node other-child))))))
+      (pwhen (null my-kb-node)		; create my own node - presently not getting pre-set at all
+	(with-new-syntactic-kb-node-w/gafs (new-node *rtp-kb-parse-mt* new-gafs these-instructions
+						     :category my-category :choice nil)
+	  (csetq my-kb-node new-node)
+	  (pcond ((result-of-parsing-formula? my-component)
+		  (cpush (list #$syntacticNodeString my-kb-node (result-of-parsing-words my-component)) these-instructions))
+		 ((join-template-components-node-p self)
+		  (cpush (list #$syntacticNodeString my-kb-node (join-template-components-node-word-list self)) these-instructions)))
+	  ;; hook up children that only the PSP parse tree (not, e.g., the ITP chart) knows about
+	  (cdolist (child valid-children)
+	    (clet ((this-child-node (itp-node-syntactic-node child)))
+	      (pwhen (cand this-child-node
+			   (null (ask-variable '?N `(#$syntacticNodeNthDaughter ,my-kb-node ?N ,this-child-node))))
+		(syntactic-node-add-dtr my-kb-node this-child-node nil *rtp-kb-parse-mt*)
+		(pwhen (full-span-coverage? self (list child))
+		  (cdolist (meaning (syntactic-node-proposed-meanings this-child-node *rtp-kb-parse-mt*))
+		    (cpush (list #$dependentMeaning my-kb-node meaning this-child-node meaning) these-instructions))))))))
+      (csetf (itp-node-syntactic-node self) my-kb-node) ;; in case it was set by the above 2 sections
+      (pwhen (cand (eql my-category #$VPTemplate)
+		   (null valid-children)
+		   (isa-in-any-mt? my-kb-parent #$SyntacticChoiceNode))
+	(cpush (list #$excludedOptionNodes my-kb-parent my-kb-node) these-instructions))
+      ;; hook myself up to my parent, if any, in the KB
+      (pwhen (cand my-real-parent (null my-kb-parent))
+	(csetq my-kb-parent (itp-node-syntactic-node my-real-parent)))
+      (pwhen my-kb-parent
+	(pcond ((isa-in-any-mt? my-kb-parent #$SyntacticChoiceNode)
+		;; redundant #$optionNode gafs are harmless
+		(cpush (list #$optionNodes my-kb-parent my-kb-node) these-instructions))
+	       ;; OTOH if we skip this check we do produce extraneous NthDaughter gafs
+	       ((null (ask-variable '?N `(#$syntacticNodeNthDaughter ,my-kb-parent ?N ,my-kb-node) *rtp-kb-parse-mt*))
+		(syntactic-node-add-dtr my-kb-parent my-kb-node nil *rtp-kb-parse-mt*))))
+      ;; go through my (legitimate) children and hook them up
+      (cdolist (this-child valid-children)
+	;; @note this has to appear at this point to get the NthDaughter gafs right
+	(cmultiple-value-bind (answer the-gafs) (itp-node-find-or-initialize-syntactic-choices self (itp-node-component this-child))
+	  (pwhen answer
+	    (cdolist (gaf the-gafs)
+	      (cpush gaf these-instructions))))
+	(clet ((gafs (reify-itp-int this-child))
+	       (join-component? (join-template-components-node-p self))
+	       (need-component? (cand (cnot join-component?)
+				      (boolean (tree-find-if 'result-of-parsing-formula? my-meaning))))
+	       (kids-component (fwhen need-component? (itp-node-component this-child))))
+	  (pcond ((proper-list-p gafs)
+		  (cdolist (this-gaf gafs)
+		    (cpush this-gaf these-instructions)
+		    (pwhen (cand need-component?
+				 (eql (formula-arg1 this-gaf) (itp-node-syntactic-node this-child))
+				 (cor (eql (formula-arg0 this-gaf) #$proposedMeaning)
+				      (eql (formula-arg0 this-gaf) #$dependentMeaning)))
+		      (clet ((kids-meaning (formula-arg2 this-gaf))
+			     (this-meaning (tree-substitute my-meaning kids-component kids-meaning)))
+			(pwhen (equalp this-meaning my-meaning)
+			  (csetq this-meaning (copy-tree kids-meaning)))
+			(punless (eql (formula-arg0 this-meaning) #$SubLQuoteFn)
+			  (csetq this-meaning (list #$SubLQuoteFn this-meaning)))
+			;; @todo handle ambiguities
+			(cpush (list #$dependentMeaning my-kb-node this-meaning (itp-node-syntactic-node this-child) kids-meaning)
+			       these-instructions)))))
+		 ((null *kb-node-gathering-mode?*)) ;; in this case, no gafs is fine
+		 ;; otherwise we should _at least_ get (isa node #$Syntactic(Choice)Node), so silence indicates abort
+		 (t (kill-syntactic-node-tree my-kb-node)
+		    (ret nil)))))
+      (pwhen (cand (join-template-components-node-p self)
+		   (isa? my-kb-node #$SyntacticNode-Sentential *rtp-kb-parse-mt*)
+		   ;; @todo handle other combos
+		   (equal (formula-arg1 my-meaning) '(#$TheList #$NPTemplate #$VPTemplate)))
+	(cdestructuring-bind (subj-component vp-component) (formula-args (formula-arg2 my-meaning))
+	  (clet ((subj-options nil) (subj-nodes nil)
+		 (vp-options nil) (vp-nodes nil))
+	    ;; make sure we gather all the relevant children
+	    (cdolist (this-child valid-children)
+	      (clet ((this-component (itp-node-component this-child))
+		     (this-node (itp-node-syntactic-node this-child)))
+		(pcond ((equal this-component subj-component)
+			(cpush this-node subj-nodes))
+		       ((equal this-component vp-component)
+			(cpush this-node vp-nodes)))))
+	    ;; make sure we gather all the relevant nodes, and their supposed meanings
+	    (cdolist (this-gaf these-instructions)
+	      (pwhen (cor (eql (formula-arg0 this-gaf) #$proposedMeaning)
+			  (eql (formula-arg0 this-gaf) #$dependentMeaning))
+		(pcond ((member? (formula-arg1 this-gaf) subj-nodes)
+			(cpushnew (list (formula-arg1 this-gaf) (formula-arg2 this-gaf)) subj-options 'equal))
+		       ((member? (formula-arg1 this-gaf) vp-nodes)
+			(cpushnew (list (formula-arg1 this-gaf) (formula-arg2 this-gaf)) vp-options 'equal)))))
+	    (cdolist (node subj-nodes)
+	      (push-node-meaning-pairs-from-syntactic-node subj-options node :mt *rtp-kb-parse-mt*))
+	    (cdolist (node vp-nodes)
+	      (push-node-meaning-pairs-from-syntactic-node vp-options node :mt *rtp-kb-parse-mt*))
+	    (pif (cor (null subj-options)
+		      (null vp-options))
+		 (warn "*** can't build any meaning combinations for ~A" my-kb-node)
+		 (cdolist (this-vp-option vp-options)
+		   (cdestructuring-bind (vp-node vp-meaning) this-vp-option
+		     (cdolist (this-subj-option subj-options)
+		       (cdestructuring-bind (subj-node subj-meaning) this-subj-option
+			 (clet ((joined-meaning (tree-substitute vp-meaning #$TheSentenceSubject subj-meaning)))
+			   (csetq joined-meaning (tree-substitute joined-meaning :SUBJECT subj-meaning))
+			   (cpush (list #$dependentMeaning my-kb-node joined-meaning vp-node vp-meaning) these-instructions)
+			   (cpush (list #$dependentMeaning my-kb-node joined-meaning subj-node subj-meaning) these-instructions))))))
+		 )))) ;; end pif, clet, cdestructuring-bind, pwhen (join-component? etc)
+      (punless (tree-find-if 'result-of-parsing-formula? my-meaning)
+	(cpush (list #$proposedMeaning my-kb-node my-meaning) these-instructions))
+      (cdolist (this-gaf (itp-node-get-dominance-gafs self))
+	(cpush this-gaf these-instructions))
+      )					; end (clet my-component etc...
+    (ret (reverse these-instructions))))
+
+(define-protected cat-itp ( &optional (state *last-itp-state-created*))
+  "Perform the breadth-first walkdown of the parse tree to compute the
+   answers we want to return. Individual nodes are computed via 
+   PERFORM-SOLUTION-NODE-ANALYSIS."
+  (check-type state itp-state-p)
+  (clet ((answers (itp-state-solution-set state))
+         (todo (enqueue-solution-roots (create-queue) answers))
+	 (result-hash (make-hash-table 16 #'equalp))
+	 (global-sub-list nil)
+         span section results sub-list)
+    (while (cnot (queue-empty-p todo))
+      (clet ((curr (dequeue todo))             
+             (the-span (itp-node-span curr)))
+	;; are we still talking about the same subpart?
+        (punless (equal span the-span)
+          (punless (null section)
+	    (cdolist (cycl section)
+	      (pushnew-hash span cycl result-hash #'equal)))
+          (csetq span the-span)
+	  (csetq section nil))
+	;; process current node
+	(cmultiple-value-setq (section sub-list)
+			      (perform-solution-node-analysis state curr section todo))
+	(csetq global-sub-list (cconcatenate global-sub-list sub-list))
+	))
+    ;; flush the accumulators
+    (punless (null section)
+      (cdolist (cycl section)
+	(pushnew-hash span cycl result-hash #'equal)))
+    (cdohash (span cycl result-hash)
+      (cpushnew (list span cycl) results #'equal))
+    (clet (temp-results
+	   temp-result)
+      (cdolist (result results)
+	(csetq temp-result result)
+	(cdolist (sub global-sub-list)
+	  (csetq temp-result (subst (second sub)
+				    (first sub)
+				    temp-result #'equal))
+	  (pwhen (cand
+		  (listp temp-result)
+		  (listp (second temp-result))
+		  (assertion-p (first (second temp-result))))
+	    (csetq temp-result
+		   (list (first temp-result)
+			 (cconcatenate (second temp-result)
+			   (third sub))))))
+	(cpushnew temp-result temp-results #'equal)
+	)
+      (csetq results temp-results))
+    ;;do all the subs in global-sub-list
+    
+    ;; done, done done
+    (ret (sort-itp-results results))))
+
+(define-protected transform-nl-quant-forms (formula span-incr)
+  (pwhen (nl-attr-w-location? formula)
+    (clet ((incremented (replace-formula-arg 3 (+ span-incr (formula-arg3 formula)) formula)))
+      (csetq formula incremented)))
+  (pcond ((atom formula) ;;don't use fort-p here, since numbers should also trigger it
+	  (ret formula))
+	 ((fort-p formula)
+	  (ret formula))
+	 ((el-formula-p formula)
+	  (pif (expression-find-if 'nl-attr-w-location? formula)
+	       (ret (cons (transform-nl-quant-forms (formula-arg0 formula) span-incr)
+			  (transform-nl-quant-forms (formula-args formula) span-incr)))
+	       (ret formula)))))
+	  
+(define-private nl-attr-w-location? (formula) 
+  (ret (cand (member? (formula-arg0 formula) '(#$NLDefinitenessFn #$NLQuantFn #$NLDefinitenessFn-3 #$NLQuantFn-3))
+	     (formula-arity= formula 3)
+	     )))
+
+(define-private sort-itp-results (parses)
+  (clet (result)
+    (cdolist (constit parses)
+      (clet ((constit-span (first constit))
+	     constit-good-result
+	     constit-bad-result)
+	(cdolist (cycl (first (rest constit)))
+	  (pif (rtp-contains-invalid-surrogate? cycl parses)
+	       (cpush cycl constit-bad-result)
+	       (cpush cycl constit-good-result)))
+	(cpush (list constit-span 
+		     (cconcatenate 
+			 (reverse constit-good-result)
+		        (reverse constit-bad-result)))
+	       result)))
+    (ret 
+      (sort result #'> #'itp-output-sorting-function))))
+
+(define-private rtp-contains-invalid-surrogate? (parse parses)
+  (clet ((surrogates #+Cyc-RKF (rkf-ch-gather-parsing-surrogates parse))
+	 invalid?)
+    (punless surrogates
+      (ret nil))
+    (csome (surrogate surrogates invalid?)
+      (clet ((surrogate-index 
+	  (rkf-ch-parsing-surrogate-token-index-list surrogate)))
+	(punless (find surrogate-index parses 'equal 'first)
+	  (csetq invalid? t))))
+  (ret invalid?)))
+
+  
+  
+
+(define-private unassembled-phrase? (formula)
+  "is FORMULA an #$AssemblePhraseFn in which not all the arguments are strings?
+   @param FORMULA formula"
+  (ret (cand (listp formula)
+	     (eq (formula-arg0 formula) #$AssemblePhraseFn)
+	     (find-if-not #'stringp (rest formula) ))))
+        
+(define-private transform-assemble-phrases (formula)
+  (ret (values (transform formula 
+			  #'unassembled-phrase?
+			  #'rewrite-assemble-phrase
+			  ))))
+
+(define-private perform-solution-node-analysis ( state node section todo-list)
+  "Perform the analysis on the node, like adding plain solutions to
+   section, descending into joinTemplateComponents, etc. Children that
+   still need work go to the todo-list. state is available for cache lookup.
+   Returns the new state of section."
+  (ignore state)
+  (clet ((expression (transform-assemble-phrases (itp-node-new-parse node)))
+         (assertion (itp-node-assertion node))
+	 (join-templates? (has-join-template-components? expression))
+	 (span-start (first (itp-node-span node)))
+	 solution-list)
+    (pcond
+     ((cor (has-substitutable-children? expression)
+	   (tp-substitutable-formula? expression)
+	   join-templates?)
+      ;; process each kid that solve this sub-problem
+      (cdolist (child (itp-node-children node))
+	(pcond
+	 ((cor
+	   (tp-substitutable-formula? (itp-node-component child))
+	   (substitutable-child-node? child))
+	  ;;watch out, the substitutable node may also have unsubstitutable children that need to be added to the output.
+	  (clet ((modifieds (tp-do-substitutions expression child todo-list)))
+	    (cdolist (modified modifieds)
+	      (clet 
+		  ((cycl (first modified))
+		   (asserts (second modified))		   
+		   (reformulated (fif (has-join-template-components? cycl)
+				      (reformulate-jointemplatecomponents cycl)
+				      cycl))
+		   (assertion-set (cons assertion asserts)))
+		(pwhen reformulated 
+		  (csetq reformulated (transform-assemble-phrases reformulated))
+		  (punless (partial-parses? reformulated)
+		    (cdolist (diff (find-differences expression reformulated))
+		      (cpushnew (list (first diff) (second diff) assertion-set) solution-list #'equal)
+		      )
+		    ;;@hack following pwhen probably over-kill, need to think through more clearly.
+		    (pwhen (has-join-template-components? reformulated)
+		      (csetq reformulated (reformulate-jointemplatecomponents reformulated)))
+		    ;;sometimes these haven't had all their children substituted yet, so the #$joinTemplateComponents is still there.  However, it will be taken care of later on in the todo-list
+		    (punless (has-join-template-components? reformulated)
+		      (cpushnew (build-return-format reformulated assertion-set span-start)
+				section #'equal))))))))
+	 (t
+	  (cdolist (child (itp-node-children node))
+	    (punless (queue-find child todo-list #'equalp)
+	      (enqueue child todo-list)))))))
+     (t
+      (pwhen expression
+	(cpushnew (build-return-format 
+		   ;;@hack this join-template check is probably over-kill
+		   (fif (has-join-template-components? expression)
+			(reformulate-jointemplatecomponents expression)
+			expression)
+		   (list assertion)
+		   span-start)
+		  section #'equal))
+      (cdolist (child (itp-node-children node))
+	(punless (queue-find child todo-list #'equalp)
+	  (enqueue child todo-list)))))
+    (ret (values (rtp-sort-constit-parses section) solution-list))))
+
+(define-private rtp-sort-constit-parses (parses)
+  (ret parses))
+
+
+(define-protected merge-parse-results (parse1 parse2)
+  "@hack at present, only works for :simple results"
+  ;;;need to make sure that this works for null parses;;;
+  (clet ((parse-iterator1 (new-itp-result-iterator parse1))
+	 (parse-iterator2 (new-itp-result-iterator parse2))
+	 result)
+    (while (cnot (itp-result-iterator-done? parse-iterator1))
+      (clet ((span-iterator1 (itp-result-iterator-curr parse-iterator1))
+	     (span (itp-section-iterator-span span-iterator1))
+	     (span-iterator2 
+	      (find-itp-section-iterator parse-iterator2 span))
+	     span-result)
+	(pwhen span-iterator2
+	  (csetq span-result (itp-section-iterator-section span-iterator2)))
+	(csetq span-result (cconcatenate span-result
+			     (itp-section-iterator-section span-iterator1)))
+	(cpush `(,span ,span-result) result))
+      (itp-result-iterator-next parse-iterator1))
+    (while (cnot (itp-result-iterator-done? parse-iterator2))
+      (clet ((span-iterator2 (itp-result-iterator-curr parse-iterator2))
+	     (span (itp-section-iterator-span span-iterator2))
+	     (span-iterator1
+	      (find-itp-section-iterator 
+	       parse-iterator1 span))
+	     span-result)
+	(punless span-iterator1
+	  (csetq span-result (itp-section-iterator-section span-iterator2))
+	  (cpush `(,span ,span-result) result)))
+      (itp-result-iterator-next parse-iterator2))
+    (ret (sort result '> 'itp-output-sorting-function))))
+
+(define-private find-differences (list1 list2 &optional (test 'equalp))
+  "@param LIST1 formula
+   @param LIST2 formula 
+   @param TEST function
+   @return list; a list of pairs of formulas
+   Given two formulas, this function finds the differences in them by comparing their 
+   arg0 positions.  If the arg0's are the same, it recurs on the cdrs, while if they 
+   are different, it returns the formulas as a pair."
+  (pcond ((funcall test list1 list2)
+	    (ret nil))
+	   ((cor (constant-p list1)
+		 (constant-p list2))
+	    (ret (list (list list1 list2))))
+	   ((cand (cor (atom (car list1))
+		       (atom (car list2)))
+		  (cnot (funcall test (car list1) (car list2))))
+	    (ret (list (list list1 list2))))
+	   (t
+	    (ret (cconcatenate 
+		     (find-differences (car list1) (car list2))
+		     (find-differences (cdr list1) (cdr list2)))))))
+
+(define-private build-return-format (sem assertion span-start)
+  "@param SEM formula
+   @param ASSERTIONS assertion
+   @return list; a list that either is the output, or is a list containing the cycl as the
+     first element, followed by any extra material"
+  (csetq sem (transform-nl-quant-forms sem span-start))
+  (pcase *rtp-return-style*
+    (:simple (ret SEM))
+    (:assertion (ret (list SEM assertion)))))
+
+(define-private cat-for-result (justification)
+  "given a particular justification, return the syntactic category thereof
+   @hack if there are several justifications, just take the category of the first one
+   @param JUSTIFICATION list of assertions or constant
+   @return atom; an instance of #$TemplateParserCategory"
+  (pcond ((cand (listp justification) (assertion-p (first justification)))
+	  (ret (gaf-arg1 (first justification))))
+	 (t (ret (first justification)))))
+
+(define-private force-for-result (justification)
+  "given a particular justification, return the sentential force thereof
+   @hack normalizes predicates in code rather than looking in the KB
+   @hack if there are several justifications, just take the force of the first one
+   @param JUSTIFICATION list of assertions or constant
+   @return atom; an instance of #$ParseTemplatePredicate; note that sentential force is assumed
+                 to be carried by the predicate"
+  (pcond ((cand (listp justification)
+		(cor (eq (first justification) #$NPTemplate)
+		     (np? (first justification))))
+	  (ret #$termTemplate))
+	 ((cand (listp justification)
+		(cor (member? (first justification) '(#$STemplate #$VPTemplate))
+		     (vbar? (first justification))))
+	  (ret #$assertTemplate))
+	 ((eq (first justification) #$Adjective)
+	  (ret #$termTemplate))
+	 ((cand (listp justification) (assertion-p (first justification)))
+	  (clet ((pred (gaf-arg0 (first justification))))
+	    (pcase pred
+	      (#$termTemplate (ret #$termTemplate))
+	      (#$termTemplate-Reln (ret #$termTemplate))
+	      (#$termTemplate-Test (ret #$termTemplate))
+	      (#$assertTemplate (ret #$assertTemplate))
+	      (#$assertTemplate-Reln (ret #$assertTemplate))
+	      (#$assertTemplate-Test (ret #$assertTemplate))
+	      (#$queryTemplate (ret #$queryTemplate))
+	      (#$queryTemplate-Reln (ret #$queryTemplate))
+	      (#$queryTemplate-Test (ret #$queryTemplate))
+	      )))
+	 (t (warn "sent ~S to force-for-result~%" justification)
+	    (ret nil))))
+
+(define-private tp-do-substitutions (expression node todo-list)
+  (ret (tp-do-substitutions-int (list expression nil) node todo-list)))
+
+(define-private tp-do-substitutions-int (expression node todo-list)
+  "Given a particular Cycl sentence and a NODE that contains something that can be substituted
+    into the sentence, determine if the semantics of any of the children on of NODE should 
+    be substituted into EXPRESSION.  Perform this recursively, since some of the children 
+    might themselves need substitution.
+   @param EXPRESSION sentence; a two-element list containing a cycl-sentence and an assertion-list
+   @param NODE itp-node
+   @param TODO-LIST list
+   @return list; a list of cycl sentences/assertion-list pairs"
+  (clet (result
+	 this-result)
+    (pcond 
+	   ((substitutable-child-node? node)
+	    (csetq this-result (list (subst (itp-node-new-parse node)
+					    (itp-node-component node)
+					    (first expression) #'equalp)
+				     (cons (itp-node-assertion node) (second expression))))
+	    (pcond
+	     ((has-substitutable-children? (first this-result))
+	      (cdolist (child (itp-node-children node))
+		(cdolist (child-result (tp-do-substitutions-int this-result child todo-list))
+		  (cpush child-result
+			 result))))
+	     (t 
+	      (cpush this-result result)
+		(punless (queue-find node todo-list #'equalp)
+		  (enqueue node todo-list)))))
+	   ((tp-substitutable-formula? (first expression))
+	    (cpush (list (itp-node-new-parse node) 
+			 (list (itp-node-assertion node)))
+		   result)
+	      (punless (queue-find node todo-list #'equalp)
+		(enqueue node todo-list)))
+	   (t
+	    (csetq result (list expression))
+	    (punless (queue-find node todo-list #'equalp)
+	      (enqueue node todo-list))
+	    ))
+  (ret result)))
+
+(define-private tp-substitutable-formula? (formula)
+  (punless (el-expression? formula)
+    (ret nil))
+  (clet ((arity (expression-arity formula)))
+    (ret (cand (integerp arity)
+	       (= arity 4)
+	       (result-of-parsing-formula? formula)
+	       (member (formula-arg3 formula) '(#$STemplate #$QuestionTemplate))
+	       ))))
+
+(define-private substitutable-child-node? ( node)
+  (ret (substitutable-child-formula? (itp-node-component node))))
+      
+(define-private substitutable-child-formula? (formula)
+  (pwhen (listp formula)
+    (ret 
+      (cand (result-of-parsing-formula? formula)
+      (verbal-template-category? (result-of-parsing-category formula)))))
+  (ret nil))
+
+(define-private enqueue-solution-roots ( queue answers)
+  (cdolist (node answers)
+    (punless (itp-node-parent node) ;;this node is accessible from another
+      (enqueue node queue)
+      )
+    )
+  (ret queue))
+
+(define-private join-template-components-p (formula)
+  (ret (eql (formula-arg0 formula) #$joinTemplateComponents)))
+
+(define-private join-template-components-node-p (node)
+  (pwhen (cand (itp-node-p node)
+	       (join-template-components-p (itp-node-new-parse node)))
+    (ret (itp-node-new-parse node))))
+
+(define-private join-template-components-word-list (formula)
+  (pwhen (join-template-components-p formula)
+    (clet ((all-words nil))
+      (do-formula-args (result (formula-arg2 formula))
+	(pwhen (result-of-parsing-formula? result)
+	  (cdolist (this-word (rkf-ch-string-tokenize (result-of-parsing-words result)))
+	    (cpush this-word all-words))))
+      (ret (bunge (reverse all-words))))))
+
+(define-private join-template-components-node-word-list (node)
+  (clet ((formula (join-template-components-node-p node)))
+    (pwhen formula
+      (ret (join-template-components-word-list formula)))))
+
+(define-private has-join-template-components? ( formula)
+  (ret (cand *perform-template-component-join*
+             (tree-find #$joinTemplateComponents formula))))
+
+(define-private has-substitutable-children? (formula)
+  (ret (tree-find-if 'substitutable-child-formula? formula)))
+
+(define-private partial-parse-filter-function (item)
+  (ret (cor (eq item #$TheSentenceSubject)
+            (keywordp item))))
+
+(define-private partial-parses? (formula)
+  (ret (tree-find-if #'partial-parse-filter-function formula)))
+
+          
+;;;{{{TEST
+;;; 
+;;; @section Unit Tests
+
+(pwhen-feature :Cyc-Testing
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Unit Test Helpers
+
+(pwhen-feature :Cyc-SUnit
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Helper constants
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Helper functions
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Define needed test categories
+
+  (define-test-category "Template Parsing Category")
+  (define-test-suite "Template Parsing with KB Battery"
+      (list "Template Parsing Category"))
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Define test cases
+  (define-test-case (test-battery-for-template-parsing-into-kb "iterative-template-parser" "cycl"
+						       :categories (list "Template Parsing Category"))
+    (def-instance-method setup () :protected)
+    (def-instance-method cleanup () :protected)
+    (def-instance-method jim-is-blue () :protected)
+    ;; Your basic RTP test routine should call something like the following:
+    ;;(clet ((*rtp-kb-parse-mt* #$ToyParseTreeMt-FullSentences))
+    ;;  (progn (itp-nuke-syntactic-nodes) (rtp-parse-exp-w/vpp "Bill Clinton is blue" #$STemplate #$RKFParsingMt)))
+    ;; ... and, starting with the resulting reified root node, go looking for things like subjects
+    ;; with appropriate meanings, verbs which are represented as their own nodes, VP (and constituents)
+    ;; with appropriate meanings, and joined (root-level) meanings where possible... which is to say,
+    ;; in any tree which doesn't have an unresolved choice node gumming up the works.
+    ;; Speaking of, some tests should take sentences that produce choice nodes, assert enough gafs
+    ;; to resolve said choices, and test to make sure everything works out right. Unfortunately,
+    ;; I'm not sure the code will explicitly join the meanings together once all the choices are
+    ;; sorted out... perhaps a forward rule should replace that code
+    ;;
+    ;; Should probably also create an mt for the tests on the fly, and kill it when done, especially
+    ;; if one's going to go around nuking the syntactic nodes
+    ;;
+    ;; check to make sure that the PSP isn't leaving incomplete+unusable subtrees lying around...
+    ;;   DavidB should have a bug on this assigned to him
+    ;;
+    ;; check that all the bookkeepy stuff (creator, part of speech, strings, etc) are as expected
+    ;;
+    ;; make sure that sentences are generating _complete_ parse trees (factoring choice nodes in)
+    )
+  
+  (def-setup-method (test-battery-for-template-parsing-into-kb :protected) ()
+    (ret nil)
+    )
+  
+  (def-cleanup-method (test-battery-for-template-parsing-into-kb :protected) ()
+    (ret nil)
+    )
+  
+  (def-test-method (jim-is-blue test-battery-for-template-parsing-into-kb :protected) ()
+    (ret nil)
+    )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Define test suites
+
+) ;; close (pwhen-feature :Cyc-SUnit
+
+) ;; close (pwhen-feature :Cyc-Testing
+
+;;; 
+;;;}}}ETEST

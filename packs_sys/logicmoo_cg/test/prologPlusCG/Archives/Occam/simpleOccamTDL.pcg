@@ -1,0 +1,42 @@
+
+event([Act = [Propel]-
+                  -actor->[Human :Karen = [Human: Karen]-
+						-Age->[Age:Kid],
+						-Hair->[Hair]-Color->[Color:Blond],
+						-Eyes->[Eyes]-Color->[Color:Blue]
+		        ],
+                  -object->[Air],
+                  -to->[Balloon = [Balloon]-
+					-size->[SizeValue : small],
+					-Color->[Color : Yellow]
+		     ]	
+      ]-after->[State = [Inflated]-
+			-actor->[Human: Karen],
+			-object->[Balloon =  [Balloon]-
+						-size->[SizeValue : small],
+						-Color->[Color : Yellow]
+				],
+			-State_Value->[State_Value:Yes_State_Value]
+	      ]).
+
+genRule([Act = [_Act]-object->[_Object = _obj]]-after->[State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object = _obj]],
+        [_Act = [_Act]-object->[_Object]]-result->[_State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object]]).
+
+genRule([Act = [_Act]-to->[_Object = _obj]]-after->[State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object = _obj]],
+        [_Act = [_Act]-to->[_Object]]-result->[_State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object]]).
+
+tdl(_newEvt, _genSchema) :-
+  genRule(_pattern, _genSchema),
+  _pattern = _newEvt,
+  writeln(_pattern),
+  asserta(genRule([Act = [_Act]-to->[_Object]]-after->[State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object]], 
+	 _genSchema), []), !.
+
+run(s) :-
+  event(_evt),
+  tdl(_evt, s).

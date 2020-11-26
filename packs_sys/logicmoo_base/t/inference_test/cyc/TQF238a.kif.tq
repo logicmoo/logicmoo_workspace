@@ -1,0 +1,162 @@
+(note TQF238a)
+
+(instance HYP-TransnationalCriminalOrganization-5109197 CovertAgent) 
+
+(formulaEquiv 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh) 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh)) 
+
+(evaluate 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TransnationalCriminalOrganization-5109197 
+ (secrecyOfOperations HYP-TransnationalCriminalOrganization-5109197 VeryHigh))) 
+
+(evaluate 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TerroristGroup-24474319 
+ (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh) )) 
+
+(instance HYP-TerroristGroup-24474319 CovertAgent) 
+
+(implies 
+ (instance ?AGENT CovertAgent) 
+ (goalCategoryForAgent ?AGENT 
+ (secrecyOfOperations ?AGENT VeryHigh) SelfPreservationGoal)) 
+
+(implies 
+ (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+ (desires ?AGT ?FORM)) 
+
+(instance HYP-TransnationalCriminalOrganization-5109197 CovertAgent) 
+
+(formulaEquiv 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh) 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh)) 
+
+(evaluate 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TransnationalCriminalOrganization-5109197 
+ (secrecyOfOperations HYP-TransnationalCriminalOrganization-5109197 VeryHigh))) 
+
+(evaluate 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TerroristGroup-24474319 
+ (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh))) 
+
+(instance HYP-TerroristGroup-24474319 CovertAgent) 
+
+(implies 
+ (instance ?AGENT CovertAgent) 
+ (goalCategoryForAgent ?AGENT 
+ (secrecyOfOperations ?AGENT VeryHigh) SelfPreservationGoal)) 
+
+(implies 
+ (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+ (desires ?AGT ?FORM)) 
+
+(formulaEquiv 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM 
+ (The Agent)))) 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM 
+ (The Agent))))) 
+
+(evaluate 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM 
+ (The Agent)))) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TerroristGroup-24474319 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM HYP-TerroristGroup-24474319))))) 
+
+(desires HYP-TerroristGroup-24474319 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM HYP-TerroristGroup-24474319) ) ) ) 
+
+(evaluate 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM 
+ (The Agent)))) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TransnationalCriminalOrganization-5109197 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM HYP-TransnationalCriminalOrganization-5109197))))) 
+
+(desires HYP-TransnationalCriminalOrganization-5109197 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM HYP-TransnationalCriminalOrganization-5109197)))) 
+
+(implies 
+ (instance ?AGT Agent) 
+ (desires ?AGT 
+ (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM ?AGT))))) 
+
+(instance HYP-TerroristGroup-24474319 TerroristGroup) 
+
+(subclass TerroristGroup Agent) 
+
+(instance HYP-TransnationalCriminalOrganization-5109197 TransnationalCriminalOrganization) 
+
+(subclass TransnationalCriminalOrganization Agent) 
+
+(query (findall (?GENERIC-TERROR-GOAL ?GENERIC-CRIMINAL-GOAL)
+
+(=> 
+(and 
+(instance ?TERROR-GROUP TerroristGroup) 
+(sponsors ?AGENT ?TERROR-GROUP) 
+(instance ?CRIMINAL-ORG TransnationalCriminalOrganization) 
+(operatesInRegion ?CRIMINAL-ORG ?REGION)) 
+(exists 
+(?TERROR-GOALS) 
+(exists 
+(?CRIMINAL-GOALS) 
+(and 
+(desires ?TERROR-GROUP ?TERROR-GOALS) 
+(desires ?CRIMINAL-ORG ?CRIMINAL-GOALS) 
+(evaluate ?GENERIC-TERROR-GOAL 
+(SubstituteFormulaFn 
+(The Agent) ?TERROR-GROUP ?TERROR-GOALS)) 
+(evaluate ?GENERIC-CRIMINAL-GOAL 
+(SubstituteFormulaFn 
+(The Agent) ?CRIMINAL-ORG ?CRIMINAL-GOALS)) 
+(formulaEquiv ?GENERIC-TERROR-GOAL ?GENERIC-CRIMINAL-GOAL)))))
+
+))
+
+(answer (list  (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh)) (list  (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh))
+)
+(answer (list  (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM HYP-TerroristGroup-24474319) ) )
+(list  (not 
+ (thereExists ?HARM 
+ (maleficiary ?HARM HYP-TerroristGroup-24474319) ) )
+)
+
+(end_of_file)
+

@@ -1,0 +1,21 @@
+local_reine(rn1,1,1).
+local_reine(rn1,1,2).
+local_reine(rn1,1,3).
+local_reine(rn1,1,4).
+local_reine(rn2,2,1).
+local_reine(rn2,2,2).
+local_reine(rn2,2,3).
+local_reine(rn2,2,4).
+local_reine(rn3,3,1).
+local_reine(rn3,3,2).
+local_reine(rn3,3,3).
+local_reine(rn3,3,4).
+local_reine(rn4,4,1).
+local_reine(rn4,4,2).
+local_reine(rn4,4,3).
+local_reine(rn4,4,4).
+non_menacee(a,b,c,d):-not(eq(b,d)),val(a1,sub(a,c)),val(a2,sub(c,a)),val(a3,sub(b,d)),not(eq(a1,a3)),not(eq(a2,a3)), /.
+solution(L):-reine1(x,L).
+reine1(x, (x|L)):-local_reine(rn1,1,x),reine2(y,L),non_menacee(1,x,2,y).
+reine2(y,(y|L)):-local_reine(rn2,2,y),reine3(z,L),non_menacee(1,x,3,z),non_menacee(2,y,3,z).
+reine3(z,(z,t)):-local_reine(rn3,3,z),local_reine(rn4,4,t),non_menacee(1,x,4,t),non_menacee(2,y,4,t),non_menacee(3,z,4,t).

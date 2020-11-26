@@ -1,0 +1,15 @@
+// Run using
+//
+//    r.js -o build.js
+//
+// Keep this in sync with swish.js.  There must be another way to do this ...
+
+({ baseURL: ".",
+   @CONFIG@
+
+   generateSourceMaps: true,
+   preserveLicenseComments: false,
+
+   name: "swish",
+   out: "swish-min.js.new"
+})

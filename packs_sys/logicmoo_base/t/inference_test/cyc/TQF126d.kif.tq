@@ -1,0 +1,13 @@
+(note TQF126d)
+
+(hasMembers AIOC ExxonCorporation) 
+
+(queryyn 
+  (or 
+    (subOrganizations AIOC ExxonCorporation) 
+    (hasMembers AIOC ExxonCorporation)))
+
+(answer Yes)
+
+(end_of_file)
+

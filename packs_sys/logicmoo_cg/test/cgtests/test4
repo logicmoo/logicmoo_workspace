@@ -1,0 +1,66 @@
+;;Date: Thu, 28 May 92 08:45:26 -0500
+;;From: esch%email.sp.unisys.com@metro.ucc.su.OZ.AU (John Esch)
+;;To: cg@cs.umn.edu
+;;Subject: CG TEST4, individuals
+
+;;The following is used for regression testing of CONSTRUCT.
+
+;;It contains the first set of type and individual examples from Conceptual Structures 
+;;page 119 & 120.
+
+;;CANON RESERVATIONS-AND-ELEPHANTS .
+
+TYPE ARRIVAL-DATE(a) IS [UNIV:*a].
+
+TYPE CIRCUS(c) IS [UNIV:*c].
+
+TYPE CIRCUS-ELEPHANT(C) IS
+[ELEPHANT:*C]<-(AGNT)<-[PERFORM]->(LOC)->[CIRCUS].
+
+TYPE DEPARTURE-DATE(d) IS [UNIV:*d].
+
+TYPE ELEPHANT(e) IS [UNIV:*e].
+
+TYPE HOTEL(h) IS [UNIV:*h].
+
+TYPE HOTEL-RESERVATION(RESERVATION-NO) IS
+[RESERVATION:*RESERVATION-NO]-
+  ->(RCPT)->[PERSON]
+  ->(OBJ)->[ROOM]->(LOC)->[HOTEL]
+  ->(DUR)->[TIME-PERIOD]-
+             ->(STRT)->[ARRIVAL-DATE]
+             ->(UNTL)->[DEPARTURE-DATE],,.
+
+TYPE PERFORM(p) IS [UNIV:*p].
+
+TYPE PERSON(p) IS [UNIV:*p].
+
+TYPE PROPOSITION(p) IS [UNIV:*p].
+
+TYPE RESERVATION(r) IS [UNIV:*r].
+
+TYPE ROOM(r) IS [UNIV:*r].
+
+TYPE TIME-PERIOD(t) IS [UNIV:*t].
+
+INDIVIDUAL HOTEL-RESERVATION(#316209) IS
+[RESERVATION:#316209]-
+  ->(RCPT)->[PERSON:JOHN SOWA]
+  ->(OBJ)->[ROOM:Q2]->(LOC)->[HOTEL:Shelburne]
+  ->(DUR)->[TIME-PERIOD:@4 NIGHTS]-
+             ->(STRT)->[ARRIVAL-DATE:MARCH 14 1983]
+             ->(UNTL)->[DEPARTURE-DATE:MARCH 18 1983],,.
+
+INDIVIDUAL HOTEL-RESERVATION(#316210) IS
+[RESERVATION:#316210]-
+  ->(RCPT)->[PERSON:JOHN ESCH]
+  ->(OBJ)->[ROOM:Q3]->(LOC)->[HOTEL:Sidney]
+  ->(DUR)->[TIME-PERIOD:@7 NIGHTS]-
+             ->(STRT)->[ARRIVAL-DATE:MARCH 12 1983]
+             ->(UNTL)->[DEPARTURE-DATE:MARCH 19 1983],,.
+
+INDIVIDUAL CIRCUS-ELEPHANT(#BUMBO) IS
+[ELEPHANT:#BUMBO]<-(AGNT)<-[PERFORM: {*}]->(LOC)->[CIRCUS:Flying Tigers].
+
+INDIVIDUAL CIRCUS-ELEPHANT(#JUMBO) IS
+[ELEPHANT:#JUMBO]<-(AGNT)<-[PERFORM: {*}]->(LOC)->[CIRCUS:Barnum & Bailey].

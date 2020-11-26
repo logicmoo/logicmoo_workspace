@@ -1,0 +1,5 @@
+Run the system in ``generation mode''. Each input sentence is
+analysed. If any parses are found, the first one is generated back
+using the currently loaded generation grammar, showing all possible
+generated strings. This is normally used for debugging the generation
+grammar.

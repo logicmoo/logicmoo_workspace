@@ -1,0 +1,57 @@
+BINDIR = bin/win32
+OBJDIR = bin/obj
+CXX = cl.exe
+# CXX  = C:/Program\ Files/Microsoft\ Visual\ C++\ Toolkit\ 2003/bin/cl.exe
+
+NUANCE   = C:/Nuance/v8.0.0
+
+INCLUDES = -IC:/Program\ Files/Microsoft\ Visual\ C++\ Toolkit\ 2003/include \
+		-IC:/Program\ Files/Microsoft\ Visual\ Studio\ .NET/Vc7/include \
+		-IC:/Program\ Files/Microsoft\ SDK/include \
+		-I$(NUANCE)/include \
+		-I.
+
+LIB_DIRS = /libpath:$(NUANCE)/lib/win32 \
+	/libpath:C:/Program\ Files/Microsoft\ Visual\ C++\ Toolkit\ 2003/lib \
+	/libpath:C:/Program\ Files/Microsoft\ SDK/Lib 
+
+
+COMPILE_OPTIONS = /Od /D "WIN32" /D "_CONSOLE" /D "_MBCS" /Gm /EHsc /RTC1 /MT  /W3 /nologo /c /Wp64 /ZI /Gd /TP
+LINK_OPTIONS = /link /MACHINE:IX86 rcapi.lib ws2_32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
+
+
+
+BINARY = $(BINDIR)/regserver.exe
+
+OBJECTS = $(OBJDIR)/main.obj $(OBJDIR)/regulusSpeechServer.obj $(OBJDIR)/nl_regulus_utils.obj $(OBJDIR)/PlaybackBuffer.obj
+
+SRC_HEADERS = regulusSpeechServer.hpp nl_regulus_utils.hpp PlaybackBuffer.hpp
+
+all:	$(BINARY)
+
+$(BINARY): $(OBJDIR) $(BINDIR) $(OBJECTS)
+	$(CXX) /o$(BINARY) $(OBJECTS) $(LINK_OPTIONS) $(LIB_DIRS)
+	cp $(BINARY) ../../runtime/
+	
+$(OBJDIR)/nl_regulus_utils.obj: $(SRC_HEADERS) nl_regulus_utils.cpp
+	$(CXX) $(COMPILE_OPTIONS) $(INCLUDES) nl_regulus_utils.cpp /Fo$@
+
+$(OBJDIR)/PlaybackBuffer.obj: $(SRC_HEADERS) PlaybackBuffer.cpp
+	$(CXX) $(COMPILE_OPTIONS) $(INCLUDES) PlaybackBuffer.cpp /Fo$@
+
+$(OBJDIR)/regulusSpeechServer.obj: $(SRC_HEADERS) regulusSpeechServer.cpp
+	$(CXX) $(COMPILE_OPTIONS) $(INCLUDES) regulusSpeechServer.cpp /Fo$@
+
+$(OBJDIR)/main.obj: $(SRC_HEADERS) main.cpp
+	$(CXX) $(COMPILE_OPTIONS) $(INCLUDES) main.cpp /Fo$@
+
+$(OBJDIR):
+	mkdir -p $@
+
+$(BINDIR):
+	mkdir -p $@
+
+clean:
+	rm -f $(BINARY) $(OBJECTS) $(BINDIR)/*.ilk $(BINDIR)/*.pdb
+	rmdir $(OBJDIR) $(BINDIR)
+	rmdir bin

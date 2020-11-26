@@ -1,0 +1,94 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Shanahan1999/ThielscherCircuit.e
+loading foundations/Root.e
+loading foundations/EC.e
+loading foundations/ECCausal.e
+312 variables and 922 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Switch2().
+Switch3().
+Happens(Close1(), 0).
+Happens(CloseRelay(), 0).
+Happens(Open2(), 0).
+1
+-Switch2().
++Relay().
++Switch1().
+P
+Initiated(Relay(), 0).
+Initiated(Relay(), 1).
+Initiated(Switch1(), 0).
+Initiated(Switch1(), 1).
+Initiated(Switch3(), 0).
+Initiated(Switch3(), 1).
+Started(Relay(), 0).
+Started(Relay(), 1).
+Started(Switch1(), 0).
+Started(Switch1(), 1).
+Started(Switch2(), 0).
+Started(Switch3(), 0).
+Started(Switch3(), 1).
+Stopped(Light(), 0).
+Stopped(Light(), 1).
+Stopped(Relay(), 0).
+Stopped(Switch1(), 0).
+Stopped(Switch2(), 0).
+Stopped(Switch2(), 1).
+Terminated(Light(), 0).
+Terminated(Light(), 1).
+Terminated(Switch2(), 0).
+Terminated(Switch2(), 1).
+!Happens(Close1(), 1).
+!Happens(CloseRelay(), 1).
+!Happens(LightOn(), 0).
+!Happens(LightOn(), 1).
+!Happens(Open2(), 1).
+!Initiated(Light(), 0).
+!Initiated(Light(), 1).
+!Initiated(Switch2(), 0).
+!Initiated(Switch2(), 1).
+!ReleasedAt(Light(), 0).
+!ReleasedAt(Light(), 1).
+!ReleasedAt(Relay(), 0).
+!ReleasedAt(Relay(), 1).
+!ReleasedAt(Switch1(), 0).
+!ReleasedAt(Switch1(), 1).
+!ReleasedAt(Switch2(), 0).
+!ReleasedAt(Switch2(), 1).
+!ReleasedAt(Switch3(), 0).
+!ReleasedAt(Switch3(), 1).
+!Started(Light(), 0).
+!Started(Light(), 1).
+!Started(Switch2(), 1).
+!Stopped(Relay(), 1).
+!Stopped(Switch1(), 1).
+!Stopped(Switch3(), 0).
+!Stopped(Switch3(), 1).
+!Terminated(Relay(), 0).
+!Terminated(Relay(), 1).
+!Terminated(Switch1(), 0).
+!Terminated(Switch1(), 1).
+!Terminated(Switch3(), 0).
+!Terminated(Switch3(), 1).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+ECCausal: 4 predicates, 0 functions, 0 fluents, 0 events, 4 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+ThielscherCircuit: 0 predicates, 0 functions, 5 fluents, 4 events, 13 axioms
+encoding 0.3s
+solution 0.0s
+total 0.6s
+Discrete Event Calculus Reasoner 1.0

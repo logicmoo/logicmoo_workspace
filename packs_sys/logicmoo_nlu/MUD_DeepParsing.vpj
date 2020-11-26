@@ -1,0 +1,35 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+	Version="10.0"
+	VendorName="SlickEdit"
+	WorkingDir=".">
+	<Config
+		Name="Release"
+		OutputFile=""
+		CompilerConfigName="GCC-4.8.2-i686-pc-cygwin">
+		<Menu>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				SaveOption="SaveModified"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1"
+				Verbose="1"
+				Beep="1">
+				<Exec CmdLine="StartMUDServer.bat build"/>
+			</Target>
+		</Menu>
+		<PreBuildCommands StopOnError="1"/>
+		<PostBuildCommands StopOnError="1"/>
+	</Config>
+	<CustomFolders>
+	</CustomFolders>
+	<Files AutoFolders="DirectoryView">
+		<F
+			N="*.*"
+			Recurse="1"
+			Refilter="1"
+			Excludes=".git/;.svn/;*.*~;*~/;*.qlf"/>
+	</Files>
+</Project>

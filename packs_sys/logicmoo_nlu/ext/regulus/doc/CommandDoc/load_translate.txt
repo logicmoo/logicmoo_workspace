@@ -1,0 +1,56 @@
+
+Load all translation-related files defined in the currently valid
+config file. These consist of a subset of the following; the set of
+files required depends on whether translation is interlingua-based or
+direct, and whether translation is from source to target, from source
+to interlingua, or from interlingua to target.
+
+\begin{itemize} 
+
+\item An interlingua checking grammar compiled into generation form,
+defined by the {\tt interlingua\_\-structure} config file
+entry. Required if translation is interlingua-based.
+
+item An interlingua declarations file defined by the
+{\tt interlingua\_\-declarations} config file entry. Required
+if translation is interlingua-based.
+
+\item One or more to\_\-interlingua rules files defined by the {\tt
+to\_\-interlingua\_\-rules} config file entry. Required if
+translation is interlingua-based.
+
+\item One or more from\_\-interlingua rules files defined by the {\tt
+from\_\-interlingua\_\-rules} config file entry.  Required if
+translation is interlingua-based.
+
+\item An ellipsis classes file (optional) defined by the
+{\tt ellipsis\_\-classes} config file entry. If this is defined, you need to
+compile it first using the {\tt COMPILE\_\-ELLIPSIS\_\-PATTERNS} command.
+
+\item A generation grammar file (required, unless translation is from
+source to interlingua) defined by the {\tt generation\_\-rules} config
+file entry. This should be the compiled form of a Regulus grammar for
+the target language. The compiled generation grammar must first be
+created using the {\tt LOAD\_\-GENERATION} command.
+
+\item A generation preferences file (optional) defined by the
+{\tt generation\_\-preferences} config file entry.
+
+\item A collocations file (optional) defined by the
+{\tt collocation\_\-rules} config file entry.
+
+\item An orthography rules file (optional) defined by the
+{\tt orthography\_\-rules} config file entry.  
+
+\item One or more transfer rules files defined by the
+{\tt transfer\_\-rules} config file entry. This is only
+required for direct (i.e.\ non-interlingua-based) translation
+applications.
+ 
+\end{itemize}
+
+If the config file entries {\tt wavfile\_\-directory} and
+{\tt wavfile\_\-recording\_\-script} are defined, implying that output
+speech will be produced using recorded wavfiles, this command also
+produces a new version of the file defined by
+{\tt wavfile\_\-recording\_\-script}.

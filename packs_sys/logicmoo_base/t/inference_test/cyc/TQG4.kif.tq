@@ -1,0 +1,9 @@
+(note TQG4)
+
+(instance Fido Canine)
+
+(agent DoingSomething Fido)
+
+(query (not (holdsDuring (WhenFn DoingSomething) (attribute Fido Dead))))
+
+(answer Yes)

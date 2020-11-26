@@ -1,0 +1,260 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Recursive and augmented transition networks
+
+Since an RTN consists of a set of networks, as opposed to the single                     
+monolithic FSTN, the data structure we use to represent the RTN needs
+to have a way of indicating which bits belong to which subnetwork.  If
+we think of each subnetwork having a name, then we can add a further
+argument to each predicate of our existing FSTN data structure and use
+this argument to indicate which component of the network the clause
+belongs to.  This leads to a predicate of the form:
+
+    arc(Departure_node, Destination_node, Label, Subnetwork).
+
+The way this works can be readily seen from our simple RTN for English
+sentences, which comprises three subnetworks, one for S, one for NP
+and one for VP (the code for these networks is repeated as
+"rtnarcs.pl" in the appendix).
+
+    % 0 is initial state of the S network:
+    initial(0,s).
+
+    % 2 is final state of the S network:
+    final(2,s).
+
+    % the S network contains an arc from 0 to 1 with label NP:
+    arc(0,1,np,s).
+
+    % the S network contains an arc from 1 to 2 with label VP:
+    arc(1,2,vp,s).
+
+    initial(0,np).
+    final(2,np).
+
+    arc(0,1,det,np).
+    arc(1,2,n,np).
+    arc(2,3,wh,np).
+    arc(3,2,vp,np).                     
+
+    initial(0,vp).
+    final(1,vp).
+    final(2,vp).
+    arc(0,1,v,vp).
+    arc(1,2,np,vp).
+    arc(1,3,that,vp).
+    arc(3,2,s,vp).
+
+Notice how each subnetwork has its own initial and final statements in
+addition to the set of arcs that define it.  And observe also how the
+same integer can represent different nodes, thus each subnetwork has a
+node "2", but the 2-node in the S network is wholly unrelated to the
+2-node in the VP network.
+
+We will now present a modified version for RTNs (appearing as                     
+"rtnrecg.pl" in the appendix) of the FSTN recognizer program.  The
+program harnesses Prolog's backtracking ability to perform a depth-
+first search of the search space, as before.  In addition, it uses
+recursion in Prolog to implement recursive network traversal and is
+hence able to dispense with an explicit push-down stack.
+
+The RTN recognizer several times uses pairs of arguments as difference
+lists to represent strings.  Though initially somewhat unintuitive,
+difference lists are an efficient way of manipulating lists of symbols
+in Prolog, and they play a crucial role in the interpretation of the
+Definite Clause Grammar formalism that we shall discuss in detail in
+the next chapter.  Readers unfamiliar with difference lists should
+probably take time out to review the coverage of the topic in a Prolog
+text at this point.  Each main predicate responsible for recognition
+is given two arguments concerned with sequences of words (lists).  The
+first of the pair of arguments represents an initial list, some
+initial portion of which is to be recognized.  The second of the pair
+represents the end portion of the first list which is "left over"
+after the recognition.  When such a predicate is invoked during
+recognition, its task is to find possible initial portions of the
+first list which can be recognized, "consume" the relevant words from
+the list and return what remains as the "left over" list.
+
+As you would expect, implementing RTN traversal is slightly more
+complex than implementing FSTN traversal since, in the former, we need
+to keep track of which network we are in, and we need some way of
+dropping down into subnetworks and of climbing back out again.  As
+before, we shall split the recognition task beween two predicates,
+traverse/3 and recognize/4.  The former is a suitably modified version
+of our previous FSTN traverse predicate and the latter is similar to
+the two argument recognize predicate, but with the addition of an
+extra argument to keep track of the name of the current network and an
+extra argument to keep track of any string "left over" after the
+traversal:
+
+     % recognize(Net,Node,WordList,Left)
+     %      Net: the name of the network to be traversed
+     %      Node:  the name of the node you wish to start from
+     %      WordList:  list of words which you want to test
+     %      Left: the list of words left over after the traversal
+
+Notice that we have chosen to use two arguments to represent the
+initial location - the network and the node within it - rather than
+combining them into a single object, as would be directly suggested by
+our "Net/Node" notation.  As with the FSTN recognize, the predicate
+recognize has two clauses.  Firstly, if we have reached the final node
+of the (sub)net, we can successfully recognize without consuming any
+of the string:
+
+    recognize(Net,Node,X,X) :-
+       final(Node,Net).
+
+Alternatively, we want to recognize a string X if (i) we can consume
+part of the string traversing an arc from the current node, leaving
+string Y over and (ii) we can recognize the remainder Y, continuing
+from where that arc ended up.  The string "left over" Z from such a
+recognition is then whatever was left over by that.
+
+    recognize(Net,Node_1,X,Z) :-
+       arc(Node_1,Node_2,Label,Net),
+       traverse(Label,X,Y),
+       recognize(Net,Node_2,Y,Z).
+
+Thus recognize delegates part of the job to traverse, and it is to the
+latter that we turn next:
+
+     % traverse(Label,WordList,Left)
+     %      Label: an arc label specifying a kind of test
+     %      WordList:  list of words which you want to test
+     %      Left: the list of words left over after the traversal of the arc
+
+There are four possibilities for success, depending on what kind of
+test on the input string the arc label specifies.  First of all
+(SYM'), if the label is not a special symbol, we can consume one word
+from the string if it is the same as the arc label, returning the rest
+of the string.
+
+    traverse(Word,[Word|X],X) :- not(special(Word)).
+
+Second (ABB'), if the label specifies an abbreviation, we can consume
+one word from the string if it is the an instance of the appropriate
+category, returning the rest of the string.
+
+    traverse(Category,[Word|X],X) :-
+       word(Category,Word).
+
+Third (PUSH/POP), if the arc label names a subnet we can traverse the
+arc by traversing the named network:
+
+    traverse(Net,String,Left) :-
+       initial(Node,Net),
+       recognize(Net,Node,String,Left).
+
+Notice that when we recursively traverse a subnetwork we do not need
+explicitly to remember where to return to afterwards.  This is because
+if the recursive call to recognize succeeds Prolog will automatically
+continue with whatever remains to be done after that (succeeding the
+traverse goal and then continuing in the recognize clause that called
+it).  So the PUSH/POP operations are conveniently implemented already
+by Prolog's call/return mechanism.  The final clause for traverse
+(JMP') handles the case where the label on the arc is the jump symbol.
+In this case we can succeed without consuming any string:
+
+    traverse('#',X,X).
+
+Between them, the mutually recursive definitions of predicates
+traverse and recognize handle the problem of RTN traversal in a
+compact and elegant manner.
+
+We need only make minimal changes to the recognition program to make a                     
+program that will transduce from one string of words to another.  The
+main addition is another couple of arguments, representing the second
+"tape" by a difference list in the same way as the first:
+
+     % transduce(Net,Node,String1,Left1,String2,Left2)
+     %       Net: the network in which the traversal takes place
+     %       Node: the node to start from
+     %       String1: the first tape
+     %       Left1: the portion of the first tape "left over"
+     %       String2: the second tape
+     %       Left2: the portion of the second tape "left over"
+
+    transduce(Net,Node,X1,X1,X2,X2) :-
+        final(Net,Node).
+    transduce(Net,Node_1,X1,Z1,X2,Z2) :-
+       arc(Node_1,Node_2,Label,Net),
+       traverse2(Label,X1,Y1,X2,Y2),
+       transduce(Net,Node_2,Y1,Z1,Y2,Z2).
+
+    traverse2([Word_1,Word_2],[Word_1|X1],X1,[Word_2|X2],X2) :-
+       not(special(Word_1)), not(special(Word_2)).
+    traverse2(Category,String_1,Left_1,String_2,Left_2) :-
+       word(Category,Word_pair),                     
+       traverse2(Word_pair,String_1,Left_1,String_2,Left_2).
+    traverse2(Subnet,String_1,Left_1,String_2,Left_2) :-
+       initial(Subnet,Node),
+       transduce(Subnet,Node,String_1,Left_1,String_2,Left_2).
+    traverse2('#',X1,X1,X2,X2).
+
+This procedure uses a traverse2 predicate very similar to the one used
+for FST traversal.  PTs are easily encoded in Prolog with the same
+techniques we have already for RTNs and FSTs.  For instance, here is
+the French translation example:
+
+     % S network
+     %
+    initial(s,0).
+    final(s,2).
+    arc(0,1,np,s).
+    arc(1,2,vp,s).
+
+     % NP network
+     %
+    initial(np,0).
+    final(np,2).
+    arc(0,1,det_femn,np).
+    arc(1,2,n_femn,np).
+    arc(0,4,det_masc,np).
+    arc(4,2,n_masc,np).
+    arc(2,3,wh,np).
+    arc(3,2,vp,np).
+
+     % VP network
+     %
+    initial(vp,0).
+    final(vp,1).
+    final(vp,2).
+    arc(0,1,v,vp).
+    arc(1,2,np,vp).
+    arc(1,3,[that,que],vp).
+    arc(3,2,s,vp).
+
+As before, we have a lexicon associating categories with pairs of
+words, one in each language:
+
+    word(n_masc,[man,homme]).
+    word(n_masc,[horse,cheval]).
+    word(n_femn,[house,maison]).
+    word(n_femn,[table,table]).
+    word(np,[john,jean]).
+    word(np,[mary,marie]).
+    word(np,[jean,jeanne]).
+    word(det_masc,[a,un]).
+    word(det_masc,[the,le]).
+    word(det_masc,[this,ce]).
+    word(det_femn,[a,une]).                     
+    word(det_femn,[the,la]).
+    word(det_femn,[this,cette]).
+    word(v,[sees,voit]).
+    word(v,[hits,frappe]).
+    word(v,[sings,chante]).
+    word(v,[lacks,manque]).
+    word(wh,[who,qui]).
+    word(wh,[which,qui]).
+    word(wh,[that,qui]).
+
+There would be something thoroughly perverse about seeking to program
+an ATN in Prolog: the native inhabitant would look at you with a
+puzzled frown and says "if I wanted to go there, I would not start
+from here".  ATNs represent an unavoidably procedural approach to the
+representation of syntactic facts about natural language, whereas the
+whole ethos of logic programming favours declarative representations.

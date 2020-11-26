@@ -1,0 +1,1602 @@
+% Romance grammar rules 
+
+feature_value_space(agr_value, [[1, 2, 3,pol], [sg, pl], [masc, fem]]).
+feature_value_space(sem_np_type_value, [[person, symptom, body_part, cause, degree, temporal, duration, frequency, part, respi, wh, food, thera, behaviour, tv, substance, none, support, locative, action, finding, artefact,argent,heure,impers,info,an,mois,ville,name,pays]]).
+feature_value_space(sem_pp_type_value, [[temporal, locative, duration, frequency_unit, cause, none, accompagnement,manière,manière_arg]]).
+feature_value_space(subcat_value, [[attr_cod, intrans, trans, passivised_trans,
+				    trans_with_clitic, ditrans_with_clitic, ind_obj_with_clitic,
+				    trans_support, adj, être, hay, pp, de_pp, null, modal, ditrans, ind_obj, inf_a,inf, inf_de,wh,ditrans_wh]]).
+feature_value_space(adj_subcat_value, [[pp, null, inf_de]]).
+feature_value_space(clitic_subcat_value, [[reflexive, none]]).
+feature_value_space(gaps_value, [[null, de_pp_gap, pp_gap, np_gap]]).
+feature_value_space(pron_type_value, [[dummy_pronoun, normal_pronoun, clitic, indefini, rel, noun]]).
+feature_value_space(aux_verb_type_value, [[avoir, être]]).
+feature_value_space(vform_value, [[finite, past_participle, infinitive, pres_participle, subjunctive]]).
+feature_value_space(inv_value, [[inverted, uninverted]]).
+feature_value_space(pos_value, [[pre, post, comparative, final]]).
+feature_value_space(yn_value, [[yes, no]]).
+feature_value_space(voice_value, [[passive, active]]).
+feature_value_space(sctype_value, [[quand, en]]).
+feature_value_space(spec_type_value, [[numeric, non_numeric]]).
+feature_value_space(de_pp_prep_value, [[de, a]]).
+feature_value_space(adjpos_value, [[pred, attributive, prenom]]).
+feature_value_space(interj_value, [[oui, poli,svp]]).
+feature_value_space(cas_value, [[acc, datif]]).
+feature_value_space(num_type_value, [[autre, minute,heure_d,heure_v,heure_v2,jour,année]]).
+
+feature(agr, agr_value).
+feature(cas, cas_value).
+feature(np_agr, agr_value).
+feature(participle_agr, agr_value).
+feature(de_pp_agr, agr_value).
+feature(i_type, interj_value).
+feature(sem_np_type, sem_np_type_value).
+feature(sem_adj_type, sem_np_type_value).
+feature(de_pp_sem_type, sem_np_type_value).
+lexical_feature_default(de_pp_sem_type, none).
+feature(subj_sem_np_type, sem_np_type_value).
+feature(obj_sem_np_type, sem_np_type_value).
+lexical_feature_default(obj_sem_np_type, none).
+feature(adj_subcat, adj_subcat_value).
+feature(subcat, subcat_value).
+lexical_feature_default(adj_subcat, null).
+
+feature(recursive, yn_value).
+feature(elision, yn_value).
+%%feature(poli, yn_value).
+feature(elision_déb, yn_value).
+feature(elisiondet, yn_value).
+feature(clitic_subcat, clitic_subcat_value).
+lexical_feature_default(clitic_subcat, none).
+
+feature(sem_pp_type, sem_pp_type_value).
+lexical_feature_default(sem_pp_type, none).
+
+feature(gapsin, gaps_value).
+feature(gapsout, gaps_value).
+feature(pron_type, pron_type_value).
+feature(type_num, num_type_value).
+feature(subj_pron, pron_type_value).
+feature(aux_v_type, aux_verb_type_value).
+feature(aux_verb, aux_verb_type_value).
+feature(vform, vform_value).
+feature(participle_vform, vform_value).
+feature(inv, inv_value).
+feature(position, pos_value).
+feature(can_be_pp, yn_value).
+feature(voice, voice_value).
+feature(sctype, sctype_value).
+feature(i_type, interj_value).
+feature(has_spec, yn_value).
+feature(np_has_spec, yn_value).
+feature(modrel, yn_value).
+feature(clitic, yn_value).
+feature(degré, yn_value).
+feature(prep, yn_value).
+%feature(n_has_spec, yn_value).
+feature(spec_type, spec_type_value).
+feature(takes_spec_type, spec_type_value).
+% Added by MR
+feature(de_pp_prep, de_pp_prep_value).
+
+feature(ind_obj_sem_np_type, sem_np_type_value).
+lexical_feature_default(ind_obj_sem_np_type, none).
+
+feature(adjpos, adjpos_value).
+feature(empty, yn_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(utterance, [sem]).
+category(med_utterance, [sem]).
+category(yn_question, [sem]).
+category(wh_question, [sem]).
+category(s, [sem,elision_déb]).
+category(degré, [sem]).
+category(elliptical_utterance, [sem]).
+category(adjp, [sem, sem_adj_type, agr, adjpos, adj_subcat,de_pp_prep, gapsin,gapsout, degré, elision, prep]).
+category(np, [sem, sem_np_type, agr, gapsin, gapsout, subcat, de_pp_sem_type, de_pp_prep, de_pp_agr, can_be_pp, has_spec, spec_type,modrel, elision, elision_déb]).
+category(pp, [sem, sem_pp_type, gapsin, gapsout, can_be_pp, recursive, empty]).
+category(de_pp, [sem, sem_np_type, agr, subcat, de_pp_prep, gapsin, gapsout]).
+category(optional_pp, [sem, sem_pp_type, gapsin, gapsout, empty]).
+category(wh_pp, [sem]).
+category(wh_de_pp, [sem, de_pp_prep]).
+category(wh_np, [sem, agr, subj_sem_np_type]).
+category(wh_pron, [sem, agr, subj_sem_np_type]).
+category(vp, [sem, inv, subj_pron, agr, subj_sem_np_type, gapsin, gapsout, vform, voice, de_pp_prep, clitic, elision]).
+category(optional_adverb, [sem, position, empty]).
+category(interj, [sem, i_type]).
+category(optional_interj, [sem, i_type]).
+category(adv, [sem, position]).
+category(vp_comps, [sem, agr, subcat, obj_sem_np_type, ind_obj_sem_np_type, sem_pp_type, agr, gapsin, gapsout,de_pp_prep]).
+category(optional_vp_postmods, [sem, gapsin, gapsout, empty]).
+category(verb, [sem, agr, vform, aux_verb, subcat, clitic_subcat, subj_sem_np_type, obj_sem_np_type, ind_obj_sem_np_type, sem_pp_type, agr, voice,elision]).
+category(vbar, [sem, agr, vform, aux_verb, subcat, clitic_subcat, subj_sem_np_type, obj_sem_np_type, ind_obj_sem_np_type, sem_pp_type, agr, voice, inv, subj_pron, clitic, elision]).
+category(aux_verb, [sem, agr, aux_v_type, vform, participle_vform, participle_agr, voice, elision]).
+category(aux_vbar, [sem, agr, aux_v_type, vform, participle_vform, participle_agr, voice, inv, subj_pron,elision]).
+category(pronoun, [sem, agr, pron_type, sem_np_type, cas, sem_np_type, elision, elision_déb]).
+category(npr, [sem, agr, sem_np_type, elision]).
+category(reflexive_pronoun, [agr,elision]).
+category(spec, [sem, agr, spec_type, elision, elisiondet]).
+category(n, [sem, agr, sem_np_type, subcat, de_pp_sem_type, de_pp_prep, de_pp_agr, can_be_pp, takes_spec_type,elision]).
+category(nbar, [sem, agr, sem_np_type, subcat, de_pp_sem_type, de_pp_prep, de_pp_agr, can_be_pp, takes_spec_type, spec_type, elision]).
+%category(core_np, [sem, agr, sem_np_type, subcat, de_pp_sem_type, de_pp_agr, can_be_pp]).
+category(number, [sem, agr,elision,type_num]).
+category(mod_time_et, [sem,agr]).
+category(num_heure, [sem,agr]).
+category(mod_time_moins, [sem]).
+category(comparative, [sem,elision]).
+category(prep, [sem, sem_pp_type, sem_np_type, np_agr, np_has_spec,elision]).
+category(de_prep, [np_agr, np_has_spec, de_pp_prep, elision]).
+category(passive_prep, [elision]).
+category(sc, [sem, sem_pp_type, sctype]).
+category(rel, [sem, agr, sem_np_type]).
+category(hyphen, []).
+category(dummy_cat, []).
+category(est_ce_que, [elision]).
+
+
+%---------------------------------------------------------------
+
+feature_instantiation_schedule(
+	[[inv],
+         [elision, elisiondet, elision_déb],
+         [prep],
+	 [subcat, clitic_subcat, adj_subcat],
+	 [gapsin, gapsout],
+	 [pron_type, subj_pron],
+	 [aux_v_type, aux_verb],
+	 [vform, participle_vform],
+	 [position],
+	 [empty],
+         [modrel], 
+	 [can_be_pp],
+         [clitic],
+         [degré],
+	 [recursive],
+	 [voice],
+         [cas], 
+	 [sctype],
+         [i_type],
+	 [has_spec],
+	 [np_has_spec],
+	 [spec_type],
+         [type_num],
+	 [takes_spec_type],
+	 [adjpos],
+	 [sem_adj_type],
+	 [de_pp_sem_type],
+	 [de_pp_prep],
+	 [sem_np_type],
+	 [subj_sem_np_type],
+	 [obj_sem_np_type],
+	 [ind_obj_sem_np_type],
+	 [sem_pp_type],
+	 [agr],
+	 [participle_agr],
+	 [np_agr],
+	 [de_pp_agr]
+	]).
+
+%---------------------------------------------------------------
+
+'.MAIN':[gsem=[value=Sem]] -->
+	utterance:[sem=Sem].
+
+% la douleur est-elle frontale?
+utterance:[sem= @utt_sem(Interj, Sem)] -->
+	med_utterance:[sem=Sem],
+        optional_interj:[sem=Interj, i_type=svp].
+
+
+% la douleur est-elle frontale?
+med_utterance:[sem= @utt_ynq_sem(Sem)] -->
+	yn_question:[sem=Sem].
+
+% lorsque vous avez mal la douleur est-elle frontale?
+med_utterance:[sem= @utt_pp_ynq_sem(Postmods, Sem)] -->
+        pp:[sem=Postmods, gapsin=null, gapsout=null, sem_pp_type=temporal, recursive=no],
+	yn_question:[sem=Sem].
+
+
+% quand la douleur est-elle apparue?
+med_utterance:[sem= @utt_whq_sem(Sem)] -->
+	wh_question:[sem=Sem].
+
+% je mange
+med_utterance:[sem= @utt_dcl_sem(Interj, Sem)] -->
+        optional_interj:[sem=Interj, i_type=oui],
+	s:[sem=Sem].
+
+% le soir j'ai été en contact
+med_utterance:[sem= @utt_pp_dcl_sem(Interj, Postmods, Sem)] -->
+        optional_interj:[sem=Interj, i_type=oui],
+        pp:[sem=Postmods, gapsin=null, gapsout=null, sem_pp_type=temporal],
+	s:[sem=Sem].
+
+med_utterance:[sem= @utt_elliptical_sem(Sem)] -->
+	elliptical_utterance:[sem=Sem].
+
+%si
+med_utterance:[sem=Sem] -->
+	interj:[sem=Sem].
+
+
+
+
+%----------------------------------------------------------------------
+
+% wh_pp_or_wh_de_pp(PPGapValue, Sem)
+
+macro(wh_pp_or_wh_de_pp(pp_gap, Sem, _),
+      wh_pp:[sem=Sem]).
+macro(wh_pp_or_wh_de_pp(de_pp_gap, Sem, DE),
+      wh_de_pp:[sem=Sem, de_pp_prep=DE]).
+
+%----------------------------------------------------------------------
+%%quand, ou
+elliptical_utterance:[sem=Sem] -->
+	%wh_pp:[sem=Sem].
+	@wh_pp_or_wh_de_pp(GapType, Sem, DE).
+
+elliptical_utterance:[sem=Sem] -->
+	wh_np:[sem=Sem].
+
+elliptical_utterance:[sem=Sem] -->
+	wh_pron:[sem=Sem].
+
+elliptical_utterance:[sem= @elliptical_interj_x_sem(Sem, Interj)] -->
+        optional_interj:[sem=Interj, i_type=oui],
+	adjp:[sem=Sem,adj_subcat=null].
+
+elliptical_utterance:[sem= @elliptical_interj_x_sem(Sem, Interj,PP)] -->
+        optional_interj:[sem=Interj, i_type=oui],
+	np:[sem=Sem, gapsin=null, gapsout=null, has_spec=yes],
+        optional_pp:[sem=PP, gapsin=null, gapsout=null].
+
+elliptical_utterance:[sem= @elliptical_interj_x_sem(Sem, Interj)] -->
+        optional_interj:[sem=Interj, i_type=oui],
+	pp:[sem=Sem, gapsin=null, gapsout=null].
+
+elliptical_utterance:[sem= @elliptical_adj_douleur_sem(Adj)] -->
+	adjp:[sem=Adj, sem_adj_type=degree, adj_subcat=null].
+
+%graduellement
+elliptical_utterance:[sem= @elliptical_interj_x_sem(Sem, Interj)] -->
+        optional_interj:[sem=Interj, i_type=oui],
+	adv:[sem=Sem].
+
+%muy
+elliptical_utterance:[sem= @elliptical_interj_x_sem(Sem, Interj)] -->
+        optional_interj:[sem=Interj, i_type=oui],
+	degré:[sem=Sem].
+
+%cuarenta
+%%elliptical_utterance:[sem=concat([[number, N]], Interj)] -->
+elliptical_utterance:[sem= @elliptical_spec(N, Interj)] -->
+        optional_interj:[sem=Interj, i_type=oui],
+%%	number:[sem=N].
+	spec:[sem=N, spec_type=numeric].
+
+%d otite, a los antibiotiocos
+elliptical_utterance:[sem= @elliptical_interj_x_sem(Sem, Interj)] -->
+         optional_interj:[sem=Interj, i_type=oui],
+	de_pp:[sem=Sem, sem_np_type=symptom\/substance, gapsin=null, gapsout=null].
+
+%%augmente t elle
+%%elliptical_utterance:[sem=Sem] -->
+%%	vp:[sem=Sem].
+
+% par la fatigue
+elliptical_utterance:[sem=Sem] -->
+        vp_comps:[sem=Sem, subcat=passivised_trans, obj_sem_np_type=(\(locative\/temporal\/part))].
+
+% vous mangez
+%%elliptical_utterance:[sem=Sem] -->
+ %%       s:[sem=Sem].
+
+
+%----------------------------------------------------------------------
+
+yn_question:[sem= @np_vp_subject_sem(Np, Vp)] -->
+	np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null],
+	vp:[sem=Vp, inv=inverted, subj_pron=dummy_pronoun, voice=Voice,
+	    subj_sem_np_type=SubjType, agr=Agr, gapsin=null,gapsout=null].
+
+yn_question:[sem=Vp] -->
+	vp:[sem=Vp, inv=inverted, subj_pron=normal_pronoun, gapsin=null, gapsout=null].
+
+@fre_only((
+yn_question:[sem=S] -->
+	est_ce_que:[elision=EL],
+	s:[sem=S, elision_déb=EL]
+)).
+
+% PRODROP RULES
+% té mal de cap
+% Separate Cat and Spa versions of this rule for historical reasons (need to stay compatible
+% with existing translation rules). May merge later.
+
+@cat_only((
+yn_question:[sem= @np_vp_subject_sem( @implicit_subj_value(you), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(you), gapsin=null, gapsout=null, vform=finite]
+)).	
+
+@spa_only((
+yn_question:[sem= @np_vp_subject_sem( @implicit_subj_value(you), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features_sg(you), gapsin=null, gapsout=null, vform=finite]
+)).	
+
+@spa_only((
+yn_question:[sem= @np_vp_subject_sem( @implicit_subj_value(they), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(they), gapsin=null, gapsout=null, vform=finite]
+)).	
+
+@spa_only((
+yn_question:[sem= @np_vp_subject_sem( @implicit_subj_value(it), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(it), gapsin=null, gapsout=null, vform=finite]
+)).	
+
+%%PB sg et plu pour permettre li han practicat
+macro(implicit_subj_features(you), [agr=3, subj_sem_np_type=person]).
+macro(implicit_subj_features_sg(you), [agr=(3/\sg), subj_sem_np_type=person]).
+
+macro(implicit_subj_features(they), [agr=3/\pl, subj_sem_np_type=person]).
+
+macro(implicit_subj_features(i), [agr=1/\sg, subj_sem_np_type=person]).
+
+macro(implicit_subj_features(he), [agr=3/\sg, subj_sem_np_type=person]).
+
+%%finding est tres ad hoc mais ajoute pour bloquer como es el dolor
+macro(implicit_subj_features(it), [agr=3/\sg, subj_sem_np_type=(\(person\/finding))]).
+
+% UNINVERTED QUESTION RULES
+
+% active
+% el dolor apareix
+% la douleur apparaît
+yn_question:[sem= @np_vp_subject_sem(Np, Vp)] -->
+	(   np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null] ;
+	    pronoun:[sem=Np, agr=Agr, pron_type=normal_pronoun, sem_np_type=SubjType, elision=EL, sem_np_type=SubjType]
+	),
+	vp:[sem=Vp, inv=uninverted, voice=Voice,
+	    subj_sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null, vform=finite, elision=EL].
+
+%----------------------------------------------------------------------
+%%subject
+wh_question:[sem= @np_vp_subject_sem(WhPP, Vp)] -->
+	wh_np:[sem=WhPP,agr=A],
+	vp:[sem=Vp, inv=uninverted, gapsin=null, gapsout=null,agr=A, vform=finite].
+
+
+%%object
+%%quels vins recommandez-vous ?
+@fre_only((
+wh_question:[sem= @fronting_sem(WhPP, Vp)] -->
+	wh_np:[sem=WhPP],
+	vp:[sem=Vp, inv=inverted, subj_pron=normal_pronoun, gapsin=np_gap, gapsout=null]
+)).
+
+%quels vins (est-ce que) vous recommandez 
+@fre_only((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(Np, Vp)) ] -->
+	wh_np:[sem=WhPP],
+        ?est_ce_que:[elision=EL],
+        (   np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null] ;
+	    pronoun:[sem=Np, agr=Agr, pron_type=normal_pronoun,elision=EL, sem_np_type=SubjType]
+	),
+	vp:[sem=Vp, agr=Agr, inv=uninverted, subj_pron=normal_pronoun, subj_sem_np_type=SubjType, gapsin=np_gap, gapsout=null]
+)).
+
+@fre_only((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(Np, Vp)) ] -->
+        (   np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null] ;
+	    pronoun:[sem=Np, agr=Agr, pron_type=normal_pronoun,elision=EL, sem_np_type=SubjType]
+	),
+	vp:[sem=Vp, agr=Agr, inv=uninverted, subj_pron=normal_pronoun, subj_sem_np_type=SubjType, gapsin=np_gap, gapsout=null],
+	wh_np:[sem=WhPP]
+)).
+
+
+
+
+%%object
+% quins medicaments pren
+@cat_or_spa((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(@implicit_subj_value(Type), Vp))] -->
+	wh_np:[sem=WhPP],
+	vp:[sem=Vp, inv=inverted\/uninverted, @implicit_subj_features(Type), gapsin=np_gap, gapsout=null, vform=finite]
+)).	
+
+wh_question:[sem= @np_vp_subject_sem( @np_pron_sem( @pron_sem([pronoun, @french_catalan_or_spanish(que, que, qué)])), Vp)] -->
+%wh_question:[sem=concat([[pronoun, @french_catalan_or_spanish(que, que, qué)]], Vp)] -->
+	@french_catalan_or_spanish(('qu\'est-ce', qui), què, qué),
+	vp:[sem=Vp, inv=uninverted, agr=(3/\sg/\masc), gapsin=null, gapsout=null].
+
+%quelle est la fréquence de vos maux de 
+wh_question:[sem= @np_vp_subject_sem(WhNP, Vp)] -->
+	wh_pron:[sem=WhNP, agr=Agr, subj_sem_np_type=SubjType],
+	vp:[sem=Vp, inv=uninverted, subj_sem_np_type=SubjType, vform=finite, agr=Agr, gapsin=null, gapsout=null].
+
+% actif
+%en combien de temps la douleur irradie-t'elle la nuque
+%de quoi votre enfant souffre-t-il 
+@fre_only((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(Np, Vp))] -->
+	%wh_pp:[sem=WhPP],
+	@wh_pp_or_wh_de_pp(GapType, WhPP, DE),
+	np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null],
+	vp:[sem=Vp, inv=inverted, voice=Voice, subj_pron=dummy_pronoun, subj_sem_np_type=SubjType, agr=Agr,
+	    gapsin=GapType, gapsout=null, de_pp_prep=DE]
+)).
+
+% où avez-vous mal
+% à quoi êtes-vous allergique
+% cuándo le duele la cabeza
+wh_question:[sem= @fronting_sem(WhPP, Vp)] -->
+	%wh_pp:[sem=WhPP],
+	@wh_pp_or_wh_de_pp(GapType, WhPP, DE),
+	vp:[sem=Vp, inv=inverted,
+	    subj_pron= @french_catalan_or_spanish(normal_pronoun\/noun, _Unspecified, _Unspecified),
+	    gapsin=GapType, gapsout=null, de_pp_prep=DE].
+
+% actif
+% quan té mal
+@cat_only((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(@implicit_subj_value(you), Vp))] -->
+	%wh_pp:[sem=WhPP],
+	@wh_pp_or_wh_de_pp(GapType, WhPP, DE),
+	vp:[sem=Vp, inv=uninverted, voice=Voice, @implicit_subj_features(you), gapsin=GapType, gapsout=null, vform=finite, de_pp_prep=DE]
+)).
+
+% actif
+@spa_only((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(@implicit_subj_value(Type), Vp))] -->
+	%wh_pp:[sem=WhPP],
+	@wh_pp_or_wh_de_pp(GapType, WhPP, DE),
+	vp:[sem=Vp, inv=uninverted, voice=Voice,
+	    @implicit_subj_features(Type), gapsin=GapType, gapsout=null, vform=finite,  de_pp_prep=DE]
+)).
+
+% actif
+% quan apareix el dolor 
+% quan el dolor apareix 
+% quan [té vostè] dolor 
+
+@cat_or_spa((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(Np, Vp))] -->
+	%wh_pp:[sem=WhPP],
+	@wh_pp_or_wh_de_pp(GapType, WhPP, DE),
+	(   np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null] ;
+	    pronoun:[sem=Np, agr=Agr, pron_type=normal_pronoun, sem_np_type=SubjType]
+	),	
+	vp:[sem=Vp, inv=inverted\/uninverted, voice=Voice,
+	    subj_sem_np_type=SubjType, agr=Agr, gapsin=GapType, gapsout=null, vform=finite, de_pp_prep=DE]
+)).
+
+
+%%NEW NOM 2011
+@fre_only((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(Np, Vp))] -->
+	%wh_pp:[sem=WhPP],
+	@wh_pp_or_wh_de_pp(GapType, WhPP, DE),
+        ?est_ce_que:[elision=EL],
+	pronoun:[sem=Np, agr=Agr, pron_type=normal_pronoun,elision=EL, sem_np_type=SubjType],	
+	vp:[sem=Vp, inv=uninverted, voice=Voice,
+	    subj_sem_np_type=SubjType, agr=Agr, gapsin=GapType, gapsout=null, vform=finite, de_pp_prep=DE]
+)).
+
+%%NEW NOM 2011
+%%tu as rendez vous à quelle heure/quand ?
+@fre_only((
+wh_question:[sem= @fronting_sem(WhPP, @np_vp_subject_sem(Np, Vp))] -->
+	%wh_pp:[sem=WhPP],
+	pronoun:[sem=Np, agr=Agr, pron_type=normal_pronoun, sem_np_type=SubjType],	
+	vp:[sem=Vp, inv=uninverted, voice=Voice,
+	    subj_sem_np_type=SubjType, agr=Agr, gapsin=GapType, gapsout=null, vform=finite, de_pp_prep=DE],
+             @wh_pp_or_wh_de_pp(GapType, WhPP, DE)
+)).
+
+%----------------------------------------------------------------------
+%DECLARATIVES
+% actif
+% vous avez mal
+% la douleur est causée par le stress
+%ai mis déterminant obligatoire.... 
+s:[sem= @np_vp_subject_sem(NP, Vp), elision_déb=DEB] -->
+	(   np:[sem=NP, agr=Agr, gapsin=null, gapsout=null, sem_np_type=SubjType,elision=DEB,has_spec=yes] ;
+	    pronoun:[sem=NP, agr=Agr, pron_type=normal_pronoun, elision=EL, sem_np_type=SubjType, elision_déb=DEB]
+	),
+	vp:[sem=Vp, inv=uninverted, voice=Voice, agr=Agr,
+	    gapsin=null, gapsout=null, vform=finite, subj_sem_np_type=SubjType,  elision=EL].
+
+%Phrases sans sujet - 3eme pers sing: quan esta [adj]
+% estornuda
+@cat_or_spa((
+s:[sem=  @np_vp_subject_sem(@implicit_subj_value(you), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(you), gapsin=null, gapsout=null, vform=finite, agr=(3/\sg/\masc)]
+)).
+
+%Phrases sans sujet - 3eme pers sing
+% ha realizado ...
+@cat_or_spa((
+s:[sem=  @np_vp_subject_sem(@implicit_subj_value(he), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(he), gapsin=null, gapsout=null, vform=finite, agr=(3/\sg/\masc)]
+)).
+
+%Phrases sans sujet - 3eme pers pl
+@cat_or_spa((
+s:[sem=  @np_vp_subject_sem(@implicit_subj_value(they), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(they), gapsin=null, gapsout=null, vform=finite, agr=(3/\pl/\masc)]
+)).
+
+
+%Phrases sans sujet - 1ere pers sg
+@cat_or_spa((
+s:[sem=  @np_vp_subject_sem(@implicit_subj_value(i), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(i), gapsin=null, gapsout=null, vform=finite, agr=(1/\sg)]
+)).
+
+
+%%peut-etre pas correct : semble necessaire pour le duele la cabeza mais
+%%trop general je pense
+@cat_or_spa((
+s:[sem=Vp] -->
+	vp:[sem=Vp, inv=inverted, subj_pron=normal_pronoun, gapsin=null, gapsout=null, clitic=yes]
+)).
+
+%Phrases sans sujet - 1ere pers
+@cat_or_spa((
+s:[sem=  @np_vp_subject_sem(@implicit_subj_value(i), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(i), gapsin=null, gapsout=null, vform=finite, agr=(1/\sg/\masc)]
+)).
+
+
+% In Spa we can also get things like "cuando [hay una luz viva]"
+
+@spa_only((
+s:[sem=  @np_vp_subject_sem(@implicit_subj_value(it), Vp)] -->
+	vp:[sem=Vp, inv=uninverted, @implicit_subj_features(it), gapsin=null, gapsout=null, vform=finite]
+)).
+
+%----------------------------------------------------------------------
+
+% VBAR rules
+
+%CAS NORM
+%FINI
+% vbar --> v, normal case
+% il [cause] votre maux de tête
+
+vbar:[sem= @vbar_v_advp_sem(V, Advp),
+      inv=uninverted,
+      subj_pron=_, voice=active,
+      vform=Vform, subcat=Subcat, clitic_subcat=CliticSubcat, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=no, elision=EL] -->
+	verb:[sem=V, vform=finite\/pres_participle, vform=Vform, subcat=Subcat, clitic_subcat=CliticSubcat, aux_verb=AuxVerbType, 
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, elision=EL],
+	optional_adverb:[sem=Advp, position=pre\/post].
+
+
+%INFINITIF
+% vbar --> v, normal case
+% il [cause] votre maux de tête
+
+vbar:[sem= @vbar_v_advp_sem_inf(V, Advp),
+      inv=uninverted,
+      subj_pron=_, voice=active,
+      vform=Vform, subcat=Subcat, clitic_subcat=CliticSubcat, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=no, elision=EL] -->
+	verb:[sem=V, vform=infinitive, vform=Vform, subcat=Subcat, clitic_subcat=CliticSubcat, aux_verb=AuxVerbType, 
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, elision=EL],
+	optional_adverb:[sem=Advp, position=pre\/post].
+
+
+%%PAST_PART
+% Avril 2005 PB : position de l'adverbe uniquement post si past participle
+% vbar --> v, normal case
+% il a [causé] vos maux de tete
+
+vbar:[sem= @vbar_v_advp_sem(V, Advp),
+      inv=uninverted,
+      subj_pron=_, voice=active,
+      vform=Vform, subcat=Subcat, clitic_subcat=CliticSubcat, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=no, elision=EL] -->
+	verb:[sem=V, vform=past_participle, vform=Vform,subcat=Subcat, clitic_subcat=CliticSubcat, aux_verb=AuxVerbType, 
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, elision=EL],
+	optional_adverb:[sem=Advp, position=post].
+
+%%%%ajout de la règle pour les clitiques en catalan, mais ok aussi pour le francais
+% np ditransitive verb
+% vbar -> pron vbar
+% vous donne qqch
+vbar:[sem= @vbar_clitic_v_indobj_sem(Pron, V), 
+      inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=VF, subcat=ditrans_with_clitic, clitic_subcat=none, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, sem_pp_type=PPType, agr=Agr, clitic=yes, elision=no]
+     -->
+   pronoun:[sem=Pron, pron_type=clitic,cas=datif,sem_np_type=ObjType, elision=EL],
+   vbar:[sem=V, inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=finite\/infinitive, vform=VF, subcat=ditrans, clitic_subcat=none, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, elision=EL].
+
+
+%%l'appelle Pierre
+vbar:[sem= @vbar_clitic_v_obj_sem(Pron, V), 
+      inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=VF, subcat=ditrans_with_clitic, clitic_subcat=none, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, sem_pp_type=PPType, agr=Agr, clitic=yes, elision=no]
+     -->
+   pronoun:[sem=Pron, pron_type=clitic,cas=acc,sem_np_type=ObjType, elision=EL],
+   vbar:[sem=V, inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=finite\/infinitive, vform=VF, subcat=attr_cod, clitic_subcat=none, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, elision=EL].
+
+
+
+% wh ditransitive verb 
+% vbar -> pron vbar
+% m'indiquer où sont les toilettes
+vbar:[sem= @vbar_clitic_v_indobj_sem(Pron, V), 
+      inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=VF, subcat=wh, clitic_subcat=none, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, sem_pp_type=PPType, agr=Agr, clitic=yes, elision=no]
+     -->
+   pronoun:[sem=Pron, pron_type=clitic,cas=datif,sem_np_type=ObjType, elision=EL],
+   vbar:[sem=V, inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=finite\/infinitive, vform=VF, subcat=ditrans_wh, clitic_subcat=none, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, elision=EL].
+
+
+
+
+
+%vous consulte.
+vbar:[sem= @vbar_clitic_v_object_sem(Pron, V), 
+      inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=VF, subcat=trans_with_clitic, clitic_subcat=none, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=none, ind_obj_sem_np_type=none, sem_pp_type=PPType, agr=Agr, clitic=yes, elision=no]
+     -->
+   pronoun:[sem=Pron, pron_type=clitic, cas=acc, sem_np_type=ObjType, elision=EL],
+   vbar:[sem=V, inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=finite\/infinitive, vform=VF, subcat=trans, clitic_subcat=none, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, elision=EL].
+
+
+
+% intrans
+% vbar -> pron vbar
+%%vous donne
+
+vbar:[sem= @vbar_clitic_v_indobj_sem(Pron, V), 
+      inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=Vform, subcat=ind_obj_with_clitic, clitic_subcat=Clit, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=none, ind_obj_sem_np_type=none,
+      sem_pp_type=PPType, agr=Agr, clitic=yes, elision=no]
+     -->
+   pronoun:[sem=Pron, pron_type=clitic, cas=datif, elision=EL],
+   vbar:[sem=V, inv=Inv,
+      subj_pron=Subj, voice=active,
+      vform=(\(past_participle)), vform=Vform, subcat=ind_obj, clitic_subcat=Clit, aux_verb=AuxVerbType, 
+      subj_sem_np_type=SubjType, sem_pp_type=PPType, agr=Agr, elision=EL].
+
+%%%%%%
+
+% vbar --> v, passivisation of transitive verb
+% la douleur est-elle [causée] par X
+
+vbar:[sem= @vbar_v_advp_passive_sem(V, Advp),
+      subj_pron=_, voice=passive, inv=uninverted, 
+      vform=past_participle, subcat=passivised_trans, clitic_subcat=CliticSubcat,
+      agr=ParticipleAgr, aux_verb=être, 
+      subj_sem_np_type=ObjType, obj_sem_np_type=SubjType, ind_obj_sem_np_type=IndObjType, clitic=no, elision=EL] -->
+	verb:[sem=V, vform=past_participle, subcat=trans, clitic_subcat=CliticSubcat,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType,
+	      agr=ParticipleAgr, voice=active, elision=EL],
+	optional_adverb:[sem=Advp, position=post].
+
+% aux_vbar --> aux_v
+% il [a] causé vos maux de tete
+
+aux_vbar:[sem= @aux_aux_advp_sem(AuxV, Advp),
+	  inv=uninverted, subj_pron=_, vform=VForm, 
+	  aux_v_type=AuxVerbType,
+	  participle_vform=MainVerbForm, agr=Agr, participle_agr=ParticipleAgr, voice=Voice, elision=EL] -->
+	aux_verb:[sem=AuxV, vform=VForm,
+		  aux_v_type=AuxVerbType, 
+		  participle_vform=MainVerbForm, agr=Agr, participle_agr=ParticipleAgr, voice=Voice, elision=EL],
+	optional_adverb:[sem=Advp, position=pre].
+
+% INVERTED SUBJECT
+
+% (Rules are French- or Catalan-specific)
+
+%% recommandez vous
+@fre_only((
+vbar:[sem= @vbar_v_advp_sem( @vbar_clitic_v_subject_sem(Pron, V), Advp),
+      inv=inverted, subj_pron=normal_pronoun,
+      vform=finite, subcat=Subcat, clitic_subcat=CliticSubcat,
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=no, elision=EL] -->
+	verb:[sem=V, vform=finite, subcat=Subcat, clitic_subcat=CliticSubcat,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, elision=EL],
+	hyphen:[],
+	pronoun:[sem=Pron, agr=Agr, pron_type=normal_pronoun, sem_np_type=SubjType],
+	optional_adverb:[sem=Advp, position=pre\/post]
+)).
+
+%% la douleur est - elle intense
+@fre_only((
+vbar:[sem= @vbar_v_advp_sem(V, Advp),
+      inv=inverted, subj_pron=dummy_pronoun,
+      vform=finite, subcat=Subcat, clitic_subcat=CliticSubcat,
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=no] -->
+	verb:[sem=V, vform=finite, subcat=Subcat, clitic_subcat=CliticSubcat,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr],
+	hyphen:[],
+	pronoun:[sem=Pron, agr=Agr, pron_type=dummy_pronoun],
+	optional_adverb:[sem=Advp, position=pre\/post]
+)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%INFINITIVE MARCHE PAS POUR GENERATION
+%% auxiliaires -  differentes regles pour macros.
+%%pour pronoms normaux passifs
+% [est-elle] causée par X
+% [a-elle] commencé
+@fre_only((
+aux_vbar:[sem= @aux_aux_advp_sem( @aux_clitic_aux_subject_sem(Pron, AuxV), Advp),
+	  inv=inverted, subj_pron=normal_pronoun,
+	  vform=VForm, vform=(finite\/infinitive\/pres_participle), 
+	  aux_v_type=AuxVerbType, participle_vform=MainVerbForm, agr=Agr,
+	  participle_agr=ParticipleAgr, voice=Voice] -->
+	aux_verb:[sem=AuxV, vform=VForm, 
+		  aux_v_type=AuxVerbType, participle_vform=MainVerbForm, agr=Agr,
+		  participle_agr=ParticipleAgr, voice=Voice],
+	hyphen:[],
+	pronoun:[sem=Pron, agr=Agr, pron_type=normal_pronoun],
+	optional_adverb:[sem=Advp, position=pre]
+)).
+
+% pour pronoms vides
+% la douleur [est-elle] causée par X
+@fre_only((
+aux_vbar:[sem= @aux_aux_advp_sem(AuxV, Advp),
+	  inv=inverted, subj_pron=dummy_pronoun,
+	  vform=VForm, vform=(finite\/infinitive\/pres_participle), 
+	  aux_v_type=AuxVerbType, participle_vform=MainVerbForm, agr=Agr,
+	  participle_agr=ParticipleAgr, voice=Voice] -->
+	aux_verb:[sem=AuxV, vform=VForm, 
+		  aux_v_type=AuxVerbType, participle_vform=MainVerbForm, agr=Agr,
+		  participle_agr=ParticipleAgr, voice=Voice],
+	hyphen:[],
+	pronoun:[sem=Pron, agr=Agr, pron_type=dummy_pronoun],
+	optional_adverb:[sem=Advp, position=pre]
+)).
+%%%%%%
+
+% apareix el dolor 
+% [té vostè] dolor 
+
+@cat_or_spa((
+vbar:[sem= @vbar_v_np_advp_advp_sem(V, Np, Advp, Advp2),
+      inv=inverted, subj_pron=PronType,
+      vform=VForm, subcat=Subcat, clitic_subcat=CliticSubcat, aux_verb=AuxVerbType,
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=no] -->
+	verb:[sem=V, vform=VForm, aux_verb=AuxVerbType, 
+	      vform=finite\/past_participle, subcat=Subcat, clitic_subcat=CliticSubcat,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr],
+        optional_adverb:[sem=Advp, position=pre],
+	(   np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null] ;
+	    pronoun:[sem=Np, agr=Agr, pron_type=normal_pronoun, pron_type=PronType]
+	),
+	optional_adverb:[sem=Advp2, position=post]
+%%	optional_adverb:[sem=Advp, position=pre\/post]
+)).
+
+
+
+%%seulement pour être subcat = pp
+@fre_only((
+vbar:[sem= @vbar_v_np_advp_advp_sem(V, Np, Advp, Advp2),
+      inv=inverted, subj_pron=noun,
+      vform=VForm, subcat=Subcat, clitic_subcat=CliticSubcat, aux_verb=AuxVerbType,
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=no] -->
+	verb:[sem=V, vform=VForm, aux_verb=AuxVerbType, 
+	      vform=finite\/past_participle, subcat=Subcat, clitic_subcat=CliticSubcat,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr],
+        optional_adverb:[sem=Advp, position=pre],
+	   np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null],
+	optional_adverb:[sem=Advp2, position=post]
+)).
+		
+
+% COMPLEX AUX
+
+% la douleur [[a] [été]] causée par X
+% la douleur [[a-t-elle] [été]] causée par X
+% la douleur [[a souvent] été] causée par X
+
+aux_vbar:[sem= @aux_aux_advp_sem(AuxV, Advp),
+	  inv=Inv, subj_pron=PronType, vform=VForm, 
+	  aux_v_type=être, participle_vform=past_participle, agr=Agr, participle_agr=Agr, voice=passive, elision=EL] -->
+	aux_vbar:[sem=AuxV, inv=Inv, subj_pron=PronType, vform=VForm, aux_v_type=avoir, agr=Agr, voice=active, elision=EL],
+	@french_catalan_or_spanish(été, estat, estado),
+	optional_adverb:[sem=Advp, position=pre].
+
+% COMBINATION OF AUX AND PAST PARTICIPLE
+
+% il [a causé] vos maux de tête
+% la douleur [[est-elle] causée] par X
+% la douleur [[a été] causée] par X
+% la douleur [[a-t-elle été] causée] par X
+% la douleur [[a souvent été] causée] par X
+
+vbar:[sem= @vbar_aux_v_sem(AuxV, V),
+      inv=Inv, subj_pron=PronType, vform=VForm, vform=(finite\/infinitive\/pres_participle),
+      aux_verb=AuxVerbType, voice=Voice,
+      subcat=Subcat, clitic_subcat=CliticSubcat,
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=CLITIC, elision=EL] -->
+	aux_vbar:[sem=AuxV, inv=Inv, subj_pron=PronType, vform=VForm, 
+		  aux_v_type=AuxVerbType, participle_vform=MainVerbForm, agr=Agr, participle_agr=ParticipleAgr, voice=Voice, elision=EL],
+	vbar:[sem=V, inv=uninverted, vform=MainVerbForm, agr=ParticipleAgr, 
+	      aux_verb=AuxVerbType, voice=Voice,
+	      subcat=Subcat, clitic_subcat=CliticSubcat,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, clitic=CLITIC].
+
+% In Spa, we can combine an uninverted aux with an inverted participle, e.g.
+% cuánto tiempo [le [[ha dolido] [la cabeza]]]
+% PB. a du changer la regle pour empecher le passif avec inversion esta sido el dolor
+% ai remplacer Voice par active
+
+%%juillet 2008 ajouté agr 
+@cat_or_spa((
+vbar:[sem= @vbar_aux_v_sem(AuxV, V),
+      inv=inverted, subj_pron=PronType, vform=VForm, vform=(finite\/infinitive\/pres_participle),
+      voice=active,
+      subcat=Subcat, clitic_subcat=CliticSubcat, 
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, agr=Agr, clitic=CLITIC] -->
+	aux_vbar:[sem=AuxV, inv=uninverted, vform=VForm, 
+		  participle_vform=MainVerbForm, agr=Agr, participle_agr=ParticipleAgr, voice=active],
+	vbar:[sem=V, inv=inverted, vform=MainVerbForm, agr=ParticipleAgr, 
+%%PB	      voice=Voice, 
+	      subcat=Subcat, clitic_subcat=CliticSubcat,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, clitic=CLITIC,agr=Agr]
+)).
+
+% REFLEXIVE PRONOUN
+
+% vous [vous levez]
+% vous [vous [êtes levés]]
+% vous [vous [êtes souvent levés]]
+% [vous [êtes-vous levés]]
+%%ai bloqué la regle pour l'infinitf en catalan qui est lexical
+
+vbar:[sem=V,
+      inv=Inv, subj_pron=SubjPron, voice=Voice,
+      @french_catalan_or_spanish(vform=(finite\/infinitive\/pres_participle),
+				 vform=(finite\/pres_participle),
+				 vform=(finite\/pres_participle)), 
+      vform=Vform, subcat=Subcat, clitic_subcat=none,
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, sem_pp_type=PPType, agr=Agr, clitic=CLITIC, elision=no] -->
+	reflexive_pronoun:[agr=Agr, elision=EL],
+	vbar:[sem=V,
+	      inv=Inv, subj_pron=SubjPron, voice=Voice,
+	      vform=Vform, subcat=Subcat, clitic_subcat=reflexive,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, sem_pp_type=PPType, agr=Agr, clitic=CLITIC, elision=EL].
+
+% REFLEXIVE PRONOUN a l'infinitif
+
+@cat_or_spa((
+vbar:[sem=V,
+      inv=Inv, subj_pron=SubjPron, voice=Voice, 
+      vform=Vform, subcat=intrans, clitic_subcat=none,
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, sem_pp_type=PPType, agr=Agr, clitic=CLITIC] -->
+	vbar:[sem=V,
+	      inv=Inv, subj_pron=SubjPron, voice=Voice,
+	      vform=infinitive, vform=Vform, subcat=intrans, clitic_subcat=reflexive,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, sem_pp_type=PPType, agr=Agr, clitic=CLITIC]
+)).	
+
+%----------------------------------------------------------------------
+
+% cause votre maux de tête
+% est-elle frontale
+% apparaît-elle soudainement
+% a irradié
+% a-t-elle irradié
+% est-elle irradiée
+% a-t-elle été irradiée 
+vp:[sem= @vp_v_comps_postmods_sem(V, Comps, @postmods_advp_postmods_sem(Advp, Postmods)),
+%vp:[sem=concat(V, concat(Comps, concat(Advp,Postmods))),
+    inv=Inv, subj_pron=SubjPron, voice=Voice, agr=Agr, de_pp_prep=DE,
+    subj_sem_np_type=SubjType, vform=Vform, gapsin=GIn, gapsout=GOut, clitic=CLITIC, elision=EL] -->
+	vbar:[sem=V, inv=Inv, subj_pron=SubjPron, voice=Voice, agr=Agr,
+	      vform=(finite\/pres_participle), vform=Vform,
+	      subcat=Subcat, clitic_subcat=none,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, clitic=CLITIC, elision=EL],
+	vp_comps:[sem=Comps, subcat=Subcat, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType,
+		  sem_pp_type=PPType, agr=Agr, de_pp_prep=DE, gapsin=GIn, gapsout=GNext],
+        optional_adverb:[sem=Advp, position=final],
+	optional_vp_postmods:[sem=Postmods, gapsin=GNext, gapsout=GOut].
+
+
+%%Pas d'attachement de pp à l'infinitf  
+vp:[sem= @vp_v_comps_sem(V, Comps),
+%vp:[sem=concat(V, concat(Comps, concat(Advp,Postmods))),
+    inv=Inv, subj_pron=SubjPron, voice=Voice, agr=Agr, de_pp_prep=DE,
+    subj_sem_np_type=SubjType, vform=Vform, gapsin=GIn, gapsout=GOut, clitic=CLITIC, elision=EL] -->
+	vbar:[sem=V, inv=Inv, subj_pron=SubjPron, voice=Voice, agr=Agr,
+	      vform=infinitive, vform=Vform,
+	      subcat=Subcat, clitic_subcat=none,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType, sem_pp_type=PPType, clitic=CLITIC, elision=EL],
+	vp_comps:[sem=Comps, subcat=Subcat, obj_sem_np_type=ObjType, ind_obj_sem_np_type=IndObjType,
+		  sem_pp_type=PPType, agr=Agr, de_pp_prep=DE, gapsin=GIn, gapsout=GNext].	
+
+
+
+
+%----------------------------------------------------------------------
+
+% frontale
+vp_comps:[sem= @comps_adjp_sem(Sem),
+	  subcat=adj, obj_sem_np_type=PredType, ind_obj_sem_np_type=none, agr=Agr, gapsin=GIn, gapsout=GOut, de_pp_prep=DE] -->
+	adjp:[sem=Sem, adjpos=pred, sem_adj_type=PredType, agr=Agr, adj_subcat=null, gapsin=GIn, gapsout=GOut, de_pp_prep=DE].
+
+
+      
+%avril 2005
+% la fréquence de vos maux de tête
+vp_comps:[sem= @comps_np_sem(Sem),
+	  subcat=être, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, agr=Agr, gapsin=GIn, gapsout=GIn] -->
+	np:[sem=Sem, agr=Agr, sem_np_type=ObjType, gapsin=GIn, gapsout=GIn, has_spec=yes ].
+
+% sur le côté, où vous avez mal
+vp_comps:[sem= @comps_pp_sem(Sem),
+	  subcat=pp, sem_pp_type=PPType, obj_sem_np_type=none, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GOut] -->
+	pp:[sem=Sem, sem_pp_type=PPType, gapsin=GIn, gapsout=GOut].
+
+
+% de vertiges
+vp_comps:[sem= @comps_de_pp_sem(Sem),
+	  subcat=de_pp, obj_sem_np_type=PPType, ind_obj_sem_np_type=none,
+	  gapsin=GIn, gapsout=GOut, de_pp_prep=de] -->
+	de_pp:[sem=Sem, sem_np_type=PPType, subcat=null,
+	       gapsin=GIn, gapsout=GOut, de_pp_prep=de].
+
+
+
+%avril 2005
+%obligé d'avoir deux règles parce que si has_spec=_ -> irradie cou
+% le cou
+vp_comps:[sem= @comps_np_sem(Sem),
+	  subcat=trans, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GOut] -->
+	np:[sem=Sem, sem_np_type=ObjType, gapsin=GIn, gapsout=GOut,
+	    @french_catalan_or_spanish(has_spec=yes, has_spec=_, has_spec=_)].
+
+vp_comps:[sem= @comps_np_ditrans_with_clitic_sem(Sem),
+	  subcat=ditrans_with_clitic, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GOut] -->
+	np:[sem=Sem, sem_np_type=ObjType, gapsin=GIn, gapsout=GOut, has_spec=_].
+
+
+% una luz viva
+@cat_or_spa((
+vp_comps:[sem= @comps_np_sem(Sem),
+	  subcat=hay, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GIn] -->
+	np:[sem=Sem, sem_np_type=ObjType, gapsin=null, gapsout=null]
+)).	
+
+%avril 2005
+% mal
+vp_comps:[sem= @comps_np_sem(Sem),
+	  subcat=trans_support, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GOut] -->
+	np:[sem=Sem, sem_np_type=ObjType, gapsin=GIn, gapsout=GOut, has_spec=no].
+
+% indiquer l'endroit
+vp_comps:[sem= @comps_vp_sem(Sem),
+	  subcat=modal, obj_sem_np_type=none, ind_obj_sem_np_type=none, gapsin=null, gapsout=null] -->
+	vp:[sem=Sem, vform=infinitive, gapsin=null, gapsout=null].
+
+
+% où sont les toilettes
+vp_comps:[sem= @embedded(Sem),
+	  subcat=wh, obj_sem_np_type=none, ind_obj_sem_np_type=none, gapsin=null, gapsout=null] -->
+	wh_question:[sem=Sem].
+
+
+% fui a ver
+@spa_only((
+vp_comps:[sem= @comps_vp_sem(Sem),
+	  subcat=inf_a, obj_sem_np_type=none, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GOut] -->
+        a,
+	vp:[sem=Sem, vform=infinitive, gapsin=GIn, gapsout=GOut]
+)).
+
+
+
+% d avoir
+@fre_only((
+vp_comps:[sem= @comps_vp_sem(Sem),
+	  subcat=inf_de, obj_sem_np_type=none, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=null] -->
+        de_prep:[np_agr=Agr, np_has_spec=HasSpec, de_pp_prep=Prep,elision=Elision],
+	vp:[sem=Sem, vform=infinitive, gapsin=GIn, gapsout=null, elision=Elision]
+)).
+
+
+
+% (intransitive = null complement)
+vp_comps:[sem= @comps_for_intrans_sem,
+	  subcat=intrans, obj_sem_np_type=none, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GIn] -->
+	[].
+
+vp_comps:[sem= @comps_for_trans_with_clitic_sem,
+	  subcat=trans_with_clitic, obj_sem_np_type=none, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GIn] -->
+	[].
+
+vp_comps:[sem= @comps_for_ind_obj_with_clitic_sem,
+	  subcat=ind_obj_with_clitic, obj_sem_np_type=none, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GIn] -->
+	[].
+
+
+% par la fatigue
+@cat_or_spa((
+vp_comps:[sem= @comps_passivise_pp_sem(Sem),
+	  subcat=passivised_trans, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GIn] --> 
+	@passive_pp_prep,
+	np:[sem=Sem, sem_np_type=ObjType, gapsin=null, gapsout=null]
+)).
+
+
+@fre_only((
+vp_comps:[sem= @comps_passivise_pp_sem(Sem),
+	  subcat=passivised_trans, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GIn] --> 
+	passive_prep:[elision=Elision],
+	np:[sem=Sem, sem_np_type=ObjType, gapsin=null, gapsout=null,elision=Elision]
+)).
+
+
+vp_comps:[sem= @comps_for_passivised_trans_sem,
+	  subcat=passivised_trans, obj_sem_np_type=ObjType, ind_obj_sem_np_type=none, gapsin=GIn, gapsout=GIn] --> 
+	[].
+
+% le matin (etc)
+optional_vp_postmods:[sem=Sem, gapsin=GIn, gapsout=GOut, empty=Empty] -->
+	optional_pp:[sem=Sem, sem_pp_type=(temporal\/duration\/locative\/frequency_unit\/cause\/manière),
+		     gapsin=GIn, gapsout=GOut, empty=Empty].
+
+@cat_or_spa((
+optional_vp_postmods:[sem=Sem, gapsin=GIn, gapsout=GIn, empty=no] -->
+	optional_adverb:[sem=Sem, position=pre, empty=no]
+)).
+
+%soudainement
+optional_adverb:[sem=Sem, position=Pos, empty=no] -->
+	adv:[sem=Sem, position=Pos].
+
+%souvent progressivement
+optional_adverb:[sem= @advp_adv_adv_sem(Sem1, Sem2), position=Pos, empty=no] -->
+	adv:[sem=Sem1, position=pre],
+        adv:[sem=Sem2, position=post].
+
+optional_adverb:[sem=[], empty=yes] -->
+	[].
+
+
+%oui, non
+optional_interj:[sem=Sem] -->
+	interj:[sem=Sem].
+
+optional_interj:[sem=[]] -->
+	[].
+
+%%%%
+% le soir
+% souvent le soir
+@fre_only((
+@recognition_only((
+optional_pp:[sem= @pp_advp_pp_sem(Sem1, Sem2),
+	     sem_pp_type=Type, gapsin=GIn, gapsout=GOut, empty=no] --> 
+        optional_adverb:[sem=Sem2, position=pre],
+	pp:[sem=Sem1, sem_pp_type=Type, gapsin=GIn, gapsout=GOut]
+))
+)).
+
+@fre_only((
+@generation_only((
+optional_pp:[sem=Sem1, sem_pp_type=Type, gapsin=GIn, gapsout=GOut, empty=no] --> 
+	pp:[sem=Sem1, sem_pp_type=Type, gapsin=GIn, gapsout=GOut]
+))
+)).
+
+@cat_or_spa((
+optional_pp:[sem= @pp_advp_pp_sem(Sem1, Sem2),
+	     sem_pp_type=Type, gapsin=GIn, gapsout=GOut, empty=no] --> 
+        optional_adverb:[sem=Sem2, position=pre],
+	pp:[sem=Sem1, sem_pp_type=Type, gapsin=GIn, gapsout=GOut]
+)).
+
+optional_pp:[sem=[], gapsin=GIn, gapsout=GIn, empty=yes] --> 
+	[].
+
+% tousser
+%np:[sem=[concat([[clause_type, nested_infinitive]], [[clause, concat([[tense, unspecified], [pronoun, unspecified]], V)]])], sem_np_type=action, agr=(3/\sg), subcat=null, has_spec=no, gapsin=null, gapsout=null] -->
+%	vp:[sem=V, inv=uninverted, vform=infinitive,
+%      subj_pron=Subj, voice=Voice, subj_sem_np_type=SubjType].
+np:[sem= @np_infinitive_vp_sem( @infinitive_vp_v_sem(V)),
+%np:[sem= @infinitive_vp_v_sem(V),
+    sem_np_type=action, agr=(3/\sg), subcat=null, has_spec=no, gapsin=null, gapsout=null] -->
+	vp:[sem=V, inv=uninverted, vform=infinitive,
+	    subj_pron=Subj, voice=Voice, subj_sem_np_type=SubjType,
+	    gapsin=null, gapsout=null].
+
+
+%%NEW
+% quelqu'un qui....
+np:[sem= @np_np_rel_sem(Np, Rel),
+    sem_np_type=Type, subcat=null, agr=Agr, has_spec=A, gapsin=GIn, gapsout=GIn, spec_type=S,can_be_pp=Can, de_pp_sem_type=none,modrel=no] -->
+	np:[sem=Np, sem_np_type=Type, agr=Agr, subcat=null, de_pp_sem_type=SubType, de_pp_agr=SubAgr, de_pp_prep=Prep, gapsin=GIn, gapsout=GIn, has_spec=A, spec_type=S,can_be_pp=Can,modrel=yes],
+	rel:[sem=Rel, sem_np_type=Type, agr=Agr].
+
+% la fréquence de vos maux de tête
+np:[sem= @np_np_de_pp_sem(Np, Pp),
+    sem_np_type=Type, subcat=null, agr=Agr, has_spec=A, gapsin=GIn, gapsout=GIn, spec_type=S,can_be_pp=Can, de_pp_sem_type=none] -->
+	np:[sem=Np, sem_np_type=Type, agr=Agr, subcat=de_pp, de_pp_sem_type=SubType, de_pp_agr=SubAgr, de_pp_prep=Prep, gapsin=GIn, gapsout=GIn, has_spec=A, spec_type=S,can_be_pp=Can],
+	de_pp:[sem=Pp, sem_np_type=SubType, agr=SubAgr, subcat=null, de_pp_prep=Prep,
+	       gapsin=null, gapsout=null].
+
+% la douleur
+%np:[sem=Sem, sem_np_type=Type, agr=Agr, de_pp_sem_type=SubType, de_pp_agr=SubAgr, subcat=Subcat, can_be_pp=Can, gapsin=GIn, gapsout=GIn] -->
+%	core_np:[sem=Sem, sem_np_type=Type, de_pp_sem_type=SubType, de_pp_agr=SubAgr, agr=Agr, subcat=Subcat, can_be_pp=Can].
+
+% quelques minutes
+np:[sem= @np_spec_nbar_sem(Spec, Nbar),
+    sem_np_type=Type, agr=Agr, subcat=Subcat, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=CanBePP, has_spec=yes, gapsin=GIn, gapsout=GIn, spec_type=SpecType, elision=Elisiondet] -->
+	spec:[sem=Spec, agr=Agr, spec_type=SpecType, elision=Elision, elisiondet=Elisiondet],
+	nbar:[sem=Nbar, sem_np_type=Type, agr=Agr, subcat=Subcat, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=CanBePP, takes_spec_type=SpecType, elision=Elision].
+
+% quelqu'un
+np:[sem=Pron, sem_np_type=Type, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+	pronoun:[sem=Pron, agr=Agr, pron_type=indefini, sem_np_type=Type].
+
+
+% plus mal
+%%pour eviter ambiguite avec [ plus de...]
+@fre_only((
+np:[sem= @np_advp_nbar_sem(Spec, Nbar),
+    sem_np_type=support, agr=Agr, subcat=Subcat, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=CanBePP, has_spec=no, gapsin=GIn, gapsout=GIn, spec_type=non_numeric] -->
+	adv:[sem=Spec, position=comparative],
+	nbar:[sem=Nbar, sem_np_type=support, agr=Agr, subcat=Subcat, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=CanBePP,elision=Elision]
+)).
+
+% au [repos]
+np:[sem= @np_nbar_sem(Nbar),
+    sem_np_type=Type, agr=Agr, subcat=Subcat, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=CanBePP, has_spec=no, 
+    gapsin=GIn, gapsout=GIn, spec_type=non_numeric,elision=Elision] -->
+	nbar:[sem=Nbar, sem_np_type=Type, agr=Agr, subcat=Subcat, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=CanBePP,elision=Elision].
+
+% Athènes
+np:[sem= @np_nbar_sem(Nbar),
+    sem_np_type=Type, agr=Agr, subcat=null, can_be_pp=yes, has_spec=yes, 
+    gapsin=GIn, gapsout=GIn, spec_type=non_numeric,elision=Elision] -->
+	npr:[sem=Nbar, sem_np_type=Type, agr=Agr, elision=Elision].
+
+% plusieurs minutes (HACK...)
+%np:[sem=Sem, sem_np_type=duration, agr=(3/\pl), subcat=null, de_pp_sem_type=none, can_be_pp=Can%BePP, has_spec=yes, 
+%    gapsin=GIn, gapsout=GIn] -->
+%	plusieurs,
+% 	n:[sem=Sem, sem_np_type=duration, agr=(3/\pl), can_be_pp=CanBePP].
+
+% le mamelon gauche
+nbar:[sem= @nbar_n_adjp_sem(N, Adj),
+      sem_np_type=Type, agr=Agr, subcat=Subcat, de_pp_sem_type=SubType, de_pp_prep=Prep, de_pp_agr=SubAgr, takes_spec_type=SpecType, spec_type=Spectype,can_be_pp=Can, elision=Elision] -->
+	n:[sem=N, sem_np_type=Type, sem_np_type=(\(heure)), agr=Agr, subcat=Subcat, de_pp_sem_type=SubType, de_pp_prep=Prep, de_pp_agr=SubAgr, takes_spec_type=SpecType,can_be_pp=Can,elision=Elision],
+        adjp:[sem=Adj, adjpos=attributive, sem_adj_type=Type, agr=Agr, adj_subcat=null, gapsin=null, gapsout=null].
+
+% un largo tiempo
+@cat_or_spa((
+nbar:[sem= @nbar_n_adjp_sem(N, Adj), sem_np_type=Type, agr=Agr, subcat=Subcat, de_pp_sem_type=SubType, de_pp_prep=Prep, de_pp_agr=SubAgr, takes_spec_type=SpecType, spec_type=Spectype,can_be_pp=Can,elision=Elision] -->
+        adjp:[sem=Adj, sem_adj_type=Type, adjpos=prenom, agr=Agr, adj_subcat=null, gapsin=null, gapsout=null, elision=Elision],
+	n:[sem=N, sem_np_type=Type, agr=Agr, subcat=Subcat, de_pp_sem_type=SubType, de_pp_prep=Prep, de_pp_agr=SubAgr, takes_spec_type=SpecType,can_be_pp=Can]
+)).
+
+% le mamelon
+nbar:[sem= @nbar_n_sem(Sem),
+      sem_np_type=Type, agr=Agr, subcat=Subcat, de_pp_sem_type=SubType, de_pp_prep=Prep,
+      de_pp_agr=SubAgr, takes_spec_type=SpecType, spec_type=SpecType,can_be_pp=Can, elision=Elision] -->
+	n:[sem=Sem, sem_np_type=Type, sem_np_type=(\(heure)),agr=Agr, subcat=Subcat, de_pp_sem_type=SubType, de_pp_prep=Prep,
+	   de_pp_agr=SubAgr, takes_spec_type=SpecType,can_be_pp=Can, elision=Elision].
+
+
+% deux
+spec:[sem= @spec_number_sem(N), agr=Agr, spec_type=numeric] -->
+	number:[sem=N, agr=Agr].
+
+% deux à trois
+spec:[sem= @spec_number_range_sem(N1, N2), agr=Agr, spec_type=numeric] -->
+	number:[sem=N1, agr=Agr],
+        @french_catalan_or_spanish(à, a, a),
+        number:[sem=N2, agr=Agr].
+
+% plus de deux heures
+spec:[sem= @spec_comparative_n_sem(Comparative, N),
+      agr=Agr, spec_type=numeric] -->
+	comparative:[sem=Comparative,elision=Elision],
+	number:[sem=N, agr=Agr,elision=Elision].
+
+% de vos maux de tête
+% du soir
+de_pp:[sem= @de_pp_np_sem(Sem),
+       sem_np_type=Type, agr=Agr, subcat=null, de_pp_prep=Prep, gapsin=null, gapsout=null] -->
+	de_prep:[np_agr=Agr, np_has_spec=HasSpec, de_pp_prep=Prep,elision=Elision],
+	np:[sem=Sem, sem_np_type=Type, agr=Agr, has_spec=HasSpec, gapsin=null, gapsout=null,
+	    subcat=(null\/de_pp), elision=Elision].
+
+% le soir
+pp:[sem= @pp_temporal_np_sem(Sem), sem_pp_type=temporal\/duration, gapsin=GIn, gapsout=GIn, recursive=no] -->
+
+	np:[sem=Sem, sem_np_type=temporal\/duration, gapsin=null, gapsout=null, can_be_pp=yes].
+
+% une fois par jour
+pp:[sem= @pp_np_pp_frequency_sem(Np, Freq),
+    sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+	np:[sem=Np, sem_np_type=frequency, gapsin=null, gapsout=null],
+	pp:[sem=Freq, sem_pp_type=frequency_unit, recursive=no, gapsin=null, gapsout=null].
+
+
+% à la tête le soir
+%le soir après le coucher
+%%second ne peut pas être locative pour eviter ambiguïté. Trop restrictif??
+pp:[sem= @pp_pp_pp_sem(PP1, PP2), sem_pp_type=A, gapsin=GIn, gapsout=GOut, recursive=yes] -->
+	pp:[sem=PP1, sem_pp_type=A, gapsin=null, gapsout=null, recursive=no],
+	pp:[sem=PP2, sem_pp_type=B, gapsin=GIn, gapsout=GOut, recursive=_, sem_pp_type=temporal\/duration\/frequency_unit\/locative\/manière].
+
+%%	pp:[sem=PP1, sem_pp_type=A, gapsin=GIn, gapsout=GOut, recursive=no],
+%%	pp:[sem=PP2, sem_pp_type=B, gapsin=null, gapsout=null, recursive=_, sem%%_pp_type=temporal\/duration\/frequency_unit].
+
+
+%%pp:[sem= @pp_p_np_sem(P, Np), sem_pp_type=PPType, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%%np:[sem=Np, sem_np_type=NPType,  sem_np_type=(\(heure)), agr=Agr, has_spec=HasSpec, gapsin=null, gapsout=null,elision=Elision].
+% après le coucher
+% au lever
+pp:[sem= @pp_p_np_sem(P, Np), sem_pp_type=PPType, gapsin=null, gapsout=null, recursive=no] -->
+	prep:[sem=P, sem_pp_type=PPType, sem_np_type=NPType, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+	np:[sem=Np, sem_np_type=NPType,  sem_np_type=(\(heure)), agr=Agr, has_spec=HasSpec, gapsin=null, gapsout=null,elision=Elision].
+
+
+%%pour deux
+%%pl pour éviter pour un/une
+pp:[sem= @pp_p_number_sem(P, N), sem_pp_type=PPType, gapsin=null, gapsout=null, recursive=no] -->
+	prep:[sem=P,  sem_pp_type=manière, sem_pp_type=PPType, sem_np_type=NPType, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+        number:[sem=N, agr=Agr, agr=pl,type_num=(\(année))].
+	
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%DATE
+@fre_only((
+%le 5 mars 1965
+pp:[sem= @pp_number_n_number(N,N2,Np), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+	le,
+        number:[sem=N, elision=Elision,type_num=jour],
+	n:[sem=Np, sem_np_type=mois],
+        number:[sem=N2, elision=Elision,type_num=année]
+)).
+
+
+
+@fre_only((
+%le 5 mars 1965
+pp:[sem= @pp_number(N2), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+	en,
+        number:[sem=N2, elision=Elision,type_num=année]
+)).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%HEURES
+%%Les PP doivent être enlevées et remplacés par un PP
+%%PP
+
+@fre_only((
+%à 1 -> 24 heures 
+pp:[sem= @pp_p_np_sem(P, Np), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+        np:[sem= Np, sem_np_type=heure, agr=Agr, gapsin=GIn, gapsout=GIn]
+)).
+
+%@fre_only((
+% à 1 -> 24 heures 
+%pp:[sem= @pp_p_np_sem_number(P, N, Np), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_v\/heure_d],
+%	n:[sem=Np, sem_np_type=heure, agr=Agr]
+%)).
+
+%%NP
+@fre_only((
+np:[sem= @np_sem_number(N, Np), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_v\/heure_d],
+	n:[sem=Np, sem_np_type=heure, agr=Agr]
+)).
+
+%%NP
+@fre_only((
+np:[sem= @np_sem_number(N, Np, Adj), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_v\/heure_d],
+	n:[sem=Np, sem_np_type=heure, agr=Agr],
+        adjp:[sem=Adj, adjpos=attributive, sem_adj_type=heure, agr=Agr, adj_subcat=null, gapsin=null, gapsout=null]
+)).
+
+
+
+
+%%PP
+%@fre_only((
+% à midi
+%pp:[sem= @pp_p_np_sem_number(P, Np), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%        num_heure:[sem=Np,agr=Agr]
+%)).
+
+%%NP
+@fre_only((
+np:[sem= @np_sem_number(Np), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        num_heure:[sem=Np,agr=Agr]   
+)).
+
+%%%%%%%%%%%%
+
+% à 1 -> 24 heures 1 -> 60
+%%PP
+%@fre_only((
+%pp:[sem= @pp_p_np_sem_number_et(P, N1,Np,N2), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%        number:[sem=N1, agr=Agr,elision=Elision,type_num=heure_v\/heure_d],
+%	n:[sem=Np, sem_np_type=heure, agr=Agr],
+%        number:[sem=N2, elision=Elision,type_num=minute\/heure_d\/heure_v]
+%)).
+
+
+%%NP
+@fre_only((
+np:[sem=@np_sem_number_et(N1,Np,N2), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        number:[sem=N1, agr=Agr,elision=Elision,type_num=heure_v\/heure_d],
+	n:[sem=Np, sem_np_type=heure, agr=Agr],
+        number:[sem=N2, elision=Elision,type_num=minute\/heure_d\/heure_v]      
+)).
+
+%%PP
+% à  midi 1 -> 60
+%@fre_only((
+%pp:[sem= @pp_p_np_sem_number_et(P, Np,N2), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%        num_heure:[sem=Np,agr=Agr],
+%        number:[sem=N2, elision=Elision,type_num=minute\/heure_d\/heure_v]
+%%)).
+
+%%NP
+@fre_only((
+np:[sem=@np_sem_number_et(Np,N2), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+    num_heure:[sem=Np,agr=Agr],
+    number:[sem=N2, elision=Elision,type_num=minute\/heure_d\/heure_v]    
+)).
+
+
+%%%%%%%%%%%%%%
+
+% à 1 -> 12 heures et demie / (un) quart 
+%%PP
+%%@fre_only((
+%%pp:[sem= @pp_p_np_sem_number_et(P, N, Np,MT), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%%        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_d],
+%%	n:[sem=Np, sem_np_type=heure, agr=Agr],
+%%        mod_time_et:[sem=MT,agr=Agr]
+%%)).
+
+%%NP
+@fre_only((
+np:[sem=@np_sem_number_et(N, Np,MT), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_d],
+	n:[sem=Np, sem_np_type=heure, agr=Agr],
+        mod_time_et:[sem=MT,agr=Agr]
+)).
+
+
+% à midi et demi / (un) quart 
+%%@fre_only((
+%%pp:[sem= @pp_p_np_sem_number_et(P, Np,MT), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%%        num_heure:[sem=Np,agr=Agr],
+%%        mod_time_et:[sem=MT,agr=Agr]
+%%)).
+
+
+%%NP
+@fre_only((
+np:[sem=@np_sem_number_et(Np,MT), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+      num_heure:[sem=Np,agr=Agr],
+      mod_time_et:[sem=MT,agr=Agr]  
+)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%PP
+% à 1 -> 12 heures moins le/un quart
+%@fre_only((
+%pp:[sem= @pp_p_np_sem_number_moins(P, N, Np,MT), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_d],
+%	n:[sem=Np, sem_np_type=heure, agr=Agr],
+%        mod_time_moins:[sem=MT]
+%)).
+
+
+%%NP
+% 1 -> 12 heures moins le/un quart
+@fre_only((
+np:[sem=@np_sem_number_moins(N, Np,MT), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_d],
+	n:[sem=Np, sem_np_type=heure, agr=Agr],
+        mod_time_moins:[sem=MT]
+)).
+
+%%PP
+% à midi moins le/un quart
+%@fre_only((
+%pp:[sem= @pp_p_np_sem_number_moins(P, Np,MT), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%        num_heure:[sem=Np,agr=Agr],
+%        mod_time_moins:[sem=MT]
+%)).
+
+%NP
+@fre_only((
+np:[sem= @np_sem_number_moins(Np,MT), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        num_heure:[sem=Np,agr=Agr],
+        mod_time_moins:[sem=MT]
+)).
+
+%%%%%%%%%%%%%%%%%%
+
+%PP
+% à 1-24 heures moins 1 -29 
+%@fre_only((
+%pp:[sem= @pp_p_np_sem_number_moins(P, N, Np,N2), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_d\/heure_v],
+%	n:[sem=Np, sem_np_type=heure, agr=Agr],
+%        moins,
+%        number:[sem=N2, type_num=minute\/heure_d\/heure_v\/heure_v2]
+%)).
+
+
+%NP
+%1-24 heures moins 1 -29 
+@fre_only((
+np:[sem= @np_sem_number_moins(N, Np,N2), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        number:[sem=N, agr=Agr,elision=Elision,type_num=heure_d\/heure_v],
+	n:[sem=Np, sem_np_type=heure, agr=Agr],
+        moins,
+        number:[sem=N2, type_num=minute\/heure_d\/heure_v\/heure_v2]
+)).
+
+
+%%PP
+% à 2 heures moins 10 / midi moins 10 
+%%ici jusqu'à -29
+%@fre_only((
+%pp:[sem= @pp_p_np_sem_number_moins(P, Np,N2), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+%	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+%        num_heure:[sem=Np,agr=Agr],
+%        moins,
+%        number:[sem=N2, type_num=minute\/heure_d\/heure_v\/heure_v2]
+%)).
+
+%NP
+%% 2 heures moins 10 / midi moins 10 
+%%ici jusqu'à -29
+@fre_only((
+np:[sem= @np_sem_number_moins(Np,N2), sem_np_type=heure, agr=Agr, subcat=null, de_pp_sem_type=DeSemPP, de_pp_prep=Prep, can_be_pp=no, has_spec=yes, gapsin=null, gapsout=null, spec_type=SpecType] -->
+        num_heure:[sem=Np,agr=Agr],
+        moins,
+        number:[sem=N2, type_num=minute\/heure_d\/heure_v\/heure_v2]
+)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% de deux heures, de deux à trois heures
+@fre_only((
+pp:[sem= @pp_de_np_duration_sem(Np),
+    sem_pp_type=duration, gapsin=GIn, gapsout=GIn, recursive=no] -->
+	de,
+	np:[sem=Np, sem_np_type=duration, agr=Agr, has_spec=yes, gapsin=null, gapsout=null, spec_type=numeric]
+)).
+
+% quand vous avez mal
+pp:[sem= @pp_sc_s_sem(Sc, S),
+    sem_pp_type=PPType, gapsin=GIn, gapsout=GIn, recursive=no] -->
+	sc:[sem=Sc, sem_pp_type=PPType, sctype=quand],
+	s:[sem=S].
+
+
+@fre_only((
+@recognition_only((
+adjp:[sem= @adjp_de_typ_adjp_sem(Adjp),
+      sem_adj_type=SemAdjType, agr=Agr, gapsin=G, gapsout=G] -->
+	 de, type, 
+         adjp:[sem=Adjp, sem_adj_type=SemAdjType, agr=(3/\sg/\masc), sem_adj_type=symptom,
+	       adj_subcat=null, gapsin=null, gapsout=null]
+))
+)).
+
+
+@fre_only((
+adjp:[sem= @adjp_de_typ_adjp_sem(Adjp),
+      sem_adj_type=SemAdjType, agr=Agr, gapsin=G, gapsout=G,adj_subcat=null] -->
+	 de, 
+         adjp:[sem=Adjp, sem_adj_type=SemAdjType, agr=Agr, prep=yes,
+	       adj_subcat=null, gapsin=null, gapsout=null]
+)).
+
+
+
+
+adjp:[sem= @adjp_deg_adjp_sem(Deg, Adjp),
+      sem_adj_type=SemAdjType, agr=Agr, gapsin=G, gapsout=G, degré=yes, adj_subcat=Sub] -->
+	 degré:[sem=Deg],
+         adjp:[sem=Adjp, sem_adj_type=SemAdjType, adj_subcat=null, gapsin=null, gapsout=null, degré=no, adj_subcat=Sub, agr=Agr].
+
+
+adjp:[sem= @adjp_adjp_de_pp_sem(Adjp, Pp),
+      sem_adj_type=SemAdjType, agr=Agr, gapsin=A, gapsout=B, de_pp_prep=Prep, adj_subcat=null] -->
+         adjp:[sem=Adjp, sem_adj_type=SemAdjType, agr=Agr, adj_subcat=pp, de_pp_prep=Prep, gapsin=null, gapsout=null],
+         de_pp:[sem=Pp, subcat=null, de_pp_prep=Prep, gapsin=A, gapsout=B].
+
+
+adjp:[sem= @adjp_adjp_de_pp_sem(Adjp, Pp),
+      sem_adj_type=SemAdjType, agr=Agr, gapsin=null, gapsout=null, de_pp_prep=Prep, adj_subcat=null,adjpos=pred] -->
+         adjp:[sem=Adjp, sem_adj_type=SemAdjType, agr=Agr, adj_subcat=inf_de, de_pp_prep=Prep, gapsin=null, gapsout=null],
+         vp_comps:[sem=Pp, subcat=inf_de, gapsin=null, gapsout=null].
+
+         
+%%rel
+%%subject
+rel:[sem= @rel_pron_vp_sem(Pron, Vp),
+     agr=A, sem_np_type=Semtype] -->
+	pronoun:[sem=Pron, agr=A, pron_type=rel],
+	vp:[sem=Vp, inv=uninverted, gapsin=null, gapsout=null,agr=A, vform=finite,subj_sem_np_type=SemType].
+
+% en buvant
+%en vous levant 
+%%limité à la seconde pers du singulier
+pp:[sem= @pp_sc_s_sem(Sc, @s_vp_sem(VP)),
+    sem_pp_type=PPType, gapsin=GIn, gapsout=GIn, recursive=no] -->
+	sc:[sem=Sc, sem_pp_type=PPType, sctype=en],
+	vp:[sem=VP, inv=uninverted, agr=Agr, gapsin=null, gapsout=null, vform=pres_participle, subj_sem_np_type=SubjType, agr=(pol/\sg/\masc)].
+
+
+% gap rule
+pp:[sem= @pp_gap,
+    gapsin=pp_gap, gapsout=null, recursive=no] -->
+	[].
+
+% gap rule
+de_pp:[sem= @de_pp_gap, gapsin=de_pp_gap, gapsout=null] -->
+	[].
+
+% gap rule
+np:[sem= @np_gap,
+    gapsin=np_gap, gapsout=null, de_pp_sem_type=none, de_pp_prep=de, can_be_pp=no] -->
+	[].

@@ -1,0 +1,1396 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/AkmanEtAl2004/ZooTest1.e
+loading foundations/Root.e
+loading foundations/DEC.e
+loading examples/AkmanEtAl2004/ZooWorld.e
+3609 variables and 23355 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+!Accessible(1, 1, 0).
+!Accessible(1, 5, 0).
+!Accessible(1, 6, 0).
+!Accessible(1, 7, 0).
+!Accessible(1, 8, 0).
+!Accessible(2, 2, 0).
+!Accessible(2, 5, 0).
+!Accessible(2, 6, 0).
+!Accessible(2, 7, 0).
+!Accessible(2, 8, 0).
+!Accessible(3, 3, 0).
+!Accessible(3, 5, 0).
+!Accessible(3, 6, 0).
+!Accessible(3, 7, 0).
+!Accessible(3, 8, 0).
+!Accessible(4, 4, 0).
+!Accessible(4, 5, 0).
+!Accessible(4, 6, 0).
+!Accessible(4, 7, 0).
+!Accessible(4, 8, 0).
+!Accessible(5, 1, 0).
+!Accessible(5, 2, 0).
+!Accessible(5, 3, 0).
+!Accessible(5, 4, 0).
+!Accessible(5, 5, 0).
+!Accessible(6, 1, 0).
+!Accessible(6, 2, 0).
+!Accessible(6, 3, 0).
+!Accessible(6, 4, 0).
+!Accessible(6, 6, 0).
+!Accessible(7, 1, 0).
+!Accessible(7, 2, 0).
+!Accessible(7, 3, 0).
+!Accessible(7, 4, 0).
+!Accessible(7, 7, 0).
+!Accessible(8, 1, 0).
+!Accessible(8, 2, 0).
+!Accessible(8, 3, 0).
+!Accessible(8, 4, 0).
+!Accessible(8, 8, 0).
+!Happens(Close(Homer, GateAO), 0).
+!Happens(GetOff(Homer, Homer), 0).
+!Happens(GetOff(Homer, Jumbo), 0).
+!Happens(Mount(Homer, Homer), 0).
+!Happens(Mount(Homer, Jumbo), 0).
+!Happens(Move(Homer, 1), 0).
+!Happens(Move(Homer, 2), 0).
+!Happens(Move(Homer, 3), 0).
+!Happens(Move(Homer, 4), 0).
+!Happens(Move(Homer, 5), 0).
+!Happens(Move(Homer, 6), 0).
+!Happens(Move(Homer, 8), 0).
+!Happens(Move(Jumbo, 1), 0).
+!Happens(Move(Jumbo, 2), 0).
+!Happens(Move(Jumbo, 3), 0).
+!Happens(Move(Jumbo, 4), 0).
+!Happens(Move(Jumbo, 5), 0).
+!Happens(Move(Jumbo, 6), 0).
+!Happens(Move(Jumbo, 7), 0).
+!Happens(Move(Jumbo, 8), 0).
+!Happens(Open(Homer, GateAO), 0).
+!Happens(ThrowOff(Homer, Homer), 0).
+!Happens(ThrowOff(Jumbo, Homer), 0).
+!HoldsAt(AbnormalEncroachment(Homer), 0).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Homer), 0).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Jumbo), 0).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Homer), 0).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Jumbo), 0).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Homer), 0).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 0).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Homer), 0).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Jumbo), 0).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Homer), 0).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Homer, 1), Homer), 0).
+!HoldsAt(DoneBy(Move(Homer, 1), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Homer, 2), Homer), 0).
+!HoldsAt(DoneBy(Move(Homer, 2), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Homer, 3), Homer), 0).
+!HoldsAt(DoneBy(Move(Homer, 3), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Homer, 4), Homer), 0).
+!HoldsAt(DoneBy(Move(Homer, 4), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Homer, 5), Homer), 0).
+!HoldsAt(DoneBy(Move(Homer, 5), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Homer, 6), Homer), 0).
+!HoldsAt(DoneBy(Move(Homer, 6), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Homer, 7), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Homer, 8), Homer), 0).
+!HoldsAt(DoneBy(Move(Homer, 8), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Homer), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Homer), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Homer), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Homer), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Homer), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Homer), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Homer), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Jumbo), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Homer), 0).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Jumbo), 0).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Homer), 0).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Jumbo), 0).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Homer), 0).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 0).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 0).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 0).
+!HoldsAt(MountFails(Homer), 0).
+!HoldsAt(Mounted(Homer, Homer), 0).
+!HoldsAt(Mounted(Homer, Jumbo), 0).
+!HoldsAt(Moves(Jumbo), 0).
+!HoldsAt(Opened(GateAO), 0).
+!HoldsAt(Pos(Homer, 1), 0).
+!HoldsAt(Pos(Homer, 2), 0).
+!HoldsAt(Pos(Homer, 3), 0).
+!HoldsAt(Pos(Homer, 4), 0).
+!HoldsAt(Pos(Homer, 5), 0).
+!HoldsAt(Pos(Homer, 7), 0).
+!HoldsAt(Pos(Homer, 8), 0).
+!HoldsAt(Pos(Jumbo, 2), 0).
+!HoldsAt(Pos(Jumbo, 3), 0).
+!HoldsAt(Pos(Jumbo, 4), 0).
+!HoldsAt(Pos(Jumbo, 5), 0).
+!HoldsAt(Pos(Jumbo, 6), 0).
+!HoldsAt(Pos(Jumbo, 7), 0).
+!HoldsAt(Pos(Jumbo, 8), 0).
+!HoldsAt(PosDeterminingFluent(Homer, 2), 0).
+!HoldsAt(PosDeterminingFluent(Homer, 3), 0).
+!HoldsAt(PosDeterminingFluent(Homer, 4), 0).
+!HoldsAt(PosDeterminingFluent(Homer, 5), 0).
+!HoldsAt(PosDeterminingFluent(Homer, 6), 0).
+!HoldsAt(PosDeterminingFluent(Homer, 7), 0).
+!HoldsAt(PosDeterminingFluent(Homer, 8), 0).
+!ReleasedAt(Mounted(Homer, Homer), 0).
+!ReleasedAt(Mounted(Homer, Jumbo), 0).
+!ReleasedAt(Opened(GateAO), 0).
+!ReleasedAt(Pos(Homer, 1), 0).
+!ReleasedAt(Pos(Homer, 2), 0).
+!ReleasedAt(Pos(Homer, 3), 0).
+!ReleasedAt(Pos(Homer, 4), 0).
+!ReleasedAt(Pos(Homer, 5), 0).
+!ReleasedAt(Pos(Homer, 6), 0).
+!ReleasedAt(Pos(Homer, 7), 0).
+!ReleasedAt(Pos(Homer, 8), 0).
+!ReleasedAt(Pos(Jumbo, 1), 0).
+!ReleasedAt(Pos(Jumbo, 2), 0).
+!ReleasedAt(Pos(Jumbo, 3), 0).
+!ReleasedAt(Pos(Jumbo, 4), 0).
+!ReleasedAt(Pos(Jumbo, 5), 0).
+!ReleasedAt(Pos(Jumbo, 6), 0).
+!ReleasedAt(Pos(Jumbo, 7), 0).
+!ReleasedAt(Pos(Jumbo, 8), 0).
+Accessible(1, 2, 0).
+Accessible(1, 3, 0).
+Accessible(1, 4, 0).
+Accessible(2, 1, 0).
+Accessible(2, 3, 0).
+Accessible(2, 4, 0).
+Accessible(3, 1, 0).
+Accessible(3, 2, 0).
+Accessible(3, 4, 0).
+Accessible(4, 1, 0).
+Accessible(4, 2, 0).
+Accessible(4, 3, 0).
+Accessible(5, 6, 0).
+Accessible(5, 7, 0).
+Accessible(5, 8, 0).
+Accessible(6, 5, 0).
+Accessible(6, 7, 0).
+Accessible(6, 8, 0).
+Accessible(7, 5, 0).
+Accessible(7, 6, 0).
+Accessible(7, 8, 0).
+Accessible(8, 5, 0).
+Accessible(8, 6, 0).
+Accessible(8, 7, 0).
+HoldsAt(DoneBy(Move(Homer, 7), Homer), 0).
+HoldsAt(Moves(Homer), 0).
+HoldsAt(Pos(Homer, 6), 0).
+HoldsAt(Pos(Jumbo, 1), 0).
+HoldsAt(PosDeterminingFluent(Homer, 1), 0).
+HoldsAt(ThrowOffFails(Homer, Homer), 0).
+HoldsAt(ThrowOffFails(Jumbo, Homer), 0).
+ReleasedAt(AbnormalEncroachment(Homer), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Jumbo), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Jumbo), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Jumbo), 0).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Jumbo), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Jumbo), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Jumbo), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 0).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 0).
+ReleasedAt(MountFails(Homer), 0).
+ReleasedAt(Moves(Homer), 0).
+ReleasedAt(Moves(Jumbo), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 0).
+ReleasedAt(ThrowOffFails(Homer, Homer), 0).
+ReleasedAt(ThrowOffFails(Jumbo, Homer), 0).
+Happens(Move(Homer, 7), 0).
+1
+!Accessible(1, 1, 1).
+!Accessible(1, 5, 1).
+!Accessible(1, 6, 1).
+!Accessible(1, 7, 1).
+!Accessible(1, 8, 1).
+!Accessible(2, 2, 1).
+!Accessible(2, 5, 1).
+!Accessible(2, 6, 1).
+!Accessible(2, 7, 1).
+!Accessible(2, 8, 1).
+!Accessible(3, 3, 1).
+!Accessible(3, 5, 1).
+!Accessible(3, 6, 1).
+!Accessible(3, 7, 1).
+!Accessible(3, 8, 1).
+!Accessible(4, 4, 1).
+!Accessible(4, 5, 1).
+!Accessible(4, 6, 1).
+!Accessible(4, 7, 1).
+!Accessible(4, 8, 1).
+!Accessible(5, 1, 1).
+!Accessible(5, 2, 1).
+!Accessible(5, 3, 1).
+!Accessible(5, 4, 1).
+!Accessible(5, 5, 1).
+!Accessible(6, 1, 1).
+!Accessible(6, 2, 1).
+!Accessible(6, 3, 1).
+!Accessible(6, 4, 1).
+!Accessible(6, 6, 1).
+!Accessible(7, 1, 1).
+!Accessible(7, 2, 1).
+!Accessible(7, 3, 1).
+!Accessible(7, 4, 1).
+!Accessible(7, 7, 1).
+!Accessible(8, 1, 1).
+!Accessible(8, 2, 1).
+!Accessible(8, 3, 1).
+!Accessible(8, 4, 1).
+!Accessible(8, 8, 1).
+!Happens(Close(Homer, GateAO), 1).
+!Happens(GetOff(Homer, Homer), 1).
+!Happens(GetOff(Homer, Jumbo), 1).
+!Happens(Mount(Homer, Homer), 1).
+!Happens(Mount(Homer, Jumbo), 1).
+!Happens(Move(Homer, 1), 1).
+!Happens(Move(Homer, 2), 1).
+!Happens(Move(Homer, 3), 1).
+!Happens(Move(Homer, 4), 1).
+!Happens(Move(Homer, 5), 1).
+!Happens(Move(Homer, 6), 1).
+!Happens(Move(Homer, 7), 1).
+!Happens(Move(Homer, 8), 1).
+!Happens(Move(Jumbo, 1), 1).
+!Happens(Move(Jumbo, 2), 1).
+!Happens(Move(Jumbo, 3), 1).
+!Happens(Move(Jumbo, 4), 1).
+!Happens(Move(Jumbo, 5), 1).
+!Happens(Move(Jumbo, 6), 1).
+!Happens(Move(Jumbo, 7), 1).
+!Happens(Move(Jumbo, 8), 1).
+!Happens(ThrowOff(Homer, Homer), 1).
+!Happens(ThrowOff(Jumbo, Homer), 1).
+!HoldsAt(AbnormalEncroachment(Homer), 1).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Homer), 1).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Jumbo), 1).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Homer), 1).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Jumbo), 1).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Homer), 1).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 1).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Homer), 1).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Jumbo), 1).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Homer), 1).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Homer, 1), Homer), 1).
+!HoldsAt(DoneBy(Move(Homer, 1), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Homer, 2), Homer), 1).
+!HoldsAt(DoneBy(Move(Homer, 2), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Homer, 3), Homer), 1).
+!HoldsAt(DoneBy(Move(Homer, 3), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Homer, 4), Homer), 1).
+!HoldsAt(DoneBy(Move(Homer, 4), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Homer, 5), Homer), 1).
+!HoldsAt(DoneBy(Move(Homer, 5), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Homer, 6), Homer), 1).
+!HoldsAt(DoneBy(Move(Homer, 6), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Homer, 7), Homer), 1).
+!HoldsAt(DoneBy(Move(Homer, 7), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Homer, 8), Homer), 1).
+!HoldsAt(DoneBy(Move(Homer, 8), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Homer), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Homer), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Homer), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Homer), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Homer), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Homer), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Homer), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Jumbo), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Homer), 1).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Jumbo), 1).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Jumbo), 1).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Homer), 1).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 1).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 1).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 1).
+!HoldsAt(MountFails(Homer), 1).
+!HoldsAt(Mounted(Homer, Homer), 1).
+!HoldsAt(Mounted(Homer, Jumbo), 1).
+!HoldsAt(Moves(Homer), 1).
+!HoldsAt(Moves(Jumbo), 1).
+!HoldsAt(Opened(GateAO), 1).
+!HoldsAt(Pos(Homer, 1), 1).
+!HoldsAt(Pos(Homer, 2), 1).
+!HoldsAt(Pos(Homer, 3), 1).
+!HoldsAt(Pos(Homer, 4), 1).
+!HoldsAt(Pos(Homer, 5), 1).
+!HoldsAt(Pos(Homer, 6), 1).
+!HoldsAt(Pos(Homer, 8), 1).
+!HoldsAt(Pos(Jumbo, 2), 1).
+!HoldsAt(Pos(Jumbo, 3), 1).
+!HoldsAt(Pos(Jumbo, 4), 1).
+!HoldsAt(Pos(Jumbo, 5), 1).
+!HoldsAt(Pos(Jumbo, 6), 1).
+!HoldsAt(Pos(Jumbo, 7), 1).
+!HoldsAt(Pos(Jumbo, 8), 1).
+!HoldsAt(PosDeterminingFluent(Homer, 2), 1).
+!HoldsAt(PosDeterminingFluent(Homer, 3), 1).
+!HoldsAt(PosDeterminingFluent(Homer, 4), 1).
+!HoldsAt(PosDeterminingFluent(Homer, 5), 1).
+!HoldsAt(PosDeterminingFluent(Homer, 6), 1).
+!HoldsAt(PosDeterminingFluent(Homer, 7), 1).
+!HoldsAt(PosDeterminingFluent(Homer, 8), 1).
+!Neighbor(1, 1).
+!Neighbor(5, 1).
+!Neighbor(6, 1).
+!Neighbor(7, 1).
+!Neighbor(8, 1).
+!ReleasedAt(Mounted(Homer, Homer), 1).
+!ReleasedAt(Mounted(Homer, Jumbo), 1).
+!ReleasedAt(Opened(GateAO), 1).
+!ReleasedAt(Pos(Homer, 1), 1).
+!ReleasedAt(Pos(Homer, 2), 1).
+!ReleasedAt(Pos(Homer, 3), 1).
+!ReleasedAt(Pos(Homer, 4), 1).
+!ReleasedAt(Pos(Homer, 5), 1).
+!ReleasedAt(Pos(Homer, 6), 1).
+!ReleasedAt(Pos(Homer, 7), 1).
+!ReleasedAt(Pos(Homer, 8), 1).
+!ReleasedAt(Pos(Jumbo, 1), 1).
+!ReleasedAt(Pos(Jumbo, 2), 1).
+!ReleasedAt(Pos(Jumbo, 3), 1).
+!ReleasedAt(Pos(Jumbo, 4), 1).
+!ReleasedAt(Pos(Jumbo, 5), 1).
+!ReleasedAt(Pos(Jumbo, 6), 1).
+!ReleasedAt(Pos(Jumbo, 7), 1).
+!ReleasedAt(Pos(Jumbo, 8), 1).
+Accessible(1, 2, 1).
+Accessible(1, 3, 1).
+Accessible(1, 4, 1).
+Accessible(2, 1, 1).
+Accessible(2, 3, 1).
+Accessible(2, 4, 1).
+Accessible(3, 1, 1).
+Accessible(3, 2, 1).
+Accessible(3, 4, 1).
+Accessible(4, 1, 1).
+Accessible(4, 2, 1).
+Accessible(4, 3, 1).
+Accessible(5, 6, 1).
+Accessible(5, 7, 1).
+Accessible(5, 8, 1).
+Accessible(6, 5, 1).
+Accessible(6, 7, 1).
+Accessible(6, 8, 1).
+Accessible(7, 5, 1).
+Accessible(7, 6, 1).
+Accessible(7, 8, 1).
+Accessible(8, 5, 1).
+Accessible(8, 6, 1).
+Accessible(8, 7, 1).
+HoldsAt(DoneBy(Open(Homer, GateAO), Homer), 1).
+HoldsAt(Pos(Homer, 7), 1).
+HoldsAt(Pos(Jumbo, 1), 1).
+HoldsAt(PosDeterminingFluent(Homer, 1), 1).
+HoldsAt(ThrowOffFails(Homer, Homer), 1).
+HoldsAt(ThrowOffFails(Jumbo, Homer), 1).
+Neighbor(2, 1).
+Neighbor(3, 1).
+Neighbor(4, 1).
+ReleasedAt(AbnormalEncroachment(Homer), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Jumbo), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Jumbo), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Jumbo), 1).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Jumbo), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Jumbo), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Jumbo), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 1).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 1).
+ReleasedAt(MountFails(Homer), 1).
+ReleasedAt(Moves(Homer), 1).
+ReleasedAt(Moves(Jumbo), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 1).
+ReleasedAt(ThrowOffFails(Homer, Homer), 1).
+ReleasedAt(ThrowOffFails(Jumbo, Homer), 1).
+Happens(Open(Homer, GateAO), 1).
+2
+!Accessible(1, 1, 2).
+!Accessible(1, 5, 2).
+!Accessible(1, 6, 2).
+!Accessible(1, 7, 2).
+!Accessible(1, 8, 2).
+!Accessible(2, 2, 2).
+!Accessible(2, 5, 2).
+!Accessible(2, 6, 2).
+!Accessible(2, 7, 2).
+!Accessible(2, 8, 2).
+!Accessible(3, 3, 2).
+!Accessible(3, 5, 2).
+!Accessible(3, 6, 2).
+!Accessible(3, 7, 2).
+!Accessible(3, 8, 2).
+!Accessible(4, 4, 2).
+!Accessible(4, 5, 2).
+!Accessible(4, 6, 2).
+!Accessible(4, 8, 2).
+!Accessible(5, 1, 2).
+!Accessible(5, 2, 2).
+!Accessible(5, 3, 2).
+!Accessible(5, 4, 2).
+!Accessible(5, 5, 2).
+!Accessible(6, 1, 2).
+!Accessible(6, 2, 2).
+!Accessible(6, 3, 2).
+!Accessible(6, 4, 2).
+!Accessible(6, 6, 2).
+!Accessible(7, 1, 2).
+!Accessible(7, 2, 2).
+!Accessible(7, 3, 2).
+!Accessible(7, 7, 2).
+!Accessible(8, 1, 2).
+!Accessible(8, 2, 2).
+!Accessible(8, 3, 2).
+!Accessible(8, 4, 2).
+!Accessible(8, 8, 2).
+!Happens(Close(Homer, GateAO), 2).
+!Happens(GetOff(Homer, Homer), 2).
+!Happens(GetOff(Homer, Jumbo), 2).
+!Happens(Mount(Homer, Homer), 2).
+!Happens(Mount(Homer, Jumbo), 2).
+!Happens(Move(Homer, 1), 2).
+!Happens(Move(Homer, 2), 2).
+!Happens(Move(Homer, 3), 2).
+!Happens(Move(Homer, 5), 2).
+!Happens(Move(Homer, 6), 2).
+!Happens(Move(Homer, 7), 2).
+!Happens(Move(Homer, 8), 2).
+!Happens(Move(Jumbo, 1), 2).
+!Happens(Move(Jumbo, 2), 2).
+!Happens(Move(Jumbo, 3), 2).
+!Happens(Move(Jumbo, 4), 2).
+!Happens(Move(Jumbo, 5), 2).
+!Happens(Move(Jumbo, 6), 2).
+!Happens(Move(Jumbo, 7), 2).
+!Happens(Move(Jumbo, 8), 2).
+!Happens(Open(Homer, GateAO), 2).
+!Happens(ThrowOff(Homer, Homer), 2).
+!Happens(ThrowOff(Jumbo, Homer), 2).
+!HoldsAt(AbnormalEncroachment(Homer), 2).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Homer), 2).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Jumbo), 2).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Homer), 2).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Jumbo), 2).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Homer), 2).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 2).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Homer), 2).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Jumbo), 2).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Homer), 2).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Homer, 1), Homer), 2).
+!HoldsAt(DoneBy(Move(Homer, 1), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Homer, 2), Homer), 2).
+!HoldsAt(DoneBy(Move(Homer, 2), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Homer, 3), Homer), 2).
+!HoldsAt(DoneBy(Move(Homer, 3), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Homer, 4), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Homer, 5), Homer), 2).
+!HoldsAt(DoneBy(Move(Homer, 5), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Homer, 6), Homer), 2).
+!HoldsAt(DoneBy(Move(Homer, 6), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Homer, 7), Homer), 2).
+!HoldsAt(DoneBy(Move(Homer, 7), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Homer, 8), Homer), 2).
+!HoldsAt(DoneBy(Move(Homer, 8), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Homer), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Homer), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Homer), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Homer), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Homer), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Homer), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Homer), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Jumbo), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Homer), 2).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Jumbo), 2).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Homer), 2).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Jumbo), 2).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Homer), 2).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 2).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 2).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 2).
+!HoldsAt(MountFails(Homer), 2).
+!HoldsAt(Mounted(Homer, Homer), 2).
+!HoldsAt(Mounted(Homer, Jumbo), 2).
+!HoldsAt(Moves(Jumbo), 2).
+!HoldsAt(Pos(Homer, 1), 2).
+!HoldsAt(Pos(Homer, 2), 2).
+!HoldsAt(Pos(Homer, 3), 2).
+!HoldsAt(Pos(Homer, 4), 2).
+!HoldsAt(Pos(Homer, 5), 2).
+!HoldsAt(Pos(Homer, 6), 2).
+!HoldsAt(Pos(Homer, 8), 2).
+!HoldsAt(Pos(Jumbo, 2), 2).
+!HoldsAt(Pos(Jumbo, 3), 2).
+!HoldsAt(Pos(Jumbo, 4), 2).
+!HoldsAt(Pos(Jumbo, 5), 2).
+!HoldsAt(Pos(Jumbo, 6), 2).
+!HoldsAt(Pos(Jumbo, 7), 2).
+!HoldsAt(Pos(Jumbo, 8), 2).
+!HoldsAt(PosDeterminingFluent(Homer, 2), 2).
+!HoldsAt(PosDeterminingFluent(Homer, 3), 2).
+!HoldsAt(PosDeterminingFluent(Homer, 4), 2).
+!HoldsAt(PosDeterminingFluent(Homer, 5), 2).
+!HoldsAt(PosDeterminingFluent(Homer, 6), 2).
+!HoldsAt(PosDeterminingFluent(Homer, 7), 2).
+!HoldsAt(PosDeterminingFluent(Homer, 8), 2).
+!Neighbor(2, 2).
+!Neighbor(5, 2).
+!Neighbor(6, 2).
+!Neighbor(7, 2).
+!Neighbor(8, 2).
+!ReleasedAt(Mounted(Homer, Homer), 2).
+!ReleasedAt(Mounted(Homer, Jumbo), 2).
+!ReleasedAt(Opened(GateAO), 2).
+!ReleasedAt(Pos(Homer, 1), 2).
+!ReleasedAt(Pos(Homer, 2), 2).
+!ReleasedAt(Pos(Homer, 3), 2).
+!ReleasedAt(Pos(Homer, 4), 2).
+!ReleasedAt(Pos(Homer, 5), 2).
+!ReleasedAt(Pos(Homer, 6), 2).
+!ReleasedAt(Pos(Homer, 7), 2).
+!ReleasedAt(Pos(Homer, 8), 2).
+!ReleasedAt(Pos(Jumbo, 1), 2).
+!ReleasedAt(Pos(Jumbo, 2), 2).
+!ReleasedAt(Pos(Jumbo, 3), 2).
+!ReleasedAt(Pos(Jumbo, 4), 2).
+!ReleasedAt(Pos(Jumbo, 5), 2).
+!ReleasedAt(Pos(Jumbo, 6), 2).
+!ReleasedAt(Pos(Jumbo, 7), 2).
+!ReleasedAt(Pos(Jumbo, 8), 2).
+Accessible(1, 2, 2).
+Accessible(1, 3, 2).
+Accessible(1, 4, 2).
+Accessible(2, 1, 2).
+Accessible(2, 3, 2).
+Accessible(2, 4, 2).
+Accessible(3, 1, 2).
+Accessible(3, 2, 2).
+Accessible(3, 4, 2).
+Accessible(4, 1, 2).
+Accessible(4, 2, 2).
+Accessible(4, 3, 2).
+Accessible(4, 7, 2).
+Accessible(5, 6, 2).
+Accessible(5, 7, 2).
+Accessible(5, 8, 2).
+Accessible(6, 5, 2).
+Accessible(6, 7, 2).
+Accessible(6, 8, 2).
+Accessible(7, 4, 2).
+Accessible(7, 5, 2).
+Accessible(7, 6, 2).
+Accessible(7, 8, 2).
+Accessible(8, 5, 2).
+Accessible(8, 6, 2).
+Accessible(8, 7, 2).
+HoldsAt(DoneBy(Move(Homer, 4), Homer), 2).
+HoldsAt(Moves(Homer), 2).
+HoldsAt(Opened(GateAO), 2).
+HoldsAt(Pos(Homer, 7), 2).
+HoldsAt(Pos(Jumbo, 1), 2).
+HoldsAt(PosDeterminingFluent(Homer, 1), 2).
+HoldsAt(ThrowOffFails(Homer, Homer), 2).
+HoldsAt(ThrowOffFails(Jumbo, Homer), 2).
+Neighbor(1, 2).
+Neighbor(3, 2).
+Neighbor(4, 2).
+ReleasedAt(AbnormalEncroachment(Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Jumbo), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Jumbo), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Jumbo), 2).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Jumbo), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Jumbo), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Jumbo), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 2).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 2).
+ReleasedAt(MountFails(Homer), 2).
+ReleasedAt(Moves(Homer), 2).
+ReleasedAt(Moves(Jumbo), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 2).
+ReleasedAt(ThrowOffFails(Homer, Homer), 2).
+ReleasedAt(ThrowOffFails(Jumbo, Homer), 2).
+Happens(Move(Homer, 4), 2).
+3
+!Accessible(1, 1, 3).
+!Accessible(1, 5, 3).
+!Accessible(1, 6, 3).
+!Accessible(1, 7, 3).
+!Accessible(1, 8, 3).
+!Accessible(2, 2, 3).
+!Accessible(2, 5, 3).
+!Accessible(2, 6, 3).
+!Accessible(2, 7, 3).
+!Accessible(2, 8, 3).
+!Accessible(3, 3, 3).
+!Accessible(3, 5, 3).
+!Accessible(3, 6, 3).
+!Accessible(3, 7, 3).
+!Accessible(3, 8, 3).
+!Accessible(4, 4, 3).
+!Accessible(4, 5, 3).
+!Accessible(4, 6, 3).
+!Accessible(4, 8, 3).
+!Accessible(5, 1, 3).
+!Accessible(5, 2, 3).
+!Accessible(5, 3, 3).
+!Accessible(5, 4, 3).
+!Accessible(5, 5, 3).
+!Accessible(6, 1, 3).
+!Accessible(6, 2, 3).
+!Accessible(6, 3, 3).
+!Accessible(6, 4, 3).
+!Accessible(6, 6, 3).
+!Accessible(7, 1, 3).
+!Accessible(7, 2, 3).
+!Accessible(7, 3, 3).
+!Accessible(7, 7, 3).
+!Accessible(8, 1, 3).
+!Accessible(8, 2, 3).
+!Accessible(8, 3, 3).
+!Accessible(8, 4, 3).
+!Accessible(8, 8, 3).
+!Happens(Close(Homer, GateAO), 3).
+!Happens(GetOff(Homer, Homer), 3).
+!Happens(GetOff(Homer, Jumbo), 3).
+!Happens(Mount(Homer, Homer), 3).
+!Happens(Move(Homer, 1), 3).
+!Happens(Move(Homer, 2), 3).
+!Happens(Move(Homer, 3), 3).
+!Happens(Move(Homer, 4), 3).
+!Happens(Move(Homer, 5), 3).
+!Happens(Move(Homer, 6), 3).
+!Happens(Move(Homer, 7), 3).
+!Happens(Move(Homer, 8), 3).
+!Happens(Move(Jumbo, 1), 3).
+!Happens(Move(Jumbo, 2), 3).
+!Happens(Move(Jumbo, 3), 3).
+!Happens(Move(Jumbo, 4), 3).
+!Happens(Move(Jumbo, 5), 3).
+!Happens(Move(Jumbo, 6), 3).
+!Happens(Move(Jumbo, 7), 3).
+!Happens(Move(Jumbo, 8), 3).
+!Happens(Open(Homer, GateAO), 3).
+!Happens(ThrowOff(Homer, Homer), 3).
+!Happens(ThrowOff(Jumbo, Homer), 3).
+!HoldsAt(AbnormalEncroachment(Homer), 3).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Homer), 3).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Jumbo), 3).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Homer), 3).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Jumbo), 3).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Homer), 3).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 3).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Homer), 3).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Jumbo), 3).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Homer, 1), Homer), 3).
+!HoldsAt(DoneBy(Move(Homer, 1), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Homer, 2), Homer), 3).
+!HoldsAt(DoneBy(Move(Homer, 2), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Homer, 3), Homer), 3).
+!HoldsAt(DoneBy(Move(Homer, 3), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Homer, 4), Homer), 3).
+!HoldsAt(DoneBy(Move(Homer, 4), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Homer, 5), Homer), 3).
+!HoldsAt(DoneBy(Move(Homer, 5), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Homer, 6), Homer), 3).
+!HoldsAt(DoneBy(Move(Homer, 6), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Homer, 7), Homer), 3).
+!HoldsAt(DoneBy(Move(Homer, 7), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Homer, 8), Homer), 3).
+!HoldsAt(DoneBy(Move(Homer, 8), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Homer), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Homer), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Homer), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Homer), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Homer), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Homer), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Homer), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Jumbo), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Homer), 3).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Jumbo), 3).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Homer), 3).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Jumbo), 3).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Homer), 3).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 3).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 3).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 3).
+!HoldsAt(MountFails(Homer), 3).
+!HoldsAt(Mounted(Homer, Homer), 3).
+!HoldsAt(Mounted(Homer, Jumbo), 3).
+!HoldsAt(Moves(Jumbo), 3).
+!HoldsAt(Pos(Homer, 1), 3).
+!HoldsAt(Pos(Homer, 2), 3).
+!HoldsAt(Pos(Homer, 3), 3).
+!HoldsAt(Pos(Homer, 5), 3).
+!HoldsAt(Pos(Homer, 6), 3).
+!HoldsAt(Pos(Homer, 7), 3).
+!HoldsAt(Pos(Homer, 8), 3).
+!HoldsAt(Pos(Jumbo, 2), 3).
+!HoldsAt(Pos(Jumbo, 3), 3).
+!HoldsAt(Pos(Jumbo, 4), 3).
+!HoldsAt(Pos(Jumbo, 5), 3).
+!HoldsAt(Pos(Jumbo, 6), 3).
+!HoldsAt(Pos(Jumbo, 7), 3).
+!HoldsAt(Pos(Jumbo, 8), 3).
+!HoldsAt(PosDeterminingFluent(Homer, 2), 3).
+!HoldsAt(PosDeterminingFluent(Homer, 3), 3).
+!HoldsAt(PosDeterminingFluent(Homer, 4), 3).
+!HoldsAt(PosDeterminingFluent(Homer, 5), 3).
+!HoldsAt(PosDeterminingFluent(Homer, 6), 3).
+!HoldsAt(PosDeterminingFluent(Homer, 7), 3).
+!HoldsAt(PosDeterminingFluent(Homer, 8), 3).
+!Neighbor(3, 3).
+!Neighbor(5, 3).
+!Neighbor(6, 3).
+!Neighbor(7, 3).
+!Neighbor(8, 3).
+!ReleasedAt(Mounted(Homer, Homer), 3).
+!ReleasedAt(Mounted(Homer, Jumbo), 3).
+!ReleasedAt(Opened(GateAO), 3).
+!ReleasedAt(Pos(Homer, 1), 3).
+!ReleasedAt(Pos(Homer, 2), 3).
+!ReleasedAt(Pos(Homer, 3), 3).
+!ReleasedAt(Pos(Homer, 4), 3).
+!ReleasedAt(Pos(Homer, 5), 3).
+!ReleasedAt(Pos(Homer, 6), 3).
+!ReleasedAt(Pos(Homer, 7), 3).
+!ReleasedAt(Pos(Homer, 8), 3).
+!ReleasedAt(Pos(Jumbo, 1), 3).
+!ReleasedAt(Pos(Jumbo, 2), 3).
+!ReleasedAt(Pos(Jumbo, 3), 3).
+!ReleasedAt(Pos(Jumbo, 4), 3).
+!ReleasedAt(Pos(Jumbo, 5), 3).
+!ReleasedAt(Pos(Jumbo, 6), 3).
+!ReleasedAt(Pos(Jumbo, 7), 3).
+!ReleasedAt(Pos(Jumbo, 8), 3).
+Accessible(1, 2, 3).
+Accessible(1, 3, 3).
+Accessible(1, 4, 3).
+Accessible(2, 1, 3).
+Accessible(2, 3, 3).
+Accessible(2, 4, 3).
+Accessible(3, 1, 3).
+Accessible(3, 2, 3).
+Accessible(3, 4, 3).
+Accessible(4, 1, 3).
+Accessible(4, 2, 3).
+Accessible(4, 3, 3).
+Accessible(4, 7, 3).
+Accessible(5, 6, 3).
+Accessible(5, 7, 3).
+Accessible(5, 8, 3).
+Accessible(6, 5, 3).
+Accessible(6, 7, 3).
+Accessible(6, 8, 3).
+Accessible(7, 4, 3).
+Accessible(7, 5, 3).
+Accessible(7, 6, 3).
+Accessible(7, 8, 3).
+Accessible(8, 5, 3).
+Accessible(8, 6, 3).
+Accessible(8, 7, 3).
+HoldsAt(DoneBy(Mount(Homer, Jumbo), Homer), 3).
+HoldsAt(Moves(Homer), 3).
+HoldsAt(Opened(GateAO), 3).
+HoldsAt(Pos(Homer, 4), 3).
+HoldsAt(Pos(Jumbo, 1), 3).
+HoldsAt(PosDeterminingFluent(Homer, 1), 3).
+HoldsAt(ThrowOffFails(Homer, Homer), 3).
+HoldsAt(ThrowOffFails(Jumbo, Homer), 3).
+Neighbor(1, 3).
+Neighbor(2, 3).
+Neighbor(4, 3).
+ReleasedAt(AbnormalEncroachment(Homer), 3).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 3).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Jumbo), 3).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 3).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Jumbo), 3).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Homer), 3).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 3).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 3).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Jumbo), 3).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Homer), 3).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 3).
+ReleasedAt(DoneBy(Move(Homer, 1), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 3).
+ReleasedAt(DoneBy(Move(Homer, 2), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 3).
+ReleasedAt(DoneBy(Move(Homer, 3), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 3).
+ReleasedAt(DoneBy(Move(Homer, 4), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 3).
+ReleasedAt(DoneBy(Move(Homer, 5), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 3).
+ReleasedAt(DoneBy(Move(Homer, 6), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 3).
+ReleasedAt(DoneBy(Move(Homer, 7), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 3).
+ReleasedAt(DoneBy(Move(Homer, 8), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Homer), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Homer), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Homer), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Homer), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Homer), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Homer), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Homer), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Jumbo), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Homer), 3).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Jumbo), 3).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 3).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Jumbo), 3).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 3).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 3).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 3).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 3).
+ReleasedAt(MountFails(Homer), 3).
+ReleasedAt(Moves(Homer), 3).
+ReleasedAt(Moves(Jumbo), 3).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 3).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 3).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 3).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 3).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 3).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 3).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 3).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 3).
+ReleasedAt(ThrowOffFails(Homer, Homer), 3).
+ReleasedAt(ThrowOffFails(Jumbo, Homer), 3).
+Happens(Mount(Homer, Jumbo), 3).
+4
+!Accessible(1, 1, 4).
+!Accessible(1, 5, 4).
+!Accessible(1, 6, 4).
+!Accessible(1, 7, 4).
+!Accessible(1, 8, 4).
+!Accessible(2, 2, 4).
+!Accessible(2, 5, 4).
+!Accessible(2, 6, 4).
+!Accessible(2, 7, 4).
+!Accessible(2, 8, 4).
+!Accessible(3, 3, 4).
+!Accessible(3, 5, 4).
+!Accessible(3, 6, 4).
+!Accessible(3, 7, 4).
+!Accessible(3, 8, 4).
+!Accessible(4, 4, 4).
+!Accessible(4, 5, 4).
+!Accessible(4, 6, 4).
+!Accessible(4, 8, 4).
+!Accessible(5, 1, 4).
+!Accessible(5, 2, 4).
+!Accessible(5, 3, 4).
+!Accessible(5, 4, 4).
+!Accessible(5, 5, 4).
+!Accessible(6, 1, 4).
+!Accessible(6, 2, 4).
+!Accessible(6, 3, 4).
+!Accessible(6, 4, 4).
+!Accessible(6, 6, 4).
+!Accessible(7, 1, 4).
+!Accessible(7, 2, 4).
+!Accessible(7, 3, 4).
+!Accessible(7, 7, 4).
+!Accessible(8, 1, 4).
+!Accessible(8, 2, 4).
+!Accessible(8, 3, 4).
+!Accessible(8, 4, 4).
+!Accessible(8, 8, 4).
+!HoldsAt(AbnormalEncroachment(Homer), 4).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Homer), 4).
+!HoldsAt(DoneBy(Close(Homer, GateAO), Jumbo), 4).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Homer), 4).
+!HoldsAt(DoneBy(GetOff(Homer, Homer), Jumbo), 4).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Homer), 4).
+!HoldsAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 4).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Homer), 4).
+!HoldsAt(DoneBy(Mount(Homer, Homer), Jumbo), 4).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Homer), 4).
+!HoldsAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Homer, 1), Homer), 4).
+!HoldsAt(DoneBy(Move(Homer, 1), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Homer, 2), Homer), 4).
+!HoldsAt(DoneBy(Move(Homer, 2), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Homer, 3), Homer), 4).
+!HoldsAt(DoneBy(Move(Homer, 3), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Homer, 4), Homer), 4).
+!HoldsAt(DoneBy(Move(Homer, 4), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Homer, 5), Homer), 4).
+!HoldsAt(DoneBy(Move(Homer, 5), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Homer, 6), Homer), 4).
+!HoldsAt(DoneBy(Move(Homer, 6), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Homer, 7), Homer), 4).
+!HoldsAt(DoneBy(Move(Homer, 7), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Homer, 8), Homer), 4).
+!HoldsAt(DoneBy(Move(Homer, 8), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Homer), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 1), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Homer), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 2), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Homer), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 3), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Homer), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 4), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Homer), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 5), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Homer), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 6), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Homer), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 7), Jumbo), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Homer), 4).
+!HoldsAt(DoneBy(Move(Jumbo, 8), Jumbo), 4).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Homer), 4).
+!HoldsAt(DoneBy(Open(Homer, GateAO), Jumbo), 4).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Homer), 4).
+!HoldsAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 4).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 4).
+!HoldsAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 4).
+!HoldsAt(MountFails(Homer), 4).
+!HoldsAt(Mounted(Homer, Homer), 4).
+!HoldsAt(Moves(Homer), 4).
+!HoldsAt(Moves(Jumbo), 4).
+!HoldsAt(Pos(Homer, 2), 4).
+!HoldsAt(Pos(Homer, 3), 4).
+!HoldsAt(Pos(Homer, 4), 4).
+!HoldsAt(Pos(Homer, 5), 4).
+!HoldsAt(Pos(Homer, 6), 4).
+!HoldsAt(Pos(Homer, 7), 4).
+!HoldsAt(Pos(Homer, 8), 4).
+!HoldsAt(Pos(Jumbo, 2), 4).
+!HoldsAt(Pos(Jumbo, 3), 4).
+!HoldsAt(Pos(Jumbo, 4), 4).
+!HoldsAt(Pos(Jumbo, 5), 4).
+!HoldsAt(Pos(Jumbo, 6), 4).
+!HoldsAt(Pos(Jumbo, 7), 4).
+!HoldsAt(Pos(Jumbo, 8), 4).
+!HoldsAt(PosDeterminingFluent(Homer, 2), 4).
+!HoldsAt(PosDeterminingFluent(Homer, 3), 4).
+!HoldsAt(PosDeterminingFluent(Homer, 4), 4).
+!HoldsAt(PosDeterminingFluent(Homer, 5), 4).
+!HoldsAt(PosDeterminingFluent(Homer, 6), 4).
+!HoldsAt(PosDeterminingFluent(Homer, 7), 4).
+!HoldsAt(PosDeterminingFluent(Homer, 8), 4).
+!HoldsAt(ThrowOffFails(Homer, Homer), 4).
+!HoldsAt(ThrowOffFails(Jumbo, Homer), 4).
+!Neighbor(4, 4).
+!Neighbor(5, 4).
+!Neighbor(6, 4).
+!Neighbor(8, 4).
+!ReleasedAt(Mounted(Homer, Homer), 4).
+!ReleasedAt(Mounted(Homer, Jumbo), 4).
+!ReleasedAt(Opened(GateAO), 4).
+!ReleasedAt(Pos(Jumbo, 1), 4).
+!ReleasedAt(Pos(Jumbo, 2), 4).
+!ReleasedAt(Pos(Jumbo, 3), 4).
+!ReleasedAt(Pos(Jumbo, 4), 4).
+!ReleasedAt(Pos(Jumbo, 5), 4).
+!ReleasedAt(Pos(Jumbo, 6), 4).
+!ReleasedAt(Pos(Jumbo, 7), 4).
+!ReleasedAt(Pos(Jumbo, 8), 4).
+Accessible(1, 2, 4).
+Accessible(1, 3, 4).
+Accessible(1, 4, 4).
+Accessible(2, 1, 4).
+Accessible(2, 3, 4).
+Accessible(2, 4, 4).
+Accessible(3, 1, 4).
+Accessible(3, 2, 4).
+Accessible(3, 4, 4).
+Accessible(4, 1, 4).
+Accessible(4, 2, 4).
+Accessible(4, 3, 4).
+Accessible(4, 7, 4).
+Accessible(5, 6, 4).
+Accessible(5, 7, 4).
+Accessible(5, 8, 4).
+Accessible(6, 5, 4).
+Accessible(6, 7, 4).
+Accessible(6, 8, 4).
+Accessible(7, 4, 4).
+Accessible(7, 5, 4).
+Accessible(7, 6, 4).
+Accessible(7, 8, 4).
+Accessible(8, 5, 4).
+Accessible(8, 6, 4).
+Accessible(8, 7, 4).
+HoldsAt(Mounted(Homer, Jumbo), 4).
+HoldsAt(Opened(GateAO), 4).
+HoldsAt(Pos(Homer, 1), 4).
+HoldsAt(Pos(Jumbo, 1), 4).
+HoldsAt(PosDeterminingFluent(Homer, 1), 4).
+Neighbor(1, 4).
+Neighbor(2, 4).
+Neighbor(3, 4).
+Neighbor(7, 4).
+ReleasedAt(AbnormalEncroachment(Homer), 4).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 4).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Jumbo), 4).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 4).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Jumbo), 4).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Homer), 4).
+ReleasedAt(DoneBy(GetOff(Homer, Jumbo), Jumbo), 4).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 4).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Jumbo), 4).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Homer), 4).
+ReleasedAt(DoneBy(Mount(Homer, Jumbo), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 4).
+ReleasedAt(DoneBy(Move(Homer, 1), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 4).
+ReleasedAt(DoneBy(Move(Homer, 2), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 4).
+ReleasedAt(DoneBy(Move(Homer, 3), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 4).
+ReleasedAt(DoneBy(Move(Homer, 4), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 4).
+ReleasedAt(DoneBy(Move(Homer, 5), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 4).
+ReleasedAt(DoneBy(Move(Homer, 6), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 4).
+ReleasedAt(DoneBy(Move(Homer, 7), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 4).
+ReleasedAt(DoneBy(Move(Homer, 8), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Homer), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 1), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Homer), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 2), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Homer), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 3), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Homer), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 4), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Homer), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 5), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Homer), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 6), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Homer), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 7), Jumbo), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Homer), 4).
+ReleasedAt(DoneBy(Move(Jumbo, 8), Jumbo), 4).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 4).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Jumbo), 4).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 4).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Jumbo), 4).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Homer), 4).
+ReleasedAt(DoneBy(ThrowOff(Jumbo, Homer), Jumbo), 4).
+ReleasedAt(MountFails(Homer), 4).
+ReleasedAt(Moves(Homer), 4).
+ReleasedAt(Moves(Jumbo), 4).
+ReleasedAt(Pos(Homer, 1), 4).
+ReleasedAt(Pos(Homer, 2), 4).
+ReleasedAt(Pos(Homer, 3), 4).
+ReleasedAt(Pos(Homer, 4), 4).
+ReleasedAt(Pos(Homer, 5), 4).
+ReleasedAt(Pos(Homer, 6), 4).
+ReleasedAt(Pos(Homer, 7), 4).
+ReleasedAt(Pos(Homer, 8), 4).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 4).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 4).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 4).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 4).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 4).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 4).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 4).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 4).
+ReleasedAt(ThrowOffFails(Homer, Homer), 4).
+ReleasedAt(ThrowOffFails(Jumbo, Homer), 4).
+P
+Adult(Homer).
+Adult(Jumbo).
+Large(Homer).
+Large(Jumbo).
+LargeSpecies(ElephantSpecies).
+LargeSpecies(HorseSpecies).
+LargeSpecies(HumanSpecies).
+Neighbor(4, 7).
+Neighbor(5, 6).
+Neighbor(5, 7).
+Neighbor(5, 8).
+Neighbor(6, 5).
+Neighbor(6, 7).
+Neighbor(6, 8).
+Neighbor(7, 5).
+Neighbor(7, 6).
+Neighbor(7, 8).
+Neighbor(8, 5).
+Neighbor(8, 6).
+Neighbor(8, 7).
+Sides(4, 7, GateAO).
+Sides(7, 4, GateAO).
+!LargeSpecies(DogSpecies).
+!Neighbor(1, 5).
+!Neighbor(1, 6).
+!Neighbor(1, 7).
+!Neighbor(1, 8).
+!Neighbor(2, 5).
+!Neighbor(2, 6).
+!Neighbor(2, 7).
+!Neighbor(2, 8).
+!Neighbor(3, 5).
+!Neighbor(3, 6).
+!Neighbor(3, 7).
+!Neighbor(3, 8).
+!Neighbor(4, 5).
+!Neighbor(4, 6).
+!Neighbor(4, 8).
+!Neighbor(5, 5).
+!Neighbor(6, 6).
+!Neighbor(7, 7).
+!Neighbor(8, 8).
+!Sides(1, 1, GateAO).
+!Sides(1, 2, GateAO).
+!Sides(1, 3, GateAO).
+!Sides(1, 4, GateAO).
+!Sides(1, 5, GateAO).
+!Sides(1, 6, GateAO).
+!Sides(1, 7, GateAO).
+!Sides(1, 8, GateAO).
+!Sides(2, 1, GateAO).
+!Sides(2, 2, GateAO).
+!Sides(2, 3, GateAO).
+!Sides(2, 4, GateAO).
+!Sides(2, 5, GateAO).
+!Sides(2, 6, GateAO).
+!Sides(2, 7, GateAO).
+!Sides(2, 8, GateAO).
+!Sides(3, 1, GateAO).
+!Sides(3, 2, GateAO).
+!Sides(3, 3, GateAO).
+!Sides(3, 4, GateAO).
+!Sides(3, 5, GateAO).
+!Sides(3, 6, GateAO).
+!Sides(3, 7, GateAO).
+!Sides(3, 8, GateAO).
+!Sides(4, 1, GateAO).
+!Sides(4, 2, GateAO).
+!Sides(4, 3, GateAO).
+!Sides(4, 4, GateAO).
+!Sides(4, 5, GateAO).
+!Sides(4, 6, GateAO).
+!Sides(4, 8, GateAO).
+!Sides(5, 1, GateAO).
+!Sides(5, 2, GateAO).
+!Sides(5, 3, GateAO).
+!Sides(5, 4, GateAO).
+!Sides(5, 5, GateAO).
+!Sides(5, 6, GateAO).
+!Sides(5, 7, GateAO).
+!Sides(5, 8, GateAO).
+!Sides(6, 1, GateAO).
+!Sides(6, 2, GateAO).
+!Sides(6, 3, GateAO).
+!Sides(6, 4, GateAO).
+!Sides(6, 5, GateAO).
+!Sides(6, 6, GateAO).
+!Sides(6, 7, GateAO).
+!Sides(6, 8, GateAO).
+!Sides(7, 1, GateAO).
+!Sides(7, 2, GateAO).
+!Sides(7, 3, GateAO).
+!Sides(7, 5, GateAO).
+!Sides(7, 6, GateAO).
+!Sides(7, 7, GateAO).
+!Sides(7, 8, GateAO).
+!Sides(8, 1, GateAO).
+!Sides(8, 2, GateAO).
+!Sides(8, 3, GateAO).
+!Sides(8, 4, GateAO).
+!Sides(8, 5, GateAO).
+!Sides(8, 6, GateAO).
+!Sides(8, 7, GateAO).
+!Sides(8, 8, GateAO).
+DEC: 6 predicates, 0 functions, 0 fluents, 0 events, 7 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+ZooTest1: 0 predicates, 0 functions, 0 fluents, 0 events, 10 axioms
+ZooWorld: 6 predicates, 4 functions, 9 fluents, 6 events, 78 axioms
+encoding 31.0s
+solution 0.9s
+total 37.3s
+Discrete Event Calculus Reasoner 1.0

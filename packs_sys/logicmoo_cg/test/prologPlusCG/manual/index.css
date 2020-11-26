@@ -1,0 +1,94 @@
+PRE {
+	background-color: #EEEEEE;
+}
+
+PRE.example {
+	background-color: #EEEEEE;
+}
+
+P.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 48pt;
+}
+
+P.subtitle {
+  text-align: center;
+  font-weight: bold;
+  font-size: 36pt;
+}
+
+P.author {
+  text-align: center;
+  font-weight: normal;
+  font-size: 36pt;
+}
+
+P.affiliation {
+  text-align: center;
+  font-weight: normal;
+  font-size: 24pt;
+}
+
+P.version {
+  text-align: center;
+  font-weight: normal;
+  font-size: 24pt;
+}
+
+P.contact {
+  text-align: center;
+  font-weight: normal;
+  font-size: 16pt;
+}
+
+P.date {
+  text-align: center;
+  font-weight: normal;
+  font-size: 24pt;
+}
+
+P.contentsheading {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24pt;
+}
+
+P.contentsitem {
+  text-align: left;
+  font-weight: normal;
+  font-size: 16pt;
+}
+
+P.figure {
+  text-align: center;
+  font-weight: normal;
+}
+
+P.figurecaption {
+  text-align: center;
+  font-weight: bold;
+}
+
+h1 {
+  text-align: left;
+  font-weight: bold;
+  font-size: 24pt;
+}
+
+h2 {
+  text-align: left;
+  font-weight: bold;
+  font-size: 18pt;
+}
+
+h3 {
+  text-align: left;
+  font-weight: bold;
+  font-size: 12pt;
+}
+
+BODY {
+        color: #000000; 
+	background-color: #FFFFFF;
+}

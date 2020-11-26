@@ -1,0 +1,270 @@
+(note TQD127)
+
+(subclass ChemicalAgent ChemicalWeapon) 
+
+
+
+
+(subclass ChemicalWeapon ChemicalWeapon) 
+
+
+
+
+(subclass PhosgeneOxime ChemicalWeapon) 
+
+
+
+
+(subclass SulfurMustardGas ChemicalWeapon) 
+
+
+
+
+(subclass HydrogenCyanide ChemicalWeapon) 
+
+
+
+
+(subclass AgentOrange ChemicalWeapon) 
+
+
+
+
+(subclass VE-NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass VX-NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass Mescaline ChemicalWeapon) 
+
+
+
+
+(subclass Benzilate ChemicalWeapon) 
+
+
+
+
+(subclass VM-NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass TearGas ChemicalWeapon) 
+
+
+
+
+(subclass Sarin ChemicalWeapon) 
+
+
+
+
+(subclass PSChloropicrin ChemicalWeapon) 
+
+
+
+
+(subclass BlisterAgent ChemicalWeapon) 
+
+
+
+
+(subclass NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass Phosgene ChemicalWeapon) 
+
+
+
+
+(subclass DistilledMustardGas ChemicalWeapon) 
+
+
+
+
+(subclass VK-NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass MustardGas ChemicalWeapon) 
+
+
+
+
+(subclass Adamsite ChemicalWeapon) 
+
+
+
+
+(subclass NitrogenMustardGas ChemicalWeapon) 
+
+
+
+
+(subclass Tabun ChemicalWeapon) 
+
+
+
+
+(subclass Lewisite ChemicalWeapon) 
+
+
+
+
+(subclass VR-55-NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass LSD ChemicalWeapon) 
+
+
+
+
+(subclass ChokingAgent ChemicalWeapon) 
+
+
+
+
+(subclass Perfluoroisobutane ChemicalWeapon) 
+
+
+
+
+(subclass BloodAgent ChemicalWeapon) 
+
+
+
+
+(subclass NerveAgent ChemicalWeapon) 
+
+
+
+
+(subclass VG-NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass CNTearGas ChemicalWeapon) 
+
+
+
+
+(subclass Psilocybin ChemicalWeapon) 
+
+
+
+
+(subclass Diphosgene ChemicalWeapon) 
+
+
+
+
+(subclass Soman ChemicalWeapon) 
+
+
+
+
+(subclass 
+ (ChemicalWeaponFn MustardGas) ChemicalWeapon) 
+
+
+
+
+(subclass CyanogenChloride ChemicalWeapon) 
+
+
+
+
+(subclass GF-NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass LSDBasedBZ ChemicalWeapon) 
+
+
+
+
+(subclass ChlorineGas ChemicalWeapon) 
+
+
+
+
+(subclass VS-NerveGas ChemicalWeapon) 
+
+
+
+
+(subclass BZ-PsychoactiveAgent ChemicalWeapon) 
+
+
+
+
+(subclass CSTearGas ChemicalWeapon) 
+
+
+
+
+
+
+( query (findall ?TYPES (subclass ?TYPES ChemicalWeapon)  
+))
+
+
+(answer  ChemicalAgent)
+(answer  ChemicalWeapon)
+(answer  PhosgeneOxime)
+(answer  SulfurMustardGas)
+(answer HydrogenCyanide )
+(answer  AgentOrange)
+(answer VE-NerveGas  )
+(answer VX-NerveGas  )
+(answer Mescaline )
+(answer Benzilate )
+(answer  VM-NerveGas)
+(answer  TearGas)
+(answer  Sarin)
+(answer PSChloropicrin )
+(answer  BlisterAgent)
+(answer  NerveGas)
+(answer Phosgene )
+(answer  DistilledMustardGas)
+(answer  VK-NerveGas)
+(answer  MustardGas)
+(answer  Adamsite)
+(answer NitrogenMustardGas )
+(answer Tabun )
+(answer  Lewisite)
+(answer VR-55-NerveGas )
+(answer  LSD)
+(answer ChokingAgent )
+(answer Perfluoroisobutane )
+(answer  BloodAgent )
+(answer NerveAgent  )
+(answer VG-NerveGas )
+(answer  BZ-PsychoactiveAgent)
+(answer  CSTearGas )
+(answer  (list (ChemicalWeaponFn MustardGas))  )
+(answer  Soman)
+(answer Diphosgene )
+(answer CyanogenChloride  )
+(answer  GF-NerveGas )
+(answer LSDBasedBZ )
+(answer ChlorineGas  )
+(answer  VS-NerveGas)
+(answer  CNTearGas )
+(answer  Psilocybin)
+
+(end_of_file)
+

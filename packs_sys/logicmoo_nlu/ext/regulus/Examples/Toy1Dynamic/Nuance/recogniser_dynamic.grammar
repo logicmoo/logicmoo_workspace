@@ -1,0 +1,7 @@
+;GSL2.0 
+
+.MAIN
+( switch on the <file:/c:/cygwin/home/speech/Regulus/Examples/Toy1Dynamic/Nuance/more_sing_devices_slots.gsl> )
+;( switch on the OTHER_NOUN_SWITCHABLE_SING )
+
+;#include "C:/cygwin/home/speech/Regulus/Examples/Toy1Dynamic/Nuance/more_sing_devices.grammar"

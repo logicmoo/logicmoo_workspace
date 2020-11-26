@@ -1,0 +1,64 @@
+
+% Qui boit de l'eau et a qui appartient le zebre?
+% Inspire de Giannesini et al 
+% A la difference de Bourgault 1987, l'ordre des contraintes
+% n'est pas naif.
+
+$ zebre:-
+   ldif(Coul),
+   ldif(Nati),
+   ldif(Fume),
+   ldif(Boit),
+   ldif(Anim),
+   eq(Mais,[1,2,3,4,5]),
+   contr(Coul,Nati,Fume,Boit,Anim,Mais),
+   imp([Coul,Nati,Fume,Boit,Anim,Mais]).
+
+$ imp([]).
+$ imp([T|Q]), write(T), nl, imp(Q).
+$ ldif([X,Y,Z,T,U]) :- sont_dif([X,Y,Z,T,U]).
+$ sont_dif([]).
+$ sont_dif([T|Q]) :- hd(T,Q), sont_dif(Q).
+$ hd(X,[]).
+$ hd(X,[T|Q]) :- dif(X,T), hd(X,Q).
+
+$ idem(X,[X|U],Y,[Y|V]).
+$ idem(X,[N|U],Y,[M|V]) :- dif(X,N), dif(Y,M), idem(X,U,Y,V).
+$ a_droite(D,G,[G,D|R]).
+$ a_droite(D,G,[X|Q]) :- dif(G,X), a_droite(D,G,Q).
+$ habite_acote(X,Lx,Y,Ly,M) :- a_cote(X,Lx,Y,Ly,M).
+$ habite_acote(X,Lx,Y,Ly,M) :- a_cote(Y,Ly,X,Lx,M).
+$ a_cote(X,Lx,Y,Ly,M) :- idem(X,Lx,K,M),
+   plus(K,1,K1),
+   idem(K1,M,Y,Ly).
+
+$ contr(C,N,F,B,A,M) :-
+   idem(norvegien,N,1,M),  
+   idem(lait,B,3,M),  
+   a_cote(norvegien,N,bleu,C,M), 
+   idem(rouge,C,anglais,N), 
+   idem(cafe,B,verte,C), 
+   idem(jaune,C,kool,F), 
+   a_droite(verte,blanc,C), 
+   idem(espagnol,N,chien,A), 
+   idem(ukrainien,N,the,B),  
+   idem(japonais,N,craven,F),
+   idem(old_gold,F,escargots,A),
+   idem(gitanes,F,vin,B),
+   habite_acote(chesterfield,F,renard,A,M),
+   habite_acote(kool,F,cheval,A,M).
+
+ % le norvegien habite la 1ere maison
+ % on boit du lait dans la maison du milieu
+ % l'anglais habite la maison rouge
+ % on boit du cafe dans la maison verte
+ % on fume des kool dans maison jaune
+ % la maison verte est a droite de la blanche
+ % le norvegien habite a cote de la maison bleue
+ % le chien appartient a l'espagnol
+ % l'ukrainien boit du the
+ % le japonais fume des craven
+ % le fumeur de old_gold eleve des escargots
+ % le fumeur de gitanes boit du vin
+ % le fumeur de chesterfield habite a cote du proprietaire du renard
+ % le le fumeur de kool habite a cote du proprietaire du cheval

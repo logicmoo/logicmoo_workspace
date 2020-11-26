@@ -1,0 +1,31 @@
+// Load first the ontology: Sowa_CG_Generalization_Hierarchy1.xml
+
+// ex: ?- integrateSituation([Robot]<-agnt-[Wash]-thme->[Car], [Robot, Wash, Car]).
+integrateSituation(G, L) :-
+    getOntology(_ontology),
+    "aminePlatform.engines.dynamicKnowledgeIntegration.DynamicKnowledgeIntegration":integrateSituation(_ontology, G, L), !.
+
+// ex: ?- ask([Robot]<-agnt-[Wash]-thme->[Inanimate], [Wash]).
+ask(G, L) :-
+    getOntology(_ontology),
+    _rslt is "aminePlatform.engines.dynamicKnowledgeIntegration.DynamicKnowledgeIntegration":ask(_ontology, G, L),
+    writeRslt(_rslt), !.
+
+// another example: ?- ask([Robot]<-agnt-[Wash]-
+//                        -thme->[Car],
+//                      -Manr->[Vigorous], [Wash]).
+writeRslt(_rslt) :-
+    member(e, _rslt),
+    write("The description is : "),
+    s1 is e:getResultInString(),
+    write(s1),
+    writeln(" to/than the known"),
+    g1 is e:getCG(),
+    writeln(g1),
+    fail.
+writeRslt(_).
+
+member(e, [e|_]).
+member(e, [_|L]) :- 
+    member(e, L).
+

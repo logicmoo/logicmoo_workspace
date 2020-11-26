@@ -1,0 +1,341 @@
+(note TQD35-a)
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran BiologicalWeapon) 
+
+(subclass BiologicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance HAMAS TerroristGroup) 
+
+(instance HAMAS InternationalOrganization) 
+
+(givesSupportToAgent Iran HAMAS 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(subclass WeaponOfMassDestruction WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance PalestineIslamicJihad TerroristGroup) 
+
+(instance PalestineIslamicJihad InternationalOrganization) 
+
+(givesSupportToAgent Iran PalestineIslamicJihad 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (and 
+ (subclass ?TYPE1 ?TYPE2) 
+ (relationInstanceExistsMany possesses ?AGT ?TYPE1)) 
+ (relationInstanceExistsMany possesses ?AGT ?TYPE2)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance LebaneseHizballah TerroristGroup) 
+
+(instance LebaneseHizballah InternationalOrganization) 
+
+(givesSupportToAgent Iran LebaneseHizballah 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance PalestineIslamicJihad TerroristGroup) 
+
+(instance PalestineIslamicJihad InternationalOrganization) 
+
+(givesSupportToAgent Iran PalestineIslamicJihad 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran RadiologicalWeapon) 
+
+(subclass RadiologicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance HAMAS TerroristGroup) 
+
+(instance HAMAS InternationalOrganization) 
+
+(givesSupportToAgent Iran HAMAS 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(subclass WeaponOfMassDestruction WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance HAMAS TerroristGroup) 
+
+(instance HAMAS InternationalOrganization) 
+
+(givesSupportToAgent Iran HAMAS 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (and 
+ (subclass ?TYPE1 ?TYPE2) 
+ (relationInstanceExistsMany possesses ?AGT ?TYPE1)) 
+ (relationInstanceExistsMany possesses ?AGT ?TYPE2)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran BiologicalWeapon) 
+
+(subclass BiologicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance LebaneseHizballah TerroristGroup) 
+
+(instance LebaneseHizballah InternationalOrganization) 
+
+(givesSupportToAgent Iran LebaneseHizballah 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran RadiologicalWeapon) 
+
+(subclass RadiologicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance LebaneseHizballah TerroristGroup) 
+
+(instance LebaneseHizballah InternationalOrganization) 
+
+(givesSupportToAgent Iran LebaneseHizballah 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran BiologicalWeapon) 
+
+(subclass BiologicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance PalestineIslamicJihad TerroristGroup) 
+
+(instance PalestineIslamicJihad InternationalOrganization) 
+
+(givesSupportToAgent Iran PalestineIslamicJihad 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran RadiologicalWeapon) 
+
+(subclass RadiologicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance PalestineIslamicJihad TerroristGroup) 
+
+(instance PalestineIslamicJihad InternationalOrganization) 
+
+(givesSupportToAgent Iran PalestineIslamicJihad 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance HAMAS TerroristGroup) 
+
+(instance HAMAS InternationalOrganization) 
+
+(givesSupportToAgent Iran HAMAS 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(subclass WeaponOfMassDestruction WeaponOfMassDestruction) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance LebaneseHizballah TerroristGroup) 
+
+(instance LebaneseHizballah InternationalOrganization) 
+
+(givesSupportToAgent Iran LebaneseHizballah 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (and 
+ (subclass ?TYPE1 ?TYPE2) 
+ (relationInstanceExistsMany possesses ?AGT ?TYPE1)) 
+ (relationInstanceExistsMany possesses ?AGT ?TYPE2)) 
+
+(query (findall (?POTENTIALGROUP ?POTENTIALWEAPON)
+
+(thereExists ?SUPPORT 
+   (and 
+       (instance ?POTENTIALGROUP TerroristGroup) 
+       (instance ?POTENTIALGROUP InternationalOrganization) 
+       (givesSupportToAgent Iran ?POTENTIALGROUP ?SUPPORT) 
+       (followingValue 
+           (MediumAmountFn MilitarySupport) ?SUPPORT) 
+       (subclass ?POTENTIALWEAPON WeaponOfMassDestruction) 
+       (relationInstanceExistsMany possesses Iran ?POTENTIALWEAPON)))
+))
+
+(answer HAMAS BiologicalWeapon
+)
+(answer HAMAS RadiologicalWeapon
+)
+(answer HAMAS ChemicalWeapon
+)
+(answer LebaneseHizballah BiologicalWeapon
+)
+(answer LebaneseHizballah RadiologicalWeapon
+)
+(answer  PalestineIslamicJihad BiologicalWeapon
+)
+(answer  PalestineIslamicJihad RadiologicalWeapon
+)
+(answer HAMAS ChemicalWeapon
+)
+(answer LebaneseHizballah WeaponOfMassDestruction
+)
+(answer  PalestineIslamicJihad WeaponOfMassDestruction
+)
+(answer LebaneseHizballah ChemicalWeapon
+)
+(answer  PalestineIslamicJihad  ChemicalWeapon
+)
+(end_of_file)
+

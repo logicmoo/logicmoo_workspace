@@ -1,0 +1,31 @@
+(note TQD67b)
+
+(implies 
+ (temporallySubsumes ?TIME 
+ (givesSupportToAgent ?AGT-1 ?AGT-2 ?SUPPORT)) 
+ (temporallySubsumes ?TIME 
+ (positiveVestedInterest ?AGT-1 ?AGT-2))) 
+
+(temporallySubsumes (YearFn 1996) 
+ (givesSupportToAgent Iran BahrainiHizballah 
+ (MediumAmountFn MilitarySupport))) 
+
+(temporallySubsumes (YearFn 1996) 
+ (positiveVestedInterest Iran BahrainiHizballah)) 
+
+(instance Iran PersianGulfCountry) 
+
+
+(query (findall ?OTHER
+(thereExists ?AGENT1 
+   (and 
+       (equals BahrainiHizballah ?AGENT1) 
+       (instance ?OTHER PersianGulfCountry) 
+       (temporallySubsumes (YearFn 1996) 
+           (positiveVestedInterest ?OTHER ?AGENT1))))
+))
+
+(answer Iran
+)
+
+(end_of_file)

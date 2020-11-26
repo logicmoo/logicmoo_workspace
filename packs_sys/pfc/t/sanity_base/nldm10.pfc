@@ -1,0 +1,26 @@
+
+:- use_module(library(pfc)).
+:- cls.
+:- mpred_notrace_exec.
+:- statistics(cputime,X),assert(load_time(X)).
+
+(adj(X,Y)==>tc(X,Y)).
+(tc(X,Y)/clause_u(tc(Y,Z)))==> tc(X,Z).
+
+:- maplist(mpred_ain,
+[
+adj(1,2),
+adj(2,3),
+adj(3,4),
+adj(4,5),
+adj(5,6),
+adj(6,7),
+adj(7,8),
+adj(8,9),
+adj(9,10),
+adj(10,1)
+]).
+
+:- statistics(cputime,X),retract(load_time(LT)), Time is X-LT,
+   wdmsg(time_was(Time)).
+

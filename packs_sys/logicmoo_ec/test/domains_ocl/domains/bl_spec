@@ -1,0 +1,131 @@
+% block world - OCL1.1
+% 2nd May, 2000
+% University of Huddersfield
+
+% sorts
+% ------------------
+sorts(primitive_sorts,[block,gripper]) .
+
+% objects
+%-------------------
+objects(block, 
+	[block1, block2, block3, block4, block5, block6, block7]) .
+objects(gripper, [tom]) .
+
+% All predicates
+%-------------------
+predicates([
+	on_block(block,block),
+	on_table(block),
+	clear(block),
+	gripped(block,gripper),
+	busy(gripper),
+	free(gripper)
+	]) .
+
+% atomic invariants
+%-------------------
+atomic_invariants([]).
+
+% substate classes
+%-------------------
+substate_classes(block, B, [
+      [gripped(B,G)],
+      [on_block(B,B1), clear(B),ne(B,B1)],
+      [on_block(B,B1),ne(B,B1)],
+      [on_table(B), clear(B)],
+      [on_table(B)] ]).
+
+substate_classes(gripper, G, [
+	[busy(G)],
+	[free(G)] ]).
+
+% negative invariants
+%-------------------
+
+inconsistent_constraint([on_block(B, B)]) .
+
+inconsistent_constraint([on_block(B,B1), on_block(B1,B), ne(B,B1)]) .
+inconsistent_constraint([on_block(B,B1), on_block(B,B2), ne(B,B1), ne(B1,B2)]) .
+inconsistent_constraint([on_block(B1,B), on_block(B2,B), ne(B,B1), ne(B1,B2)]) .
+
+inconsistent_constraint([on_block(B, B1), clear(B1)]) .
+
+inconsistent_constraint([on_block(B, B1), on_table(B)]) .
+
+inconsistent_constraint([gripped(B,G), on_block(B1, B)]) .
+inconsistent_constraint([gripped(B,G), on_block(B, B1)]) .
+inconsistent_constraint([gripped(B,G), on_table(B)]) .
+inconsistent_constraint([gripped(B,G), clear(B)]) .
+inconsistent_constraint([gripped(B,G), gripped(B1,G),ne(B,B1)]) .
+
+inconsistent_constraint([busy(G),free(G)]) .
+inconsistent_constraint([gripped(B,G),free(G)]) .
+
+% implied invariants
+% --------------------------------
+implied_invariant([],[]).
+
+% operators
+% -------------
+
+operator(grip_from_blocks(B,G), 
+     % prevail
+     [],
+     % necessary
+	[sc(block, B,[on_block(B,B1),clear(B),ne(B,B1)] => [gripped(B,G)]),
+         sc(block,B1,[on_block(B1,B2),ne(B1,B2)] => 	
+                                    [on_block(B1,B2),clear(B1)]),
+	 sc(gripper,G,[free(G)] => [busy(G)])],
+     % conditional
+     []) .
+
+operator(grip_from_one_block(B,G), 
+     % prevail
+     [],
+     % necessary
+	[sc(block, B,[on_block(B,B1),clear(B),ne(B,B1)] => [gripped(B,G)]),
+         sc(block,B1,[on_table(B1)]=>[on_table(B1),clear(B1)]),
+	 sc(gripper,G,[free(G)] => [busy(G)])],
+     % conditional
+     []) .
+
+operator(grip_from_table(B,G), 
+     % prevail
+     [],
+     % necessary
+	[sc(block, B,[on_table(B),clear(B)] => [gripped(B,G)]),
+	 sc(gripper,G,[free(G)] => [busy(G)])],
+     % conditional
+     []) .
+
+operator(put_on_blocks(B,G), 
+     % prevail
+     [],
+     % necessary
+     [sc(block, B,[gripped(B,G)]=>[on_block(B,B1),clear(B),ne(B,B1)]),
+      sc(block, B1, [on_block(B1,B2),clear(B1),ne(B1,B2)] => 
+                                             [on_block(B1,B2)]),
+      sc(gripper,G,[busy(G)]=>[free(G)])],
+     % conditional
+     []) .
+
+operator(put_on_one_block(B,G), 
+     % prevail
+     [],
+     % necessary
+     [sc(block, B,[gripped(B,G)]=>[on_block(B,B1),clear(B),ne(B,B1)]),
+      sc(block, B1,[on_table(B1),clear(B1)]=>[on_table(B1)]),
+	sc(gripper,G,[busy(G)]=>[free(G)])],
+     % conditional
+     []) .
+
+operator(put_on_table(B,G), 
+     % prevail
+     [],
+     % necessary
+     [sc(block, B,[gripped(B,G)]=>[on_table(B),clear(B)]),
+	sc(gripper,G,[busy(G)] => [free(G)])],
+     % conditional
+     []) .
+

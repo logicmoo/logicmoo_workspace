@@ -1,0 +1,7200 @@
+00 : 00
+
+noll noll noll noll
+
+
+00 : 01
+
+noll noll noll ett
+
+
+00 : 10
+
+noll noll tio
+
+
+00 : 11
+
+noll noll elva
+
+
+00 : 12
+
+noll noll tolv
+
+
+00 : 13
+
+noll noll tretton
+
+
+00 : 14
+
+noll noll fjorton
+
+
+00 : 15
+
+noll noll femton
+
+
+00 : 16
+
+noll noll sexton
+
+
+00 : 17
+
+noll noll sjutton
+
+
+00 : 18
+
+noll noll arton
+
+
+00 : 19
+
+noll noll nitton
+
+
+00 : 02
+
+noll noll noll två
+
+
+00 : 20
+
+noll noll tjugo
+
+
+00 : 21
+
+noll noll tju ett
+
+
+00 : 22
+
+noll noll tju två
+
+
+00 : 23
+
+noll noll tju tre
+
+
+00 : 24
+
+noll noll tju fyra
+
+
+00 : 25
+
+noll noll tju fem
+
+
+00 : 26
+
+noll noll tju sex
+
+
+00 : 27
+
+noll noll tju sju
+
+
+00 : 28
+
+noll noll tju åtta
+
+
+00 : 29
+
+noll noll tju nio
+
+
+00 : 03
+
+noll noll noll tre
+
+
+00 : 30
+
+noll noll trettio
+
+
+00 : 31
+
+noll noll trettio ett
+
+
+00 : 32
+
+noll noll trettio två
+
+
+00 : 33
+
+noll noll trettio tre
+
+
+00 : 34
+
+noll noll trettio fyra
+
+
+00 : 35
+
+noll noll trettio fem
+
+
+00 : 36
+
+noll noll trettio sex
+
+
+00 : 37
+
+noll noll trettio sju
+
+
+00 : 38
+
+noll noll trettio åtta
+
+
+00 : 39
+
+noll noll trettio nio
+
+
+00 : 04
+
+noll noll noll fyra
+
+
+00 : 40
+
+noll noll fyrtio
+
+
+00 : 41
+
+noll noll fyrtio ett
+
+
+00 : 42
+
+noll noll fyrtio två
+
+
+00 : 43
+
+noll noll fyrtio tre
+
+
+00 : 44
+
+noll noll fyrtio fyra
+
+
+00 : 45
+
+noll noll fyrtio fem
+
+
+00 : 46
+
+noll noll fyrtio sex
+
+
+00 : 47
+
+noll noll fyrtio sju
+
+
+00 : 48
+
+noll noll fyrtio åtta
+
+
+00 : 49
+
+noll noll fyrtio nio
+
+
+00 : 05
+
+noll noll noll fem
+
+
+00 : 50
+
+noll noll femtio
+
+
+00 : 51
+
+noll noll femtio ett
+
+
+00 : 52
+
+noll noll femtio två
+
+
+00 : 53
+
+noll noll femtio tre
+
+
+00 : 54
+
+noll noll femtio fyra
+
+
+00 : 55
+
+noll noll femtio fem
+
+
+00 : 56
+
+noll noll femtio sex
+
+
+00 : 57
+
+noll noll femtio sju
+
+
+00 : 58
+
+noll noll femtio åtta
+
+
+00 : 59
+
+noll noll femtio nio
+
+
+00 : 06
+
+noll noll noll sex
+
+
+00 : 07
+
+noll noll noll sju
+
+
+00 : 08
+
+noll noll noll åtta
+
+
+00 : 09
+
+noll noll noll nio
+
+
+01 : 00
+
+noll ett noll noll
+
+
+01 : 01
+
+noll ett noll ett
+
+
+01 : 10
+
+noll ett tio
+
+
+01 : 11
+
+noll ett elva
+
+
+01 : 12
+
+noll ett tolv
+
+
+01 : 13
+
+noll ett tretton
+
+
+01 : 14
+
+noll ett fjorton
+
+
+01 : 15
+
+noll ett femton
+
+
+01 : 16
+
+noll ett sexton
+
+
+01 : 17
+
+noll ett sjutton
+
+
+01 : 18
+
+noll ett arton
+
+
+01 : 19
+
+noll ett nitton
+
+
+01 : 02
+
+noll ett noll två
+
+
+01 : 20
+
+noll ett tjugo
+
+
+01 : 21
+
+noll ett tju ett
+
+
+01 : 22
+
+noll ett tju två
+
+
+01 : 23
+
+noll ett tju tre
+
+
+01 : 24
+
+noll ett tju fyra
+
+
+01 : 25
+
+noll ett tju fem
+
+
+01 : 26
+
+noll ett tju sex
+
+
+01 : 27
+
+noll ett tju sju
+
+
+01 : 28
+
+noll ett tju åtta
+
+
+01 : 29
+
+noll ett tju nio
+
+
+01 : 03
+
+noll ett noll tre
+
+
+01 : 30
+
+noll ett trettio
+
+
+01 : 31
+
+noll ett trettio ett
+
+
+01 : 32
+
+noll ett trettio två
+
+
+01 : 33
+
+noll ett trettio tre
+
+
+01 : 34
+
+noll ett trettio fyra
+
+
+01 : 35
+
+noll ett trettio fem
+
+
+01 : 36
+
+noll ett trettio sex
+
+
+01 : 37
+
+noll ett trettio sju
+
+
+01 : 38
+
+noll ett trettio åtta
+
+
+01 : 39
+
+noll ett trettio nio
+
+
+01 : 04
+
+noll ett noll fyra
+
+
+01 : 40
+
+noll ett fyrtio
+
+
+01 : 41
+
+noll ett fyrtio ett
+
+
+01 : 42
+
+noll ett fyrtio två
+
+
+01 : 43
+
+noll ett fyrtio tre
+
+
+01 : 44
+
+noll ett fyrtio fyra
+
+
+01 : 45
+
+noll ett fyrtio fem
+
+
+01 : 46
+
+noll ett fyrtio sex
+
+
+01 : 47
+
+noll ett fyrtio sju
+
+
+01 : 48
+
+noll ett fyrtio åtta
+
+
+01 : 49
+
+noll ett fyrtio nio
+
+
+01 : 05
+
+noll ett noll fem
+
+
+01 : 50
+
+noll ett femtio
+
+
+01 : 51
+
+noll ett femtio ett
+
+
+01 : 52
+
+noll ett femtio två
+
+
+01 : 53
+
+noll ett femtio tre
+
+
+01 : 54
+
+noll ett femtio fyra
+
+
+01 : 55
+
+noll ett femtio fem
+
+
+01 : 56
+
+noll ett femtio sex
+
+
+01 : 57
+
+noll ett femtio sju
+
+
+01 : 58
+
+noll ett femtio åtta
+
+
+01 : 59
+
+noll ett femtio nio
+
+
+01 : 06
+
+noll ett noll sex
+
+
+01 : 07
+
+noll ett noll sju
+
+
+01 : 08
+
+noll ett noll åtta
+
+
+01 : 09
+
+noll ett noll nio
+
+
+10 : 00
+
+tio noll noll
+
+
+10 : 01
+
+tio noll ett
+
+
+10 : 10
+
+tio tio
+
+
+10 : 11
+
+tio elva
+
+
+10 : 12
+
+tio tolv
+
+
+10 : 13
+
+tio tretton
+
+
+10 : 14
+
+tio fjorton
+
+
+10 : 15
+
+tio femton
+
+
+10 : 16
+
+tio sexton
+
+
+10 : 17
+
+tio sjutton
+
+
+10 : 18
+
+tio arton
+
+
+10 : 19
+
+tio nitton
+
+
+10 : 02
+
+tio noll två
+
+
+10 : 20
+
+tio tjugo
+
+
+10 : 21
+
+tio tju ett
+
+
+10 : 22
+
+tio tju två
+
+
+10 : 23
+
+tio tju tre
+
+
+10 : 24
+
+tio tju fyra
+
+
+10 : 25
+
+tio tju fem
+
+
+10 : 26
+
+tio tju sex
+
+
+10 : 27
+
+tio tju sju
+
+
+10 : 28
+
+tio tju åtta
+
+
+10 : 29
+
+tio tju nio
+
+
+10 : 03
+
+tio noll tre
+
+
+10 : 30
+
+tio trettio
+
+
+10 : 31
+
+tio trettio ett
+
+
+10 : 32
+
+tio trettio två
+
+
+10 : 33
+
+tio trettio tre
+
+
+10 : 34
+
+tio trettio fyra
+
+
+10 : 35
+
+tio trettio fem
+
+
+10 : 36
+
+tio trettio sex
+
+
+10 : 37
+
+tio trettio sju
+
+
+10 : 38
+
+tio trettio åtta
+
+
+10 : 39
+
+tio trettio nio
+
+
+10 : 04
+
+tio noll fyra
+
+
+10 : 40
+
+tio fyrtio
+
+
+10 : 41
+
+tio fyrtio ett
+
+
+10 : 42
+
+tio fyrtio två
+
+
+10 : 43
+
+tio fyrtio tre
+
+
+10 : 44
+
+tio fyrtio fyra
+
+
+10 : 45
+
+tio fyrtio fem
+
+
+10 : 46
+
+tio fyrtio sex
+
+
+10 : 47
+
+tio fyrtio sju
+
+
+10 : 48
+
+tio fyrtio åtta
+
+
+10 : 49
+
+tio fyrtio nio
+
+
+10 : 05
+
+tio noll fem
+
+
+10 : 50
+
+tio femtio
+
+
+10 : 51
+
+tio femtio ett
+
+
+10 : 52
+
+tio femtio två
+
+
+10 : 53
+
+tio femtio tre
+
+
+10 : 54
+
+tio femtio fyra
+
+
+10 : 55
+
+tio femtio fem
+
+
+10 : 56
+
+tio femtio sex
+
+
+10 : 57
+
+tio femtio sju
+
+
+10 : 58
+
+tio femtio åtta
+
+
+10 : 59
+
+tio femtio nio
+
+
+10 : 06
+
+tio noll sex
+
+
+10 : 07
+
+tio noll sju
+
+
+10 : 08
+
+tio noll åtta
+
+
+10 : 09
+
+tio noll nio
+
+
+11 : 00
+
+elva noll noll
+
+
+11 : 01
+
+elva noll ett
+
+
+11 : 10
+
+elva tio
+
+
+11 : 11
+
+elva elva
+
+
+11 : 12
+
+elva tolv
+
+
+11 : 13
+
+elva tretton
+
+
+11 : 14
+
+elva fjorton
+
+
+11 : 15
+
+elva femton
+
+
+11 : 16
+
+elva sexton
+
+
+11 : 17
+
+elva sjutton
+
+
+11 : 18
+
+elva arton
+
+
+11 : 19
+
+elva nitton
+
+
+11 : 02
+
+elva noll två
+
+
+11 : 20
+
+elva tjugo
+
+
+11 : 21
+
+elva tju ett
+
+
+11 : 22
+
+elva tju två
+
+
+11 : 23
+
+elva tju tre
+
+
+11 : 24
+
+elva tju fyra
+
+
+11 : 25
+
+elva tju fem
+
+
+11 : 26
+
+elva tju sex
+
+
+11 : 27
+
+elva tju sju
+
+
+11 : 28
+
+elva tju åtta
+
+
+11 : 29
+
+elva tju nio
+
+
+11 : 03
+
+elva noll tre
+
+
+11 : 30
+
+elva trettio
+
+
+11 : 31
+
+elva trettio ett
+
+
+11 : 32
+
+elva trettio två
+
+
+11 : 33
+
+elva trettio tre
+
+
+11 : 34
+
+elva trettio fyra
+
+
+11 : 35
+
+elva trettio fem
+
+
+11 : 36
+
+elva trettio sex
+
+
+11 : 37
+
+elva trettio sju
+
+
+11 : 38
+
+elva trettio åtta
+
+
+11 : 39
+
+elva trettio nio
+
+
+11 : 04
+
+elva noll fyra
+
+
+11 : 40
+
+elva fyrtio
+
+
+11 : 41
+
+elva fyrtio ett
+
+
+11 : 42
+
+elva fyrtio två
+
+
+11 : 43
+
+elva fyrtio tre
+
+
+11 : 44
+
+elva fyrtio fyra
+
+
+11 : 45
+
+elva fyrtio fem
+
+
+11 : 46
+
+elva fyrtio sex
+
+
+11 : 47
+
+elva fyrtio sju
+
+
+11 : 48
+
+elva fyrtio åtta
+
+
+11 : 49
+
+elva fyrtio nio
+
+
+11 : 05
+
+elva noll fem
+
+
+11 : 50
+
+elva femtio
+
+
+11 : 51
+
+elva femtio ett
+
+
+11 : 52
+
+elva femtio två
+
+
+11 : 53
+
+elva femtio tre
+
+
+11 : 54
+
+elva femtio fyra
+
+
+11 : 55
+
+elva femtio fem
+
+
+11 : 56
+
+elva femtio sex
+
+
+11 : 57
+
+elva femtio sju
+
+
+11 : 58
+
+elva femtio åtta
+
+
+11 : 59
+
+elva femtio nio
+
+
+11 : 06
+
+elva noll sex
+
+
+11 : 07
+
+elva noll sju
+
+
+11 : 08
+
+elva noll åtta
+
+
+11 : 09
+
+elva noll nio
+
+
+12 : 00
+
+tolv noll noll
+
+
+12 : 01
+
+tolv noll ett
+
+
+12 : 10
+
+tolv tio
+
+
+12 : 11
+
+tolv elva
+
+
+12 : 12
+
+tolv tolv
+
+
+12 : 13
+
+tolv tretton
+
+
+12 : 14
+
+tolv fjorton
+
+
+12 : 15
+
+tolv femton
+
+
+12 : 16
+
+tolv sexton
+
+
+12 : 17
+
+tolv sjutton
+
+
+12 : 18
+
+tolv arton
+
+
+12 : 19
+
+tolv nitton
+
+
+12 : 02
+
+tolv noll två
+
+
+12 : 20
+
+tolv tjugo
+
+
+12 : 21
+
+tolv tju ett
+
+
+12 : 22
+
+tolv tju två
+
+
+12 : 23
+
+tolv tju tre
+
+
+12 : 24
+
+tolv tju fyra
+
+
+12 : 25
+
+tolv tju fem
+
+
+12 : 26
+
+tolv tju sex
+
+
+12 : 27
+
+tolv tju sju
+
+
+12 : 28
+
+tolv tju åtta
+
+
+12 : 29
+
+tolv tju nio
+
+
+12 : 03
+
+tolv noll tre
+
+
+12 : 30
+
+tolv trettio
+
+
+12 : 31
+
+tolv trettio ett
+
+
+12 : 32
+
+tolv trettio två
+
+
+12 : 33
+
+tolv trettio tre
+
+
+12 : 34
+
+tolv trettio fyra
+
+
+12 : 35
+
+tolv trettio fem
+
+
+12 : 36
+
+tolv trettio sex
+
+
+12 : 37
+
+tolv trettio sju
+
+
+12 : 38
+
+tolv trettio åtta
+
+
+12 : 39
+
+tolv trettio nio
+
+
+12 : 04
+
+tolv noll fyra
+
+
+12 : 40
+
+tolv fyrtio
+
+
+12 : 41
+
+tolv fyrtio ett
+
+
+12 : 42
+
+tolv fyrtio två
+
+
+12 : 43
+
+tolv fyrtio tre
+
+
+12 : 44
+
+tolv fyrtio fyra
+
+
+12 : 45
+
+tolv fyrtio fem
+
+
+12 : 46
+
+tolv fyrtio sex
+
+
+12 : 47
+
+tolv fyrtio sju
+
+
+12 : 48
+
+tolv fyrtio åtta
+
+
+12 : 49
+
+tolv fyrtio nio
+
+
+12 : 05
+
+tolv noll fem
+
+
+12 : 50
+
+tolv femtio
+
+
+12 : 51
+
+tolv femtio ett
+
+
+12 : 52
+
+tolv femtio två
+
+
+12 : 53
+
+tolv femtio tre
+
+
+12 : 54
+
+tolv femtio fyra
+
+
+12 : 55
+
+tolv femtio fem
+
+
+12 : 56
+
+tolv femtio sex
+
+
+12 : 57
+
+tolv femtio sju
+
+
+12 : 58
+
+tolv femtio åtta
+
+
+12 : 59
+
+tolv femtio nio
+
+
+12 : 06
+
+tolv noll sex
+
+
+12 : 07
+
+tolv noll sju
+
+
+12 : 08
+
+tolv noll åtta
+
+
+12 : 09
+
+tolv noll nio
+
+
+13 : 00
+
+tretton noll noll
+
+
+13 : 01
+
+tretton noll ett
+
+
+13 : 10
+
+tretton tio
+
+
+13 : 11
+
+tretton elva
+
+
+13 : 12
+
+tretton tolv
+
+
+13 : 13
+
+tretton tretton
+
+
+13 : 14
+
+tretton fjorton
+
+
+13 : 15
+
+tretton femton
+
+
+13 : 16
+
+tretton sexton
+
+
+13 : 17
+
+tretton sjutton
+
+
+13 : 18
+
+tretton arton
+
+
+13 : 19
+
+tretton nitton
+
+
+13 : 02
+
+tretton noll två
+
+
+13 : 20
+
+tretton tjugo
+
+
+13 : 21
+
+tretton tju ett
+
+
+13 : 22
+
+tretton tju två
+
+
+13 : 23
+
+tretton tju tre
+
+
+13 : 24
+
+tretton tju fyra
+
+
+13 : 25
+
+tretton tju fem
+
+
+13 : 26
+
+tretton tju sex
+
+
+13 : 27
+
+tretton tju sju
+
+
+13 : 28
+
+tretton tju åtta
+
+
+13 : 29
+
+tretton tju nio
+
+
+13 : 03
+
+tretton noll tre
+
+
+13 : 30
+
+tretton trettio
+
+
+13 : 31
+
+tretton trettio ett
+
+
+13 : 32
+
+tretton trettio två
+
+
+13 : 33
+
+tretton trettio tre
+
+
+13 : 34
+
+tretton trettio fyra
+
+
+13 : 35
+
+tretton trettio fem
+
+
+13 : 36
+
+tretton trettio sex
+
+
+13 : 37
+
+tretton trettio sju
+
+
+13 : 38
+
+tretton trettio åtta
+
+
+13 : 39
+
+tretton trettio nio
+
+
+13 : 04
+
+tretton noll fyra
+
+
+13 : 40
+
+tretton fyrtio
+
+
+13 : 41
+
+tretton fyrtio ett
+
+
+13 : 42
+
+tretton fyrtio två
+
+
+13 : 43
+
+tretton fyrtio tre
+
+
+13 : 44
+
+tretton fyrtio fyra
+
+
+13 : 45
+
+tretton fyrtio fem
+
+
+13 : 46
+
+tretton fyrtio sex
+
+
+13 : 47
+
+tretton fyrtio sju
+
+
+13 : 48
+
+tretton fyrtio åtta
+
+
+13 : 49
+
+tretton fyrtio nio
+
+
+13 : 05
+
+tretton noll fem
+
+
+13 : 50
+
+tretton femtio
+
+
+13 : 51
+
+tretton femtio ett
+
+
+13 : 52
+
+tretton femtio två
+
+
+13 : 53
+
+tretton femtio tre
+
+
+13 : 54
+
+tretton femtio fyra
+
+
+13 : 55
+
+tretton femtio fem
+
+
+13 : 56
+
+tretton femtio sex
+
+
+13 : 57
+
+tretton femtio sju
+
+
+13 : 58
+
+tretton femtio åtta
+
+
+13 : 59
+
+tretton femtio nio
+
+
+13 : 06
+
+tretton noll sex
+
+
+13 : 07
+
+tretton noll sju
+
+
+13 : 08
+
+tretton noll åtta
+
+
+13 : 09
+
+tretton noll nio
+
+
+14 : 00
+
+fjorton noll noll
+
+
+14 : 01
+
+fjorton noll ett
+
+
+14 : 10
+
+fjorton tio
+
+
+14 : 11
+
+fjorton elva
+
+
+14 : 12
+
+fjorton tolv
+
+
+14 : 13
+
+fjorton tretton
+
+
+14 : 14
+
+fjorton fjorton
+
+
+14 : 15
+
+fjorton femton
+
+
+14 : 16
+
+fjorton sexton
+
+
+14 : 17
+
+fjorton sjutton
+
+
+14 : 18
+
+fjorton arton
+
+
+14 : 19
+
+fjorton nitton
+
+
+14 : 02
+
+fjorton noll två
+
+
+14 : 20
+
+fjorton tjugo
+
+
+14 : 21
+
+fjorton tju ett
+
+
+14 : 22
+
+fjorton tju två
+
+
+14 : 23
+
+fjorton tju tre
+
+
+14 : 24
+
+fjorton tju fyra
+
+
+14 : 25
+
+fjorton tju fem
+
+
+14 : 26
+
+fjorton tju sex
+
+
+14 : 27
+
+fjorton tju sju
+
+
+14 : 28
+
+fjorton tju åtta
+
+
+14 : 29
+
+fjorton tju nio
+
+
+14 : 03
+
+fjorton noll tre
+
+
+14 : 30
+
+fjorton trettio
+
+
+14 : 31
+
+fjorton trettio ett
+
+
+14 : 32
+
+fjorton trettio två
+
+
+14 : 33
+
+fjorton trettio tre
+
+
+14 : 34
+
+fjorton trettio fyra
+
+
+14 : 35
+
+fjorton trettio fem
+
+
+14 : 36
+
+fjorton trettio sex
+
+
+14 : 37
+
+fjorton trettio sju
+
+
+14 : 38
+
+fjorton trettio åtta
+
+
+14 : 39
+
+fjorton trettio nio
+
+
+14 : 04
+
+fjorton noll fyra
+
+
+14 : 40
+
+fjorton fyrtio
+
+
+14 : 41
+
+fjorton fyrtio ett
+
+
+14 : 42
+
+fjorton fyrtio två
+
+
+14 : 43
+
+fjorton fyrtio tre
+
+
+14 : 44
+
+fjorton fyrtio fyra
+
+
+14 : 45
+
+fjorton fyrtio fem
+
+
+14 : 46
+
+fjorton fyrtio sex
+
+
+14 : 47
+
+fjorton fyrtio sju
+
+
+14 : 48
+
+fjorton fyrtio åtta
+
+
+14 : 49
+
+fjorton fyrtio nio
+
+
+14 : 05
+
+fjorton noll fem
+
+
+14 : 50
+
+fjorton femtio
+
+
+14 : 51
+
+fjorton femtio ett
+
+
+14 : 52
+
+fjorton femtio två
+
+
+14 : 53
+
+fjorton femtio tre
+
+
+14 : 54
+
+fjorton femtio fyra
+
+
+14 : 55
+
+fjorton femtio fem
+
+
+14 : 56
+
+fjorton femtio sex
+
+
+14 : 57
+
+fjorton femtio sju
+
+
+14 : 58
+
+fjorton femtio åtta
+
+
+14 : 59
+
+fjorton femtio nio
+
+
+14 : 06
+
+fjorton noll sex
+
+
+14 : 07
+
+fjorton noll sju
+
+
+14 : 08
+
+fjorton noll åtta
+
+
+14 : 09
+
+fjorton noll nio
+
+
+15 : 00
+
+femton noll noll
+
+
+15 : 01
+
+femton noll ett
+
+
+15 : 10
+
+femton tio
+
+
+15 : 11
+
+femton elva
+
+
+15 : 12
+
+femton tolv
+
+
+15 : 13
+
+femton tretton
+
+
+15 : 14
+
+femton fjorton
+
+
+15 : 15
+
+femton femton
+
+
+15 : 16
+
+femton sexton
+
+
+15 : 17
+
+femton sjutton
+
+
+15 : 18
+
+femton arton
+
+
+15 : 19
+
+femton nitton
+
+
+15 : 02
+
+femton noll två
+
+
+15 : 20
+
+femton tjugo
+
+
+15 : 21
+
+femton tju ett
+
+
+15 : 22
+
+femton tju två
+
+
+15 : 23
+
+femton tju tre
+
+
+15 : 24
+
+femton tju fyra
+
+
+15 : 25
+
+femton tju fem
+
+
+15 : 26
+
+femton tju sex
+
+
+15 : 27
+
+femton tju sju
+
+
+15 : 28
+
+femton tju åtta
+
+
+15 : 29
+
+femton tju nio
+
+
+15 : 03
+
+femton noll tre
+
+
+15 : 30
+
+femton trettio
+
+
+15 : 31
+
+femton trettio ett
+
+
+15 : 32
+
+femton trettio två
+
+
+15 : 33
+
+femton trettio tre
+
+
+15 : 34
+
+femton trettio fyra
+
+
+15 : 35
+
+femton trettio fem
+
+
+15 : 36
+
+femton trettio sex
+
+
+15 : 37
+
+femton trettio sju
+
+
+15 : 38
+
+femton trettio åtta
+
+
+15 : 39
+
+femton trettio nio
+
+
+15 : 04
+
+femton noll fyra
+
+
+15 : 40
+
+femton fyrtio
+
+
+15 : 41
+
+femton fyrtio ett
+
+
+15 : 42
+
+femton fyrtio två
+
+
+15 : 43
+
+femton fyrtio tre
+
+
+15 : 44
+
+femton fyrtio fyra
+
+
+15 : 45
+
+femton fyrtio fem
+
+
+15 : 46
+
+femton fyrtio sex
+
+
+15 : 47
+
+femton fyrtio sju
+
+
+15 : 48
+
+femton fyrtio åtta
+
+
+15 : 49
+
+femton fyrtio nio
+
+
+15 : 05
+
+femton noll fem
+
+
+15 : 50
+
+femton femtio
+
+
+15 : 51
+
+femton femtio ett
+
+
+15 : 52
+
+femton femtio två
+
+
+15 : 53
+
+femton femtio tre
+
+
+15 : 54
+
+femton femtio fyra
+
+
+15 : 55
+
+femton femtio fem
+
+
+15 : 56
+
+femton femtio sex
+
+
+15 : 57
+
+femton femtio sju
+
+
+15 : 58
+
+femton femtio åtta
+
+
+15 : 59
+
+femton femtio nio
+
+
+15 : 06
+
+femton noll sex
+
+
+15 : 07
+
+femton noll sju
+
+
+15 : 08
+
+femton noll åtta
+
+
+15 : 09
+
+femton noll nio
+
+
+16 : 00
+
+sexton noll noll
+
+
+16 : 01
+
+sexton noll ett
+
+
+16 : 10
+
+sexton tio
+
+
+16 : 11
+
+sexton elva
+
+
+16 : 12
+
+sexton tolv
+
+
+16 : 13
+
+sexton tretton
+
+
+16 : 14
+
+sexton fjorton
+
+
+16 : 15
+
+sexton femton
+
+
+16 : 16
+
+sexton sexton
+
+
+16 : 17
+
+sexton sjutton
+
+
+16 : 18
+
+sexton arton
+
+
+16 : 19
+
+sexton nitton
+
+
+16 : 02
+
+sexton noll två
+
+
+16 : 20
+
+sexton tjugo
+
+
+16 : 21
+
+sexton tju ett
+
+
+16 : 22
+
+sexton tju två
+
+
+16 : 23
+
+sexton tju tre
+
+
+16 : 24
+
+sexton tju fyra
+
+
+16 : 25
+
+sexton tju fem
+
+
+16 : 26
+
+sexton tju sex
+
+
+16 : 27
+
+sexton tju sju
+
+
+16 : 28
+
+sexton tju åtta
+
+
+16 : 29
+
+sexton tju nio
+
+
+16 : 03
+
+sexton noll tre
+
+
+16 : 30
+
+sexton trettio
+
+
+16 : 31
+
+sexton trettio ett
+
+
+16 : 32
+
+sexton trettio två
+
+
+16 : 33
+
+sexton trettio tre
+
+
+16 : 34
+
+sexton trettio fyra
+
+
+16 : 35
+
+sexton trettio fem
+
+
+16 : 36
+
+sexton trettio sex
+
+
+16 : 37
+
+sexton trettio sju
+
+
+16 : 38
+
+sexton trettio åtta
+
+
+16 : 39
+
+sexton trettio nio
+
+
+16 : 04
+
+sexton noll fyra
+
+
+16 : 40
+
+sexton fyrtio
+
+
+16 : 41
+
+sexton fyrtio ett
+
+
+16 : 42
+
+sexton fyrtio två
+
+
+16 : 43
+
+sexton fyrtio tre
+
+
+16 : 44
+
+sexton fyrtio fyra
+
+
+16 : 45
+
+sexton fyrtio fem
+
+
+16 : 46
+
+sexton fyrtio sex
+
+
+16 : 47
+
+sexton fyrtio sju
+
+
+16 : 48
+
+sexton fyrtio åtta
+
+
+16 : 49
+
+sexton fyrtio nio
+
+
+16 : 05
+
+sexton noll fem
+
+
+16 : 50
+
+sexton femtio
+
+
+16 : 51
+
+sexton femtio ett
+
+
+16 : 52
+
+sexton femtio två
+
+
+16 : 53
+
+sexton femtio tre
+
+
+16 : 54
+
+sexton femtio fyra
+
+
+16 : 55
+
+sexton femtio fem
+
+
+16 : 56
+
+sexton femtio sex
+
+
+16 : 57
+
+sexton femtio sju
+
+
+16 : 58
+
+sexton femtio åtta
+
+
+16 : 59
+
+sexton femtio nio
+
+
+16 : 06
+
+sexton noll sex
+
+
+16 : 07
+
+sexton noll sju
+
+
+16 : 08
+
+sexton noll åtta
+
+
+16 : 09
+
+sexton noll nio
+
+
+17 : 00
+
+sjutton noll noll
+
+
+17 : 01
+
+sjutton noll ett
+
+
+17 : 10
+
+sjutton tio
+
+
+17 : 11
+
+sjutton elva
+
+
+17 : 12
+
+sjutton tolv
+
+
+17 : 13
+
+sjutton tretton
+
+
+17 : 14
+
+sjutton fjorton
+
+
+17 : 15
+
+sjutton femton
+
+
+17 : 16
+
+sjutton sexton
+
+
+17 : 17
+
+sjutton sjutton
+
+
+17 : 18
+
+sjutton arton
+
+
+17 : 19
+
+sjutton nitton
+
+
+17 : 02
+
+sjutton noll två
+
+
+17 : 20
+
+sjutton tjugo
+
+
+17 : 21
+
+sjutton tju ett
+
+
+17 : 22
+
+sjutton tju två
+
+
+17 : 23
+
+sjutton tju tre
+
+
+17 : 24
+
+sjutton tju fyra
+
+
+17 : 25
+
+sjutton tju fem
+
+
+17 : 26
+
+sjutton tju sex
+
+
+17 : 27
+
+sjutton tju sju
+
+
+17 : 28
+
+sjutton tju åtta
+
+
+17 : 29
+
+sjutton tju nio
+
+
+17 : 03
+
+sjutton noll tre
+
+
+17 : 30
+
+sjutton trettio
+
+
+17 : 31
+
+sjutton trettio ett
+
+
+17 : 32
+
+sjutton trettio två
+
+
+17 : 33
+
+sjutton trettio tre
+
+
+17 : 34
+
+sjutton trettio fyra
+
+
+17 : 35
+
+sjutton trettio fem
+
+
+17 : 36
+
+sjutton trettio sex
+
+
+17 : 37
+
+sjutton trettio sju
+
+
+17 : 38
+
+sjutton trettio åtta
+
+
+17 : 39
+
+sjutton trettio nio
+
+
+17 : 04
+
+sjutton noll fyra
+
+
+17 : 40
+
+sjutton fyrtio
+
+
+17 : 41
+
+sjutton fyrtio ett
+
+
+17 : 42
+
+sjutton fyrtio två
+
+
+17 : 43
+
+sjutton fyrtio tre
+
+
+17 : 44
+
+sjutton fyrtio fyra
+
+
+17 : 45
+
+sjutton fyrtio fem
+
+
+17 : 46
+
+sjutton fyrtio sex
+
+
+17 : 47
+
+sjutton fyrtio sju
+
+
+17 : 48
+
+sjutton fyrtio åtta
+
+
+17 : 49
+
+sjutton fyrtio nio
+
+
+17 : 05
+
+sjutton noll fem
+
+
+17 : 50
+
+sjutton femtio
+
+
+17 : 51
+
+sjutton femtio ett
+
+
+17 : 52
+
+sjutton femtio två
+
+
+17 : 53
+
+sjutton femtio tre
+
+
+17 : 54
+
+sjutton femtio fyra
+
+
+17 : 55
+
+sjutton femtio fem
+
+
+17 : 56
+
+sjutton femtio sex
+
+
+17 : 57
+
+sjutton femtio sju
+
+
+17 : 58
+
+sjutton femtio åtta
+
+
+17 : 59
+
+sjutton femtio nio
+
+
+17 : 06
+
+sjutton noll sex
+
+
+17 : 07
+
+sjutton noll sju
+
+
+17 : 08
+
+sjutton noll åtta
+
+
+17 : 09
+
+sjutton noll nio
+
+
+18 : 00
+
+arton noll noll
+
+
+18 : 01
+
+arton noll ett
+
+
+18 : 10
+
+arton tio
+
+
+18 : 11
+
+arton elva
+
+
+18 : 12
+
+arton tolv
+
+
+18 : 13
+
+arton tretton
+
+
+18 : 14
+
+arton fjorton
+
+
+18 : 15
+
+arton femton
+
+
+18 : 16
+
+arton sexton
+
+
+18 : 17
+
+arton sjutton
+
+
+18 : 18
+
+arton arton
+
+
+18 : 19
+
+arton nitton
+
+
+18 : 02
+
+arton noll två
+
+
+18 : 20
+
+arton tjugo
+
+
+18 : 21
+
+arton tju ett
+
+
+18 : 22
+
+arton tju två
+
+
+18 : 23
+
+arton tju tre
+
+
+18 : 24
+
+arton tju fyra
+
+
+18 : 25
+
+arton tju fem
+
+
+18 : 26
+
+arton tju sex
+
+
+18 : 27
+
+arton tju sju
+
+
+18 : 28
+
+arton tju åtta
+
+
+18 : 29
+
+arton tju nio
+
+
+18 : 03
+
+arton noll tre
+
+
+18 : 30
+
+arton trettio
+
+
+18 : 31
+
+arton trettio ett
+
+
+18 : 32
+
+arton trettio två
+
+
+18 : 33
+
+arton trettio tre
+
+
+18 : 34
+
+arton trettio fyra
+
+
+18 : 35
+
+arton trettio fem
+
+
+18 : 36
+
+arton trettio sex
+
+
+18 : 37
+
+arton trettio sju
+
+
+18 : 38
+
+arton trettio åtta
+
+
+18 : 39
+
+arton trettio nio
+
+
+18 : 04
+
+arton noll fyra
+
+
+18 : 40
+
+arton fyrtio
+
+
+18 : 41
+
+arton fyrtio ett
+
+
+18 : 42
+
+arton fyrtio två
+
+
+18 : 43
+
+arton fyrtio tre
+
+
+18 : 44
+
+arton fyrtio fyra
+
+
+18 : 45
+
+arton fyrtio fem
+
+
+18 : 46
+
+arton fyrtio sex
+
+
+18 : 47
+
+arton fyrtio sju
+
+
+18 : 48
+
+arton fyrtio åtta
+
+
+18 : 49
+
+arton fyrtio nio
+
+
+18 : 05
+
+arton noll fem
+
+
+18 : 50
+
+arton femtio
+
+
+18 : 51
+
+arton femtio ett
+
+
+18 : 52
+
+arton femtio två
+
+
+18 : 53
+
+arton femtio tre
+
+
+18 : 54
+
+arton femtio fyra
+
+
+18 : 55
+
+arton femtio fem
+
+
+18 : 56
+
+arton femtio sex
+
+
+18 : 57
+
+arton femtio sju
+
+
+18 : 58
+
+arton femtio åtta
+
+
+18 : 59
+
+arton femtio nio
+
+
+18 : 06
+
+arton noll sex
+
+
+18 : 07
+
+arton noll sju
+
+
+18 : 08
+
+arton noll åtta
+
+
+18 : 09
+
+arton noll nio
+
+
+19 : 00
+
+nitton noll noll
+
+
+19 : 01
+
+nitton noll ett
+
+
+19 : 10
+
+nitton tio
+
+
+19 : 11
+
+nitton elva
+
+
+19 : 12
+
+nitton tolv
+
+
+19 : 13
+
+nitton tretton
+
+
+19 : 14
+
+nitton fjorton
+
+
+19 : 15
+
+nitton femton
+
+
+19 : 16
+
+nitton sexton
+
+
+19 : 17
+
+nitton sjutton
+
+
+19 : 18
+
+nitton arton
+
+
+19 : 19
+
+nitton nitton
+
+
+19 : 02
+
+nitton noll två
+
+
+19 : 20
+
+nitton tjugo
+
+
+19 : 21
+
+nitton tju ett
+
+
+19 : 22
+
+nitton tju två
+
+
+19 : 23
+
+nitton tju tre
+
+
+19 : 24
+
+nitton tju fyra
+
+
+19 : 25
+
+nitton tju fem
+
+
+19 : 26
+
+nitton tju sex
+
+
+19 : 27
+
+nitton tju sju
+
+
+19 : 28
+
+nitton tju åtta
+
+
+19 : 29
+
+nitton tju nio
+
+
+19 : 03
+
+nitton noll tre
+
+
+19 : 30
+
+nitton trettio
+
+
+19 : 31
+
+nitton trettio ett
+
+
+19 : 32
+
+nitton trettio två
+
+
+19 : 33
+
+nitton trettio tre
+
+
+19 : 34
+
+nitton trettio fyra
+
+
+19 : 35
+
+nitton trettio fem
+
+
+19 : 36
+
+nitton trettio sex
+
+
+19 : 37
+
+nitton trettio sju
+
+
+19 : 38
+
+nitton trettio åtta
+
+
+19 : 39
+
+nitton trettio nio
+
+
+19 : 04
+
+nitton noll fyra
+
+
+19 : 40
+
+nitton fyrtio
+
+
+19 : 41
+
+nitton fyrtio ett
+
+
+19 : 42
+
+nitton fyrtio två
+
+
+19 : 43
+
+nitton fyrtio tre
+
+
+19 : 44
+
+nitton fyrtio fyra
+
+
+19 : 45
+
+nitton fyrtio fem
+
+
+19 : 46
+
+nitton fyrtio sex
+
+
+19 : 47
+
+nitton fyrtio sju
+
+
+19 : 48
+
+nitton fyrtio åtta
+
+
+19 : 49
+
+nitton fyrtio nio
+
+
+19 : 05
+
+nitton noll fem
+
+
+19 : 50
+
+nitton femtio
+
+
+19 : 51
+
+nitton femtio ett
+
+
+19 : 52
+
+nitton femtio två
+
+
+19 : 53
+
+nitton femtio tre
+
+
+19 : 54
+
+nitton femtio fyra
+
+
+19 : 55
+
+nitton femtio fem
+
+
+19 : 56
+
+nitton femtio sex
+
+
+19 : 57
+
+nitton femtio sju
+
+
+19 : 58
+
+nitton femtio åtta
+
+
+19 : 59
+
+nitton femtio nio
+
+
+19 : 06
+
+nitton noll sex
+
+
+19 : 07
+
+nitton noll sju
+
+
+19 : 08
+
+nitton noll åtta
+
+
+19 : 09
+
+nitton noll nio
+
+
+02 : 00
+
+noll två noll noll
+
+
+02 : 01
+
+noll två noll ett
+
+
+02 : 10
+
+noll två tio
+
+
+02 : 11
+
+noll två elva
+
+
+02 : 12
+
+noll två tolv
+
+
+02 : 13
+
+noll två tretton
+
+
+02 : 14
+
+noll två fjorton
+
+
+02 : 15
+
+noll två femton
+
+
+02 : 16
+
+noll två sexton
+
+
+02 : 17
+
+noll två sjutton
+
+
+02 : 18
+
+noll två arton
+
+
+02 : 19
+
+noll två nitton
+
+
+02 : 02
+
+noll två noll två
+
+
+02 : 20
+
+noll två tjugo
+
+
+02 : 21
+
+noll två tju ett
+
+
+02 : 22
+
+noll två tju två
+
+
+02 : 23
+
+noll två tju tre
+
+
+02 : 24
+
+noll två tju fyra
+
+
+02 : 25
+
+noll två tju fem
+
+
+02 : 26
+
+noll två tju sex
+
+
+02 : 27
+
+noll två tju sju
+
+
+02 : 28
+
+noll två tju åtta
+
+
+02 : 29
+
+noll två tju nio
+
+
+02 : 03
+
+noll två noll tre
+
+
+02 : 30
+
+noll två trettio
+
+
+02 : 31
+
+noll två trettio ett
+
+
+02 : 32
+
+noll två trettio två
+
+
+02 : 33
+
+noll två trettio tre
+
+
+02 : 34
+
+noll två trettio fyra
+
+
+02 : 35
+
+noll två trettio fem
+
+
+02 : 36
+
+noll två trettio sex
+
+
+02 : 37
+
+noll två trettio sju
+
+
+02 : 38
+
+noll två trettio åtta
+
+
+02 : 39
+
+noll två trettio nio
+
+
+02 : 04
+
+noll två noll fyra
+
+
+02 : 40
+
+noll två fyrtio
+
+
+02 : 41
+
+noll två fyrtio ett
+
+
+02 : 42
+
+noll två fyrtio två
+
+
+02 : 43
+
+noll två fyrtio tre
+
+
+02 : 44
+
+noll två fyrtio fyra
+
+
+02 : 45
+
+noll två fyrtio fem
+
+
+02 : 46
+
+noll två fyrtio sex
+
+
+02 : 47
+
+noll två fyrtio sju
+
+
+02 : 48
+
+noll två fyrtio åtta
+
+
+02 : 49
+
+noll två fyrtio nio
+
+
+02 : 05
+
+noll två noll fem
+
+
+02 : 50
+
+noll två femtio
+
+
+02 : 51
+
+noll två femtio ett
+
+
+02 : 52
+
+noll två femtio två
+
+
+02 : 53
+
+noll två femtio tre
+
+
+02 : 54
+
+noll två femtio fyra
+
+
+02 : 55
+
+noll två femtio fem
+
+
+02 : 56
+
+noll två femtio sex
+
+
+02 : 57
+
+noll två femtio sju
+
+
+02 : 58
+
+noll två femtio åtta
+
+
+02 : 59
+
+noll två femtio nio
+
+
+02 : 06
+
+noll två noll sex
+
+
+02 : 07
+
+noll två noll sju
+
+
+02 : 08
+
+noll två noll åtta
+
+
+02 : 09
+
+noll två noll nio
+
+
+20 : 00
+
+tjugo noll noll
+
+
+20 : 01
+
+tjugo noll ett
+
+
+20 : 10
+
+tjugo tio
+
+
+20 : 11
+
+tjugo elva
+
+
+20 : 12
+
+tjugo tolv
+
+
+20 : 13
+
+tjugo tretton
+
+
+20 : 14
+
+tjugo fjorton
+
+
+20 : 15
+
+tjugo femton
+
+
+20 : 16
+
+tjugo sexton
+
+
+20 : 17
+
+tjugo sjutton
+
+
+20 : 18
+
+tjugo arton
+
+
+20 : 19
+
+tjugo nitton
+
+
+20 : 02
+
+tjugo noll två
+
+
+20 : 20
+
+tjugo tjugo
+
+
+20 : 21
+
+tjugo tju ett
+
+
+20 : 22
+
+tjugo tju två
+
+
+20 : 23
+
+tjugo tju tre
+
+
+20 : 24
+
+tjugo tju fyra
+
+
+20 : 25
+
+tjugo tju fem
+
+
+20 : 26
+
+tjugo tju sex
+
+
+20 : 27
+
+tjugo tju sju
+
+
+20 : 28
+
+tjugo tju åtta
+
+
+20 : 29
+
+tjugo tju nio
+
+
+20 : 03
+
+tjugo noll tre
+
+
+20 : 30
+
+tjugo trettio
+
+
+20 : 31
+
+tjugo trettio ett
+
+
+20 : 32
+
+tjugo trettio två
+
+
+20 : 33
+
+tjugo trettio tre
+
+
+20 : 34
+
+tjugo trettio fyra
+
+
+20 : 35
+
+tjugo trettio fem
+
+
+20 : 36
+
+tjugo trettio sex
+
+
+20 : 37
+
+tjugo trettio sju
+
+
+20 : 38
+
+tjugo trettio åtta
+
+
+20 : 39
+
+tjugo trettio nio
+
+
+20 : 04
+
+tjugo noll fyra
+
+
+20 : 40
+
+tjugo fyrtio
+
+
+20 : 41
+
+tjugo fyrtio ett
+
+
+20 : 42
+
+tjugo fyrtio två
+
+
+20 : 43
+
+tjugo fyrtio tre
+
+
+20 : 44
+
+tjugo fyrtio fyra
+
+
+20 : 45
+
+tjugo fyrtio fem
+
+
+20 : 46
+
+tjugo fyrtio sex
+
+
+20 : 47
+
+tjugo fyrtio sju
+
+
+20 : 48
+
+tjugo fyrtio åtta
+
+
+20 : 49
+
+tjugo fyrtio nio
+
+
+20 : 05
+
+tjugo noll fem
+
+
+20 : 50
+
+tjugo femtio
+
+
+20 : 51
+
+tjugo femtio ett
+
+
+20 : 52
+
+tjugo femtio två
+
+
+20 : 53
+
+tjugo femtio tre
+
+
+20 : 54
+
+tjugo femtio fyra
+
+
+20 : 55
+
+tjugo femtio fem
+
+
+20 : 56
+
+tjugo femtio sex
+
+
+20 : 57
+
+tjugo femtio sju
+
+
+20 : 58
+
+tjugo femtio åtta
+
+
+20 : 59
+
+tjugo femtio nio
+
+
+20 : 06
+
+tjugo noll sex
+
+
+20 : 07
+
+tjugo noll sju
+
+
+20 : 08
+
+tjugo noll åtta
+
+
+20 : 09
+
+tjugo noll nio
+
+
+21 : 00
+
+tju ett noll noll
+
+
+21 : 01
+
+tju ett noll ett
+
+
+21 : 10
+
+tju ett tio
+
+
+21 : 11
+
+tju ett elva
+
+
+21 : 12
+
+tju ett tolv
+
+
+21 : 13
+
+tju ett tretton
+
+
+21 : 14
+
+tju ett fjorton
+
+
+21 : 15
+
+tju ett femton
+
+
+21 : 16
+
+tju ett sexton
+
+
+21 : 17
+
+tju ett sjutton
+
+
+21 : 18
+
+tju ett arton
+
+
+21 : 19
+
+tju ett nitton
+
+
+21 : 02
+
+tju ett noll två
+
+
+21 : 20
+
+tju ett tjugo
+
+
+21 : 21
+
+tju ett tju ett
+
+
+21 : 22
+
+tju ett tju två
+
+
+21 : 23
+
+tju ett tju tre
+
+
+21 : 24
+
+tju ett tju fyra
+
+
+21 : 25
+
+tju ett tju fem
+
+
+21 : 26
+
+tju ett tju sex
+
+
+21 : 27
+
+tju ett tju sju
+
+
+21 : 28
+
+tju ett tju åtta
+
+
+21 : 29
+
+tju ett tju nio
+
+
+21 : 03
+
+tju ett noll tre
+
+
+21 : 30
+
+tju ett trettio
+
+
+21 : 31
+
+tju ett trettio ett
+
+
+21 : 32
+
+tju ett trettio två
+
+
+21 : 33
+
+tju ett trettio tre
+
+
+21 : 34
+
+tju ett trettio fyra
+
+
+21 : 35
+
+tju ett trettio fem
+
+
+21 : 36
+
+tju ett trettio sex
+
+
+21 : 37
+
+tju ett trettio sju
+
+
+21 : 38
+
+tju ett trettio åtta
+
+
+21 : 39
+
+tju ett trettio nio
+
+
+21 : 04
+
+tju ett noll fyra
+
+
+21 : 40
+
+tju ett fyrtio
+
+
+21 : 41
+
+tju ett fyrtio ett
+
+
+21 : 42
+
+tju ett fyrtio två
+
+
+21 : 43
+
+tju ett fyrtio tre
+
+
+21 : 44
+
+tju ett fyrtio fyra
+
+
+21 : 45
+
+tju ett fyrtio fem
+
+
+21 : 46
+
+tju ett fyrtio sex
+
+
+21 : 47
+
+tju ett fyrtio sju
+
+
+21 : 48
+
+tju ett fyrtio åtta
+
+
+21 : 49
+
+tju ett fyrtio nio
+
+
+21 : 05
+
+tju ett noll fem
+
+
+21 : 50
+
+tju ett femtio
+
+
+21 : 51
+
+tju ett femtio ett
+
+
+21 : 52
+
+tju ett femtio två
+
+
+21 : 53
+
+tju ett femtio tre
+
+
+21 : 54
+
+tju ett femtio fyra
+
+
+21 : 55
+
+tju ett femtio fem
+
+
+21 : 56
+
+tju ett femtio sex
+
+
+21 : 57
+
+tju ett femtio sju
+
+
+21 : 58
+
+tju ett femtio åtta
+
+
+21 : 59
+
+tju ett femtio nio
+
+
+21 : 06
+
+tju ett noll sex
+
+
+21 : 07
+
+tju ett noll sju
+
+
+21 : 08
+
+tju ett noll åtta
+
+
+21 : 09
+
+tju ett noll nio
+
+
+22 : 00
+
+tju två noll noll
+
+
+22 : 01
+
+tju två noll ett
+
+
+22 : 10
+
+tju två tio
+
+
+22 : 11
+
+tju två elva
+
+
+22 : 12
+
+tju två tolv
+
+
+22 : 13
+
+tju två tretton
+
+
+22 : 14
+
+tju två fjorton
+
+
+22 : 15
+
+tju två femton
+
+
+22 : 16
+
+tju två sexton
+
+
+22 : 17
+
+tju två sjutton
+
+
+22 : 18
+
+tju två arton
+
+
+22 : 19
+
+tju två nitton
+
+
+22 : 02
+
+tju två noll två
+
+
+22 : 20
+
+tju två tjugo
+
+
+22 : 21
+
+tju två tju ett
+
+
+22 : 22
+
+tju två tju två
+
+
+22 : 23
+
+tju två tju tre
+
+
+22 : 24
+
+tju två tju fyra
+
+
+22 : 25
+
+tju två tju fem
+
+
+22 : 26
+
+tju två tju sex
+
+
+22 : 27
+
+tju två tju sju
+
+
+22 : 28
+
+tju två tju åtta
+
+
+22 : 29
+
+tju två tju nio
+
+
+22 : 03
+
+tju två noll tre
+
+
+22 : 30
+
+tju två trettio
+
+
+22 : 31
+
+tju två trettio ett
+
+
+22 : 32
+
+tju två trettio två
+
+
+22 : 33
+
+tju två trettio tre
+
+
+22 : 34
+
+tju två trettio fyra
+
+
+22 : 35
+
+tju två trettio fem
+
+
+22 : 36
+
+tju två trettio sex
+
+
+22 : 37
+
+tju två trettio sju
+
+
+22 : 38
+
+tju två trettio åtta
+
+
+22 : 39
+
+tju två trettio nio
+
+
+22 : 04
+
+tju två noll fyra
+
+
+22 : 40
+
+tju två fyrtio
+
+
+22 : 41
+
+tju två fyrtio ett
+
+
+22 : 42
+
+tju två fyrtio två
+
+
+22 : 43
+
+tju två fyrtio tre
+
+
+22 : 44
+
+tju två fyrtio fyra
+
+
+22 : 45
+
+tju två fyrtio fem
+
+
+22 : 46
+
+tju två fyrtio sex
+
+
+22 : 47
+
+tju två fyrtio sju
+
+
+22 : 48
+
+tju två fyrtio åtta
+
+
+22 : 49
+
+tju två fyrtio nio
+
+
+22 : 05
+
+tju två noll fem
+
+
+22 : 50
+
+tju två femtio
+
+
+22 : 51
+
+tju två femtio ett
+
+
+22 : 52
+
+tju två femtio två
+
+
+22 : 53
+
+tju två femtio tre
+
+
+22 : 54
+
+tju två femtio fyra
+
+
+22 : 55
+
+tju två femtio fem
+
+
+22 : 56
+
+tju två femtio sex
+
+
+22 : 57
+
+tju två femtio sju
+
+
+22 : 58
+
+tju två femtio åtta
+
+
+22 : 59
+
+tju två femtio nio
+
+
+22 : 06
+
+tju två noll sex
+
+
+22 : 07
+
+tju två noll sju
+
+
+22 : 08
+
+tju två noll åtta
+
+
+22 : 09
+
+tju två noll nio
+
+
+23 : 00
+
+tju tre noll noll
+
+
+23 : 01
+
+tju tre noll ett
+
+
+23 : 10
+
+tju tre tio
+
+
+23 : 11
+
+tju tre elva
+
+
+23 : 12
+
+tju tre tolv
+
+
+23 : 13
+
+tju tre tretton
+
+
+23 : 14
+
+tju tre fjorton
+
+
+23 : 15
+
+tju tre femton
+
+
+23 : 16
+
+tju tre sexton
+
+
+23 : 17
+
+tju tre sjutton
+
+
+23 : 18
+
+tju tre arton
+
+
+23 : 19
+
+tju tre nitton
+
+
+23 : 02
+
+tju tre noll två
+
+
+23 : 20
+
+tju tre tjugo
+
+
+23 : 21
+
+tju tre tju ett
+
+
+23 : 22
+
+tju tre tju två
+
+
+23 : 23
+
+tju tre tju tre
+
+
+23 : 24
+
+tju tre tju fyra
+
+
+23 : 25
+
+tju tre tju fem
+
+
+23 : 26
+
+tju tre tju sex
+
+
+23 : 27
+
+tju tre tju sju
+
+
+23 : 28
+
+tju tre tju åtta
+
+
+23 : 29
+
+tju tre tju nio
+
+
+23 : 03
+
+tju tre noll tre
+
+
+23 : 30
+
+tju tre trettio
+
+
+23 : 31
+
+tju tre trettio ett
+
+
+23 : 32
+
+tju tre trettio två
+
+
+23 : 33
+
+tju tre trettio tre
+
+
+23 : 34
+
+tju tre trettio fyra
+
+
+23 : 35
+
+tju tre trettio fem
+
+
+23 : 36
+
+tju tre trettio sex
+
+
+23 : 37
+
+tju tre trettio sju
+
+
+23 : 38
+
+tju tre trettio åtta
+
+
+23 : 39
+
+tju tre trettio nio
+
+
+23 : 04
+
+tju tre noll fyra
+
+
+23 : 40
+
+tju tre fyrtio
+
+
+23 : 41
+
+tju tre fyrtio ett
+
+
+23 : 42
+
+tju tre fyrtio två
+
+
+23 : 43
+
+tju tre fyrtio tre
+
+
+23 : 44
+
+tju tre fyrtio fyra
+
+
+23 : 45
+
+tju tre fyrtio fem
+
+
+23 : 46
+
+tju tre fyrtio sex
+
+
+23 : 47
+
+tju tre fyrtio sju
+
+
+23 : 48
+
+tju tre fyrtio åtta
+
+
+23 : 49
+
+tju tre fyrtio nio
+
+
+23 : 05
+
+tju tre noll fem
+
+
+23 : 50
+
+tju tre femtio
+
+
+23 : 51
+
+tju tre femtio ett
+
+
+23 : 52
+
+tju tre femtio två
+
+
+23 : 53
+
+tju tre femtio tre
+
+
+23 : 54
+
+tju tre femtio fyra
+
+
+23 : 55
+
+tju tre femtio fem
+
+
+23 : 56
+
+tju tre femtio sex
+
+
+23 : 57
+
+tju tre femtio sju
+
+
+23 : 58
+
+tju tre femtio åtta
+
+
+23 : 59
+
+tju tre femtio nio
+
+
+23 : 06
+
+tju tre noll sex
+
+
+23 : 07
+
+tju tre noll sju
+
+
+23 : 08
+
+tju tre noll åtta
+
+
+23 : 09
+
+tju tre noll nio
+
+
+03 : 00
+
+noll tre noll noll
+
+
+03 : 01
+
+noll tre noll ett
+
+
+03 : 10
+
+noll tre tio
+
+
+03 : 11
+
+noll tre elva
+
+
+03 : 12
+
+noll tre tolv
+
+
+03 : 13
+
+noll tre tretton
+
+
+03 : 14
+
+noll tre fjorton
+
+
+03 : 15
+
+noll tre femton
+
+
+03 : 16
+
+noll tre sexton
+
+
+03 : 17
+
+noll tre sjutton
+
+
+03 : 18
+
+noll tre arton
+
+
+03 : 19
+
+noll tre nitton
+
+
+03 : 02
+
+noll tre noll två
+
+
+03 : 20
+
+noll tre tjugo
+
+
+03 : 21
+
+noll tre tju ett
+
+
+03 : 22
+
+noll tre tju två
+
+
+03 : 23
+
+noll tre tju tre
+
+
+03 : 24
+
+noll tre tju fyra
+
+
+03 : 25
+
+noll tre tju fem
+
+
+03 : 26
+
+noll tre tju sex
+
+
+03 : 27
+
+noll tre tju sju
+
+
+03 : 28
+
+noll tre tju åtta
+
+
+03 : 29
+
+noll tre tju nio
+
+
+03 : 03
+
+noll tre noll tre
+
+
+03 : 30
+
+noll tre trettio
+
+
+03 : 31
+
+noll tre trettio ett
+
+
+03 : 32
+
+noll tre trettio två
+
+
+03 : 33
+
+noll tre trettio tre
+
+
+03 : 34
+
+noll tre trettio fyra
+
+
+03 : 35
+
+noll tre trettio fem
+
+
+03 : 36
+
+noll tre trettio sex
+
+
+03 : 37
+
+noll tre trettio sju
+
+
+03 : 38
+
+noll tre trettio åtta
+
+
+03 : 39
+
+noll tre trettio nio
+
+
+03 : 04
+
+noll tre noll fyra
+
+
+03 : 40
+
+noll tre fyrtio
+
+
+03 : 41
+
+noll tre fyrtio ett
+
+
+03 : 42
+
+noll tre fyrtio två
+
+
+03 : 43
+
+noll tre fyrtio tre
+
+
+03 : 44
+
+noll tre fyrtio fyra
+
+
+03 : 45
+
+noll tre fyrtio fem
+
+
+03 : 46
+
+noll tre fyrtio sex
+
+
+03 : 47
+
+noll tre fyrtio sju
+
+
+03 : 48
+
+noll tre fyrtio åtta
+
+
+03 : 49
+
+noll tre fyrtio nio
+
+
+03 : 05
+
+noll tre noll fem
+
+
+03 : 50
+
+noll tre femtio
+
+
+03 : 51
+
+noll tre femtio ett
+
+
+03 : 52
+
+noll tre femtio två
+
+
+03 : 53
+
+noll tre femtio tre
+
+
+03 : 54
+
+noll tre femtio fyra
+
+
+03 : 55
+
+noll tre femtio fem
+
+
+03 : 56
+
+noll tre femtio sex
+
+
+03 : 57
+
+noll tre femtio sju
+
+
+03 : 58
+
+noll tre femtio åtta
+
+
+03 : 59
+
+noll tre femtio nio
+
+
+03 : 06
+
+noll tre noll sex
+
+
+03 : 07
+
+noll tre noll sju
+
+
+03 : 08
+
+noll tre noll åtta
+
+
+03 : 09
+
+noll tre noll nio
+
+
+04 : 00
+
+noll fyra noll noll
+
+
+04 : 01
+
+noll fyra noll ett
+
+
+04 : 10
+
+noll fyra tio
+
+
+04 : 11
+
+noll fyra elva
+
+
+04 : 12
+
+noll fyra tolv
+
+
+04 : 13
+
+noll fyra tretton
+
+
+04 : 14
+
+noll fyra fjorton
+
+
+04 : 15
+
+noll fyra femton
+
+
+04 : 16
+
+noll fyra sexton
+
+
+04 : 17
+
+noll fyra sjutton
+
+
+04 : 18
+
+noll fyra arton
+
+
+04 : 19
+
+noll fyra nitton
+
+
+04 : 02
+
+noll fyra noll två
+
+
+04 : 20
+
+noll fyra tjugo
+
+
+04 : 21
+
+noll fyra tju ett
+
+
+04 : 22
+
+noll fyra tju två
+
+
+04 : 23
+
+noll fyra tju tre
+
+
+04 : 24
+
+noll fyra tju fyra
+
+
+04 : 25
+
+noll fyra tju fem
+
+
+04 : 26
+
+noll fyra tju sex
+
+
+04 : 27
+
+noll fyra tju sju
+
+
+04 : 28
+
+noll fyra tju åtta
+
+
+04 : 29
+
+noll fyra tju nio
+
+
+04 : 03
+
+noll fyra noll tre
+
+
+04 : 30
+
+noll fyra trettio
+
+
+04 : 31
+
+noll fyra trettio ett
+
+
+04 : 32
+
+noll fyra trettio två
+
+
+04 : 33
+
+noll fyra trettio tre
+
+
+04 : 34
+
+noll fyra trettio fyra
+
+
+04 : 35
+
+noll fyra trettio fem
+
+
+04 : 36
+
+noll fyra trettio sex
+
+
+04 : 37
+
+noll fyra trettio sju
+
+
+04 : 38
+
+noll fyra trettio åtta
+
+
+04 : 39
+
+noll fyra trettio nio
+
+
+04 : 04
+
+noll fyra noll fyra
+
+
+04 : 40
+
+noll fyra fyrtio
+
+
+04 : 41
+
+noll fyra fyrtio ett
+
+
+04 : 42
+
+noll fyra fyrtio två
+
+
+04 : 43
+
+noll fyra fyrtio tre
+
+
+04 : 44
+
+noll fyra fyrtio fyra
+
+
+04 : 45
+
+noll fyra fyrtio fem
+
+
+04 : 46
+
+noll fyra fyrtio sex
+
+
+04 : 47
+
+noll fyra fyrtio sju
+
+
+04 : 48
+
+noll fyra fyrtio åtta
+
+
+04 : 49
+
+noll fyra fyrtio nio
+
+
+04 : 05
+
+noll fyra noll fem
+
+
+04 : 50
+
+noll fyra femtio
+
+
+04 : 51
+
+noll fyra femtio ett
+
+
+04 : 52
+
+noll fyra femtio två
+
+
+04 : 53
+
+noll fyra femtio tre
+
+
+04 : 54
+
+noll fyra femtio fyra
+
+
+04 : 55
+
+noll fyra femtio fem
+
+
+04 : 56
+
+noll fyra femtio sex
+
+
+04 : 57
+
+noll fyra femtio sju
+
+
+04 : 58
+
+noll fyra femtio åtta
+
+
+04 : 59
+
+noll fyra femtio nio
+
+
+04 : 06
+
+noll fyra noll sex
+
+
+04 : 07
+
+noll fyra noll sju
+
+
+04 : 08
+
+noll fyra noll åtta
+
+
+04 : 09
+
+noll fyra noll nio
+
+
+05 : 00
+
+noll fem noll noll
+
+
+05 : 01
+
+noll fem noll ett
+
+
+05 : 10
+
+noll fem tio
+
+
+05 : 11
+
+noll fem elva
+
+
+05 : 12
+
+noll fem tolv
+
+
+05 : 13
+
+noll fem tretton
+
+
+05 : 14
+
+noll fem fjorton
+
+
+05 : 15
+
+noll fem femton
+
+
+05 : 16
+
+noll fem sexton
+
+
+05 : 17
+
+noll fem sjutton
+
+
+05 : 18
+
+noll fem arton
+
+
+05 : 19
+
+noll fem nitton
+
+
+05 : 02
+
+noll fem noll två
+
+
+05 : 20
+
+noll fem tjugo
+
+
+05 : 21
+
+noll fem tju ett
+
+
+05 : 22
+
+noll fem tju två
+
+
+05 : 23
+
+noll fem tju tre
+
+
+05 : 24
+
+noll fem tju fyra
+
+
+05 : 25
+
+noll fem tju fem
+
+
+05 : 26
+
+noll fem tju sex
+
+
+05 : 27
+
+noll fem tju sju
+
+
+05 : 28
+
+noll fem tju åtta
+
+
+05 : 29
+
+noll fem tju nio
+
+
+05 : 03
+
+noll fem noll tre
+
+
+05 : 30
+
+noll fem trettio
+
+
+05 : 31
+
+noll fem trettio ett
+
+
+05 : 32
+
+noll fem trettio två
+
+
+05 : 33
+
+noll fem trettio tre
+
+
+05 : 34
+
+noll fem trettio fyra
+
+
+05 : 35
+
+noll fem trettio fem
+
+
+05 : 36
+
+noll fem trettio sex
+
+
+05 : 37
+
+noll fem trettio sju
+
+
+05 : 38
+
+noll fem trettio åtta
+
+
+05 : 39
+
+noll fem trettio nio
+
+
+05 : 04
+
+noll fem noll fyra
+
+
+05 : 40
+
+noll fem fyrtio
+
+
+05 : 41
+
+noll fem fyrtio ett
+
+
+05 : 42
+
+noll fem fyrtio två
+
+
+05 : 43
+
+noll fem fyrtio tre
+
+
+05 : 44
+
+noll fem fyrtio fyra
+
+
+05 : 45
+
+noll fem fyrtio fem
+
+
+05 : 46
+
+noll fem fyrtio sex
+
+
+05 : 47
+
+noll fem fyrtio sju
+
+
+05 : 48
+
+noll fem fyrtio åtta
+
+
+05 : 49
+
+noll fem fyrtio nio
+
+
+05 : 05
+
+noll fem noll fem
+
+
+05 : 50
+
+noll fem femtio
+
+
+05 : 51
+
+noll fem femtio ett
+
+
+05 : 52
+
+noll fem femtio två
+
+
+05 : 53
+
+noll fem femtio tre
+
+
+05 : 54
+
+noll fem femtio fyra
+
+
+05 : 55
+
+noll fem femtio fem
+
+
+05 : 56
+
+noll fem femtio sex
+
+
+05 : 57
+
+noll fem femtio sju
+
+
+05 : 58
+
+noll fem femtio åtta
+
+
+05 : 59
+
+noll fem femtio nio
+
+
+05 : 06
+
+noll fem noll sex
+
+
+05 : 07
+
+noll fem noll sju
+
+
+05 : 08
+
+noll fem noll åtta
+
+
+05 : 09
+
+noll fem noll nio
+
+
+06 : 00
+
+noll sex noll noll
+
+
+06 : 01
+
+noll sex noll ett
+
+
+06 : 10
+
+noll sex tio
+
+
+06 : 11
+
+noll sex elva
+
+
+06 : 12
+
+noll sex tolv
+
+
+06 : 13
+
+noll sex tretton
+
+
+06 : 14
+
+noll sex fjorton
+
+
+06 : 15
+
+noll sex femton
+
+
+06 : 16
+
+noll sex sexton
+
+
+06 : 17
+
+noll sex sjutton
+
+
+06 : 18
+
+noll sex arton
+
+
+06 : 19
+
+noll sex nitton
+
+
+06 : 02
+
+noll sex noll två
+
+
+06 : 20
+
+noll sex tjugo
+
+
+06 : 21
+
+noll sex tju ett
+
+
+06 : 22
+
+noll sex tju två
+
+
+06 : 23
+
+noll sex tju tre
+
+
+06 : 24
+
+noll sex tju fyra
+
+
+06 : 25
+
+noll sex tju fem
+
+
+06 : 26
+
+noll sex tju sex
+
+
+06 : 27
+
+noll sex tju sju
+
+
+06 : 28
+
+noll sex tju åtta
+
+
+06 : 29
+
+noll sex tju nio
+
+
+06 : 03
+
+noll sex noll tre
+
+
+06 : 30
+
+noll sex trettio
+
+
+06 : 31
+
+noll sex trettio ett
+
+
+06 : 32
+
+noll sex trettio två
+
+
+06 : 33
+
+noll sex trettio tre
+
+
+06 : 34
+
+noll sex trettio fyra
+
+
+06 : 35
+
+noll sex trettio fem
+
+
+06 : 36
+
+noll sex trettio sex
+
+
+06 : 37
+
+noll sex trettio sju
+
+
+06 : 38
+
+noll sex trettio åtta
+
+
+06 : 39
+
+noll sex trettio nio
+
+
+06 : 04
+
+noll sex noll fyra
+
+
+06 : 40
+
+noll sex fyrtio
+
+
+06 : 41
+
+noll sex fyrtio ett
+
+
+06 : 42
+
+noll sex fyrtio två
+
+
+06 : 43
+
+noll sex fyrtio tre
+
+
+06 : 44
+
+noll sex fyrtio fyra
+
+
+06 : 45
+
+noll sex fyrtio fem
+
+
+06 : 46
+
+noll sex fyrtio sex
+
+
+06 : 47
+
+noll sex fyrtio sju
+
+
+06 : 48
+
+noll sex fyrtio åtta
+
+
+06 : 49
+
+noll sex fyrtio nio
+
+
+06 : 05
+
+noll sex noll fem
+
+
+06 : 50
+
+noll sex femtio
+
+
+06 : 51
+
+noll sex femtio ett
+
+
+06 : 52
+
+noll sex femtio två
+
+
+06 : 53
+
+noll sex femtio tre
+
+
+06 : 54
+
+noll sex femtio fyra
+
+
+06 : 55
+
+noll sex femtio fem
+
+
+06 : 56
+
+noll sex femtio sex
+
+
+06 : 57
+
+noll sex femtio sju
+
+
+06 : 58
+
+noll sex femtio åtta
+
+
+06 : 59
+
+noll sex femtio nio
+
+
+06 : 06
+
+noll sex noll sex
+
+
+06 : 07
+
+noll sex noll sju
+
+
+06 : 08
+
+noll sex noll åtta
+
+
+06 : 09
+
+noll sex noll nio
+
+
+07 : 00
+
+noll sju noll noll
+
+
+07 : 01
+
+noll sju noll ett
+
+
+07 : 10
+
+noll sju tio
+
+
+07 : 11
+
+noll sju elva
+
+
+07 : 12
+
+noll sju tolv
+
+
+07 : 13
+
+noll sju tretton
+
+
+07 : 14
+
+noll sju fjorton
+
+
+07 : 15
+
+noll sju femton
+
+
+07 : 16
+
+noll sju sexton
+
+
+07 : 17
+
+noll sju sjutton
+
+
+07 : 18
+
+noll sju arton
+
+
+07 : 19
+
+noll sju nitton
+
+
+07 : 02
+
+noll sju noll två
+
+
+07 : 20
+
+noll sju tjugo
+
+
+07 : 21
+
+noll sju tju ett
+
+
+07 : 22
+
+noll sju tju två
+
+
+07 : 23
+
+noll sju tju tre
+
+
+07 : 24
+
+noll sju tju fyra
+
+
+07 : 25
+
+noll sju tju fem
+
+
+07 : 26
+
+noll sju tju sex
+
+
+07 : 27
+
+noll sju tju sju
+
+
+07 : 28
+
+noll sju tju åtta
+
+
+07 : 29
+
+noll sju tju nio
+
+
+07 : 03
+
+noll sju noll tre
+
+
+07 : 30
+
+noll sju trettio
+
+
+07 : 31
+
+noll sju trettio ett
+
+
+07 : 32
+
+noll sju trettio två
+
+
+07 : 33
+
+noll sju trettio tre
+
+
+07 : 34
+
+noll sju trettio fyra
+
+
+07 : 35
+
+noll sju trettio fem
+
+
+07 : 36
+
+noll sju trettio sex
+
+
+07 : 37
+
+noll sju trettio sju
+
+
+07 : 38
+
+noll sju trettio åtta
+
+
+07 : 39
+
+noll sju trettio nio
+
+
+07 : 04
+
+noll sju noll fyra
+
+
+07 : 40
+
+noll sju fyrtio
+
+
+07 : 41
+
+noll sju fyrtio ett
+
+
+07 : 42
+
+noll sju fyrtio två
+
+
+07 : 43
+
+noll sju fyrtio tre
+
+
+07 : 44
+
+noll sju fyrtio fyra
+
+
+07 : 45
+
+noll sju fyrtio fem
+
+
+07 : 46
+
+noll sju fyrtio sex
+
+
+07 : 47
+
+noll sju fyrtio sju
+
+
+07 : 48
+
+noll sju fyrtio åtta
+
+
+07 : 49
+
+noll sju fyrtio nio
+
+
+07 : 05
+
+noll sju noll fem
+
+
+07 : 50
+
+noll sju femtio
+
+
+07 : 51
+
+noll sju femtio ett
+
+
+07 : 52
+
+noll sju femtio två
+
+
+07 : 53
+
+noll sju femtio tre
+
+
+07 : 54
+
+noll sju femtio fyra
+
+
+07 : 55
+
+noll sju femtio fem
+
+
+07 : 56
+
+noll sju femtio sex
+
+
+07 : 57
+
+noll sju femtio sju
+
+
+07 : 58
+
+noll sju femtio åtta
+
+
+07 : 59
+
+noll sju femtio nio
+
+
+07 : 06
+
+noll sju noll sex
+
+
+07 : 07
+
+noll sju noll sju
+
+
+07 : 08
+
+noll sju noll åtta
+
+
+07 : 09
+
+noll sju noll nio
+
+
+08 : 00
+
+noll åtta noll noll
+
+
+08 : 01
+
+noll åtta noll ett
+
+
+08 : 10
+
+noll åtta tio
+
+
+08 : 11
+
+noll åtta elva
+
+
+08 : 12
+
+noll åtta tolv
+
+
+08 : 13
+
+noll åtta tretton
+
+
+08 : 14
+
+noll åtta fjorton
+
+
+08 : 15
+
+noll åtta femton
+
+
+08 : 16
+
+noll åtta sexton
+
+
+08 : 17
+
+noll åtta sjutton
+
+
+08 : 18
+
+noll åtta arton
+
+
+08 : 19
+
+noll åtta nitton
+
+
+08 : 02
+
+noll åtta noll två
+
+
+08 : 20
+
+noll åtta tjugo
+
+
+08 : 21
+
+noll åtta tju ett
+
+
+08 : 22
+
+noll åtta tju två
+
+
+08 : 23
+
+noll åtta tju tre
+
+
+08 : 24
+
+noll åtta tju fyra
+
+
+08 : 25
+
+noll åtta tju fem
+
+
+08 : 26
+
+noll åtta tju sex
+
+
+08 : 27
+
+noll åtta tju sju
+
+
+08 : 28
+
+noll åtta tju åtta
+
+
+08 : 29
+
+noll åtta tju nio
+
+
+08 : 03
+
+noll åtta noll tre
+
+
+08 : 30
+
+noll åtta trettio
+
+
+08 : 31
+
+noll åtta trettio ett
+
+
+08 : 32
+
+noll åtta trettio två
+
+
+08 : 33
+
+noll åtta trettio tre
+
+
+08 : 34
+
+noll åtta trettio fyra
+
+
+08 : 35
+
+noll åtta trettio fem
+
+
+08 : 36
+
+noll åtta trettio sex
+
+
+08 : 37
+
+noll åtta trettio sju
+
+
+08 : 38
+
+noll åtta trettio åtta
+
+
+08 : 39
+
+noll åtta trettio nio
+
+
+08 : 04
+
+noll åtta noll fyra
+
+
+08 : 40
+
+noll åtta fyrtio
+
+
+08 : 41
+
+noll åtta fyrtio ett
+
+
+08 : 42
+
+noll åtta fyrtio två
+
+
+08 : 43
+
+noll åtta fyrtio tre
+
+
+08 : 44
+
+noll åtta fyrtio fyra
+
+
+08 : 45
+
+noll åtta fyrtio fem
+
+
+08 : 46
+
+noll åtta fyrtio sex
+
+
+08 : 47
+
+noll åtta fyrtio sju
+
+
+08 : 48
+
+noll åtta fyrtio åtta
+
+
+08 : 49
+
+noll åtta fyrtio nio
+
+
+08 : 05
+
+noll åtta noll fem
+
+
+08 : 50
+
+noll åtta femtio
+
+
+08 : 51
+
+noll åtta femtio ett
+
+
+08 : 52
+
+noll åtta femtio två
+
+
+08 : 53
+
+noll åtta femtio tre
+
+
+08 : 54
+
+noll åtta femtio fyra
+
+
+08 : 55
+
+noll åtta femtio fem
+
+
+08 : 56
+
+noll åtta femtio sex
+
+
+08 : 57
+
+noll åtta femtio sju
+
+
+08 : 58
+
+noll åtta femtio åtta
+
+
+08 : 59
+
+noll åtta femtio nio
+
+
+08 : 06
+
+noll åtta noll sex
+
+
+08 : 07
+
+noll åtta noll sju
+
+
+08 : 08
+
+noll åtta noll åtta
+
+
+08 : 09
+
+noll åtta noll nio
+
+
+09 : 00
+
+noll nio noll noll
+
+
+09 : 01
+
+noll nio noll ett
+
+
+09 : 10
+
+noll nio tio
+
+
+09 : 11
+
+noll nio elva
+
+
+09 : 12
+
+noll nio tolv
+
+
+09 : 13
+
+noll nio tretton
+
+
+09 : 14
+
+noll nio fjorton
+
+
+09 : 15
+
+noll nio femton
+
+
+09 : 16
+
+noll nio sexton
+
+
+09 : 17
+
+noll nio sjutton
+
+
+09 : 18
+
+noll nio arton
+
+
+09 : 19
+
+noll nio nitton
+
+
+09 : 02
+
+noll nio noll två
+
+
+09 : 20
+
+noll nio tjugo
+
+
+09 : 21
+
+noll nio tju ett
+
+
+09 : 22
+
+noll nio tju två
+
+
+09 : 23
+
+noll nio tju tre
+
+
+09 : 24
+
+noll nio tju fyra
+
+
+09 : 25
+
+noll nio tju fem
+
+
+09 : 26
+
+noll nio tju sex
+
+
+09 : 27
+
+noll nio tju sju
+
+
+09 : 28
+
+noll nio tju åtta
+
+
+09 : 29
+
+noll nio tju nio
+
+
+09 : 03
+
+noll nio noll tre
+
+
+09 : 30
+
+noll nio trettio
+
+
+09 : 31
+
+noll nio trettio ett
+
+
+09 : 32
+
+noll nio trettio två
+
+
+09 : 33
+
+noll nio trettio tre
+
+
+09 : 34
+
+noll nio trettio fyra
+
+
+09 : 35
+
+noll nio trettio fem
+
+
+09 : 36
+
+noll nio trettio sex
+
+
+09 : 37
+
+noll nio trettio sju
+
+
+09 : 38
+
+noll nio trettio åtta
+
+
+09 : 39
+
+noll nio trettio nio
+
+
+09 : 04
+
+noll nio noll fyra
+
+
+09 : 40
+
+noll nio fyrtio
+
+
+09 : 41
+
+noll nio fyrtio ett
+
+
+09 : 42
+
+noll nio fyrtio två
+
+
+09 : 43
+
+noll nio fyrtio tre
+
+
+09 : 44
+
+noll nio fyrtio fyra
+
+
+09 : 45
+
+noll nio fyrtio fem
+
+
+09 : 46
+
+noll nio fyrtio sex
+
+
+09 : 47
+
+noll nio fyrtio sju
+
+
+09 : 48
+
+noll nio fyrtio åtta
+
+
+09 : 49
+
+noll nio fyrtio nio
+
+
+09 : 05
+
+noll nio noll fem
+
+
+09 : 50
+
+noll nio femtio
+
+
+09 : 51
+
+noll nio femtio ett
+
+
+09 : 52
+
+noll nio femtio två
+
+
+09 : 53
+
+noll nio femtio tre
+
+
+09 : 54
+
+noll nio femtio fyra
+
+
+09 : 55
+
+noll nio femtio fem
+
+
+09 : 56
+
+noll nio femtio sex
+
+
+09 : 57
+
+noll nio femtio sju
+
+
+09 : 58
+
+noll nio femtio åtta
+
+
+09 : 59
+
+noll nio femtio nio
+
+
+09 : 06
+
+noll nio noll sex
+
+
+09 : 07
+
+noll nio noll sju
+
+
+09 : 08
+
+noll nio noll åtta
+
+
+09 : 09
+
+noll nio noll nio
+
+

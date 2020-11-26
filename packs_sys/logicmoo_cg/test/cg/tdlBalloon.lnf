@@ -1,0 +1,20 @@
+// ontology required (to load first): aminePlatform/samples/ontology/OccamSBLSample.xml
+[Act = [Propel #0] -
+                -Actor->[Human :Karen = [Human :Karen] -
+                                                    -Age->[Age :Kid],
+                                                    -Hair->[Hair]-Color->[Color :Blond],
+                                                    -Eyes->[Eyes]-Color->[Color :Blue]
+                                        ],
+                -Object->[Air],
+                -to->[Balloon = [Balloon #1] -
+                                          -size->[SizeValue :small],
+                                          -Color->[Color :Yellow]
+                                ]
+       ]-after->[State = [Inflated #2] -
+                                   -Actor->[Human :Karen],
+                                   -Object->[Balloon = [Balloon #3] -
+                                                                 -size->[SizeValue :small],
+                                                                 -Color->[Color :Yellow]
+                                                       ],
+                                   -State_Value->[State_Value :Yes_State_Value]
+                        ]

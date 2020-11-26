@@ -1,0 +1,529 @@
+
+% Declarations
+ 
+feature_value_space(yesno_value, [[yes, no]]).
+feature_value_space(numtype_value, [[one, ohdigit, dayofmonth, year, hour, minute_or_second]]).
+feature_value_space(number_value, [[sing, plur]]).
+feature_value_space(tense_value, [[past, present, future]]).
+
+feature(numtype, numtype_value).
+feature(number, number_value).
+feature(tense, tense_value).
+feature(def, yesno_value).
+feature(may_include_tense, yesno_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(aggregate, [sem, number]).
+category(at_location, [sem]).
+category(at_time, [sem]).
+category(attend_verb, [number, tense]).
+category(be_there, [number, tense]).
+category(be_verb, [number, tense]).
+category(date, [sem]).
+category(datime, [sem]).
+category(day_of_week, [sem]).
+category(during_interval, [sem]).
+category(end_datime, [sem]).
+category(error, [sem]).
+category(having_affiliation, [sem]).
+category(interval, [sem]).
+category(time_interval, [sem]).
+category(meeting, [sem, number, def]).
+category(month, [sem]).
+category(name, [sem]).
+category(generalised_name, [sem]).
+category(number, [sem, numtype]).
+category(on_date, [sem]).
+category(question, [sem]).
+category(question_body, [sem, may_include_tense]).
+category(aggregate_question_body, [sem]).
+category(question_type, [sem]).
+category(referent, [sem]).
+category(referent_from_context, [sem]).
+category(referent_list, [sem]).
+category(start_datime, [sem]).
+category(tense, [sem, tense]).
+category(time, [sem]).
+category(utterance, [sem]).
+category(wh_question, [sem]).
+category(with_attendee, [sem]).
+
+%---------------------------------------------------------------
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=S] -->
+	(   question:[sem=S]
+	;   error:[sem=S]
+	).
+
+question:[sem=concat(QType, Body)] -->
+	question_type:[sem=QType],
+	question_body:[sem=Body, may_include_tense=no].
+
+%---------------------------------------------------------------
+
+error:[sem=[error(several_referents_for(_Referent, ReferentList))]] -->
+	did, you, mean,
+	referent_list:[sem=ReferentList].
+
+referent_list:[sem=[P, Q]] -->
+	referent:[sem=P],
+	or,
+	referent:[sem=Q].
+
+referent_list:[sem=[F | R]] -->
+	referent:[sem=R],
+	@st([], ','),
+	referent:[sem=Q].
+
+referent:[sem=Name] -->
+	generalised_name:[sem=Name].
+
+referent:[sem=Date] -->
+	date:[sem=Date].
+
+%---------------------------------------------------------------
+
+question_body:[sem=concat(MainBody, TenseSem), may_include_tense=yes] -->
+	question_body:[sem=MainBody, may_include_tense=no],
+	tense:[sem=TenseSem, tense=_Tense].
+
+%question_body:[sem=concat(Time, Date, Interval, Location,
+%			  Attendee, Affiliation, 
+%			  ReferentFromContext),
+%	       may_include_tense=no] -->
+%	?at_time:[sem=Time],
+%	?on_date:[sem=Date],
+%	?during_interval:[sem=Interval],
+%	?at_location:[sem=Location],
+%	?with_attendee:[sem=Attendee],
+%	?having_affiliation:[sem=Affiliation],
+%	?referent_from_context:[sem=ReferentFromContext].
+
+question_body:[sem=concat([], Time, Date, Interval, Location,
+			  Attendee, Affiliation),
+	       may_include_tense=no] -->
+	?at_time:[sem=Time],
+	?on_date:[sem=Date],
+	?during_interval:[sem=Interval],
+	?at_location:[sem=Location],
+	?with_attendee:[sem=Attendee],
+	?having_affiliation:[sem=Affiliation].
+
+%---------------------------------------------------------------
+
+question_type:[sem=concat([utterance_type=whq, query_object=when], TenseSem, Meeting)] -->
+	when,
+	tense:[sem=TenseSem, tense=Tense, tense=present\/past],
+	be_verb:[tense=Tense, number=Number],
+	meeting:[sem=Meeting, number=Number].
+
+question_type:[sem=concat([utterance_type=whq, query_object=when], TenseSem, Meeting)] -->
+	when,
+	tense:[sem=TenseSem, tense=future],
+	will,
+	meeting:[sem=Meeting, number=Number],
+	be.
+
+question_type:[sem=concat([utterance_type=whq, query_object=where], TenseSem, Meeting)] -->
+	where,
+	tense:[sem=TenseSem, tense=Tense, tense=present\/past],
+	be_verb:[tense=Tense, number=Number],
+	meeting:[sem=Meeting, number=Number].
+
+question_type:[sem=concat([utterance_type=whq, query_object=where], TenseSem, Meeting)] -->
+	where,
+	tense:[sem=TenseSem, tense=future],
+	will,
+	meeting:[sem=Meeting, number=Number],
+	be.
+
+question_type:[sem=concat([utterance_type=whq, query_object=start_time], TenseSem, Meeting)] -->
+	what,
+	tense:[sem=TenseSem, tense=Tense],
+	be_verb:[tense=Tense, number=sing],
+	the, start, time, for,
+	meeting:[sem=Meeting, number=Number].
+
+question_type:[sem=concat([utterance_type=whq, query_object=end_time], TenseSem, Meeting)] -->
+	what,
+	tense:[sem=TenseSem, tense=Tense],
+	be_verb:[tense=Tense, number=sing],
+	the, end, time, for,
+	meeting:[sem=Meeting, number=Number].
+
+question_type:[sem=concat([utterance_type=whq, query_object=attendee], TenseSem, Meeting)] -->
+	who,
+	tense:[sem=TenseSem, tense=Tense],
+	attend_verb:[tense=Tense, number=Number],
+	meeting:[sem=Meeting, number=Number].
+
+question_type:[sem=concat(Wh, [query_object=phone_number, attendee=Person])] -->
+	?wh_question:[sem=Wh],
+	what, is,
+	generalised_name:[sem=Person],
+	@st(s, '\'s'),
+	phone, number.
+
+question_type:[sem=concat(Wh, [query_object=attendee_address, attendee=Person])] -->
+	?wh_question:[sem=Wh],
+	what, is,
+	generalised_name:[sem=Person],
+	@st(s, '\'s'),
+	address.
+
+question_type:[sem=concat(Wh, [query_object=email_address, attendee=Person])] -->
+	?wh_question:[sem=Wh],
+	what, is,
+	generalised_name:[sem=Person],
+	@st(s, '\'s'),
+	email, address.
+
+question_type:[sem=concat(Wh, TenseSem, Meeting)] -->
+	?wh_question:[sem=Wh],
+	what, meetings,
+	tense:[sem=TenseSem, tense=Tense],
+	be_there:[tense=Tense, number=plur].
+
+question_type:[sem=concat(Wh, TenseSem, Meeting)] -->
+	?wh_question:[sem=Wh],
+	what,
+	tense:[sem=TenseSem, tense=Tense],
+	be_verb:[tense=Tense, number=Num],
+	@st([], '['),
+	aggregate:[sem=Meeting, number=Num],
+	@st([], ']').
+
+question_type:[sem=concat([utterance_type=ynq], TenseSem, Meeting)] -->
+	tense:[sem=TenseSem, tense=Tense],
+	be_there:[tense=Tense, number=Number],
+	meeting:[sem=Meeting, number=Number, def=no].
+
+question_type:[sem=concat([utterance_type=ynq], TenseSem, Meeting)] -->
+	tense:[sem=TenseSem, tense=Tense, tense=(present\/past)],
+	be_verb:[tense=Tense, number=Number],
+	meeting:[sem=Meeting, number=Number, def=yes].
+
+question_type:[sem=concat([utterance_type=ynq], TenseSem, Meeting)] -->
+	tense:[sem=TenseSem, tense=future],
+	will,
+	meeting:[sem=Meeting, number=Number, def=yes],
+	be.
+
+%---------------------------------------------------------------
+
+wh_question:[sem=[utterance_type=whq]] --> [].
+
+%---------------------------------------------------------------
+
+be_verb:[tense=past, number=sing] --> 'was'.
+be_verb:[tense=past, number=plur] --> 'were'.
+be_verb:[tense=present, number=sing] --> 'is'.
+be_verb:[tense=present, number=plur] --> 'are'.
+be_verb:[tense=future, number=_] --> 'will', 'be'.
+
+be_there:[tense=past, number=sing] --> 'was', 'there'.
+be_there:[tense=past, number=plur] --> 'were', 'there'.
+be_there:[tense=present, number=sing] --> 'is', 'there'.
+be_there:[tense=present, number=plur] --> 'are', 'there'.
+be_there:[tense=future, number=_] --> 'will', 'there', 'be'.
+
+attend_verb:[tense=past, number=sing] --> 'attended'.
+attend_verb:[tense=past, number=plur] --> 'attended'.
+attend_verb:[tense=present, number=sing] --> 'is', 'attending'.
+attend_verb:[tense=present, number=plur] --> 'are', 'attending'.
+attend_verb:[tense=future, number=_] --> 'will', 'attend'.
+
+%---------------------------------------------------------------
+
+tense:[sem=[tense_information=interval(Now, datime(_DOW, 2100, 0, 0, 0, 0, 0))], tense=future] --> [].
+tense:[sem=[tense_information=interval(datime(_DOW, 1980, 0, 0, 0, 0, 0), Now)], tense=past] --> [].
+tense:[sem=[], tense=present] --> [].
+
+%---------------------------------------------------------------
+
+meeting:[sem=concat([meeting=in_list([])], Referent), number=sing, def=yes] -->
+	referent_from_context:[sem=Referent],
+	that, meeting, you, would, have, mentioned.
+meeting:[sem=concat([meeting=in_list([_])], Referent), number=sing, def=yes] -->
+	referent_from_context:[sem=Referent],
+	that, meeting.
+meeting:[sem=concat([meeting=in_list([_ | _])], Referent), number=plur, def=yes] -->
+	referent_from_context:[sem=Referent],
+	those, meetings.
+meeting:[sem=Sem, number=Num, def=yes] -->
+	@st([], '['),
+	aggregate:[sem=Sem, number=Num],
+	@st([], ']').
+meeting:[sem=[], number=plur, def=no] -->
+	meetings.
+
+referent_from_context:[sem=[referent_from_context=_]] --> [].
+
+%---------------------------------------------------------------
+
+aggregate:[sem=[aggregate(next_n_meetings(1), Body)], number=sing] -->
+	the, next, meeting,
+	aggregate_question_body:[sem=Body].
+
+aggregate:[sem=[aggregate(next_n_meetings(N), Body)], number=plur] -->
+	the, next,
+	number:[sem=N, numtype=(\(one))/\(\(ohdigit))],
+	meetings,
+	aggregate_question_body:[sem=Body].
+
+aggregate:[sem=[aggregate(nth_meeting(1), Body)], number=sing] -->
+	the, first, meeting,
+	aggregate_question_body:[sem=Body].
+
+aggregate:[sem=[aggregate(first_n_meetings(N), Body)], number=plur] -->
+	the, first,
+	number:[sem=N, numtype=(\(one))/\(\(ohdigit))],
+	meetings,
+	aggregate_question_body:[sem=Body].
+
+aggregate:[sem=[aggregate(last_n_meetings(1), Body)], number=sing] -->
+	the, last, meeting,
+	aggregate_question_body:[sem=Body].
+
+aggregate:[sem=[aggregate(last_n_meetings(N), Body)], number=plur] -->
+	the, last,
+	number:[sem=N, numtype=(\(one))/\(\(ohdigit))],
+	meetings,
+	aggregate_question_body:[sem=Body].
+
+%---------------------------------------------------------------
+
+during_interval:[sem=[in_interval=Interval]] -->
+	interval:[sem=Interval].
+
+on_date:[sem=[on_date=Date]] -->
+	on,
+	date:[sem=Date].
+
+at_time:[sem=[at_time=Time]] -->
+	at,
+	time:[sem=Time].
+
+at_location:[sem=[meeting_loc=LocName]] -->
+	in,
+	generalised_name:[sem=LocName].
+
+with_attendee:[sem=[attendee=Name]] -->
+	attended, by,
+	generalised_name:[sem=Name].
+
+with_attendee:[sem=[attendee=Name1, attendee=Name2]] -->
+	attended, by,
+	generalised_name:[sem=Name1],
+	and,
+	generalised_name:[sem=Name2].
+
+having_affiliation:[sem=[affiliation=Name]] -->
+	affiliated, with,
+	generalised_name:[sem=Name].
+
+%---------------------------------------------------------------
+
+interval:[sem=interval(datime(DOW, Year, Month, Day, Hour1, Minute1, Second1),
+		       datime(DOW, Year, Month, Day, Hour2, Minute2, Second2))] -->
+	time_interval:[sem=interval(datime(generic, generic, generic, generic, Hour1, Minute1, Second1),
+				    datime(generic, generic, generic, generic, Hour2, Minute2, Second2))],
+	on,
+	date:[sem=datime(DOW, Year, Month, Day, 0, 0, 0)].
+
+interval:[sem=interval(Datime1, Datime2)] -->
+	between,
+	start_datime:[sem=Datime1],
+	and,
+	end_datime:[sem=Datime2].
+
+interval:[sem=interval(Datime1, Datime2)] -->
+	between,
+	time:[sem=Datime1],
+	and,
+	time:[sem=Datime2].
+
+time_interval:[sem=interval(Datime1, Datime2)] -->
+	between,
+	time:[sem=Datime1],
+	and,
+	time:[sem=Datime2].
+
+date:[sem=datime(DOW, Year, Month, Day, 0, 0, 0)] -->
+	day_of_week:[sem=DOW],
+	month:[sem=Month],
+	number:[sem=Day, numtype=dayofmonth],
+	number:[sem=Year, numtype=year].
+
+time:[sem=datime(_DOW, generic, generic, generic, Hour, Minute, _Second)] -->
+	number:[sem=Hour, numtype=hour],
+	@st([], ':'),
+	number:[sem=Minute, numtype=minute_or_second].
+	%@st([], ':'),
+	%number:[sem=Second, numtype=minute_or_second].
+
+start_datime:[sem=datime(DOW, Year, Month, Day, 0, 0, 0)] -->
+	day_of_week:[sem=DOW],
+	month:[sem=Month],
+	number:[sem=Day, numtype=dayofmonth],
+	number:[sem=Year, numtype=year].
+
+start_datime:[sem=datime(DOW, Year, Month, Day, Hour, Minute, Second)] -->
+	datime:[sem=datime(DOW, Year, Month, Day, Hour, Minute, Second)].
+
+end_datime:[sem=datime(DOW, Year, Month, Day, 23, 59, 59)] -->
+	day_of_week:[sem=DOW],
+	month:[sem=Month],
+	number:[sem=Day, numtype=dayofmonth],
+	number:[sem=Year, numtype=year].
+
+end_datime:[sem=datime(DOW, Year, Month, Day, Hour, Minute, Second)] -->
+	datime:[sem=datime(DOW, Year, Month, Day, Hour, Minute, Second)].
+
+datime:[sem=datime(DOW, Year, Month, Day, Hour, Minute, _Second)] -->
+	number:[sem=Hour, numtype=hour],
+	@st([], ':'),
+	number:[sem=Minute, numtype=minute_or_second],
+	%@st([], ':'),
+	%number:[sem=Second, numtype=minute_or_second],
+	on,
+	day_of_week:[sem=DOW],
+	month:[sem=Month],
+	number:[sem=Day, numtype=dayofmonth],
+	number:[sem=Year, numtype=year].
+
+%---------------------------------------------------------------
+
+number:[sem=0, numtype=hour\/minute_or_second] --> @st(hundred, '00').
+
+number:[sem=1, numtype=one\/dayofmonth] --> @st(one, '1').
+number:[sem=2, numtype=dayofmonth] --> @st(two, '2').
+number:[sem=3, numtype=dayofmonth] --> @st(three, '3').
+number:[sem=4, numtype=dayofmonth] --> @st(four, '4').
+number:[sem=5, numtype=dayofmonth] --> @st(five, '5').
+number:[sem=6, numtype=dayofmonth] --> @st(six, '6').
+number:[sem=7, numtype=dayofmonth] --> @st(seven, '7').
+number:[sem=8, numtype=dayofmonth] --> @st(eight, '8').
+number:[sem=9, numtype=dayofmonth] --> @st(nine, '9').
+
+number:[sem=1, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, one), '01').
+number:[sem=2, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, two), '02').
+number:[sem=3, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, three), '03').
+number:[sem=4, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, four), '04').
+number:[sem=5, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, five), '05').
+number:[sem=6, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, six), '06').
+number:[sem=7, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, seven), '07').
+number:[sem=8, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, eight), '08').
+number:[sem=9, numtype=ohdigit\/hour\/minute_or_second] --> @st((oh, nine), '09').
+
+number:[sem=10, numtype=dayofmonth\/hour\/minute_or_second] --> @st(ten, '10').
+number:[sem=11, numtype=dayofmonth\/hour\/minute_or_second] --> @st(eleven, '11').
+number:[sem=12, numtype=dayofmonth\/hour\/minute_or_second] --> @st(twelve, '12').
+number:[sem=13, numtype=dayofmonth\/hour\/minute_or_second] --> @st(thirteen, '13').
+number:[sem=14, numtype=dayofmonth\/hour\/minute_or_second] --> @st(fourteen, '14').
+number:[sem=15, numtype=dayofmonth\/hour\/minute_or_second] --> @st(fifteen, '15').
+number:[sem=16, numtype=dayofmonth\/hour\/minute_or_second] --> @st(sixteen, '16').
+number:[sem=17, numtype=dayofmonth\/hour\/minute_or_second] --> @st(seventeen, '17').
+number:[sem=18, numtype=dayofmonth\/hour\/minute_or_second] --> @st(eighteen, '18').
+number:[sem=19, numtype=dayofmonth\/hour\/minute_or_second] --> @st(nineteen, '19').
+number:[sem=20, numtype=dayofmonth\/hour\/minute_or_second] --> @st(twenty, '20').
+number:[sem=21, numtype=dayofmonth\/hour\/minute_or_second] --> @st((twenty, one), '21').
+number:[sem=22, numtype=dayofmonth\/hour\/minute_or_second] --> @st((twenty, two), '22').
+number:[sem=23, numtype=dayofmonth\/hour\/minute_or_second] --> @st((twenty, three), '23').
+number:[sem=24, numtype=dayofmonth\/minute_or_second] --> @st((twenty, four), '24').
+number:[sem=25, numtype=dayofmonth\/minute_or_second] --> @st((twenty, five), '25').
+number:[sem=26, numtype=dayofmonth\/minute_or_second] --> @st((twenty, six), '26').
+number:[sem=27, numtype=dayofmonth\/minute_or_second] --> @st((twenty, seven), '27').
+number:[sem=28, numtype=dayofmonth\/minute_or_second] --> @st((twenty, eight), '28').
+number:[sem=29, numtype=dayofmonth\/minute_or_second] --> @st((twenty, nine), '29').
+number:[sem=30, numtype=dayofmonth\/minute_or_second] --> @st(thirty, '30').
+number:[sem=31, numtype=dayofmonth\/minute_or_second] --> @st((thirty, one), '31').
+number:[sem=32, numtype=minute_or_second] --> @st((thirty, two), '32').
+number:[sem=33, numtype=minute_or_second] --> @st((thirty, three), '33').
+number:[sem=34, numtype=minute_or_second] --> @st((thirty, four), '34').
+number:[sem=35, numtype=minute_or_second] --> @st((thirty, five), '35').
+number:[sem=36, numtype=minute_or_second] --> @st((thirty, six), '36').
+number:[sem=37, numtype=minute_or_second] --> @st((thirty, seven), '37').
+number:[sem=38, numtype=minute_or_second] --> @st((thirty, eight), '38').
+number:[sem=39, numtype=minute_or_second] --> @st((thirty, nine), '39').
+number:[sem=40, numtype=minute_or_second] --> @st(forty, '40').
+number:[sem=41, numtype=minute_or_second] --> @st((forty, one), '41').
+number:[sem=42, numtype=minute_or_second] --> @st((forty, two), '42').
+number:[sem=43, numtype=minute_or_second] --> @st((forty, three), '43').
+number:[sem=44, numtype=minute_or_second] --> @st((forty, four), '44').
+number:[sem=45, numtype=minute_or_second] --> @st((forty, five), '45').
+number:[sem=46, numtype=minute_or_second] --> @st((forty, six), '46').
+number:[sem=47, numtype=minute_or_second] --> @st((forty, seven), '47').
+number:[sem=48, numtype=minute_or_second] --> @st((forty, eight), '48').
+number:[sem=49, numtype=minute_or_second] --> @st((forty, nine), '49').
+number:[sem=50, numtype=minute_or_second] --> @st(fifty, '50').
+number:[sem=51, numtype=minute_or_second] --> @st((fifty, one), '51').
+number:[sem=52, numtype=minute_or_second] --> @st((fifty, two), '52').
+number:[sem=53, numtype=minute_or_second] --> @st((fifty, three), '53').
+number:[sem=54, numtype=minute_or_second] --> @st((fifty, four), '54').
+number:[sem=55, numtype=minute_or_second] --> @st((fifty, five), '55').
+number:[sem=56, numtype=minute_or_second] --> @st((fifty, six), '56').
+number:[sem=57, numtype=minute_or_second] --> @st((fifty, seven), '57').
+number:[sem=58, numtype=minute_or_second] --> @st((fifty, eight), '58').
+number:[sem=59, numtype=minute_or_second] --> @st((fifty, nine), '59').
+
+number:[sem=2006, numtype=year] --> @st((two, thousand, and, six), '2006').
+number:[sem=2007, numtype=year] --> @st((two, thousand, and, seven), '2007').
+number:[sem=2008, numtype=year] --> @st((two, thousand, and, eight), '2008').
+number:[sem=2009, numtype=year] --> @st((two, thousand, and, nine), '2009').
+number:[sem=2010, numtype=year] --> @st((two, thousand, and, ten), '2010').
+
+month:[sem=1] --> @st(jan, 'Jan').
+month:[sem=2] --> @st(feb, 'Feb').
+month:[sem=3] --> @st(mar, 'Mar').
+month:[sem=4] --> @st(apr, 'Apr').
+month:[sem=5] --> @st(may, 'May').
+month:[sem=6] --> @st(june, 'Jun').
+month:[sem=7] --> @st(jul, 'Jul').
+month:[sem=8] --> @st(aug, 'Aug').
+month:[sem=9] --> @st(sep, 'Sep').
+month:[sem=10] --> @st(oct, 'Oct').
+month:[sem=11] --> @st(nov, 'Nov').
+month:[sem=12] --> @st(dec, 'Dec').
+
+%month:[sem=1] --> @st(, 'January').
+%month:[sem=2] --> @st(, 'February').
+%month:[sem=3] --> @st(, 'March').
+%month:[sem=4] --> @st(, 'April').
+%month:[sem=5] --> @st(, 'May').
+%month:[sem=6] --> @st(, 'June').
+%month:[sem=7] --> @st(, 'July').
+%month:[sem=8] --> @st(, 'August').
+%month:[sem=9] --> @st(, 'September').
+%month:[sem=10] --> @st(, 'October').
+%month:[sem=11] --> @st(, 'November').
+%month:[sem=12] --> @st(, 'December').
+
+day_of_week:[sem=monday] --> @st(mon, 'Mon').
+day_of_week:[sem=tuesday] --> @st(tue, 'Tue').
+day_of_week:[sem=wednesday] --> @st(wed, 'Wed').
+day_of_week:[sem=thursday] --> @st(thu, 'Thu').
+day_of_week:[sem=friday] --> @st(fri, 'Fri').
+day_of_week:[sem=saturday] --> @st(sat, 'Sat').
+day_of_week:[sem=sunday] --> @st(sun, 'Sun').
+
+generalised_name:[sem=Sem] -->
+	name:[sem=Sem].
+
+generalised_name:[sem=in_list([])] -->
+	that, person, you, would, have, mentioned.
+
+macro(place_name(Surface, Sem),
+      ( name:[sem=Sem] --> Surface )
+     ).
+
+macro(person_name(Surface, Sem),
+      ( name:[sem=Sem] --> Surface )
+     ).

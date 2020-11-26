@@ -1,0 +1,8 @@
+entier(0).
+
+entier(_X) :- 
+	_X is _Y + 1,
+	entier(_Y),
+	inf(_Y, 9, true).
+
+inf(_X, _Y, _Z) :- _Z is _X < _Y.

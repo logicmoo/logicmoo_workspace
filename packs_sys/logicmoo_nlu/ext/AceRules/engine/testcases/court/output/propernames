@@ -1,0 +1,5 @@
+ERROR: Invalid ACE text:
+The word "gun" is unknown; did you mean "run"?
+The word "gun" is unknown; did you mean "run"?
+"John has a <> gun.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+

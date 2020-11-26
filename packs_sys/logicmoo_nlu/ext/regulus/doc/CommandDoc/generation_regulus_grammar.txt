@@ -1,0 +1,4 @@
+Relevant to applications that use generation (typically translation
+applications). If there is no regulus\_\-grammar entry, points to the
+Regulus file, or list of Regulus files, that are to be compiled into
+the generation file.

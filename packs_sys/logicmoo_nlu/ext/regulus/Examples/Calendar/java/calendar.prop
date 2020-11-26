@@ -1,0 +1,92 @@
+#
+#
+# Global app definitions
+#
+
+#
+# These processes are started first. They are used by all languages and application domains
+#
+global.process.1=nlm.exe D:/Nuance/Vocalizer4.0/license.txt nuanceLicenceNo
+global.process.2=vocalizer -num_channels 1 -voice enhancedlaurie -voices_from_disk
+
+#cmd /k vocalizer -num_channels 1 -voice enhancedlaurie -voices_from_disk
+# global.process.3=sicstus -l $REGULUS$/Examples/Calendar/scripts/load_and_run_server.pl
+
+# global.process.3=sicstus -l D:/Regulus/Examples/Calendar/scripts/load_and_run_japanese_dm_server.pl
+
+# global.process.3=redirect.exe -e D:/Regulus/Examples/Calendar/scripts/logs/dialogue_server_err.txt -o D:/Regulus/Examples/Calendar/scripts/logs/dialogue_server_out.txt sicstus 
+
+
+#
+# Set recognition client parameters 
+# 
+global.recognition.clientParameters=client.TTSAddresses=localhost audio.OutputVolume=200 rec.ConfidenceRejectionThreshold=0 rec.Pruning=1600 rec.DoNBest=TRUE rec.NumNBest=6 client.RecordDirectory=d:/regulus/examples/calendar/corpora/speech/
+global.recognition.wavFileDir=d:/Regulus/Examples/Calendar/corpora/speech/
+global.recognition.nbest=6
+
+global.startup.recServer.waitTimeMsecs=10000
+global.startup.regulusServer.Host=localhost
+global.startup.regulusServer.Port=1975
+global.startup.regulusServer.waitTimeMsecs=5000
+global.startup.regulusServer.command=d:/regulus/regulusspeechserver/runtime/regserver
+
+# how long to wait for in between two vocalizer starts 
+global.vocalizer.startWaitTime=1500
+# how long to wait after vocalizer has been killed for the port to become available
+global.vocalizer.killWaitTime=1500
+
+global.gui.startup.computeXCPUTime=false
+global.gui.startup.showRawRecognitionResult=true
+global.gui.startup.showInlineHelp=true
+global.gui.startup.showSourceLanguageRepresentation=false
+global.gui.startup.showInterlingua=false
+
+dialogue.server.host=localhost
+dialogue.server.port=1985
+dialogue.server.charset=iso-8859-1
+dialogue.server.starting.time=15000
+dialogue.noHelpSent=5
+
+# global.startup.dialogueServer.command=redirect.exe -e D D:/Regulus/Examples/Calendar/scripts/logs/dialogue_server_err.txt -o D:/Regulus/Examples/Calendar/scripts/logs/dialogue_server_out.txt sicstus 
+global.startup.dialogueServer.command= sicstus 
+global.startup.dialogueServer.waitTimeMsecs=15000
+
+global.lang.1.name=Japanese 
+global.lang.2.name=British\ English
+
+Japanese.index=0
+English.index=1
+
+#
+# COMMUNICATION LANGUAGE: JAPANESE 
+#
+
+Japanese.dialogueServer.package=-l D:/Regulus/Examples/Calendar/scripts/load_and_run_japanese_dm_server.pl
+
+# -------------------- Define output mode --------------------
+Japanese.outputMode=files
+Japanese.outputMode.parameters=D:/Regulus/Examples/Calendar/japanese_wavfiles
+
+# recserver -package %REGULUS%\Examples\Calendar\Generated\japanese_recogniser
+Japanese.recognition.package=D:/Regulus/Examples/Calendar/Generated/japanese_recogniser
+Japanese.recongition.characterEncoding=iso-8859-1
+Japanese.glm.grammar=.MAIN
+Japanese.slm.grammar=.MAIN_SLM
+
+
+
+#
+# COMMUNICATION LANGUAGE: ENGLISH 
+#
+English.dialogueServer.package=-l D:/Regulus/Examples/Calendar/scripts/load_and_run_server.pl  
+
+English.outputMode=vocalizer
+English.outputMode.parameters=rm.Addresses\=localhost lm.Addresses\=localhost:8471 tts.Port\=32324 -dictionary_port 22554 tts.ResourceName\="en_US"
+#cmd /k vocalizer -num_channels 1 -voice enhancedlaurie -voices_from_disk
+
+British\ English.dialogueServer.package=-l D:/Regulus/Examples/Calendar/scripts/load_and_run_server.pl  
+British\ English.recognition.package=d:/Regulus/Examples/Calendar/Generated/recogniser
+British\ English.recongition.characterEncoding=iso-8859-1
+British\ English.glm.grammar=.MAIN
+British\ English.slm.grammar=.MAIN_SLM
+

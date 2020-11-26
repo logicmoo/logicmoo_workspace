@@ -1,0 +1,1180 @@
+**** Choice ****
+  IN: <robin --> bird>. %1.00;0.90% {0 : 1} 
+10
+  IN: <swan --> bird>. %1.00;0.80% {10 : 2} 
+2
+ OUT: <swan --> robin>. %1.00;0.42% {12 : 1;2} 
+ OUT: <robin --> swan>. %1.00;0.42% {12 : 1;2} 
+ OUT: <robin <-> swan>. %1.00;0.42% {12 : 1;2} 
+ OUT: <(&,robin,swan) --> bird>. %1.00;0.72% {12 : 1;2} 
+ OUT: <(|,robin,swan) --> bird>. %1.00;0.72% {12 : 1;2} 
+ OUT: <<swan --> $1> ==> <robin --> $1>>. %1.00;0.42% {12 : 1;2} 
+ OUT: <<robin --> $1> ==> <swan --> $1>>. %1.00;0.42% {12 : 1;2} 
+ OUT: <<robin --> $1> <=> <swan --> $1>>. %1.00;0.42% {12 : 1;2} 
+ OUT: (&&,<robin --> #1>,<swan --> #1>). %1.00;0.72% {12 : 1;2} 
+8
+  IN: <penguin --> bird>. %0.80;0.90% {20 : 3} 
+10
+  IN: <?1 --> bird>?  {30 : 4} 
+10
+ OUT: <swan --> robin>. %1.00;0.42% {40 : 1;2} 
+ OUT: <robin --> swan>. %1.00;0.42% {40 : 1;2} 
+ OUT: <robin <-> swan>. %1.00;0.42% {40 : 1;2} 
+ OUT: <(&,robin,swan) --> bird>. %1.00;0.72% {40 : 1;2} 
+ OUT: <(|,robin,swan) --> bird>. %1.00;0.72% {40 : 1;2} 
+ OUT: <<swan --> $1> ==> <robin --> $1>>. %1.00;0.42% {40 : 1;2} 
+ OUT: <<robin --> $1> ==> <swan --> $1>>. %1.00;0.42% {40 : 1;2} 
+ OUT: <<robin --> $1> <=> <swan --> $1>>. %1.00;0.42% {40 : 1;2} 
+ OUT: (&&,<robin --> #1>,<swan --> #1>). %1.00;0.72% {40 : 1;2} 
+1
+ OUT: <robin --> swan>. %1.00;0.42% {41 : 2;1} 
+ OUT: <swan --> robin>. %1.00;0.42% {41 : 2;1} 
+ OUT: <robin <-> swan>. %1.00;0.42% {41 : 2;1} 
+ OUT: <(&,robin,swan) --> bird>. %1.00;0.72% {41 : 2;1} 
+ OUT: <(|,robin,swan) --> bird>. %1.00;0.72% {41 : 2;1} 
+ OUT: <<robin --> $1> ==> <swan --> $1>>. %1.00;0.42% {41 : 2;1} 
+ OUT: <<swan --> $1> ==> <robin --> $1>>. %1.00;0.42% {41 : 2;1} 
+ OUT: <<robin --> $1> <=> <swan --> $1>>. %1.00;0.42% {41 : 2;1} 
+ OUT: (&&,<robin --> #1>,<swan --> #1>). %1.00;0.72% {41 : 2;1} 
+5
+ OUT: <robin --> penguin>. %1.00;0.39% {46 : 3;1} 
+ OUT: <penguin --> robin>. %0.80;0.45% {46 : 3;1} 
+ OUT: <penguin <-> robin>. %0.80;0.45% {46 : 3;1} 
+ OUT: <(&,penguin,robin) --> bird>. %1.00;0.81% {46 : 3;1} 
+ OUT: <(|,penguin,robin) --> bird>. %0.80;0.81% {46 : 3;1} 
+ OUT: <<robin --> $1> ==> <penguin --> $1>>. %0.80;0.45% {46 : 3;1} 
+ OUT: <<penguin --> $1> ==> <robin --> $1>>. %1.00;0.39% {46 : 3;1} 
+ OUT: <<penguin --> $1> <=> <robin --> $1>>. %0.80;0.45% {46 : 3;1} 
+ OUT: (&&,<penguin --> #1>,<robin --> #1>). %0.80;0.81% {46 : 3;1} 
+1
+ OUT: <swan --> penguin>. %1.00;0.37% {47 : 3;2} 
+ OUT: <penguin --> swan>. %0.80;0.42% {47 : 3;2} 
+ OUT: <penguin <-> swan>. %0.80;0.42% {47 : 3;2} 
+ OUT: <(&,penguin,swan) --> bird>. %1.00;0.72% {47 : 3;2} 
+ OUT: <(|,penguin,swan) --> bird>. %0.80;0.72% {47 : 3;2} 
+ OUT: <<swan --> $1> ==> <penguin --> $1>>. %0.80;0.42% {47 : 3;2} 
+ OUT: <<penguin --> $1> ==> <swan --> $1>>. %1.00;0.37% {47 : 3;2} 
+ OUT: <<penguin --> $1> <=> <swan --> $1>>. %0.80;0.42% {47 : 3;2} 
+ OUT: (&&,<penguin --> #1>,<swan --> #1>). %0.80;0.72% {47 : 3;2} 
+1
+ OUT: <swan --> bird>. %1.00;0.80% {10 : 2} 
+10
+ OUT: <(&,robin,swan) --> bird>. %1.00;0.80% {58 : 2} 
+ OUT: <(&,robin,swan) --> (&,bird,robin)>. %1.00;0.80% {58 : 2} 
+9
+ OUT: <robin --> penguin>. %1.00;0.39% {67 : 3;1} 
+ OUT: <penguin --> robin>. %0.80;0.45% {67 : 3;1} 
+ OUT: <penguin <-> robin>. %0.80;0.45% {67 : 3;1} 
+ OUT: <(&,penguin,robin) --> bird>. %1.00;0.81% {67 : 3;1} 
+ OUT: <(|,penguin,robin) --> bird>. %0.80;0.81% {67 : 3;1} 
+ OUT: <<robin --> $1> ==> <penguin --> $1>>. %0.80;0.45% {67 : 3;1} 
+ OUT: <<penguin --> $1> ==> <robin --> $1>>. %1.00;0.39% {67 : 3;1} 
+ OUT: <<penguin --> $1> <=> <robin --> $1>>. %0.80;0.45% {67 : 3;1} 
+ OUT: (&&,<penguin --> #1>,<robin --> #1>). %0.80;0.81% {67 : 3;1} 
+1
+ OUT: <?1 --> swan>?  {68 : 2;4} 
+ OUT: <swan --> ?1>?  {68 : 2;4} 
+ OUT: <?1 <-> swan>?  {68 : 2;4} 
+6
+ OUT: <penguin --> robin>. %0.80;0.45% {74 : 1;3} 
+ OUT: <robin --> penguin>. %1.00;0.39% {74 : 1;3} 
+ OUT: <penguin <-> robin>. %0.80;0.45% {74 : 1;3} 
+ OUT: <(&,penguin,robin) --> bird>. %1.00;0.81% {74 : 1;3} 
+ OUT: <(|,penguin,robin) --> bird>. %0.80;0.81% {74 : 1;3} 
+ OUT: <<penguin --> $1> ==> <robin --> $1>>. %1.00;0.39% {74 : 1;3} 
+ OUT: <<robin --> $1> ==> <penguin --> $1>>. %0.80;0.45% {74 : 1;3} 
+ OUT: <<penguin --> $1> <=> <robin --> $1>>. %0.80;0.45% {74 : 1;3} 
+ OUT: (&&,<penguin --> #1>,<robin --> #1>). %0.80;0.81% {74 : 1;3} 
+6
+ OUT: <(|,penguin,swan) --> bird>. %0.80;0.58% {80 : 3;2} 
+3
+ OUT: <penguin --> swan>. %0.80;0.42% {83 : 2;3} 
+ OUT: <swan --> penguin>. %1.00;0.37% {83 : 2;3} 
+ OUT: <penguin <-> swan>. %0.80;0.42% {83 : 2;3} 
+ OUT: <(&,penguin,swan) --> bird>. %1.00;0.72% {83 : 2;3} 
+ OUT: <(|,penguin,swan) --> bird>. %0.80;0.72% {83 : 2;3} 
+ OUT: <<penguin --> $1> ==> <swan --> $1>>. %1.00;0.37% {83 : 2;3} 
+ OUT: <<swan --> $1> ==> <penguin --> $1>>. %0.80;0.42% {83 : 2;3} 
+ OUT: <<penguin --> $1> <=> <swan --> $1>>. %0.80;0.42% {83 : 2;3} 
+ OUT: (&&,<penguin --> #1>,<swan --> #1>). %0.80;0.72% {83 : 2;3} 
+6
+ OUT: <(&,penguin,swan) --> robin>. %1.00;0.42% {89 : 1;2} 
+ OUT: <(&,penguin,swan) --> (&,penguin,robin)>. %1.00;0.42% {89 : 1;2} 
+1
+ OUT: <robin --> bird>. %1.00;0.90% {0 : 1} 
+**** Contradiction ****
+  IN: <coffee --> beverage>. %1.00;0.90% {0 : 1} 
+  IN: <Java --> coffee>. %1.00;0.90% {0 : 2} 
+  IN: (--,<Java --> coffee>). %1.00;0.90% {0 : 3} 
+2
+ OUT: (--,<Java --> coffee>). %0.00;0.90% {2 : 2} 
+1
+ OUT: (--,<Java --> coffee>). %0.50;0.95% {3 : 3;2} 
+4
+ OUT: <Java --> coffee>. %0.00;0.90% {7 : 3} 
+1
+ OUT: <Java --> coffee>. %0.50;0.95% {8 : 2;3} 
+1
+ OUT: <Java --> coffee>. %0.00;0.90% {9 : 3} 
+1
+  IN: <Java --> coffee>?  {10 : 4} 
+1
+ OUT: <Java --> coffee>. %0.50;0.95% {8 : 2;3} 
+6
+ OUT: <Java --> coffee>. %0.00;0.90% {17 : 3} 
+3
+  IN: <tea --> beverage>?  {20 : 5} 
+1
+ OUT: (--,<Java --> coffee>). %0.00;0.90% {21 : 2} 
+5
+ OUT: <Java --> beverage>. %0.50;0.43% {26 : 2;1;3} 
+ OUT: <beverage --> Java>. %1.00;0.30% {26 : 2;1;3} 
+3
+ OUT: <tea --> coffee>?  {29 : 1;5} 
+ OUT: <coffee --> tea>?  {29 : 1;5} 
+ OUT: <coffee <-> tea>?  {29 : 1;5} 
+1
+  IN: <coffee --> beverage>?  {30 : 6} 
+1
+ OUT: <coffee --> beverage>. %1.00;0.90% {0 : 1} 
+4
+ OUT: <Java --> beverage>. %1.00;0.81% {35 : 1;2} 
+ OUT: <beverage --> Java>. %1.00;0.45% {35 : 1;2} 
+1
+ OUT: <Java --> beverage>?  {36 : 2;6;3} 
+ OUT: <beverage --> Java>?  {36 : 2;6;3} 
+3
+ OUT: <tea --> coffee>?  {39 : 1;5} 
+ OUT: <coffee --> tea>?  {39 : 1;5} 
+ OUT: <coffee <-> tea>?  {39 : 1;5} 
+1
+ OUT: (--,<Java --> coffee>). %0.00;0.90% {40 : 2} 
+**** Confidence and revision ****
+  IN: <{Willy} --> swimmer>. %1.00;0.90% {0 : 1} 
+  IN: <fish --> swimmer>. %1.00;0.90% {0 : 2} 
+  IN: <{Willy} --> fish>?  {0 : 3} 
+1
+ OUT: <{Willy} --> fish>. %1.00;0.45% {1 : 2;1} 
+ OUT: <fish --> {Willy}>. %1.00;0.45% {1 : 2;1} 
+ OUT: <fish <-> {Willy}>. %1.00;0.45% {1 : 2;1} 
+ OUT: <(&,fish,{Willy}) --> swimmer>. %1.00;0.81% {1 : 2;1} 
+ OUT: <(|,fish,{Willy}) --> swimmer>. %1.00;0.81% {1 : 2;1} 
+ OUT: <<{Willy} --> $1> ==> <fish --> $1>>. %1.00;0.45% {1 : 2;1} 
+ OUT: <<fish --> $1> ==> <{Willy} --> $1>>. %1.00;0.45% {1 : 2;1} 
+ OUT: <<fish --> $1> <=> <{Willy} --> $1>>. %1.00;0.45% {1 : 2;1} 
+ OUT: (&&,<fish --> #1>,<{Willy} --> #1>). %1.00;0.81% {1 : 2;1} 
+1
+ OUT: <{Willy} --> fish>. %1.00;0.45% {1 : 2;1} 
+4
+ OUT: <fish --> {Willy}>. %1.00;0.45% {6 : 1;2} 
+ OUT: <{Willy} --> fish>. %1.00;0.45% {6 : 1;2} 
+ OUT: <fish <-> {Willy}>. %1.00;0.45% {6 : 1;2} 
+ OUT: <(&,fish,{Willy}) --> swimmer>. %1.00;0.81% {6 : 1;2} 
+ OUT: <(|,fish,{Willy}) --> swimmer>. %1.00;0.81% {6 : 1;2} 
+ OUT: <<fish --> $1> ==> <{Willy} --> $1>>. %1.00;0.45% {6 : 1;2} 
+ OUT: <<{Willy} --> $1> ==> <fish --> $1>>. %1.00;0.45% {6 : 1;2} 
+ OUT: <<fish --> $1> <=> <{Willy} --> $1>>. %1.00;0.45% {6 : 1;2} 
+ OUT: (&&,<fish --> #1>,<{Willy} --> #1>). %1.00;0.81% {6 : 1;2} 
+1
+ OUT: <{Willy} --> fish>. %1.00;0.31% {7 : 1;2} 
+3
+  IN: <{Willy} --> whale>. %1.00;0.90% {10 : 4} 
+  IN: <whale --> [black]>. %1.00;0.90% {10 : 5} 
+  IN: <{Willy} --> [black]>?  {10 : 6} 
+7
+ OUT: <{Willy} --> swimmer>?  {17 : 2;3} 
+ OUT: <swimmer --> {Willy}>?  {17 : 2;3} 
+4
+ OUT: <{Willy} --> [black]>. %1.00;0.81% {21 : 5;4} 
+ OUT: <[black] --> {Willy}>. %1.00;0.45% {21 : 5;4} 
+1
+ OUT: <{Willy} --> [black]>. %1.00;0.81% {21 : 5;4} 
+7
+ OUT: <{Willy} --> fish>. %1.00;0.45% {29 : 2;1} 
+ OUT: <fish --> {Willy}>. %1.00;0.45% {29 : 2;1} 
+ OUT: <fish <-> {Willy}>. %1.00;0.45% {29 : 2;1} 
+ OUT: <(&,fish,{Willy}) --> swimmer>. %1.00;0.81% {29 : 2;1} 
+ OUT: <(|,fish,{Willy}) --> swimmer>. %1.00;0.81% {29 : 2;1} 
+ OUT: <<{Willy} --> $1> ==> <fish --> $1>>. %1.00;0.45% {29 : 2;1} 
+ OUT: <<fish --> $1> ==> <{Willy} --> $1>>. %1.00;0.45% {29 : 2;1} 
+ OUT: <<fish --> $1> <=> <{Willy} --> $1>>. %1.00;0.45% {29 : 2;1} 
+ OUT: (&&,<fish --> #1>,<{Willy} --> #1>). %1.00;0.81% {29 : 2;1} 
+1
+  IN: <{Willy} --> [black]>. %0.00;0.90% {30 : 7} 
+  IN: <{Willy} --> fish>. %0.00;0.90% {30 : 8} 
+1
+ OUT: <{Willy} --> [black]>. %0.32;0.93% {31 : 5;7;4} 
+ OUT: <{Willy} --> [black]>. %0.00;0.90% {30 : 7} 
+ OUT: <{Willy} --> fish>. %0.08;0.91% {31 : 2;8;1} 
+ OUT: <{Willy} --> fish>. %0.00;0.90% {30 : 8} 
+1
+ OUT: <{Willy} --> [black]>. %0.32;0.93% {31 : 5;7;4} 
+ OUT: <{Willy} --> fish>. %0.08;0.91% {31 : 2;8;1} 
+4
+ OUT: <{Willy} --> [black]>. %1.00;0.81% {36 : 4;5} 
+ OUT: <[black] --> {Willy}>. %1.00;0.45% {36 : 4;5} 
+4
+ OUT: <fish --> [black]>. %0.00;0.06% {40 : 2;7;8;1} 
+ OUT: <[black] <-> fish>. %0.00;0.06% {40 : 2;7;8;1} 
+ OUT: <{Willy} --> (|,[black],fish)>. %0.08;0.82% {40 : 2;7;8;1} 
+ OUT: (&&,<#1 --> [black]>,<#1 --> fish>). %0.00;0.82% {40 : 2;7;8;1} 
+**** Deduction chain ****
+  IN: <{Tweety} --> robin>. %1.00;0.90% {0 : 1} 
+  IN: <robin --> bird>. %1.00;0.90% {0 : 2} 
+  IN: <bird --> animal>. %1.00;0.90% {0 : 3} 
+1
+ OUT: <{Tweety} --> bird>. %1.00;0.81% {1 : 2;1} 
+ OUT: <bird --> {Tweety}>. %1.00;0.45% {1 : 2;1} 
+1
+ OUT: <robin --> animal>. %1.00;0.81% {2 : 3;2} 
+ OUT: <animal --> robin>. %1.00;0.45% {2 : 3;2} 
+3
+ OUT: <robin --> animal>. %1.00;0.81% {5 : 2;3} 
+ OUT: <animal --> robin>. %1.00;0.45% {5 : 2;3} 
+2
+ OUT: <bird <-> {Tweety}>. %1.00;0.45% {7 : 2;1} 
+9
+ OUT: <{Tweety} --> bird>. %1.00;0.81% {16 : 1;2} 
+ OUT: <bird --> {Tweety}>. %1.00;0.45% {16 : 1;2} 
+1
+ OUT: <robin --> animal>. %1.00;0.81% {17 : 3;2} 
+ OUT: <animal --> robin>. %1.00;0.45% {17 : 3;2} 
+2
+ OUT: <{Tweety} --> animal>. %1.00;0.73% {19 : 2;3;1} 
+ OUT: <animal --> {Tweety}>. %1.00;0.42% {19 : 2;3;1} 
+1
+ OUT: <{Tweety} --> animal>. %1.00;0.29% {20 : 3;1;2} 
+ OUT: <animal --> {Tweety}>. %1.00;0.29% {20 : 3;1;2} 
+ OUT: <animal <-> {Tweety}>. %1.00;0.29% {20 : 3;1;2} 
+ OUT: <(&,animal,{Tweety}) --> robin>. %1.00;0.40% {20 : 3;1;2} 
+ OUT: <(|,animal,{Tweety}) --> robin>. %1.00;0.40% {20 : 3;1;2} 
+ OUT: <<{Tweety} --> $1> ==> <animal --> $1>>. %1.00;0.29% {20 : 3;1;2} 
+ OUT: <<animal --> $1> ==> <{Tweety} --> $1>>. %1.00;0.29% {20 : 3;1;2} 
+ OUT: <<animal --> $1> <=> <{Tweety} --> $1>>. %1.00;0.29% {20 : 3;1;2} 
+ OUT: (&&,<animal --> #1>,<{Tweety} --> #1>). %1.00;0.40% {20 : 3;1;2} 
+7
+ OUT: <robin --> animal>. %1.00;0.81% {27 : 3;2} 
+ OUT: <animal --> robin>. %1.00;0.45% {27 : 3;2} 
+2
+ OUT: <robin --> animal>. %1.00;0.81% {29 : 2;3} 
+ OUT: <animal --> robin>. %1.00;0.45% {29 : 2;3} 
+1
+  IN: <{Tweety} --> bird>?  {30 : 4} 
+1
+ OUT: <{Tweety} --> bird>. %1.00;0.81% {1 : 2;1} 
+1
+ OUT: <animal --> {Tweety}>. %1.00;0.29% {32 : 3;1;2} 
+ OUT: <{Tweety} --> animal>. %1.00;0.29% {32 : 3;1;2} 
+ OUT: <animal <-> {Tweety}>. %1.00;0.29% {32 : 3;1;2} 
+ OUT: <(&,animal,{Tweety}) --> robin>. %1.00;0.40% {32 : 3;1;2} 
+ OUT: <(|,animal,{Tweety}) --> robin>. %1.00;0.40% {32 : 3;1;2} 
+ OUT: <<animal --> $1> ==> <{Tweety} --> $1>>. %1.00;0.29% {32 : 3;1;2} 
+ OUT: <<{Tweety} --> $1> ==> <animal --> $1>>. %1.00;0.29% {32 : 3;1;2} 
+ OUT: <<animal --> $1> <=> <{Tweety} --> $1>>. %1.00;0.29% {32 : 3;1;2} 
+ OUT: (&&,<animal --> #1>,<{Tweety} --> #1>). %1.00;0.40% {32 : 3;1;2} 
+6
+ OUT: <{Tweety} --> bird>. %1.00;0.81% {38 : 1;2} 
+ OUT: <bird --> {Tweety}>. %1.00;0.45% {38 : 1;2} 
+2
+  IN: <{Tweety} --> animal>?  {40 : 5} 
+1
+ OUT: <{Tweety} --> animal>. %1.00;0.73% {19 : 2;3;1} 
+2
+ OUT: <{Tweety} --> animal>. %1.00;0.73% {43 : 2;3;1} 
+ OUT: <animal --> {Tweety}>. %1.00;0.42% {43 : 2;3;1} 
+1
+ OUT: <{Tweety} --> bird>. %1.00;0.81% {44 : 2;1} 
+ OUT: <bird --> {Tweety}>. %1.00;0.45% {44 : 2;1} 
+**** Resemblance Chain ****
+  IN: <cat <-> dog>. %0.90;0.90% {0 : 1} 
+  IN: <cat <-> tiger>. %0.90;0.90% {0 : 2} 
+  IN: <lion <-> tiger>. %0.90;0.90% {0 : 3} 
+  IN: <dog <-> lion>?  {0 : 4} 
+2
+ OUT: <dog <-> tiger>. %0.81;0.80% {2 : 2;1} 
+1
+ OUT: <dog <-> tiger>?  {3 : 3;4} 
+6
+ OUT: <cat <-> lion>?  {9 : 1;4} 
+1
+ OUT: <cat <-> dog>?  {10 : 3;2;4} 
+2
+ OUT: <cat <-> tiger>?  {12 : 3;1;4} 
+2
+ OUT: <lion <-> tiger>?  {14 : 2;4;1} 
+5
+ OUT: <dog <-> tiger>. %0.81;0.80% {19 : 1;2} 
+3
+ OUT: <cat <-> lion>?  {22 : 1;4} 
+4
+ OUT: <dog <-> tiger>?  {26 : 3;4} 
+4
+ OUT: <cat <-> lion>. %0.81;0.80% {30 : 3;2} 
+2
+ OUT: <dog <-> lion>. %0.73;0.71% {32 : 2;3;1} 
+1
+ OUT: <dog <-> lion>. %0.73;0.71% {32 : 2;3;1} 
+1
+ OUT: <dog <-> lion>. %0.73;0.71% {34 : 2;3;1} 
+**** Induction and revision ****
+  IN: <bird --> swimmer>?  {0 : 1} 
+  IN: <swimmer --> bird>?  {0 : 2} 
+10
+  IN: <swan --> bird>. %1.00;0.90% {10 : 3} 
+  IN: <swan --> swimmer>. %1.00;0.90% {10 : 4} 
+3
+ OUT: <swan --> swimmer>?  {13 : 3;1} 
+ OUT: <swimmer --> swan>?  {13 : 3;1} 
+2
+ OUT: <swimmer --> bird>. %1.00;0.45% {15 : 4;3} 
+ OUT: <bird --> swimmer>. %1.00;0.45% {15 : 4;3} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {15 : 4;3} 
+ OUT: <swan --> (|,bird,swimmer)>. %1.00;0.81% {15 : 4;3} 
+ OUT: <swan --> (&,bird,swimmer)>. %1.00;0.81% {15 : 4;3} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {15 : 4;3} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {15 : 4;3} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {15 : 4;3} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {15 : 4;3} 
+1
+ OUT: <swimmer --> bird>. %1.00;0.45% {15 : 4;3} 
+ OUT: <bird --> swimmer>. %1.00;0.45% {15 : 4;3} 
+3
+ OUT: <swimmer --> swan>?  {19 : 3;2} 
+ OUT: <swan --> swimmer>?  {19 : 3;2} 
+ OUT: <swan <-> swimmer>?  {19 : 3;2} 
+1
+  IN: <gull --> bird>. %1.00;0.90% {20 : 5} 
+  IN: <gull --> swimmer>. %1.00;0.90% {20 : 6} 
+1
+ OUT: <gull --> swimmer>?  {21 : 5;1} 
+ OUT: <swimmer --> gull>?  {21 : 5;1} 
+2
+ OUT: <swimmer --> bird>. %1.00;0.45% {23 : 4;3} 
+1
+ OUT: <gull --> swimmer>. %1.00;0.40% {24 : 4;5;3} 
+ OUT: <swimmer --> gull>. %1.00;0.29% {24 : 4;5;3} 
+1
+ OUT: <gull --> swimmer>. %1.00;0.91% {25 : 4;6;5;3} 
+5
+ OUT: <swimmer --> bird>. %1.00;0.45% {30 : 6;5} 
+ OUT: <bird --> swimmer>. %1.00;0.45% {30 : 6;5} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {30 : 6;5} 
+ OUT: <gull --> (|,bird,swimmer)>. %1.00;0.81% {30 : 6;5} 
+ OUT: <gull --> (&,bird,swimmer)>. %1.00;0.81% {30 : 6;5} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {30 : 6;5} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {30 : 6;5} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {30 : 6;5} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {30 : 6;5} 
+1
+ OUT: <swimmer --> bird>. %1.00;0.62% {31 : 4;6;3;5} 
+ OUT: <bird --> swimmer>. %1.00;0.62% {31 : 4;6;3;5} 
+ OUT: <bird <-> swimmer>. %1.00;0.62% {31 : 4;6;3;5} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.62% {31 : 4;6;3;5} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.62% {31 : 4;6;3;5} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.62% {31 : 4;6;3;5} 
+1
+ OUT: <swimmer --> bird>. %1.00;0.62% {31 : 4;6;3;5} 
+ OUT: <bird --> swimmer>. %1.00;0.62% {31 : 4;6;3;5} 
+2
+ OUT: <bird --> swimmer>. %1.00;0.45% {34 : 3;4} 
+ OUT: <swimmer --> bird>. %1.00;0.45% {34 : 3;4} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {34 : 3;4} 
+ OUT: <swan --> (|,bird,swimmer)>. %1.00;0.81% {34 : 3;4} 
+ OUT: <swan --> (&,bird,swimmer)>. %1.00;0.81% {34 : 3;4} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {34 : 3;4} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {34 : 3;4} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {34 : 3;4} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {34 : 3;4} 
+6
+  IN: <crow --> bird>. %1.00;0.90% {40 : 7} 
+  IN: (--,<crow --> swimmer>). %1.00;0.90% {40 : 8} 
+4
+ OUT: <crow --> swimmer>. %0.00;0.90% {44 : 8} 
+1
+ OUT: <bird --> swimmer>. %1.00;0.45% {45 : 5;6} 
+ OUT: <swimmer --> bird>. %1.00;0.45% {45 : 5;6} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {45 : 5;6} 
+ OUT: <gull --> (|,bird,swimmer)>. %1.00;0.81% {45 : 5;6} 
+ OUT: <gull --> (&,bird,swimmer)>. %1.00;0.81% {45 : 5;6} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {45 : 5;6} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {45 : 5;6} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {45 : 5;6} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {45 : 5;6} 
+1
+ OUT: <swan --> gull>. %1.00;0.45% {46 : 5;3} 
+ OUT: <gull --> swan>. %1.00;0.45% {46 : 5;3} 
+ OUT: <gull <-> swan>. %1.00;0.45% {46 : 5;3} 
+ OUT: <(&,gull,swan) --> bird>. %1.00;0.81% {46 : 5;3} 
+ OUT: <(|,gull,swan) --> bird>. %1.00;0.81% {46 : 5;3} 
+ OUT: <<swan --> $1> ==> <gull --> $1>>. %1.00;0.45% {46 : 5;3} 
+ OUT: <<gull --> $1> ==> <swan --> $1>>. %1.00;0.45% {46 : 5;3} 
+ OUT: <<gull --> $1> <=> <swan --> $1>>. %1.00;0.45% {46 : 5;3} 
+ OUT: (&&,<gull --> #1>,<swan --> #1>). %1.00;0.81% {46 : 5;3} 
+1
+ OUT: <crow --> bird>. %0.00;0.36% {47 : 4;8;6;3;5} 
+1
+ OUT: <crow --> bird>. %0.94;0.91% {48 : 4;7;8;6;3;5} 
+6
+ OUT: <swan --> gull>. %1.00;0.40% {54 : 6;4;5;3} 
+ OUT: <gull --> swan>. %1.00;0.40% {54 : 6;4;5;3} 
+ OUT: <gull <-> swan>. %1.00;0.40% {54 : 6;4;5;3} 
+ OUT: <(&,gull,swan) --> (|,bird,swimmer)>. %1.00;0.66% {54 : 6;4;5;3} 
+ OUT: <(|,gull,swan) --> (|,bird,swimmer)>. %1.00;0.66% {54 : 6;4;5;3} 
+ OUT: <<swan --> $1> ==> <gull --> $1>>. %1.00;0.40% {54 : 6;4;5;3} 
+ OUT: <<gull --> $1> ==> <swan --> $1>>. %1.00;0.40% {54 : 6;4;5;3} 
+ OUT: <<gull --> $1> <=> <swan --> $1>>. %1.00;0.40% {54 : 6;4;5;3} 
+ OUT: (&&,<gull --> #1>,<swan --> #1>). %1.00;0.66% {54 : 6;4;5;3} 
+1
+ OUT: <swan --> bird>. %1.00;0.81% {55 : 4;3} 
+9
+ OUT: <gull --> swimmer>. %1.00;0.40% {64 : 5;4;3} 
+ OUT: <swimmer --> gull>. %1.00;0.29% {64 : 5;4;3} 
+7
+ OUT: <crow --> swimmer>. %0.00;0.90% {71 : 8} 
+7
+ OUT: <gull --> swimmer>. %1.00;0.40% {78 : 3;5;4} 
+5
+ OUT: <crow --> swimmer>. %0.00;0.90% {83 : 8} 
+1
+ OUT: <bird --> swimmer>. %0.00;0.45% {84 : 8;7} 
+ OUT: <bird <-> swimmer>. %0.00;0.45% {84 : 8;7} 
+ OUT: <crow --> (|,bird,swimmer)>. %1.00;0.81% {84 : 8;7} 
+ OUT: <crow --> (-,bird,swimmer)>. %1.00;0.81% {84 : 8;7} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %0.00;0.45% {84 : 8;7} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %0.00;0.45% {84 : 8;7} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %0.00;0.81% {84 : 8;7} 
+1
+ OUT: <bird --> swimmer>. %0.67;0.71% {85 : 4;8;6;7;3;5} 
+ OUT: <bird <-> swimmer>. %0.67;0.71% {85 : 4;8;6;7;3;5} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %0.67;0.71% {85 : 4;8;6;7;3;5} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %0.67;0.71% {85 : 4;8;6;7;3;5} 
+1
+ OUT: <bird --> swimmer>. %0.67;0.71% {85 : 4;8;6;7;3;5} 
+**** Mixed Inference ****
+  IN: <swan --> bird>. %1.00;0.90% {0 : 1} 
+  IN: <swan --> swimmer>. %1.00;0.90% {0 : 2} 
+  IN: <gull --> bird>. %1.00;0.90% {0 : 3} 
+  IN: <gull --> swimmer>. %1.00;0.90% {0 : 4} 
+  IN: <bird --> swimmer>?  {0 : 5} 
+2
+ OUT: <swan --> swimmer>?  {2 : 1;5} 
+ OUT: <swimmer --> swan>?  {2 : 1;5} 
+2
+ OUT: <gull --> swimmer>?  {4 : 3;5} 
+ OUT: <swimmer --> gull>?  {4 : 3;5} 
+5
+ OUT: <bird --> swan>?  {9 : 2;5} 
+ OUT: <swan --> bird>?  {9 : 2;5} 
+ OUT: <bird <-> swan>?  {9 : 2;5} 
+10
+ OUT: <swimmer --> bird>. %1.00;0.45% {19 : 4;3} 
+ OUT: <bird --> swimmer>. %1.00;0.45% {19 : 4;3} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {19 : 4;3} 
+ OUT: <gull --> (|,bird,swimmer)>. %1.00;0.81% {19 : 4;3} 
+ OUT: <gull --> (&,bird,swimmer)>. %1.00;0.81% {19 : 4;3} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {19 : 4;3} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {19 : 4;3} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {19 : 4;3} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {19 : 4;3} 
+1
+ OUT: <bird --> swimmer>. %1.00;0.45% {19 : 4;3} 
+3
+ OUT: <swimmer --> bird>. %1.00;0.45% {23 : 2;1} 
+ OUT: <bird --> swimmer>. %1.00;0.45% {23 : 2;1} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {23 : 2;1} 
+ OUT: <swan --> (|,bird,swimmer)>. %1.00;0.81% {23 : 2;1} 
+ OUT: <swan --> (&,bird,swimmer)>. %1.00;0.81% {23 : 2;1} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {23 : 2;1} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {23 : 2;1} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {23 : 2;1} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {23 : 2;1} 
+1
+ OUT: <bird --> swimmer>. %1.00;0.62% {24 : 4;2;3;1} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.62% {24 : 4;2;3;1} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.62% {24 : 4;2;3;1} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.62% {24 : 4;2;3;1} 
+1
+ OUT: <bird --> swimmer>. %1.00;0.62% {24 : 4;2;3;1} 
+1
+ OUT: <gull --> swimmer>?  {26 : 3;5} 
+ OUT: <swimmer --> gull>?  {26 : 3;5} 
+2
+ OUT: <bird --> swimmer>. %1.00;0.45% {28 : 1;2} 
+ OUT: <swimmer --> bird>. %1.00;0.45% {28 : 1;2} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {28 : 1;2} 
+ OUT: <swan --> (|,bird,swimmer)>. %1.00;0.81% {28 : 1;2} 
+ OUT: <swan --> (&,bird,swimmer)>. %1.00;0.81% {28 : 1;2} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {28 : 1;2} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {28 : 1;2} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {28 : 1;2} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {28 : 1;2} 
+2
+  IN: <robin --> [feathered]>. %1.00;0.90% {30 : 6} 
+  IN: <bird --> [feathered]>. %1.00;0.90% {30 : 7} 
+  IN: <robin --> bird>?  {30 : 8} 
+9
+ OUT: <robin --> bird>. %1.00;0.45% {39 : 7;6} 
+ OUT: <bird --> robin>. %1.00;0.45% {39 : 7;6} 
+ OUT: <bird <-> robin>. %1.00;0.45% {39 : 7;6} 
+ OUT: <(&,bird,robin) --> [feathered]>. %1.00;0.81% {39 : 7;6} 
+ OUT: <(|,bird,robin) --> [feathered]>. %1.00;0.81% {39 : 7;6} 
+ OUT: <<robin --> $1> ==> <bird --> $1>>. %1.00;0.45% {39 : 7;6} 
+ OUT: <<bird --> $1> ==> <robin --> $1>>. %1.00;0.45% {39 : 7;6} 
+ OUT: <<bird --> $1> <=> <robin --> $1>>. %1.00;0.45% {39 : 7;6} 
+ OUT: (&&,<bird --> #1>,<robin --> #1>). %1.00;0.81% {39 : 7;6} 
+1
+ OUT: <robin --> bird>. %1.00;0.45% {39 : 7;6} 
+1
+ OUT: <robin --> bird>. %1.00;0.45% {41 : 7;6} 
+ OUT: <bird --> robin>. %1.00;0.45% {41 : 7;6} 
+ OUT: <bird <-> robin>. %1.00;0.45% {41 : 7;6} 
+ OUT: <(&,bird,robin) --> [feathered]>. %1.00;0.81% {41 : 7;6} 
+ OUT: <(|,bird,robin) --> [feathered]>. %1.00;0.81% {41 : 7;6} 
+ OUT: <<robin --> $1> ==> <bird --> $1>>. %1.00;0.45% {41 : 7;6} 
+ OUT: <<bird --> $1> ==> <robin --> $1>>. %1.00;0.45% {41 : 7;6} 
+ OUT: <<bird --> $1> <=> <robin --> $1>>. %1.00;0.45% {41 : 7;6} 
+ OUT: (&&,<bird --> #1>,<robin --> #1>). %1.00;0.81% {41 : 7;6} 
+2
+ OUT: <bird --> swimmer>. %1.00;0.45% {43 : 3;4} 
+ OUT: <swimmer --> bird>. %1.00;0.45% {43 : 3;4} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {43 : 3;4} 
+ OUT: <gull --> (|,bird,swimmer)>. %1.00;0.81% {43 : 3;4} 
+ OUT: <gull --> (&,bird,swimmer)>. %1.00;0.81% {43 : 3;4} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {43 : 3;4} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {43 : 3;4} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {43 : 3;4} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {43 : 3;4} 
+1
+ OUT: <swimmer --> bird>. %1.00;0.62% {44 : 1;3;2;4} 
+ OUT: <bird <-> swimmer>. %1.00;0.62% {44 : 1;3;2;4} 
+7
+ OUT: <[feathered] --> bird>?  {51 : 6;8} 
+ OUT: <bird --> [feathered]>?  {51 : 6;8} 
+ OUT: <[feathered] <-> bird>?  {51 : 6;8} 
+2
+ OUT: <robin --> bird>. %1.00;0.45% {53 : 7;6} 
+7
+  IN: <robin --> swimmer>?  {60 : 9} 
+6
+ OUT: <bird --> bird>. %1.00;0.20% {66 : 2;3;1;4} 
+15
+ OUT: <bird --> [feathered]>. %1.00;0.81% {81 : 7;6} 
+9
+ OUT: <swimmer --> bird>. %1.00;0.45% {90 : 2;1} 
+ OUT: <bird --> swimmer>. %1.00;0.45% {90 : 2;1} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {90 : 2;1} 
+ OUT: <swan --> (|,bird,swimmer)>. %1.00;0.81% {90 : 2;1} 
+ OUT: <swan --> (&,bird,swimmer)>. %1.00;0.81% {90 : 2;1} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {90 : 2;1} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {90 : 2;1} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {90 : 2;1} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {90 : 2;1} 
+6
+ OUT: <robin --> bird>. %1.00;0.45% {96 : 7;6} 
+1
+ OUT: <swimmer --> bird>. %1.00;0.45% {97 : 4;3} 
+ OUT: <bird --> swimmer>. %1.00;0.45% {97 : 4;3} 
+ OUT: <bird <-> swimmer>. %1.00;0.45% {97 : 4;3} 
+ OUT: <gull --> (|,bird,swimmer)>. %1.00;0.81% {97 : 4;3} 
+ OUT: <gull --> (&,bird,swimmer)>. %1.00;0.81% {97 : 4;3} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %1.00;0.45% {97 : 4;3} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.45% {97 : 4;3} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %1.00;0.45% {97 : 4;3} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %1.00;0.81% {97 : 4;3} 
+3
+ OUT: <bird --> robin>. %1.00;0.45% {100 : 6;7} 
+ OUT: <robin --> bird>. %1.00;0.45% {100 : 6;7} 
+ OUT: <bird <-> robin>. %1.00;0.45% {100 : 6;7} 
+ OUT: <(&,bird,robin) --> [feathered]>. %1.00;0.81% {100 : 6;7} 
+ OUT: <(|,bird,robin) --> [feathered]>. %1.00;0.81% {100 : 6;7} 
+ OUT: <<bird --> $1> ==> <robin --> $1>>. %1.00;0.45% {100 : 6;7} 
+ OUT: <<robin --> $1> ==> <bird --> $1>>. %1.00;0.45% {100 : 6;7} 
+ OUT: <<bird --> $1> <=> <robin --> $1>>. %1.00;0.45% {100 : 6;7} 
+ OUT: (&&,<bird --> #1>,<robin --> #1>). %1.00;0.81% {100 : 6;7} 
+1
+ OUT: <bird --> robin>. %1.00;0.45% {101 : 6;7} 
+ OUT: <robin --> bird>. %1.00;0.45% {101 : 6;7} 
+ OUT: <bird <-> robin>. %1.00;0.45% {101 : 6;7} 
+ OUT: <(&,bird,robin) --> [feathered]>. %1.00;0.81% {101 : 6;7} 
+ OUT: <(|,bird,robin) --> [feathered]>. %1.00;0.81% {101 : 6;7} 
+ OUT: <<bird --> $1> ==> <robin --> $1>>. %1.00;0.45% {101 : 6;7} 
+ OUT: <<robin --> $1> ==> <bird --> $1>>. %1.00;0.45% {101 : 6;7} 
+ OUT: <<bird --> $1> <=> <robin --> $1>>. %1.00;0.45% {101 : 6;7} 
+ OUT: (&&,<bird --> #1>,<robin --> #1>). %1.00;0.81% {101 : 6;7} 
+4
+ OUT: <robin --> swimmer>. %1.00;0.28% {105 : 4;7;2;6;3;1} 
+1
+ OUT: <robin --> swimmer>. %1.00;0.28% {105 : 4;7;2;6;3;1} 
+**** Semi-compositionality ****
+  IN: <light --> traffic_signal>. %0.10;0.90% {0 : 1} 
+  IN: <[red] --> traffic_signal>. %0.10;0.90% {0 : 2} 
+1
+ OUT: <[red] --> light>. %0.10;0.07% {1 : 1;2} 
+ OUT: <light --> [red]>. %0.10;0.07% {1 : 1;2} 
+ OUT: <[red] <-> light>. %0.05;0.13% {1 : 1;2} 
+ OUT: <(&,[red],light) --> traffic_signal>. %0.19;0.81% {1 : 1;2} 
+ OUT: (&&,<[red] --> #1>,<light --> #1>). %0.01;0.81% {1 : 1;2} 
+1
+ OUT: <light --> [red]>. %0.10;0.07% {2 : 2;1} 
+ OUT: <[red] --> light>. %0.10;0.07% {2 : 2;1} 
+ OUT: <[red] <-> light>. %0.05;0.13% {2 : 2;1} 
+ OUT: <(&,[red],light) --> traffic_signal>. %0.19;0.81% {2 : 2;1} 
+ OUT: (&&,<[red] --> #1>,<light --> #1>). %0.01;0.81% {2 : 2;1} 
+8
+  IN: <(&,[red],light) --> traffic_signal>?  {10 : 3} 
+7
+ OUT: <light --> [red]>. %0.10;0.07% {17 : 2;1} 
+ OUT: <[red] --> light>. %0.10;0.07% {17 : 2;1} 
+ OUT: <[red] <-> light>. %0.05;0.13% {17 : 2;1} 
+ OUT: <(&,[red],light) --> traffic_signal>. %0.19;0.81% {17 : 2;1} 
+ OUT: (&&,<[red] --> #1>,<light --> #1>). %0.01;0.81% {17 : 2;1} 
+1
+ OUT: <(&,[red],light) --> traffic_signal>. %0.19;0.81% {17 : 2;1} 
+1
+ OUT: <[red] <-> traffic_signal>. %0.10;0.90% {19 : 2} 
+1
+  IN: <{light_1} --> (&,[red],light)>. %1.00;0.90% {20 : 4} 
+  IN: <{light_1} --> traffic_signal>. %1.00;0.90% {20 : 5} 
+3
+ OUT: <[red] --> light>. %0.10;0.07% {23 : 1;2} 
+ OUT: <light --> [red]>. %0.10;0.07% {23 : 1;2} 
+ OUT: <[red] <-> light>. %0.05;0.13% {23 : 1;2} 
+ OUT: <(&,[red],light) --> traffic_signal>. %0.19;0.81% {23 : 1;2} 
+ OUT: (&&,<[red] --> #1>,<light --> #1>). %0.01;0.81% {23 : 1;2} 
+7
+  IN: <{light_2} --> (&,[red],light)>. %1.00;0.90% {30 : 6} 
+  IN: <{light_2} --> traffic_signal>. %1.00;0.90% {30 : 7} 
+2
+ OUT: <(&,[red],light) --> traffic_signal>. %1.00;0.45% {32 : 4;5} 
+ OUT: <traffic_signal --> (&,[red],light)>. %1.00;0.45% {32 : 4;5} 
+ OUT: <(&,[red],light) <-> traffic_signal>. %1.00;0.45% {32 : 4;5} 
+ OUT: <{light_1} --> (|,(&,[red],light),traffic_signal)>. %1.00;0.81% {32 : 4;5} 
+ OUT: <{light_1} --> (&,[red],light,traffic_signal)>. %1.00;0.81% {32 : 4;5} 
+ OUT: <<$1 --> traffic_signal> ==> <$1 --> (&,[red],light)>>. %1.00;0.45% {32 : 4;5} 
+ OUT: <<$1 --> (&,[red],light)> ==> <$1 --> traffic_signal>>. %1.00;0.45% {32 : 4;5} 
+ OUT: <<$1 --> (&,[red],light)> <=> <$1 --> traffic_signal>>. %1.00;0.45% {32 : 4;5} 
+ OUT: (&&,<#1 --> (&,[red],light)>,<#1 --> traffic_signal>). %1.00;0.81% {32 : 4;5} 
+1
+ OUT: <(&,[red],light) --> traffic_signal>. %0.32;0.84% {33 : 2;4;1;5} 
+1
+ OUT: <(&,[red],light) --> traffic_signal>. %0.32;0.84% {33 : 2;4;1;5} 
+1
+ OUT: <(&,[red],light) --> traffic_signal>. %1.00;0.45% {35 : 6;7} 
+ OUT: <traffic_signal --> (&,[red],light)>. %1.00;0.45% {35 : 6;7} 
+ OUT: <(&,[red],light) <-> traffic_signal>. %1.00;0.45% {35 : 6;7} 
+ OUT: <{light_2} --> (|,(&,[red],light),traffic_signal)>. %1.00;0.81% {35 : 6;7} 
+ OUT: <{light_2} --> (&,[red],light,traffic_signal)>. %1.00;0.81% {35 : 6;7} 
+ OUT: <<$1 --> traffic_signal> ==> <$1 --> (&,[red],light)>>. %1.00;0.45% {35 : 6;7} 
+ OUT: <<$1 --> (&,[red],light)> ==> <$1 --> traffic_signal>>. %1.00;0.45% {35 : 6;7} 
+ OUT: <<$1 --> (&,[red],light)> <=> <$1 --> traffic_signal>>. %1.00;0.45% {35 : 6;7} 
+ OUT: (&&,<#1 --> (&,[red],light)>,<#1 --> traffic_signal>). %1.00;0.81% {35 : 6;7} 
+1
+ OUT: <(&,[red],light) --> traffic_signal>. %0.41;0.85% {36 : 2;6;4;7;1;5} 
+1
+ OUT: <(&,[red],light) --> traffic_signal>. %0.41;0.85% {36 : 2;6;4;7;1;5} 
+1
+ OUT: <(&,[red],light) --> traffic_signal>. %1.00;0.45% {38 : 6;7} 
+ OUT: <traffic_signal --> (&,[red],light)>. %1.00;0.45% {38 : 6;7} 
+ OUT: <(&,[red],light) <-> traffic_signal>. %1.00;0.45% {38 : 6;7} 
+ OUT: <{light_2} --> (|,(&,[red],light),traffic_signal)>. %1.00;0.81% {38 : 6;7} 
+ OUT: <{light_2} --> (&,[red],light,traffic_signal)>. %1.00;0.81% {38 : 6;7} 
+ OUT: <<$1 --> traffic_signal> ==> <$1 --> (&,[red],light)>>. %1.00;0.45% {38 : 6;7} 
+ OUT: <<$1 --> (&,[red],light)> ==> <$1 --> traffic_signal>>. %1.00;0.45% {38 : 6;7} 
+ OUT: <<$1 --> (&,[red],light)> <=> <$1 --> traffic_signal>>. %1.00;0.45% {38 : 6;7} 
+ OUT: (&&,<#1 --> (&,[red],light)>,<#1 --> traffic_signal>). %1.00;0.81% {38 : 6;7} 
+**** Fuzzy Concept ****
+  IN: <{John} --> boy>. %1.00;0.90% {0 : 1} 
+  IN: <{John} --> (/,taller_than,{Tom},_)>. %1.00;0.90% {0 : 2} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,{John})>. %1.00;0.90% {1 : 2} 
+ OUT: <(*,{Tom},{John}) --> taller_than>. %1.00;0.90% {1 : 2} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {2 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {2 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {2 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {2 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {2 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {2 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {2 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {2 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {2 : 2;1} 
+8
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {10 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {10 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {10 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {10 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {10 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {10 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {10 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {10 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {10 : 2;1} 
+  IN: <{Tom} --> (/,taller_than,_,boy)>?  {10 : 3} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %1.00;0.45% {11 : 2;1} 
+ OUT: <(*,{Tom},boy) --> taller_than>. %1.00;0.45% {11 : 2;1} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %1.00;0.45% {11 : 2;1} 
+4
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {16 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {16 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {16 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {16 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {16 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {16 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {16 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {16 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {16 : 2;1} 
+4
+  IN: <{David} --> boy>. %1.00;0.90% {20 : 4} 
+  IN: (--,<{David} --> (/,taller_than,{Tom},_)>). %1.00;0.90% {20 : 5} 
+4
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %0.00;0.90% {24 : 5} 
+2
+ OUT: <{Tom} --> (/,taller_than,_,{John})>. %1.00;0.90% {26 : 2} 
+ OUT: <(*,{Tom},{John}) --> taller_than>. %1.00;0.90% {26 : 2} 
+3
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {29 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {29 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {29 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {29 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {29 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {29 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {29 : 5;4} 
+1
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.50;0.62% {30 : 2;5;1;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.50;0.62% {30 : 2;5;1;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.50;0.62% {30 : 2;5;1;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.50;0.62% {30 : 2;5;1;4} 
+9
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %0.00;0.90% {39 : 5} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {40 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {40 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {40 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {40 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {40 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {40 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {40 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {40 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {40 : 2;1} 
+4
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {44 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {44 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {44 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {44 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {44 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {44 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {44 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {44 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {44 : 2;1} 
+1
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {45 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {45 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {45 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {45 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {45 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {45 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {45 : 5;4} 
+2
+ OUT: <{Tom} --> (/,taller_than,_,{John})>. %1.00;0.90% {47 : 2} 
+ OUT: <(*,{Tom},{John}) --> taller_than>. %1.00;0.90% {47 : 2} 
+6
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %1.00;0.29% {53 : 2;4;1} 
+1
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %0.04;0.90% {54 : 2;5;4;1} 
+5
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {59 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {59 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {59 : 1;2} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {59 : 1;2} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {59 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {59 : 1;2} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {59 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {59 : 1;2} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {59 : 1;2} 
+3
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {62 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {62 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {62 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {62 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {62 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {62 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {62 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {62 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {62 : 2;1} 
+10
+ OUT: <{David} --> boy>. %0.00;0.29% {72 : 2;5;1} 
+ OUT: <boy <-> {David}>. %0.00;0.29% {72 : 2;5;1} 
+ OUT: <(&,boy,{David}) --> (/,taller_than,{Tom},_)>. %1.00;0.40% {72 : 2;5;1} 
+ OUT: <(~,boy,{David}) --> (/,taller_than,{Tom},_)>. %1.00;0.40% {72 : 2;5;1} 
+ OUT: <<boy --> $1> ==> <{David} --> $1>>. %0.00;0.29% {72 : 2;5;1} 
+ OUT: <<boy --> $1> <=> <{David} --> $1>>. %0.00;0.29% {72 : 2;5;1} 
+ OUT: (&&,<boy --> #1>,<{David} --> #1>). %0.00;0.40% {72 : 2;5;1} 
+1
+ OUT: <{David} --> boy>. %0.96;0.90% {73 : 2;4;5;1} 
+5
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %0.00;0.20% {78 : 5;2;4;1} 
+3
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %0.00;0.90% {81 : 5} 
+3
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %1.00;0.40% {84 : 2;4;1} 
+ OUT: <(/,taller_than,{Tom},_) --> {David}>. %1.00;0.29% {84 : 2;4;1} 
+2
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %0.00;0.20% {86 : 5;2;4;1} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {87 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {87 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {87 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {87 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {87 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {87 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {87 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {87 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {87 : 2;1} 
+4
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {91 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {91 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {91 : 1;2} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {91 : 1;2} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {91 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {91 : 1;2} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {91 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {91 : 1;2} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {91 : 1;2} 
+3
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {94 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {94 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {94 : 1;2} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {94 : 1;2} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {94 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {94 : 1;2} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {94 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {94 : 1;2} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {94 : 1;2} 
+2
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {96 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {96 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {96 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {96 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {96 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {96 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {96 : 5;4} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {97 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {97 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {97 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {97 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {97 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {97 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {97 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {97 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {97 : 2;1} 
+13
+ OUT: <{David} --> boy>. %0.00;0.40% {110 : 2;5;1} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %1.00;0.45% {111 : 2;1} 
+ OUT: <(*,{Tom},boy) --> taller_than>. %1.00;0.45% {111 : 2;1} 
+3
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {114 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {114 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {114 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {114 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {114 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {114 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {114 : 5;4} 
+1
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %0.00;0.90% {115 : 5} 
+2
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {117 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {117 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {117 : 1;2} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {117 : 1;2} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {117 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {117 : 1;2} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {117 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {117 : 1;2} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {117 : 1;2} 
+13
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {130 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {130 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {130 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {130 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {130 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {130 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {130 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {130 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {130 : 2;1} 
+8
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %0.00;0.20% {138 : 5;2;4;1} 
+1
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {139 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {139 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {139 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {139 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {139 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {139 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {139 : 5;4} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %0.00;0.20% {140 : 5;2;4;1} 
+2
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {142 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {142 : 1;2} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {142 : 1;2} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {142 : 1;2} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {142 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {142 : 1;2} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {142 : 1;2} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {142 : 1;2} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {142 : 1;2} 
+14
+ OUT: <{David} --> boy>. %0.00;0.29% {156 : 1;5;2} 
+4
+ OUT: (&&,<#1 --> boy>,<{Tom} --> (/,taller_than,_,#1)>). %1.00;0.81% {160 : 1;2} 
+2
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %0.00;0.90% {162 : 5} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,{John})>. %1.00;0.90% {163 : 2} 
+ OUT: <(*,{Tom},{John}) --> taller_than>. %1.00;0.90% {163 : 2} 
+3
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %1.00;0.40% {166 : 1;4;2} 
+5
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %0.00;0.90% {171 : 5} 
+2
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {173 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {173 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {173 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {173 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {173 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {173 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {173 : 5;4} 
+5
+ OUT: <boy --> boy>?  {178 : 1;3;2} 
+8
+ OUT: <<$1 --> boy> <=> <{Tom} --> (/,taller_than,_,$1)>>. %1.00;0.45% {186 : 1;2} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %0.00;0.45% {187 : 5;4} 
+ OUT: <(*,{Tom},boy) --> taller_than>. %0.00;0.45% {187 : 5;4} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %0.50;0.62% {188 : 2;5;1;4} 
+ OUT: <(*,{Tom},boy) --> taller_than>. %0.50;0.62% {188 : 2;5;1;4} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %0.50;0.62% {188 : 2;5;1;4} 
+2
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {191 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {191 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {191 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {191 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {191 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {191 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {191 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {191 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {191 : 2;1} 
+7
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {198 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {198 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {198 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {198 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {198 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {198 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {198 : 5;4} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {199 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {199 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {199 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {199 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {199 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {199 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {199 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {199 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {199 : 2;1} 
+4
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {203 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {203 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {203 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {203 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {203 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {203 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {203 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {203 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {203 : 2;1} 
+1
+ OUT: (--,<{David} --> (/,taller_than,{Tom},_)>). %0.00;0.40% {204 : 1;4;2} 
+1
+ OUT: (--,<{David} --> (/,taller_than,{Tom},_)>). %0.93;0.91% {205 : 1;5;4;2} 
+9
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {214 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {214 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {214 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {214 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {214 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {214 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {214 : 5;4} 
+6
+  IN: <{Karl} --> boy>. %1.00;0.90% {220 : 6} 
+  IN: <{Karl} --> (/,taller_than,{Tom},_)>. %1.00;0.90% {220 : 7} 
+2
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {222 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {222 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {222 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {222 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {222 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {222 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {222 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {222 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {222 : 2;1} 
+29
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {251 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {251 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {251 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {251 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {251 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {251 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {251 : 5;4} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {252 : 7;6} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {252 : 7;6} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {252 : 7;6} 
+ OUT: <{Karl} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {252 : 7;6} 
+ OUT: <{Karl} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {252 : 7;6} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {252 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {252 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {252 : 7;6} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {252 : 7;6} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.62% {253 : 2;7;1;6} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.67;0.71% {253 : 2;7;5;6;1;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.67;0.71% {253 : 2;7;5;6;1;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.67;0.71% {253 : 2;7;5;6;1;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.62% {253 : 2;7;1;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.67;0.71% {253 : 2;7;5;6;1;4} 
+1
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {254 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {254 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {254 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {254 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {254 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {254 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {254 : 5;4} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {255 : 7;6} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {255 : 7;6} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {255 : 7;6} 
+ OUT: <{Karl} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {255 : 7;6} 
+ OUT: <{Karl} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {255 : 7;6} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {255 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {255 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {255 : 7;6} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {255 : 7;6} 
+1
+ OUT: (--,<{David} --> (/,taller_than,{Tom},_)>). %0.00;0.40% {256 : 1;4;2} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {257 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {257 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {257 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {257 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {257 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {257 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {257 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {257 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {257 : 2;1} 
+7
+ OUT: <{John} --> (/,taller_than,{Tom},_)>. %1.00;0.29% {264 : 7;1;6} 
+1
+ OUT: <{John} --> (/,taller_than,{Tom},_)>. %1.00;0.90% {265 : 7;2;1;6} 
+7
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {272 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {272 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {272 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {272 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {272 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {272 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {272 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {272 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {272 : 2;1} 
+4
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {276 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {276 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {276 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {276 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {276 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {276 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {276 : 5;4} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {277 : 7;6} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {277 : 7;6} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {277 : 7;6} 
+ OUT: <{Karl} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {277 : 7;6} 
+ OUT: <{Karl} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {277 : 7;6} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {277 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {277 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {277 : 7;6} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {277 : 7;6} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {278 : 7;6} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {278 : 7;6} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {278 : 7;6} 
+ OUT: <{Karl} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {278 : 7;6} 
+ OUT: <{Karl} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {278 : 7;6} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {278 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {278 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {278 : 7;6} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {278 : 7;6} 
+3
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %0.67;0.71% {281 : 2;7;5;6;1;4} 
+ OUT: <(*,{Tom},boy) --> taller_than>. %0.67;0.71% {281 : 2;7;5;6;1;4} 
+1
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %0.67;0.71% {281 : 2;7;5;6;1;4} 
+1
+ OUT: <(*,{Tom},boy) --> taller_than>?  {283 : 3} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>?  {283 : 3} 
+5
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {288 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {288 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {288 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {288 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {288 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {288 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {288 : 5;4} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {289 : 7;6} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {289 : 7;6} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {289 : 7;6} 
+ OUT: <{Karl} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {289 : 7;6} 
+ OUT: <{Karl} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {289 : 7;6} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {289 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {289 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {289 : 7;6} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {289 : 7;6} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {290 : 7;6} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {290 : 7;6} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {290 : 7;6} 
+ OUT: <{Karl} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {290 : 7;6} 
+ OUT: <{Karl} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {290 : 7;6} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {290 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {290 : 7;6} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {290 : 7;6} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {290 : 7;6} 
+7
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %0.00;0.45% {297 : 5;4} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %0.00;0.45% {297 : 5;4} 
+ OUT: <{David} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {297 : 5;4} 
+ OUT: <{David} --> (-,boy,(/,taller_than,{Tom},_))>. %1.00;0.81% {297 : 5;4} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %0.00;0.45% {297 : 5;4} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %0.00;0.45% {297 : 5;4} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %0.00;0.81% {297 : 5;4} 
+1
+ OUT: <(/,taller_than,{Tom},_) --> boy>. %1.00;0.45% {298 : 2;1} 
+ OUT: <boy --> (/,taller_than,{Tom},_)>. %1.00;0.45% {298 : 2;1} 
+ OUT: <(/,taller_than,{Tom},_) <-> boy>. %1.00;0.45% {298 : 2;1} 
+ OUT: <{John} --> (|,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {298 : 2;1} 
+ OUT: <{John} --> (&,(/,taller_than,{Tom},_),boy)>. %1.00;0.81% {298 : 2;1} 
+ OUT: <<$1 --> boy> ==> <$1 --> (/,taller_than,{Tom},_)>>. %1.00;0.45% {298 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> ==> <$1 --> boy>>. %1.00;0.45% {298 : 2;1} 
+ OUT: <<$1 --> (/,taller_than,{Tom},_)> <=> <$1 --> boy>>. %1.00;0.45% {298 : 2;1} 
+ OUT: (&&,<#1 --> (/,taller_than,{Tom},_)>,<#1 --> boy>). %1.00;0.81% {298 : 2;1} 
+9
+ OUT: <{Tom} --> (/,taller_than,_,boy)>. %1.00;0.45% {307 : 2;1} 
+ OUT: <(*,{Tom},boy) --> taller_than>. %1.00;0.45% {307 : 2;1} 
+11
+ OUT: <{David} --> (/,taller_than,{Tom},_)>. %1.00;0.40% {318 : 2;4;1} 

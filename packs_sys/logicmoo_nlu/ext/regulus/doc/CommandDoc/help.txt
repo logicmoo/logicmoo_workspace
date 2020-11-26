@@ -1,0 +1,4 @@
+Print all available commands, together with short descriptions of what
+they do. It is usually preferable to restrict the search by giving an
+argument to {\tt HELP}, since there are many commands.
+

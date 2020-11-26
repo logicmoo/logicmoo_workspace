@@ -1,0 +1,47 @@
+Stardate 41123.7 
+
+Plot:
+
+The USS Enterprise scans a vessel deep within the alpha quadrant.
+
+When they investigate, they discover the science vessel Mendeleev.
+The vessel is drifting dead in space and visual scanning 
+
+The Enterprise hails the Mendeleev,
+
+Principal Researcher T'Syrna Knows-The-World appears on voice, but 
+they are not transmitting video. 
+
+Enterprise, we are having a few technical problems, but feel fuly equipped to handle them ourselves.
+We do not require assistance.
+
+
+
+screen. The bridge
+of the Mendeleev appears damaged. 
+
+The Mendeleev is damaged. The ship is partially depressurized, and the space suits are all in the depressurized section, so the crew of the mendeleev 
+
+
+Suits -
+characters are wearing a uniform. 'Suits' go over the uniform. They can be worn and taken off.
+
+if the char is in a vacuum and is not wearing a suit or their visor is up they get 'your blood is boiling' message for one turn, then die.
+
+when the visor is down the char is breathing from their air tank, whose pressure goes down 1 each turn. if the pressure reaches zero the character will get 'you cant breath' messages for next 3 turns, then die
+
+There is a current tank. If the char has only one tank it's current, if not, then whichever was current last frame is current.
+
+
+When worn, these verbs are added:
+check air (or just 'air') - reports number of turns of air left
+visor up
+visor down
+change tank - if the char has more than one tank in their inventory, the fullest one is exchanged for the current one. 
+
+Objects -
+
+
+
+
+[Area,Artifact-Generic,ArtifactCol1000,ArtifactCol1001,ArtifactCol1002,ArtifactCol1003,ArtifactCol1004,ArtifactCol1005,ArtifactCol1006,ArtifactCol1007,ArtifactCol1008,ArtifactCol1009,ArtifactCol1010,ArtifactCol1011,ArtifactCol1012,ArtifactCol1020,ArtifactCol1021,ArtifactCol1022,ArtifactCol1023,ArtifactCol1024,ArtifactCol1025,BPVLocation,Bottle,Container,ControlDevice,Device-SingleUser,FemaleAnimal,Flask-LabGlassware,FluidReservoir,FreeSpaceContent,FreeSpaceContext,HandTool,Handgun,Indoors-IsolatedFromOutside,InformationStore,LightingDevice,LimitedAccess,MaleAnimal,Necklace,NpcCol1000,NpcCol1001,NpcCol1002,NpcCol1003,NpcCol1004,NpcCol1005,NpcCol1006,NpcCol1007,NpcCol1008,NpcCol1009,NpcCol1010,NpcCol1011,NpcCol1012,NpcCol1013,PortableObject,Portal,ProtectiveAttire,RodShapedObject,ShipMap,SomethingToWear,SpaceInAHOC,TemporallyExistingThing,Weapon,action,actiontype,activeAgent,actor,agent,agenttype,apple,areaPath,argsIsaInList,assertionMacroHead,back_yard,ball,bear,bed,bed_room,blanket,book,book_type_a,book_type_b,bookcase,boolean,bottom_drawer,broccoli,candle,cellar,chair,channel,chargable,chargeable,closet,coat,coffee,coffee_cup,coffee_table,command,completeExtentAsserted,computer,container,corpsea,corpseb,corpsec,crackers,createableType,desk,dice,dining_room,dir,dirt,door,drawer,dresser,drinkable,easy_chair,eatable,edge,elixer,envelope,explorer,flagged_act_friend,flagged_act_nice_thief,flagged_act_sentinel,flagged_act_stay_zone,flagged_act_wimpy,flagged_aware,flagged_helper,flagged_memory,flagged_nobackstab,flagged_nobash,flagged_noblind,flagged_nocharm,flagged_nosleep,flagged_nosummon,flagged_npc_detect_invis,flagged_npc_notrack,flagged_npc_sanctuary,flagged_visor,flashlight,food,formatted,formattype,fpred,garden_plant,gold,gossup,green_apple,gueridon,hall,hide,high_box,high_wall,houseplant,human_player,int,item,key,kitchen,knife,ledge,light_switch,list,listValued,living_room,low_box,low_wall,machine,material_value,me,middle_drawer,mpred,multiValued,nani,nasty_knife,negationByFailure,nonGroundOK,npc_player,number,nut,obj,office,ordered,outlet,pajamas,pajams,pants,percent,pillow,pit,plant,planter,player,possessable,posture,prologBuiltin,prologHybrid,prologOnly,red_apple,region,regiontype,relation,rock,room,shape_value,shirt,sillyitem,singleValued,size_value,skin,sofa,spatialthing,stamp,stand_table,stowable,string,switch,table,teddy_bear,term,text,texture_value,top_drawer,torso,tough_hide,tree,type,typeDeclarer,usable,useable,value,var,verb,voprop,wall,washing_machine,wearable,wieldable,yard]

@@ -1,0 +1,152 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cslipubs-extra}[2002/01/09 CSLI publications extra macros]
+
+
+% This package contains (mainly for use as excerpts):
+%
+% 1. preset theorem-like environments
+%    includes a \begin{proof} \end{proof} environment
+%               \begin{display} \end{display} environment
+%
+% 2. AVM structures (though it might be better to use the AVM package
+%
+% 3. proof tree macro
+%
+% 4. typewriter-font macros
+%
+% 5. miscellaneous symbols
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% theorem-like environments
+\newtheorem{df}{Definition}
+\newenvironment{defn}{\begin{df}\rm}{\end{df}}
+\newenvironment{definition}{\begin{df}\rm}{\end{df}}
+\newtheorem{ax}{Axiom}
+\newenvironment{axiom}{\begin{ax}\rm}{\end{ax}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{thm}[theorem]{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{cor}[theorem]{Corollary}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lem}[theorem]{Lemma}
+\newtheorem{lemma}[theorem]{Lemma}
+\newenvironment{example}{\begin{ex}\rm}{\end{ex}}
+\newtheorem{exer}{Exercise}
+\newenvironment{exercise}{\begin{exer}\rm}{\end{exer}}
+
+\newenvironment{proof}{\noindent {\em Proof}.}{ %\vspace{\topsep}
+        {\unskip\nobreak\hfill\proofbox\vspace{\topsep}\par}}
+\newcommand{\proofbox}{{\larger\rlap{$\sqcup$}$\sqcap$}}
+ % \proofqed places a QED mark at end of last line of proof (in normal
+ % paragraph mode; to be used immediately before the \end{proof} command.
+\newcommand{\proofqed}{\hfill\proofbox}
+ % \eqnqed is for a QED sign at end of an \eqnarray.  Is supposed to put
+ % a QED mark at the right of any equation from where it is placed
+ % (hence the last one).  Use \nonumber with other equations?
+ % This assumes \leqno is NOT in effect.
+\def\eqnqed{{\renewcommand{\stepcounter}[1]{}\def\theequation{\proofbox}}}
+ % \arrayqed is for a QED sign when an array or tabular environment
+ % ends a proof.  Is used immediately after the \end{proof} command.
+\def\arrayqed{\par\vskip-\topsep\vskip-\baselineskip
+              \leavevmode\hbox{}\hfill\proofbox\vskip\topsep}
+
+% arbitrary theorem-like environment
+\newenvironment{display}[1]{\trivlist\item[\hskip\labelsep{\bf #1}]}{\endtrivlist}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AVM structures.  (Needs some work?)
+%
+% \outerfs{alpha & beta\\ gamma & delta}
+% produces
+% __              __
+% | alpha    beta  |
+% | gamma    delta |
+% --              --
+% 
+% \outerfs can be nested.  Note that you can use \\[+/-<#>ex] to
+% increase or decrease space between rows
+
+\def\outerfs#1{\mbox{$\left[\begin{tabular}{@{}ll@{}}#1\end{tabular}\right]$}}
+\let\avm=\outerfs
+
+%% Atleast for deeply nested avms, use the following:
+\def\AVM#1{$\!\left[\vcenter spread8pt{\vfil\tabskip=0pt
+                            \halign{##\hfil&\enspace ##\hfil\cr #1\cr}
+                            \vfil}\right]\!$}
+
+% Inside of enumsentence use with \evnup[2pt]{\outerfs{...}}
+% to ensure that top of feature structure lines up with the number.
+% It can take an argument to improve lining up.
+\def\evnup{\@ifnextchar[{\@evnup}{\@evnup[0pt]}} %]
+\def\@evnup[#1]#2{\setbox1=\hbox{#2}%
+\dimen1=\ht1 \advance\dimen1 by -.5\baselineskip%
+\advance\dimen1 by -#1%
+\leavevmode\lower\dimen1\box1}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% proof tree macro
+%                                A;B
+% \ddctn{A;B}{C}   produces     -----
+%                                 C             B
+% and can be nested:                           ---
+%                                           A   C
+% \ddctn{A\ \ \ddctn{B}{C}}{D}  produces   -------
+%                                             D
+% Can be used only in math mode.
+%
+\def\ddctn#1#2{\begin{array}[b]{@{}c@{}} #1 \\ \hline #2 \end{array}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% typewriter-font macros
+
+
+% fabricated boldface typewriter font (works best one word at a time):
+
+\newcommand  {\textbt}[1] {\texttt{\rlap{\hspace{.03em}#1}%
+                                   \rlap{\hspace{.03em}\raisebox{.01em}{#1}}%
+                                   \rlap              {\raisebox{.01em}{#1}}%
+                                   #1}}
+
+
+% ASCII characters whose LaTeX commands don't exist or insist on $math$ mode
+
+                                \let \LaTeXbackslash = \backslash
+\renewcommand {\backslash} {\ifmmode \LaTeXbackslash   \else \char'134 \fi}
+
+\newcommand   {\caret}     {\ifmmode \relax            \else \char'136 \fi}
+
+                                \let \LaTeXlbrace =    \lbrace
+\renewcommand {\lbrace}    {\ifmmode \LaTeXlbrace      \else \char'173 \fi}
+
+                                \let \LaTeXrbrace =    \rbrace
+\renewcommand {\rbrace}    {\ifmmode \LaTeXrbrace      \else \char'175 \fi}
+
+                                \let \LaTeXsim =       \sim
+\renewcommand {\sim}       {\ifmmode \LaTeXsim         \else \char'176 \fi}
+                                \let \LaTeXtilde =     \tilde
+\renewcommand {\tilde}     {\ifmmode \LaTeXtilde       \else \char'176 \fi}
+
+
+% for convenience
+
+\newcommand   {\braced}[1] {\lbrace{#1}\rbrace }   % e.g., \braced{X} --> {X}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% miscellaneous symbols
+
+\newcommand   {\degree}    {\raisebox{.7ex}{$\circ$}}
+
+
+
+

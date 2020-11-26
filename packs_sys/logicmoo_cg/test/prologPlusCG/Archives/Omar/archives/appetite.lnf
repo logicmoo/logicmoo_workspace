@@ -1,0 +1,19 @@
+[Bird : Arthur] -has-> [Hungry] -
+		-intensityOf-> [Intensity = "very much"]
+		-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 20],
+		-intensityOf-> [Intensity = "normal"]
+		-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 10],
+		-intensityOf-> [Intensity = "few"]
+		-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 5],
+		-intensityOf-> [Intensity = "very much"]
+		-quantityOfFood-> [Food = "cheese"] -quantityOf-> [Quantity = 10],
+		-intensityOf-> [Intensity = "normal"]
+		-quantityOfFood-> [Food = "cheese"] -quantityOf-> [Quantity = 5],
+		-intensityOf-> [Intensity = "few"]
+		-quantityOfFood-> [Food = "cheese"] -quantityOf-> [Quantity = 2],
+		-intensityOf-> [Intensity = "very much"]
+		-quantityOfFood-> [Food = "Verre_De_Terre"] -quantityOf-> [Quantity = 30],
+		-intensityOf-> [Intensity = "normal"]
+		-quantityOfFood-> [Food = "Verre_De_Terre"] -quantityOf-> [Quantity = 20],
+		-intensityOf-> [Intensity = "few"]
+		-quantityOfFood-> [Food = "Verre_De_Terre"] -quantityOf-> [Quantity = 10]

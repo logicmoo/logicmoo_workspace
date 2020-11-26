@@ -1,0 +1,63 @@
+************************************************
+         PROLOG+CG, Version 3.0, 2004         
+             (c) Dr. Adil KABBAJ              
+                  Amine Group             
+************************************************
+
+?- loadOntology("C:\Amine\AmineCourant\src\aminePlatform\classes\aminePlatform\samples\ontology\Souris.xml").
+yes
+?- consult(["DynamicOntologySample.pcg"]).
+yes
+?- integrateSituation([Eat]-agnt->[Mammal], [Eat, Mammal, Action]).
+ yes
+?- integrateSituation([Eat]-obj->[Mammal], [Eat, Mammal, Action]).
+ yes
+?- ask([Eat]-agnt->[Mammal], [Eat]).
+The description is : EQUAL than 
+_FREE
+ yes
+?- reconsult(["DynamicOntologySample.pcg"]).
+yes
+?- ask([Eat]-agnt->[Mammal], [Eat]).
+The description is : EQUAL than 
+[Eat]-agnt->[Mammal]
+ yes
+?- ask([Eat]-agnt->[Mouse], [Eat]).
+The description is : MORE_SPECIFIC than 
+[Eat]-agnt->[Mammal]
+ yes
+?- integrateSituation([Cat]<-agnt-[Eat]-obj->[Mouse], [Eat, Cat, Mouse, Action]).
+ yes
+?- integrateSituation([Cat]<-agnt-[Hunt]-obj->[Mouse], [Eat, Cat, Mouse, Action]).
+ yes
+?- ask([Cat]<-agnt-[Action]-obj->[Mouse], [Action]).
+The description is : MORE_SPECIFIC than 
+null
+ yes
+?- debug(true).
+yes
+?- ask([Cat]<-agnt-[Action]-obj->[Mouse], [Action]).
+The description is : MORE_SPECIFIC than 
+null
+ yes
+?- debug(false).
+yes
+?- ask([Cat]<-agnt-[Eat]-obj->[Mouse], [Eat]).
+The description is : EQUAL than 
+[Eat #0] -
+      -obj->[Mouse],
+      -agnt->[Cat]
+The description is : EQUAL than 
+[Eat #0] -
+      -obj->[Mouse],
+      -agnt->[Cat]
+ yes
+?- ask([Action]-obj->[Mouse], [Action, Mouse]).
+The description is : MORE_SPECIFIC than 
+null
+The description is : MORE_GENERAL than 
+[Action #0] -
+         -obj->[Mouse],
+         -agnt->[Cat]
+ yes
+?- 

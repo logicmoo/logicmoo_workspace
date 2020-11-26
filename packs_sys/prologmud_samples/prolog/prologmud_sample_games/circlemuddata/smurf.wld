@@ -1,0 +1,731 @@
+#300
+Entrance to Smurfville~
+You see before you several tiny houses with little blue people scurrying 
+about their tasks.  Everyone seems SO happy.
+~
+3 0 2
+D0
+Onward to smurf village.
+~
+~
+0 -1 304
+D2
+A small path back to the King's Highway.
+~
+~
+0 -1 15001
+S
+#301
+Smurfberry Patch~
+You are in the far south-west corner of the smurfberry patch.  Small white 
+picket fences block passage to the south and west.  You can continue on to 
+the north or east, where more of the smurfberry patch awaits.
+~
+3 0 2
+D0
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 310
+D1
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 302
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#302
+Smurfberry Patch~
+The smurfberries are starting to clog your nostrils with their sweet 
+smell.  Everywhere you look there are neat litte smurfberry bushes with 
+ripe smurfberries on them.  To the south there is a small picket fence 
+keeping you from the wild jungle beyond.
+~
+3 0 2
+D0
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 311
+D1
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 303
+D3
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 301
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#303
+Smurfberry Patch~
+You are in the south-east corner of this wonderfully cute smurfberry patch.
+~
+3 0 2
+D0
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 312
+D3
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 302
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#304
+Smurfy Road~
+You are on the main street in Smurfville.  To the north you see a cute 
+smurfy well in the distance and to the east you see some nice smurfy houses
+aligned in a perfect row. 
+~
+3 0 1
+D0
+Smurfy Road leads off to the north.
+~
+~
+0 -1 313
+D1
+Papa Smurf Lane begins over here.
+~
+~
+0 -1 331
+D2
+You see the entrance to Smurfville.
+~
+~
+0 -1 300
+S
+#305
+Brainy Smurf's House~
+As you enter this house you are amazed by the number of scientific apparatus 
+neatly arranged throughout the room.  Several test tubes are boiling with 
+various extracts of smurfberries.
+~
+3 8 0
+D0
+Out the door you see Papa Smurf Lane.
+~
+~
+1 -1 331
+S
+#306
+Handy Smurf's House~
+There is an impressive array of tools of all types and purposes. Picking 
+one up, you see the brand name, 'Smurfy Sears' engraved in the handle.
+~
+3 8 0
+D0
+Out the door you see Papa Smurf Lane.
+~
+~
+1 -1 332
+S
+#307
+Papa Smurf's House~
+This small house is the residence of the leader of all smurfs, Papa Smurf.  
+There are various red hats hanging from pegs on the wall.  A smurfy throne 
+is sitting in the center of the room.
+~
+3 8 0
+D0
+You see a small secret door behind Papa Smurf's bed.  Hmm, I wonder where 
+that leads?
+~
+~
+1 -1 316
+D3
+Out the door you see Papa Smurf Lane.
+~
+~
+1 -1 332
+E
+hats hat hatrack pegs peg~
+You see several red hats that look neat, but are much too small for you to 
+wear.
+~
+E
+throne~
+You see an oak throne, impressively engraved with utmost smurfy care.
+~
+S
+#308
+Vanity Smurf's House~
+There are oodles of mirrors positioned everywhere.  My, you look a mess.  
+When was the last time you took a bath?
+~
+3 8 0
+D2
+Back to Papa Smurf Lane.
+~
+~
+1 -1 331
+S
+#309
+Athletic Smurf's House~
+This looks more like a Gym than a house.  Over to the left you see a 
+miniature bench press set up with a two pound weight mounted on either 
+side, ready to be lifted.
+~
+3 8 0
+D2
+Back to Papa Smurf Lane.
+~
+~
+1 -1 332
+E
+bench press weight left~
+Don't you think it would be more constructive if you spent your time 
+wielding something heavier?
+~
+S
+#310
+Smurfberry Patch~
+Oh goodie, even more smurfberry patch! To the east, you see a white picket 
+fence.
+~
+3 0 2
+D0
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 319
+D1
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 311
+D2
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 301
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#311
+Smurfberry Patch~
+Everywhere you look, there are neat rows of Smurfberry bushes.~
+3 0 2
+D0
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 320
+D1
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 312
+D2
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 302
+D3
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 310
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#312
+Entrance to Smurfberry Patch ~
+You see ordered rows of bushes growing what appear to be Smurfberries.  The 
+patch continues to the north, south and west.  To the east lies Smurfy Road.
+~
+3 0 2
+D0
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 321
+D1
+Back to Smurfy Road.
+~
+~
+0 -1 313
+D2
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 303
+D3
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 311
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#313
+Smurfy Road~
+You are walking down a well-kept road in the middle of Smurfville.  To the 
+north, you see a cute little smurfy well.  To the west is what appears to 
+be a Smurfberry Patch. To the east, you see yet another row of well-kept 
+houses.
+~
+3 0 1
+D0
+You see the road leading to a smurfy well.
+~
+~
+0 -1 322
+D1
+Into Smurfette Lane.
+~
+~
+0 -1 333
+D2
+You see more of the Smurfy Road Leading out of the Village.
+~
+~
+0 -1 304
+D3
+You see a path leading to the Smurfberry Patch.
+~
+~
+0 -1 312
+S
+#314
+Clumsy Smurf's House~
+This looks like a normal smurfy house, except for the fact that there are 
+absolutely no sharp corners in the house.
+~
+3 8 0
+D0
+Back to Smurfette Lane.
+~
+~
+1 -1 333
+S
+#315
+Grumpy Smurf's House~
+This house is probably positioned so close to Smurfette's house just so that 
+some of Smurfette's overwhelming goodness will rub off on Grumpy Smurf.
+~
+3 8 0
+D0
+Back to Smurfette Lane.
+~
+~
+1 -1 334
+S
+#316
+Smurfette's House~
+Pink!  Everything in sight is Pink!  Smurfette keeps her house nice and 
+tidy, and well dusted.  Her bed looks very large and comfortable.
+~
+3 8 0
+D2
+Secret passage from Papa Smurf's house.
+~
+~
+1 -1 307
+D3
+Back to Smurfette Lane
+~
+~
+1 -1 334
+E
+bed~
+This is a large, comfortable be, larger than any one smurf would need.  Is 
+that a door you see partially hidden by the bed to the south?
+~
+S
+#317
+Artistic Smurf's House~
+This is the most creative smurfy house you've seen yet.  Everywhere hangs 
+brightly colored paintings. The floor has enormous amounts of paint 
+splattered everywhere.  The ceiling has a half-finished mural painted on it.
+~
+3 8 0
+D2
+Back to Smurfette Lane
+~
+~
+1 -1 333
+E
+mural painting paintings~
+Of course, it's another picture of Smurfette in the nude.
+~
+S
+#318
+Fireman Smurf's House~
+Fireman Smurf's house is pretty plain.  It does not appear that he spends 
+much time here.  His bed is neatly made, and an extra fireman's suit hangs 
+in the closet.
+~
+3 8 0
+D2
+Back to Smurfette Lane
+~
+~
+1 -1 334
+S
+#319
+Smurfberry Patch~
+This is the Northwest corner of the smurfberry patch.  Once again, you see 
+more rows of smurfberry bushes, neatly aligned.  To the north and west you 
+see a small white picket fence preventing you from going farther.
+~
+3 0 2
+D1
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 320
+D2
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 310
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#320
+Smurfberry Patch~
+The smurfberry patch extends to the south, east, and west. There is a white 
+picket fence to the north, blocking your passage in that direction.
+~
+3 0 2
+D1
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 321
+D2
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 311
+D3
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 319
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#321
+Smurfberry Patch~
+This is the Northeast corner of the smurfberry patch.  Once again, you see 
+more rows of smurfberry bushes, neatly aligned.  To the north and east you 
+see a small white picket fence preventing you from going farther.
+~
+3 0 2
+D2
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 312
+D3
+You see more smurfberries growing in nice neat rows.
+~
+~
+0 -1 320
+E
+smurfberry smurfberries patch berry berries~
+You see some very delicious looking smurfberries.
+~
+S
+#322
+The Smurfy Well~
+You see a cute smurfy well made of cute, perfectly cut smurfy stones.  This 
+looks like the central meeting place for the Smurfs.  This appears to be 
+the northern end of Smurfville.  There is a sinister-looking road leading 
+off to the north.
+~
+3 0 1
+D0
+The path leading north appears to be rarely used, as it is overgrown with 
+weeds.
+~
+~
+0 -1 326
+D2
+Back to Smurfy Road
+~
+~
+0 -1 313
+D5
+You peer into the dark well and think you may just be able to squeeze down.
+~
+~
+0 -1 323
+E
+well~
+You peer into the dark well and think you may just be able to squeeze down.
+~
+S
+#323
+Inside the well~
+As you look around, you see there is very little water left at the bottom 
+of this well. There appears to be a small tunnel leading off to the east.
+~
+3 265 0
+D1
+You see a dark tunnel.
+~
+~
+0 -1 324
+D4
+Back up to Smurfville.
+~
+~
+0 -1 322
+S
+#324
+End of Tunnel~
+There appears to be recent digging going on here to find more water for the 
+dry well.  You are becoming claustrophobic in this small, damp, muddy tunnel.
+~
+3 265 0
+D3
+You see a dark tunnel.
+~
+~
+0 -1 323
+S
+#325
+Road to Gargamel's Castle~
+You are on a not-too-well paved road leading to a large sinister-looking 
+castle to the north.  Eerie theme music is filtering down from the castle.
+~
+3 0 2
+D0
+You see Gargamel's castle looming in the distance.
+~
+~
+0 -1 328
+D1
+This path leads off into the distance somewhere.
+~
+~
+0 -1 326
+S
+#326
+A T-intersection~
+You are on a T-intersection of two rarely-used paths.
+~
+3 0 2
+D1
+You hear the Barney theme song drifting on the wind.
+~
+~
+0 -1 327
+D2
+You see a path leading back to the well-lit area of Smurfville.
+~
+~
+0 -1 322
+D3
+The path leads somewhere to the west.
+~
+~
+0 -1 325
+S
+#327
+Barney's Playland~
+Oh no, Barney's gone psychotic.  There is blood covering all of the toys and 
+walls of this once well-lit area.  Several indistinguishable corpses litter 
+the ground and a putrid stench hangs in the air.
+~
+3 0 2
+D3
+You see a path leading away from this disaster.
+~
+~
+0 -1 326
+S
+#328
+Entrance to Gargamel's Castle~
+You are at the entrance to a large, sinister-looking castle.  The castle 
+appears to be mostly deserted, with possibly a few inhabitants.  The 
+entrance to the castle is unguarded, but you are not sure you want
+to see what's inside.
+~
+3 1 2
+D0
+You see a large iron door leading into the abode of Gargamel.
+~
+door iron~
+1 -1 329
+D2
+There is an overgrown path leading away from the castle.
+~
+~
+0 -1 325
+S
+#329
+Gargamel's Lair~
+Cold, bare stone floors and walls surround you in every direction.  There 
+is a large table with several cages and smurf-torturing devices on it.  
+There is a fireplace against the wall, with a large black cauldron boiling 
+above the pit. You see an exit to the south as well as a small door placed 
+in the east wall.
+~
+3 8 0
+D1
+You see a door leading into a small room.
+~
+door~
+1 300 330
+D2
+You see the exit from this dismal place.
+~
+door iron~
+1 -1 328
+E
+table cage smurf torture torturing device devices~
+Upon closer inspection, you see that this table is not used very much.  
+Gargamel must not be very good at catching smurfs.
+~
+S
+#330
+A small room~
+As you look around, you see that this is nothing but a small store room 
+mainly containing empty, threadbare sacks and boxex.  A small pile of 
+bones is in one corner.
+~
+3 8 0
+D3
+You see the main area of the castle.
+~
+door~
+1 300 329
+S
+#331
+Papa Smurf Lane~
+This is a cute, smurfy road with houses to the north and south.  The road 
+continues to the east and west.
+~
+3 0 1
+D0
+You see Vanity Smurf's house.
+~
+~
+1 -1 308
+D1
+Papa Smurf lane continues to the east.
+~
+~
+0 -1 332
+D2
+You see Brainy Smurf's house.
+~
+~
+1 -1 305
+D3
+Papa Smurf Lane intersects with Smurfy Road
+~
+~
+0 -1 304
+S
+#332
+Papa Smurf Lane~
+This is a cute, smurfy road with houses to the north and south.  The road 
+continues to the west.  To the east you see the formidable house of Papa 
+Smurf.
+~
+3 0 1
+D0
+You see Athletic Smurf's house.
+~
+~
+1 -1 309
+D1
+You see a smurfy house that is larger than the others.  It appears to be 
+Papa Smurfs'.
+~
+~
+1 -1 307
+D2
+You see Handy Smurf's house.
+~
+~
+1 -1 306
+D3
+Papa Smurf Lane continues.
+~
+~
+0 -1 331
+S
+#333
+Smurfette Lane~
+This is a cute, smurfy road with houses to the north and south.  The road 
+continues to the east and west.
+~
+3 0 1
+D0
+You see Artistic Smurf's house.
+~
+~
+1 -1 317
+D1
+Smurfette lane continues to the east.
+~
+~
+0 -1 334
+D2
+You see Clumsy Smurf's house.
+~
+~
+1 -1 314
+D3
+Papa Smurf Lane intersects with Smurfy Road
+~
+~
+0 -1 313
+S
+#334
+Smurfette Lane~
+This is a cute, smurfy road with houses to the north and south.  The road 
+continues to the east and west.
+~
+3 0 1
+D0
+You see Fireman Smurf's house.
+~
+~
+1 -1 318
+D1
+You see the cute pink house belonging to Smurfette.
+~
+~
+1 -1 316
+D2
+You see Grumpy Smurf's house.
+~
+~
+1 -1 315
+D3
+Smurfette Lane continues.
+~
+~
+0 -1 333
+S
+$~

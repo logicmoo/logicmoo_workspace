@@ -1,0 +1,715 @@
+
+
+Foundations of an Object-centred Approach to Knowledge
+
+Engineering for AI Planning Applications
+
+D. E. Kitchin T. L. McCluskey R. M. Simpson
+
+The School of Computing and Mathematics,
+
+The University of Huddersfield,
+
+Huddersfield, UK
+
+June 28, 2001
+
+1
+
+Abstract
+Recent successful applications of AI planning technology have highlighted the knowledge engineering of planning domain models as an important research area. In this paper
+we describe an object-centred language for encoding planning domain models, and demonstrate that rigour is maintained by defining a truth criterion for the language. This truth
+criterion provides a sound basis for the development of object-centred planning algorithms.
+It can also be used to aid and simplify threat detection and resolution.
+
+1 Introduction
+Due to the inherent complexity of planning it is well known that there is no one planning
+algorithm that can perform well on all problems in all domains. In practice, many planners
+still concentrate on simple, toy domains. However, recently there has been an increasing use
+of AI planning technology for real applications [15, 1]. It is also beginning to be recognised
+that, in order to plan for real domains, planners need to be able to utilise all the knowledge
+contained in a domain model to help improve planner efficiency [6, 5]. We propose that
+adopting an approach inspired by object oriented methods for the construction of domain
+models and planning engines can greatly facilitate this objective.
+
+Approaches to modelling in planning have concentrated in the last 30 years on the dynamic,
+behavioural view. This is nowhere more true than in domain independent planning, where
+the aim seems to be to have a planner input a minimal description of dynamic behaviour.
+While this approach has, to some extent, facilitated the construction of and research into
+planning algorithms, it appears to have narrowed the concerns of the field. Developments in
+domain modelling in the last few years seem obsessed with extending the expressivity of these
+dynamic languages, and standardising the syntax (exemplified in PDDL [3]).
+
+Our own work, inspired by object-oriented analysis and design practice, has concentrated
+on taking an object-centred approach to the engineering of planning domain models [13, 10].
+This is facilitated by the recognition that in the traditional proposition-centred representation,
+propositions are clustered around objects, and actions change the state of objects [11]. Rather
+than a drastic change to the traditional dynamic domain model, we have sought to evolve the
+prevailing ideas so that, for example, it is not difficult to translate the standard conventional
+syntax (PDDL) to our representation language (OCL) [16].
+
+This evolution resulted in an exploratory object-centred method specific to planning which
+involves building up a structural view of the domain in addition to the dynamic view.
+Objects in a planning domain (e.g. robots, packages, trucks, and so on) can be thought of as
+having a "state", and can naturally be arranged in object class hierarchies. The behavioural
+model can be further elaborated with transition diagrams for each object class.
+
+In this paper we describe our object-centred approach to the engineering of planning domains
+together with the theoretical underpinnings of object-centred planning. We define a truth
+criterion for object-centred planning which provides a sound basis for the development of
+object-centred planning algorithms. Additionally we discuss how we can use this truth criterion in threat detection and resolution. Our approach produces a more structured domain
+
+2
+
+model, allowing the capture of more knowledge which we can make use of both before planning (via compilation tools) and during planning (via appropriate planning engines) to help
+reduce search.
+
+2 Object Domain Model
+First we will outline the domain model, using as an example a multi-robot world, R3. R3
+consists of seven rooms, connected by several doors and containing a variety of boxes and
+keys. Boxes can be moved from one location to another by robots, who may have to lock or
+unlock doors and switch lights on or off in order to carry out their allotted tasks. R3 domain
+model has:
+
+- a set of primitive sorts Sorts denoting object classes: e.g.
+froom; door ; box ; robot ; key; :::g
+
+- a set of object identifiers: e.g.
+fbox 1; box 2; r 1; r 2; key6; key7; door 12; door 23; :::g
+
+- a set of static and dynamic predicate signatures, each with arguments identified by sort
+names: e.g.
+
+fbox in(box ; room); robot next box (robot ; box );
+unlocked (door ); connect (room; room; door )g
+
+The first argument is reserved for an instance of the key sort, which we call the key object that is, the object whose state the predicate is describing.
+
+- a set of atomic invariants. These are instances of static predicates Predicates that are
+always true in the domain: e.g. connect (room1; room2; door 12). Any possible instantiation
+of a static predicate that is not a member of atomic invariants is assumed false.
+
+- a set of Substate Class definitions. Each sort in Sorts must be specified by describing the
+possible states of the object instances of that sort. Each such state description is characterised
+by a substate class expression. For example, objects of the sort robot can be in one of the
+following four substates:
+
+ffrobot in(Robot ; Room); robot near door (Robot ; Door ; Room);
+connect (Room; Room1; Door )g;
+frobot in(Robot ; Room); robot next box (Robot ; Box )g;
+frobot in(Robot ; Room); robot next key(Robot ; Key)g;
+frobot in(Robot ; Room)gg Example 2:1
+
+All variables (shown with initial capitals) range over their sorts. Any instantiation of a
+substate class expression in which any static predicates are members of atomic invariants
+constitutes a valid substate. For example, this substate satisfies the first substate class above,
+and so is a valid substate for r 1:
+
+3
+
+frobot in(r 1; room1); robot near door (r 1; door 12; room1);
+connect (room1; room2; door 12)g
+
+- a set of inconsistency constraints: these are invariants which place restrictions between
+substates. Examples of state invariants are that two robot arms (A1 and A2) cannot be
+holding the same key (K ).
+
+inconsistent constraint(arm used (A1; K )&arm used (A2; K )&A1 6= A2)
+The domain model is completed by descriptions of the domain operators and problems as
+specified by their goal conditions and initial state. These are described in sections 2.2 and
+2.3.
+
+2.1 Substate Class Expressions and Substate Expressions
+In order to aid the subsequent discussion of operators, goals and truth criteria, we will give
+here some definitions, making clear the distinction between substate expressions and substate
+class expressions and define the relations of containment and generalisation that hold between
+substate expressions.
+
+Substate Class Expressions
+A substate class expression is a description of a possible substate of a sort which, when fully
+instantiated under a legal substitution, describes a unique substate for any object of the sort.
+The substate class expressions for the sort Robot are given in Example 2.1 on page 3.
+
+Substate Expressions
+Substate expressions describe conditions on substates. A substate expression for an object must contain a subset of predicates in any one of the object's sort substate class expressions. For example, robot in(Robot ; Room1) is a general condition on the state of the
+robot - the robot's substate may be any substate which contains this predicate. Predicates
+cannot be combined indiscriminately - for example, robot near door (Robot ; Door ; Room),
+robot next box (Robot ; Box ) would not constitute a valid substate expression, as there is no
+valid substate class expression containing both these predicates. A substate class expression
+is written under a local closed world assumption - if a predicate is not present, then it is false.
+This is not true of substate expressions.
+
+Containment
+We can say that one substate expression, z, contains another, z'. We write z ' z 0 if the
+predicates in one expression are a subset of the predicates in the other, and all terms are
+identical. This means that any variables will also be identical. Both the substate expressions
+below contain the substate expression frobot in(Robot ; Room)g:
+
+frobot in(Robot ; Room)g
+frobot in(Robot ; Room); robot next key(Robot ; Key; Room)g
+
+4
+
+To illustrate this, and the following points, we will use an abstract example, as shown in
+Figure 1. In Example 1, where x and y may or may not be variables, we can say that R3
+contains L2.
+
+Example 1
+Example 2.f(x',y')&g(x',a) f(x,y)
+f(x,y)
+R L21 3R
+f(x,y)&g(x,a)
+
+Note, we will use x and x' to show there is some legal substitution where the terms will unify
+
+Figure 1: Abstract Example 1
+Generalisation
+If we have two substate expressions, x and y, concerning an object of the same sort, then we
+can say that one expression (y) is a generalisation of the other (x) if there is some legal substitution s, such that xs contains ys . For example, we can say the substate expression f(x,y) is
+a generalisation of f(x',y'),g(x',a) where it is possible to unify x and x', and y and y', as shown
+in Example 2 in Figure 1. Note, the fact that two variables can be unified does not mean that
+they necessarily will be during planning. More concretely, robot in(Robot ; RoomX ) is a generalisation of robot in(Robot ; RoomY ), robot next box (Robot ; Box ; RoomY ) since RoomX and
+RoomY can unify.
+
+2.2 Goal Conditions and Initial State
+A goal to be achieved by the planning process is defined in terms of a set of valid substate
+expressions for a subset of the objects in the problem domain. The initial state of the planning
+problem is defined by a set of ground substate class expressions fully specifying the start state
+of every object in the problem domain.
+
+2.3 Operators
+Object-centred operators have 3 components: prevail conditions, necessary changes and conditional changes. Prevail conditions specify those conditions that must be true before the
+operator can be applied, and which will still be true after its application. The necessary
+changes are shown by condition-effect pairs, (1 pair for each object concerned), showing the
+conditions that must be true before the action and the effects that must result after its application. The conditional changes are also made up of condition-effect pairs, but the specified
+effects only occur if the conditions are true. Note that there is a difference between variable
+slots in the necessary effects and variable slots in the conditional effects. Those in the necessary effects are existentially quantified, whilst those in the key slots of the conditional effects
+are universally quantified.
+
+5
+
+Name: pushtodoor(Tom,Box,Door,Room)
+Prevail conditions:
+
+ffrobot in(Tom,Room),robot next box(Tom,Box)g g
+
+Necessary changes:
+
+f fbox in(Box,Room)g )
+fbox in(Box,Room),box near door(Box,Door,Room),connect(Room,R,Door)gg
+
+Conditional changes:
+
+ffrobot in(Dick,Room),robot next box(Dick,Box),ne(Dick,Tom)g )
+frobot in(Dick,Room)g
+
+fbox in(B,Room),box next box(B,Box),ne(B,Box)g )
+fbox in(B,Room)g
+
+fkey on floor(K,Room),key next box(K,Box)g )
+fkey on floor(K,Room)gg
+
+Figure 2: An example of an operator from R3
+The right-hand sides of the necessary and conditional effects are substate class expressions,
+describing the resulting unique substates of the objects affected by application of the operator.
+The prevail conditions, the left-hand side of the necessary changes and the left-hand side of
+the conditional changes describe the conditions that must (or may, for conditional changes)
+be true for the action to be applicable. They are all substate expressions. Figure 2 is an
+operator with conditional effects from R3.
+
+2.3.1 Establishment in Partial Plans
+A partial plan is a partially developed plan containing the partially instantiated and partially
+ordered steps in the plan so far. A partial-order plan represents a set of total-order plans, as
+there may be many different ways of linearising the partial ordering.
+
+A substate expression l is possibly established by a substate class expression r in the righthand side of an action in a partial plan PP , (or in an initial state), if there is some legal
+substitution t where lt ` rt and the constraints and static predicates in the partial plan, PPt ,
+are consistent using the atomic domain invariants. We work this as:
+
+p estab(rt ; lt ; PPt) = lt ` rt ^ consistent (PPt :static) ^ before(rt ; lt )
+By consistent (PPt :static), we mean that all the static predicates in the current partial plan,
+under the current substitution t , are true with respect to the atomic domain invariants and
+do not contradict each other.
+
+In the following discussion we will use Nec:lhs, Cond:lhs, Nec:rhs and Cond:rhs to refer to the
+left-hand sides and right-hand sides respectively of the necessary and conditional transitions.
+
+6
+
+We will use A:lhs to refer to all the substate expressions in the left-hand sides of the prevail
+conditions, necessary and conditional changes of a step A, and A:rhs to refer to all the substate
+class expressions in the right-hand sides of the necessary and conditional changes.
+
+3 Truth Criteria
+In this section, we look at a literal-based definition of a necessary truth criterion, before
+defining our own version for object-centred planning. This truth criterion provides a sound
+basis for the design of object-centred planning algorithms.
+
+Classical literal-based planning uses the literal as the basic level of representation, and operators representing actions as the basic knowledge structure. We define a literal as an atomic
+proposition or its negation. In object-centred planning we lift the level of domain representation from the literal to focus on objects and their behaviour. A literal-based truth criterion
+describes what conditions are necessary for ensuring that a literal is true at some point in
+a partial plan. An object-centred truth criterion describes what conditions are necessary for
+ensuring that a substate expression is true at some point in a partial plan.
+
+t s
+
+C W
+
+p
+
+r~q
+Chapman's necessary truth criterion
+
+a clobberer
+a white knight
+
+KEY
+
+necessarily before
+possibly before
+
+Figure 3: Chapman's Necessary Truth Criterion
+3.1 Literal-based Truth Criteria
+We give here Kambhampati's definition of a truth criterion: "A truth criterion specifies a set
+of constraints on the orderings, bindings and steps of a plan, which, when satisfied, will ensure
+that a given precondition of a given step is necessarily true (in that it will be satisfied in all
+the completions of the plan) ......When all the preconditions of all the steps are necessarily
+true, then the plan itself is necessarily correct". [7]
+
+Chapman's Modal Truth Criteria (MTC) defines necessary and possible truth for partial
+
+7
+
+plans. Necessary truth describes the truth of some literal for every completion of the plan,
+while possible truth refers to its truth in at least one completion. To paraphrase Chapman's
+MTC, a proposition p is true in a situation s, if it has previously been necessarily asserted
+(made true by some action), and if there is any action which clobbers (makes false) this
+proposition, then there must be another action ordered between the clobbering action and
+the situation s which asserts p. 1
+
+Figure 3, illustrating Chapman's necessary truth criterion, is reproduced from [2]. The dashed
+box is a clobbering step and the dotted box what Chapman terms a White Knight, that is,
+a step that would make the dashed step safe at this point. White Knights are used to deal
+with plans like the one in Figure 4, which illustrates a part of a plan where p and q possibly
+codesignate. If they do codesignate, then the second step denies p, but it is reasserted by
+step 3.
+
+p q
+Step 1 Step 2 Step 3
+
+~q
+
+Figure 4: Chapman's `Odd Plan'
+3.2 Truth Criterion for Object-Centred Planning
+We can see that the example above is concerned with literals, and so is not applicable to
+object-based planning. (Chapman uses the term proposition rather than literal). Therefore
+we have developed an equivalent truth criterion for object-based planning. We will see that
+the structure of the object-centred truth criterion is similar to that of the literal-based truth
+criterion described in the previous section. This truth criterion depends on the following
+definitions, of achieves and n estab.
+
+Achieves
+Earlier we discussed what it means for an action to be a possible achiever of a goal for a step
+in a partial plan in the object-centred formulation. We now give a more formal definition, for
+a step, A, under some substitution t (of objects to variables), achieving a goal, l , in a step,
+O , in a partial plan, PP, as:
+
+achieves(A; l ; O; PP ) , 9 t : n estab(At ; Ot ; lt ; PPt ) ^ consistent (PPt :static)
+l is a substate expression, which may be a prevail condition, or one of the left-hand sides of
+a necessary or conditional change, or a `top-level' goal.
+
+1We note that there have been subsequent corrections with regard to Chapman's modal truth criterion
+for possible truth by [8] and others. [8] point out that it is correct for both necessary and possible truth
+only if we "reinterpret it as a criterion for modal conditional truth (that is, modal truth conditional on plan
+executability)"
+
+8
+
+Necessary Establishment
+A substate expression l is necessarily 2 established by a substate class expression r , where
+there are steps At and O in the partial plan PP which have, respectively, a right-hand side
+r , and a left-hand side l, if A ! O is a member of the ordering constraints in PP, and there
+is no step C , possibly ordered after A and before O which has a prevail condition or substate
+change for the same key object as r and l, unless C also has a right-hand side u which contains
+l.
+
+A; O 2 PP:steps ^ l 2 (O :lhs [ O :prevail ) )
+n estab(A; O ; l; PP ) ,
+
+9 r 2 A:rhs^ :
+l ` r ^
+A ! O ^ :(9 C 2 PP :steps :
+
+C ! O ^
+A ! C ^
+9 u 2 C :rhs :
+(l :object = u:object ^
+:(l ` u))
+
+In the following section we go on to look at the definition of a threat for an object-centred
+planner, and what techniques can be used for threat resolution. We show how the use of the
+object-centred truth criterion can simplify threat resolution.
+
+4 Threats and their resolution
+For a plan to be sound, all goals, all prevail conditions and all the left-hand sides of all
+necessary conditions need to be necessarily achieved. Additionally, the left-hand sides of any
+conditional changes need to be necessarily achieved (for the relevant objects only) if their
+right-hand sides are used to achieve a substate expression for some step in the plan.
+
+In the terminology of planners with `causal links', a causal link is usually defined [9, 17] as
+a data structure consisting of three fields, (A; p; O ), where p is a proposition, A is an action
+which has p as an effect, and O an action which has p as a precondition. Links for an objectcentred planner contain an identifier for an object rather than a proposition. We define a
+link as a structure which contains the ids of two steps, S effect and S need , where S effect
+is the step which brings about the substate change for an object, o, required by the step,
+S need . The link also contains o id , which is an identifier for o with the form (object ; sort ),
+where object can be identified by a constant or a variable, and sort is the object's sort. We
+refer to that substate expression in S need which is the required substate expression for o
+as OE. For example, o id could be (box 1; box ), and OE might be box in(box 1; Room). For any
+
+2We follow Kambhampati in not requiring the executability condition for the partial plan.
+
+9
+
+object, each action will have only one transition or prevail condition, so the relevant substate
+expression in S effect can be easily identified.
+
+A threatening step, C , is usually defined as a step with an effect that deletes the proposition
+p in the link, and which can possibly be ordered between steps A and O [17]. In some
+planners, the threatening effect may be conditional. In the object-centred formulation, a
+step, S threat , potentially threatens a link if it has either a prevail condition, a necessary or
+conditional change for the same object o as that in o id and if it can be ordered between
+S effect and S need . We say potentially threatens, as it may be the case that OE is also
+established by S threat .
+
+Existing threat resolution techniques include demotion, promotion, separation and confrontation. Demotion and promotion are commonly used in non-linear planners without conditional
+effects [9], while separation and confrontation are additional techniques used in a planner with
+conditional effects and universal quantification [12, 17]. Demotion requires an ordering constraint to be added to make C before A, while promotion adds a constraint to order C after O.
+Where the threatening effect is conditional, confrontation adds the negation of the conditional
+effect's antecedent as a new goal. Separation adds new binding constraints on existentially
+quantified variables.
+
+Threat resolution techniques for object-centred planners also include demotion and promotion, used in the conventional ways. However, the use of an OCL and an object-centred
+planner means we can use a version of separation which we call object separation. Object
+separation, when the threat is from a necessary effect, simply requires the addition of a constraint that the object in the link and the object in the threatening effect are not the same.
+It is not necessary to add constraints on all the subsidiary objects as well, as it is the key
+object's state changes which are important. If the threat is from a conditional effect, then
+we can add constraints on the existentially quantified variables in the conditional transition
+and their corresponding variables in the threatened substate. Thus, all types of threat can be
+resolved by one or more of these techniques. Confrontation is not required in object-centred
+planning.
+
+4.1 Threats from Necessary Effects
+
+A, C , O = Steps in a partial planSorts S1, S2 and S3 are the same
+
+A
+
+C
+L   -->   R L    -->
+
+O
+
+1 21
+S1 S2
+
+L     -->   R3 3
+
+S3
+
+Figure 5: Step C is a potential threat
+
+10
+
+Let us assume a situation, illustrated in Figure 5, where a step, A, in a partial plan has a
+member of A:rhs which we will call R1. Another step, O , has a member of O:lhs which we
+will call L2. Step A provides the required substate transition for L2. A third step, C , has
+a Nec:rhs, R3. A is ordered before O in the partial plan and C can potentially be ordered
+between A and O. The substate transitions for R1, L2 and R3 all concern objects of the same
+sort.
+
+Now let us consider all the possibilities regarding possible threats from necessary effects and
+how they may be resolved. To illustrate this, we will use again an abstract example, shown
+in Figure 6, where we can see that in all these examples R1 contains L2.
+
+RR 21 3 L
+f(x,y)&g(x,a)
+f(x,y)&g(x,a) f(x,y)&h(x,d)
+
+f(x,y)
+f(x,y) Example 5.
+
+Example 4.
+
+Note, we will use x and x' to show there is some legal substitution where the terms will unify
+
+f(x,y)f(x,y) Example 3.h(x',y')&g(x',a)
+f(x',z)&g(x,'a)
+
+Figure 6: Abstract Example
+Case 1
+If L2 is not a generalisation of R3, then C is a threatening step, which would result in
+the object moving to some substate other than the one required by step O . This is shown
+in Example 3 of Figure 6), where we can see that step C would move x to the substate
+h(x ; y)&g(x ; a), rather than the substate f (x ; y) which we are necessarily achieving with step
+A. This type of threat must be resolved by promotion or demotion.
+
+Case 2
+We now consider the case where L2 is a generalisation of R3. Given that L2 is f (x ; y) and
+R3 is f (x 0; y0)&k (x 0; c), then provided there is some legal substitution for x , and y where it
+is possible that x = x 0 and y = y0, then we can say that L2 is a generalisation of R3, as in
+Example 4. In this case, C may or may not be a threatening step. There is the possibility
+that R3 will become instantiated to an expression which contains L2, but also the possibility
+that it may not. This type of threat may be resolved by either promotion, demotion or object
+separation. Object separation in the case of threats from necessary effects requires only the
+addition of a constraint that x and x' must not codesignate.
+
+Note, it is generally thought in literal-based planning that it is more efficient to postpone
+resolving threats like these until it is certain that a threat exists. It may be that conflict resolution is unnecessary if the threat doesn't actually occur in this partial plan. Postponement
+is also thought to be more efficient as using traditional separation techniques can increase
+the amount of search needed, by requiring the addition of several possible non-codesignation
+
+11
+
+constraints, resulting in several new partial plans. For example, given a link fA; a(w ; z ); Og
+and a threatening action with a delete effect a(x ; y), it would be necessary to add constraints
+that x is not equal to w or y is not equal to z , generating one new partial plan for each
+possibility. Clearly, a link of the type f (y; z )&f (g; h) threatened by a similar literal would
+generate many additional plans each time such a threat had to be resolved. In object-centred
+planning we do not have this problem, with object separation we only ever have to add one
+constraint for resolving threats from necessary effects, and so can choose to resolve threats
+eagerly or lazily, without adding to the search space.
+
+Case 3
+If R3 contains L2, then C is not a threatening step, and no threat resolution is necessary. If
+C is eventually necessarily ordered between A and O , it can just be considered as another
+achiever for L2. Note the reason for C 's introduction into the partial plan may have been
+to bring about a transition for some other object, and its achievement of L2 may just be a
+side-effect of this other transition.
+
+4.2 Threats from Conditional Effects
+The threatening effect may be conditional. In this case, the notion of a threat and threat
+resolution is slightly different, as the object variable in a conditional effect is universally quantified. For example, in a conditional substate transition from f(x',y'),g(x',j') to f(x',y'), then
+x' refers to all objects of the correct sort whose substate matches with f(x',y'),g(x',j'). If we
+have a step which establishes f (x ; y); g(x ; j ), then this conditional transition is a potential
+threat. One of these objects referred to by x' may or may not be the same object as x, and
+we cannot tell until the final plan is produced and the final ordering of steps decided on, or
+the partially ordered steps become sufficiently instantiated to make a threat certain. This
+is because the right-hand side of a conditional effect is only effected if the left-hand side is
+true when the action is applied. Let us consider a situation where we have a substate expression frobot in(Tom,Room),robot next key(Tom,Key)g and a possibly threatening transition
+from frobot in(R; Rm); robot next key(R; K )g to frobot in(R; Rm)g. If Rm and K can possibly be unified with Room and Key then a potential threat exists. If they are identical then
+a threat will exist in the current ordering of steps.
+
+Let us now consider a situation, where a step, A, in a partial plan has a member of A:rhs
+which we will call R1. Another step, O , has a member of O :lhs which we will call L2. Step A
+provides the required substate transition for L2. A third step, C , has a conditional transition
+from Cond :lhs to Cond:rhs, which we refer to as CL3 and CR3 respectively. A is ordered
+before O in the partial plan and C can potentially be ordered between A and O . The substate
+transitions for R1, L2 and CR3 all concern objects of the same sort.
+
+We will examine all the possibilities, again using an abstract example (see Figure 7). In the
+case of Examples 1-5, CR3 does not contain L2 - that is, C is a potential threatening step. If
+CR3 contained L2, we could simply view C as also achieving L2. In every case, R1 contains
+L2. The cases differ according to the presence or absence of constants in CR3 and L2.
+
+12
+
+f(x, y)&g(x, a)
+
+y)&g(x, a)f(x,
+
+f(x,y)&g( x,a)
+
+f(x,y)&g(x,a)
+
+2
+f(x,y)&g(x,a)
+
+L
+
+f(x, y)&g(x, a)
+f(x,y)&g( x,a)
+
+f(x, y)&g(x, a)
+
+Example 3.
+Example 1
+Example 2.
+
+Example 4.
+Example 5.
+
+Note, we will use x and x' to show where there is some legal substitution where the terms will unify
+
+to indicate constants We will use  bold type
+
+R1
+f(x,y)&g(x,a)
+f(x,y)&g(x,a)
+
+f(x',y')&h(x',b)
+f(x',y')&k(x',c)
+
+y')f(x',
+CR
+
+f(x, )y
+
+3
+f(x',y')
+y')&g(x',
+
+f(x',y')&g(x',a')
+
+)
+CL
+
+f(x', y)&g(x', a)
+
+3
+f(x',y')&g(x',a)
+
+f(x',  a'
+f(x',y')&g(x',a')
+
+Figure 7: Abstract Conditional Example
+Case 1
+If there are no constants in either L2 or CL3, as in Example 1, then there is a potential threat,
+because the existentially quantified variables in CL3 or L2 could become instantiated to the
+same objects. If this happens, then because the key object variable in the conditional effect is
+universally quantified, any other object in that substate will be affected, and a definite threat
+exists.
+
+In this case, we can resolve the threat by either object separation, promotion or demotion,
+or we can leave resolution until instantiation of the existentially quantified variables makes
+it certain that there will be a threat with regard to the particular object the L2 transition
+concerns. The situation is equivalent when the object variable in L2 has been replaced by a
+constant, as in Example 3.
+
+Case 2
+If there is a set of constants in CL3 which possibly unify with a set of existentially quantified
+variables in L2, as in Example 2, then there is a potential threat which we can resolve by either
+object separation, promotion or demotion. Object separation would require the addition of
+constraints that each constant and its corresponding variable should not be equal. The
+situation is equivalent if there are constants in place of the existentially quantified variables
+in L2, but none in CL3, as in Example 4.
+
+Case 3
+If there is a set of constants in CL3 that are the same as a set of constants in L2, as in Example
+5, then it must be possible for any universally quantified variable in CL3 to be unified with
+the corresponding variable in L2. In this case, we can only resolve the threat by demotion or
+promotion. Using confrontation would not be satisfactory in this case: because L2 must be
+necessarily achieved, adding the negation of CL3 as a new subgoal may still clobber L2. The
+object-centred equivalent of adding the negation as a new subgoal would be to say that the
+
+13
+
+key object in L2 which can unify with the universally quantified variable in CL3 must be in
+some substate other than those specified by CL3 - which may mean some substate other than
+those specified by L2, and which we want to necessarily achieve with R1.
+
+Case 4
+If CR3 contains L2, then C is not a threatening step, as it also achieves L2.
+It is possible that the achieving effect in A is conditional, but in this case any variables
+contained in the link become existentially quantified, and so threat resolution is the same as
+if the achieving effect is necessary. Another possibility is that we may have had a previous
+threat from a necessary effect and added a separation constraint on the key objects, and
+then later we have a threat for the same object from a conditional effect. Now we have the
+situation where:
+
+R1 = f (x ; y)&g(x ; a) L2 = f (x ; y)
+CL3 = (1) f (x 0y0) or (2) f (x 0y)
+
+If there are no constants in the threatening conditional effect (1), then we can add further
+constraints that y and y' do not codesignate. If y is already a constant (2) in CL3 then we
+can only resolve the threat by promotion or demotion.
+
+To summarise, threats from both necessary and conditional effects can be resolved by one of
+the following techniques: demotion, promotion and object separation. At its simplest, object
+separation requires the addition of a constraint that the object identified in the link and the
+object in the threatening effect are not the same.
+
+5 Conclusion
+Traditionally in the literature of classical planning, domain models were expressed in a
+STRIPS-style [4] notation. More recently we have seen domains written in PDDL. Models expressed in either of these formats function at the level of the literal. They both have
+as their main feature a set of operator schema modelling domain actions, which transform
+states by adding and deleting literals. An object-centred operator transforms the entire state
+of an object, and doesn't just add or delete literals. Object-centred domain models are able
+to capture and express explicitly the legal behaviour of objects, and enable us to deal with
+behaviour at the object level.
+
+The object-centred approach offers an expressive domain modelling language and associated
+domain encoding method that is well-founded and aids domain validation and maintenance.
+It provides a method that allows the non-AI planning expert to construct a precise, validated
+domain model. It provides opportunities for the additional structural information about the
+domain to be exploited by planning algorithms.
+
+We have discussed truth criteria and described our own truth criterion for object-centred
+planning with conditional actions. This truth criterion describes what conditions are necessary
+for ensuring that a substate expression is true at some point in a partial plan. We can make
+
+14
+
+use of the truth criterion during planning in threat detection and resolution procedures. We
+have shown that the use of OCL and object-centred planning allows us to simplify existing
+threat resolution techniques whether the threatening effect is necessary or conditional. This
+object-centred truth criterion provides a sound basis for the development of object-centred
+planning algorithms.
+
+References
+
+[1] A. Tate (editor). Advanced Planning Technology: Technological Achievements of the ARPA/Rome Laboratory Planning Initiative. IOS Press, 1996.
+
+[2] D. Chapman. Planning for Conjunctive Goals. Artificial Intelligence, 32, 1987.
+[3] AIPS-98 Planning Competition Committee. PDDL - The Planning Domain Definition Language. Technical Report CVC TR-98-003/DCS TR-1165, Yale Center for Computational Vision and Control, 1998.
+
+[4] R. E. Fikes and N. J. Nilsson. STRIPS: A New Approach to the Application of Theorem Proving to
+
+Problem Solving. Artificial Intelligence, 2, 1971.
+
+[5] M. Fox and D. Long. The Automatic Inference of State Invariants in TIM. JAIR vol. 9, pages 367-421,
+
+1997.
+
+[6] A. Gerevini and L. Schubert. Computing Parameter Domains as an Aid to Planning. In Third International Conference on Artificial Intelligence Planning Systems, 1996.
+
+[7] S. Kambhampati. Formalizing a Spectrum of Plan Generalizations Based on Modal Truth Criteria . In
+
+Canadian AI Conference, 1994.
+
+[8] S. Kambhampati and D. S. Nau. On the Nature of Modal Truth Criteria in Planning. In Proceedings of
+
+the Twelfth National Conference on Artificial Intelligence, 1994.
+
+[9] D. McAllester and D. Rosenblitt. Systematic Nonlinear Planning. In Proceedings of the Ninth National
+
+Conference on Artificial Intelligence. AAAI Press, 1991.
+
+[10] T. L. McCluskey and D. E. Kitchin. A Tool-Supported Approach to Engineering HTN Planning Models.
+
+In Proceedings of 10th IEEE International Conference on Tools with Artificial Intelligence, 1998.
+
+[11] T. L. McCluskey and J. M. Porteous. Engineering and Compiling Planning Domain Models to Promote
+
+Validity and Efficiency. Artificial Intelligence, 95:1-65, 1997.
+
+[12] J. S. Penberthy and D. S. Weld. UCPOP: A Sound, Complete, Partial Order Planner for ADL. In Proc.
+
+KR, 1992.
+
+[13] Planform. An Open Environment for Building Planners. http://helios.hud.ac.uk/planform.
+[14] J. Rintanen. A planning algorithm not based on directional search. In Proceedings of the 6th International
+
+Conference on Principles of Knowledge Representation, 1998.
+
+[15] S. A. Chien (editor). 1st NASA Workshop on Planning and Scheduling in Space Applications. NASA,
+
+Oxnard, CA, 1997.
+
+[16] R. M. Simpson, T. L. McCluskey, D. Liu, and D. E. Kitchin. Knowledge Representation in Planning: A
+
+PDDL to OCLh Translation. In Proceedings of the 12th International Symposium on Methodologies for
+Intelligent Systems, 2000.
+
+[17] D. S. Weld. An Introduction to Least Commitment Planning. AI Magazine, 1994.
+
+15

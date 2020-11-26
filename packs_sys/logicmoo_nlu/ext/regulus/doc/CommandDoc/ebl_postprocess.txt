@@ -1,0 +1,7 @@
+Create one or more specialised Regulus grammars out of the results produced by
+the {EBL\_\-TRAIN} command. The grammars are created in two forms.
+The file {\tt $\langle$prefix$\rangle$\_\-specialised\_\-no\_\-binarise\_\-$\langle$tag$\rangle$.regulus}
+is the original one; the file {\tt $\langle$prefix$\rangle$\_\-specialised\_\-$\langle$tag$\rangle$.regulus}
+has been subjected to a binarisation transformation, so that no rule has more than
+two daughters. The binarised version is the one passed to the {\tt EBL\_\-NUANCE}
+command, and is also the default file loaded by {\tt EBL\_\-LOAD}.

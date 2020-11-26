@@ -1,0 +1,8 @@
+Relevant to applications that use generation (typically translation
+applications). Defines the semantic feature in the top-level rule
+which holds the semantic value. Normally, the rule will be of the form
+\begin{verbatim}
+'.MAIN':[gsem=[value=Sem]] --> Body
+\end{verbatim}
+and the value of this parameter will be value (default if not
+specified).

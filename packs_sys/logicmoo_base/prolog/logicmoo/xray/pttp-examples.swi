@@ -1,0 +1,309 @@
+:- if(( ( \+ ((current_prolog_flag(logicmoo_include,Call),Call))) )).
+:- module(xray_pttp_examples,[]).
+:- endif.
+
+%%% ****f* PTTP_Examples/chang_lee_example1
+%%% DESCRIPTION
+%%%   Prove that in an associative system with left and right
+%%%   solutions, there is a right identity element.
+%%% NOTES
+%%%   this is problem GRP028-4 in TPTP
+%%%
+%%%   this and the other chang_lee examples are taken from
+%%%   C.L. Chang and R.C.T. Lee,
+%%%   Symbolic Logic and Mechanical Theorem Proving,
+%%%   Academic Press, New York, 1973, pp. 298-305.
+%%%
+%%%   the result of executing these examples
+%%%   can be seen in the file pttp-examples.typescript
+%%%
+%%%   this problem contains only Horn clauses
+%%%   (clauses with at most one positive literal)
+%%%   so neither contrapositives nor more than one
+%%%   instance of an all negative query are required
+%%%   for completeness
+%%%
+%%%   so clauses are written in implication form to
+%%%   suppress generation of unnecessary contrapositives
+%%%   and the negation of the query is not included
+%%% SEE ALSO
+%%%   chang_lee_example7, chang_lee_example8
+%%% SOURCE
+
+
+chang_lee_example1 :-
+	pttp((
+		p(g(X,Y),X,Y),
+		p(X,h(X,Y),Y),
+		(p(U,Z,W) :- p(X,Y,U) , p(Y,Z,V) , p(X,V,W)),
+		(p(X,V,W) :- p(X,Y,U) , p(Y,Z,V) , p(U,Z,W)),
+		(query :- p(k(X),X,k(X)))
+	)),
+	fail.				% clear stack used in compilation
+chang_lee_example1 :-
+	prove(query).			% run query with fresh stack
+%%% ***
+%%% ****f* PTTP_Examples/chang_lee_example2
+%%% DESCRIPTION
+%%%   In an associative system with an identity element,
+%%%   if the square of every element is the identity,
+%%%   the system is commutative.
+%%% NOTES
+%%%   this is problem GRP001-5 in TPTP
+%%% SOURCE
+
+chang_lee_example2 :-
+	pttp((
+		p(e,X,X),
+		p(X,e,X),
+		p(X,X,e),
+		p(a,b,c),
+		(p(U,Z,W) :- p(X,Y,U) , p(Y,Z,V) , p(X,V,W)),
+		(p(X,V,W) :- p(X,Y,U) , p(Y,Z,V) , p(U,Z,W)),
+		(query :- p(b,a,c))
+	)),
+	fail.
+chang_lee_example2 :-
+	prove(query).
+%%% ***
+%%% ****f* PTTP_Examples/chang_lee_example3
+%%% DESCRIPTION
+%%%   In a group the left identity is also a right identity.
+%%% NOTES
+%%%   this is problem GRP003-1 in TPTP
+%%% SOURCE
+
+chang_lee_example3 :-
+	pttp((
+		p(e,X,X),
+		p(i(X),X,e),
+		(p(U,Z,W) :- p(X,Y,U) , p(Y,Z,V) , p(X,V,W)),
+		(p(X,V,W) :- p(X,Y,U) , p(Y,Z,V) , p(U,Z,W)),
+		(query :- p(a,e,a))
+	)),
+	fail.
+chang_lee_example3 :-
+	prove(query).
+%%% ***
+%%% ****f* PTTP_Examples/chang_lee_example4
+%%% DESCRIPTION
+%%%   In a group with left inverse and left identity
+%%%   every element has a right inverse.
+%%% NOTES
+%%%   this is problem GRP004-1 in TPTP
+%%% SOURCE
+
+chang_lee_example4 :-
+	pttp((
+		p(e,X,X),
+		p(i(X),X,e),
+		(p(U,Z,W) :- p(X,Y,U) , p(Y,Z,V) , p(X,V,W)),
+		(p(X,V,W) :- p(X,Y,U) , p(Y,Z,V) , p(U,Z,W)),
+		(query :- p(a,X,e))
+	)),
+	fail.
+chang_lee_example4 :-
+	prove(query).
+%%% ***
+%%% ****f* PTTP_Examples/chang_lee_example5
+%%% DESCRIPTION
+%%%   If S is a nonempty subset of a group such that
+%%%   if x,y belong to S, then x*inv(y) belongs to S,
+%%%   then the identity e belongs to S.
+%%% NOTES
+%%%   this is problem GRP005-1 in TPTP
+%%% SOURCE
+
+chang_lee_example5 :-
+	pttp((
+		p(e,X,X),
+		p(X,e,X),
+		p(X,i(X),e),
+		p(i(X),X,e),
+		s(a),
+		(s(Z) :- s(X) , s(Y) , p(X,i(Y),Z)),
+		(p(U,Z,W) :- p(X,Y,U) , p(Y,Z,V) , p(X,V,W)),
+		(p(X,V,W) :- p(X,Y,U) , p(Y,Z,V) , p(U,Z,W)),
+		(query :- s(e))
+	)),
+	fail.
+chang_lee_example5 :-
+	prove(query).
+%%% ***
+%%% ****f* PTTP_Examples/chang_lee_example6
+%%% DESCRIPTION
+%%%   If S is a nonempty subset of a group such that
+%%%   if x,y belong to S, then x*inv(y) belongs to S,
+%%%   then S contains inv(x) whenever it contains x.
+%%% NOTES
+%%%   this is problem GRP006-1 in TPTP
+%%% SOURCE
+
+chang_lee_example6 :-
+	pttp((
+		p(e,X,X),
+		p(X,e,X),
+		p(X,i(X),e),
+		p(i(X),X,e),
+		s(b),
+		(s(Z) :- s(X) , s(Y) , p(X,i(Y),Z)),
+		(p(U,Z,W) :- p(X,Y,U) , p(Y,Z,V) , p(X,V,W)),
+		(p(X,V,W) :- p(X,Y,U) , p(Y,Z,V) , p(U,Z,W)),
+		(query :- s(i(b)))
+	)),
+	fail.
+chang_lee_example6 :-
+	prove(query).
+%%% ***
+%%% ****f* PTTP_Examples/chang_lee_example7
+%%% DESCRIPTION
+%%%   If a is a prime and a = b*b/c*c then a divides b.
+%%% NOTES
+%%%   this is problem NUM014-1 in TPTP
+%%%
+%%%   this problem is non-Horn
+%%%   so clauses are written in disjunction form to
+%%%   result in generation of all contrapositives
+%%%
+%%%   because the query is ground, it is unnecessary
+%%%   for its negation to be included
+%%% SEE ALSO
+%%%   chang_lee_example1, chang_lee_example8
+%%% SOURCE
+
+chang_lee_example7 :-
+	quietly((pttp((
+		p(a),
+		m(a,s(c),s(b)),
+		m(X,X,s(X)),
+		(not_m(X,Y,Z) ; m(Y,X,Z)),
+		(not_m(X,Y,Z) ; d(X,Z)),
+		(not_p(X) ; not_m(Y,Z,U) ; not_d(X,U) ; d(X,Y) ; d(X,Z)),
+		(query :- d(a,b))
+	)))),
+	fail.
+chang_lee_example7 :-
+	prove(query).
+%%% ***
+%%% ****f* PTTP_Examples/chang_lee_example8
+%%% DESCRIPTION
+%%%    Any number greater than one has a prime divisor.
+%%% NOTES
+%%%   this is problem NUM015-1 in TPTP
+%%%
+%%%   this problem is non-Horn
+%%%   so clauses are written in disjunction form to
+%%%   result in generation of all contrapositives
+%%%
+%%%   the negation of the query is included
+%%%   to allow multiple instances to be used in
+%%%   the proof (and yield an indefinite answer)
+%%% SEE ALSO
+%%%   chang_lee_example1, chang_lee_example7
+%%% SOURCE
+
+chang_lee_example8 :-
+	pttp((
+		l(1,a),
+		d(X,X),
+		(p(X) ; d(g(X),X)),
+		(p(X) ; l(1,g(X))),
+		(p(X) ; l(g(X),X)),
+		(not_p(X) ; not_d(X,a)),		% negation of query
+		(not_d(X,Y) ; not_d(Y,Z) ; d(X,Z)),
+		(not_l(1,X) ; not_l(X,a) ; p(f(X))),
+		(not_l(1,X) ; not_l(X,a) ; d(f(X),X)),
+		(query :- (p(X) , d(X,a)))
+	)),
+	fail.
+chang_lee_example8 :-
+	prove(query).
+%%% ***
+%%% ****f* PTTP_Examples/chang_lee_example9
+%%% DESCRIPTION
+%%%   There exist infinitely many primes.
+%%% NOTES
+%%%   this is problem NUM016-2 in TPTP
+%%% SOURCE
+
+chang_lee_example9 :-
+	pttp((
+		l(X,f(X)),
+		not_l(X,X),
+		(not_l(X,Y) ; not_l(Y,X)),
+		(not_d(X,f(Y)) ; l(Y,X)),
+		(p(X) ; d(h(X),X)),
+		(p(X) ; p(h(X))),
+		(p(X) ; l(h(X),X)),
+		(not_p(X) ; not_l(a,X) ; l(f(a),X)),	% negation of query
+		((query :- p(X) , l(a,X) , not_l(f(a),X)))
+	)),
+	prove(query).
+
+% chang_lee_example9 :-         time(query).
+	% 
+%%% ***
+%%% ****f* PTTP_Examples/overbeek_example4
+%%% DESCRIPTION
+%%%   Show that Kalman's shortest single axiom for the
+%%%   equivalential calculus, XGK, can be derived from the
+%%%   Meredith single axiom PYO.
+%%% NOTES
+%%%   a harder problem than the Chang and Lee examples
+%%%   from Overbeek's competition problems
+%%%
+%%%   this is problem LCL024-1 in TPTP
+%%% SOURCE
+
+overbeek_example4 :-
+	pttp((
+		p(e(X,e(e(Y,e(Z,X)),e(Z,Y)))),
+		(p(Y) :- p(e(X,Y)), p(X)),
+		(query :- p(e(e(e(a,e(b,c)),c),e(b,a))))
+	)),
+	fail.
+overbeek_example4 :-  %  prove(query).
+        ( prove(query,100,0,3)).	% cost 30 proof
+%%% ***
+
+%%% Theorem proving examples from
+%%%   Chang, C.L. and R.C.T. Lee.
+%%%   Symbolic Logic and Mechanical Theorem Proving.
+%%%   Academic Press, New York, 1973, pp. 298-305.
+
+%%% Note that the prove driver predicate
+%%% can be invoked by prove(query) as in
+%%% chang_lee_example8 or can be explicitly
+%%% included in the query as in chang_lee_example2.
+
+chang_lee_example2a :-
+        nl,
+        write(chang_lee_example2),
+        pttp((
+                p(e,X,X),
+                p(X,e,X),
+                p(X,X,e),
+                p(a,b,c),
+                (p(U,Z,W) :- p(X,Y,U) , p(Y,Z,V) , p(X,V,W)),
+                (p(X,V,W) :- p(X,Y,U) , p(Y,Z,V) , p(U,Z,W)),
+                (query :- prove(p(b,a,c)))
+        )),
+        time(query).
+
+chang_lee_example8a :-
+        nl,
+        write(chang_lee_example8),
+        pttp((
+                l(1,a),
+                d(X,X),
+                (p(X) ; d(g(X),X)),
+                (p(X) ; l(1,g(X))),
+                (p(X) ; l(g(X),X)),
+                (not_p(X) ; not_d(X,a)),
+                (not_d(X,Y) ; not_d(Y,Z) ; d(X,Z)),
+                (not_l(1,X) ; not_l(X,a) ; p(f(X))),
+                (not_l(1,X) ; not_l(X,a) ; d(f(X),X)),
+                (query :- (p(X) , d(X,a)))
+        )),
+        time(prove(query)).
+

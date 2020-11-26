@@ -1,0 +1,4 @@
+[submodule "Rserve"]
+	path = Rserve
+	url = https://github.com/JanWielemaker/Rserve
+	branch = janw

@@ -1,0 +1,95 @@
+(note TQB106)
+
+(existant Stage4-AttackOnSaudiTanker2 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(agent Stage4-AttackOnSaudiTanker2 
+ (NavyFn Iran)) 
+
+(subrelation agent agent) 
+
+(subProcess HPKBScenarioConflict Stage4-AttackOnSaudiTanker2) 
+
+(instance Stage4-AttackOnSaudiTanker2 AttackOnTangible) 
+
+(damages Stage4-AttackOnSaudiTanker2 Stage4-SaudiTanker2) 
+					    
+(instance (NavyFn Iran) Navy) 
+					    
+(instance Stage4-SaudiTanker2 OilTanker) 						   
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict) Stage4-AttackOnSaudiTanker1) 
+										   
+(existant Stage4-AttackOnSaudiTanker1 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict))  
+
+(agent Stage4-AttackOnSaudiTanker1 
+ (NavyFn Iran)) 
+
+(agent Stage4-AttackOnSaudiTanker1 
+ (NavyFn Iran))  
+
+(subProcess HPKBScenarioConflict Stage4-AttackOnSaudiTanker1) 
+
+(instance Stage4-AttackOnSaudiTanker1 AttackOnTangible) 
+
+(damages Stage4-AttackOnSaudiTanker1 Stage4-SaudiTanker1) 
+
+(instance 
+ (NavyFn Iran) Navy) 
+
+(instance Stage4-SaudiTanker1 OilTanker) 
+
+			
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict) Stage4-AttackOnKuwaitiTanker36) 
+
+(existant Stage4-AttackOnKuwaitiTanker36 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(agent Stage4-AttackOnKuwaitiTanker36 
+ (NavyFn Iran)) 
+
+(agent Stage4-AttackOnKuwaitiTanker36 
+ (NavyFn Iran))  
+
+(subProcess HPKBScenarioConflict Stage4-AttackOnKuwaitiTanker36) 
+
+(instance Stage4-AttackOnKuwaitiTanker36 AttackOnTangible) 
+
+(damages Stage4-AttackOnKuwaitiTanker36 Stage4-KuwaitiTanker36) 
+
+(instance Stage4-KuwaitiTanker36 OilTanker) 
+
+
+
+
+(query (findall ?THING
+
+ (thereExists ?ACT 
+ (and 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT AttackOnTangible) 
+ (instance ?THING OilTanker) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict) ?ACT) 
+ (damages ?ACT ?THING) 
+ (thereExists ?FORCE 
+ (and 
+ (instance ?FORCE Navy) 
+ (agent ?ACT ?FORCE)))))  )
+)
+
+(answer Stage4-SaudiTanker2)
+(answer Stage4-SaudiTanker1)
+(answer Stage4-KuwaitiTanker36)
+
+
+
+(end_of_file)
+
+

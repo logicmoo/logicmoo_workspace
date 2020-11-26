@@ -1,0 +1,92 @@
+Universal > Actor, Tool, Material.
+Actor > Baker.
+Tool > Oven, Mitten.
+Material > Dough, Salt.
+cg(cg1, [Actor]-
+                        -uses->[Tool],
+                        -uses->[Material]).
+cg(cg2, [Baker]-
+                        -uses->[Oven],
+                        -uses->[Dough]).
+cg(cg3, [Actor]-
+	uses->[Tool]).
+
+cg(cg4, [Baker]-
+	uses->[Oven]).
+
+cg(cg5, [Baker]-
+	uses->[Mitten]).
+
+cg(cg6, [Baker]-
+	uses->[Dough]).
+
+cg(cg7, [Baker]-
+	uses->[Material]).
+
+cg(cg8, [Actor]-
+	uses->[Material]).
+
+
+
+
+// Should say:
+// {G=[Baker] -
+//        -uses->[Oven],
+//        -uses->[Dough]}
+test1(G) :-
+     cg(cg1, G1),
+     cg(cg2, G2),
+     subsume(G1, G2, G).
+
+// Should say:
+// {G=[Baker]-uses->[Oven]}
+test2(G) :-
+     cg(cg3, G1),
+     cg(cg4, G2),
+     subsume(G1, G2, G).
+
+
+// Should say:
+// {G=[Actor]-uses->[Tool]}
+test3(G) :-
+     cg(cg3, G1),
+     cg(cg1, G2),
+     subsume(G1, G2, G).
+
+// Should say:
+// {G=[Baker]-uses->[Oven]}
+test4(G) :-
+     cg(cg3, G1),
+     cg(cg2, G2),
+     subsume(G1, G2, G).
+
+// Should say:
+// G=[Baker]-uses->[Oven]
+test5(G) :-
+     cg(cg3, G1),
+     cg(cg4, G2),
+     subsume(G1, G2, G).
+
+// Should say: no.
+test6(G) :-
+     cg(cg2, G1),
+     cg(cg5, G2),
+     subsume(G1, G2, G).
+
+// Should say: G=[Baker]-uses->[Mitten]
+test7(G) :-
+     cg(cg3, G1),
+     cg(cg5, G2),
+     subsume(G1, G2, G).
+
+// Should say: no.
+test8(G) :-
+     cg(cg4, G1),
+     cg(cg5, G2),
+     subsume(G1, G2, G).
+
+test9(G) :-
+     cg(cg8, G1),
+     cg(cg1, G2),
+     subsume(G1, G2, G).
+

@@ -1,0 +1,26 @@
+(note TQD35-b)
+
+(instance HYP-Revolution-Political-51940838 Revolution-Political) 
+
+(instance SaveTheChildren SocialAidOrganization) 
+
+(not 
+ (and 
+ (instance ?ORG SocialAidOrganization) 
+ (instance ?REV Revolution-Political) 
+ (capableOfDoing ?ORG ?REV directingAgent))) 
+
+
+
+(queryyn  (implies 
+   (and 
+       (instance ?ACT Revolution-Political) 
+       (eventOccursAt ?ACT Iran)) 
+   (not 
+       (capableOfDoing SaveTheChildren ?ACT directingAgent))) 
+)
+
+(answer Yes
+)
+
+(end_of_file)

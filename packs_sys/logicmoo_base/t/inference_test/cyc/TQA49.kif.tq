@@ -1,0 +1,17 @@
+(note TQA49)
+
+(negativeVestedInterest BahrainiHizballah Bahrain) 
+(instance BahrainiHizballah TerroristGroup) 
+(residenceOfOrganization BahrainiHizballah Bahrain) 
+
+(query (findall ?AGENT
+  (and 
+    (residenceOfOrganization ?AGENT Bahrain) 
+    (instance ?AGENT TerroristGroup) 
+    (negativeVestedInterest ?AGENT Bahrain))))
+
+(answer BahrainiHizballah) 
+
+(end_of_file)
+
+ 

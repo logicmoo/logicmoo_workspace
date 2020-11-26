@@ -1,0 +1,5 @@
+Switch on help processing for top-level inputs. This only makes sense
+if help resources have been loaded using the {\tt LOAD\_\-HELP} command.
+In that case, help processing is applied first, and the top 5 help
+responses are printed together with trace information. After that,
+normal processing is carried out.

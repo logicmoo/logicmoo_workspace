@@ -1,0 +1,33 @@
+(note TQF124a)
+
+(hasOwnershipIn AIOC AIOCsCaspianOilFields) 
+
+(owns AIOC AIOCsCaspianOilFields) 
+(instance AIOC CommercialOrganization) 
+(instance AIOC OilCompany) 
+(instance AIOC PublicPrivateConsortium) 
+
+(statementOfPurpose AIOC "AIOC, the Azerbaijan International Operating Company, is an InternationalOrganization consisting of major and middle-sized oil industry companies. AIOC is concerned with the price of, commerce in and marketing of Petroleum-CrudeOil and NaturalGas in Azerbaijan. It is the main broker in oil and gas contracts in Azerbaijan.") 
+
+(presentInRegion AIOC Azerbaijan) 
+(instance AIOC InternationalOrganization) 
+(operatesInRegion AIOC Azerbaijan) 
+
+(implies 
+ (assertedTermFormulas ?TERM ?FORMULA) 
+ (descriptionFormulas ?TERM ?FORMULA)) 
+
+(query (findall ?DESCRIPTIVE-FORMULA (descriptionFormulas AIOC ?DESCRIPTIVE-FORMULA)))
+
+(answer (list (hasOwnershipIn AIOC AIOCsCaspianOilFields)))
+(answer (list (owns AIOC AIOCsCaspianOilFields)))
+(answer (list (instance AIOC CommercialOrganization)))
+(answer (list (instance AIOC OilCompany)))
+(answer (list (instance AIOC PublicPrivateConsortium)))
+(answer (list (statementOfPurpose AIOC "AIOC, the Azerbaijan International Operating Company, is an InternationalOrganization consisting of major and middle-sized oil industry companies. AIOC is concerned with the price of, commerce in and marketing of Petroleum-CrudeOil and NaturalGas in Azerbaijan. It is the main broker in oil and gas contracts in Azerbaijan.")  ))
+(answer (list (presentInRegion AIOC Azerbaijan)))
+(answer (list (instance AIOC InternationalOrganization)))
+(answer (list (operatesInRegion AIOC Azerbaijan)))
+
+(end_of_file)
+

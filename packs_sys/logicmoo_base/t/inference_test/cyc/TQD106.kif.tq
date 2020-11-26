@@ -1,0 +1,33 @@
+(note TQD106)
+
+(existant Stage2-BWAttackAtRasTannurah 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(instance Stage2-BiologicalWeapon1 WeaponOfMassDestruction) 
+
+(instrument-Generic Stage2-BWAttackAtRasTannurah Stage2-BiologicalWeapon1) 
+
+(subProcess HPKBScenarioConflict Stage2-BWAttackAtRasTannurah) 
+
+(instance Stage2-BWAttackAtRasTannurah AttackOnTangible) 
+
+(casualtyCount Stage2-BWAttackAtRasTannurah Hundreds-Quant) 
+
+
+( query (findall ?NUM (thereExists ?ACT 
+ (and 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT AttackOnTangible) 
+ (thereExists ?FORCE 
+ (and 
+ (instrument-Generic ?ACT ?FORCE) 
+ (instance ?FORCE WeaponOfMassDestruction))) 
+ (casualtyCount ?ACT ?NUM) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) ?ACT)))  
+))
+
+(answer Hundreds-Quant)
+

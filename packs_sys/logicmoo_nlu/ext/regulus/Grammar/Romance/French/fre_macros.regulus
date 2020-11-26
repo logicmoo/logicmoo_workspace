@@ -1,0 +1,10 @@
+
+macro(fre_only(Body), Body).
+macro(fre_or_cat(Body), Body).
+macro(fre_or_spa(Body), Body).
+
+macro(cat_only(Body), (dummy_cat:[] --> dummy)).
+macro(spa_only(Body), (dummy_cat:[] --> dummy)).
+macro(cat_or_spa(Body), (dummy_cat:[] --> dummy)).
+
+macro(french_catalan_or_spanish(French, Catalan, Spanish), French).

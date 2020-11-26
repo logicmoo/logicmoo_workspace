@@ -1,0 +1,119 @@
+// Type-hierarchy
+entity > Person, Act,  Haste, Utterance, Proposition, Situation, Manner.
+Manner > Loud, Quiet, Wisely, Slow, Fast, Sudden.
+
+// Type-instances
+Person = Romeo, FriarLawrence.
+Act = Insist, Walk, Run, Stumble.
+
+// CG 1:
+// Romeo cries to Friar Lawrence: "I stand on sudden haste."
+graph(gr1, [Utterance]-
+         -Agnt->[Person: Romeo],
+         -Rcpt->[Person: FriarLawrence],
+         -Manr->[Loud],
+         -Thme->[Proposition =
+                     [Act: Insist]-
+                       -Agnt->[Person: I], // NOTE: This variable means that any person who is used in concOfCG or branchOfCG will appear twice...
+                       -Thme->[Situation =
+                                  [Haste]-Attr->[Sudden]
+                                ]
+                  ]).
+
+//
+// CG 2:
+// Friar Lawrence says to Romeo: "Wisely and slow,
+// they stumble that run fast."
+graph(gr2, [Utterance]-
+         -Agnt->[Person: FriarLawrence],
+         -Manr->[Quiet],
+         -Thme->[Proposition =
+                         [Proposition =
+                                 [Act: Walk]-
+                                   -Manr->[Wisely],
+                                   -Manr->[Slow]
+                         ]-Reas->[Proposition =
+                                     [Act: Stumble]-Agnt->[Person=  
+                                         [Person]<-Agnt-[Act: Run]-Manr->[fast]
+                                                    ]
+                                 ]
+                         ]).
+
+// Opgave 2.2 (uden subsume)
+//i hvilken graf I siger personen A noget med en Manr, som er H
+
+says_how(I, A, H):-
+  graph(I,G),
+  who_says(I,A),
+  how_says(I,H).
+
+who_says(I,A) :-  
+   graph(I,G),
+   branchOfCG([Utterance]-Agnt->[Person: A], G).
+
+how_says(I,H) :-
+  graph(I,G),
+  branchOfCG([Utterance]-Manr->[H], G).
+
+// Opgave 2.3
+//alle koncepter C i grafen I p� det yderste niveau
+
+Concepts(I, C):-
+  graph(I,G),
+  concOfCG(C,G).
+
+// Opgave 2.4
+//alle koncepter C i grafen I inde i en proposition 
+
+ConceptsProp(I, C):-
+  graph(I,G),
+  branchOfCG([Proposition = P], G),
+  concOfCG(C, P).
+
+// Opgave 2.5
+//alle koncepter C i grafen I inde i en proposition inde i en proposition
+
+CPP(I,C):-
+  graph(I,G),
+  subsume([Proposition], G),
+  branchOfCG([Proposition = P ] ,G),
+  subsume([Proposition], P),
+  branchOfCG([Proposition = P2 ] ,P),
+  concOfCG(C, P2).
+
+CPP2(I,C):-
+  graph(I,G),
+  subsume([Proposition], G),
+  concOfCG([Proposition = P ] ,G),
+  subsume([Proposition], P),
+  concOfCG([Proposition = P2 ] ,P),
+  concOfCG(C, P2).
+
+// den virker med subsume
+
+
+// Opgave 2.6
+//alle koncepter i grafen I
+
+AllConcepts(I, C):-
+    Concepts(I, C).
+
+AllConcepts(I,C):-  
+  ConceptsProp(I, C).
+
+AllConcepts(I,C):-
+  ConceptsPropProp(I, C).
+
+// Opgave 2.7
+//alle de koncepter C i grafen I, hvor Romeo er referenten
+
+// This is what used to fail!
+Romeo(I, C):-
+AllConcepts(I,C),
+ eq(G, C-dummy->[entity]),
+ branchOfCG([Person: Romeo]-dummy->[entity], G).
+
+Romeo2(I, C):-
+AllConcepts(I,C),
+  eq(G, C-dummy->[entity]),
+ concOfCG([Person: Romeo], G).

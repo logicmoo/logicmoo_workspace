@@ -1,0 +1,7 @@
+[Drive]-
+     -obj->[Car]-chrc->[Color : red],
+     -agnt->[Boy : John]
+
+
+
+

@@ -1,0 +1,47 @@
+%------------------------------------------------------------------------------
+% File     : BOO021-1 : TPTP v3.3.0. Released v2.2.0.
+% Domain   : Boolean Algebra
+% Problem  : A Basis for Boolean Algebra
+% Version  : [MP96] (equality) axioms.
+% English  : This theorem starts with a (self-dual independent) basis_
+%            for Boolean algebra and derives commutativity of product.
+
+% Refs     : [McC98] McCune (1998), Email to G. Sutcliffe
+%          : [MP96]  McCune & Padmanabhan (1996), Automated Deduction in Eq
+% Source   : [McC98]
+% Names    : DUAL-BA-1 [MP96]
+
+% Status   : Unsatisfiable
+% Rating   : 0.00 v3.3.0, 0.07 v3.1.0, 0.11 v2.7.0, 0.00 v2.2.1
+% Syntax   : Number of clauses     :    7 (   0 non-Horn;   7 unit;   1 RR)
+%            Number of atoms       :    7 (   7 equality)
+%            Maximal clause size   :    1 (   1 average)
+%            Number of predicates  :    1 (   0 propositional; 2-2 arity)
+%            Number of functors    :    7 (   4 constant; 0-2 arity)
+%            Number of variables   :   12 (   2 singleton)
+%            Maximal term depth    :    3 (   2 average)
+
+% Comments : The other part of this problem is to prove associativity.
+%          : tptp2X -f tptp:short BOO021-1.p 
+%------------------------------------------------------------------------------
+cnf(multiply_add,axiom,(
+    multiply(add(X,Y),Y) = Y )).
+
+cnf(multiply_add_property,axiom,(
+    multiply(X,add(Y,Z)) = add(multiply(Y,X),multiply(Z,X)) )).
+
+cnf(additive_inverse,axiom,(
+    add(X,inverse(X)) = n1 )).
+
+cnf(add_multiply,axiom,(
+    add(multiply(X,Y),Y) = Y )).
+
+cnf(add_multiply_property,axiom,(
+    add(X,multiply(Y,Z)) = multiply(add(Y,X),add(Z,X)) )).
+
+cnf(multiplicative_inverse,axiom,(
+    multiply(X,inverse(X)) = n0 )).
+
+cnf(prove_commutativity_of_multiply,negated_conjecture,(
+    multiply(b,a) != multiply(a,b) )).
+%------------------------------------------------------------------------------

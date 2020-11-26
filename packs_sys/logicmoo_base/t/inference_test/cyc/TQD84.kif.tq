@@ -1,0 +1,55 @@
+(note TQD84)
+
+(relationInstanceExistsMany possesses Libya NerveAgent) 
+
+(subrelation relationInstanceExistsMany relationInstanceExists) 
+
+(instance NerveAgent MilitaryWeaponTypeByFunction) 
+
+(subclass NerveAgent ChemicalAgent) 
+
+(different ChemicalAgent ChemicalWeapon) 
+
+(different MilitaryWeaponTypeByFunction) 
+
+(relationInstanceExistsMany possesses Libya BlisterAgent) 
+
+(subrelation relationInstanceExistsMany relationInstanceExists) 
+
+(instance BlisterAgent MilitaryWeaponTypeByFunction) 
+
+(subclass BlisterAgent ChemicalAgent) 
+
+(different ChemicalAgent ChemicalWeapon) 
+
+(different MilitaryWeaponTypeByFunction) 
+
+(relationInstanceExistsMany possesses Libya MustardGas) 
+
+(subrelation relationInstanceExistsMany relationInstanceExists) 
+
+(instance MustardGas MilitaryWeaponTypeByFunction) 
+
+(subclass MustardGas ChemicalAgent) 
+
+(different ChemicalAgent ChemicalWeapon) 
+
+(different MilitaryWeaponTypeByFunction) 
+
+
+(query (findall ?WEAPONTYPE 
+(and 
+   (subclass ?WEAPONTYPE ChemicalAgent) 
+   (instance ?WEAPONTYPE MilitaryWeaponTypeByFunction) 
+   (different ChemicalWeapon ChemicalAgent) 
+   (different MilitaryWeaponTypeByFunction) 
+   (relationInstanceExists possesses Libya ?WEAPONTYPE))
+))
+
+(answer NerveAgent 
+)
+(answer BlisterAgent 
+)
+(answer MustardGas
+)
+(end_of_file)

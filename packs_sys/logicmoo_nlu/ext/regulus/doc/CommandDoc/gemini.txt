@@ -1,0 +1,3 @@
+The grammar defined by the parameter {\tt regulus\_\-grammar} is
+translated into Gemini form. The base name for the output grammar
+file needs to be specified using the parameter {\tt gemini\_\-grammar}.

@@ -1,0 +1,30 @@
+(note TQF204b)
+
+(adversarialResponseTo BlockadeOfIraq IraqAnnexesKuwait) 
+(objectOfPossessionTransfer IraqAnnexesKuwait Kuwait) 
+(agent IraqAnnexesKuwait Iraq) 
+(instance IraqAnnexesKuwait AnnexingTerritory) 
+(toPossessor IraqAnnexesKuwait Iraq) 
+(inReactionTo UNDeclaresAnnexationVoid IraqAnnexesKuwait) 
+(objectOfPossessionTransfer IraqAnnexesKuwait Kuwait) 
+(agent IraqAnnexesKuwait Iraq) 
+(instance IraqAnnexesKuwait AnnexingTerritory) 
+(toPossessor IraqAnnexesKuwait Iraq) 
+(adversarialResponseTo BlockadeOfIraq IraqAnnexesKuwait) 
+
+(query (findall (?RESPONSEONE ?RESPONSETWO) 
+   (thereExists ?ANNEX 
+       (and 
+           (instance ?ANNEX AnnexingTerritory) 
+           (objectOfPossessionTransfer ?ANNEX Kuwait) 
+           (agent ?ANNEX Iraq) 
+           (toPossessor ?ANNEX Iraq) 
+           (adversarialResponseTo ?RESPONSEONE ?ANNEX) 
+           (inReactionTo ?RESPONSETWO ?ANNEX))))
+
+(answer BlockadeOfIraq BlockadeOfIraq)
+(answer BlockadeOfIraq UNDeclaresAnnexationVoid)
+
+(end_of_file)
+
+

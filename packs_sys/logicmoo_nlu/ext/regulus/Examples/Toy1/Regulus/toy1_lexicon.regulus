@@ -1,0 +1,29 @@
+% Lexicon
+
+%%include('Supplement/toy1_lexicon_supplement.regulus').
+
+verb:[sem=[[state, be]], vform=finite, vtype=be, singplur=sing,
+	obj_sem_np_type=n] --> is.
+verb:[sem=[[state, be]], vform=finite, vtype=be, singplur=plur,
+	obj_sem_np_type=n] --> are.
+
+verb:[sem=[[action, switch]], vform=imperative, vtype=switch, singplur=sing, 
+	obj_sem_np_type=switchable] --> switch.
+verb:[sem=[[action, switch]], vform=imperative, vtype=switch, singplur=sing,
+	obj_sem_np_type=switchable] --> turn.
+
+verb:[sem=[[action, dim]], vform=imperative, vtype=transitive, singplur=sing,
+	obj_sem_np_type=dimmable] --> dim.
+
+noun:[sem=[[device, light]], sem_np_type=switchable\/dimmable, singplur=sing] --> light.
+noun:[sem=[[device, light]], sem_np_type=switchable\/dimmable, singplur=plur] --> lights.
+noun:[sem=[[device, fan]], sem_np_type=switchable, singplur=sing] --> fan.
+noun:[sem=[[device, fan]], sem_np_type=switchable, singplur=plur] --> fans.
+
+noun:[sem=[[location, kitchen]], sem_np_type=location, singplur=sing] --> kitchen.
+noun:[sem=[[location, living_room]], sem_np_type=location, singplur=sing] --> living, room.
+
+onoff:[sem=[[onoff, on]]] --> ?switched, on.
+onoff:[sem=[[onoff, off]]] --> ?switched, off.
+
+ 

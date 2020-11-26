@@ -1,0 +1,23 @@
+
+ %Filtrage sur listes plates avec variables et mange-tout sous-liste
+
+   $ filtre([],[],S,S).
+   $ filtre([F|Re],[F|Rf],S,U) :- filtre(Re,Rf,S,U).
+   $ filtre(E,['_'|Rf],S,U) :- filtre(E,Rf,S,U).
+   $ filtre([E|Re],['_'|Rf],S,U) :- filtre(Re,['_'|Rf],S,U).
+   $ filtre([E|Re],[F|Rf],S,U) :- est_var(F), val(F,S,V), !,
+                                  eq(V,E), filtre(Re,Rf,S,U).
+   $ filtre([E|Re],[F|Rf],S,U) :- est_var(F), 
+                                  filtre(Re,Rf,[[F|E]|S],U).  
+   $ tf:- filtre([a,b,c,d,e],['_',x,'_',y,'_'],[],X), imprime(X), fail.
+
+   $ est_var(x).
+   $ est_var(y).
+   $ est_var(z).
+
+   $ val(F,[[F|E]|R],E).
+   $ val(F,[T|Q],E) :- val(F,Q,E).
+
+   $ imprime([]):- nl.
+   $ imprime([[F|E]|R]) :- write(F), write('='), write(E), 
+                           tab(5), imprime(R).

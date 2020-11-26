@@ -1,0 +1,43 @@
+
+
+%[Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle]
+
+%@verb([finden, finde, findest, findet, finden, findet, gefunden], [[action, find]], [subcat=nx0vnx1]).
+
+
+%DETERMINERS --------------------------------------------------------------------------------
+
+@def_det([the], def, def, []). 
+@indef_det([a], indef, indef, []).
+%d:[sem=the_sing, agr=sing\/plur,def=def] --> the.
+%d:[sem=the_plur, agr=plur,def=def] --> the.
+
+%AUX VERBS -----------------------------------------------------------------------------------
+
+
+     
+/*
+
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], Sem), 
+      ( v:[sem=Sem, vform=base, subcat=nx0vvx1_modal] --> Base ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], Sem), 
+      ( v:[sem=Sem, vform=inf, subcat=nx0vvx1_modal] --> Base) ).      
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], Sem), 
+      ( v:[sem=Sem, vform=finite, agr=(1/\sing), subcat=nx0vvx1_modal] --> Pres_1_Sing ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], Sem), 
+      ( v:[sem=Sem, vform=finite, agr=(2/\sing), subcat=nx0vvx1_modal] --> Pres_2_Sing ) ).      
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], Sem), 
+      ( v:[sem=Sem, vform=finite, agr=(3/\sing), subcat=nx0vvx1_modal] --> Pres_3_Sing ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], Sem), 
+      ( v:[sem=Sem, vform=finite, agr=((1/\plur)\/(3/\plur)), subcat=nx0vvx1_modal] --> Pres_Formal ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], Sem), 
+      ( v:[sem=Sem, vform=finite, agr=(2/\plur), subcat=nx0vvx1_modal] --> Pres_2_Plur ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], Sem), 
+      ( v:[sem=Sem, vform=participle, subcat=nx0vvx1_modal] --> Participle ) ).	 
+
+@modal_verb([koennen, kann, kannst, kann, koennen, koennt, gekonnt], [[modal,can]]).
+*/
+
+%Complmentizers ---------------------------------------------------------
+
+@comp([that], that, []).

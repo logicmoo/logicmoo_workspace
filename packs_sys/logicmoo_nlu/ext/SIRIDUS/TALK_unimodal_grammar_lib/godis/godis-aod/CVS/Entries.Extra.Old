@@ -1,0 +1,15 @@
+/alias.pl////
+/control.pl////
+/control_async.pl////
+/control_async2.pl////
+/godis_datatypes.pl////
+/godis_macros.pl////
+/godis_semantics.pl////
+/infostate.pl////
+/macros.pl////
+/module_interfaces.pl////
+/resource_interfaces.pl////
+/select.pl////
+/selection_rules.pl////
+/update.pl////
+/update_rules.pl////

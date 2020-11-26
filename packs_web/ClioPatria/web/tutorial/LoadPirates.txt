@@ -1,0 +1,71 @@
+---+ Load and explore the Pirates data
+
+We assume ClioPatria is still running and you are logged on, either as
+=admin= or as a another user with at least _read_ and _write_ access.
+The initial set of data is added to the _library_ as part of the
+=pirates= packages and can be loaded using *|Repository/Load from
+library|*.  Then select "=|pirates -- Piracy data|=" and click *load*.
+
+---++ Explore the data
+
+The main entry point for exploring the data is the menu
+*|Places/graphs|*, which lists the datasets loaded into ClioPatria.
+Select the topmost graph, which holds the piracy data. The two most
+useful entry points are
+
+  1. _predicates_, which lists all _relations_ in the graph
+  2. _classes_, which lists the _types_ that are used in the graph
+
+Note that RDF resources are web addresses, i.e., typically strings of
+the form =|http://<host><path>[#fragment]|=. Many RDF tools and
+languages allow for an _|abbreviated notation|_ by declaring a
+_mnemonic_ that represents the (long) common prefix of RDF resources.
+For example, the short form for
+http://semanticweb.cs.vu.nl/2009/11/sem/hasPlace is
+
+  ==
+  sem:hasPlace
+  ==
+
+We defined prefixes for some commonly used resources in
+the file =|config-enabled/pirates.pl|= that is part of the =pirates=
+package. Prefixes are sometimes also referred to as _namespaces_.  See
+also rdf_register_ns/2 and rdf_current_ns/2.
+
+
+---++ The Web of Data
+
+As you browse through the data, some links colored *red*. These are
+resources that are not defined in the currently loaded dataset. Clicking
+on such a link opens a page with information on where the resource is
+used and the button *|Query the Linked Data cloud|*. Clicking this
+button causes ClioPatria to retrieve the information from the resource
+itself. In the ideal world, the resource (URI) points to an RDF document
+that provides additional information about this resource. Similar to
+links in HTML documents, the target may not exist, might not be a valid
+RDF document, etc.
+
+---++ Exercises
+
+Use the ClioPatria browser (starting from *|Places/graphs|*) and answer
+the following questions:
+
+  1. What is the full resource and what is the meaning (according to its
+  comment) of the predicate =|geonames_ont:featureClass|=?
+
+  2. Piracy actions are modelled using *sem* (Simple Event Model).  Use
+  the ClioPatria browser to find the main types and predicates that make
+  up this model and draw a diagram that explains the main relations.
+
+  3. =|sem:ActorType|= (the victim ship) and =|sem:EventType|= (what
+  happened) are organised in hierarchies. Draw a diagram that explains
+  how the _actorType_ hierarchy is organised.
+
+  4. =|sem:subTypeOf|= is related to =|rdfs:subClassOf|=. Which relation
+  is defined between these two properties?  What is the consequence of
+  this for instances of the classes =|sem:ActorType|= and
+  =|sem:EventType|=.
+  
+You are now ready to [[query pirate data with Prolog][QueryPirates.txt]].
+
+@see [[Tutorial index][Piracy.txt]]

@@ -1,0 +1,13 @@
+student(name(Lisa), semester(5)).
+student(name(Martin), semester(3)).
+student(name(John), semester(3)).
+student(name(Edward), semester(7)).
+
+same_semester(A,B) :- student(A,S), 
+                      student(B,S).
+
+same_semester(A,B,S) :- student(A,S), 
+                        student(B,S).
+
+
+

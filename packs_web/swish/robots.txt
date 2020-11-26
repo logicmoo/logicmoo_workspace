@@ -1,0 +1,4 @@
+User-agent: *
+Sitemap: /sitemap.xml
+Sitemap: http://trill-sw.eu/sitemap.xml
+Sitemap: http://cplint.lamping.unife.it/sitemap.xml

@@ -1,0 +1,50 @@
+# Build a SWISH image, using the SWISH_SHA1 below. This is a simple variation of
+# https://github.com/SWI-Prolog/docker-swish
+#	docker build -t logicalcontracts/swish-valentine2019 -f Dockerfile-SWISH-valentine2019 .
+################
+# If the version below is unavailable, probably use 'latest':
+FROM swipl:8.1.1 as base
+
+RUN apt-get update && apt-get install -y \
+    git build-essential autoconf curl unzip \
+    cleancss node-requirejs
+
+# We're not using the bower-zip targer in the makefile, so:
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get install -y nodejs
+RUN npm install -g bower
+RUN npm install -g clean-css clean-css-cli
+RUN echo '{ "allow_root": true }' > .bowerrc 
+
+# We'll place this instead on a more "portable" location:
+ENV SWISH_HOME /home/swish
+# Valentine's Day, 2019:
+ENV SWISH_SHA1 e3551c7f5bc6e0619ab16307e7c9bc06e2cc43e8
+
+RUN echo "At version ${SWISH_SHA1}"
+# Using a unique SWISH_SHA1 is also good to deal with Docker caching
+RUN (cd /home && git clone https://github.com/SWI-Prolog/swish.git) && \
+    (cd ${SWISH_HOME} && git checkout -q ${SWISH_SHA1})
+RUN make -C ${SWISH_HOME} RJS="nodejs /usr/lib/nodejs/requirejs/r.js" \
+	bower packs min
+
+FROM base
+# adapted from... LABEL maintainer "Jan Wielemaker <jan@swi-prolog.org>"
+LABEL maintainer "Miguel Calejo <mc@logicalcontracts.com>"
+
+RUN apt-get update && apt-get install -y \
+    graphviz imagemagick \
+    git \
+    wamerican && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=base ${SWISH_HOME} ${SWISH_HOME}
+COPY ./entry.sh entry.sh
+
+ENV SWISH_DATA /data
+VOLUME ${SWISH_DATA}
+WORKDIR ${SWISH_DATA}
+
+ENTRYPOINT ["/entry.sh"]
+
+

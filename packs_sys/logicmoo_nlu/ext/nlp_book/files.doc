@@ -1,0 +1,219 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Introduction
+
+The programs discussed in the text have been organized as a set of
+files that can be loaded independently.  The files use the standard
+Prolog predicates consult and reconsult to load other files with given
+names (which are assumed to be in the same directory).  The predicate
+reconsult differs from consult in that the clauses read override any
+existing clauses for the same predicate, whereas consult simply
+augments the clauses that already exist.
+
+The example files do not assume the existence of any built-in
+predicates other than those presented in Clocksin and Mellish (1981).
+However, the definitions of some widely used predicates have been
+included in the file library.pl, which is reconsulted by many of the
+other files.  These predicates include append, islist, and retractall.
+Definitions are also given there for dbgwrite -- a tracing utility --
+rule and word, where the latter two predicates provide a uniform
+interface to rules and lexical entries expressed in a DCG-style rule
+format.
+
+Index of library files       
+
+<FILE> <CHAPTER> <CONTENTS> <PAGE>
+
+airlines.pl [9] Example rulebase for inference, etc.
+airlines.ptr [8] Syntax and semantics for airline fragment
+anbncn.dcg [4] A DCG for the language a^n b^n c^n
+aprecg.pl [4] Encoding a PSG in Prolog
+buchart1.pl [6] A bottom-up chart parser
+buchart2.pl [6] Bottom-up chart parser - with term unification
+bupars1.pl [5] A bottom-up shift-reduce parser
+bupars2.pl [5] The BUP bottom-up parser
+chrtlib1.pl [6] Library predicates for database chart parsers
+chrtlib2.pl [6] Library predicates for argument chart parsers
+dagunify.pl [7] Unification of DAGS
+dbq.pl [9] Evaluator for DBQ formulae
+dcgtrans.pl [4] Full DCG translator originally from C&M
+defaults.pl [9] Simple semantic net, with default inheritance
+disambig.ptr [8] Disambiguation by semantic features
+eng_lex.ptr [7] A Prolog PATR lexicon for an English fragment
+eng_syn.ptr [7] A Prolog PATR grammar for an English fragment
+europe.pl [9] Example rulebase for inference, etc.
+examples.pl [--] A set of test examples
+ezpars.pl [4] A simple top-down parser
+ezrecg.pl [4] A simple topdown recognizer
+families.pl [9] Inference rules about family relationships
+flexicon.pl [4] Example lexicon - makes extensive use of features
+forwards.pl [9] Simple forwards inference program
+french.ptr [7] A Prolog PATR grammar for a French fragment
+fsgrules.pl [4] Feature augmented phrase structure rules
+fstnarcs.pl [2] An example finite state transition network
+fstnpars.pl [2] A finite state transition network parser
+fstnrecg.pl [2] A finite state transition network recognizer
+fstrans.pl [2] A very simple finite state transducer
+fxamples.pl [4] Another set of test examples
+inherits.pl [9] Simple semantic net, with absolute inheritance
+lexemes.pl [7] Implementing lexical macros and WFCs
+lexicon.pl [4] An example lexicon
+library.pl [--] A collection of utility predicates
+mix2.dcg [4] Two DCGs for the language {a,b}* such that n(a) = n(b)
+mix3.dcg [4] A DCG for the language MIX, MIX in {a,b,c}*, n(a) = n(b) = n(c)
+mkdcg [4] Unix shell script to convert '--->' grammars to DCGs
+plan_gen.pl [10] Generation of plans involving illocutionary acts
+presupp.ptr [10] Presupposition grammar and inference rules
+pro_patr.pl [7] Prolog PATR interpreter
+psgrules.pl [4] An example set of CF-PSG rules
+psgtrans.pl [4] Translate simple phrase structure grammar rules
+rtnarcs.pl [3] A simple recursive transition network
+rtnpars.pl [3] A recursive transition network parser
+rtnrecg.pl [3] A recursive transition network recognizer
+rtrans.pl [3] Pushdown transduction
+scripts.pl [10] Simple script applier
+show_net.pl [9] Utility code for exhibiting net theorems
+tdchart1.pl [6] A top-down chart parser
+tdchart2.pl [6] Top down chart parser
+tdpars.pl [5] A simple top-down parser
+tdrecg.pl [5] A simple top-down recognizer
+xx.dcg [4] A DCG for the language xx, x in {a,b,c}*
+
+12.3.  Index of procedures defined
+
+<PROCEDURE> <CHAPTER> <FILE> <PAGE>
+
+add [9] forwards.pl
+add_edge [6] buchart1.pl
+add_edge [6] chrtlib2.pl
+add_edge [6] tdchart1.pl
+add_edges [6] chrtlib2.pl
+add_vars [4] psgtrans.pl
+airline [9] airlines.pl
+all [9] dbq.pl
+all_facts [9] forwards.pl
+allplan [10] plan_gen.pl
+and [9] dbq.pl
+append [--] library.pl
+assert_edge [6] chrtlib1.pl
+atom_length [7] pro_patr.pl
+borders [9] europe.pl
+collect_found [6] chrtlib2.pl
+combine [4] psgtrans.pl
+conjtolist [--] library.pl
+db_goal [10] plan_gen.pl
+dbgwrite [--] library.pl
+dcg_and [4] dcgtrans.pl
+dcg_lhs [4] dcgtrans.pl                     
+dcg_or [4] dcgtrans.pl
+dcg_rhs [4] dcgtrans.pl
+denotes [7] lexemes.pl
+denotes [7] pro_patr.pl
+det [5] bupars2.pl
+do [6] chrtlib1.pl
+dv [5] bupars2.pl
+exists [9] dbq.pl
+extend_edges [6] chrtlib2.pl
+fact [9] forwards.pl
+find_new_consequences [9] forwards.pl
+findall [6] chrtlib2.pl
+fit_in [10] presupp.ptr
+fit_on [10] presupp.ptr
+flatten1 [4] dcgtrans.pl
+flatten2 [4] dcgtrans.pl
+foreach [6] chrtlib1.pl
+found_parse [6] buchart2.pl
+getnext [6] chrtlib2.pl
+goal [5] bupars2.pl
+ground [10] plan_gen.pl
+groundstate [10] plan_gen.pl
+has_attr [9] defaults.pl
+has_attr [9] inherits.pl
+heads [5] bupars1.pl
+in_word [--] library.pl
+islist [--] library.pl
+iv [5] bupars2.pl
+lenacc [10] plan_gen.pl
+listlen [10] plan_gen.pl
+macro [7] eng_lex.ptr
+macro [7] lexemes.pl
+manipulate [10] presupp.ptr
+match [10] scripts.pl
+matches [5] tdpars.pl
+matches [5] tdrecg.pl
+member [10] plan_gen.pl
+member [6] chrtlib2.pl
+mirror [6] chrtlib1.pl
+mwrite [6] chrtlib1.pl
+new_edges [6] buchart2.pl
+new_edges [6] tdchart2.pl
+nn [5] bupars2.pl
+not_local [9] defaults.pl
+np [5] bupars2.pl
+or [9] dbq.pl
+p [5] bupars2.pl
+parse [2] fstnpars.pl
+parse [3] rtnpars.pl
+parse [5] bupars1.pl
+parse [5] tdpars.pl
+parse [6] buchart1.pl
+parse [6] tdchart1.pl                     
+pathval [7] dagunify.pl
+plan [10] plan_gen.pl
+planner [10] plan_gen.pl
+pp_dag [7] pro_patr.pl
+printout [9] dbq.pl
+prpr [10] scripts.pl
+prpx [10] scripts.pl
+rappend [5] bupars1.pl
+read_in [--] library.pl
+readword [--] library.pl
+recognize [2] fstnrecg.pl
+recognize [3] rtnrecg.pl
+recognize [5] tdrecg.pl
+reduce1 [5] bupars1.pl
+reduce2 [5] bupars1.pl
+restsent [--] library.pl
+restword [--] library.pl
+rule [--] library.pl
+s [4] aprecg.pl
+s [4] ezpars.pl
+s [4] ezrecg.pl
+select [9] forwards.pl
+show [9] show_net.pl
+special [2] fstnpars.pl
+special [2] fstnrecg.pl
+special [3] rtnpars.pl
+special [3] rtnrecg.pl
+start_active [6] tdchart1.pl
+start_active [6] tdchart2.pl
+start_agenda [6] chrtlib2.pl
+start_chart [6] chrtlib1.pl
+subsidiary [9] airlines.pl
+sv [5] bupars2.pl
+tag [4] dcgtrans.pl
+transduce [2] fstrans.pl
+transduce [3] rtrans.pl
+translate [4] dcgtrans.pl
+translate [4] psgtrans.pl
+traverse [2] fstnpars.pl
+traverse [2] fstnrecg.pl
+traverse [3] rtnpars.pl
+traverse [3] rtnrecg.pl
+traverse2 [2] fstrans.pl
+traverse2 [3] rtrans.pl
+tv [5] bupars2.pl
+uk_based [9] airlines.pl
+understand [10] scripts.pl
+unify [7] dagunify.pl
+us_based [9] airlines.pl
+vp [4] aprecg.pl
+vp [4] ezpars.pl
+vp [4] ezrecg.pl
+wh [5] bupars2.pl
+word [--] library.pl
+write_acts [10] plan_gen.pl

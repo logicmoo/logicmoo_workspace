@@ -1,0 +1,72 @@
+(note "TQB10-b - math")
+
+(instance (MillionBarrelsPerDay ?X) FlowRate) 
+
+(productionAmountDuring Kuwait PetroleumProduct (YearFn 1996) (MillionBarrelsPerDay 2.15100)) 
+(productionAmountDuring Iraq PetroleumProduct (YearFn 1997) (MillionBarrelsPerDay 1.20000)) 
+(productionAmountDuring Iran PetroleumProduct (YearFn 1997) (MillionBarrelsPerDay 3.66000)) 
+(productionAmountDuring Qatar PetroleumProduct (YearFn 1996) (BarrelsPerDay 561000)) 
+(productionAmountDuring Qatar PetroleumProduct (YearFn 1995) (BarrelsPerDay 498000)) 
+(productionAmountDuring Iran PetroleumProduct (YearFn 1996) (MillionBarrelsPerDay 3.75800)) 
+(productionAmountDuring UnitedArabEmirates PetroleumProduct (YearFn 1995) (MillionBarrelsPerDay 2.39600)) 
+(productionAmountDuring SaudiArabia PetroleumProduct (YearFn 1995) (MillionBarrelsPerDay 8.94758)) 
+(productionAmountDuring UnitedArabEmirates PetroleumProduct (YearFn 1996) (MillionBarrelsPerDay 2.44100)) 
+(productionAmountDuring SaudiArabia PetroleumProduct (YearFn 1996) (MillionBarrelsPerDay 8.93000)) 
+(productionAmountDuring Bahrain PetroleumProduct (YearFn 1995) (BarrelsPerDay 51780)) 
+(productionAmountDuring SaudiArabia PetroleumProduct (YearFn 1997) (MillionBarrelsPerDay 9.00000)) 
+(productionAmountDuring Iraq PetroleumProduct (YearFn 1995) (BarrelsPerDay 586000)) 
+(productionAmountDuring Bahrain PetroleumProduct (YearFn 1996) (BarrelsPerDay 46000)) 
+(productionAmountDuring Kuwait PetroleumProduct (YearFn 1995) (MillionBarrelsPerDay 2.15641) ) 
+(productionAmountDuring Iran PetroleumProduct (YearFn 1995) (MillionBarrelsPerDay 3.71522)) 
+(productionAmountDuring Iraq PetroleumProduct (YearFn 1996) (BarrelsPerDay 600000)) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY IndependentCountry) 
+    (productionAmountDuring ?COUNTRY PetroleumProduct ?TIME (?UNIT ?AMOUNT)))
+  (exportThroughAmountDuring ?COUNTRY PetroleumProduct BaniyasPipeline ?TIME (?UNIT 0))) 
+
+(instance Iraq IndependentCountry) 
+(instance Iraq PersianGulfCountry)
+(instance UnitedArabEmirates IndependentCountry) 
+(instance UnitedArabEmirates PersianGulfCountry) 
+(instance Qatar IndependentCountry) 
+(instance Qatar PersianGulfCountry) 
+(instance SaudiArabia IndependentCountry) 
+(instance SaudiArabia PersianGulfCountry) 
+(instance Kuwait IndependentCountry) 
+(instance Kuwait PersianGulfCountry) 
+(instance Bahrain IndependentCountry) 
+(instance Bahrain PersianGulfCountry) 
+
+(query (findall ?COUNTRY (findall ?TOTAL (findall ?TIME
+  (and 
+    (instance ?COUNTRY PersianGulfCountry) 
+    (thereExists ?TOTAL 
+      (thereExists ?THROUGH 
+        (and 
+          (productionAmountDuring ?COUNTRY PetroleumProduct ?TIME ?TOTAL) 
+          (instance ?TOTAL FlowRate) 
+          (exportThroughAmountDuring ?COUNTRY PetroleumProduct BaniyasPipeline ?TIME ?THROUGH) 
+          (evaluate ?FRACTION (QuantityConversionFn  (QuotientFn ?THROUGH ?TOTAL)))))))))))
+				     
+(answer Kuwait 0.00000 1996)
+(answer Iran 0.00000 1996)
+(answer Qatar 0 1995)
+(answer Iran 0.00000 1997)
+(answer Qatar 0 1996)
+(answer UnitedArabEmirates 0.00000 1995)
+(answer Saudi Arabia 0.00000 1995)
+(answer United Arab Emirates 0.00000 1996)
+(answer Saudi Arabia 0.00000 1996)
+(answer Bahrain 0 1995)
+(answer Saudi Arabia 0.00000 1997)
+(answer Iraq 0 1995)
+(answer Bahrain 0 1996)
+(answer Kuwait 0.00000 1995)
+(answer Iran 0.00000 1995)
+(answer Iraq 0 1996)
+(answer Iraq 0.00000 1997)
+
+(end_of_file)
+

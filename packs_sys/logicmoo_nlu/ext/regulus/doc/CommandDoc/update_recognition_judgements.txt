@@ -1,0 +1,9 @@
+Update recognition judgements file, defined by the
+translation\_\-corpus\_\-recognition\_\-judgements config file entry, from the
+temporary translation corpus recognition judgements file, defined by
+the translation\_\-corpus\_\-tmp\_\-recognition\_\-judgements config file entry
+and produced by the TRANSLATE\_\-SPEECH\_\-CORPUS or
+TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN commands. This command should be used
+after editing the temporary translation corpus recognition judgements
+file. Editing should replace question marks by valid judgements,
+currently 'y' or 'n'.

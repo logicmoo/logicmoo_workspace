@@ -1,0 +1,91 @@
+(note TQB58)
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+    (believes InternationalCommunity 
+      (agent ?ACT ?AGT))) 
+  (increasesCausally ?ACT 
+    (thereExists ?SANCTION 
+      (and 
+        (instance ?SANCTION ImposingSanctions) 
+        (maleficiary ?SANCTION ?AGT))) likelihood)) 
+
+(implies 
+  (and 
+    (instance ?HOSTAGE TakingSomeoneHostage) 
+    (agent ?HOSTAGE ?COUNTRY-ORG) 
+    (instance ?COUNTRY-ORG Country)) 
+  (believes InternationalCommunity 
+    (agent ?HOSTAGE ?COUNTRY-ORG))) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT DontTakeHostages) 
+    (agent ?ACT ?AGT) 
+    (instance ?AGT Country)) 
+  (believes InternationalCommunity 
+    (agent ?ACT ?AGT))) 
+
+(implies 
+  (and 
+    (instance ?HOSTAGE TakingSomeoneHostage) 
+    (agent ?HOSTAGE ?COUNTRY) 
+    (instance ?COUNTRY Country)) 
+  (actionViolatesObligation ?HOSTAGE DontTakeHostages)) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ?OB) 
+    (obligationParts ?WIDE ?OB)) 
+  (actionViolatesObligation ?ACT ?WIDE)) 
+
+(obligationParts DontTakeHostages DontTakeHostages) 
+
+(subrelation agent agent) 
+(obligationParts ModernInternationalRelationsCOC ModernInternationalRelationsCOC) 
+(obligationParts ModernInternationalRelationsCOC DontTakeHostages) 
+(instance Iran GeopoliticalEntity) 
+
+(implies 
+  (instance ?GEOPOL GeopoliticalEntity) 
+  (desires ?GEOPOL 
+    (not 
+      (thereExists ?SANCTION 
+        (and 
+          (instance ?SANCTION ImposingSanctions) 
+          (maleficiary ?SANCTION ?GEOPOL)))))) 
+
+(instance Iran Country) 
+
+(query (findall ?PROP
+  (implies 
+    (and 
+      (agent ?ACT Iran) 
+      (instance ?ACT TakingSomeoneHostage) 
+      (objectActedOn ?ACT ?HOSTAGE) 
+      (citizens UnitedKingdomOfGreatBritainAndNorthernIreland ?HOSTAGE)) 
+    (or 
+      (and 
+        (desires Iran ?PROP) 
+        (decreasesCausally ?ACT ?PROP likelihood)) 
+      (and 
+        (desires Iran (not ?PROP)) 
+        (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list 
+  (thereExists ?BLAME 
+       (and 
+           (instance ?BLAME Censuring-CommunicationAct) 
+           (senderOfInfo ?BLAME InternationalCommunity) 
+           (maleficiary ?BLAME Iran)))))
+ 
+(answer (list 
+  (thereExists ?SANCTION 
+       (and 
+           (instance ?SANCTION ImposingSanctions) 
+           (maleficiary ?SANCTION Iran)))))
+
+(end_of_file)
+
+

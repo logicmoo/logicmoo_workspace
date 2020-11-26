@@ -1,0 +1,23 @@
+(note "TQB129 SymmetricRelation")
+
+(instance Oman PersianGulfCountry) 
+
+
+(instance near SymmetricRelation) 
+
+(implies (instance ?Place PersianGulfCountry) (near ?Place PersianGulf))
+
+(queryyn  (near PersianGulf  Oman)  )
+
+(answer Yes)
+
+(queryyn  (near  Oman PersianGulf)  )
+
+(answer Yes)
+
+
+(end_of_file)
+
+
+
+

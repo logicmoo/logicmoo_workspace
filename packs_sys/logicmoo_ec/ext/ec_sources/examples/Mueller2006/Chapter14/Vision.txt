@@ -1,0 +1,67 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter14/Vision.e
+loading foundations/Root.e
+loading foundations/EC.e
+83 variables and 405 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Aspect(Object1, Aspect1).
+Happens(Change(Object1, Aspect1, Aspect2), 0).
+1
+-Aspect(Object1, Aspect1).
++Aspect(Object1, Aspect2).
+P
+Arc(Shape1, Aspect1, Aspect2).
+Arc(Shape2, Aspect1, Aspect3).
+Arc(Shape2, Aspect3, Aspect2).
+Shape(Object1, Shape1).
+!Arc(Shape1, Aspect1, Aspect1).
+!Arc(Shape1, Aspect1, Aspect3).
+!Arc(Shape1, Aspect2, Aspect1).
+!Arc(Shape1, Aspect2, Aspect2).
+!Arc(Shape1, Aspect2, Aspect3).
+!Arc(Shape1, Aspect3, Aspect1).
+!Arc(Shape1, Aspect3, Aspect2).
+!Arc(Shape1, Aspect3, Aspect3).
+!Arc(Shape2, Aspect1, Aspect1).
+!Arc(Shape2, Aspect1, Aspect2).
+!Arc(Shape2, Aspect2, Aspect1).
+!Arc(Shape2, Aspect2, Aspect2).
+!Arc(Shape2, Aspect2, Aspect3).
+!Arc(Shape2, Aspect3, Aspect1).
+!Arc(Shape2, Aspect3, Aspect3).
+!Happens(Change(Object1, Aspect1, Aspect1), 0).
+!Happens(Change(Object1, Aspect1, Aspect3), 0).
+!Happens(Change(Object1, Aspect2, Aspect1), 0).
+!Happens(Change(Object1, Aspect2, Aspect2), 0).
+!Happens(Change(Object1, Aspect2, Aspect3), 0).
+!Happens(Change(Object1, Aspect3, Aspect1), 0).
+!Happens(Change(Object1, Aspect3, Aspect2), 0).
+!Happens(Change(Object1, Aspect3, Aspect3), 0).
+!ReleasedAt(Aspect(Object1, Aspect1), 0).
+!ReleasedAt(Aspect(Object1, Aspect1), 1).
+!ReleasedAt(Aspect(Object1, Aspect2), 0).
+!ReleasedAt(Aspect(Object1, Aspect2), 1).
+!ReleasedAt(Aspect(Object1, Aspect3), 0).
+!ReleasedAt(Aspect(Object1, Aspect3), 1).
+!Shape(Object1, Shape2).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Vision: 2 predicates, 0 functions, 1 fluents, 1 events, 10 axioms
+encoding 0.1s
+solution 0.0s
+total 0.3s
+Discrete Event Calculus Reasoner 1.0

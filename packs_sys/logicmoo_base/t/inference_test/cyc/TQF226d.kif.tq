@@ -1,0 +1,38 @@
+(note TQF226d)
+
+(isomorphicWith 
+ (and 
+ (agent PassingUNSC-Resolution678 UN-SecurityCouncil) 
+ (senderOfInfo UNDeclaresAnnexationVoid UN-SecurityCouncil) 
+ (recipientOfInfo IraqRejectsUNResolutions UN-SecurityCouncil)) 
+ (and 
+ (agent Y2Scenario-SaudiArabiaAndGCCEndorseUSPosition GulfCooperationCouncil) 
+ (senderOfInfo Y2Stage4-StatementCondemningIran GulfCooperationCouncil) 
+ (recipientOfInfo Y2Stage6-UNPersuadesIranAndGCCToMeet GulfCooperationCouncil))) 
+
+
+
+( query  (findall (?PRIMARY-SIMILARITY ?ANALOG)
+ (thereExists 
+(?UN-PRIMARY-SIMILARITY) 
+(thereExists 
+(?ANALOG-FACT-PRIMARY-SIMILARITY) 
+(and 
+(findAnalogs -2 DesertShieldMt UN-SecurityCouncil Y2Scenario-AllStagesMt ?ANALOG) 
+(or 
+(and 
+(= ?ANALOG UN-SecurityCouncil) 
+(= ?PRIMARY-SIMILARITY 
+(= ?ANALOG UN-SecurityCouncil))) 
+(and 
+(structureMap UN-SecurityCouncil DesertShieldMt ?ANALOG Y2Scenario-AllStagesMt ?UN-PRIMARY-SIMILARITY ?ANALOG-FACT-PRIMARY-SIMILARITY) 
+(= ?PRIMARY-SIMILARITY 
+(andWhile ?UN-PRIMARY-SIMILARITY ?ANALOG-FACT-PRIMARY-SIMILARITY)) 
+(explainDifferenceBetween UN-SecurityCouncil ?ANALOG ?PRIMARY-DIFFERENCE))))))
+)
+)
+
+(answer UN-SecurityCouncil (list (equals UN-SecurityCouncil UN-SecurityCouncil) ) )
+
+
+(end_of_file)

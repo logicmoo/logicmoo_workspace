@@ -1,0 +1,9 @@
+inclu([X|Q], L) :- 
+	membre(X,L),
+	inclu(Q, L),!.
+
+inclu([], _).
+
+membre(X,[X|Y]).
+
+membre(X,[Y|Z]) :- membre(X,Z).

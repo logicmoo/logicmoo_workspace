@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+#
+# Convert prefix-style types to pCG type statements.
+#
+# Reads from standard input or the specified files. Writes to standard output.
+#
+# Assumptions:
+#
+# o All type relationships expressed as GT t1 t2.
+# o All types are concept types!
+#
+# dbenn, May 2001
+
+while (<>) {
+  if (m/^\(GT\s+\[TypeLabel\s+\"([A-Za-z0-9\.\'_]+)\"\]
+             \s+\[TypeLabel\s+\"([A-Za-z0-9\.\'_]+)\"\]\)$/x) {
+    my ($first, $second) = ($1, $2);
+    $first =~ s/\./_/g; $second =~ s/\./_/g; # replace occurrences of . with _ 
+    $first =~ s/\'//g; $second =~ s/\'//g; # remove single quotes
+    $first =~ s/univ/universal/g;
+    print "concept $first > $second;\n";
+  } else {
+    die "error in line '$_'.\n";
+  }
+}

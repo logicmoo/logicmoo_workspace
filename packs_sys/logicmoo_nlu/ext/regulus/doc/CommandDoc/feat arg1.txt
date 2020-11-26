@@ -1,0 +1,9 @@
+If the argument is a feature in the currently loaded grammar,
+print information showing the range of permitted values for 
+that feature. For example:
+\begin{verbatim}
+>> FEAT agr
+(Display information for specified feature)
+
+Feature values for feature "agr": [[1,2,3],[masc,fem],[sg,pl]]
+\end{verbatim}

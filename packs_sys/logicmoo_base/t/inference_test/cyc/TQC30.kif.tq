@@ -1,0 +1,61 @@
+(note TQC30)
+
+(implies ?FORMULA 
+ (ist Topic-LibyaRussia ?FORMULA)) 
+
+(seller 
+ (SKF-38421845) Russia) 
+
+(buyer 
+ (SKF-38421845) Libya) 
+
+(instance 
+ (SKF-38421845) 
+ (BuyingFn NuclearProduct)) 
+
+(infoTransferred 
+ (SKF-49233405) Topic-LibyaRussia) 
+
+(subclass NuclearProduct NuclearProduct) 
+
+(exports Russia NuclearProduct) 
+
+(different Libya Russia) 
+
+(senderOfInfo 
+ (SKF-49233405) Russia) 
+
+(instance 
+ (SKF-49233405) MultiDirectionalCommunication) 
+
+(senderOfInfo 
+ (SKF-49233405) Libya) 
+
+
+
+
+(query (findall ?COUNTRY
+
+ (thereExists ?COM 
+ (thereExists ?TOPIC 
+ (thereExists ?IM 
+ (thereExists ?BUYING 
+ (and 
+ (instance ?COM MultiDirectionalCommunication) 
+ (senderOfInfo ?COM Libya) 
+ (different Libya ?COUNTRY) 
+ (subclass ?IM NuclearProduct) 
+ (senderOfInfo ?COM ?COUNTRY) 
+ (infoTransferred ?COM ?TOPIC) 
+ (exports ?COUNTRY ?IM) 
+ (ist ?TOPIC 
+ (seller ?BUYING ?COUNTRY)) 
+ (ist ?TOPIC 
+ (instance ?BUYING 
+ (BuyingFn NuclearProduct))) 
+ (ist ?TOPIC 
+ (buyer ?BUYING Libya)))))))))
+
+(answer Russia)  
+
+(end_of_file)

@@ -1,0 +1,2 @@
+Relevant to applications using grammar specialisation. Specifies a
+file or list of files containing EBL include lex declarations.

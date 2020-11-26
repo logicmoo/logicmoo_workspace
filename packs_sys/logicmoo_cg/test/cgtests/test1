@@ -1,0 +1,153 @@
+;;Date: Thu, 28 May 92 08:43:23 -0500
+;;From: esch%email.sp.unisys.com@metro.ucc.su.OZ.AU (John Esch)
+;;To: cg@cs.umn.edu
+;;Subject: CG TEST1, graphs
+
+
+;;The following is a test case used for regression testing in CONSTRUCT.
+
+;;This file contains a variety of graphs linearized from each node, 
+;;including one with a cycle.
+;;The only referents are generic or variables for linearization.
+
+[CAT].
+
+[CAT]<-(AGNT).
+
+(AGNT)->[CAT].
+
+[CAT:*v0017]->(AGNT)->[CAT:*v0017].
+
+(AGNT)-
+  <-[CAT:*v0019]
+  ->[CAT:*v0019],.
+
+[CAT:*v0021]1->(AGNT)-
+                 2<-[CAT:*v0021]
+                 3->[CAT:*v0021],.
+
+(AGNT)-
+  1<-[CAT:*v0023]
+  2<-[CAT:*v0023]
+  3->[CAT:*v0023],.
+
+[CAT]->(STAT)->[SIT].
+
+(STAT)-
+  <-[CAT]
+  ->[SIT],.
+
+[SIT]<-(STAT)<-[CAT].
+
+[CAT]->(STAT)->[SIT]->(LOC)->[MAT].
+
+(STAT)-
+  <-[CAT]
+  ->[SIT]->(LOC)->[MAT],.
+
+[SIT]-
+  <-(STAT)<-[CAT]
+  ->(LOC)->[MAT],.
+
+(LOC)-
+  <-[SIT]<-(STAT)<-[CAT]
+  ->[MAT],.
+
+[MAT]<-(LOC)<-[SIT]<-(STAT)<-[CAT].
+
+[CAT]-
+  <-(AGNT)<-[SIT:*v0033]->(LOC)->[MAT]
+  ->(STAT)->[SIT:*v0033],.
+
+(STAT)-
+  <-[CAT]<-(AGNT)<-[SIT:*v0035]->(LOC)->[MAT]
+  ->[SIT:*v0035],.
+
+[SIT]-
+  <-(STAT)<-[CAT:*v0037]
+  ->(AGNT)->[CAT:*v0037]
+  ->(LOC)->[MAT],.
+
+(LOC)-
+  <-[SIT]-
+      <-(STAT)<-[CAT:*v0039]
+      ->(AGNT)->[CAT:*v0039],
+  ->[MAT],.
+
+[MAT]<-(LOC)<-[SIT]-
+                <-(STAT)<-[CAT:*v0041]
+                ->(AGNT)->[CAT:*v0041],.
+
+[MONKEY]<-(AGNT)<-[EAT]-
+                    ->(INSTANCE)->[SPOON]->(MATR)->[SHELL]<-(PART)<-[WALNUT:*v0043]
+                    ->(OBJ)->[WALNUT:*v0043],.
+
+(AGNT)-
+  <-[EAT]-
+      ->(INSTANCE)->[SPOON]->(MATR)->[SHELL]<-(PART)<-[WALNUT:*v0045]
+      ->(OBJ)->[WALNUT:*v0045],
+  ->[MONKEY],.
+
+[EAT]-
+  ->(INSTANCE)->[SPOON]->(MATR)->[SHELL]<-(PART)<-[WALNUT:*v0047]
+  ->(OBJ)->[WALNUT:*v0047]
+  ->(AGNT)->[MONKEY],.
+
+(OBJ)-
+  <-[EAT]-
+      ->(INSTANCE)->[SPOON]->(MATR)->[SHELL]<-(PART)<-[WALNUT:*v0049]
+      ->(AGNT)->[MONKEY],
+  ->[WALNUT:*v0049],.
+
+[WALNUT]-
+  <-(OBJ)<-[EAT:*v0051]-
+             ->(AGNT)->[MONKEY]
+             ->(INSTANCE)->[SPOON]->(MATR)->[SHELL:*v0267],
+  ->(PART)->[SHELL:*v0267],.
+
+(PART)-
+  <-[WALNUT]<-(OBJ)<-[EAT]-
+                       ->(INSTANCE)->[SPOON]->(MATR)->[SHELL:*v0053]
+                       ->(AGNT)->[MONKEY],
+  ->[SHELL:*v0053],.
+
+[SHELL]-
+  <-(PART)<-[WALNUT]<-(OBJ)<-[EAT]-
+                               ->(INSTANCE)->[SPOON:*v0055]
+                               ->(AGNT)->[MONKEY],
+  <-(MATR)<-[SPOON:*v0055],.
+
+(MATR)-
+  <-[SPOON]<-(INSTANCE)<-[EAT]-
+                           ->(OBJ)->[WALNUT]->(PART)->[SHELL:*v0057]
+                           ->(AGNT)->[MONKEY],
+  ->[SHELL:*v0057],.
+
+[SPOON]-
+  <-(INSTANCE)<-[EAT:*v0059]-
+                  ->(AGNT)->[MONKEY]
+                  ->(OBJ)->[WALNUT]->(PART)->[SHELL:*v0272],
+  ->(MATR)->[SHELL:*v0272],.
+
+(INSTANCE)-
+  <-[EAT]-
+      ->(OBJ)->[WALNUT]->(PART)->[SHELL]<-(MATR)<-[SPOON:*v0061]
+      ->(AGNT)->[MONKEY],
+  ->[SPOON:*v0061],.
+
+(BETWEEN)-
+  1<-[CEILING]
+  2<-[FLOOR]
+  3->[MAT],.
+
+[MAT]3<-(BETWEEN)-
+          1<-[CEILING]
+          2<-[FLOOR],.
+
+[CEILING]1->(BETWEEN)-
+              2<-[FLOOR]
+              3->[MAT],.
+
+[FLOOR]2->(BETWEEN)-
+            1<-[CEILING]
+            3->[MAT],.

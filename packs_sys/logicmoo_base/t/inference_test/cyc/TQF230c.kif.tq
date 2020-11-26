@@ -1,0 +1,58 @@
+(note TQF230c)
+
+(instance Iran-UAEGulfIslandsDispute ConflictEvent) 
+(subProcess Iran-UAEGulfIslandsDispute HYP-MilitaryAttack-12129992) 
+(instance HYP-MilitaryAttack-12129992 MilitaryAttack) 
+
+(implies 
+  (and 
+    (instance ?ATTACK MilitaryAttack) 
+    (subProcess ?CONFLICT ?ATTACK) 
+    (instance ?CONFLICT ConflictEvent)) 
+  (increases-Generic ?ATTACK ?CONFLICT conflictLevel)) 
+
+(instance AbuMusaConflict-1992 ConflictEvent) 
+(subProcess AbuMusaConflict-1992 HYP-MilitaryAttack-12129992) 
+(instance HYP-MilitaryAttack-12129992 MilitaryAttack) 
+(instance UnitedArabEmirates Country) 
+(instance Iran Country) 
+(opponentsInConflict Iran UnitedArabEmirates AbuMusaConflict-1992) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY-1 Country) 
+    (instance ?COUNTRY-2 Country) 
+    (opponentsInConflict ?COUNTRY-1 ?COUNTRY-2 ?CONFLICT) 
+    (increases-Generic ?ACT ?CONFLICT conflictLevel)) 
+  (increases-Generic ?ACT ?COUNTRY-1 
+    (Kappa 
+      (?AGENT ?TENSION-LEVEL) 
+        (statusWithAgent-Gradient ?AGENT ?COUNTRY-2 StateOfDiplomaticTension ?TENSION-LEVEL))))
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+(query (findall (?AFFECTED-BY-DECREASING ?PROPERTY ?AFFECTED-BY-INCREASING)
+  (implies
+    (and 
+      (subProcess AbuMusaConflict-1992 ?EVENT) 
+      (instance ?EVENT MilitaryAttack) 
+      (directingAgent ?EVENT UnitedArabEmirates)) 
+    (or 
+      (increases-Generic ?EVENT ?AFFECTED-BY-INCREASING ?PROPERTY) 
+      (decreases-Generic ?EVENT ?AFFECTED-BY-DECREASING ?PROPERTY)))))
+
+(answer Iran-UAEGulfIslandsDispute conflictLevel ??)
+(answer AbuMusaConflict-1992 conflictLevel ??)
+
+(answer Iran (list  (Kappa 
+ (?AGENT ?TENSION-LEVEL) 
+ (statusWithAgent-Gradient ?AGENT UnitedArabEmirates StateOfDiplomaticTension ?TENSION-LEVEL))))
+ 
+(answer UnitedArabEmirates (list  (Kappa 
+ (?AGENT ?TENSION-LEVEL) 
+ (statusWithAgent-Gradient ?AGENT Iran StateOfDiplomaticTension ?TENSION-LEVEL))))
+
+(end_of_file)
+

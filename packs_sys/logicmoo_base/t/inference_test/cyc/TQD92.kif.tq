@@ -1,0 +1,30 @@
+(note TQD92)
+
+(agent HypotheticalAttackOfIranOnSaudiArabia Iran) 
+
+(maleficiary HypotheticalAttackOfIranOnSaudiArabia SaudiArabia) 
+
+(instance HypotheticalAttackOfIranOnSaudiArabia MilitaryAttack) 
+
+(instrument-Generic HypotheticalAttackOfIranOnSaudiArabia ShinMimRe-Iran) 
+
+(instance ShinMimRe-Iran NBCWeaponsUnit-Offensive) 
+
+(sovereignAllegianceOfOrg ShinMimRe-Iran Iran) 
+
+(query (findall (?ATTACK ?DEPLOYED-UNIT  ?ROLE )
+
+(and 
+   (instance ?ATTACK MilitaryAttack) 
+   (agent ?ATTACK Iran) 
+   (maleficiary ?ATTACK SaudiArabia) 
+   (instance ?DEPLOYED-UNIT NBCWeaponsUnit-Offensive) 
+   (sovereignAllegianceOfOrg ?DEPLOYED-UNIT Iran) 
+   (?ROLE ?ATTACK ?DEPLOYED-UNIT))
+))
+
+(answer HypotheticalAttackOfIranOnSaudiArabia ShinMimRe-Iran instrument-Generic 
+)
+
+(end_of_file)
+

@@ -1,0 +1,55 @@
+(note TQF211c)
+
+(affectedAgent-Direct Iranian-TalibanConflict-1998 Taliban) 
+(subProcess Iranian-TalibanConflict-1998 Zolfaghar2-MilitaryExercise) 
+
+(temporallyIntersects Zolfaghar2-MilitaryExercise 
+ (MonthFn November 
+ (YearFn 1998))) 
+
+(instance Zolfaghar2-MilitaryExercise MilitaryExercise) 
+(directingAgent Zolfaghar2-MilitaryExercise Iran) 
+
+(implies 
+ (and 
+ (instance ?CONFLICT ConflictEvent) 
+ (opponentsInConflict ?AGENT ?OTHER ?CONFLICT)) 
+ (affectedAgent-Direct ?CONFLICT ?AGENT)) 
+
+(instance Iranian-TalibanConflict-1998 ConflictEvent) 
+(opponentsInConflict Taliban Iran Iranian-TalibanConflict-1998) 
+
+(endingDate Zolfaghar2-MilitaryExercise 
+ (MonthFn November 
+ (YearFn 1998))) 
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+(opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+
+(query (findall ?AGENTS-WHO-ARE-DIRECTLY-AFFECTED 
+   (thereExists ?EXERCISE 
+       (and 
+           (instance ?EXERCISE MilitaryExercise) 
+           (directingAgent ?EXERCISE Iran) 
+           (temporallyIntersects ?EXERCISE 
+               (MonthFn November 
+                   (YearFn 1998))) 
+           (or 
+               (and 
+                   (different ?AGENTS-WHO-ARE-DIRECTLY-AFFECTED Iran) 
+                   (affectedAgent-Direct ?EXERCISE ?AGENTS-WHO-ARE-DIRECTLY-AFFECTED)) 
+               (thereExists ?CONFLICT 
+                   (and 
+                       (opponentsInConflict Iran Taliban ?CONFLICT) 
+                       (subProcess ?CONFLICT ?EXERCISE) 
+                       (different ?AGENTS-WHO-ARE-DIRECTLY-AFFECTED Iran) 
+                       (affectedAgent-Direct ?CONFLICT ?AGENTS-WHO-ARE-DIRECTLY-AFFECTED))))))))
+
+(answer Taliban )
+(end_of_file)
+
+
+

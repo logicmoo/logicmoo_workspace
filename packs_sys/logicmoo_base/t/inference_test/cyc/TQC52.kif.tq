@@ -1,0 +1,313 @@
+(note TQC52)
+
+; English: "After Day 16, what risks would Saudi Arabia face in attacking targets in Iran with chemical weapons?"
+
+(increasesCausally HYP-MilitaryAttack-64413153 
+ (exists ?DESTROY 
+ (inputsDestroyed ?DESTROY HYP-ChemicalWeapon-13134070)) likelihood) 
+
+(possesses SaudiArabia HYP-ChemicalWeapon-13134070) 
+
+(=> 
+ (possesses ?AGT ?THING) 
+ (desires ?AGT 
+ (not 
+ (exists ?EVT 
+ (inputsDestroyed ?EVT ?THING))))) 
+
+(increasesCausally HYP-MilitaryAttack-64413153 
+ (exists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION SaudiArabia))) likelihood) 
+
+(instance SaudiArabia Agent) 
+
+(=> 
+ (instance ?AGT Agent) 
+ (desires ?AGT 
+ (not 
+ (exists ?ATTACK 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT)))))) 
+
+
+
+
+(agent HYP-MilitaryAttack-64413153 SaudiArabia) 
+
+(increasesImmediatelyCausally HYP-MilitaryAttack-64413153 
+ (failureForAgents HYP-MilitaryAttack-64413153 SaudiArabia) likelihood) 
+
+(subrelation increasesImmediatelyCausally increasesCausally) 
+
+(=> 
+ (agent ?ACT ?AGT) 
+ (desires ?AGT 
+ (not 
+ (failureForAgents ?ACT ?AGT)))) 
+
+
+
+
+(increasesCausally HYP-MilitaryAttack-64413153 
+ (exists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP OrganizationForTheProhibitionOfChemicalWeapons) 
+ (maleficiary ?MIL-OP SaudiArabia))) likelihood) 
+
+(desires SaudiArabia 
+ (not 
+ (exists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP OrganizationForTheProhibitionOfChemicalWeapons) 
+ (maleficiary ?MIL-OP SaudiArabia))))) 
+
+
+
+
+(increasesCausally HYP-MilitaryAttack-64413153 
+ (exists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION OrganizationForTheProhibitionOfChemicalWeapons) 
+ (maleficiary ?SANCTION SaudiArabia))) likelihood) 
+
+(desires SaudiArabia 
+ (not 
+ (exists (?SANCTION)
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION OrganizationForTheProhibitionOfChemicalWeapons) 
+ (maleficiary ?SANCTION SaudiArabia))))) 
+
+
+
+
+(=> 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (deviceUsed ?ATTACK ?WEAPON)) 
+ (increasesCausally ?ATTACK 
+ (exists ?DESTROY 
+ (inputsDestroyed ?DESTROY ?WEAPON)) likelihood)) 
+
+(instance HYP-MilitaryAttack-64413153 MilitaryAttack) 
+
+(deviceUsed HYP-MilitaryAttack-64413153 HYP-ChemicalWeapon-13134070) 
+
+
+
+
+(=> 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT2) 
+ (instance ?AGT2 Agent) 
+ (agent ?ATTACK ?AGT1)) 
+ (increasesCausally ?ATTACK 
+ (exists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION ?AGT1))) likelihood)) 
+
+(subclass MilitaryAttack AttackOnTangible) 
+
+(agent HYP-MilitaryAttack-64413153 SaudiArabia) 
+
+(instance Iran Agent) 
+
+(maleficiary HYP-MilitaryAttack-64413153 Iran) 
+
+(subrelation agent agent) 
+
+
+
+
+(=> 
+ (and 
+ (instance ?AGREE CodeOfConduct) 
+ (instance ?AGREE InternationalAgreement) 
+ (enforcingAgent ?AGREE ?GROUP) 
+ (actionViolatesObligation ?ACT ?AGREE) 
+ (agent ?ACT ?GEOPOL) 
+ (instance ?GEOPOL GeopoliticalEntity)) 
+ (increasesCausally ?ACT 
+ (exists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP ?GROUP) 
+ (maleficiary ?MIL-OP ?GEOPOL))) likelihood)) 
+
+(instance ChemicalWeaponsConvention CodeOfConduct) 
+
+(instance ChemicalWeaponsConvention InternationalAgreement) 
+
+(enforcingAgent ChemicalWeaponsConvention OrganizationForTheProhibitionOfChemicalWeapons) 
+
+(actionViolatesObligation HYP-MilitaryAttack-64413153 ChemicalWeaponsConvention) 
+
+(agent HYP-MilitaryAttack-64413153 SaudiArabia) 
+
+(instance SaudiArabia GeopoliticalEntity) 
+
+
+
+
+(=> 
+ (and 
+ (instance ?AGREE CodeOfConduct) 
+ (instance ?AGREE InternationalAgreement) 
+ (enforcingAgent ?AGREE ?GROUP) 
+ (actionViolatesObligation ?ACT ?AGREE) 
+ (agent ?ACT ?GEOPOL) 
+ (instance ?GEOPOL GeopoliticalEntity)) 
+ (increasesCausally ?ACT 
+ (exists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION ?GROUP) 
+ (maleficiary ?SANCTION ?GEOPOL))) likelihood)) 
+
+
+(=> 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?AGT) 
+ (deviceUsed ?ATTACK ?DEVICE)) 
+ (possesses ?AGT ?DEVICE)) 
+
+
+(=> 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?WEAPON) 
+ (instance ?WEAPON ChemicalWeapon) 
+ (agent ?ATTACK ?ATTACKING-AGENT)) 
+ (increasesImmediatelyCausally ?ATTACK 
+ (failureForAgents ?ATTACK ?ATTACKING-AGENT) likelihood)) 
+
+
+
+(instance HYP-ChemicalWeapon-13134070 ChemicalWeapon) 
+
+
+
+
+(=> 
+ (and 
+ (instance ?GEOPOL GeopoliticalEntity) 
+ (obligatedAgent ?OBL ?GEOPOL) 
+ (enforcingAgent ?OBL ?ENFORCER)) 
+ (desires ?GEOPOL 
+ (not 
+ (exists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP ?ENFORCER) 
+ (maleficiary ?MIL-OP ?GEOPOL)))))) 
+
+(=> 
+ (and 
+ (instance ?GEOPOL GeopoliticalEntity) 
+ (obligatedAgent ?OBL ?GEOPOL) 
+ (enforcingAgent ?OBL ?ENFORCER)) 
+ (desires ?GEOPOL 
+ (not 
+ (exists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION ?ENFORCER) 
+ (maleficiary ?SANCTION ?GEOPOL)))))) 
+
+(=> 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?COUNTRY2) 
+ (instance ?COUNTRY2 Country) 
+ (eventOccursAt ?ATTACK ?AREA) 
+ (different ?COUNTRY1 ?COUNTRY2) 
+ (inRegion ?AREA ?COUNTRY1) 
+ (instance ?COUNTRY1 Country)) 
+ (maleficiary ?ATTACK ?COUNTRY1)) 
+
+(instance Iran Country) 
+
+(different SaudiArabia Iran) 
+
+(inRegion HYP-SomethingExisting-42411240 Iran) 
+
+(eventOccursAt HYP-MilitaryAttack-64413153 HYP-SomethingExisting-42411240) 
+
+(instance SaudiArabia Country) 
+
+
+
+(=> 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?CHEM) 
+ (instance ?CHEM ChemicalWeapon) 
+ (agent ?ATTACK ?COUNTRY) 
+ (obligatedAgent ChemicalWeaponsConvention ?COUNTRY)) 
+ (actionViolatesObligation ?ATTACK ChemicalWeaponsConvention)) 
+
+(obligatedAgent ChemicalWeaponsConvention SaudiArabia) 
+
+(instance HYP-ChemicalWeapon-65056192 ChemicalWeapon) 
+
+
+
+
+
+(query (findall ?PROP 
+
+ (=> 
+ (and 
+ (agent ?ACT SaudiArabia) 
+ (instance ?ACT MilitaryAttack) 
+ (eventOccursAt ?ACT ?TARGET) 
+ (inRegion ?TARGET Iran) 
+ (deviceUsed ?ACT ?FORCE) 
+ (instance ?FORCE ChemicalWeapon) 
+ (startsAfterStartingOf ?ACT 
+ (DateInSituationFn CalendarDay 16 HPKBScenarioConflict))) 
+ (or 
+ (and 
+ (desires SaudiArabia ?PROP) 
+ (decreasesCausally ?ACT ?PROP likelihood)) 
+ (and 
+ (desires SaudiArabia 
+ (not ?PROP)) 
+ (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list 
+   (exists ?DESTROY 
+       (inputsDestroyed ?DESTROY #$HYP-ChemicalWeapon-13134070))  ))
+
+(answer (list (exists ?RETALIATION 
+       (and 
+           (instance ?RETALIATION AttackOnTangible) 
+           (maleficiary ?RETALIATION SaudiArabia))) ))
+
+(answer (list  (failureForAgents #$HYP-MilitaryAttack-64413153 SaudiArabia) ))
+
+(answer (list 
+(exists ?MIL-OP 
+       (and 
+           (instance ?MIL-OP MilitaryOperation) 
+           (directingAgent ?MIL-OP OrganizationForTheProhibitionOfChemicalWeapons) 
+           (maleficiary ?MIL-OP SaudiArabia)))
+))
+
+(answer (list (exists ?SANCTION 
+       (and 
+           (instance ?SANCTION ImposingSanctions) 
+           (directingAgent ?SANCTION OrganizationForTheProhibitionOfChemicalWeapons) 
+           (maleficiary ?SANCTION SaudiArabia))) ))
+
+
+(end_of_file)

@@ -1,0 +1,26 @@
+# So far just placeholder files (NOT recorded on PDA!) to test that the scripts work.
+# Need to replace these with real PDA files.
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt02.wav was there a meeting on monday
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt03.wav where is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt04.wav is there a meeting planned in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt05.wav where is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt06.wav	when
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt07.wav is there a meeting planned in geneva
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt08.wav will pierrette be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt09.wav will susan be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt10.wav will maria be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt11.wav will marianne be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt12.wav marianne starlander
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt13.wav will marianne santaholma be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt14.wav will marita be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt15.wav will yukie be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt16.wav will nikos be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt17.wav who will be there
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt18.wav is there a meeting next week
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt19.wav is there a meeting next month
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt20.wav is there a meeting in two months
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt21.wav is there a meeting in march
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt22.wav will there be a meeting in march
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt23.wav will there be a meeting in two months
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt24.wav when is the next meeting
+$REGULUS/Examples/Calendar/corpora/speech/2008-02-08_15-31-01/utt25.wav will pierrette be there

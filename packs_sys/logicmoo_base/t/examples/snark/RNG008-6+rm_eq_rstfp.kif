@@ -1,0 +1,129 @@
+;--------------------------------------------------------------------------
+; File     : RNG008-6 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Ring Theory
+; Problem  : Boolean rings are commutative
+; Version  : [MOW76] axioms : Augmented.
+; English  : Given a ring in which for all x, x * x = x, prove that for 
+;            all x and y, x * y = y * x.
+
+; Refs     : [MOW76] McCharen et al. (1976), Problems and Experiments for a
+;          : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+; Source   : [Ove90]
+; Names    : CADE-11 Competition 3 [Ove90]
+;          : THEOREM 3 [LM93]
+
+; Status   : unsatisfiable
+; Rating   : 0.67 v2.2.0, 0.71 v2.1.0, 0.75 v2.0.0
+; Syntax   : Number of clauses    :   22 (   0 non-Horn;  11 unit;  13 RR)
+;            Number of literals   :   55 (   2 equality)
+;            Maximal clause size  :    5 (   2 average)
+;            Number of predicates :    3 (   0 propositional; 2-3 arity)
+;            Number of functors   :    7 (   4 constant; 0-2 arity)
+;            Number of variables  :   74 (   2 singleton)
+;            Maximal term depth   :    2 (   1 average)
+
+; Comments : Supplies multiplication to identity as lemmas
+;          : tptp2X -f kif -t rm_equality:rstfp RNG008-6.p 
+;--------------------------------------------------------------------------
+; additive_identity1, axiom.
+(or (sum additive_identity ?A ?A))
+
+; additive_identity2, axiom.
+(or (sum ?A additive_identity ?A))
+
+; closure_of_multiplication, axiom.
+(or (product ?A ?B (multiply ?A ?B)))
+
+; closure_of_addition, axiom.
+(or (sum ?A ?B (add ?A ?B)))
+
+; left_inverse, axiom.
+(or (sum (additive_inverse ?A) ?A additive_identity))
+
+; right_inverse, axiom.
+(or (sum ?A (additive_inverse ?A) additive_identity))
+
+; associativity_of_addition1, axiom.
+(or (not (sum ?A ?B ?C))
+    (not (sum ?B ?D ?E))
+    (not (sum ?C ?D ?F))
+    (sum ?A ?E ?F))
+
+; associativity_of_addition2, axiom.
+(or (not (sum ?A ?B ?C))
+    (not (sum ?B ?D ?E))
+    (not (sum ?A ?E ?F))
+    (sum ?C ?D ?F))
+
+; commutativity_of_addition, axiom.
+(or (not (sum ?A ?B ?C))
+    (sum ?B ?A ?C))
+
+; associativity_of_multiplication1, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?B ?D ?E))
+    (not (product ?C ?D ?F))
+    (product ?A ?E ?F))
+
+; associativity_of_multiplication2, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?B ?D ?E))
+    (not (product ?A ?E ?F))
+    (product ?C ?D ?F))
+
+; distributivity1, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?A ?D ?E))
+    (not (sum ?B ?D ?F))
+    (not (product ?A ?F ?G))
+    (sum ?C ?E ?G))
+
+; distributivity2, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?A ?D ?E))
+    (not (sum ?B ?D ?F))
+    (not (sum ?C ?E ?G))
+    (product ?A ?F ?G))
+
+; distributivity3, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?D ?B ?E))
+    (not (sum ?A ?D ?F))
+    (not (product ?F ?B ?G))
+    (sum ?C ?E ?G))
+
+; distributivity4, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?D ?B ?E))
+    (not (sum ?A ?D ?F))
+    (not (sum ?C ?E ?G))
+    (product ?F ?B ?G))
+
+; addition_is_well_defined, axiom.
+(or (not (sum ?A ?B ?C))
+    (not (sum ?A ?B ?D))
+    (= ?C ?D))
+
+; multiplication_is_well_defined, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?A ?B ?D))
+    (= ?C ?D))
+
+; x_times_identity_x_is_identity, axiom.
+(or (product ?A additive_identity additive_identity))
+
+; identity_times_x_is_identity, axiom.
+(or (product additive_identity ?A additive_identity))
+
+; x_squared_is_x, hypothesis.
+(or (product ?A ?A ?A))
+
+; a_times_b_is_c, hypothesis.
+(or (product a b c))
+
+; prove_b_times_a_is_c, conjecture.
+(or (not (product b a c)))
+
+;--------------------------------------------------------------------------

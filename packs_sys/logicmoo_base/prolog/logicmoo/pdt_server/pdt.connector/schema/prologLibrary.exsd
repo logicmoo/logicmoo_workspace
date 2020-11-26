@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.cs3.prolog.connector.prolog.interface">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.cs3.prolog.connector.prolog.interface" id="prologLibraries" name="Prolog Libraries"/>
+      </appInfo>
+      <documentation>
+         [Enter description of this extension point.]
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <documentation>
+            Plugins can use this extension point to export prolog code as library that can be used within code of other plugins.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="library" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="library">
+      <annotation>
+         <documentation>
+            A prolog library manifests in a contribution to the prolog source lookup facility. The plugin that hosts a library tags it with a global unique id which can typically be accessed via  public constants in the host plugin&apos;s Java API. Clients can ask the PDT Runtime Plugin to configure the source lookup facility of a particular Prolog Runtime using the information registered with this ID. This will be conducted by adding clauses to the system predicate file_search_path/2.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <choice minOccurs="0" maxOccurs="unbounded">
+               <element ref="dependency"/>
+               <element ref="attribute"/>
+            </choice>
+         </sequence>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  global unique identifier for the hosted library
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="alias" type="string" use="default" value="library">
+            <annotation>
+               <documentation>
+                  Defaults to &quot;library&quot;. See documentation of file_search_path/2
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string" use="required">
+            <annotation>
+               <documentation>
+                  You should give a path to a directory, relative to the install directory of the hosting plugin. The path will be resolved to an absolute path at runtime.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dependency">
+      <annotation>
+         <documentation>
+            Used to specify a dependency of the hosted library to some other library, possibly hosted by some other plugin. When the Prolog Runtime is asked to configure the lookup path of a PrologProcess to include the hosted library, it will first make sure that the path also includes the libraries the hosted library depends on.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="library" type="string">
+            <annotation>
+               <documentation>
+                  Id of a library
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="attribute">
+      <annotation>
+         <documentation>
+            Used to add a application-specific attribute to this library
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  attribute name
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string" use="default" value="true">
+            <annotation>
+               <documentation>
+                  Attribute value. Defaults to true.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

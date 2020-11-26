@@ -1,0 +1,3 @@
+Relevant to translation applications. Points to the file containing
+the interlingua declarations, which define the constants that may be
+used at the interlingual representation level.

@@ -1,0 +1,89 @@
+
+% Intro consisting of correction + non-correction interjection - Checklist rule
+% [i meant no]
+utterance_intro:[sem= @correction_and_interjection_sem(Correction, Interjection), stype=none] -->
+interjection:[sem=Correction, interjection_type=correction],
+interjection:[sem=Interjection, interjection_type=(\(correction)), stype=none].
+
+% S introduced by adv - Checklist rule
+% [now] go to step three
+utterance:[sem= @s_advp_s_sem(Advp, S), stype=imp\/dcl\/ynq\/whq, stype=SType] -->
+	   advp:[sem=Advp, wh=n, advpos=fronted, gapsin=null, gapsout=null],
+	   s:[sem=S, stype=SType, operator_wrapped=y, gapsin=null, gapsout=null].
+
+% We get lone wh- PPs through the post_mods rule above, but we need another rule for lone wh+ - Checklist rule
+% [how]
+utterance:[sem= @elliptical_utt_sem(PP), stype=ellipsis] -->
+           pp:[sem=PP, wh=y, gapsin=null, gapsout=null].
+
+% Lone advp as utterance - Checklist rule
+% [louder] 
+utterance:[sem= @elliptical_utt_sem(Sem), stype=ellipsis] -->
+           advp:[sem=Sem, gap=n, gapsin=null, gapsout=null].
+
+% imperative with "let's" - Checklist rule
+% let's continue
+s:[sem= @s_lets_vp_imperative_sem(Vp), wh=n, vform=imperative, inv=n, whmoved=n, 
+   operator_wrapped=n, takes_adv_type=AdvpType, gapsin=null, gapsout=null] -->
+let, '\'s',
+vp:[sem=Vp, inv=n, subj_nform=normal, vform=base, takes_post_mods=n, passive_subj=n, 
+    takes_adv_type=AdvpType, gapsin=null, gapsout=null].
+
+% vp_v_np_measure - Checklist rule
+% intransive with measure phrase
+% move three steps
+vp:[sem= @vp_v_np_sem(Verb, NP), @vbar_feats_for_vp(Feats), takes_post_mods=y,
+    gapsin=GIn, gapsout=GIn] -->
+vbar:[sem=Verb, subcat=nx0vnx1_measure, @vbar_feats_for_vp(Feats), obj_sem_n_type=ObjSem], 
+measure_phrase:[sem=NP, sem_n_type=ObjSem].
+
+% vp_v_np_pp - Checklist rule
+% vp with np and pp arguements
+% put it on step five
+vp:[sem= @vp_v_np_pp_sem(Verb, NP, PP), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut] -->
+vbar:[sem=Verb, subcat=nx0vnx1pnx2, @vbar_feats_for_vp(Feats), 
+      obj_sem_n_type=ObjSem, obj_def=ObjDef, obj_syn_type=ObjSynType, pp_sem_pp_type=PPSem], 
+np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjSem, def=ObjDef, 
+    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GNext, case=nonsubj, syn_type=ObjSynType],
+pp:[sem=PP, wh=n, sem_pp_type=PPSem, 
+    gapsin=GNext, gapsout=GOut].
+
+%----------------------------------------------------------------------
+
+% Measure phrase (should be specialised NP?) - Checklist rule
+% e.g. go back [three steps]
+measure_phrase:[sem= @measure_phrase_det_unit(Det, Unit), sem_n_type=UnitType] -->
+	        d:[sem=Det, agr=Agr, wh=n, det_type=numeric, prenumber=n],
+		n:[sem=Unit, sem_n_type=UnitType, agr=Agr].
+
+%----------------------------------------------------------------------
+
+% Number rules
+
+% Spelled out three figure number - Checklist rule
+% e.g. step [one two five]
+number:[sem= @number_three_digits(D1, D2, D3), num_type=three_figure] -->
+number:[sem=D1, num_type=(zero\/digit)],
+number:[sem=D2, num_type=(zero\/digit)],
+number:[sem=D3, num_type=(zero\/digit)].
+
+% Restricted decimal number - Checklist rule
+% e.g. step [two point four], step [ten point twelve]
+number:[sem= @number_decimal(N1, N2), num_type=decimal] -->
+number:[sem=N1, num_type=(\(oh_digit\/a\/decimal))],
+point,
+number:[sem=N2, num_type=(\(oh_digit\/a))].
+
+% ordinal as D - Checklist rule
+% e.g. this is [second]
+% "second"
+d:[sem= @det_ordinal_sem(N), agr=sing, wh=n, det_type=ordinal, prenumber=y, can_be_np=y, syn_type=ordinal_det] -->
+ordinal:[sem=N, time_type=none].
+
+% D + ordinal as D - Checklist rule
+% e.g. [the second] floor
+% "the second"
+d:[sem= @det_det_ordinal_sem(D, N), agr=sing, wh=n, det_type=ordinal, prenumber=y, can_be_np=y, syn_type=ordinal_det] -->
+d:[sem=D, agr=sing, wh=n, det_type=def\/quant],
+ordinal:[sem=N, time_type=none].

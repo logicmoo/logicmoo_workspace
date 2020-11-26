@@ -1,0 +1,185 @@
+﻿<html xmlns:mshelp="http://msdn.microsoft.com/mshelp">
+<head>
+    <title>Instruction</title>
+    <link rel="stylesheet" type="text/css" href="../styles/presentation.css" />
+    <link rel="stylesheet" type="text/css" href="ms-help://Hx/HxRuntime/HxLink.css" />
+
+    <script type="text/javascript" src="../scripts/script_prototype.js"> </script>
+    <script type="text/javascript" src="../scripts/EventUtilities.js"> </script>
+    <script type="text/javascript" src="../scripts/StyleUtilities.js"> </script>
+    <script type="text/javascript" src="../scripts/SplitScreen.js"> </script>
+    <script type="text/javascript" src="../scripts/ElementCollection.js"> </script>
+    <script type="text/javascript" src="../scripts/MemberFilter.js"> </script>
+    <script type="text/javascript" src="../scripts/CollapsibleSection.js"> </script>
+    <script type="text/javascript" src="../scripts/LanguageFilter.js"> </script>
+    <script type="text/javascript" src="../scripts/CookieDataStore.js"> </script>
+</head>
+<body>
+    <div id="control">
+        <span class="productTitle">Swi-cs-pl - A CSharp class library to connect .NET languages with SWI-Prolog </span>
+        <br />
+        <span class="topicTitle">SbsSW.SwiPlCs</span>
+        <br />
+        <div id="toolbar">
+        </div>
+    </div>
+    
+    <div id="main">
+        <span style="color:Gray"></span>
+        <div class="summary">
+        </div>
+        <div class="section">
+            <div class="sectionTitle">Abstract</div>
+            <div class="sectionContent">
+                This document describes a CSharp interface to <a href="http://www.swi-prolog.org">SWI-Prolog</a>.
+                The described interface
+                provides a layer around the C-interface for natural programming from C#. The interface
+                deals with automatic type-conversion to and from Prolog, mapping of exceptions and
+                making queries to Prolog in an easy way. There is a call-back from Prolog to C#.
+            </div>
+        </div>
+        <div class="section">
+            <div class="sectionTitle">
+                Introduction
+            </div>
+            <div class="sectionContent">
+                The first version of this Interface was more or less a port of the C++ interface.
+                Now the naming is more '.Net' like and the interface provides a number of features
+                that make queries to SWI-Prolog very easy and powerful. Using programmable type-conversion
+                (casting), native data-types can be translated automatically into appropriate Prolog
+                types. Automatic destruction deals with most of the cleanup required.
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="sectionTitle">Acknowledgements</div>
+            <div class="sectionContent">
+                I would like to thank Jan Wielemaker for answering many questions and for his comments.
+                <br />
+                Also to Arne Skjærholt for the 64-Bit version (SwiPlCs64.dll).</div>
+        </div>
+
+        <div class="section">
+            <div class="sectionTitle">Download binaries</div>
+            <div class="sectionContent">
+                <p>
+                    Here is the link to download the latest binaries or older versions.
+                    <a href='../../download/index.htm'>Download page</a>
+                    <br />
+                    There is also a copy on <a href="http://gollem.swi.psy.uva.nl/twiki/pl/bin/view/Foreign/CSharpInterface">SWI-Prolog Twiki page</a>
+                    and <a href="http://www.swi-prolog.org/contrib/CSharp.html">SWI-Prolog contrib page</a>. The latter might be outdated.
+                    <br />
+                    At present I only publish the binaries including the documentation. 
+                    The sources, which are now under LGPL 2, might be published later. 
+                    If you like to see them or work on them don't hesitate to contact me via mail.
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="sectionTitle">Versions</div>
+            <div class="sectionContent">
+                <p>
+                The latest version work with SWI-Prolog 5.8.0 and higher.
+                </p>
+                The AssemblyVersion number, e.g. 1.1.578.0, can be interpreted as follows:
+                <ul>
+                    <li>1   - major version</li>
+                    <li>1   - minor version</li>
+                    <li>578 - SWI-Prolog version 5.7.8 (test cases run against this prolog version)</li>
+                    <li>0   - patch level version</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="sectionTitle">Getting started</div>
+            <div class="sectionContent">
+                <p>
+                    Copy SwiPlCs.dll or SwiPlCs64.dll and SwiPlCs.XML where ever you want and add in your project a reference
+                    to SwiPlCs.dll.
+                </p>
+                <p>
+                    After that intelligence and tool tips should be available.
+                </p>
+                <p>
+                    <img alt="screen shot" src="Intelligence.png" style="padding:20px 10px 20px 10px;" />
+                </p>
+                <p>
+                    Make sure that swipl.dll and its dependencies could be found by the system. For
+                    the sample below it is swipl.dll and pthreadVC.dll. For a big application it could
+                    be a lot more.
+                </p>
+                <p>
+                    TIP: For development add the SWI-prolog bin directory to the PATH environment variable.
+                    <br />
+                    NOTE: Don't forget to restart Visual Studio after that. VS must recognize the new environment
+                    for debugging.
+                </p>
+                <p>
+                    Basically windows search first in the folder where the executable resist than in
+                    the windows system directory and at least in the directories that are listed in
+                    the PATH environment variable. For details see <a href="http://msdn.microsoft.com/en-us/library/ms682586.aspx">
+                        "Dynamic-Link Library Search Order"</a>
+                </p>
+                <p>
+                    If swipl.dll or one of its dependencies could not found you will recive an error like
+                    <br />
+                    System.IO.FileNotFoundException: Das angegebene Modul wurde nicht gefunden. (Ausnahme von HRESULT: 0x8007007E)
+                </p>
+                <p>
+                    An other common error is:<br />
+                    SWI-Prolog: [FATAL ERROR:<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Could not find system resources]<br />
+                    Failed to release stacks<br />
+                    <br />
+                    To fix this add the SWI_HOME_DIR environment variable as described in 
+                    <a href="http://www.swi-prolog.org/FAQ/FindResources.html">SWI-Prolog FAQ FindResources</a>
+                    with a statment like this befor calling PlEngine.Initialize.
+                </p>
+                <div class="code">
+                    <code>Environment.SetEnvironmentVariable("SWI_HOME_DIR", @"the_PATH_to_boot32.prc");</code>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="sectionTitle">First program</div>
+            <div class="sectionContent">
+                <p>
+                    A sample says more then I want to write here.
+                </p>
+                <div class="code">
+                    <code source="..\..\HelloWorldDemo\Program.cs" region="demo_doc" />
+                </div>
+                <p>
+                    For further samples see the examples in
+                    <see cref="SbsSW.SwiPlCs" />
+                    and <see cref="SbsSW.SwiPlCs.PlEngine" />.
+                </p>
+                <p>
+                    The class <see cref="SbsSW.SwiPlCs.PlQuery" /> is the key to ask SWI-Prolog for proofs or solutions.
+                </p>
+                <p>
+                    The <see cref="SbsSW.SwiPlCs.PlTerm" /> <see langword="struct" />
+                    plays a central role in conversion and operating on Prolog data.
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="sectionTitle">Known Bugs</div>
+            <div class="sectionContent">
+                <p>
+                    <see cref="SbsSW.SwiPlCs.PlEngine.Initialize" /> work *not* as expected if there are e.g. German umlauts in the parameters
+                    e.g. in the path or filename for a qlf file ( switch -x )
+                    <br />
+                    See marshalling in the source NativeMethods.cs
+                </p>
+            </div>
+        </div>
+        
+        <div id="footer">by Uwe Lesta, SBS-Softwaresysteme GmbH </div>
+    </div>
+</body>
+</html>

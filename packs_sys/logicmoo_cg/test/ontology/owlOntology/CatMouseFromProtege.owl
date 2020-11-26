@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:amine="http://www.amine.org/ontologies/amine#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"
+    xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="http://www.amine.org/ontologies/amine">
+  <owl:Ontology rdf:about="">
+    <amine:MixedLanguage rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >True</amine:MixedLanguage>
+    <amine:Root rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >universal</amine:Root>
+    <amine:MainLanguage rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >english</amine:MainLanguage>
+    <amine:Languages rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >english,french</amine:Languages>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Owl Ontology Generate by Amine Platform</rdfs:comment>
+    <amine:Name rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >C:\Samples of Amine Ontologies\owl\CatMouseFromAmine.owl</amine:Name>
+    <amine:RelationRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >relation</amine:RelationRoot>
+  </owl:Ontology>
+  <owl:Class rdf:ID="Mouse">
+    <amine:LexiconsOfMouse rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):Mouse</amine:LexiconsOfMouse>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Mammal"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="DisneyMouse">
+    <rdfs:subClassOf rdf:resource="#Mouse"/>
+    <amine:LexiconsOfDisneyMouse rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):DisneyMouse</amine:LexiconsOfDisneyMouse>
+  </owl:Class>
+  <owl:Class rdf:ID="Hunt">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Action"/>
+    </rdfs:subClassOf>
+    <amine:LexiconsOfHunt rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):Hunt</amine:LexiconsOfHunt>
+  </owl:Class>
+  <owl:Class rdf:about="#Action">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="universal"/>
+    </rdfs:subClassOf>
+    <amine:LexiconsOfAction rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):Action</amine:LexiconsOfAction>
+  </owl:Class>
+  <owl:Class rdf:ID="Eat">
+    <rdfs:subClassOf rdf:resource="#Action"/>
+    <amine:LexiconsOfEat rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):Eat</amine:LexiconsOfEat>
+  </owl:Class>
+  <owl:Class rdf:about="#Mammal">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#universal"/>
+    </rdfs:subClassOf>
+    <amine:LexiconsOfMammal rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):Mammal</amine:LexiconsOfMammal>
+  </owl:Class>
+  <owl:Class rdf:about="#universal">
+    <amine:LexiconsOfuniversal rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):universal</amine:LexiconsOfuniversal>
+  </owl:Class>
+  <owl:Class rdf:ID="Cat">
+    <rdfs:subClassOf rdf:resource="#Mammal"/>
+    <amine:LexiconsOfcat rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:french;Synonym(s):Chat,Chaton,Chati</amine:LexiconsOfcat>
+    <amine:LexiconsOfCat rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):Cat</amine:LexiconsOfCat>
+  </owl:Class>
+  <owl:Class rdf:ID="Drink">
+    <amine:LexiconsOfdrink rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:french;Synonym(s):boire</amine:LexiconsOfdrink>
+    <amine:LexiconsOfdrink rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):drink</amine:LexiconsOfdrink>
+    <rdfs:subClassOf rdf:resource="#Action"/>
+  </owl:Class>
+  <owl:ObjectProperty rdf:ID="relation">
+    <amine:LexiconsOfrelation rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):relation</amine:LexiconsOfrelation>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="instr">
+    <rdfs:subPropertyOf rdf:resource="#relation"/>
+    <amine:LexiconsOfinstr rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:french;Synonym(s):instr_f</amine:LexiconsOfinstr>
+    <amine:LexiconsOfinstr rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):instr</amine:LexiconsOfinstr>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="obj">
+    <amine:LexiconsOfobj rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):obj</amine:LexiconsOfobj>
+    <rdfs:subPropertyOf rdf:resource="#relation"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="agnt">
+    <rdfs:subPropertyOf rdf:resource="#relation"/>
+    <amine:LexiconsOfagnt rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):agnt</amine:LexiconsOfagnt>
+  </owl:ObjectProperty>
+  <owl:AnnotationProperty rdf:ID="Name"/>
+  <owl:AnnotationProperty rdf:ID="Languages"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfdrink"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfcat1"/>
+  <owl:AllDifferent>
+    <owl:distinctMembers rdf:parseType="Resource">
+      <rdf:first>
+        <amine:Cat rdf:ID="cat1">
+          <amine:LexiconsOfcat1 rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+          >Language:english;Synonym(s):cat1</amine:LexiconsOfcat1>
+        </amine:Cat>
+      </rdf:first>
+      <rdf:rest rdf:parseType="Resource">
+        <rdf:first>
+          <amine:Cat rdf:ID="cat2">
+            <amine:LexiconsOfcat2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Language:english;Synonym(s):cat2</amine:LexiconsOfcat2>
+          </amine:Cat>
+        </rdf:first>
+      </rdf:rest>
+    </owl:distinctMembers>
+  </owl:AllDifferent>
+  <owl:AllDifferent>
+    <owl:distinctMembers rdf:parseType="Collection">
+      <amine:Cat rdf:about="#cat1"/>
+      <amine:Cat rdf:about="#cat2"/>
+      <amine:Cat rdf:ID="Cat3">
+        <amine:LexiconsOfcat3 rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        ></amine:LexiconsOfcat3>
+      </amine:Cat>
+    </owl:distinctMembers>
+  </owl:AllDifferent>
+  <amine:Mouse rdf:ID="mouse1">
+    <amine:LexiconsOfmouse1 rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):mouse1</amine:LexiconsOfmouse1>
+  </amine:Mouse>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfMouse"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfinstr"/>
+  <owl:AnnotationProperty rdf:ID="MainLanguage"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfEat"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfobj"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfcat"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfDisneyMouse"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfagnt"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfAction"/>
+  <amine:Mouse rdf:ID="mouse2">
+    <amine:LexiconsOfmouse2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Language:english;Synonym(s):mouse2</amine:LexiconsOfmouse2>
+  </amine:Mouse>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfrelation"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfcat3"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfMammal"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfHunt"/>
+  <owl:AnnotationProperty rdf:ID="Root"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfmouse1"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfmouse2"/>
+  <owl:AnnotationProperty rdf:ID="RelationRoot"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfcat2"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfuniversal"/>
+  <owl:AnnotationProperty rdf:ID="MixedLanguage"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfCat"/>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 3.4, Build 533)  http://protege.stanford.edu -->

@@ -1,0 +1,7 @@
+ERROR: Invalid ACE text:
+The word "catholic" is unknown.
+The word "catholic" is unknown.
+The word "religious" is unknown.
+The word "religious" is unknown.
+"Mary is a <> catholic.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+

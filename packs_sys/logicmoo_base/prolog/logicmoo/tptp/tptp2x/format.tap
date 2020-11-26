@@ -1,0 +1,425 @@
+%========================================================================  
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the 3TAP system.
+%----
+%----Written by Karla Geiss, March, 1995.
+%----Modified by Geoff Sutcliffe, June, 1995.
+%----    I take no responsibility for this code. I've not checked it.
+%========================================================================
+%----Print out the domain of a predicate or function.
+output_rest_of_3tap_domain(0):-
+    !.
+
+output_rest_of_3tap_domain(N):-
+    write(' x '),
+    write('top'),
+    N1 is N-1,
+    output_rest_of_3tap_domain(N1).
+%----------------------------------------------------------------------------
+%----Output the domain structure, if any arguments
+output_3tap_domain(0):-
+    !.
+
+output_3tap_domain(Arity):-
+    write(' : '),
+    write('top'),
+    Arity1 is Arity - 1,
+    output_rest_of_3tap_domain(Arity1).
+%----------------------------------------------------------------------------
+%----Print out the definition of the predicates in 3TAP format.
+output_3tap_predicate_declaration([]):-
+    nl,!.
+
+%----Equal/2 is built in (I guess)
+output_3tap_predicate_declaration(['$tptp_equal'/2|RestOfPredicates]):-
+    !,
+    output_3tap_predicate_declaration(RestOfPredicates).
+
+%----Others have to be declared
+output_3tap_predicate_declaration([FirstPredicate/Arity|RestOfPredicates]):-
+    write('predicate  p_'),
+    write(FirstPredicate),
+    output_3tap_domain(Arity),
+    write('.'),
+    nl,
+    output_3tap_predicate_declaration(RestOfPredicates).
+%----------------------------------------------------------------------------
+%----Print out the definition of the functions in 3TAP format.
+output_3tap_function_declaration([]):-
+    nl,!.
+
+output_3tap_function_declaration([FirstFunction/Arity|RestOfFunctions]):-
+    write('function   f_'),
+    write(FirstFunction),
+    output_3tap_domain(Arity),
+    write(' -> top.'),
+    nl,
+    output_3tap_function_declaration(RestOfFunctions).    
+%----------------------------------------------------------------------------
+%----Print out the definition of the constants in 3TAP format.
+output_3tap_constant_declaration([]):-
+    nl,!.
+
+output_3tap_constant_declaration([FirstConstant|RestOfConstants]):-
+    write('constant   c_'),
+    write(FirstConstant),
+    output_3tap_domain(1),
+    write('.'),
+    nl,
+    output_3tap_constant_declaration(RestOfConstants).
+%----------------------------------------------------------------------------
+%----Print out the variables in 3TAP format, replacing the capital
+%----with a small letter.
+output_3tap_variable(Variable):-
+    name(Variable,[FirstChar|RestOfCharList]),
+    NewFirstChar is FirstChar+32,
+    name(RenamedVariable,[NewFirstChar|RestOfCharList]),
+    write('v_'),
+    write(RenamedVariable).
+%----------------------------------------------------------------------------
+%----Print out the definition of the variables in 3TAP format.
+output_3tap_variable_declaration([]):-
+    nl,!.
+
+output_3tap_variable_declaration([FirstVariable|RestOfVariables]):-
+    write('variable   '),
+    output_3tap_variable(FirstVariable),
+    output_3tap_domain(1),
+    write('.'),
+    nl,
+    output_3tap_variable_declaration(RestOfVariables).
+%----------------------------------------------------------------------------
+%----Print out the definition of the 3TAP predicates, functions,
+%----constants and variables.
+output_3tap_declaration(Predicates,Functions,Constants,Variables):-
+    nl,
+    write('sort top.'),
+    nl,
+    nl,
+    output_3tap_predicate_declaration(Predicates),
+    output_3tap_function_declaration(Functions),
+    output_3tap_constant_declaration(Constants),
+    output_3tap_variable_declaration(Variables).
+%----------------------------------------------------------------------------
+%----Print out the terms of the literal in 3TAP format.
+output_3tap_terms([],_):-
+    !.
+
+output_3tap_terms([FirstTerm|RestOfTerms],Dictionary):-
+%----FirstTerm is a 3TAP variable
+    atomic(FirstTerm),
+    name(FirstTerm,[FirstChar|_RestOfCharList]),
+    65 =< FirstChar, 
+    FirstChar =< 90,
+    !,
+    output_3tap_variable(FirstTerm),
+    (RestOfTerms \== []  ->
+        write(',');
+        true),
+    output_3tap_terms(RestOfTerms,Dictionary).
+
+output_3tap_terms([FirstTerm|RestOfTerms],Dictionary):-
+%----FirstTerm is a 3TAP constant
+    atomic(FirstTerm),
+    !,
+    write('c_'),
+    write(FirstTerm),
+    (RestOfTerms \== []  ->
+        write(',');
+        true),
+    output_3tap_terms(RestOfTerms,Dictionary).
+
+output_3tap_terms([FirstTerm|RestOfTerms],Dictionary):-
+%----FirstTerm is a 3TAP function
+    write('f_'),
+    FirstTerm =.. [FunctionName|Subterms],
+    functor(FirstTerm,FunctionName,Arity),
+%----Look up in the dictionary the name of the function and replace it
+%----if necessary with the new name.
+    (tptp2X_member((FunctionName,NewFunctionName,Arity),Dictionary) ->
+        write(NewFunctionName);
+        write(FunctionName)),
+    write('('),
+    output_3tap_terms(Subterms,Dictionary),
+    write(')'),
+    (RestOfTerms \== []  ->
+        write(',');
+        true),
+    output_3tap_terms(RestOfTerms,Dictionary).
+%----------------------------------------------------------------------------
+%----Output a literal with - for negative, nothing for positive,
+%----writing equality in infix notation.
+%----Look up in the dictionary the name of the predicate and replace it
+%----if necessary with the new name.
+output_3tap_signed_literal(--Atom,Dictionary):-
+    !,
+    write('-'),
+    Atom =.. [Predicate|Terms],
+    (Predicate == '$tptp_equal' ->
+        ( Terms = [LeftTerm,RightTerm],
+          write('('),
+          output_3tap_terms([LeftTerm],Dictionary),
+          write(' = '),
+          output_3tap_terms([RightTerm],Dictionary),
+          write(')'));
+        ( write('p_'),
+          functor(Atom,Predicate,Arity), 
+          (tptp2X_member((Predicate,NewPredicate,Arity),Dictionary) ->
+              write(NewPredicate);
+              write(Predicate)),
+          (Arity > 0 ->
+              (write('('),
+               output_3tap_terms(Terms,Dictionary),
+               write(')'));
+              true))).
+
+output_3tap_signed_literal(++Atom,Dictionary):-
+    write(' '),
+    Atom =.. [Predicate|Terms],
+    (Predicate == '$tptp_equal' ->
+        ( Terms = [LeftTerm,RightTerm],
+          output_3tap_terms([LeftTerm],Dictionary),
+          write(' = '),
+          output_3tap_terms([RightTerm],Dictionary));
+        ( write('p_'),
+          functor(Atom,Predicate,Arity), 
+          (tptp2X_member((Predicate,NewPredicate,Arity),Dictionary) ->
+              write(NewPredicate);
+              write(Predicate)),
+          (Arity > 0 ->
+              (write('('),
+               output_3tap_terms(Terms,Dictionary),
+               write(')'));
+              true))).
+%----------------------------------------------------------------------------
+%----Print out the literals of the clause in 3TAP format.
+%----Special case of an empty clause
+output_3tap_literals([],_):-
+    !,
+    write(false).
+
+output_3tap_literals([OneLiteral],Dictionary):-
+    !,
+    output_3tap_signed_literal(OneLiteral,Dictionary).
+
+output_3tap_literals([FirstLiteral|RestOfLiterals],Dictionary):-
+    output_3tap_signed_literal(FirstLiteral,Dictionary),
+    write('  v'),
+    nl,
+    write('   '),
+    output_3tap_literals(RestOfLiterals,Dictionary).
+%----------------------------------------------------------------------------
+%----Print out the list of 3TAP variables.
+output_3tap_variables([]):-
+    !.
+
+output_3tap_variables([FirstVariable|RestOfVariables]):-
+    output_3tap_variable(FirstVariable),
+    (RestOfVariables \== []  ->
+        write(',');
+        true),
+    output_3tap_variables(RestOfVariables).
+%----------------------------------------------------------------------------
+%----Print out the clause in 3TAP format.
+output_3tap_clause(Variables,Literals,Dictionary):-
+    (Variables \== []  ->
+        (write('  forall '),
+         output_3tap_variables(Variables),
+         nl);
+        true),
+    write('  ('),
+    output_3tap_literals(Literals,Dictionary),
+    write(')').
+%----------------------------------------------------------------------------
+%----Print out the clauses with status theorem in 3TAP format.
+output_3tap_theorem_clauses([],_):-
+    !.
+
+output_3tap_theorem_clauses([input_clause(Name,_Status,Variables,Literals)|
+RestOfClauses],Dictionary):-
+    write('  % '),
+    write(Name),
+    nl,
+    output_3tap_clause(Variables,Literals,Dictionary),
+    (RestOfClauses \== []  ->
+        (nl,
+         nl,
+         write('  &'),
+         nl,
+         nl);
+         true),
+    output_3tap_theorem_clauses(RestOfClauses,Dictionary).
+%----------------------------------------------------------------------------
+%----Print out the 3TAP theorem.
+output_3tap_theorem([],_):-
+    !.
+
+output_3tap_theorem(TheoremClauses,Dictionary):-
+    write('theorem '),
+    write('t;'),
+    nl,
+    write('-('),
+    nl,
+    output_3tap_theorem_clauses(TheoremClauses,Dictionary),
+    nl,
+    write(' ).'),
+    nl,
+    nl.
+%----------------------------------------------------------------------------
+%----Print out the clauses with status different from theorem in
+%----3TAP format.
+output_3tap_clauses([],_):-
+    !.
+
+output_3tap_clauses([input_clause(Name,_Status,Variables,Literals)|
+RestOfClauses],Dictionary):-
+    write('axiom '),
+    write(Name),
+    write(';'),
+    nl,
+    output_3tap_clause(Variables,Literals,Dictionary),
+    write('.'),
+    nl,
+    nl,
+    output_3tap_clauses(RestOfClauses,Dictionary).
+%----------------------------------------------------------------------------
+%----Select the clauses with status theorem.
+select_3tap_theorem([],[],[]):-
+    !.
+
+select_3tap_theorem([input_clause(Name,negated_conjecture,Variables,Literals)|
+RestOfInputClauses],[input_clause(Name,negated_conjecture,Variables,Literals)|
+RestOfTheoremClauses],OtherClauses):-
+    !,
+    select_3tap_theorem(RestOfInputClauses,RestOfTheoremClauses,OtherClauses).
+
+select_3tap_theorem([FirstClause|RestOfInputClauses],TheoremClauses,
+                    [FirstClause|RestOfOtherClauses]):-
+    select_3tap_theorem(RestOfInputClauses,TheoremClauses,RestOfOtherClauses).
+%----------------------------------------------------------------------------
+%----If exist predicates or functions with the same name and different
+%----arity, make them unique 3TAP predicates or functions respectively
+%----and enter them in the dictionary.
+make_unique_3tap_pred_and_fct(_,[],[],[],[],[]):-
+    !.
+
+make_unique_3tap_pred_and_fct(N,[FirstPredicate/Arity|RestOfPredicates],
+[NewPredicate/Arity|RestOfNewPredicates],Functions,NewFunctions,
+Dictionary):-
+    !,
+    (tptp2X_member(FirstPredicate/_,RestOfPredicates) ->
+        (N1 is N+1,
+         concatenate_atoms([FirstPredicate,'@',N1],NewPredicate),
+         Dictionary = [(FirstPredicate,NewPredicate,Arity)|
+RestOfDictionary],
+         make_unique_3tap_pred_and_fct(N1,RestOfPredicates,RestOfNewPredicates,
+Functions,NewFunctions,RestOfDictionary));
+        (NewPredicate = FirstPredicate,
+         make_unique_3tap_pred_and_fct(N,RestOfPredicates,RestOfNewPredicates,
+Functions,NewFunctions,Dictionary))).
+
+make_unique_3tap_pred_and_fct(N,[],[],[FirstFunction/Arity|RestOfFunctions],
+[NewFunction/Arity|RestOfNewFunctions],Dictionary):-
+    (tptp2X_member(FirstFunction/_,RestOfFunctions) ->
+        (N1 is N+1,
+         concatenate_atoms([FirstFunction,'@',N1],NewFunction),
+         Dictionary = [(FirstFunction,NewFunction,Arity)|RestOfDictionary],
+         make_unique_3tap_pred_and_fct(N1,[],[],RestOfFunctions,
+RestOfNewFunctions,RestOfDictionary));
+        (NewFunction = FirstFunction,
+         make_unique_3tap_pred_and_fct(N,[],[],RestOfFunctions,
+RestOfNewFunctions,Dictionary))).    
+%----------------------------------------------------------------------------
+%----Extract predicates
+threetap_predicate(ThreetapClauses,PredicateSymbol/Arity):-
+    tptp2X_member(input_clause(_,_,Literals),ThreetapClauses),
+    tptp2X_member(Literal,Literals),
+    Literal =.. [_,Atom],
+    functor(Atom,PredicateSymbol,Arity).
+%----------------------------------------------------------------------------
+%----Extract a functor, knowing it's below the atom level
+threetap_functor_extract(Atom,Atom/0):-
+    atom(Atom),
+    !,
+%----Check it's not a variable
+    name(Atom,[FirstASCII|_]),
+    FirstASCII >= 97,
+    FirstASCII =< 122.
+ 
+threetap_functor_extract([FirstTerm|RestOfTerms],Functor):-
+    !,
+    tptp2X_member(Term,[FirstTerm|RestOfTerms]),
+    threetap_functor_extract(Term,Functor).
+
+%----Otherwise it's a function (hoorah)
+threetap_functor_extract(Function,Functor/Arity):-
+    functor(Function,Functor,Arity).
+
+%----Extract functors from the arguments
+threetap_functor_extract(Function,Functor):-
+    Function =.. [_|Terms],
+    threetap_functor_extract(Terms,Functor).
+%----------------------------------------------------------------------------
+%----Extract functors
+threetap_functor(ThreetapClauses,Functor):-
+    tptp2X_member(input_clause(_,_,Literals),ThreetapClauses),
+    tptp2X_member(Literal,Literals),
+    Literal =.. [_,Atom],
+    Atom =.. [_|Terms],
+    threetap_functor_extract(Terms,Functor).
+%----------------------------------------------------------------------------
+%----Separate constants from other functors
+separate_3tap_constants([],[],[]).
+
+separate_3tap_constants([Constant/0|RestOfFunctors],NonConstants,
+[Constant|RestOfConstants]):-
+    separate_3tap_constants(RestOfFunctors,NonConstants,RestOfConstants).
+
+separate_3tap_constants([Functor/Arity|RestOfFunctors],[Functor/Arity|
+RestOfNonConstants],Constants):-
+    Arity >= 1,
+    separate_3tap_constants(RestOfFunctors,RestOfNonConstants,Constants).
+%----------------------------------------------------------------------------
+%----Extract all the unique variables from the clauses
+all_3tap_variables(ThreetapClauses,Variables):-
+    tptp2X_findall_setof1(Variable,
+(    tptp2X_member(input_clause(_,_,ClauseVariables,_),ThreetapClauses),
+     tptp2X_member(Variable,ClauseVariables)),Variables).
+%----------------------------------------------------------------------------
+%----Make extended clauses with variable lists. Use leanTAP code.
+make_3tap_clauses(InputClauses,ThreetapClauses):-
+    make_leantap_clauses(InputClauses,ThreetapClauses).
+%----------------------------------------------------------------------------
+%----Print out all the clauses in 3TAP format.
+tap(tap,Clauses,_):-
+    tptp_clauses(Clauses),
+%----Make extended clauses with variables list
+    make_3tap_clauses(Clauses,ThreetapClauses),
+%----Find all the variables
+    all_3tap_variables(ThreetapClauses,Variables),
+%----Extract predicates
+    tptp2X_setof1(Predicate,threetap_predicate(Clauses,Predicate),
+Predicates),
+%----Extract functors
+    tptp2X_setof1(Functor,threetap_functor(Clauses,Functor),Functors),
+%----Extract constants
+    separate_3tap_constants(Functors,NonConstants,Constants),
+%----From here Karla is on her own
+    make_unique_3tap_pred_and_fct(0,Predicates,NewPredicates,NonConstants,
+NewFunctions,Dictionary),
+    output_3tap_declaration(NewPredicates,NewFunctions,Constants,Variables),
+    select_3tap_theorem(ThreetapClauses,TheoremClauses,OtherClauses),
+    output_3tap_clauses(OtherClauses,Dictionary),
+    output_3tap_theorem(TheoremClauses,Dictionary).
+
+%----Do nothing for FOF - just leave a comment
+tap(tap,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in 3TAP'),
+    nl.
+%----------------------------------------------------------------------------
+%----Provide information about the 3TAP format.
+tap_format_information('%','.3tap').
+tap_file_information(format,tap,'TAP format').
+%----------------------------------------------------------------------------

@@ -1,0 +1,887 @@
+%
+% File acl03.tex
+% February 4 2003
+% Contact: danr@cs.uiuc.edu
+
+\documentclass[11pt]{article}
+\usepackage{acl03}
+\usepackage{times}
+\usepackage{latexsym}
+
+\title{Example Based Derivation of Efficient Domain-Specific Speech Recognisers from a General Linguistically Motivated Unification Grammar}
+
+\author{Manny Rayner, Beth Ann Hockey and John Dowding\\
+  Mail Stop T-27A \\
+  NASA Ames Research Center \\
+  Moffett Field, CA 94035-1000 \\
+  {\tt \{mrayner,bahockey,jdowding\}@riacs.edu} }
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+We describe an approach to portable grammar-based language modelling
+in which all models are derived from a single linguistically motivated
+unification grammar. Domain-specific CFG language models are produced
+by first specialising the grammar using an automatic corpus-based
+method, and then compiling the resulting specialised grammars into CFG
+form.
+
+We present results showing that recognisers for multiple, fairly
+different, domains can be derived from a single general grammar. The
+process remains tractable as the size of the general grammar
+increases, and also scales well with the size of the training corpus
+used. We also show that a simple method for compiling unification
+grammars into CFG form can be successfully applied to grammars
+containing large numbers of features, if it is enhanced by suitable
+interleaving of the expansion and filtering stages.
+
+\end{abstract}
+
+\section{Introduction}
+
+Grammar based language models for constraining speech recognition are
+particularly attractive as an alternative to statistical models in
+domains that lack extensive speech corpora. For commercial dialogue
+systems, the case in which there is not enough speech data to train
+effective statistical models is the norm. This lack of data
+also impacts research domains that are relatively novel, such as
+dialogue interfaces to robots. Given the difficulties involved in
+using statistical modeling with limited speech data, we think it is
+important to investigate ways in which grammar based models can be
+efficiently and effectively produced.
+
+Commercial speech platform vendors like 
+Nuance \cite{Nuance} and SpeechWorks \cite{SpeechWorks} have primarily focussed on grammar-based
+language models, typically implemented in some variant
+of context free grammar (CFG). However, even moderate sized
+CFGs are tedious to write and difficult to maintain, compared to
+grammars written in higher level formalisms such as unification based
+grammars. For each rule in the higher level grammar there are likely
+to be many rules, very similar to each other, in a comparable CFG. The
+higher-level formalism provides a more compact representation and
+expresses linguistic dependencies and relations more transparently and
+explicitly than a corresponding CFG.
+
+Compiling the CFG language model from a grammar written in the higher
+level formalism is one step toward producing a CFG language model efficiently
+while taking advantage of the attractive properties of the
+higher-level formalism. Techniques for compilation from unification
+grammars to CFGs have been discussed in
+% MR Feb 22. Quote IDIAP guy too.
+%\cite{Moore1998,KieferKrieger2000,DowdingEA2001,RaynerDowdingHockey2001,Bos2002}.
+\cite{Moore1998,ChappelierEA1999,KieferKrieger2000,DowdingEA2001,RaynerDowdingHockey2001,Bos2002}.
+ 
+A further step in making the production of grammar based language
+models efficient is to avoid the overhead of creating a new unification
+based grammars from scratch for each new domain. Grammars for
+different domains can be sensibly viewed as subsets of the larger
+grammar of a language. From the point of view of portability, having a
+single general unification based grammar for a language and deriving
+domain-specific grammars from it is clearly preferable to building
+individual grammars for each domain by hand. The obvious advantage is
+that grammar rules are reusable and need only be written
+once. Consequently, effort that would have gone into developing the
+grammar for each domain can instead be put into refining the general
+grammar, thereby benefiting all subsequent domains.
+
+In summary, the overall approach we are advocating is to develop a
+general domain-independent unification grammar for each language,
+semi-automatically derive specialised versions of this grammar for
+each new domain, and compile these specialised grammars down first
+into CFG language models and then into concrete recognisers. It is
+clear that this is an ambitious programme, and that there are many
+potential problems. 
+
+In the current paper, we describe a series of experiments, carried out
+using the {\sc xxx} system\footnote{The name of the system has been
+suppressed in the interests of preserving anonymity.}, that provide
+surprisingly positive answers to several of the obvious questions.
+Our main claims are as follows:
+
+\begin{itemize}
+
+\item It is possible to derive multiple domain-specific recognisers
+from a single linguistically motivated unification grammar, using
+example-based methods driven by small corpora.
+
+\item These recognisers are competitive with ones built from
+hand-coded grammars.
+
+\item The methods have good scalability properties, both with respect
+to the number of domain-specific training examples and with respect to
+the size of the general grammar.
+
+\end{itemize}
+
+%The rest of the paper is organised as follows. Section~\ref{Section:Regulus2}
+%describes the {\sc xxx} system. Section~\ref{Section:Experiments}
+%describes the experiments. The final section concludes.
+
+\section{The {\sc xxx} system}
+\label{Section:Regulus2}
+
+This section presents an overview of {\sc xxx}.  {\sc xxx} is a suite
+of software modules, which extends the Open Source {\sc regulus}
+system \cite{RaynerDowdingHockey2001}. It consists of the following
+main components:
+
+\begin{enumerate}
+
+\item An environment for developing and debugging typed unification
+grammars, whose main component is a compiler that converts grammars
+of this form into left-corner parsers, using a version of the 
+algorithm described in \cite{Moore2000b}.
+
+\item A general linguistically motivated unification grammar for a
+substantial fragment of English, including an accompanying core
+lexicon.
+
+\item Tools to support corpus-based specialisation of the general
+grammar.
+
+\item A compiler that translates typed unification grammars into
+CFG language models expressed in Nuance Grammar Specification
+Language (GSL) formalism. These language models can then be compiled
+into Nuance recognition packages using the Nuance Toolkit {\tt nuance-compile}
+utility.
+
+\end{enumerate}
+
+All these components are implemented on top of Sicstus Prolog
+%\cite{Sicstus} 
+and the Nuance Toolkit. 
+%\cite{Nuance}.
+%, and are available
+%as Open Source software SourceForge at
+%http://sourceforge.net/projects/leonlp/.
+In the rest of the section,
+we will describe the general grammar, the specialisation tools and the
+unification grammar to CFG compiler.
+
+\begin{table}%[h]
+\begin{center}
+\begin{tabular}{|l|}
+\hline
+{\bf Personal Satellite Assistant (PSA)}\\
+``affirmative''\\
+``go to flight deck''\\
+``mid deck and lower deck''\\
+``measure pressure''\\ 
+``what were oxygen and c o two one minute ago''\\ 
+``when did the temperature reach twenty degrees''\\ 
+``go to the crew hatch and close it''\\
+``close all three doors''\\
+\hline
+{\bf Home Automation (HA)}\\
+``is there a tv in the living room''\\
+``which devices are switched on''\\
+``turn on the kitchen light and the stove''\\
+``dim the light to fifty percent''\\
+``thank you''\\
+\hline
+{\bf Travel Deals (TD)}\\
+``holidays in paris under two hundred pounds''\\
+``i want something leaving from stansted''\\
+``in spain during may or june from gatwick''\\
+``is there anything in italy before may tenth''\\
+``give me a winter brochure''\\
+``do you have three star or four star''\\
+\hline
+{\bf Medical Speech Translator (MST)}\\
+``do you often have headaches in the morning''\\
+``is the pain in the front of your chest''\\
+``does the pain spread to the left arm''\\
+``have you had chest pains for more than a week''\\
+``are the headaches relieved by stress removal''\\
+``how severe are the symptoms''\\
+``is the frequency of the attacks increasing''\\
+\hline
+{\bf Intelligent Procedure Assistant (IPA)}\\
+``next step''\\
+``go back''\\
+``go to step three point two''\\
+``no i said go to step five''\\
+``set alarm for twelve minutes from now''\\
+``record a voice note on step seven''\\
+``delete voice note on step four point one''\\
+``increase volume''\\
+``say that again''\\
+\hline
+{\bf Mobile Agents (MA)}\\
+``take a picture of me''\\
+``boudreaux follow me now''\\
+``return to the hab''\\
+``start tracking my physiological sensors''\\
+\hline
+\end{tabular}
+\caption{Example utterances for domains currently covered by the
+general grammar}
+\label{Table:DomainExamples}
+\end{center}
+\end{table}
+
+\subsection{The general grammar}
+\label{Section:GeneralGrammar}
+
+The general grammar currently contains 145 phrase-structure rules and
+72 features, and is a greatly expanded version of the grammar
+described in \cite{Coling2000}, which in turn is loosely based on the
+Core Language Engine grammar \cite{Pulman92}. It is built according to
+reasonably standard linguistic principles and covers a large
+proportion of the basic constructions of English, including the
+following: declarative clauses; Y-N questions; WH-questions with
+movement of NPs, PPs, ADJPs and ADVPs; embedded Y-N and WH-questions;
+imperatives; elliptical NPs, PPs, ADVPs and sequences of these
+constituents; impersonal subjects; passives; verbal and sentential
+adverbs; a wide variety of subcategorisation types of verb, including
+intransitives, transitives, ditransitives, verbs taking PPs, verbs
+taking particles, equative and predicative ``be'', auxiliaries,
+modals, verbs taking ``-ing'' complements, infinitives and ``to'' VP
+complements, verbs taking propositional and embedded question
+complements and verbs taking adjectives; postmodification of NPs and
+VPs by PPs, ADJPs, ADVPs, relative and reduced relative clauses,
+numbers and names; use of NPs as temporal adverbials; postpositions;
+date and time expressions; conjunction of NPs, PPs, ADJPs, DETs and
+clauses; possessives; pronouns; bare determiners; prenominal adjectives
+and compound nominals; measure phrases; complex DETs; numbers;
+correction utterances; interjections; and politeness phrases.
+The grammar includes a flexible mechanism for specifying domain-specific 
+lexical sortal constraints, which for example makes it possible 
+for a transitive verb to constrain the sortal type of its direct
+object, or for a noun to constrain the sortal type of a pre-modifying
+adjective.
+
+The original grammar was developed for a robotic command and control
+domain \cite{ANLP00}. Further development work has been systematically
+carried out by extending it to cover five more domains: a home
+automation application \cite{SIGDIAL2001}; an ATIS-like travel
+planning application; a medical speech translator
+\cite{RaynerBouillon2002}; an intelligent procedure assistant
+\cite{Aist02}; and a mobile geology assistant. Examples of typical
+utterances for each of these domains are shown in
+Table~\ref{Table:DomainExamples}. Transcribed corpora of at least
+several hundred utterances exist for all the domains,
+and have been used to debug the grammar coverage.
+
+\subsection{The grammar specialisation tools}
+\label{Section:GrammarSpecialisation}
+
+{\sc xxx} implements a version of the grammar specialisation
+scheme which extends the Explanation Based Learning method described
+in \cite{RaynerHockeyDowding2002}. A grammar built on top of the
+general grammar is transformed into a specialised unification grammar
+in the following processing stages:
+\begin{enumerate}
+
+\item The training corpus is converted into a ``treebank'' of parsed
+representations, using the left-corner parser representation of the
+grammar.
+
+\item Each parsed representation in the treebank is processed into one
+or more specialised unification grammar rules, using the EBL algorithm
+\cite{VanHarmelenBundy88,Rayner88}.
+
+\item Duplicate specialised rules are merged, so that each unique rule is
+tagged with the number of training examples from which it could have
+been derived. 
+
+%\item If there are enough training examples associated with a rule, it
+%is further constrained to unify with the anti-unification (least
+%common generalisation) of all the contexts in which it has
+%occurred. The threshold which determines when this happens is defined
+%by another user-supplied parameter.
+%
+\item Each rule is subjected to a binarisation transform, to ensure
+that no rule in the final set has more than two daughters.
+
+\end{enumerate}
+
+%The piece of this sequence that is novel to {\sc xxx} is the
+%penultimate stage (the {\em rule context anti-unification}, or RCAU
+%step), which we will describe in more detail. 
+%
+The EBL algorithm
+performs {\em grammatical} specialisation; it creates new grammar
+rules by merging the constraints present in existing rules. Thus, in
+an air travel domain, an example like ``show me flights to Boston''
+might induce a rule schematically of the form
+\begin{verbatim}
+S -> V, NP, NP
+\end{verbatim}
+The features on this derived rule will contain various constraints,
+the exact nature of which will depend on the original general grammar.
+With the grammar of Section~\ref{Section:GrammarScalability}, 
+the derived rule will for example constrain the first daughter NP's
+{\tt case} feature to unify with the value {\tt nonsubj}, and its {\tt np\_type}
+(sortal) feature to unify with the value of the corresponding
+{\tt indobj\_type} feature on the V. 
+
+In general, the coverage of a specialised grammar derived using the
+EBL method is a strict subset of the coverage of the original grammar,
+in a sense made precise in \cite{RaynerCarterSamuelsson00}. The loss
+of coverage is compensated by the specialised grammar's simpler
+structure, which typically produces faster processing and decreased
+ambiguity. In practice, the net result is often that the specialised
+grammar yields more accurate results than the original one,
+both for text-based parsing \cite{SamuelssonRayner91,Samuelsson94}
+and for spoken language processing \cite{RaynerHockeyDowding2002}.
+
+%It is however impossible for a pure EBL method to induce {\em
+%distributional} generalisations in the specialised rules it
+%creates. To continue the example, we may have many training utterances
+%of the form ``show me flights to X'', where X is the name of a city. If
+%we have enough of them, we feel intuitively that this should have some
+%effect on the derived rule: for instance, we might want the first
+%daughter NP to be constrained to be a pronoun. We can readily see that
+%this is not a grammatical generalisation, since the underlying grammar
+%will permit a sentence like ``show my friend flights to Boston''. The
+%point is that since we have failed to observe any such sentences over a
+%substantial training set, we may prefer to block it in the derived
+%grammar.
+%
+%RCAU addresses this problem. In each parsed training example for a
+%given derived rule $R$, the surrounding context instantiates $R$ to
+%some version $R_i$: this applies equally to lexical and non-lexical
+%rules. The anti-unification of all the $R_i$ (call it $R^\prime$) is
+%thus a further specialisation of $R$, which adds the information
+%common to all contexts in which $R$ has appeared.  The question of
+%whether to prefer $R$ or $R^\prime$ as the final specialised rule
+%depends on the number of contexts for $R$. Intuitively, a large number
+%of contexts implies that a difference between $R$ and $R^\prime$ is
+%probably significant; conversely, generalisations based on small
+%numbers of contexts are liable to lead to overfitting. The
+%experiments in Section~\ref{Section:IterativeExpansion}
+%present results to support this claim.
+%
+%Use of RCAU motivates addition to the general grammar of a novel type
+%of feature. Normally, features enforce grammatical constraints by
+%blocking undesired derivations; thus for example the agreement feature
+%will block derivations with a singular determiner and plural noun.
+%With RCAU present, it can be meaningful to introduce features which
+%initially block no derivations, and rely on RCAU to introduce
+%non-trivial constraints in rules that have been further specialised
+%through their contexts. The current version of the general grammar
+%contains a group of four such features. The central feature, {\tt
+%syn\_type}, categorises NPs as belonging to one of eight different
+%distributional types, e.g.\ ``pronoun'', ``name'' or ``conjoined
+%NP''. The other three features make it possible for verbs to constrain
+%the {\tt syn\_type} values of their NP complements. The experiments
+%in Section~\ref{Section:GrammarScalability} show that use of 
+%``syn-type'' features can significantly constrain specialised
+%grammars and their derived language models.
+%
+\subsection{The UG to CFG compiler}
+\label{Section:UGToCFG}
+
+The basic compilation mechanism for the {\sc regulus} UG to CFG
+compiler, {\em enumerative expansion}, is described in
+\cite{RaynerDowdingHockey2001}. The compiler essentially performs
+non-deterministic expansion of the unification grammar to yield a
+context-free grammar, and then filters the result to remove
+unreachable rules. Although a completely naive implementation of
+enumerative expansion is insufficient for any but the very smallest grammars,
+\cite{RaynerDowdingHockey2001} showed how some simple
+enhancements can greatly increase its power. In particular, it is
+possible to effect a major reduction in the size of the expanded
+rule-space by performing the {\em singular variable elimination}
+transform, and it is also possible to filter the space of expanded
+rules in time linear in the number of rules. 
+
+For grammars as large as the general grammar described in
+Section~\ref{Section:GeneralGrammar}, the methods used by the {\sc
+regulus} compiler turn out to be inadequate; the space of expanded
+rules is too large to generate in its entirety.  The {\sc regulus}
+compiler breaks down not only on the general grammar itself, but also
+on specialised grammars derived from it. The problem is not the number
+of rules in the grammar, but rather the number of features, which is
+unaffected by the specialisation process; the size of the expanded
+rule space increases exponentially with the number of features. Other
+experiments showed that the {\sc gemini} compiler \cite{Moore1998} was
+similarly incapabable of compiling these grammars.
+
+It does however turn out to be possible to compile grammars with large
+numbers of features by adding a further refinement to the enumerative
+expansion algorithm, which interleaves the expansion and filtering
+phases. In {\sc xxx}, the set of features is divided into an
+ordered list of subsets; each subset is in turn expanded
+non-deterministically, and the result is then filtered using the
+algorithms of \cite{RaynerDowdingHockey2001} before proceeding to the
+next subset. The experiments in Section~\ref{Section:GrammarScalability}
+show that compile times still increase as the feature set expands,
+but only slowly.  
+
+\section{Experiments}
+\label{Section:Experiments}
+
+This section describes a series of experiments which empirically
+investigate the claims made in Section~\ref{Section:Regulus2}.
+The experiments are divided into four groups, as follows:
+\begin{enumerate}
+
+\item Comparison of recognisers derived from general grammars and
+recognisers derived from hand-coded grammars (Section~\ref{Section:GeneralVersusHandCoded}).
+
+\item Scalability of specialised grammars with respect to size
+of the original general grammar (Section~\ref{Section:GrammarScalability}).
+
+\item Scalability of specialised grammars with respect to size
+of training corpora (Section~\ref{Section:CorpusScalability}).
+
+%\item Effect of varying the rule context anti-unification threshold
+%(Section~\ref{Section:RCAUExperiments}).
+
+\item Effect of interleaved expansion and filtering on efficiency of UG
+to CFG compilation (Section~\ref{Section:IterativeExpansion}).
+
+\end{enumerate}
+
+Corpora from two domains were used in these experiments\footnote{We have
+concentrated on these two domains here, since they are the ones for
+which we have best data. Two of the other systems built using {\sc
+xxx} are in parallel being submitted to the demo track at this
+conference.}. The first corpus, used in
+Section~\ref{Section:GeneralVersusHandCoded}, was collected in the
+September 2002 field test for the Mobile Agents robotic geologist's
+assistant at Meteor Crater, AZ.  The speech data in this corpus was
+collected in an ``open-mic'' configuration, where everything spoken by
+the subject was recorded, whether the speech was intended for the
+robotic assistant or not, and is acoustically noisy, since the data
+was collected either from a subject inside a space suit, or outdoors
+in high wind.
+%The Mobile Agents corpus used in our
+%experiment contains 608 in domain utterances from 8 speakers divided
+%into a 485 utterance (2811 word) training set and a 123 utterance (724
+%word) test set. There are 6 one-word yes/no responses (e.g. yes, yeah, no, etc.) 
+%and the remaining 602 utterances have an mean length of 4.8 words.
+The Mobile Agents corpus used in our experiment contains 608 in domain
+utterances (3535 words) from 8 speakers, which we divided into a 485
+utterance training set and a 123 utterance test set.
+
+%The remaining experiments were run
+%on the Personal Satellite Assistant (PSA) corpus, which was collected
+%in user tests of the PSA system. The PSA corpus has 10513 utterances 
+%from 27 speakers, which we divided into a training set of 5394
+%utterances and a test set of 5119 utterances. This corpus has 5344 one-word 
+%yes/no responses and the remaining 5169 utterances have a mean length of 6.5 words.
+
+%The remaining experiments were run on the Personal Satellite
+%Assistant (PSA) corpus, which was collected in user tests of the PSA
+%system. The PSA corpus has 10483 utterances from 27 speakers with
+%average utterance length R. We divided the corpus into a test set
+%contains 5094 utterance from 14 speakers and the training set contains
+%5389 utterances from 13 speakers. The split was done by speaker rather
+%than randomizing across all the utterances because the resulting test
+%and training data more closely approximate the process one often faces
+%in developing a system for which there is no pre-existing corpus. Also
+%test and training sets constructed this way will be less alike so the
+%test will be more difficult.
+
+The remaining experiments were run on the Personal Satellite Assistant
+(PSA) corpus, which was collected in user tests of the PSA system. The
+PSA corpus has 10513 utterances (38943 words) from 27 speakers, which
+we divided into a training set of 5394 utterances and a test set of
+5119 utterances. It is worth mentioning that the length distribution
+on this corpus is extremely skewed. A little more than half the corpus
+(5344 utterances) consists of one-word yes/no responses; the remaining
+5169 utterances have a mean length of 6.5 words. The test sets for
+both corpora were unseen data for the purposes of these experiments.
+
+We used the {\sc xxx} system to compile a variety of language models
+and associated recognisers, using the general grammar of
+Section~\ref{Section:GeneralGrammar} and the methods of
+Section~\ref{Section:GrammarSpecialisation} and~\ref{Section:UGToCFG}.
+We evaluated the language models and recognisers both in terms
+of compile-time and run-time performance. With reference to the compilation
+process, we were interested in the time taken to perform EBL-based
+grammar specialisation ({\bf EBL\_T}), time taken to compile the
+specialised unification grammar into a CFG language model ({\bf UG\_CFG\_T}),
+and the number of nodes in the Nuance recognition package's node array
+({\bf \#Nodes}). 
+
+At run-time, we were interested in the accuracy of the resulting
+recogniser and on its speed, measured on both training and test data.
+Grammar-based recognisers reject a certain proportion of
+their input: utterances are typically rejected if they are either well outside
+grammar coverage, or acoustically too noisy.  We consequently present
+accuracy in terms of three numbers.  {\bf WER} represents the standard
+word error rate. {\bf REJ} measures the proportion of utterances
+rejected by the recogniser, and {\bf AWER} (``adjusted word error
+rate'') measures the word error rate on the utterances that were not
+rejected. Speed is as usual measured as a multiple of
+real-time. Experiments were run on a 1.9 GHz Pentium 4, using Nuance 8
+and SICStus 3.8.5.
+
+\subsection{Specialised versus hand-coded grammars}
+\label{Section:GeneralVersusHandCoded}
+
+%Comparison between our most highly optimised hand-coded grammar
+%(Mobile Agents) and a version built using specialisation
+%methodology. The specialised version was built in one day, and with no
+%additional tuning performs comparably with the hand-coded version.
+%
+
+The data collected in the Mobile Agents field test used a language
+model derived from a hand-optimised unification grammar.  Due to the
+existence of this hand-optimized grammar, the Mobile Agents domain
+provided the best comparison of hand-built to automatically
+generated. After the field test, the 485 utterance training set was
+used to build a specialised grammar from the general grammar.  The
+specialised version was built in one day, and underwent no additional
+tuning. Table~\ref{Table:HandCodedVsSpecialised} compares the performance of this
+specialised grammar with the hand-coded grammar on the training and
+test sets respectively. The specialised grammar performs quite well,
+generally out-performing the hand-coded grammar. The results also
+demonstrate that it is possible to build effective specialised
+grammars in this domain from relatively small amounts of training
+data.
+
+\begin{table}[h]
+\begin{tabular}{|c||c|c|c|c|}
+\hline
+Version 	&WER	&REJ	&AWER	&xCPUrt	\\
+		&(\%)	&(\%)	&(\%)	&(\%)	\\
+\hline	
+\hline	
+\multicolumn{5}{|c|}{\bf Measured on training set}\\
+\hline
+Hand-Coded	&12.56 	&7.72 	&4.54 	&58.79 	\\
+\hline						
+Specialised	&5.29	&1.86  	&3.21  	&11.78	\\
+\hline						
+\multicolumn{5}{|c|}{\bf Measured on test set}\\
+\hline
+Hand-Coded	&9.50	&7.50	&3.25 	&57.50	\\
+\hline						
+Specialised	&5.49 	&2.44 	&2.91 	&13.74	\\
+\hline						
+\hline						
+\end{tabular}
+\caption{Comparing an automatically specialised grammar with a hand-coded grammar:
+WER, proportion rejected, adjusted WER and speed.}
+\label{Table:HandCodedVsSpecialised}
+\end{table}
+
+
+\subsection{Scalability of general grammars}
+\label{Section:GrammarScalability}
+
+The experiments reported in this section investigate scalability with
+respect to the size of the general unification grammar. We trained
+versions of the domain-specific PSA grammar on reconstructed versions
+of the general unification grammar corresponding to merges of
+increasingly large numbers of domains, ending with a grammar that
+merged all six domains. Table~\ref{Table:GrammarScalingGrammars}
+presents statistics on the sizes of the various versions, measured in
+terms of the numbers of rules and features.
+
+\begin{table}[h]
+\begin{tabular}{|c||c|c|c|}
+\hline
+Version 	&Domains	&\#Rules	&\#Feats\\
+		&included 	&		&	\\
+\hline	
+\hline	
+1		&PSA		&70		&42	\\
+\hline						
+2		&PSA,HA		&74		&46	\\
+\hline
+3		&PSA,HA		&106		&56	\\
+		&TD		&		&	\\
+\hline
+4		&PSA,HA		&127		&64	\\
+		&TD,MST		&		&	\\
+\hline
+5		&PSA,HA		&139		&68	\\
+		&TD,MST		&		&	\\
+		&IPA		&		&	\\
+\hline
+6		&PSA,HA		&145		&68	\\
+		&TD,MST		&		&	\\
+		&IPA,MA		&		&	\\
+\hline
+\hline
+\end{tabular}
+\caption{Versions of the general grammar used for grammar scaling experiments.
+Domain abbreviations as in Table~\ref{Table:DomainExamples}.}
+\label{Table:GrammarScalingGrammars}
+\end{table}
+
+It seemed to us that increasing the size of the general grammar could
+potentially cause two undesirable effects. Firstly, compile times
+could increase unmanageably; secondly, runtime performance of the
+resulting recognisers could be adversely affected. In fact, the
+experiments suggest that neither of these things happens.
+Table~\ref{Table:GrammarScalabilityCompilation} shows a fairly modest
+increase in compile times and node arrays as the size of the general
+grammar increases. A large part of the increase occurred in the move
+from Version 1 to Version 2; this appears to be due to the fact that
+noun compounding rules appeared at this point, significantly
+increasing grammar coverage and correspondingly decreasing WER.
+Table~\ref{Table:GrammarScalabilityRunTime} shows that word error
+rates and rejection rates remain stable, and processing speed
+decreases only slightly as the size of the general grammar increases.
+%. At least for this domain, it would appear
+%that the general grammar could be made considerably larger without any
+%very serious effects.
+
+\begin{table}[h]
+\begin{tabular}{|c||c|c|r|}
+\hline
+Version 	&EBL\_T		&UG\_CFG\_T	&\#Nodes\\
+		&(secs)		&(secs)		&	\\
+\hline	
+\hline	
+1		&110		&28		&2590	\\
+\hline						
+2		&155		&51		&10035	\\
+\hline
+3		&205		&55		&12768	\\
+\hline
+4		&300		&65		&12760	\\
+\hline
+5		&341		&85		&14540 	\\
+\hline
+6		&409		&84		&14540	\\
+\hline
+\end{tabular}
+\caption{Compile-time behaviour with increasingly large general
+grammars: time for EBL processing, time for compilation to CFG
+form, and number of nodes in resulting recogniser. Grammar
+versions as in Table~\ref{Table:GrammarScalingGrammars}.}
+\label{Table:GrammarScalabilityCompilation}
+\end{table}
+
+\begin{table}[h]
+\begin{tabular}{|c||c|c|c|c|}
+\hline
+Version 	&WER	&REJ	&AWER	&xCPUrt	\\
+		&(\%)	&(\%)	&(\%)	&(\%)	\\
+\hline	
+\hline	
+\multicolumn{5}{|c|}{\bf Measured on training set}\\
+\hline
+1		&20.64	&5.66	&10.99	&6.43	\\
+\hline						
+2		&10.32	&2.02	&7.01	&9.57	\\
+\hline						
+3		&10.27	&1.73	&7.42	&10.29	\\
+\hline						
+4		&10.25	&1.65	&7.52	&10.83	\\
+\hline						
+5		&10.26	&1.69	&7.46	&11.69	\\
+\hline						
+6		&10.26	&1.69	&7.46	&11.63	\\
+\hline						
+\multicolumn{5}{|c|}{\bf Measured on test set}\\
+\hline
+1		&22.61	&6.22	&12.46	&6.60	\\
+\hline						
+2		&13.88	&2.43	&9.57	&10.11	\\
+\hline						
+3		&14.17	&2.23	&10.34	&10.93	\\
+\hline						
+4		&14.08	&2.11	&10.39	&11.48	\\
+\hline						
+5		&14.13	&2.17	&10.38	&12.26	\\
+\hline						
+6		&14.13	&2.17	&10.38	&12.24	\\
+\hline						
+\end{tabular}
+\caption{Runtime behavior with increasingly large general grammars:
+WER, proportion rejected, adjusted WER and speed. Grammar
+versions as in Table~\ref{Table:GrammarScalingGrammars}.}
+\label{Table:GrammarScalabilityRunTime}
+\end{table}
+
+
+\subsection{Scalability of training corpora}
+\label{Section:CorpusScalability}
+
+We next investigated the effects on compile-time and run-time
+performance as we increased the number of training examples used in
+the EBL specialisation process. We again used the PSA domain for the
+experiments. Table~\ref{Table:CorpusScalabilityCompileTime} suggests
+that compile times grow at most linearly with the size of the corpus,
+and that the size of the node array grows sub-linearly.
+
+\begin{table}[h]
+\begin{tabular}{|c||c|c|r|}
+\hline
+\#Examples 	&EBL\_T		&UG\_CFG\_T	&\#Nodes\\
+		&(secs)		&(secs)		&	\\
+\hline	
+\hline	
+250		&21		&22		&4067	\\
+\hline
+500		&40		&27		&9236	\\
+\hline
+1000		&79		&40		&12545	\\
+\hline
+2500		&194		&63		&12827	\\
+\hline
+5000		&385		&84		&14462	\\
+\hline
+\end{tabular}
+\caption{Compile-time behaviour with increasingly large training
+corpora: time for EBL processing, time for compilation to CFG form,
+and number of nodes in resulting recogniser.}
+\label{Table:CorpusScalabilityCompileTime}
+\end{table}
+
+% this section will come out more sensible if we calculate statistical significance.
+The runtime performance figures in
+Table~\ref{Table:CorpusScalability} suggests that recogniser performance
+tops out fairly quickly; the error rates for 5000 training examples
+are only marginally better than those for 2500.
+
+\begin{table}[h]
+\begin{tabular}{|c||c|c|c|c|}
+\hline
+\#Examples 	&WER	&REJ	&AWER	&xCPUrt	\\
+		&(\%)	&(\%)	&(\%)	&(\%)	\\
+\hline	
+\hline	
+\multicolumn{5}{|c|}{\bf Measured on training set}\\
+\hline
+250		&16.12	&3.01	&11.33	&5.25	\\
+\hline						
+500		&13.33	&2.46	&9.45	&6.03	\\
+\hline						
+1000		&12.09	&2.09	&8.79	&7.64	\\
+\hline						
+2500		&11.19	&1.95	&7.71	&9.39	\\
+\hline						
+5000		&10.39	&1.76	&7.45	&11.90	\\
+\hline						
+\multicolumn{5}{|c|}{\bf Measured on test set}\\
+\hline
+250		&21.04	&5.07	&12.73	&5.36	\\
+\hline						
+500		&17.30	&3.84	&11.23	&6.17	\\
+\hline						
+1000		&16.63	&3.58	&10.86	&7.67	\\
+\hline						
+2500		&14.91	&2.35	&10.72	&9.70	\\
+\hline						
+5000		&14.25	&2.20	&10.47	&12.29	\\
+\hline						
+\end{tabular}
+\caption{Runtime behavior with increasing size of training corpus:
+WER, proportion rejected, adjusted WER and speed.}
+\label{Table:CorpusScalability}
+\end{table}
+
+
+%\subsection{Rule context anti-unification}
+%\label{Section:RCAUExperiments}
+%
+%The effect of varying the rule context anti-unification threshold
+%(cf. Section~\ref{Section:GrammarSpecialisation}). We vary the
+%RCAU threshold from 1 (alway use RCAU) to 100 (use it only
+%with at least 100 examples), and see how that affects things.
+%It would be particularly nice if could significantly improve
+%recognition by picking a good value for the RCAU threshold.
+%
+%Effect of syn-type features. We show that they decrease the size of
+%the node arrays, and also give a non-trivial speed-up in the
+%resulting recognisers.
+%
+\subsection{Interleaved expansion and filtering}
+\label{Section:IterativeExpansion}
+
+Finally, we investigated the value of interleaving expansion and
+filtering in the UG to CFG compilation stage
+(cf. Section~\ref{Section:UGToCFG}). By suppressing features, we
+created a series of versions of the specialised PSA grammar with the
+same number of rules, but increasing numbers of features. We then
+attempted to compile these grammars using a version of the compiler
+which carried out a single expansion step which expanded all features
+simultaneously, followed by a single filtering step.
+
+In Table ~\ref{Table:CorpusScalabilityFeatures} we see that the number
+of expanded rules and the compilation time both increase rapidly, and
+exceeded resource bounds when the grammar reached 40 features.  These
+results contrast sharply with those in
+Table~\ref{Table:GrammarScalabilityCompilation}, where compilation
+times increase only slowly as the grammar grows from 42 features
+(Version 1) to 68 features (Version 6).
+
+\begin{table}
+\begin{tabular}{|c||r|r|r|}
+\hline
+\#Features	&Rules		&Rules		&Time\\
+		&before		&after		&(secs)\\
+		&filtering	&filtering	&\\
+\hline
+\hline
+5		&378		&342		&0.2\\
+\hline
+10		&412		&364		&0.1\\
+\hline
+15		&735		&367		&0.2\\
+\hline
+20		&771		&388		&0.2\\
+\hline
+25		&1189		&457		&0.3\\
+\hline
+30		&2027		&468		&0.7\\
+\hline
+35		&9245		&1052		&5.1\\
+\hline
+36		&56849		&1082		&5.3\\
+\hline
+37		&56849		&1082		&19.1\\
+\hline
+38		&210933		&1086		&99.9\\
+\hline
+39		&210933		&1086		&75.3\\
+\hline
+40		&\multicolumn{3}{l|}{exceeded resource limits}\\
+\hline
+\end{tabular}
+\caption{Effect on compilation performance of increasing number of
+features in the grammar, when all features are expanded
+simultaneously and then filtered.}
+\label{Table:CorpusScalabilityFeatures}
+\end{table}
+
+\section{Summary and conclusions}
+
+This paper has described an approach to grammar-based language
+modelling, in which all models are derived from a single
+linguistically motivated unification grammar. Domain-specific CFG
+language models are produced by first specialising the grammar using
+an automatic corpus-based method, and then compiling the resulting
+specialised grammars into CFG form. We have presented results showing
+that recognisers for multiple, fairly different, domains can be
+derived from a single general grammar. The process remains tractable
+as the size of the general grammar increases, and also scales well
+with the size of the training corpus used. We have also shown
+that a simple method for compiling unification grammars into CFG form
+can be successfully applied to grammars containing large numbers of
+features, if it is enhanced by suitable interleaving of the expansion
+and filtering stages.
+
+Based on experience with other broad-coverage grammars, we believe
+that our current general grammar will only need to become moderately
+larger in order to achieve very reasonable cross-domain coverage for a
+large variety of domains. The grammar, and the tools used to perform
+the specialisation and compilation operations, are all Open Source,
+and will soon be made generally available to the community. The final
+version of the paper will contain instructions for accessing and
+downloading them.
+
+%\section*{Acknowledgements}
+%
+%We would like to thank everyone, especially RIACS and Fluency for
+%giving us money.
+
+\bibliographystyle{acl}
+\bibliography{rialist}
+
+\end{document}

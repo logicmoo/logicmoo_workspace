@@ -1,0 +1,35 @@
+(note TQB11-12)
+
+
+(instance 
+ (MillionBarrelsPerDay 69.8600) FlowRate) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 69.8600)) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct SuMedPipeline 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 2.10000)) 
+
+
+
+(query (findall ?FRACTION  (findall ?THROUGH-1  (findall ?TIME
+
+ (thereExists ?MEASURE-2 
+ (and 
+ (productionAmountDuring PlanetEarth PetroleumProduct ?TIME ?MEASURE-2) 
+ (instance ?MEASURE-2 FlowRate) 
+ (supplyThroughAmountDuring PlanetEarth PetroleumProduct SuMedPipeline ?TIME ?THROUGH-1) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?THROUGH-1 ?MEASURE-2)))))  )
+
+)   ))
+
+(answer 3.00601 2.10000 1995)
+
+
+(end_of_file)
+
+

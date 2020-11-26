@@ -1,0 +1,2288 @@
+%==============================================================================
+%----Code to do syntactic examination of TPTP files.
+%==============================================================================
+%==============================================================================
+%----Recognition of tptp syntax
+%==============================================================================
+%------------------------------------------------------------------------------
+tptp_quantifier(Quantifier):-
+    tptp2X_member(Quantifier,['!','?','^','!>','?*','@+','@-']).
+%------------------------------------------------------------------------------
+tptp_type_binary_connective(TypeConnective):-
+    tptp2X_member(TypeConnective,['>','*','+']).
+%------------------------------------------------------------------------------
+tptp_flat_binary_connnective(Connective):-
+    tptp2X_member(Connective,['@','>','*','+']).
+%------------------------------------------------------------------------------
+tptp_associative_binary_connective(Connective):-
+%----|;BUG
+    tptp2X_member(Connective,[&,'|',';','@','*','+','>','**','++']).
+%------------------------------------------------------------------------------
+tptp_left_associative_binary_connective(Connective):-
+    tptp2X_member(Connective,['@','*','+','**','++']).
+%------------------------------------------------------------------------------
+tptp_right_associative_binary_connective(Connective):-
+    tptp2X_member(Connective,['>']).
+%------------------------------------------------------------------------------
+tptp_binary_connnective(Connective):-
+    tptp2X_member(Connective,['|',';','~|','&','~&','=>','<=','<=>','<~>','@',
+'>','*','+','-->','**','++','-=','<>','<+>','<<','>>']).
+%------------------------------------------------------------------------------
+%----Recognise and split up quantified formulae
+%----FOF syntax, only in tptp mode
+tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula):-
+    nonvar(QuantifiedFormula),
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    \+ looks_like_a_variable(Quantification),
+    Quantification =.. [Quantifier,Variables],
+    tptp_quantifier(Quantifier),
+    !.
+
+%----Case for reconstruction
+tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula):-
+    var(QuantifiedFormula),
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    Quantification =.. [Quantifier,Variables],
+    tptp_quantifier(Quantifier),
+    !.
+
+oldtptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula).
+%------------------------------------------------------------------------------
+%----Recognise and split up binary formulae
+%----Converting from the Prolog syntax to FOF syntax
+tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS):-
+%----Do the member first to get instantiated variables for backward use
+%----Will backtrack until it finds the right connective. Needs the ()s for 
+%----Prolog weirdness with '+'.
+    tptp2X_member((OldBinaryConnective)-(BinaryConnective),[
+%----|;BUG
+('|')-('|'),(';')-('|'),('~|')-('~|'),('&')-('&'),('~&')-('~&'), ('=>')-('=>'),
+('<=')-('<='),('<=>')-('<=>'),('<~>')-('<~>'),('@')-('@'),('>')-('>'),
+('*')-('*'),('+')-('+'),('-->')-('-->'),('**')-('**'),('++')-('++'),
+('-=')-('-='),('<>')-('<>'),('<+>')-('<+>'),('<<')-('<<'),('>>')-('>>')]),
+    BinaryFormula =.. [OldBinaryConnective,LHS,RHS].
+
+oldtptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS):-
+    tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS).
+%------------------------------------------------------------------------------
+%----Recognise and split up unary formulae
+tptp_unary_formula(UnaryFormula,UnaryConnective,Formula):-
+    UnaryFormula =.. [UnaryConnective,Formula],
+    tptp2X_member(UnaryConnective,['~','!!','??','&','!','?']).
+
+oldtptp_unary_formula(UnaryFormula,UnaryConnective,Formula):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula).
+%------------------------------------------------------------------------------
+%----Recognize non-atomic formulae
+tptp_non_atomic_formula(Formula):-
+    tptp_quantified_formula(Formula,_,_,_).
+
+tptp_non_atomic_formula(Formula):-
+    tptp_binary_formula(Formula,_,_,_).
+
+tptp_non_atomic_formula(Formula):-
+    tptp_unary_formula(Formula,_,_).
+
+%----A sad attempt to recognize when an equality is an equation. It doesn't
+%----work because X = Y is an equation but is seen to be an atomic equality.
+%----Shit, because variables are atoms for THF.
+tptp_non_atomic_formula('$tptp_equal'(LHS,_)):-
+    \+ tptp_atomic_formula(LHS).
+
+tptp_non_atomic_formula('$tptp_equal'(_,RHS)):-
+    \+ tptp_atomic_formula(RHS).
+
+%----!= are unary
+tptp_non_atomic_formula('$tptp_not_equal'(_,_)).
+
+%----Tuples - non-empty ones are not atomic
+tptp_non_atomic_formula([_|_]).
+%------------------------------------------------------------------------------
+%----Recognize atomic formulae. Variables for THF.
+tptp_atomic_formula(Variable):-
+    looks_like_a_variable(Variable),
+    !.
+
+%----Tuples of atoms are atomic
+tptp_atomic_formula([]):-
+    !.
+
+tptp_atomic_formula([H|T]):-
+    !,
+    atomic(H),
+    tptp_atomic_formula(T).
+
+%----Derefereneces are atomic
+tptp_atomic_formula(&(_)):-
+    !.
+
+tptp_atomic_formula(AtomicFormula):-
+    \+ tptp_non_atomic_formula(AtomicFormula).
+%------------------------------------------------------------------------------
+tptp_flat_unary_formula(&(_),'&'):-
+    !.
+
+%------------------------------------------------------------------------------
+tptp_flat_binary_formula(Variable,BinaryConnective):-
+    looks_like_a_variable(Variable),
+    !,
+    tptp_flat_binary_connnective(BinaryConnective).
+
+tptp_flat_binary_formula(Formula,BinaryConnective):-
+    tptp_literal_formula(Formula,_),
+    !,
+    tptp_flat_binary_connnective(BinaryConnective).
+
+tptp_flat_binary_formula(Formula,BinaryConnective):-
+    Formula =.. [BinaryConnective,LHS,RHS],
+    tptp_flat_binary_connnective(BinaryConnective),
+    tptp_flat_binary_formula(LHS,_LHSConnective),
+    tptp_flat_binary_formula(RHS,_RHSConnective).
+%------------------------------------------------------------------------------
+tptp_flat_type(Formula,UnaryConnective):-
+    tptp_flat_unary_formula(Formula,UnaryConnective),
+    !.
+
+tptp_flat_type(Formula,BinaryConnective):-
+    tptp_flat_binary_formula(Formula,BinaryConnective),
+    !.
+
+tptp_flat_type(XProd > Symbol,'>'):-
+    atomic(Symbol),
+    tptp_flat_binary_formula(XProd,'*').
+%------------------------------------------------------------------------------
+%----Recognize literal formulae
+tptp_literal_formula(~Atom,Atom):-
+    tptp_atomic_formula(Atom).
+
+tptp_literal_formula(Atom,Atom):-
+    tptp_atomic_formula(Atom).
+%------------------------------------------------------------------------------
+%----Check that it is a list of clauses
+tptp_clauses([]).
+
+tptp_clauses([input_clause(_,_Role,_)|RestOfClauses]):-
+%----CNF cannot have conjectures - why did I enforce this?
+%    Role \== conjecture,
+    tptp_clauses(RestOfClauses).
+%------------------------------------------------------------------------------
+tptp_ensure_short_form([],[]).
+
+tptp_ensure_short_form([AnnotatedFormula|RestOfAnnotatedFormulae],
+[ShortAnnotatedFormula|RestOfShortForms]):-
+    AnnotatedFormula =.. [Language,Name,Role,Logic|_],
+    ShortAnnotatedFormula =.. [Language,Name,Role,Logic],
+    tptp_ensure_short_form(RestOfAnnotatedFormulae,RestOfShortForms).
+%------------------------------------------------------------------------------
+tptp_ensure_long_form([],[]).
+
+tptp_ensure_long_form([AnnotatedFormula|RestOfAnnotatedFormulae],
+[LongAnnotatedFormula|RestOfLongForms]):-
+    AnnotatedFormula =.. [Language,Name,Role,Logic],
+    !,
+    LongAnnotatedFormula =.. [Language,Name,Role,Logic,unknown,[]],
+    tptp_ensure_long_form(RestOfAnnotatedFormulae,RestOfLongForms).
+
+tptp_ensure_long_form([AnnotatedFormula|RestOfAnnotatedFormulae],
+[LongAnnotatedFormula|RestOfLongForms]):-
+    AnnotatedFormula =.. [Language,Name,Role,Logic,Source],
+    !,
+    LongAnnotatedFormula =.. [Language,Name,Role,Logic,Source,[]],
+    tptp_ensure_long_form(RestOfAnnotatedFormulae,RestOfLongForms).
+
+tptp_ensure_long_form([AnnotatedFormula|RestOfAnnotatedFormulae],
+[AnnotatedFormula|RestOfLongForms]):-
+    AnnotatedFormula =.. [_,_,_,_,_,_],
+    !,
+    tptp_ensure_long_form(RestOfAnnotatedFormulae,RestOfLongForms).
+%------------------------------------------------------------------------------
+%----Check that it is a list of formulae with these languages
+tptp_formulae_language([],_).
+
+tptp_formulae_language([Formula|RestOfFormulae],Languages):-
+    Formula =.. [Language|_],
+    tptp2X_member(Language,Languages),
+    tptp_formulae_language(RestOfFormulae,Languages).
+%------------------------------------------------------------------------------
+%----Extract formulae with a given role
+tptp_separate_formulae_with_role(_,[],[],[]).
+
+tptp_separate_formulae_with_role(Role,[WithRole|Rest],[WithRole|
+RestWithRole],OtherRole):-
+    WithRole =.. [_,_,Role|_],
+    !,
+    tptp_separate_formulae_with_role(Role,Rest,RestWithRole,OtherRole).
+
+tptp_separate_formulae_with_role(Role,[WithoutRole|Rest],WithRole,[WithoutRole|
+RestWithoutRole]):-
+    tptp_separate_formulae_with_role(Role,Rest,WithRole,RestWithoutRole).
+%------------------------------------------------------------------------------
+%----Check that it is a list of formulae
+tptp_formulae(Formulae):-
+    tptp_formulae_language(Formulae,[dlf,fof,thf,tff]).
+%------------------------------------------------------------------------------
+tptp_clause_like(Literal):-
+    tptp_literal_formula(Literal,_),
+    !.
+
+tptp_clause_like(RHS '|' LHS):-
+    tptp_clause_like(RHS),
+    tptp_clause_like(LHS).
+%------------------------------------------------------------------------------
+tptp_clause_like_formulae([]).
+
+tptp_clause_like_formulae([fof(_,_,Formula)|RestOfFormulae]):-
+    tptp_clause_like(Formula),
+    tptp_clause_like_formulae(RestOfFormulae).
+%------------------------------------------------------------------------------
+%----Check if non-propositional 
+%----CNF case
+tptp_non_propositional(Clauses):-
+%----Extract any atom
+    tptp2X_member(input_clause(_,_,Literals),Clauses),
+    tptp2X_member(Literal,Literals),
+    Literal =.. [_,Atom],
+%----Check that the atom has an argument
+    Atom =.. [_,_|_],
+    !.
+
+%----FOF case
+tptp_non_propositional(Formulae):-
+%----Look at formulae one at a time, to avoid extracting all atoms
+%----unnecessarily
+    tptp2X_member(AnnotatedFormula,Formulae),
+    AnnotatedFormula =.. [fof|_],
+    extract_atoms_from_formulae([AnnotatedFormula],_,_,no,Atoms),
+    tptp2X_member(Atom,Atoms),
+    Atom =.. [_,_|_],
+    !.
+%------------------------------------------------------------------------------
+%----Check if propositional
+tptp_propositional(Formulae):-
+    \+ tptp_non_propositional(Formulae).
+%------------------------------------------------------------------------------
+tptp_non_epr(Clauses):-
+    (   ( count_literals_with_predicate(Clauses,'$tptp_equal',2,Number),
+          Number > 0 )
+    ;   extract_formulae_variables(Clauses,[_,_])
+    ),
+    examine_formulae_for_functors(Clauses,FunctorStructures,_),
+    tptp2X_arity_range(FunctorStructures,_,MaximalFunctorArity),
+    MaximalFunctorArity > 0,
+    !.
+
+%----Very pessimistic about FOF :-(
+tptp_non_epr(Formulae):-
+    tptp2X_member(AnnotatedFormula,Formulae),
+    AnnotatedFormula =.. [fof|_].
+%------------------------------------------------------------------------------
+tptp_epr(Formulae):-
+    \+ tptp_non_epr(Formulae).
+%------------------------------------------------------------------------------
+%----Check formula is in TPTP normal form
+%----conjectures are safe so far
+tptp_normal_formula(fof(_,conjecture,_)):-
+    !.
+
+%tptp_normal_formula(fof(Name,_,_ & _)):-
+%    !,
+%    write('%----ERROR : Top level & in '),
+%    write(Name),
+%    nl,
+%    fail.
+
+tptp_normal_formula(fof(Name,Status,forall(_,Formula))):-
+    !,
+    tptp_normal_formula(fof(Name,Status,Formula)).
+
+tptp_normal_formula(fof(Name,Status,!(_,Formula))):-
+    !,
+    tptp_normal_formula(fof(Name,Status,Formula)).
+
+tptp_normal_formula(_).
+%------------------------------------------------------------------------------
+%----Check the formulae are in TPTP normal form
+tptp_normal_formulae([]).
+
+tptp_normal_formulae([FirstFormula|RestOfFormulae]):-
+    tptp_normal_formula(FirstFormula),
+    tptp_normal_formulae(RestOfFormulae).
+%------------------------------------------------------------------------------
+ensure_typed_variables([],[]).
+
+ensure_typed_variables([Variable|RestOfVariables],[Variable:'$i'|
+RestOfTypedVariables]):-
+    looks_like_a_variable(Variable),
+    !,
+    ensure_typed_variables(RestOfVariables,RestOfTypedVariables).
+
+ensure_typed_variables([Variable:Type|RestOfVariables],[Variable:Type|
+RestOfTypedVariables]):-
+    !,
+    ensure_typed_variables(RestOfVariables,RestOfTypedVariables).
+
+ensure_typed_variables([Variable|_RestOfVariables],[Variable|
+_RestOfTypedVariables]):-
+    write('SHOULD NEVER GET HERE'),nl.
+
+%------------------------------------------------------------------------------
+type_quantified_variables(QuantifiedFormula,FixedQuantified):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula),
+    !,
+    type_quantified_variables(Formula,FixedFormula),
+    ensure_typed_variables(Variables,TypedVariables),
+    tptp_quantified_formula(FixedQuantified,Quantifier,TypedVariables,
+FixedFormula).
+
+type_quantified_variables(BinaryFormula,FixedBinary):-
+    tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS),
+    !,
+    type_quantified_variables(LHS,FixedLHS),
+    type_quantified_variables(RHS,FixedRHS),
+    tptp_binary_formula(FixedBinary,BinaryConnective,FixedLHS,FixedRHS).
+
+type_quantified_variables(UnaryFormula,FixedUnary):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula),
+    !,
+    type_quantified_variables(Formula,FixedFormula),
+    tptp_unary_formula(FixedUnary,UnaryConnective,FixedFormula).
+
+type_quantified_variables(Formula,Formula).
+%------------------------------------------------------------------------------
+type_tff_variables([],[]).
+
+type_tff_variables([TFFFormula|RestTFFFormulae],[FixedTFFFormula|
+RestFixedTFFFormulae]):-
+    TFFFormula =.. [Form,Name,Role,Logic|Rest],
+    Role \= type,
+    tptp2X_member(Form,[tff,fof]),
+    !,
+    type_quantified_variables(Logic,TypedLogic),
+    FixedTFFFormula =.. [tff,Name,Role,TypedLogic|Rest],
+    type_tff_variables(RestTFFFormulae,RestFixedTFFFormulae).
+
+type_tff_variables([TFFFormula|RestTFFFormulae],[TFFFormula|
+RestFixedTFFFormulae]):-
+    type_tff_variables(RestTFFFormulae,RestFixedTFFFormulae).
+%------------------------------------------------------------------------------
+check_xproduct_length(Variable,1):-
+    var(Variable),
+    !.
+
+check_xproduct_length(RHS * Atomic,Arity):-
+    var(Atomic),
+    !,
+    Arity1 is Arity - 1,
+    check_xproduct_length(RHS,Arity1).
+
+check_xproduct_length(RHS * Atomic,Arity):-
+    nonvar(Atomic),
+    !,
+    Arity1 is Arity - 1,
+    check_xproduct_length(RHS,Arity1).
+
+check_xproduct_length(_,1).
+%------------------------------------------------------------------------------
+tptp_symbol_is_declared(Number,0,_,_):-
+    looks_like_a_number(Number),
+    !.
+
+%----Defined start with $
+tptp_symbol_is_declared(Defined,_,_,_):-
+    name(Defined,[36|_]),
+    !.
+
+%----Base types
+tptp_symbol_is_declared(Symbol,0,_,TypeDeclarations):-
+    tptp2X_member(tff(_,type,Symbol: '$tType'),TypeDeclarations),
+    !.
+
+tptp_symbol_is_declared(Symbol,Arity,_,TypeDeclarations):-
+    tptp2X_member(tff(_,type,Symbol: XProduct > '$tType'),TypeDeclarations),
+    check_xproduct_length(XProduct,Arity),
+    !.
+
+%----Propositions and constants
+tptp_symbol_is_declared(Symbol,0,RequiredResultType,TypeDeclarations):-
+    tptp2X_member(tff(_,type,Symbol: RequiredResultType),TypeDeclarations),
+    !.
+
+tptp_symbol_is_declared(Symbol,Arity,RequiredResultType,TypeDeclarations):-
+    tptp2X_member(tff(_,type,Symbol: Declaration),TypeDeclarations),
+    quantified_formula(tptp,Declaration,'!>',Variables,RequiredResultType,
+_,_,_,_,_),
+    tptp2X_length(Variables,Arity),
+    !.
+
+%----Predicates and functions
+tptp_symbol_is_declared(Symbol,Arity,RequiredResultType,TypeDeclarations):-
+    Arity > 0,
+    tptp2X_member(tff(_,type,Symbol: XProduct > RequiredResultType),
+TypeDeclarations),
+    check_xproduct_length(XProduct,Arity),
+    !.
+
+tptp_symbol_is_declared(Symbol,Arity,RequiredResultType,TypeDeclarations):-
+    Arity > 0,
+    tptp2X_member(tff(_,type,Symbol: Declaration),TypeDeclarations),
+%DEBUG write('Is it '),write(Symbol: Declaration),nl,
+    quantified_formula(tptp,Declaration,'!>',Variables,
+XProduct > RequiredResultType,_,_,_,_,_),
+%DEBUG write('Variables '),write(Variables),nl,
+%DEBUG write('XProduct '),write(XProduct),nl,
+    tptp2X_length(Variables,PolyArity),
+%DEBUG write('PolyArity '),write(PolyArity),nl,
+    XProductLength is Arity - PolyArity,
+%DEBUG write('XProductLength '),write(XProductLength),nl,
+    check_xproduct_length(XProduct,XProductLength).
+%DEBUG write('YES'),nl.
+
+%------------------------------------------------------------------------------
+tptp_find_undeclared_symbols([],_,_,[]).
+
+tptp_find_undeclared_symbols([Symbol/Arity|RestOfStructures],TypeDeclarations,
+RequiredResultType,UndeclaredStructures):-
+%----Don't let a variable RequiredResultType get instantiated
+    (   nonvar(RequiredResultType)
+   ->   ThisRequiredResultType = RequiredResultType
+    ;   true
+    ),
+%DEBUG write('Go look for '),write(Symbol/Arity),write(' with result type '),write(ThisRequiredResultType),nl,
+    tptp_symbol_is_declared(Symbol,Arity,ThisRequiredResultType,
+TypeDeclarations),
+    !,
+    tptp_find_undeclared_symbols(RestOfStructures,TypeDeclarations,
+RequiredResultType,UndeclaredStructures).
+
+tptp_find_undeclared_symbols([Undeclared|RestOfStructures],TypeDeclarations,
+RequiredResultType,[Undeclared|RestOfUndeclaredStructures]):-
+    tptp_find_undeclared_symbols(RestOfStructures,TypeDeclarations,
+RequiredResultType,RestOfUndeclaredStructures).
+%------------------------------------------------------------------------------
+tptp_make_xproduct(1,ArgumentType,ArgumentType).
+
+tptp_make_xproduct(Arity,ArgumentType,(RestOfXProduct * ArgumentType)):-
+    Arity > 1,
+    Arity1 is Arity - 1,
+    tptp_make_xproduct(Arity1,ArgumentType,RestOfXProduct).
+%------------------------------------------------------------------------------
+tptp_make_type_declarations([],_,_,[]).
+
+%----Equality is built in, therefore needs no type declaration
+tptp_make_type_declarations([Symbol/Arity|RestOfStructures],ArgumentType,
+ResultType,TypeDeclarations):-
+    tptp2X_member(Symbol/Arity,['$tptp_equal'/2]),
+    !,
+    tptp_make_type_declarations(RestOfStructures,ArgumentType,ResultType,
+TypeDeclarations).
+
+%----No type declaration for distinct objects
+tptp_make_type_declarations([Symbol/0|RestOfStructures],ArgumentType,ResultType,
+TypeDeclarations):-
+    name(Symbol,[34|_]),
+    !,
+    tptp_make_type_declarations(RestOfStructures,ArgumentType,ResultType,
+TypeDeclarations).
+
+tptp_make_type_declarations([Symbol/0|RestOfStructures],ArgumentType,ResultType,
+[tff(Name,type,Symbol:ResultType)|RestOfTypeDeclarations]):-
+    !,
+    concatenate_atoms([Symbol,'_0_',type],Name),
+    tptp_make_type_declarations(RestOfStructures,ArgumentType,ResultType,
+RestOfTypeDeclarations).
+
+tptp_make_type_declarations([Symbol/Arity|RestOfStructures],ArgumentType,
+ResultType,[tff(Name,type,Symbol: XProduct > ResultType)|
+RestOfTypeDeclarations]):-
+    Arity > 0,
+    tptp_make_xproduct(Arity,ArgumentType,XProduct),
+    concatenate_atoms([Symbol,'_',Arity,'_',type],Name),
+%DEBUG write('=== MTD : '),write(tff(Name,type,Symbol: XProduct > ResultType)),nl,
+    tptp_make_type_declarations(RestOfStructures,ArgumentType,ResultType,
+RestOfTypeDeclarations).
+%------------------------------------------------------------------------------
+complete_tff_types(LogicalFormulae,TypeDeclarations,
+CompletedTypeDeclarations):-
+%DEBUG write('--- ITDs : '),write(TypeDeclarations),nl,
+%----Do basic syntactic examination
+    examine_formulae_for_predicates(LogicalFormulae,_,PredicateStructures,_),
+%DEBUG write('--- PSs  : '),write(PredicateStructures),nl,
+    examine_formulae_for_functors(LogicalFormulae,FunctorStructures,_),
+%DEBUG write('--- FSs  : '),write(FunctorStructures),nl,
+%----Find which are already declared
+    tptp_find_undeclared_symbols(PredicateStructures,TypeDeclarations,'$o',
+UndeclaredPredicateStructures),
+%DEBUG write('--- UPS : '),write(UndeclaredPredicateStructures),nl,
+%----Declare rest as $i and $o
+    tptp_make_type_declarations(UndeclaredPredicateStructures,'$i','$o',
+PredicateTypeDeclarations),
+%DEBUG write('--- PTDs : '),display(PredicateTypeDeclarations),nl,
+    tptp_find_undeclared_symbols(FunctorStructures,TypeDeclarations,_,
+UndeclaredFunctorStructures),
+%DEBUG write('--- UFS : '),write(UndeclaredFunctorStructures),nl,
+    tptp_make_type_declarations(UndeclaredFunctorStructures,'$i','$i',
+FunctorTypeDeclarations),
+%DEBUG write('--- FTDs : '),display(FunctorTypeDeclarations),nl,
+    tptp2X_append(TypeDeclarations,PredicateTypeDeclarations,
+TypeDeclarations1),
+    tptp2X_append(TypeDeclarations1,FunctorTypeDeclarations,
+CompletedTypeDeclarations).
+%------------------------------------------------------------------------------
+tptp_complete_types(Formulae,CompletedTypeDeclarations,
+CompletedLogicalFormulae):-
+    tptp_formulae_language(Formulae,[tff,fof]),
+    tptp_separate_formulae_with_role(type,Formulae,TypeDeclarations,
+LogicalFormulae),
+    type_tff_variables(LogicalFormulae,CompletedLogicalFormulae),
+    complete_tff_types(CompletedLogicalFormulae,TypeDeclarations,
+CompletedTypeDeclarations).
+
+%----Need to implement for THF
+tptp_complete_types(Formulae,TypeDeclarations,LogicalFormulae):-
+    tptp_formulae_language(Formulae,[thf]),
+    tptp_separate_formulae_with_role(type,Formulae,TypeDeclarations,
+LogicalFormulae).
+%------------------------------------------------------------------------------
+%======================================================================
+%----Syntax procedures
+%======================================================================
+%------------------------------------------------------------------------------
+%----Keep each variable in the list. This is the first time it's appeared
+do_tptp2X_syntax_extract_variables(Variable,[Variable]):-
+    looks_like_a_variable(Variable),
+    !.
+
+%----If an atomic term is found, then ignore it.
+do_tptp2X_syntax_extract_variables(Term,[]):-
+    atomic(Term),
+    !.
+
+%----If a list, then do head and tail
+do_tptp2X_syntax_extract_variables([Head|Tail],Variables):-
+    !,
+    do_tptp2X_syntax_extract_variables(Head,Variables1),
+    do_tptp2X_syntax_extract_variables(Tail,Variables2),
+    tptp2X_append(Variables1,Variables2,Variables).
+
+%----Otherwise, it must be a function term. Pull it apart and do
+%----the arguments one by one.
+do_tptp2X_syntax_extract_variables(Function,Variables):-
+    Function =.. [_|Arguments],
+    do_tptp2X_syntax_extract_variables(Arguments,Variables).
+%------------------------------------------------------------------------------
+extract_unique_variables([],UniqueVariables,UniqueVariables).
+
+extract_unique_variables([FirstVariable|RestOfVariables],UniqueSoFar,
+UniqueVariables):-
+    tptp2X_exact_member(FirstVariable,UniqueSoFar),
+    !,
+    extract_unique_variables(RestOfVariables,UniqueSoFar,UniqueVariables).
+
+extract_unique_variables([FirstVariable|RestOfVariables],UniqueSoFar,
+UniqueVariables):-
+    extract_unique_variables(RestOfVariables,[FirstVariable|UniqueSoFar],
+UniqueVariables).
+%------------------------------------------------------------------------------
+tptp2X_syntax_extract_variables(Term,Variables,UniqueVariables):-
+    do_tptp2X_syntax_extract_variables(Term,Variables),
+    extract_unique_variables(Variables,[],UniqueVariables).
+%------------------------------------------------------------------------------
+%----Measure the maximum depth of functor nesting in the term
+tptp2X_syntax_term_depth(Variable,1):-
+    var(Variable),
+    !.
+
+tptp2X_syntax_term_depth([],0):-
+    !.
+
+tptp2X_syntax_term_depth([First|Rest],Depth):-
+    !,
+    tptp2X_syntax_term_depth(First,FirstDepth),
+    tptp2X_syntax_term_depth(Rest,RestDepth),
+    tptp2X_choose_maximum(FirstDepth,RestDepth,Depth).
+
+tptp2X_syntax_term_depth(Term,Depth):-
+    Term =.. [_|Arguments],
+    tptp2X_syntax_term_depth(Arguments,ArgumentDepth),
+    Depth is ArgumentDepth + 1.
+%------------------------------------------------------------------------------
+%----Measure the depth of a formula
+tptp2X_syntax_formula_depth(Variable,1):-
+    looks_like_a_variable(Variable),
+    !.
+
+tptp2X_syntax_formula_depth(QuantifiedFormula,Depth):-
+    tptp_quantified_formula(QuantifiedFormula,_,Variables,Formula),
+    !,
+    tptp2X_syntax_formula_depth(Formula,FormulaDepth),
+    tptp2X_length(Variables,MoreDepth),
+    Depth is FormulaDepth + MoreDepth.
+
+tptp2X_syntax_formula_depth(BinaryFormula,Depth):-
+    tptp_binary_formula(BinaryFormula,_,LHS,RHS),
+    !,
+    tptp2X_syntax_formula_depth(LHS,LHSDepth),
+    tptp2X_syntax_formula_depth(RHS,RHSDepth),
+    tptp2X_choose_maximum(LHSDepth,RHSDepth,MaximumDepth),
+    Depth is MaximumDepth + 1.
+
+tptp2X_syntax_formula_depth(UnaryFormula,Depth):-
+    tptp_unary_formula(UnaryFormula,_,Formula),
+    !,
+    tptp2X_syntax_formula_depth(Formula,FormulaDepth),
+    Depth is FormulaDepth + 1.
+
+tptp2X_syntax_formula_depth(TypeOrDefnForm,Depth):-
+    TypeOrDefnForm =.. [Separator,Formula,TypeOrDefn],
+    tptp2X_member(Separator,[':',':=']),
+    !,
+    tptp2X_syntax_formula_depth(Formula,LHSDepth),
+    tptp2X_syntax_formula_depth(TypeOrDefn,RHSDepth),
+    tptp2X_choose_maximum(LHSDepth,RHSDepth,ANYDepth),
+    Depth is ANYDepth + 1.
+
+tptp2X_syntax_formula_depth(AtomicFormula,1):-
+    tptp_atomic_formula(AtomicFormula),
+    !.
+
+%----Only delve into equations (THF), not equalities (FOF, CNF)
+tptp2X_syntax_formula_depth('$tptp_equal'(LHS,RHS),Depth):-
+    !,
+    tptp2X_syntax_formula_depth(LHS,LHSDepth),
+    tptp2X_syntax_formula_depth(RHS,RHSDepth),
+    tptp2X_choose_maximum(LHSDepth,RHSDepth,ANYSideDepth),
+    Depth is ANYSideDepth + 1.
+
+tptp2X_syntax_formula_depth('$tptp_not_equal'(LHS,RHS),Depth):-
+    !,
+    tptp2X_syntax_formula_depth(~ '$tptp_equal'(LHS,RHS),Depth).
+%------------------------------------------------------------------------------
+count_formula_list_connectives([],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]).
+
+count_formula_list_connectives([Formula|RestOfFormulae],CountVector):-
+    count_formula_connectives(Formula,FirstVector),
+    count_formula_list_connectives(RestOfFormulae,RestVector),
+    tptp2X_list_add(FirstVector,RestVector,CountVector).
+%------------------------------------------------------------------------------
+%----Count the number of occurences of each type of connective in a
+%----formula
+%DEBUG count_formula_connectives(Formula,_):-write('CFC--- '),display(Formula),nl,fail.
+
+%----Catch variables (for THF case) and atomic formulae early
+count_formula_connectives(Variable,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]):-
+    looks_like_a_variable(Variable),
+    !.
+
+count_formula_connectives(Atomic,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]):-
+    atomic(Atomic),
+    !.
+
+%----Type declaration - catch before quantified
+%----Global type - RHS only, and count type declartions
+count_formula_connectives(Symbol : Type,CountVector):-
+%----Non-var looks like !
+    atomic(Symbol),
+    !,
+    count_formula_connectives(Type,TypeCountVector),
+    tptp2X_list_add(TypeCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+CountVector).
+
+%----Variable type - RHS only, and count typed variables
+count_formula_connectives(Symbol : Type,CountVector):-
+    var(Symbol),
+    !,
+    count_formula_connectives(Type,TypeCountVector),
+    tptp2X_list_add(TypeCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----Map arrows 
+count_formula_connectives(LHS > RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,LocalCountVector),
+    tptp2X_list_add(LocalCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+CountVector).
+
+%----X product
+count_formula_connectives(LHS * RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,LocalCountVector),
+    tptp2X_list_add(LocalCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+CountVector).
+
+%----Union
+count_formula_connectives(LHS + RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,LocalCountVector),
+    tptp2X_list_add(LocalCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+CountVector).
+
+%----Subtype
+count_formula_connectives(_ << _,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]):-
+    !.
+
+%----Global defn - RHS only, and count global definitions
+count_formula_connectives(Symbol := Defn,CountVector):-
+    atomic(Symbol),
+    !,
+    count_formula_connectives(Defn,DefnCountVector),
+    tptp2X_list_add(DefnCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+CountVector).
+
+%----Variable defn - RHS only, and count nothing. Note TypedVariable may have
+%----its own RHS, which will be done above. Count of variable defns is done
+%----in letrec below.
+count_formula_connectives(TypedVariable := Defn,CountVector):-
+    !,
+    count_formula_connectives(TypedVariable,TypedVariableCountVector),
+    count_formula_connectives(Defn,DefnCountVector),
+    tptp2X_list_add(TypedVariableCountVector,DefnCountVector,CountVector).
+
+%----NOT
+count_formula_connectives(~ Formula,CountVector):-
+    !,
+    count_formula_connectives(Formula,FormulaCountVector),
+    tptp2X_list_add(FormulaCountVector,
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----Pi
+count_formula_connectives('!!' Formula,CountVector):-
+    !,
+    count_formula_connectives(Formula,FormulaCountVector),
+    tptp2X_list_add(FormulaCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----Sigma
+count_formula_connectives('??' Formula,CountVector):-
+    !,
+    count_formula_connectives(Formula,FormulaCountVector),
+    tptp2X_list_add(FormulaCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----OR
+count_formula_connectives(';'(LHS,RHS),CountVector):-
+%----To avoid confusion with |
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,ORCountVector),
+    tptp2X_list_add(ORCountVector,
+[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----|;BUG
+count_formula_connectives('|'(LHS,RHS),CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,ORCountVector),
+    tptp2X_list_add(ORCountVector,
+[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----AND
+count_formula_connectives(LHS & RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,ANDCountVector),
+    tptp2X_list_add(ANDCountVector,
+[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----IMPLY
+count_formula_connectives(LHS => RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,IMPLYCountVector),
+    tptp2X_list_add(IMPLYCountVector,
+[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----IMPLIED
+count_formula_connectives(LHS <= RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,IMPLIEDCountVector),
+    tptp2X_list_add(IMPLIEDCountVector,
+[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----EQUIV
+count_formula_connectives(LHS <=> RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,EQUIVCountVector),
+    tptp2X_list_add(EQUIVCountVector,
+[0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----XOR
+count_formula_connectives(LHS <~> RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,XORCountVector),
+    tptp2X_list_add(XORCountVector,
+[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----NOR
+count_formula_connectives(LHS '~|' RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,NORCountVector),
+    tptp2X_list_add(NORCountVector,
+[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----NAND
+count_formula_connectives(LHS ~& RHS,CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,NANDCountVector),
+    tptp2X_list_add(NANDCountVector,
+[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----Applys
+count_formula_connectives(@(LHS,RHS),CountVector):-
+    !,
+    count_formula_connectives(LHS,LHSCountVector),
+    count_formula_connectives(RHS,RHSCountVector),
+    tptp2X_list_add(LHSCountVector,RHSCountVector,ANDCountVector),
+    tptp2X_list_add(ANDCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----Universals
+count_formula_connectives(! Variables : Formula,CountVector):-
+    !,
+    tptp2X_length(Variables,NumberOfVariables),
+    count_formula_list_connectives(Variables,VariablesCountVector),
+    count_formula_connectives(Formula,FormulaCountVector),
+    tptp2X_list_add(VariablesCountVector,FormulaCountVector,LocalCountVector),
+    tptp2X_list_add(LocalCountVector,
+[0,0,0,0,0,0,0,0,0,NumberOfVariables,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----Existentials
+count_formula_connectives(? Variables : Formula,CountVector):-
+    !,
+    tptp2X_length(Variables,NumberOfVariables),
+    count_formula_list_connectives(Variables,VariablesCountVector),
+    count_formula_connectives(Formula,FormulaCountVector),
+    tptp2X_list_add(VariablesCountVector,FormulaCountVector,LocalCountVector),
+    tptp2X_list_add(LocalCountVector,
+[0,0,0,0,0,0,0,0,0,0,NumberOfVariables,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----Lambdas 
+count_formula_connectives(^ Variables : Formula,CountVector):-
+    !,
+    tptp2X_length(Variables,NumberOfVariables),
+    count_formula_list_connectives(Variables,VariablesCountVector),
+    count_formula_connectives(Formula,FormulaCountVector),
+    tptp2X_list_add(VariablesCountVector,FormulaCountVector,LocalCountVector),
+    tptp2X_list_add(LocalCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,NumberOfVariables,0,0,0,0,0,0,0,0,0,0,0,0,0],
+CountVector).
+
+%----PI 
+count_formula_connectives('!>' Variables : Formula,CountVector):-
+    !,
+    tptp2X_length(Variables,NumberOfVariables),
+    count_formula_list_connectives(Variables,VariablesCountVector),
+    count_formula_connectives(Formula,FormulaCountVector),
+    tptp2X_list_add(VariablesCountVector,FormulaCountVector,LocalCountVector),
+    tptp2X_list_add(LocalCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NumberOfVariables,0,0,0,0,0,0,0],
+CountVector).
+
+%----SIGMA 
+count_formula_connectives('?*' Variables : Formula,CountVector):-
+    !,
+    tptp2X_length(Variables,NumberOfVariables),
+    count_formula_list_connectives(Variables,VariablesCountVector),
+    count_formula_connectives(Formula,FormulaCountVector),
+    tptp2X_list_add(VariablesCountVector,FormulaCountVector,LocalCountVector),
+    tptp2X_list_add(LocalCountVector,
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NumberOfVariables,0,0,0,0,0,0],
+CountVector).
+
+%----THF atoms can have formulae inside
+count_formula_connectives(Atom,CountVector):-
+    Atom =.. [_|Arguments],
+    count_formula_list_connectives(Arguments,CountVector).
+
+%------------------------------------------------------------------------------
+%----Count the number of occurences of each type of connective in a
+%----list of formulae
+count_formulae_connectives([],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]).
+
+count_formulae_connectives([AnnotatedFormula|RestOfFormulae],CountVector):-
+    AnnotatedFormula =.. [_,_,_,FirstFormula|_],
+    count_formula_connectives(FirstFormula,FirstVector),
+    count_formulae_connectives(RestOfFormulae,RestVector),
+    tptp2X_list_add(FirstVector,RestVector,CountVector).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Pulling clauses apart code
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Extract all the arguments from the literals
+extract_arguments_from_literals([],[]):-
+    !.
+
+extract_arguments_from_literals([FirstLiteral|RestOfLiterals],Arguments):-
+    extract_arguments_from_literals(RestOfLiterals,RestOfArguments),
+    FirstLiteral =.. [_,Atom],
+    Atom =.. [_|ArgumentList],
+    tptp2X_append(ArgumentList,RestOfArguments,Arguments).
+%------------------------------------------------------------------------------
+%----Extract all the function arguments from atoms. Avoid nested formulae
+%----which can occur in THF case.
+extract_arguments_from_atoms(Atoms,Arguments):-
+    findall(Argument,
+        (   tptp2X_member(Atom,Atoms),
+            Atom =.. [_|ArgumentList],
+            tptp2X_member(Argument,ArgumentList),
+            tptp_atomic_formula(Argument)
+        ),Arguments).
+%------------------------------------------------------------------------------
+%----Filter a list of literals for those with certain properties
+filter_literals([],_,_,_,[]).
+
+%----Case that the literal meets the requirements
+filter_literals([FirstLiteral|RestOfLiterals],Sign,PredicateSymbol,Arity,
+[FirstLiteral|RestOfFilteredLiterals]):-
+%----Verify to avoid instantiations if variables
+    \+ \+ (FirstLiteral =.. [Sign,Atom],
+%----Avoid reserved predicates
+           \+ (atom(Atom),
+               name(Atom,[36|_])),
+           functor(Atom,PredicateSymbol,Arity)),
+    !,
+    filter_literals(RestOfLiterals,Sign,PredicateSymbol,Arity,
+RestOfFilteredLiterals).
+
+%----Case that the literal does not meet the requirements
+filter_literals([_|RestOfLiterals],Sign,PredicateSymbol,Arity,
+FilteredLiterals):-
+    filter_literals(RestOfLiterals,Sign,PredicateSymbol,Arity,
+FilteredLiterals).
+%------------------------------------------------------------------------------
+%----Extract all the literals from the clauses, subject to the sign,
+%----predicate symbol and arity.
+extract_literals_from_clauses([],_,_,_,[]).
+
+extract_literals_from_clauses([input_clause(_,_,ClauseLiterals)|
+RestOfClauses],Sign,PredicateSymbol,Arity,Literals):-
+    filter_literals(ClauseLiterals,Sign,PredicateSymbol,Arity,FilteredLiterals),
+    extract_literals_from_clauses(RestOfClauses,Sign,PredicateSymbol,Arity,
+RestOfFilteredLiterals),
+    tptp2X_append(FilteredLiterals,RestOfFilteredLiterals,Literals).
+%------------------------------------------------------------------------------
+extract_atom_from_type(BinaryType,Type):-
+    BinaryType =.. [TypeConnective,LHS,RHS],
+    tptp_type_binary_connective(TypeConnective),
+    !,
+    (   extract_atom_from_type(LHS,Type)
+    ;   extract_atom_from_type(RHS,Type)
+    ).
+
+extract_atom_from_type(FormulaType,Type):-
+    tptp_non_atomic_formula(FormulaType),
+    extract_atom_from_formula(FormulaType,no,Type).
+%------------------------------------------------------------------------------
+%----Given a formula, extract an atom
+%DEBUG extract_atom_from_formula(Something,_,_):-write('EAFF--- '),write(Something),nl,fail.
+
+extract_atom_from_formula(Variable,no,_):-
+    looks_like_a_variable(Variable),
+    !,
+    fail.
+
+extract_atom_from_formula(Variable,yes,Variable):-
+    looks_like_a_variable(Variable),
+    !.
+
+%----Lists for tuples in THF
+extract_atom_from_formula([First|Rest],THFAtoms,Atom):-
+    !,
+    tptp2X_member(Term,[First|Rest]),
+    extract_atom_from_formula(Term,THFAtoms,Atom).
+
+%----Look in variable lists for typed and defined stuff
+extract_atom_from_formula(QuantifiedFormula,THFAtoms,Atom):-
+    tptp_quantified_formula(QuantifiedFormula,_,Variables,_),
+    extract_atom_from_formula(Variables,THFAtoms,Atom).
+
+extract_atom_from_formula(QuantifiedFormula,THFAtoms,Atom):-
+    tptp_quantified_formula(QuantifiedFormula,_,_,Formula),
+    !,
+    extract_atom_from_formula(Formula,THFAtoms,Atom).
+
+extract_atom_from_formula(BinaryFormula,THFAtoms,Atom):-
+    tptp_binary_formula(BinaryFormula,_,LHS,_),
+%----Cannot cut here as this is backtracked over in extract_atoms_from_formulae
+    extract_atom_from_formula(LHS,THFAtoms,Atom).
+
+extract_atom_from_formula(BinaryFormula,THFAtoms,Atom):-
+    tptp_binary_formula(BinaryFormula,_,_,RHS),
+    !,
+    extract_atom_from_formula(RHS,THFAtoms,Atom).
+
+extract_atom_from_formula(UnaryFormula,THFAtoms,Atom):-
+    tptp_unary_formula(UnaryFormula,_,Formula),
+    !,
+    extract_atom_from_formula(Formula,THFAtoms,Atom).
+
+%----Do not do subtypes
+extract_atom_from_formula(_ << _,_,_):-
+    !,
+    fail.
+
+%----Do not do LHS of types
+extract_atom_from_formula(Formula:_,THFAtoms,Atom):-
+    fail,
+    extract_atom_from_formula(Formula,THFAtoms,Atom).
+
+extract_atom_from_formula(_:Type,THFAtoms,Atom):-
+    !,
+    extract_atom_from_formula(Type,THFAtoms,Atom).
+
+%----Do not do LHS of definitions (variable and global constant)
+extract_atom_from_formula(Formula:=_,THFAtoms,Atom):-
+    fail,
+    extract_atom_from_formula(Formula,THFAtoms,Atom).
+
+extract_atom_from_formula(_:=Definition,THFAtoms,Atom):-
+    !,
+    extract_atom_from_formula(Definition,THFAtoms,Atom).
+
+%----!= are unary
+extract_atom_from_formula('$tptp_not_equal'(LHS,RHS),THFAtoms,Atom):-
+    extract_atom_from_formula('$tptp_equal'(LHS,RHS),THFAtoms,Atom).
+
+%----Equalities are atoms in FOF mode, and fake in THF mode
+extract_atom_from_formula('$tptp_equal'(LHS,RHS),_,'$tptp_equal'(LHS,RHS)).
+
+%----Equalities are not atoms in THF mode
+extract_atom_from_formula('$tptp_equal'(LHS,_),yes,Atom):-
+    extract_atom_from_formula(LHS,yes,Atom).
+
+extract_atom_from_formula('$tptp_equal'(_,RHS),yes,Atom):-
+    !,
+    extract_atom_from_formula(RHS,yes,Atom).
+
+extract_atom_from_formula(Atom,_,Atom):-
+    Atom \= '$tptp_equal'(_,_),
+    tptp_atomic_formula(Atom).
+
+%----Delve into arguments in THF mode
+extract_atom_from_formula(AtomWithFormulaArgs,yes,Atom):-
+    AtomWithFormulaArgs =.. [_|Arguments],
+    tptp2X_member(Argument,Arguments),
+    extract_atom_from_formula(Argument,yes,Atom).
+%------------------------------------------------------------------------------
+filter_atoms_from_formulae(Atom,_,0):-
+    looks_like_a_variable(Atom).
+
+filter_atoms_from_formulae(Atom,PredicateSymbol,Arity):-
+    \+ looks_like_a_variable(Atom),
+    functor(Atom,PredicateSymbol,Arity).
+%------------------------------------------------------------------------------
+%----Extract all the atoms from the formulae, subject to the predicate 
+%----symbol and arity.
+extract_atoms_from_formulae(Formulae,PredicateSymbol,Arity,THFAtoms,Atoms):-
+    findall(Atom,
+        (   tptp2X_member(AnnotatedFormula,Formulae),
+%DEBUG write('EAFF--- '),write(AnnotatedFormula),nl,
+            AnnotatedFormula =.. [_,_,_,Formula|_],
+%DEBUG write('EAFF-F--- '),write(Formula),nl,
+            extract_atom_from_formula(Formula,THFAtoms,Atom),
+%DEBUG write('EAFF-A--- '),write(Atom),nl,
+            filter_atoms_from_formulae(Atom,PredicateSymbol,Arity)),
+        Atoms).
+%------------------------------------------------------------------------------
+%----Get the functor details of a term
+%----Integer term
+extract_typed_functor_structure(Number,Number/0):-
+    looks_like_a_number(Number),
+    !.
+
+%----"distinct object"
+extract_typed_functor_structure([Head|Tail],AtomicDistinctObject/0):-
+    !,
+    tptp2X_append([34,Head|Tail],[34],AllASCII),
+    name(AtomicDistinctObject,AllASCII).
+
+%----Function term
+extract_typed_functor_structure(Function,Functor/Arity):-
+    functor(Function,Functor,Arity).
+
+%----Get the functor details from the arguments of a function term
+extract_typed_functor_structure(Function,FunctorStructure):-
+%----Extract the arguments of the function
+    Function =.. [_|FunctionArguments],
+%----Get functor details from these terms
+    extract_functor_structure(FunctionArguments,FunctorStructure).
+%------------------------------------------------------------------------------
+looks_like_a_number(Integer):-
+    integer(Integer),
+    !.
+
+looks_like_a_number(Numerator/Denominator):-
+    integer(Numerator),
+    integer(Denominator),
+    !.
+
+%----Only in Eclipse I think
+looks_like_a_number(Real):-
+    number(Real).
+%------------------------------------------------------------------------------
+%----A list of ASCII codes looks like a string to me
+looks_like_a_string([Integer]):-
+    integer(Integer).
+
+looks_like_a_string([Integer|RestOfIntegers]):-
+    integer(Integer),
+    looks_like_a_string(RestOfIntegers).
+%------------------------------------------------------------------------------
+looks_like_a_prolog_variable(Variable):-
+    var(Variable).
+
+looks_like_a_prolog_variable(Something):-
+    nonvar(Something),
+    Something =.. ['$VAR',_].
+%------------------------------------------------------------------------------
+%----Check that a term looks like a variable
+looks_like_a_variable(Variable):-
+    looks_like_a_prolog_variable(Variable).
+
+looks_like_a_variable(AtomVariable):-
+    nonvar(AtomVariable),
+    atom(AtomVariable),
+    name(AtomVariable,[FirstASCII|RestASCII]),
+    FirstASCII >= 65,
+    FirstASCII =< 90,
+%----All alphanumeric
+    \+ (tptp2X_member(NastyASCII,RestASCII),
+        \+ (   NastyASCII >= 65,
+               NastyASCII =< 90
+           ),
+        \+ (   NastyASCII >= 97,
+               NastyASCII =< 122
+           ),
+        \+ (   NastyASCII >= 48,
+               NastyASCII =< 57
+           ),
+        NastyASCII \== 95
+    ).
+%------------------------------------------------------------------------------
+%----Extract any functor structure from a list of terms
+extract_functor_structure(Terms,FunctorStructure):-
+    tptp2X_member(Term,Terms),
+    \+ looks_like_a_variable(Term),
+    extract_typed_functor_structure(Term,FunctorStructure).
+%------------------------------------------------------------------------------
+%----Given a list of signed structures, make unsigned ones
+extract_unsigned_structure(PredicateStructures,Symbol/Arity):-
+    tptp2X_member(Structure,PredicateStructures),
+    Structure =.. [_,Symbol/Arity].
+%------------------------------------------------------------------------------
+%----Given a list of literals, make signed structure
+extract_signed_structure_from_literals(Literals,SignedStructure):-
+    tptp2X_member(Literal,Literals),
+    Literal =.. [Sign,Atom],
+    functor(Atom,Symbol,Arity),
+    SignedStructure =.. [Sign,Symbol/Arity].
+%------------------------------------------------------------------------------
+%----Given a list of atoms, make unsigned structure
+extract_unsigned_structure_from_atoms(Atoms,Symbol/Arity):-
+    tptp2X_member(Atom,Atoms),
+%----Exclude variable atoms from THF case
+    \+ looks_like_a_variable(Atom),
+    functor(Atom,Symbol,Arity).
+%------------------------------------------------------------------------------
+%----Collect all predicate symbols
+%----Empty case
+examine_formulae_for_predicates([],[],[],[]):-
+    !.
+
+%----CNF case
+examine_formulae_for_predicates(Clauses,PredicateStructures,
+UnsignedPredicateStructures,PredicateSymbols):-
+    tptp_clauses(Clauses),
+    extract_literals_from_clauses(Clauses,_,_,_,Literals),
+%DEBUG statistics(times,T2),write('% about to extract_signed_structure_from_literals '),write(T2),nl,
+    tptp2X_setof1(Structure,
+        extract_signed_structure_from_literals(Literals,Structure),
+        PredicateStructures),
+%DEBUG statistics(times,T3),write('% about to extract_unsigned_structure '),write(T3),nl,
+    tptp2X_setof1(UnsignedStructure,
+        extract_unsigned_structure(PredicateStructures,UnsignedStructure),
+        UnsignedPredicateStructures),
+    tptp2X_findall_setof1(PredicateSymbol,
+        tptp2X_member(PredicateSymbol/_,UnsignedPredicateStructures),
+        PredicateSymbols).
+
+%----FOF and TFF case
+examine_formulae_for_predicates(AnnotatedFormulae,[],
+UnsignedPredicateStructures,PredicateSymbols):-
+    (   tptp_formulae_language(AnnotatedFormulae,[fof])
+    ;   tptp_formulae_language(AnnotatedFormulae,[tff])
+    ),
+    extract_atoms_from_formulae(AnnotatedFormulae,_,_,no,Atoms),
+%DEBUG write('EFFP Atoms--- '),write(Atoms),nl,
+    tptp2X_findall_setof1(UnsignedStructure,
+        extract_unsigned_structure_from_atoms(Atoms,UnsignedStructure),
+        UnsignedPredicateStructures),
+%DEBUG write('EFFP UPS--- '),write(UnsignedPredicateStructures),nl,
+    tptp2X_findall_setof1(PredicateSymbol,
+        tptp2X_member(PredicateSymbol/_,UnsignedPredicateStructures),
+        PredicateSymbols).
+
+%----THF case
+examine_formulae_for_predicates(AnnotatedFormulae,[],
+UnsignedPredicateStructures,PredicateSymbols):-
+    tptp_formulae_language(AnnotatedFormulae,[thf]),
+    extract_atoms_from_formulae(AnnotatedFormulae,_,_,yes,Atoms),
+%DEBUG write('EFFP Atoms--- '),write(Atoms),nl,
+    tptp2X_findall_setof1(UnsignedStructure,
+        extract_unsigned_structure_from_atoms(Atoms,UnsignedStructure),
+        UnsignedPredicateStructures),
+%DEBUG write('EFFP UPS--- '),write(UnsignedPredicateStructures),nl,
+    tptp2X_findall_setof1(PredicateSymbol,
+        tptp2X_member(PredicateSymbol/_,UnsignedPredicateStructures),
+        PredicateSymbols).
+%------------------------------------------------------------------------------
+%----Collect all functors
+%----Empty case
+examine_formulae_for_functors([],[],[]):-
+    !.
+
+%----CNF case
+examine_formulae_for_functors(Clauses,FunctorStructures,Functors):-
+    tptp_clauses(Clauses),
+    extract_literals_from_clauses(Clauses,_,_,_,Literals),
+    extract_arguments_from_literals(Literals,Arguments),
+    tptp2X_findall_setof1(FunctorStructure,extract_functor_structure(
+Arguments,FunctorStructure),FunctorStructures),
+    tptp2X_findall_setof1(Functor,tptp2X_member(Functor/_,
+FunctorStructures),Functors).
+
+%----FOF and THF case
+examine_formulae_for_functors(AnnotatedFormulae,FunctorStructures,Functors):-
+    tptp_formulae(AnnotatedFormulae),
+    extract_atoms_from_formulae(AnnotatedFormulae,_,_,no,Atoms),
+%DEBUG write('EFFF--- '),write(Atoms),nl,
+    extract_arguments_from_atoms(Atoms,Arguments),
+%DEBUG write('EFFFArgs '),write(Arguments),nl,
+    tptp2X_findall_setof1(FunctorStructure,extract_functor_structure(
+Arguments,FunctorStructure),FunctorStructures),
+%DEBUG write('EFFFFSs '),write(FunctorStructures),nl,
+    tptp2X_findall_setof1(Functor,tptp2X_member(Functor/_,
+FunctorStructures),Functors).
+%------------------------------------------------------------------------------
+examine_formulae_for_symbols(Formulae,SymbolStructures,Symbols):-
+    examine_formulae_for_predicates(Formulae,_,UnsignedPredicateStructures,
+PredicateSymbols),
+    examine_formulae_for_functors(Formulae,FunctorStructures,Functors),
+    tptp2X_append(UnsignedPredicateStructures,FunctorStructures,
+AllSymbolStructures),
+    tptp2X_setof1(SymbolStructure,tptp2X_member(SymbolStructure,
+AllSymbolStructures),SymbolStructures),
+    tptp2X_append(PredicateSymbols,Functors,AllSymbols),
+    tptp2X_setof1(Symbol,tptp2X_member(Symbol,AllSymbols),Symbols).
+%------------------------------------------------------------------------------
+extract_type_from_type(BinaryType,Type):-
+    BinaryType =.. [TypeConnective,LHS,RHS],
+    tptp_type_binary_connective(TypeConnective),
+    !,
+    (   extract_type_from_type(LHS,Type)
+    ;   extract_type_from_type(RHS,Type)
+    ).
+
+extract_type_from_type(AtomicType,AtomicType):-
+    tptp_atomic_formula(AtomicType),
+    !.
+
+extract_type_from_type(FormulaType,Type):-
+    tptp_non_atomic_formula(FormulaType),
+    extract_type_from_formula(FormulaType,Type).
+%------------------------------------------------------------------------------
+%DEBUG extract_type_from_formula(Formula,_):-write('ETFF--- '),display(Formula),nl.
+
+%----Given a formula, extract an atom
+extract_type_from_formula(Variable,_):-
+    looks_like_a_variable(Variable),
+    !,
+    fail.
+
+extract_type_from_formula([First|Rest],Type):-
+    !,
+    tptp2X_member(ListElement,[First|Rest]),
+    extract_type_from_formula(ListElement,Type).
+
+extract_type_from_formula(QuantifiedFormula,Type):-
+    tptp_quantified_formula(QuantifiedFormula,_,_,Formula),
+%----Cannot cut here as this is backtracked over in examine_formulae_for_types
+    extract_type_from_formula(Formula,Type).
+
+%----Look in the variable list
+extract_type_from_formula(QuantifiedFormula,Atom):-
+    tptp_quantified_formula(QuantifiedFormula,_,TypedVariables,_),
+    !,
+    extract_type_from_formula(TypedVariables,Atom).
+
+extract_type_from_formula(BinaryFormula,Atom):-
+    tptp_binary_formula(BinaryFormula,_,LHS,_),
+%----Cannot cut here as this is backtracked over in examine_formulae_for_types
+    extract_type_from_formula(LHS,Atom).
+
+extract_type_from_formula(BinaryFormula,Atom):-
+    tptp_binary_formula(BinaryFormula,_,_,RHS),
+    !,
+    extract_type_from_formula(RHS,Atom).
+
+extract_type_from_formula(UnaryFormula,Atom):-
+    tptp_unary_formula(UnaryFormula,_,Formula),
+    !,
+    extract_type_from_formula(Formula,Atom).
+
+%----Aha! A type. Take it, and look inside it.
+extract_type_from_formula(_:ItsType,ItsType).
+%DEBUG write('ETFF found--- '),write(ItsType),nl.
+
+extract_type_from_formula(_:ItsType,Type):-
+    tptp_non_atomic_formula(ItsType),
+    !,
+    extract_type_from_type(ItsType,Type).
+
+extract_type_from_formula(Formula:_,Type):-
+    tptp_non_atomic_formula(Formula),
+    !,
+    extract_type_from_formula(Formula,Type).
+
+extract_type_from_formula(_:=_,_):-
+    !,
+    fail.
+
+extract_type_from_formula(Atom,Atom):-
+    tptp_atomic_formula(Atom).
+%DEBUG write('ETFF atomic--- '),write(Atom),nl.
+%------------------------------------------------------------------------------
+extract_type_from_thf_formulae(AnnotatedFormulae,Type):-
+    tptp2X_member(AnnotatedTHF,AnnotatedFormulae),
+    AnnotatedTHF =.. [thf,_,_,Formula|_],
+    extract_type_from_formula(Formula,Type).
+%------------------------------------------------------------------------------
+extract_atomic_type(ComplexTypes,AtomicType):-
+    tptp2X_member(AtomicType,ComplexTypes),
+    atomic(AtomicType).
+%------------------------------------------------------------------------------
+%----Collect all types
+%----Empty case
+examine_formulae_for_types([],[],[]):-
+    !.
+
+%----CNF case
+examine_formulae_for_types(Clauses,[],[]):-
+    tptp_clauses(Clauses).
+
+%----Formula case
+examine_formulae_for_types(AnnotatedFormulae,ComplexTypes,AtomicTypes):-
+    tptp_formulae(AnnotatedFormulae),
+    tptp2X_findall_setof1(ComplexType,extract_type_from_thf_formulae(
+AnnotatedFormulae,ComplexType),ComplexTypes),
+    tptp2X_setof1(AtomicType,extract_atomic_type(ComplexTypes,AtomicType),
+AtomicTypes).
+%------------------------------------------------------------------------------
+examine_formulae_for_definitions(AnnotatedFormulae,DefinedSymbols):-
+    findall(DefinedSymbol,
+        (   tptp2X_member(AnnotatedTHF,AnnotatedFormulae),
+            AnnotatedTHF =.. [thf,_,definition,DefinedSymbol:=_|_]
+        ),DefinedSymbols).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Syntactic examination code
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Count the number of structures with a given arity
+count_structures_of_arity([],_,0):-
+    !.
+
+count_structures_of_arity([_/Arity|RestOfStructures],Arity,
+Number):-
+    !,
+    count_structures_of_arity(RestOfStructures,Arity,RestNumber),
+    Number is RestNumber + 1.
+
+count_structures_of_arity([_|RestOfStructures],Arity,Number):-
+    count_structures_of_arity(RestOfStructures,Arity,Number).
+%------------------------------------------------------------------------------
+%----Find minimal and maximal arities
+tptp2X_arity_range([],MinimalArity,MaximalArity,MinimalArity,
+MaximalArity).
+
+%----Less than minimal so far
+tptp2X_arity_range([_/Arity|RestOfStructures],MinimalAritySoFar,
+MaximalAritySoFar,MinimalArity,MaximalArity):-
+    Arity < MinimalAritySoFar,
+    !,
+    tptp2X_arity_range(RestOfStructures,Arity,MaximalAritySoFar,
+MinimalArity,MaximalArity).
+
+%----Greater than maximal so far
+tptp2X_arity_range([_/Arity|RestOfStructures],MinimalAritySoFar,
+MaximalAritySoFar,MinimalArity,MaximalArity):-
+    Arity > MaximalAritySoFar,
+    !,
+    tptp2X_arity_range(RestOfStructures,MinimalAritySoFar,Arity,
+MinimalArity,MaximalArity).
+
+%----In current range
+tptp2X_arity_range([_|RestOfStructures],MinimalAritySoFar,
+MaximalAritySoFar,MinimalArity,MaximalArity):-
+    tptp2X_arity_range(RestOfStructures,MinimalAritySoFar,
+MaximalAritySoFar,MinimalArity,MaximalArity).
+%------------------------------------------------------------------------------
+%----Find minimal and maximal arities
+%----If no structures, then return -
+tptp2X_arity_range([],'-','-').
+
+tptp2X_arity_range([_/Arity|RestOfStructures],MinimalArity,MaximalArity):-
+    tptp2X_arity_range(RestOfStructures,Arity,Arity,MinimalArity,
+MaximalArity).
+%------------------------------------------------------------------------------
+%----Check that the number of literals is in range. This needs special
+%----treatment, due to Prolog's poor number handling
+check_length_range(ClauseLiterals,MinimumLength,MaximumLength):-
+    tptp2X_length(ClauseLiterals,Length),
+    (integer(MinimumLength) ->
+        Length >= MinimumLength
+    ;   true),
+    (integer(MaximumLength) ->
+        Length =< MaximumLength
+    ;   true).
+%------------------------------------------------------------------------------
+%----Extract clauses of given name, status, and length range
+extract_clauses_from_input_set(AllClauses,Name,Status,MinimumLength,
+MaximumLength,Clauses):-
+    findall(input_clause(Name,Status,ClauseLiterals),
+        (   tptp2X_member(input_clause(Name,Status,ClauseLiterals),
+AllClauses),
+            check_length_range(ClauseLiterals,MinimumLength,MaximumLength)),
+        Clauses).
+%------------------------------------------------------------------------------
+%----Count the number of input clauses of a given length
+count_clauses_of_length(Clauses,Length,Number):-
+    extract_clauses_from_input_set(Clauses,_,_,Length,Length,
+ClausesOfLength),
+    tptp2X_length(ClausesOfLength,Number).
+%------------------------------------------------------------------------------
+%----Count the number of literals in the input clauses with a given
+%----predicate symbol
+count_literals_with_predicate(Clauses,PredicateSymbol,Arity,Number):-
+    extract_literals_from_clauses(Clauses,_,PredicateSymbol,Arity,
+Literals),
+    tptp2X_length(Literals,Number).
+%------------------------------------------------------------------------------
+%----Extract top level arguments of atoms
+%----CNF case
+extract_arguments_of_atoms(Clauses,Arguments):-
+    tptp_clauses(Clauses),
+    extract_literals_from_clauses(Clauses,_,_,_,Literals),
+    extract_arguments_from_literals(Literals,Arguments).
+ 
+%----FOF case
+extract_arguments_of_atoms(Formulae,Arguments):-
+    tptp_formulae(Formulae),
+    extract_atoms_from_formulae(Formulae,_,_,no,Atoms),
+    extract_arguments_from_atoms(Atoms,Arguments).
+%------------------------------------------------------------------------------
+%----Look for the maximum depth of any term (CNF and FOF)
+term_depth_values(Formulae,MaximalTermDepth,AverageTermDepth):-
+    extract_arguments_of_atoms(Formulae,Arguments),
+    findall(Depth,
+%----Select an argument
+        (   tptp2X_member(Argument,Arguments),
+%----Get its depth
+            tptp2X_syntax_term_depth(Argument,Depth)),
+        AllDepths),
+    tptp2X_maximal_in_list(AllDepths,MaximalTermDepth),
+    tptp2X_arithmetic_average(AllDepths,AverageTermDepth).
+%------------------------------------------------------------------------------
+count_math_functions(FunctorStructures,NumberOfMathFunctions):-
+    findall(MathFunction,
+        (   tptp2X_member(MathFunction,[
+'$uminus'/1,
+'$sum'/2,
+'$difference'/2,
+'$product'/2,
+'$to_int'/1,
+'$to_rat'/1,
+'$to_real'/1]),
+            tptp2X_member(MathFunction,FunctorStructures)
+        ),
+        AllMathFunctions),
+    tptp2X_length(AllMathFunctions,NumberOfMathFunctions).
+%------------------------------------------------------------------------------
+count_math_predicates(PredicateStructures,NumberOfMathPredicates):-
+    findall(MathPredicate,
+        (   tptp2X_member(MathPredicate,[
+'$less'/2,
+'$lesseq'/2,
+'$greater'/2,
+'$greatereq'/2,
+'$evaleq'/2,
+'$is_int'/1,
+'$is_rat'/1]),
+            tptp2X_member(MathPredicate,PredicateStructures)
+        ),
+        AllMathPredicates),
+    tptp2X_length(AllMathPredicates,NumberOfMathPredicates).
+%------------------------------------------------------------------------------
+count_math_numbers(FunctorStructures,NumberOfNumbers):-
+    findall(Number,
+        (   tptp2X_member(Number/0,FunctorStructures),
+            looks_like_a_number(Number)
+        ),
+        AllNumbers),
+    tptp2X_length(AllNumbers,NumberOfNumbers).
+%------------------------------------------------------------------------------
+count_mathematics(AnnotatedClauses,NumberOfArithmeticSymbols,
+NumberOfMathPredicates,NumberOfMathFunctions,NumberOfNumbers):-
+    tptp_clauses(AnnotatedClauses),
+    !,
+    extract_literals_from_clauses(AnnotatedClauses,_,_,_,Literals),
+    findall(Structure,
+        extract_signed_structure_from_literals(Literals,Structure),
+        PredicateStructures),
+    tptp2X_setof1(UnsignedStructure,
+        extract_unsigned_structure(PredicateStructures,UnsignedStructure),
+        UnsignedPredicateStructures),
+    count_math_predicates(UnsignedPredicateStructures,NumberOfMathPredicates),
+    extract_arguments_from_literals(Literals,Arguments),
+    findall(FunctorStructure,extract_functor_structure(
+Arguments,FunctorStructure),FunctorStructures),
+    count_math_functions(FunctorStructures,NumberOfMathFunctions),
+    count_math_numbers(FunctorStructures,NumberOfNumbers),
+    NumberOfArithmeticSymbols is NumberOfMathPredicates +
+NumberOfMathFunctions + NumberOfNumbers.
+
+%----FOF and TFF case
+count_mathematics(AnnotatedFormulae,NumberOfArithmeticSymbols,
+NumberOfMathPredicates,NumberOfMathFunctions,NumberOfNumbers):-
+    (   tptp_formulae_language(AnnotatedFormulae,[fof])
+    ;   tptp_formulae_language(AnnotatedFormulae,[tff])
+    ),
+    !,
+    extract_atoms_from_formulae(AnnotatedFormulae,_,_,no,Atoms),
+    tptp2X_findall_setof1(UnsignedStructure,
+        extract_unsigned_structure_from_atoms(Atoms,UnsignedStructure),
+        UnsignedPredicateStructures),
+    count_math_predicates(UnsignedPredicateStructures,NumberOfMathPredicates),
+    extract_arguments_from_atoms(Atoms,Arguments),
+    findall(FunctorStructure,extract_functor_structure(
+Arguments,FunctorStructure),FunctorStructures),
+    count_math_functions(FunctorStructures,NumberOfMathFunctions),
+    count_math_numbers(FunctorStructures,NumberOfNumbers),
+    NumberOfArithmeticSymbols is NumberOfMathPredicates +
+NumberOfMathFunctions + NumberOfNumbers.
+%DEBUG write('NP '),write(NumberOfMathPredicates),nl,
+%DEBUG write('NF '),write(NumberOfMathFunctions),nl,
+%DEBUG write('NN '),write(NumberOfNumbers),nl.
+
+%----THF case
+count_mathematics(AnnotatedFormulae,NumberOfArithmeticSymbols,
+NumberOfMathPredicates,NumberOfMathFunctions,NumberOfNumbers):-
+    tptp_formulae_language(AnnotatedFormulae,[thf]),
+    extract_atoms_from_formulae(AnnotatedFormulae,_,_,yes,Atoms),
+    tptp2X_findall_setof1(UnsignedStructure,
+        extract_unsigned_structure_from_atoms(Atoms,UnsignedStructure),
+        UnsignedPredicateStructures),
+    count_math_predicates(UnsignedPredicateStructures,NumberOfMathPredicates),
+    count_math_functions(UnsignedPredicateStructures,NumberOfMathFunctions),
+    count_math_numbers(UnsignedPredicateStructures,NumberOfNumbers),
+    NumberOfArithmeticSymbols is NumberOfMathPredicates +
+NumberOfMathFunctions + NumberOfNumbers.
+%------------------------------------------------------------------------------
+%----Find the clause with the most literals and count
+clause_size_values([],0,0):-
+    !.
+
+clause_size_values(AllClauses,MaximalClauseSize,AverageClauseSize):-
+    findall(ClauseSize,
+%----Select an input clause and get its length
+        (   tptp2X_member(input_clause(_,_,Literals),AllClauses),
+            tptp2X_length(Literals,ClauseSize)),
+        AllClauseSizes),
+    tptp2X_maximal_in_list(AllClauseSizes,MaximalClauseSize),
+    tptp2X_arithmetic_average(AllClauseSizes,AverageClauseSize).
+%------------------------------------------------------------------------------
+%----FOF formula depth values
+formulae_depth_values([],0,0).
+
+formulae_depth_values(Formulae,MaximalFormulaDepth,AverageFormulaDepth):-
+    findall(FormulaDepth,
+%----Select an input clause and get its length
+        (   tptp2X_member(AnnotatedFormula,Formulae),
+            AnnotatedFormula =.. [_,_,_,Formula],
+            tptp2X_syntax_formula_depth(Formula,FormulaDepth)
+%DEBUG write(AnnotatedFormula),write(' '),write(FormulaDepth),nl
+        ),
+        AllFormulaDepths),
+    tptp2X_maximal_in_list(AllFormulaDepths,MaximalFormulaDepth),
+    tptp2X_arithmetic_average(AllFormulaDepths,AverageFormulaDepth).
+%------------------------------------------------------------------------------
+%----Extract a singleton numbervarsed variable from a list of vars
+extract_singleton_variables(Variables,Singletons):-
+    findall(Singleton,
+        (   tptp2X_select(Singleton,Variables,RestOfVariables),
+            \+ tptp2X_member(Singleton,RestOfVariables)
+        ),Singletons).
+%------------------------------------------------------------------------------
+%----Check if the formula variables are quantified, and note that quantified
+%----variables have been used
+check_quantifications([],_,[]).
+
+check_quantifications([FirstFormulaVariable|RestOfFormulaVariables],
+VariablesQuantifiedSoFar,FreeVariables):-
+%----Check it's not a free variable
+    tptp2X_exact_member(FirstFormulaVariable,VariablesQuantifiedSoFar),
+    !,
+    check_quantifications(RestOfFormulaVariables,VariablesQuantifiedSoFar,
+FreeVariables).
+
+%----Damn, it's a free variable
+check_quantifications([FirstFormulaVariable|RestOfFormulaVariables],
+VariablesQuantifiedSoFar,[FirstFormulaVariable|RestOfFreeVariables]):-
+    check_quantifications(RestOfFormulaVariables,VariablesQuantifiedSoFar,
+RestOfFreeVariables).
+%------------------------------------------------------------------------------
+seperate_types_from_variables([],[],[]).
+
+seperate_types_from_variables([FirstVariable|RestOfTypedVariables],
+[FirstVariable|RestOfVariables],Types):-
+    var(FirstVariable),
+    !,
+    seperate_types_from_variables(RestOfTypedVariables,RestOfVariables,Types).
+
+seperate_types_from_variables([FirstVariable:FirstType|RestOfTypedVariables],
+[FirstVariable|RestOfVariables],[FirstType|RestOfTypes]):-
+    !,
+    seperate_types_from_variables(RestOfTypedVariables,RestOfVariables,
+RestOfTypes).
+%------------------------------------------------------------------------------
+%DEBUG parse_formula_for_variables(S,Q,_,_):-
+%DEBUG     write('PFFV--- '),write(S),write(' '),write(Q),nl,fail.
+
+%----Parse formula for variables, checking quantification
+parse_formula_for_variables(Variable,QuantifiedVariablesSoFar,[Variable],
+FreeVariables):-
+    looks_like_a_variable(Variable),
+    !,
+    check_quantifications([Variable],QuantifiedVariablesSoFar,FreeVariables).
+
+%----Is it an atom
+parse_formula_for_variables(Atom,_,[],[]):-
+    atomic(Atom),
+    !.
+
+%----Is it a quantified formula
+parse_formula_for_variables(QuantifiedFormula,QuantifiedVariablesSoFar,
+AllQuantifiedVariables,FreeVariables):-
+    tptp_quantified_formula(QuantifiedFormula,_,QuantifiedVariablesWithTypes,
+Formula),
+    !,
+    seperate_types_from_variables(QuantifiedVariablesWithTypes,
+QuantifiedVariables,Types),
+    replace_variable_list(QuantifiedVariables,Formula-Types,
+NewQuantifiedVariables,ReplacedFormula-ReplacedTypes),
+    tptp2X_append(QuantifiedVariablesSoFar,NewQuantifiedVariables,
+NewQuantifiedVariablesSoFar),
+%----Parse the types and formula with the current quantified variables
+    parse_list_for_variables(ReplacedTypes,NewQuantifiedVariablesSoFar,
+_TypeVariables,FreeTypeVariables),
+    parse_formula_for_variables(ReplacedFormula,NewQuantifiedVariablesSoFar,
+FormulaQuantifiedVariables,FreeFormulaVariables),
+%tptp2X_append(NewQuantifiedVariables,TypeVariables,MoreQuantifiedVariables),
+    tptp2X_append(NewQuantifiedVariables,FormulaQuantifiedVariables,
+AllQuantifiedVariables),
+    tptp2X_append(FreeTypeVariables,FreeFormulaVariables,FreeVariables).
+
+%----Is it binary
+parse_formula_for_variables(BinaryFormula,QuantifiedVariablesSoFar,
+AllQuantifiedVariables,FreeVariables):-
+    tptp_binary_formula(BinaryFormula,_,LHS,RHS),
+    !,
+    parse_formula_for_variables(LHS,QuantifiedVariablesSoFar,
+LHSQuantifiedVariables,LHSFreeVariables),
+    parse_formula_for_variables(RHS,QuantifiedVariablesSoFar,
+RHSQuantifiedVariables,RHSFreeVariables),
+    tptp2X_append(LHSFreeVariables,RHSFreeVariables,FreeVariables),
+    tptp2X_append(LHSQuantifiedVariables,RHSQuantifiedVariables,
+AllQuantifiedVariables).
+
+%----Is it unary
+parse_formula_for_variables(UnaryFormula,QuantifiedVariablesSoFar,
+QuantifiedVariables,FreeVariables):-
+    tptp_unary_formula(UnaryFormula,_,Formula),
+    !,
+    parse_formula_for_variables(Formula,QuantifiedVariablesSoFar,
+QuantifiedVariables,FreeVariables).
+
+parse_formula_for_variables(_ := Definition,VariablesQuantifiedSoFar,
+QuantifiedVariables,FreeVariables):-
+    !,
+    parse_formula_for_variables(Definition,VariablesQuantifiedSoFar,
+QuantifiedVariables,FreeVariables).
+
+parse_formula_for_variables(_ : Type,VariablesQuantifiedSoFar,
+QuantifiedVariables,FreeVariables):-
+    !,
+    parse_formula_for_variables(Type,VariablesQuantifiedSoFar,
+QuantifiedVariables,FreeVariables).
+
+%----Else it is a term
+parse_formula_for_variables(Term,QuantifiedVariablesSoFar,QuantifiedVariables,
+FreeVariables):-
+    Term =.. TermList,
+    parse_list_for_variables(TermList,QuantifiedVariablesSoFar,
+QuantifiedVariables,FreeVariables).
+%------------------------------------------------------------------------------
+%DEBUG parse_list_for_variables(S,Q,_,_):-
+%DEBUG     write('PLFV--- '),write(S),write(' '),write(Q),nl,fail.
+
+parse_list_for_variables([],_,[],[]).
+
+parse_list_for_variables([H|T],QuantifiedVariablesSoFar,QuantifiedVariables,
+FreeVariables):-
+    parse_formula_for_variables(H,QuantifiedVariablesSoFar,HQuantifiedVariables,
+HFreeVariables),
+    parse_list_for_variables(T,QuantifiedVariablesSoFar,TQuantifiedVariables,
+TFreeVariables),
+    tptp2X_append(HQuantifiedVariables,TQuantifiedVariables,
+QuantifiedVariables),
+    tptp2X_append(HFreeVariables,TFreeVariables,FreeVariables).
+%------------------------------------------------------------------------------
+%----Report bad variables if there are any
+report_bad_variables(_,[],_):-
+    !.
+
+report_bad_variables(Message,Variables,FormulaName):-
+    write('WARNING: '),
+    write(Message),
+    write(' in '),
+    write(FormulaName),
+    write(': '),
+    write(Variables),
+    nl.
+%------------------------------------------------------------------------------
+%----Parse list of formulae for variables
+parse_formulae_for_variables([],[]).
+
+parse_formulae_for_variables([AnnotatedFormula|RestOfFormulae],
+QuantifiedVariables):-
+    AnnotatedFormula =.. [_,Name,_,FirstFormula|_],
+    parse_formula_for_variables(FirstFormula,[],FirstQuantifiedVariables,
+FreeVariables),
+    report_bad_variables('Free variables',FreeVariables,Name),
+%----Do rest of formulae and append the result
+    parse_formulae_for_variables(RestOfFormulae,RestOfQuantifiedVariables),
+    tptp2X_append(FirstQuantifiedVariables,RestOfQuantifiedVariables,
+QuantifiedVariables).
+%------------------------------------------------------------------------------
+%----Extract variables from clauses or formulae
+%----For clauses just hack on in
+extract_formulae_variables(Clauses,Variables):-
+    tptp_clauses(Clauses),
+    !,
+    tptp2X_syntax_extract_variables(Clauses,Variables,_).
+
+%----For FOF check that quantified variables occur, then discard
+extract_formulae_variables(Formulae,Variables):-
+    tptp_formulae(Formulae),
+    !,
+    parse_formulae_for_variables(Formulae,Variables).
+%------------------------------------------------------------------------------
+%----Count the number of singleton variables in the clauses
+count_number_of_variables(Formulae,NumberOfVariables,NumberOfSingletons):-
+%----Copy so that I can use numbervars to count them
+    copy_term(Formulae,CopyOfFormulae),
+    extract_formulae_variables(CopyOfFormulae,Variables),
+    numbervars(Variables,0,NumberOfVariables),
+    extract_singleton_variables(Variables,Singletons),
+    tptp2X_length(Singletons,NumberOfSingletons).
+%------------------------------------------------------------------------------
+%----Separate out the positive and negative literals
+split_literals_by_sign([],[],[]):-
+    !.
+
+split_literals_by_sign([++Atom|RestOfLiterals],[++Atom|
+RestOfPositive],Negative):-
+    split_literals_by_sign(RestOfLiterals,RestOfPositive,Negative).
+
+split_literals_by_sign([--Atom|RestOfLiterals],Positive,[--Atom|
+RestOfNegative]):-
+    split_literals_by_sign(RestOfLiterals,Positive,
+RestOfNegative).
+%------------------------------------------------------------------------------
+%----Check if a clause is range restricted
+range_restricted(Literals):-
+    split_literals_by_sign(Literals,Positive,Negative),
+%----Verify to avoid instantiation by numbervars
+    \+ \+ (
+        numbervars(Negative,0,N),
+        numbervars(Positive,N,N)).
+%------------------------------------------------------------------------------
+%----Count number of range-restricted clauses
+count_number_of_range_restricted_clauses([],0):-
+    !.
+
+count_number_of_range_restricted_clauses([input_clause(_,_,Literals)|
+RestOfClauses],Number):-
+    range_restricted(Literals),
+    !,
+    count_number_of_range_restricted_clauses(RestOfClauses,
+RestNumber),
+    Number is RestNumber + 1.
+
+count_number_of_range_restricted_clauses([_|RestOfClauses],
+Number):-
+    count_number_of_range_restricted_clauses(RestOfClauses,Number).
+%------------------------------------------------------------------------------
+%----Count the number of Horn and non-Horn clauses in the input set
+determine_horn_status([],0-0):-
+    !.
+
+determine_horn_status([input_clause(_,_,Literals)|RestOfClauses],
+NumberOfHornClauses-NewNumberOfNonHornClauses):-
+%----Determine non-Horn status by looking for a clause with two 
+%----positive literals
+    tptp2X_select(++_,Literals,OtherLiterals),
+    tptp2X_member(++_,OtherLiterals),
+    !,
+    determine_horn_status(RestOfClauses,NumberOfHornClauses-
+NumberOfNonHornClauses),
+    NewNumberOfNonHornClauses is NumberOfNonHornClauses + 1.
+
+%----If not non-Horn, then must be Horn
+determine_horn_status([_|RestOfClauses],
+NewNumberOfHornClauses-NumberOfNonHornClauses):-
+    determine_horn_status(RestOfClauses,NumberOfHornClauses-
+NumberOfNonHornClauses),
+    NewNumberOfHornClauses is NumberOfHornClauses + 1.
+%------------------------------------------------------------------------------
+%----Count number of unit formulae (has a single atom)
+count_unit_formulae(InputFormulae,THFAtoms,NumberOfUnitFormulae):-
+    findall(InputFormula,
+        (   tptp2X_member(InputFormula,InputFormulae),
+%----Check the formula has a single atom. THIS ASSUMES tptp CONNECTIVES
+%----at the moment
+            extract_atoms_from_formulae([InputFormula],_,_,THFAtoms,[_])),
+        UnitFormulae),
+%DEBUG write('UF are '),write(UnitFormulae),nl,
+    tptp2X_length(UnitFormulae,NumberOfUnitFormulae).
+%------------------------------------------------------------------------------
+count_formulae_with_role(Formulae,Role,NumberOfRoleFormulae):-
+    findall(RoleFormula,
+        (   tptp2X_member(RoleFormula,Formulae),
+            RoleFormula =.. [_,_,Role|_]
+        ),
+        RoleFormulae),
+    tptp2X_length(RoleFormulae,NumberOfRoleFormulae).
+%------------------------------------------------------------------------------
+count_variable_atoms(Atoms,NumberOfVariableAtoms):-
+    findall(Variable,
+        (   tptp2X_member(Variable,Atoms),
+            looks_like_a_variable(Variable)
+        ),
+        VariableAtoms),
+    tptp2X_length(VariableAtoms,NumberOfVariableAtoms).
+%------------------------------------------------------------------------------
+remove_equality_for_thf_structures(SymbolStructures,THFSymbolStructures):-
+    tptp2X_select('$tptp_equal'/_,SymbolStructures,THFSymbolStructures),
+    !.
+
+remove_equality_for_thf_structures(SymbolStructures,SymbolStructures).
+
+%------------------------------------------------------------------------------
+%----Do the syntactic examination of the input set
+%----Empty case assumes clauses. May not be true, of course. AAARGH.
+examine_input_syntactics([],
+%----These are the output values
+['CNFF'-0,'NNHN'-0,'UNIT'-0,'RARE'-0,'LITS'-0,'EQLS'-0,'CLSZ'-0,'CLAS'-0,
+ 'PRED'-0,'PROP'-0,'MINP'-0,'MAXP'-0,'FUNC'-0,'CNST'-0,'MINF'-0,'MAXF'-0,
+ 'VARS'-0,'SGTN'-0,'TMDP'-0,'TMAD'-0]):-
+    !.
+
+%----CNF case
+examine_input_syntactics(Clauses,
+%----These are the output values
+['CNFF'-NumberOfClauses,'NNHN'-NumberOfNonHornClauses,
+ 'UNIT'-NumberOfUnitClauses,'RARE'-NumberOfRangeRestrictedClauses,
+ 'LITS'-NumberOfLiterals,'EQLS'-NumberOfEqualityLiterals,
+ 'CLSZ'-MaximalClauseSize,'CLAS'-AverageClauseSize,
+ 'PRED'-NumberOfPredicateSymbols,'PROP'-NumberOfPropositions,
+ 'MINP'-MinimalPredicateArity,'MAXP'-MaximalPredicateArity,
+ 'FUNC'-NumberOfFunctors,'CNST'-NumberOfConstants,
+ 'MINF'-MinimalFunctorArity,'MAXF'-MaximalFunctorArity,
+ 'VARS'-NumberOfVariables,'SGTN'-NumberOfSingletons,
+ 'TMDP'-MaximalTermDepth,'TMAD'-AverageTermDepth,
+ 'MATT'-NumberOfArithmeticSymbols,'MATP'-NumberOfMathPredicates,
+ 'MATF'-NumberOfMathFunctions,'MATN'-NumberOfNumbers]):-
+%----Check it contains clauses
+    tptp_clauses(Clauses),
+    !,
+%----Do basic syntactic examination
+    examine_formulae_for_predicates(Clauses,_,UnsignedPredicateStructures,_),
+    examine_formulae_for_functors(Clauses,FunctorStructures,_),
+%----Do more detailed exmaination for TPTP
+%----Number of clauses
+    tptp2X_length(Clauses,NumberOfClauses),
+%----Number of non-Horn clauses
+    determine_horn_status(Clauses,_-NumberOfNonHornClauses),
+%----Number of unit clauses
+    count_clauses_of_length(Clauses,1,NumberOfUnitClauses),
+%----Number of range restricted clauses
+    count_number_of_range_restricted_clauses(Clauses,
+NumberOfRangeRestrictedClauses),
+%----Number of literals
+    count_literals_with_predicate(Clauses,_,_,NumberOfLiterals),
+%----Number of equality literals
+    count_literals_with_predicate(Clauses,'$tptp_equal',2,
+NumberOfEqualityLiterals),
+%----Maximal clause size and arithmetic_average clause size
+    clause_size_values(Clauses,MaximalClauseSize,AverageClauseSize),
+%----Number of predicate symbols
+    tptp2X_length(UnsignedPredicateStructures,NumberOfPredicateSymbols),
+%----Number of propositions
+    count_structures_of_arity(UnsignedPredicateStructures,0,
+NumberOfPropositions),
+%----Range of predicate arities
+    tptp2X_arity_range(UnsignedPredicateStructures,MinimalPredicateArity,
+MaximalPredicateArity),
+%----Number of functors
+    tptp2X_length(FunctorStructures,NumberOfFunctors),
+%----Number of constants
+    count_structures_of_arity(FunctorStructures,0,NumberOfConstants),
+%----Range of functor arities
+    tptp2X_arity_range(FunctorStructures,MinimalFunctorArity,
+MaximalFunctorArity),
+%----Math components
+    count_mathematics(Clauses,NumberOfArithmeticSymbols,
+NumberOfMathPredicates,NumberOfMathFunctions,NumberOfNumbers),
+%----Number of variables and singletons BEWARE THIS INSTANTIATES
+    count_number_of_variables(Clauses,NumberOfVariables,
+NumberOfSingletons),
+%----Maximal and arithmetic_average term depth
+    term_depth_values(Clauses,MaximalTermDepth,AverageTermDepth).
+
+%----FOF case
+examine_input_syntactics(Formulae,
+['FOFF'-NumberOfFormulae,'UNIT'-NumberOfUnitFormulae,
+ 'ATOM'-NumberOfAtoms,'EQAT'-NumberOfEqualityAtoms,
+ 'FMDP'-MaximalFormulaDepth,'FMAD'-AverageFormulaDepth,
+ 'CONN'-NumberOfConnectives,
+ 'NOTS'-NumberOfNOTs,'ORSS'-NumberOfORs,'ANDS'-NumberOfANDs,
+ 'IMPS'-NumberOfIMPLYs,'PMIS'-NumberOfIMPLIEDs,'EQVS'-NumberOfEQUIVs,
+ 'XORS'-NumberOfXORs,'NORS'-NumberOfNORs,'NANS'-NumberOfNANDs,
+ 'PRED'-NumberOfPredicateSymbols,'PROP'-NumberOfPropositions,
+ 'MINP'-MinimalPredicateArity,'MAXP'-MaximalPredicateArity,
+ 'FUNC'-NumberOfFunctors,'CNST'-NumberOfConstants,
+ 'MINF'-MinimalFunctorArity,'MAXF'-MaximalFunctorArity,
+ 'VARS'-NumberOfVariables,'SGTN'-NumberOfSingletons,
+ 'UNIV'-NumberOfUniversals,'EXIS'-NumberOfExistentials,
+ 'TMDP'-MaximalTermDepth,'TMAD'-AverageTermDepth,
+ 'MATT'-NumberOfArithmeticSymbols,'MATP'-NumberOfMathPredicates,
+ 'MATF'-NumberOfMathFunctions,'MATN'-NumberOfNumbers]):-
+%----Check it contains formulae
+    tptp_formulae_language(Formulae,[fof]),
+    !,
+%----Do basic syntactic examination
+    examine_formulae_for_predicates(Formulae,_,UnsignedPredicateStructures,_),
+    examine_formulae_for_functors(Formulae,FunctorStructures,_),
+%----Number of formulae
+    tptp2X_length(Formulae,NumberOfFormulae),
+%----Number of unit formulae
+    count_unit_formulae(Formulae,no,NumberOfUnitFormulae),
+%----Number of atoms
+    extract_atoms_from_formulae(Formulae,_,_,no,Atoms),
+    tptp2X_length(Atoms,NumberOfAtoms),
+%----Number of equality atoms
+    extract_atoms_from_formulae(Formulae,'$tptp_equal',2,no,EqualityAtoms),
+    tptp2X_length(EqualityAtoms,NumberOfEqualityAtoms),
+%----Maximal and arithmetic_average formula depth
+    formulae_depth_values(Formulae,MaximalFormulaDepth,AverageFormulaDepth),
+%----Number of each type of connective
+    count_formulae_connectives(Formulae,[NumberOfNOTs,NumberOfORs,
+NumberOfANDs,NumberOfIMPLYs,NumberOfIMPLIEDs,NumberOfEQUIVs,NumberOfXORs,
+NumberOfNORs,NumberOfNANDs,NumberOfUniversals,NumberOfExistentials,
+_NumberOfLambdas,_NumberOfAPPLYs,_NumberOfDefns,_NumberOfTypeDecs,
+_NumberOfPi,_NumberOfSigmas,_NumberOfPIs,_NumberOfSIGMAs,_NumberOfGlobalDefns,
+_NumberOfGlobalTypeDecs,_NumberOfMaps,_NumberOfXProds,_NumberOfUnions,
+_NumberOfSubtypes]),
+    NumberOfConnectives is NumberOfNOTs + NumberOfORs + NumberOfANDs + 
+NumberOfIMPLYs + NumberOfIMPLIEDs + NumberOfEQUIVs + NumberOfXORs + 
+NumberOfNORs + NumberOfNANDs,
+%----Number of predicate symbols
+    tptp2X_length(UnsignedPredicateStructures,NumberOfPredicateSymbols),
+%----Number of propositions
+    count_structures_of_arity(UnsignedPredicateStructures,0,
+NumberOfPropositions),
+%----Range of predicate arities
+    tptp2X_arity_range(UnsignedPredicateStructures,MinimalPredicateArity,
+MaximalPredicateArity),
+%----Number of functors
+    tptp2X_length(FunctorStructures,NumberOfFunctors),
+%----Number of constants
+    count_structures_of_arity(FunctorStructures,0,NumberOfConstants),
+%----Range of functor arities
+    tptp2X_arity_range(FunctorStructures,MinimalFunctorArity,
+MaximalFunctorArity),
+%----Math components
+    count_mathematics(Formulae,NumberOfArithmeticSymbols,
+NumberOfMathPredicates,NumberOfMathFunctions,NumberOfNumbers),
+%----Number of variables and singletons BEWARE THIS INSTANTIATES????
+%----Should equal the sum of !, ?, and ^
+    count_number_of_variables(Formulae,NumberOfVariables,
+NumberOfSingletons),
+%----Maximal and arithmetic_average term depth
+    term_depth_values(Formulae,MaximalTermDepth,AverageTermDepth).
+
+%----TFF case
+examine_input_syntactics(Formulae,
+['TFFF'-NumberOfFormulae,'UNIT'-NumberOfUnitFormulae,
+ 'TFRM'-NumberOfTypeFormulae,
+ 'ATOM'-NumberOfAtoms,'EQAT'-NumberOfEqualityAtoms,
+ 'FMDP'-MaximalFormulaDepth,'FMAD'-AverageFormulaDepth,
+ 'CONN'-NumberOfConnectives,
+ 'NOTS'-NumberOfNOTs,'ORSS'-NumberOfORs,'ANDS'-NumberOfANDs,
+ 'IMPS'-NumberOfIMPLYs,'PMIS'-NumberOfIMPLIEDs,'EQVS'-NumberOfEQUIVs,
+ 'XORS'-NumberOfXORs,'NORS'-NumberOfNORs,'NANS'-NumberOfNANDs,
+ 'TCON'-NumberOfTypeConnectives,'MAPS'-NumberOfMaps,'XPRO'-NumberOfXProds,
+ 'UNIO'-NumberOfUnions,'SUBT'-NumberOfSubtypes,
+ 'PRED'-NumberOfPredicateSymbols,'PROP'-NumberOfPropositions,
+ 'MINP'-MinimalPredicateArity,'MAXP'-MaximalPredicateArity,
+ 'FUNC'-NumberOfFunctors,'CNST'-NumberOfConstants,
+ 'MINF'-MinimalFunctorArity,'MAXF'-MaximalFunctorArity,
+ 'VARS'-NumberOfVariables,'SGTN'-NumberOfSingletons,
+ 'UNIV'-NumberOfUniversals,'EXIS'-NumberOfExistentials,
+ 'TMDP'-MaximalTermDepth,'TMAD'-AverageTermDepth,
+ 'MATT'-NumberOfArithmeticSymbols,'MATP'-NumberOfMathPredicates,
+ 'MATF'-NumberOfMathFunctions,'MATN'-NumberOfNumbers]):-
+%----Check it contains formulae
+    tptp_formulae_language(Formulae,[tff]),
+    !,
+%----Do basic syntactic examination
+    examine_formulae_for_predicates(Formulae,_,UnsignedPredicateStructures,_),
+    examine_formulae_for_functors(Formulae,FunctorStructures,_),
+%----Number of formulae
+    tptp2X_length(Formulae,NumberOfFormulae),
+%----Number of unit formulae
+    count_unit_formulae(Formulae,no,NumberOfUnitFormulae),
+%----Number of formulae with type role
+    count_formulae_with_role(Formulae,type,NumberOfTypeFormulae),
+%----Number of atoms
+    extract_atoms_from_formulae(Formulae,_,_,no,Atoms),
+    tptp2X_length(Atoms,NumberOfAtoms),
+%----Number of equality atoms
+    extract_atoms_from_formulae(Formulae,'$tptp_equal',2,no,EqualityAtoms),
+    tptp2X_length(EqualityAtoms,NumberOfEqualityAtoms),
+%----Maximal and arithmetic_average formula depth
+    formulae_depth_values(Formulae,MaximalFormulaDepth,AverageFormulaDepth),
+%----Number of each type of connective
+    count_formulae_connectives(Formulae,[NumberOfNOTs,NumberOfORs,
+NumberOfANDs,NumberOfIMPLYs,NumberOfIMPLIEDs,NumberOfEQUIVs,NumberOfXORs,
+NumberOfNORs,NumberOfNANDs,NumberOfUniversals,NumberOfExistentials,
+_NumberOfLambdas,_NumberOfAPPLYs,_NumberOfDefns,_NumberOfTypeDecs,
+_NumberOfPi,_NumberOfSigmas,_NumberOfPIs,_NumberOfSIGMAs,_NumberOfGlobalDefns,
+_NumberOfGlobalTypeDecs,NumberOfMaps,NumberOfXProds,NumberOfUnions,
+NumberOfSubtypes]),
+    NumberOfConnectives is NumberOfNOTs + NumberOfORs + NumberOfANDs + 
+NumberOfIMPLYs + NumberOfIMPLIEDs + NumberOfEQUIVs + NumberOfXORs + 
+NumberOfNORs + NumberOfNANDs,
+    NumberOfTypeConnectives is NumberOfMaps + NumberOfXProds + NumberOfUnions +
+NumberOfSubtypes,
+%----Number of predicate symbols
+    tptp2X_length(UnsignedPredicateStructures,NumberOfPredicateSymbols),
+%----Number of propositions
+    count_structures_of_arity(UnsignedPredicateStructures,0,
+NumberOfPropositions),
+%----Range of predicate arities
+    tptp2X_arity_range(UnsignedPredicateStructures,MinimalPredicateArity,
+MaximalPredicateArity),
+%----Number of functors
+    tptp2X_length(FunctorStructures,NumberOfFunctors),
+%----Number of constants
+    count_structures_of_arity(FunctorStructures,0,NumberOfConstants),
+%----Range of functor arities
+    tptp2X_arity_range(FunctorStructures,MinimalFunctorArity,
+MaximalFunctorArity),
+%----Math components
+    count_mathematics(Formulae,NumberOfArithmeticSymbols,
+NumberOfMathPredicates,NumberOfMathFunctions,NumberOfNumbers),
+%----Number of variables and singletons BEWARE THIS INSTANTIATES????
+%----Should equal the sum of !, ?, and ^
+    count_number_of_variables(Formulae,NumberOfVariables,
+NumberOfSingletons),
+%----Maximal and arithmetic_average term depth
+    term_depth_values(Formulae,MaximalTermDepth,AverageTermDepth).
+
+%----THF case
+examine_input_syntactics(Formulae,
+['THFF'-NumberOfFormulae,'UNIT'-NumberOfUnitFormulae,
+ 'TFRM'-NumberOfTypeFormulae,'DFRM'-NumberOfDefnFormulae,
+ 'GDEF'-NumberOfGlobalDefns,'GTYP'-NumberOfGlobalTypeDecs,
+ 'ATOM'-NumberOfAtoms,'EQAT'-NumberOfEqualityAtoms,
+ 'VAAT'-NumberOfVariableAtoms,
+ 'FMDP'-MaximalFormulaDepth,'FMAD'-AverageFormulaDepth,
+ 'CONN'-NumberOfConnectives,
+ 'NOTS'-NumberOfNOTs,'ORSS'-NumberOfORs,'ANDS'-NumberOfANDs,
+ 'IMPS'-NumberOfIMPLYs,'PMIS'-NumberOfIMPLIEDs,'EQVS'-NumberOfEQUIVs,
+ 'XORS'-NumberOfXORs,'NORS'-NumberOfNORs,'NANS'-NumberOfNANDs,
+ 'APPY'-NumberOfAPPLYs,'DEFN'-NumberOfDefns,'TYPE'-NumberOfTypeDecs,
+ 'PIPI'-NumberOfPis,'SIGM'-NumberOfSigmas,
+ 'BIPI'-NumberOfPIs,'BISI'-NumberOfSIGMAs,
+ 'FUNC'-NumberOfSymbols,'CNST'-NumberOfConstants,
+ 'MINF'-MinimalSymbolArity,'MAXF'-MaximalSymbolArity,
+ 'VARS'-NumberOfVariables,'SGTN'-NumberOfSingletons,
+ 'UNIV'-NumberOfUniversals,'EXIS'-NumberOfExistentials,
+ 'LMDA'-NumberOfLambdas,
+ 'MATT'-NumberOfArithmeticSymbols,'MATP'-NumberOfMathPredicates,
+ 'MATF'-NumberOfMathFunctions,'MATN'-NumberOfNumbers,
+ 'TCON'-NumberOfTypeConnectives,'MAPS'-NumberOfMaps,'XPRO'-NumberOfXProds,
+ 'UNIO'-NumberOfUnions,'SUBT'-NumberOfSubtypes]):-
+%----Check it contains formulae
+    tptp_formulae_language(Formulae,[thf]),
+    !,
+%----Do basic syntactic examination
+    examine_formulae_for_symbols(Formulae,SymbolStructures,_),
+%----Remove equality for THF usage
+    remove_equality_for_thf_structures(SymbolStructures,THFSymbolStructures),
+%----Number of formulae
+    tptp2X_length(Formulae,NumberOfFormulae),
+%----Number of unit formulae
+    count_unit_formulae(Formulae,yes,NumberOfUnitFormulae),
+%----Number of formulae with type and defn role
+    count_formulae_with_role(Formulae,type,NumberOfTypeFormulae),
+    count_formulae_with_role(Formulae,definition,NumberOfDefnFormulae),
+%----Number of atoms (note, this includes the equality "atoms")
+    extract_atoms_from_formulae(Formulae,_,_,yes,Atoms),
+%DEBUG write('ATOMS '),write(Atoms),nl,
+    tptp2X_length(Atoms,NumberOfAtoms),
+    count_variable_atoms(Atoms,NumberOfVariableAtoms),
+%----Number of equality atoms
+    extract_atoms_from_formulae(Formulae,'$tptp_equal',2,yes,EqualityAtoms),
+    tptp2X_length(EqualityAtoms,NumberOfEqualityAtoms),
+%----Maximal and arithmetic_average formula depth
+    formulae_depth_values(Formulae,MaximalFormulaDepth,AverageFormulaDepth),
+%----Number of each type of connective
+    count_formulae_connectives(Formulae,[NumberOfNOTs,NumberOfORs,
+NumberOfANDs,NumberOfIMPLYs,NumberOfIMPLIEDs,NumberOfEQUIVs,NumberOfXORs,
+NumberOfNORs,NumberOfNANDs,NumberOfUniversals,NumberOfExistentials,
+NumberOfLambdas,NumberOfAPPLYs,NumberOfDefns,NumberOfTypeDecs,
+NumberOfPis,NumberOfSigmas,NumberOfPIs,NumberOfSIGMAs,NumberOfGlobalDefns,
+NumberOfGlobalTypeDecs,NumberOfMaps,NumberOfXProds,NumberOfUnions,
+NumberOfSubtypes]),
+    NumberOfConnectives is NumberOfNOTs + NumberOfORs + NumberOfANDs + 
+NumberOfIMPLYs + NumberOfIMPLIEDs + NumberOfEQUIVs + NumberOfXORs + 
+NumberOfNORs + NumberOfNANDs + NumberOfAPPLYs + NumberOfPis + NumberOfSigmas,
+    NumberOfTypeConnectives is NumberOfMaps + NumberOfXProds + NumberOfUnions +
+NumberOfSubtypes,
+%----Number of functors
+    tptp2X_length(THFSymbolStructures,NumberOfSymbols),
+%DEBUG write('SYMBOLS '),write(THFSymbolStructures),write(NumberOfSymbols),nl,
+%----Number of constants
+    count_structures_of_arity(THFSymbolStructures,0,NumberOfConstants),
+%----Range of functor arities
+    tptp2X_arity_range(THFSymbolStructures,MinimalSymbolArity,
+MaximalSymbolArity),
+%----Math components
+    count_mathematics(Formulae,NumberOfArithmeticSymbols,
+NumberOfMathPredicates,NumberOfMathFunctions,NumberOfNumbers),
+%----Number of variables and singletons BEWARE THIS INSTANTIATES????
+%----Should equal the sum of !, ?, and ^
+    count_number_of_variables(Formulae,NumberOfVariables,
+NumberOfSingletons).
+%------------------------------------------------------------------------------
+convert_literal_to_tptp(--Atom,~ Atom).
+
+convert_literal_to_tptp(++Atom,Atom).
+%------------------------------------------------------------------------------
+%----TSTP conversion procedures
+convert_literals_to_tptp([],'$false'):-
+    !.
+
+convert_literals_to_tptp([Literal],Formula):-
+    !,
+    convert_literal_to_tptp(Literal,Formula).
+
+convert_literals_to_tptp([FirstLiteral|RestOfLiterals],
+(LHS| RestOfFormula)):-
+    !,
+    convert_literal_to_tptp(FirstLiteral,LHS),
+    convert_literals_to_tptp(RestOfLiterals,RestOfFormula).
+%------------------------------------------------------------------------------
+convert_clauses_to_tptp([],[]).
+
+convert_clauses_to_tptp([input_clause(Name,Status,Literals)|RestOfClauses],
+[cnf(Name,Status,Formula)|RestOfTSTP]):-
+    convert_literals_to_tptp(Literals,Formula),
+    convert_clauses_to_tptp(RestOfClauses,RestOfTSTP).
+%------------------------------------------------------------------------------
+%----In the future this will expand things to long format
+convert_formulae_to_tptp(A,A).
+%------------------------------------------------------------------------------
+%----TSTP conversion procedures
+convert_tptp_to_literals([FirstLiteral|RestOfLiterals],[FirstLiteral|
+RestOfLiterals]):-
+    !.
+
+%----Have to quote the '|' for SICStus
+convert_tptp_to_literals(LHS '|' RHS,Literals):-
+    !,
+    convert_tptp_to_literals(LHS,LHSLiterals),
+    convert_tptp_to_literals(RHS,RHSLiterals),
+    tptp2X_append(LHSLiterals,RHSLiterals,Literals).
+
+%convert_tptp_to_literals('$false',[]):-
+%    !.
+%
+%convert_tptp_to_literals(~ '$true',[]):-
+%    !.
+
+convert_tptp_to_literals(~ Atom,[--Atom]):-
+    !.
+
+convert_tptp_to_literals(Atom,[++Atom]).
+%------------------------------------------------------------------------------

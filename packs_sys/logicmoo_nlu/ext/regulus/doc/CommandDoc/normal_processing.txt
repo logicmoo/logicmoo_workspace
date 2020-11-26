@@ -1,0 +1,6 @@
+Switch sentence processing in the Regulus top-level back to the
+default behaviour: the system attempts to parse the sentence using the
+current parser. If successful, it prints relevant information, in
+particular the logical form(s), the associated analysis tree(s),
+and any associated preference information.
+

@@ -1,0 +1,73 @@
+--------------------------
+leanCoP ReadMe File (v2.1)
+
+-----------
+Description
+
+leanCoP is a compact theorem prover for classical first-order logic
+implemented in Prolog. See http://www.leancop.de for more details.
+
+--------
+Contents
+
+ReadMe_leancop   - this ReadMe file
+leancop.sh       - shell script to invoke leanCoP
+leancop21.pl     - the leanCoP core prover for ECLiPSe
+                   (leancop21_swi/sic.pl for SWI/SICStus)
+def_mm.pl        - clausal form transformation
+leancop_main.pl  - invokes the leanCoP core prover
+leancop_proof.pl - presents proof found by leanCoP
+leancop_tptp2.pl - translates problems in TPTP syntax
+
+------------
+Installation
+
+Set the path for the Prolog system (ECLiPSe, SICStus or SWI)
+and the path for the leanCoP prover in the file leancop.sh.
+This file also includes parameters to control the output of
+the proof and to specify the proof layout.
+
+---------
+Execution
+
+./leancop.sh %s [%d]
+where %s is the name of the problem file and %d is the (optional)
+time limit in seconds.
+
+Example:  ./leancop.sh SET/SET009+3 10
+
+Output if formula is valid:    %s is a Theorem
+Output if formula is invalid:  %s is a Non-Theorem
+
+Example:  SET/SET009+3 is a Theorem
+
+------
+Syntax
+
+The problem file has to contain a Prolog term of the form
+   f(<formula>).
+in which <formula> is a first-order formula built from Prolog
+terms (atomic formulae), the logical connectives '~' (negation),
+';' (disjunction), ',' (conjunction), '=>' (implication), '<=>'
+(equivalence), and the logical quantifiers 'all X:' (universal)
+and 'ex X:' (existential) where X is a Prolog variable.
+
+Example:  f( ((p , all X:(p=>q(X))) => q(a)) ).
+
+If the problem file contains equality ('=') all equality axioms
+are automatically added. Alternatively, the problem file can
+contain a formula in TPTP syntax (see http://www.tptp.org).
+
+-----------
+At a Glance
+
+System:  leanCoP
+Version: 2.1
+URL:     http://www.leancop.de
+Command: ./leancop.sh %s %d
+Format:  leancop or (raw) tptp
+Output:  - valid:            %s is a Theorem
+         - invalid:          %s is a Non-Theorem
+         - unsatisfiable(*): %s is Unsatisfiable
+         - satisfiable(*):   %s is Satisfiable
+(*: for problems in TPTP syntax without conjecture)

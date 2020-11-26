@@ -1,0 +1,25 @@
+(note TQC47-b)
+
+(instance (NationalPressFn Kuwait) (GroupFn NewsOrganization)) 
+
+(not 
+  (and 
+    (instance ?AGENCY (GroupFn NewsOrganization)) 
+    (instance ?ACT PhysicalDistributionEvent) 
+    (capableOfDoing ?AGENCY ?ACT agent) 
+    (transferredThing ?ACT ?OBJ) 
+    (instance ?OBJ (GroupFn MilitaryHardware)) 
+    (cost ?OBJ (LowAmountFn Money)))) 
+
+(query 
+  (implies 
+    (and 
+      (instance ?ACT PhysicalDistributionEvent) 
+      (instance ?OBJ (GroupFn MilitaryHardware)) 
+      (cost ?OBJ (LowAmountFn Money)) 
+      (transferredThing ?ACT ?OBJ)) 
+   (not 
+     (capableOfDoing 
+       (NationalPressFn Kuwait) ?ACT agent))))
+
+(answer yes)  

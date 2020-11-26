@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YASR</title>
+  <link rel="icon"  type="image/png" href="doc/imgs/favicon.png">
+  <link href="dist/yasr.min.css" rel="stylesheet" type="text/css" />
+<!-- build:css -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/yasqe/2.6.3/yasqe.min.css">
+<!-- endbuild -->
+  <link href="doc/doc.min.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+
+  <a href="https://github.com/YASGUI/YASR" target="_blank"><img style="z-index: 1; position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+   <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">YASR</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">About</a></li>
+            <li><a href="doc/">Documentation</a></li>
+            <li><a href="http://laurensrietveld.nl">About me</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="container" role="main">
+
+
+    <div class="jumbotron ">
+		<div class="row">
+	        <div class="col-md-3">
+	        <img class="img-responsive" src="doc/imgs/yasr.png">
+	        </div>
+	        <div class="col-md-9">
+	        	<h1>Yet Another Sparql Resultset GUI</h1>
+	        	<div style="text-align:right">Funded by <a href="http://data2semantics.org" target="_blank"><img width="30%" src="doc/imgs/data2semantics.png"></a></div>
+	        </div>
+      </div>
+      </div>
+
+
+
+
+
+      	<div class="row">
+      	<div class="col-md-12">
+      	<h1>About YASR</h1>
+      	YASR is part of the regular <a target="_blank" href='http://about.yasgui.org'>YASGUI</a> web application. YASR provides a plugin-based visualizations for SPARQL resultsets.
+      	<div id="yasqe"></div>
+      	<div id="showcase"></div>
+      	<code>var yasr = YASR(document.getElementById("showcase"));</code>
+      	</div>
+      	</div>
+
+
+      	<div class="row">
+      	<div class="col-md-12">
+      	<h1>Features</h1>
+      	YASR features:
+      	<ul>
+      		<li>Completely client-side</li>
+      		<li>Easily customizable and extendible</li>
+      		<li>Easily integrates with <a href="http://yasqe.yasgui.org" target="_blank">YASQE</a></li>
+      		<li>Can handle <i>any</i> valid SPARQL resultset format</li>
+      		<li>Use of common libraries such as <a href="http://www.datatables.net/" target="_blank">jQuery Datatables</a> and <a href="http://codemirror.net/" target="_blank">CodeMirror</a></li>
+      		<li>Integration of <a href="http://preflabel.org" target="_blank">preflabel.org</a> for fetching URI labels</li>
+      	</ul>
+      	Combining YASR with the YASQE library (a SPARQL editor library) is easy: all you need to do is define YASR as a handler to the YASQE query method.
+      	See <a href="https://gist.github.com/LaurensRietveld/7d8beca5dbeb6b909b6f" target="_blank">this example gist</a>.
+
+      	</div>
+      	</div>
+
+
+      	<div class="row" id="releases">
+      	<div class="col-md-12">
+      	<h1>Download the latest release</h1>
+		<p>We provide a <i>bundled</i> release containing all external dependencies, and we provide a release containing just the YASR core. If you choose to use the regular release, make sure to include <a href="http://jquery.com" target="_blank">jQuery</a>, <a href="http://codemirror.net" target="_blank">CodeMirror</a> and <a href="http://datatables.net" target="_blank">jQuery.DataTables</a> in your page as well.</p>
+      	</div>
+      	</div>
+
+      	<div id="downloads">
+	      	<div class="row">
+	      		<div id="cdnDownload" class="row">
+	      			<div class="well col-md-12" style="margin-bottom: 0px">
+			      		<h3>CDN</h3>
+			      		<p>The YASR files are hosted via <a href="http://www.jsdelivr.com/#!yasr" target="_blank">JsDelivr</a>. This CDN is the easiest way to include YASR in your website.</p>
+			      		<strong>CSS</strong>
+			      		<div><code id="yasrCss"></code></div>
+			      		<strong>JS</strong> <small>Choose either the bundled or the core version</small>
+			      		<div><code id="yasrJsBundled"></code></div>
+			      		<div><code id="yasrJs"></code></div>
+		      		</div>
+	      		</div>
+	      		<div class="row">
+		      		<div class="well col-md-6">
+			      		<h3>GitHub</h3>
+			      		<p>Visit the GitHub repository to download the YASR .css and .js files (find them in the <code>dist</code> directory).</p>
+			      		<a class="btn btn-large btn-info" href="https://github.com/YASGUI/YASR" target="_blank">Download latest release from GitHub&nbsp;<img style="height: 22px;" src="doc/imgs/blacktocat.png"></a>
+		      		</div>
+		      		<div class="well col-md-6">
+			      		<h3><img style="height: 26px;" src="doc/imgs/npm.png"></h3>
+			      		<p>YASR is registered as a node package as well, so you'll be able to use the node package manager to keep your version of YASR up to date.</p>
+			      		<a class="btn btn-large btn-info" href="https://www.npmjs.org/package/yasgui-yasr" target="_blank">Show NPM Package</a>
+		      		</div>
+	      		</div>
+	      	</div>
+      	</div>
+
+
+
+      	<div class="row" id="used">
+      	<div class="col-md-12">
+      	<h1>Used by</h1>
+      	<p><a href="http://doc.yasgui.org" target="_blank">YASGUI</a> (or one of its components, <a href="http://yasqe.yasgui.org" target="_blank">YASQE</a>/<a href="http://yasr.yasgui.org" target="_blank">YASR</a>) is integrated in common triple-stores such as <a href="https://jena.apache.org/" target="_blank">Apache Jena</a>
+      	, <a href="http://rdf4j.org/" target="_blank">OpenRDF Sesame</a>
+      	and <a href="http://www.swi-prolog.org/web/ClioPatria/" target="_blank">ClioPatria</a>.
+      	</p>
+      	<p>It has seen uptake in Linked Data tools as well, including</p>
+      	<ul>
+      	<li><a href="https://github.com/scampi/gosparqled" target="_blank">Gosparqled</a> <small>(<a href="http://scampi.github.io/gosparqled/" target="_blank">demo</a>)</small>, an extension of YASQE providing context-dependent property and class autocompletions</li>
+      	<li><a href="https://github.com/jiemakel/snapper" target="_blank">Snapper</a> <small>(<a href="http://jiemakel.github.io/snapper/#/" target="_blank">demo</a>)</small>, a browser based Turtle editor</li>
+      	<li><a href="https://github.com/jiemakel/visu" target="_blank">Visu</a> <small>(<a href="http://demo.seco.tkk.fi/visu/" target="_blank">demo</a>)</small>, the first library to extend YASR with Google Chart functionality</li>
+      	<li><a href="https://github.com/Data2Semantics/brwsr" target="_blank">Brwsr</a>, a Linked Data browser</li>
+      	<li><a href="https://github.com/zazukoians/trifid-ld" target="_blank">Trifid-LD</a>, a lightweight Linked Data server and proxy</li>
+      	</ul>
+      	<p>Publishers are using  as well, such as
+      	<a href="http://www.healthdata.gov/sparql/" target="_blank">HealthData.gov</a>
+      	, <a href="http://americanart.si.edu/collections/search/lod/about/sparql.cfm" target="_blank">the Smithsonian American Art museum</a>
+      	,<a href="http://zbw.eu/labs/en/blog/publishing-sparql-queries-live" target="_blank">the German National Library of Economics (ZWB)</a>
+      	, <a href="http://lov.okfn.org/dataset/lov/sparql" target="_blank">Linked Open Vocabularies</a>
+      	, the <a href="http://lodlaundromat.org/sparql/" target="_blank">LOD Laundromat</a>
+      	, <a href="http://doc.metalex.eu/query" target="_blank">MetaLex</a>
+        , <a href="http://http://linkedarc.net/" target="_blank">linkedArc</a>
+      	and the <a href="http://lod.cedar-project.nl/cedar/data.html" target="_blank">CEDAR project</a>.
+
+      	</p>
+      	</div>
+      	</div>
+
+
+      	<div class="row">
+      	<div class="col-md-12">
+      	<h1>Thanks!</h1>
+      	A big thanks goes out to:
+      	<ul>
+      	<li>Marijn Haverbeke for his great work on the <a href="http://codemirror.net" target="_blank">CodeMirror library</a> syntax highlighting library</li>
+      	<li>The work done by Marat Charlaganov on <a href="http://preflabel.org" target="_blank">PrefLabel.org</a>, which is used for fetching URI labels found in SPARQL result sets</li>
+      	<li>Nicolas Kruchten for his work on the <a href="https://github.com/nicolaskruchten/pivottable" target="_blank">PivotTable</a> JS Library</li>
+      	<li>Eetu Mäkelä, who extended YASR with Google Chart functionality (see <a href="https://github.com/jiemakel/visu" target="_blank">here</a>). His work was later directly integrated in YASR.</li>
+      	</ul>
+      	</div>
+      	</div>
+
+
+
+    </div> <!-- /container -->
+
+
+
+<!-- 	<div id="yWrapper"></div> -->
+
+
+
+<script src="dist/yasr.bundled.min.js"></script>
+<!-- build:js -->
+<script src="//cdn.jsdelivr.net/yasqe/2.6.3/yasqe.bundled.min.js"></script>
+<!-- endbuild -->
+<script src="doc/doc.min.js"></script>
+<script type="text/javascript">
+	var yasr, yasqe = {};
+	YASQE.defaults.value = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
+	"PREFIX dbpedia: <http://dbpedia.org/resource/>\n"+
+	"SELECT DISTINCT ?person WHERE {\n"+
+	"  ?person a foaf:Person .\n"+
+	"}\n"+
+	"LIMIT 10";
+
+	yasr = YASR(document.getElementById("showcase"));
+    yasqe = YASQE(document.getElementById("yasqe"), {
+    	sparql: {
+    		showQueryButton: true,
+    		endpoint: 'http://dbpedia.org/sparql'
+    	}
+    });
+
+    /**
+    * Set some of the hooks to link YASR and YASQE
+    */
+    yasr.options.getUsedPrefixes = yasqe.getPrefixesFromQuery;
+	yasqe.options.sparql.callbacks.complete = yasr.setResponse;
+
+	if (!yasr.storage.get("yasr_showcase_results"))  yasqe.query();
+	/**
+	* A function to do some quick testing
+	*/
+	function testFile(testFile) {
+		$.get("test/" + testFile, function(data) {
+			yasr.setResponse(data);
+		});
+	}
+
+</script>
+  </body>
+</html>

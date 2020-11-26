@@ -1,0 +1,22 @@
+% le crible d'Eratosthene 
+% version avec geler de Le Huitouze et Ridoux
+
+
+$ eras :- freeze(L,prem(L)),		% le consommateur initial
+	liste_entiers(2,L).		% le producteur
+
+$ prem([X|L]) :-
+	write(X), nl, 
+	freeze(L,crible(X,L,Canal)),	% pour que X teste tout ce qui va venir
+  	freeze(Canal,prem(Canal)).	% pour croitre et multiplier
+
+$ crible(X,[Nb|L],Canal) :-
+	mod(Nb,X,0), !,			% Le nouvel arrive divisible par X
+	freeze(L,crible(X,L,Canal)).	% ne rien dire aux autres
+					% et attendre le suivant
+$ crible(X,[Nb|L],[Nb|Canal2]) :-	% sinon l'envoyer au voisin
+	freeze(L,crible(X,L,Canal2)).	% et attendre le suivant
+
+$ liste_entiers(X,[X|L]) :- 
+	plus(X,1,X1),
+	liste_entiers(X1,L).

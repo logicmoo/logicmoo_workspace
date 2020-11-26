@@ -1,0 +1,96 @@
+// the definition of the plans
+
+//	Plan Pl3_SatisfyHungry :
+// At first the agent in heis neighberhood, if he find a possible aliment he will take it immediatly.
+// Otherwise, the agent will consult its knowledge to check if he knows a place which is located an aliment.
+// While he walks throught the way he continue to look for a possible food in the way. in this case the agent 
+// will abort the operation and he wiil shift to this aliment.
+// if any of those attempts the plan will fail 
+
+//Algorithm :
+//	- scan the neighberhood.
+//	- if exists a possible food 
+//		then go to consumit 
+//		else move to an other location (mignt be within a traject)
+
+//Formulation in Prolog+CG :
+////////////////////////////////////////////////////////////----------description of the plan SatisfyHungry------------///////////////////////////////////////////////////////////////
+// 1) in the case that the food is in the visual neigberhood of the agent, 
+Animal( x, Plan ):: [Animal : x] <-actor-[Plan3_SatisfyHungry] -intensityOf-> [Hungry = _Level] :-
+	Animal( x, Procedure ):: [Animal : x] <-actor- [PerceptionOf]-
+					-id-> [Name = "Neigberhood"],
+					-obj-> [Food = _Food], 
+					-locatedIn-> [Position = _FoodPosition],
+	Animal( x, Procedure ):: [Animal : x] <-actor- [Trajectory]-
+					-id-> [Name = "Final"],
+					-locatedIn-> [CurrentPosition = _CurrentPosition], 
+					-to-> [TargetPosition = _FoodPosition],
+	getQuantityOfFoodForAnimal( x, _Food, _Level, _Quantity ),
+	Animal( x,PrimitiveAction ):: [Animal : x] <-actor- [Eat] -
+				-obj-> [Food =  _Food]
+				-numberOf-> [Quantity = _Quantity],
+				-locatedIn-> [Position = _FoodPosition], !.
+
+// otherwise, concerning the previous case, the animal will look for it otherwhere
+Animal( x, Plan ):: [Animal : x] <-actor-[Plan3_SatisfyHungry] -intensityOf-> [Hungry = _Level] :-
+	getAnimalPosition( x, _CurrentPosition ),
+	getFoodAnimalKnowledge( x, _NameTrajectory),
+	getTrajectory( _Object, _Trajectory, _NameTrajectory  ),
+	ReturnFirstElementOf( _Trajectory, _CurrentPosition),
+	memberFood( x, _Object ),
+	Animal( x, Procedure ):: [Animal : x] <-actor- [Trajectory]-
+					-trajectoryId-> [Name = _NameTrajectory],
+					-locatedIn-> [CurrentPosition = _CurrentPosition], 
+					-to-> [TargetPosition = _NextPosition],
+	moveToEndOfTraject( x, _NameTrajectory, _Level ).
+
+moveToEndOfTraject( x, _NameTrajectory, _Level ) :- 
+	Animal( x, Procedure ):: [Animal : x] <-actor- [PerceptionOf]-
+					-id-> [Name = "Neigberhood"],
+					-obj-> [Food = _Food], 
+					-locatedIn-> [Position = _FoodPosition],
+	Animal( x, Procedure ):: [Animal : x] <-actor- [Trajectory]-
+					-id-> [Name = "Final"],
+					-locatedIn-> [CurrentPosition = _CurrentPosition], 
+					-to-> [TargetPosition = _FoodPosition],
+	getQuantityOfFoodForAnimal( x, _Food, _Level, _Quantity ),
+	Animal( x,PrimitiveAction ):: [Animal : x] <-actor- [Eat] -
+				-obj-> [Food =  _Food]
+				-numberOf-> [Quantity = _Quantity],
+				-locatedIn-> [Position = _FoodPosition], !.
+
+moveToEndOfTraject( x, _NameTrajectory, _Level ) :- 
+	Animal( x, Procedure ) ::[Animal : x] <-actor- [Trajectory]-
+					-trajectoryId-> [Name = _NameTrajectory],
+					-locatedIn-> [CurrentPosition = _CurrentPosition], 
+					-to-> [TargetPosition = _NextPosition],
+	moveToEndOfTraject( x, _NameTrajectory, _Level ).
+
+//myRetract2(B) :-
+  // myRetract(B).
+//myRetract2(B) :-
+  // assertz(B, []).
+////////////////////////////////////////////////////////////////-----------------description of the perception rule------------------/////////////////////////////////////////////
+// the case below is used if a possible food of an agent is his neigberhood
+// the perception of an animal
+Animal( x, Procedure ):: [Animal :x] <-actor- [PerceptionOf]-
+				-id-> [Name = "Neigberhood"],
+				-obj-> [Food = _Food], 
+				-LocatedIn-> [Position = _FoodPosition] :-
+	getAnimalPerception( x, _Ray ),
+	getPossibleFoodInNeiberhood( x, _Ray, _AgentPosition, _Food, _FoodPosition ),
+	fullfilAnimalKnowledge( x, Knowledge)::  [Object = _Food] -locatedIn-> [Position = _FoodPosition],!.
+////////////////////////////////////////////////////////////////////////-------------description of the rule trajectory----------------///////////////////////////////////////////////
+Animal( x, Procedure ) ::[Animal : x] <-actor- [Trajectory]-
+				-id-> [Name = "Final"],
+				-locatedIn-> [CurrentPosition = _CurrentPosition], 
+				-to-> [TargetPosition = _NextPosition]:-
+	UpDateAgentCurrentPosition( x, _NextPosition ).
+
+Animal( x, Procedure ) ::[Animal : x] <-actor- [Trajectory]-
+				-trajectoryId-> [Name = _NameTrajectory],
+				-locatedIn-> [CurrentPosition = _CurrentPosition], 
+				-to-> [TargetPosition = _NextPosition]:-
+	getTrajectory( _Object, _Trajectory, _NameTrajectory  ),
+	NextAgentPosition( x, _NameTrajectory, _NextPosition ),
+	UpDateAgentCurrentPosition( x, _NextPosition ), !.

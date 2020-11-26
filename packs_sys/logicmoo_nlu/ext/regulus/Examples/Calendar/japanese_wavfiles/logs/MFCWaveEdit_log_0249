@@ -1,0 +1,3 @@
+10,0a01a8c0_000009f4_48cd212d_0001_0000,LOG,WARN,0,2008/09/14 16:35:25.531,eti087-PB,MFCWaveEdit,3120,AUDIO,AudioClientImpl::InitializeFromConfig,135,Audio provider does not support barge-in because it cannot perform full duplex play and record-- setting client.AllowBargeIn to false.
+10,0a01a8c0_000009f4_48cd212d_0001_0000,LOG,FATAL,0,2008/09/14 16:37:20.390,eti087-PB,MFCWaveEdit,400,XWAVEDIT,SBCopySamples,73,
+  Failed assertion "index < SBGetNumSamples(sb)" in sample-buffer.c:373

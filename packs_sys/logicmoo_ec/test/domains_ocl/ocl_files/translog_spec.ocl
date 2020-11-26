@@ -1,0 +1,353 @@
+/* Simple Translog, August, 1999. *****************************************
+
+  Written in: OCLh
+  Originator: Donghong Liu      Aug 99
+  Updated:    Lee McCLuskey     Sept 99
+
+   Derived from Univ. of Maryland's literal-based specification     
+
+This model captures the object structure and actions in a "transport
+logistics" domain where packages have to be transported around 
+different locations in different cities, using trucks and trains */
+
+/*********************** sort hierarchy *****************************/
+
+sorts(non_primitive_sorts, [
+       location, city_location,tcentre,not_tcentre, route, 
+       physical_obj, vehicle, railv]).
+sorts(primitive_sorts, [
+        train_station, post_office, clocation, city, package, 
+        train, traincar, truck, road_route, rail_route]).
+sorts(physical_obj, [vehicle, package]).
+sorts(vehicle, [railv,truck]).
+sorts(railv, [traincar,train]).
+sorts(location, [city_location,city]).
+sorts(city_location, [tcentre,not_tcentre]).
+sorts(tcentre, [train_station]).
+sorts(not_tcentre, [clocation,post_office]).
+sorts(route, [road_route, rail_route]).
+objects(train_station, [city1_ts1,city2_ts1,city3_ts1]).
+objects(clocation, [city1_cl1,city1_cl2,city2_cl1,city3_cl1]).
+objects(post_office, [post_1]).
+objects(city, [city1, city2, city3]).
+objects(train,[train1,train2]).
+objects(traincar,[traincar1]).
+objects(road_route, [road_route_1,road_route_2, 
+                     road_route_3, road_route_4 ]).
+objects(rail_route,[rail_route_2,rail_route_3,rail_route_4 ]).
+objects(truck, [truck_1, truck_2, truck_3, truck_11, truck_22, truck_33]).
+objects(package,[pk_1, pk_2, pk_3, pk_4, pk_5, pk_6]).
+
+/*********************** predcate defns ***********************************/
+
+predicates([
+% dynamic 
+  at(physical_obj,city_location),
+  moveable(vehicle),
+  available(vehicle),
+  busy(vehicle),
+  attached(vehicle,vehicle),
+  unattached(vehicle),
+  waiting(package),
+  certified(package),
+  uncertified(package),
+  loaded(package,vehicle),
+  delivered(package),
+% static
+  rv_compatible(route,vehicle),
+  serves(tcentre,location),
+  connects(route,location,location),
+  in_city(city_location, city),
+  route_available(route) ]).
+
+/*********************** invariants ****************************************/
+
+% LHS vars univ. quantified over primitive sorts
+% RHS free vars are existentially quantified
+
+implied_invariant([loaded(P,V)], [at(V,L),at(P,L)]).
+
+inconsistent_constraint([certified(P), not_insured(P)]).
+
+atomic_invariants([
+      rv_compatible(rail_route,traincar),
+      rv_compatible(rail_route,train),
+      rv_compatible(road_route,truck),
+      in_city(city1_cl1,city1), in_city(city1_ts1,city1),
+      in_city(city1_cl2,city1), in_city(city1_ts2,city1),
+      in_city(city2_cl1,city2), in_city(city2_ts1,city2),
+      in_city(city3_cl1,city3), in_city(city3_ts1,city3),
+      serves(city1_ts1,city1), serves(city1_ts2,city1),
+      serves(city2_ts1,city2),
+      serves(city3_ts1,city3),
+      route_available(road_route_1),
+      connects(road_route_1,city3,city1),
+      connects(road_route_1,city1,city3),
+      route_available(road_route_2),
+      connects(road_route_2,city3,city2),
+      connects(road_route_2,city2,city3),
+      route_available(rail_route_1),
+      connects(rail_route_1,city1_ts2,city1_ts1),
+      connects(rail_route_1,city1_ts1,city1_ts2),
+      route_available(rail_route_2),
+      connects(rail_route_2,city2_ts1,city1_ts1),
+      connects(rail_route_2,city1_ts1,city2_ts1),
+      route_available(road_route_3),
+      connects(road_route_3,city2,city1),
+      route_available(road_route_4),
+      connects(road_route_4,city1,city2)
+      ]).
+
+/*********************** ss classes ****************************************/
+
+substate_classes(physical_obj, P,
+       [
+        [at(P,L)]
+       ]).
+substate_classes(railv, V,
+       [
+        [unattached(V)] , [attached(V,V1)]
+       ]).
+substate_classes(train, T,
+       [
+        [moveable(T),available(T)], 
+        [moveable(T),busy(T)] 
+       ]).
+substate_classes(traincar, TC,
+       [
+        [moveable(TC),available(TC)],
+        [moveable(TC),busy(TC) ]
+       ]).
+substate_classes(truck, TU,
+        [
+        [moveable(TU), available(TU)],
+        [moveable(TU), busy(TU) ]
+       ]).
+substate_classes(package, P,
+       [
+        [uncertified(P)],
+        [waiting(P),certified(P)],
+        [loaded(P,V),certified(P)],
+        [delivered(P)]
+      ]) .
+/*********************** operators ****************************************/
+
+% method(name,precons,transitions,statics,temps,decomposition)
+% operator(name,prevail,transitions,cond_transitions)
+
+method(
+ % 1. name
+      transport(P,O,D),
+ % 2. dynamic constraints
+      [ ],
+ % 3. list of necessary substate changes
+      [ sc(package, P, [at(P,O), is_of_sort(P,package)] => 
+                       [at(P,D), delivered(P)]) ],
+ % 4. static constraints
+      [ ne(O,D)
+       % list of static predicates that must be instantiated to
+       % be true. Static preds may also appear in 2. and 3. if
+       % its clearer that way 
+       ],
+
+ % 5.  temporal  constraints
+       % list of static predicates before(N1,N2)
+      [before(1,2),before(2,3)],
+ % 6. decomposition
+      [ achieve( ss(package, P,[waiting(P),certified(P)]) ), carry_direct(P,O,D), deliver(P,D)]
+ ).
+
+% carry between two cities by traincar
+method(
+/*N*/  carry_direct(P,O,D),
+/*C*/ [ ],
+/*D*/  [ sc(package, P, [at(P,O),waiting(P),certified(P)] => 
+                       [at(P,D),waiting(P),certified(P)]) ],
+/*S*/ [is_of_sort(P,package),
+       is_of_sort(V,traincar),
+       connects(R2,O1,O),
+       is_of_primitive_sort(R,RS),
+       rv_compatible(RS,traincar),
+       route_available(R),
+       ne(Train,V),
+       connects(R,O,D)
+       ],
+/*T*/ [before(1,2), before(2,3), before(3,4),before(4,5),
+       before(5,6),before(6,7),before(7,8) ],
+/*E*/ [commission(V),
+       achieve(ss(train,Train,[at(Train,O1)])),
+       attach_traincar(Train,V,O1),
+       pull_traincar(Train,V,O1,O,R2),
+       load_package(P,V,O),
+       pull_traincar(Train,V,O,D,R),
+       detach_traincar(Train,V,D),
+       unload_package(P,V,D)
+       ]
+).
+% 
+% carry in one city
+method(  
+/*N*/  carry_direct(P,O,D),
+/*C*/ [ ],
+/*D*/  [ sc(package, P, [at(P,O),waiting(P),certified(P)] => 
+                       [at(P,D),waiting(P),certified(P)]) ],
+/*S*/ [is_of_sort(P,package),
+       is_of_sort(V,truck),
+       in_city(O,CY),
+       in_city(D,CY)
+       ],
+/*T*/ [before(1,2), before(2,3), before(3,4),before(4,5)
+       ],
+/*E*/ [commission(V),
+       achieve(ss(truck,V,[at(V,O)])),
+       load_package(P,V,O),
+       move(V,O,D,local_road),
+       unload_package(P,V,D)
+       ]
+).
+
+% carry between two cities by truck
+method(
+/*N*/  carry_direct(P,O,D),
+/*C*/ [ ],
+/*D*/  [ sc(package, P, [at(P,O),waiting(P),certified(P)] => 
+                       [at(P,D),waiting(P),certified(P)]) ],
+/*S*/ [is_of_sort(P,package),
+       is_of_sort(V,truck),
+       in_city(O,CY),
+       in_city(D,CY1),
+       ne(CY,CY1),
+       connects(R,CY,CY2),
+       is_of_sort(R,road_route),
+       route_available(R)
+       ],
+/*T*/ [before(1,2), before(2,3), before(3,4),before(4,5) ],
+/*E*/ [commission(V),
+       achieve(ss(truck,V,[at(V,O)])),
+       load_package(P,V,O),
+       move(V,O,D,R),
+       unload_package(P,V,D)
+       ]
+).
+
+method(
+/*N*/  move_traincar(V, O, L, R2),
+/*C*/ [ ],
+         [sc(traincar,V,[at(V,O) ]
+            =>[at(V,L)] )],
+/*S*/ [is_of_sort(V,traincar),
+       connects(R2,O,L),
+       is_of_sort(R2,rail_route),
+       is_of_sort(Train,train) ],
+/*T*/ [before(1,2), before(2,3), before(3,4),before(4,5) ],
+/*E*/ [   achieve(ss(train,Train,[at(Train,O)])),
+          attach_traincar(Train,V,O),
+          pull_traincar(Train,V,O,L,R2),
+          detach_traincar(Train,V,L) ]
+).
+
+/* getting docs ready */
+ operator( pay_fees(P),
+      [],
+      [sc(package,P,[uncertified(P)]
+      =>[waiting(P),certified(P)])],
+      [ ]).
+
+%move truck
+operator( move(V, O, L, R), 
+        [ ],
+         [sc(truck,V,[at(V,O),
+             is_of_sort(R,road_route),
+             moveable(V),
+             in_city(O,City),
+             in_city(L,City1),
+             ne(City,City1),
+             connects(R,City,City1)]
+            =>[at(V,L)] )],
+         [sc(package,X,[loaded(X,V),at(X,O)] 
+            => [loaded(X,V),at(X,L)])  ]
+).
+
+%move truck inside city
+operator( move(V, O, L, R), 
+         [],
+         [sc(truck,V,[at(V,O),
+             is_of_sort(R,road_route),
+             moveable(V),
+             in_city(O,City),
+             in_city(L,City)]
+            =>[at(V,L)]  )],
+         [ sc(package,X,[loaded(X,V),at(X,O)] 
+            =>[loaded(X,V),at(X,L)])   ]
+).
+
+%move traincar
+operator( pull_traincar(Train,V1, O, L, Rt), 
+         [  ],
+         [ sc(train,Train,[at(Train,O),
+             attached(Train,V1),
+             moveable(Train),
+             connects(Rt,O,L),
+             is_of_sort(Rt,rail_route)]
+            =>[at(Train,L),attached(Train,V1)] ),
+           sc(traincar,V1,[at(V1,O),attached(V1,Train)]
+            =>[at(V1,L),attached(V1,Train)]) ],
+         [sc(package,P,[loaded(P,V1),at(P,O)]
+            =>[loaded(P,V1),at(P,L)]) ]
+).
+
+operator( move_train(V, O, L, Rt),
+         [ ],
+          [sc(train,V,[at(V,O),unattached(V),
+             moveable(V),available(V),
+             connects(Rt,O,L),
+             is_of_sort(Rt,rail_route)]
+            =>[at(V,L),unattached(V),moveable(V),available(V)] )],
+       [ ]
+).
+
+operator(attach_traincar(Train,V,O),
+     [  ],
+     [sc(train, Train, [at(Train,O),moveable(Train),available(Train),unattached(Train)]
+        =>[at(Train,O),attached(Train,V),moveable(Train),busy(Train)] ),
+     sc(traincar, V, [at(V,O),unattached(V)]
+        =>[at(V,O),attached(V,Train)] ) ],
+     [ ]
+).
+
+operator(detach_traincar(Train,V,O),
+     [ ],
+     [sc(train, Train, [attached(Train,V),moveable(Train),busy(Train)]
+        =>[unattached(Train),moveable(Train),available(Train)] ),
+     sc(traincar, V, [attached(V,Train)]
+        =>[unattached(V)] ) ],
+     [ ]
+).
+
+operator(commission(V),
+      [ ],
+      [sc(vehicle, V,[moveable(V),available(V)] =>[moveable(V), busy(V)])],
+      [ ]).
+
+         
+operator( load_package(P,V,L),
+[],
+ [sc(vehicle,V, [at(V,L)] =>[at(V,L)]),
+sc(package, P, [at(P,L),waiting(P),certified(P)]=>[at(P,L),loaded(P,V),certified(P)])],
+[]
+).
+ 
+operator( unload_package(P,V,L),
+[],
+ [sc(vehicle,V, [at(V,L)] =>[at(V,L)]),
+sc(package, P, [at(P,L),loaded(P,V),certified(P)]=>[at(P,L),waiting(P),certified(P)])],
+[]
+).
+
+operator( deliver(P,L),
+        [],
+        [sc(package, P, [at(P,L),waiting(P),certified(P)]=>
+          [at(P,L),delivered(P)] )],
+        []
+).
+

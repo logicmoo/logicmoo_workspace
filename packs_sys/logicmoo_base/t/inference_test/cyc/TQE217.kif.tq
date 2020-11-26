@@ -1,0 +1,72 @@
+(note TQE217)
+(subOrganizations UnitedNationsOrganization UN-SecurityCouncil) 
+
+(internationalOrg-MemberCountry UN-SecurityCouncil Russia) 
+
+(internationalOrg-MemberCountry UnitedNationsOrganization Russia) 
+
+(memberStatusInOrganization Russia UN-SecurityCouncil PermanentMember) 
+
+(subOrganizations UnitedNationsOrganization UN-SecurityCouncil) 
+
+(subOrganizations UnitedNationsOrganization InternationalAtomicEnergyAgency) 
+
+(internationalOrg-MemberCountry InternationalAtomicEnergyAgency Russia) 
+
+(query (findall (?RELATION-1 ?RELATION-10 ?RELATION-3 ?RELATION-4 ?RELATION-9 ?WHAT ?WHAT-4 ?WHAT-5)
+(or 
+  (trueFormula 
+    (?RELATION-1 UnitedNationsOrganization Russia)) 
+  (trueFormula 
+    (?RELATION-2 Russia UnitedNationsOrganization)) 
+  (and 
+    (trueFormula 
+      (?RELATION-3 UnitedNationsOrganization ?WHAT)) 
+    (trueFormula 
+      (?RELATION-4 ?WHAT Russia))) 
+  (and 
+    (trueFormula 
+      (?RELATION-5 Russia ?WHAT-1)) 
+    (trueFormula 
+      (?RELATION-6 ?WHAT-1 UnitedNationsOrganization)))
+  (trueFormula 
+    (?RELATION-7 Russia UnitedNationsOrganization ?WHAT-2)) 
+  (trueFormula 
+    (?RELATION-8 UnitedNationsOrganization Russia ?WHAT-3)) 
+  (and 
+    (trueFormula 
+      (?RELATION-9 UnitedNationsOrganization ?WHAT-4)) 
+    (or 
+      (trueFormula 
+        (?RELATION-10 Russia ?WHAT-4 ?WHAT-5)) 
+      (trueFormula 
+        (?RELATION-11 ?WHAT-4 Russia ?WHAT-6)) 
+      (trueFormula 
+        (?RELATION-12 ?WHAT-7 ?WHAT-4 Russia)) 
+      (trueFormula 
+        (?RELATION-13 ?WHAT-8 Russia ?WHAT-4)) 
+      (trueFormula 
+        (?RELATION-14 Russia ?WHAT-9 ?WHAT-4)) 
+      (trueFormula 
+        (?RELATION-15 ?WHAT-4 ?WHAT-10 Russia))))
+  (and 
+    (trueFormula 
+      (?RELATION-16 Russia ?WHAT-11)) 
+    (or 
+      (trueFormula 
+        (?RELATION-17 UnitedNationsOrganization ?WHAT-11 ?WHAT-12)) 
+      (trueFormula 
+        (?RELATION-18 ?WHAT-11 UnitedNationsOrganization ?WHAT-13)) 
+      (trueFormula 
+        (?RELATION-19 ?WHAT-14 ?WHAT-11 UnitedNationsOrganization)) 
+      (trueFormula 
+        (?RELATION-20 ?WHAT-15 UnitedNationsOrganization ?WHAT-11)) 
+      (trueFormula 
+        (?RELATION-21 UnitedNationsOrganization ?WHAT-11 ?WHAT-16)) 
+      (trueFormula 
+        (?RELATION-22 ?WHAT-11 ?WHAT-17 UnitedNationsOrganization)))))))
+			  
+(answer ?? ?? )
+
+(end_of_file)
+

@@ -1,0 +1,265 @@
+************************************************
+         PROLOG+CG, Version 3.0, 2004         
+             (c) Dr. Adil KABBAJ              
+                  Amine Group             
+************************************************
+
+?- loadOntology("C:\Amine\AmineCourant\src\aminePlatform\classes\aminePlatform\samples\ontology\OccamSBLSampleB1.xml").
+yes
+?- consult(["DynamicOntologySample.pcg"]).
+yes
+?- ask([Human :Karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]]<-Actor-[Goal], [Goal]).
+The description is : MORE_SPECIFIC to/than the known
+[Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]
+The description is : MORE_SPECIFIC to/than the known
+[Goal]-Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]
+The description is : MORE_GENERAL to/than the known
+[Goal #0 = [Goal #0] -
+       -Actor->[Human :Karen*k_karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+       -Goal->[Open = [Open #0] -
+       -Object->[Refrigerator :Refrigerator001 = [Refrigerator :Refrigerator001]-Color->[Color :White]],
+       -State_Value->[State_Value :Yes_State_Value]],
+       -Plan->[Plan*p_plan = [Plan #0] -
+       -Actor->[Human :Karen*k_karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+       -RealizedBy->[Propel*p_propel = [Propel #0] -
+         -Actor->[Human :Karen*k_karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+         -Object->[Door #1]<-Door-[Refrigerator :Refrigerator001]]],
+       -outcome->[Failure_Goal_Outcome]] -
+         -outcome->[Failure_Goal_Outcome],
+         -intendedBy->[Plan?p_plan = [Plan #0] -
+       -Actor->[Human :Karen*k_karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+       -RealizedBy->[Propel*p_propel = [Propel #0] -
+         -Actor->[Human :Karen*k_karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+         -Object->[Door #1]<-Door-[Refrigerator :Refrigerator001]]]-RealizedBy->[Propel?p_propel = [Propel #0] -
+         -Actor->[Human :Karen*k_karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+         -Object->[Door #1]<-Door-[Refrigerator :Refrigerator001]],
+         -Actor->[Human :Karen?k_karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]]
+The description is : HAVE_AN_INTERSECTION to/than the known
+[Goal #0] -
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+       -outcome->[Goal_Outcome]
+The description is : EQUAL to/than the known
+[Human :Karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]]<-Actor-[Goal]
+The description is : MORE_GENERAL to/than the known
+[Goal #0 = [Goal #0] -
+       -Plan->[Plan = [Plan #0] -
+       -RealizedBy->[Act = [Act #0] -
+      -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+      -to->[Object]],
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]],
+       -outcome->[Success_Goal_Outcome],
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]] -
+         -Actor->[Human :Mike = [Human :Mike] -
+           -Age->[Age :Grown_Up],
+           -Hair->[Hair]-Color->[Color :Brown],
+           -Eyes->[Eyes]-Color->[Color :Green]],
+         -outcome->[State #3 = [State #0] -
+        -Object->[PhysicalObject],
+        -State_Value->[State_Value :Yes_State_Value],
+        -Actor->[Human :Karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]]]<-outcome-[Goal #2 = [Goal #0] -
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+       -Plan->[Plan = [Plan #0] -
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+       -RealizedBy->[Act = [Act #0] -
+      -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+      -to->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]]],
+       -outcome->[Success_Goal_Outcome]] -
+                                                  -Actor->[Human :Karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+                                                  -intendedBy->[Plan = [Plan #0] -
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+       -RealizedBy->[Act = [Act #0] -
+      -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+      -to->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]]]-RealizedBy->[MTrans = [MTrans #0] -
+         -Object->[Act = [Act #0] -
+      -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+      -to->[Object]],
+         -Actor->[Human :Karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]]-Father->[Human :Mike = [Human :Mike] -
+           -Age->[Age :Grown_Up],
+           -Hair->[Hair]-Color->[Color :Brown],
+           -Eyes->[Eyes]-Color->[Color :Green]]<-to-[MTrans #0]]-motivates->[Goal #0],
+                                                  -achievedBy->[Act #1 = [Act #0] -
+      -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+      -to->[Object]] -
+                                                                       <-achievedBy-[Goal #0],
+                                                                       <-RealizedBy-[Plan = [Plan #0] -
+       -RealizedBy->[Act = [Act #0] -
+      -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+      -to->[Object]],
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]]<-intendedBy-[Goal #0]
+The description is : MORE_GENERAL to/than the known
+[Goal #0] -
+       -Actor->[Human :Karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+       -outcome->[Goal_Outcome]
+The description is : EQUAL to/than the known
+[Human :Karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]]<-Actor-[Goal]
+ yes
+?- ask([Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]<-Actor-[Act], [Human, Act]).
+The description is : MORE_SPECIFIC to/than the known
+[Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]
+The description is : HAVE_AN_INTERSECTION to/than the known
+[Goal]-Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]
+The description is : EQUAL to/than the known
+[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]<-Actor-[Act]
+The description is : MORE_GENERAL to/than the known
+[Act #0] -
+      -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+      -to->[Object]
+The description is : MORE_GENERAL to/than the known
+[Propel #0] -
+         -Actor->[Human :Karen*k_karen = [Human :Karen] -
+            -Age->[Age :Kid],
+            -Hair->[Hair]-Color->[Color :Blond],
+            -Eyes->[Eyes]-Color->[Color :Blue]],
+         -Object->[Door #1]<-Door-[Refrigerator :Refrigerator001]
+The description is : MORE_GENERAL to/than the known
+[Act = [Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]<-Actor-[Act]]
+The description is : MORE_GENERAL to/than the known
+[Plan]-RealizedBy->[Act = [Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]<-Actor-[Act]]
+The description is : MORE_GENERAL to/than the known
+[Goal #0 = [Goal #0] -
+       -outcome->[Goal_Outcome],
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]],
+       -Plan->[Plan = [Plan #0] -
+       -RealizedBy->[Act = [Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]<-Actor-[Act]],
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]]] -
+         -intendedBy->[Plan = [Plan #0] -
+       -RealizedBy->[Act = [Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]<-Actor-[Act]],
+       -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]]-RealizedBy->[Act = [Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]<-Actor-[Act]],
+         -Actor->[Human = [Human #0] -
+        -Age->[Age],
+        -Eyes->[Eyes]-Color->[Color],
+        -Hair->[Hair]-Color->[Color]]
+ yes
+?- 

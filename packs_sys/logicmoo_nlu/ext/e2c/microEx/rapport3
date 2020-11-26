@@ -1,0 +1,6 @@
+$ test :- differents(L), is_list(L).
+
+$ is_list([_|Q) :- frozen_goals, get(C), is_list(Q).
+
+$ test2 :- differents(L), islist(L).
+$ islist([T|Q]) :- get(T), frozen_goals, islist(Q).

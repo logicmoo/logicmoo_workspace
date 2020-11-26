@@ -1,0 +1,44 @@
+;--------------------------------------------------------------------------
+; File     : LCL024-1 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Logic Calculi (Equivalential)
+; Problem  : PYO depends on XGK
+; Version  : [Ove90] axioms.
+; English  : Show that Kalman's shortest single axiom for the 
+;            equivalential calculus, XGK, can be derived from the Meredith 
+;            single axiom PYO.
+
+; Refs     : [Wos88] Wos (1988), Automated Reasoning - 33 Basic Research Pr
+;          : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+; Source   : [Ove90]
+; Names    : Test Problem 16 [Wos88]
+;          : XGK and Equivalential Calculus [Wos88]
+;          : CADE-11 Competition 4 [Ove90]
+;          : THEOREM 4 [LM93]
+
+; Status   : unsatisfiable
+; Rating   : 0.78 v2.2.0, 0.89 v2.1.0, 0.75 v2.0.0
+; Syntax   : Number of clauses    :    3 (   0 non-Horn;   2 unit;   2 RR)
+;            Number of literals   :    5 (   0 equality)
+;            Maximal clause size  :    3 (   1 average)
+;            Number of predicates :    1 (   0 propositional; 1-1 arity)
+;            Number of functors   :    4 (   3 constant; 0-2 arity)
+;            Number of variables  :    5 (   0 singleton)
+;            Maximal term depth   :    5 (   2 average)
+
+; Comments : 
+;          : tptp2X -f kif -t rm_equality:rstfp LCL024-1.p 
+;--------------------------------------------------------------------------
+; condensed_detachment, axiom.
+(or (not (is_a_theorem (equivalent ?A ?B)))
+    (not (is_a_theorem ?A))
+    (is_a_theorem ?B))
+
+; prove_xgk, axiom.
+(or (is_a_theorem (equivalent ?A (equivalent (equivalent ?B (equivalent ?C ?A)) (equivalent ?C ?B)))))
+
+; prove_pyo, conjecture.
+(or (not (is_a_theorem (equivalent (equivalent (equivalent a (equivalent b c)) c) (equivalent b a)))))
+
+;--------------------------------------------------------------------------

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+
+      <view
+            name="PDT Context View"
+            category="org.cs3.pdt"
+            class="org.cs3.pdt.graphicalviews.focusview.FocusView"
+            id="pdt.view.focus">
+      </view>
+      
+      <view
+            name="PDT Global View"
+            category="org.cs3.pdt"
+            class="org.cs3.pdt.graphicalviews.focusview.GlobalView"
+            id="pdt.view.global">
+      </view>
+      
+      <view
+            name="PDT Load Graph"
+            category="org.cs3.pdt"
+            class="org.cs3.pdt.graphicalviews.focusview.DependenciesView"
+            id="pdt.view.dependencies">
+      </view>
+      <view
+            category="org.cs3.pdt"
+            class="org.cs3.pdt.graphicalviews.focusview.LogtalkView"
+            id="pdt.view.logtalk.entity"
+            name="Logtalk Diagrams">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.cs3.pdt.graphicalviews.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.cs3.pdt.common.internal.preferences.PDTCommonPreferencePage"
+            class="org.cs3.pdt.graphicalviews.preferences.MainPreferencePage"
+            id="pdt.y.preferences.MainPreferencePage"
+            name="Context View">
+      </page>
+      <page
+            category="pdt.y.preferences.MainPreferencePage"
+            class="org.cs3.pdt.graphicalviews.preferences.FileAppearancePreferences"
+            id="pdt.y.preferences.FileAppearancePreferences"
+            name="File Appearance">
+      </page>
+      <page
+            category="pdt.y.preferences.MainPreferencePage"
+            class="org.cs3.pdt.graphicalviews.preferences.PredicateAppearancePreferences"
+            id="pdt.y.preferences.PredicateAppearancePreferences"
+            name="Predicate Appearance">
+      </page>
+      <page
+            category="pdt.y.preferences.MainPreferencePage"
+            class="org.cs3.pdt.graphicalviews.preferences.PredicateLayoutPreferences"
+            id="pdt.y.preferences.PredicateLayoutPreferences"
+            name="Predicate Layout">
+      </page>
+      <page
+            category="pdt.y.preferences.MainPreferencePage"
+            class="org.cs3.pdt.graphicalviews.preferences.EdgeAppearancePreferences"
+            id="pdt.y.preferences.EdgeAppearancePreferences"
+            name="Edge Appearance">
+      </page>
+      <page
+            category="pdt.y.preferences.MainPreferencePage"
+            class="org.cs3.pdt.graphicalviews.preferences.SkinsPreferencePage"
+            id="pdt.y.preferences.SkinsPreferencePage"
+            name="Skins">
+      </page>
+   </extension>
+   <extension
+         point="org.cs3.pdt.connector.bootstrapContribution">
+      <fileContribution
+            id="pdt.contextview.fileContribution"
+            path="pl/load.pl">
+         <dependency
+               contribution="pdt.builder.analyzer">
+         </dependency>
+         <dependency
+               contribution="org.cs3.pdt.common.pl.path">
+         </dependency>
+      </fileContribution>
+      <fileSearchPathContribution
+            alias="pdt_contextview_pl"
+            id="pdt.contextview.pl"
+            path="pl/">
+      </fileSearchPathContribution>
+   </extension>
+</plugin>

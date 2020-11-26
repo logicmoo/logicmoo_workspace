@@ -1,0 +1,14 @@
+
+JAVA_HOME=/cygdrive/c/Program\ Files/Java/jdk1.6.0_05
+
+JAVAC=$(JAVA_HOME)/bin/javac
+JAVA=$(JAVA_HOME)/bin/java
+
+ifeq (${MACHINE_TYPE}, win32)
+	CLASSPATH="${REGULUS}/RegulusSpeechServer/runtime/regclient.jar;${REGULUS}/Examples/Toy1Dynamic/java"
+else
+	CLASSPATH=${REGULUS}/RegulusSpeechServer/runtime/regclient.jar:${REGULUS}/Examples/Toy1Dynamic/java
+endif
+
+SICSTUS=sicstus
+

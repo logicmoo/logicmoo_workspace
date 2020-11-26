@@ -1,0 +1,70 @@
+(note TQE209a)
+(agent Y2Stage1-IranMakesAPlan Iran) 
+
+(intermediateGoals Iran 
+  (thereExists ?PIPELINE 
+    (and 
+      (instance ?PIPELINE OilPipeline) 
+      (between ?PIPELINE Azerbaijan Iran) 
+      (importanceOfThingInSet ?PIPELINE 
+        (TheSetOf ?PIPE 
+          (and 
+            (instance ?PIPE OilPipeline) 
+            (pathTerminus ?PIPE AIOCsCaspianOilFields))) VeryHigh))) 
+  (thereExists ?INCREASE 
+    (increases-Generic ?INCREASE Iran oilRevenue))) 
+
+(purposeInEvent Iran Y2Stage1-IranMakesAPlan 
+  (thereExists ?PIPELINE 
+    (and 
+      (instance ?PIPELINE OilPipeline) 
+      (between ?PIPELINE Azerbaijan Iran) 
+      (importanceOfThingInSet ?PIPELINE 
+        (TheSetOf ?PIPE 
+          (and 
+            (instance ?PIPE OilPipeline) 
+            (pathTerminus ?PIPE AIOCsCaspianOilFields))) VeryHigh))))
+
+(reasonForAction Y2Stage1-IranMakesAPlan desires Iran 
+  (not 
+    (thereExists ?PIPELINE 
+      (and 
+        (instance ?PIPELINE OilPipeline) 
+        (between ?PIPELINE CityOfBakuAzerbaijan CityOfCeyhanTurkey) 
+        (importanceOfThingInSet ?PIPELINE 
+          (TheSetOf ?PIPE 
+            (instance ?PIPE OilPipeline)) VeryHigh)))))
+
+(query (findall (?IRANS-MOTIVATION-IS-THAT-IT-BE-TRUE-THAT ?THEIR-UNDERLYING-MOTIVATION-IS-THAT-IT-BE-TRUE-THAT)
+  (exists 
+    (?EVENT) 
+    (and 
+      (agent ?EVENT Iran) 
+      (purposeInEvent Iran ?EVENT ?IRANS-MOTIVATION-IS-THAT-IT-BE-TRUE-THAT)
+      (intermediateGoals Iran ?IRANS-MOTIVATION-IS-THAT-IT-BE-TRUE-THAT
+        ?THEIR-UNDERLYING-MOTIVATION-IS-THAT-IT-BE-TRUE-THAT) 
+      (reasonForAction ?EVENT desires Iran 
+        (not 
+          (exists 
+            (?PIPELINE) 
+            (and 
+              (instance ?PIPELINE OilPipeline) 
+              (between ?PIPELINE CityOfBakuAzerbaijan CityOfCeyhanTurkey) 
+              (importanceOfThingInSet ?PIPELINE 
+                (TheSetOf ?PIPE 
+                  (instance ?PIPE OilPipeline)) VeryHigh)))))))))
+
+(answer (list (thereExists ?PIPELINE 
+                   (and 
+                       (instance ?PIPELINE OilPipeline) 
+                       (between ?PIPELINE Azerbaijan Iran) 
+                       (importanceOfThingInSet ?PIPELINE 
+                           (TheSetOf ?PIPE 
+                               (and 
+                                   (instance ?PIPE OilPipeline) 
+                                   (pathTerminus ?PIPE AIOCsCaspianOilFields)))))) (list (thereExists ?INCREASE 
+                   (increases-Generic ?INCREASE Iran oilRevenue)))))
+
+(end_of_file)
+
+

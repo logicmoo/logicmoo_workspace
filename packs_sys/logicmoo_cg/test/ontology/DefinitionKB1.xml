@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\aminePlatform5\aminePlatform\classes\aminePlatform\samples\ontology\DefinitionKB1.xml</Name>
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>English</Language>
+  </Languages>
+  <MainLanguage>English</MainLanguage>
+  <RelationRoot>Relation</RelationRoot>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Universal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Universal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Relation</Key>
+        </Child>
+        <Child>
+          <Key>Attribute</Key>
+        </Child>
+        <Child>
+          <Key>Object</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Object</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Object</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>TT</Key>
+        </Child>
+        <Child>
+          <Key>QQ</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>QQ</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>QQ</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>QQ1</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@fdd15b</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@fdd15b</Key>
+      <Content>
+        <Description>[QQ]-rr8-&gt;[AA7]</Description>
+      </Content>
+      <Children>
+        <Child>
+          <Key>QQ2</Key>
+        </Child>
+        <Child>
+          <Key>QQ3</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>AA7</Key>
+        </Father>
+        <Father>
+          <Key>QQ</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>QQ3</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>QQ3</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[QQ :super] -
+         -rr6-&gt;[AA5],
+         -rr8-&gt;[AA7]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@fdd15b</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>QQ2</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>QQ2</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[QQ1 :super]-rr8-&gt;[AA7]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>QQ1</Key>
+        </Father>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@fdd15b</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>QQ1</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>QQ1</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[QQ :super]-rr5-&gt;[AA2]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>QQ2</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>QQ</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>TT</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>TT</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>TT1</Key>
+        </Child>
+        <Child>
+          <Key>TT3</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>TT3</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>TT3</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[TT :super]-rr1-&gt;[AA3]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>TT</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>TT1</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>TT1</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[TT :super]-rr2-&gt;[AA1]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>TT2</Key>
+        </Child>
+        <Child>
+          <Key>TT4</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>TT</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>TT4</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>TT4</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[TT1 :super]-rr3-&gt;[AA4]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>TT1</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>TT2</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>TT2</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[TT1 :super]-rr4-&gt;[AA2]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>TT1</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Attribute</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Attribute</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>AA1</Key>
+        </Child>
+        <Child>
+          <Key>AA2</Key>
+        </Child>
+        <Child>
+          <Key>AA3</Key>
+        </Child>
+        <Child>
+          <Key>AA4</Key>
+        </Child>
+        <Child>
+          <Key>AA5</Key>
+        </Child>
+        <Child>
+          <Key>AA6</Key>
+        </Child>
+        <Child>
+          <Key>AA7</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>AA7</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>AA7</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@fdd15b</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>AA6</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>AA6</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>AA5</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>AA5</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>AA4</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>AA4</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>AA3</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>AA3</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>AA2</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>AA2</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>AA1</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>AA1</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>Relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>rr1</Key>
+        </Child>
+        <Child>
+          <Key>rr2</Key>
+        </Child>
+        <Child>
+          <Key>rr3</Key>
+        </Child>
+        <Child>
+          <Key>rr4</Key>
+        </Child>
+        <Child>
+          <Key>rr5</Key>
+        </Child>
+        <Child>
+          <Key>rr6</Key>
+        </Child>
+        <Child>
+          <Key>rr7</Key>
+        </Child>
+        <Child>
+          <Key>rr8</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rr8</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rr8</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rr7</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rr7</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rr6</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rr6</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rr5</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rr5</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rr4</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rr4</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rr3</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rr3</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rr2</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rr2</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rr1</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rr1</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

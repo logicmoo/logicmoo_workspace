@@ -1,0 +1,55 @@
+(note TQB52)
+
+(implies 
+  (and 
+    (instance ?ACT FoundingAnOrganization) 
+    (outputsCreated ?ACT ?ORG) 
+    (instance ?ORG Coalition-International) 
+    (agent ?ACT ?COUNTRY1) 
+    (instance ?COUNTRY1 Country) 
+    (internationalOrg-MemberCountry ?ORG ?COUNTRY2) 
+    (contains ?AREA ?COUNTRY2) 
+    (instance ?AREA GeoculturalRegion)) 
+  (increasesCausally ?ACT 
+    (powerInRegion-Geopolitical ?COUNTRY1 ?AREA HighToVeryHigh) likelihood))
+
+(contains MiddleEast-Region Iran) 
+(instance MiddleEast-Region GeoculturalRegion) 
+(instance Iran Country) 
+
+(implies 
+  (and 
+    (instance ?ORG Coalition-International) 
+    (groupMembers ?ORG ?MEM)) 
+  (internationalOrg-MemberCountry ?ORG ?MEM)) 
+
+(implies 
+  (and 
+    (instance ?ORG Coalition-International) 
+    (instance ?COUNTRY Country) 
+    (outputsCreated ?ACT ?ORG) 
+    (agent ?ACT ?COUNTRY) 
+    (instance ?ACT FoundingAnOrganization)) 
+  (internationalOrg-MemberCountry ?ORG ?COUNTRY)) 
+
+(query (findall ?PROP
+  (implies 
+    (and 
+      (agent ?ACT Iran) 
+      (instance ?ACT FoundingAnOrganization) 
+      (instance ?ORG Coalition-International) 
+      (considersAsEnemy ?ORG GulfCooperationCouncil) 
+      (outputsCreated ?ACT ?ORG)) 
+    (or 
+      (and 
+        (desires Iran ?PROP) 
+        (increasesCausally ?ACT ?PROP likelihood)) 
+      (and 
+        (desires Iran (not ?PROP)) 
+        (decreasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list 
+  (powerInRegion-Geopolitical Iran MiddleEast-Region HighToVeryHigh)))
+
+(end_of_file)
+

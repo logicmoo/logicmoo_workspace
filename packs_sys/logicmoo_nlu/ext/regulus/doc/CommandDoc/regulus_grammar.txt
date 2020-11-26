@@ -1,0 +1,2 @@
+Points to the Regulus file, or list of Regulus files, that constitute
+the main grammar.

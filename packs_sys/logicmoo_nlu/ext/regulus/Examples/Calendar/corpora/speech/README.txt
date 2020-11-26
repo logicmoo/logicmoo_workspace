@@ -1,0 +1,1 @@
+This directory is for holding the recorded wavfiles. One timestamped sub-directory should be created for each session.

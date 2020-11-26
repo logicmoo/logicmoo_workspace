@@ -1,0 +1,74 @@
+resolveur(_Deplacements) :-
+	configuration_initiale(_Ci),
+	configuration_finale(_Cf),	
+	resoudre(_Ci, _Cf, _Deplacements).
+
+resoudre(_Ci, _Cf, _Deplacements) :-
+	resoudre(_Ci, _Cf, [_Ci], _Deplacements).
+
+resoudre(_Config, _Config, _, []).
+
+resoudre(_Config1, _Config2, _Deja_Generees, [_Deplacement | _Deplacements]) :-
+	trouver_Deplacement_legal(_Deplacement, _Config1),
+	generer(_Deplacement, _Config1, _Config),
+	not(membre(_Config, _Deja_Generees)),
+	resoudre(_Config, _Config2, [_Config | _Deja_Generees], _Deplacements),
+	!.	
+
+trouver_Deplacement_legal(transporter(_Origine, _Destination), _Config) :-
+	num(_Origine),
+	num(_Destination),
+	eq(_Origine, _Destination, false),
+	not(contraintes(transporter(_Origine, _Destination), _Config)).
+
+generer(transporter(_Origine, _Destination), _Config1, _Config2) :-
+	oter_premier(_Config1, _Origine, _Premier, _Config3),
+	ajouter_premier(_Config3, _Destination, _Premier, _Config2).
+
+contraintes(transporter(_Origine, _Destination), _Configuration) :-
+	contenu(_Configuration, _Origine, []).
+contraintes(transporter(_Origine, _Destination), _Configuration) :-
+	contenu(_Configuration, _Origine, [_X | _]),	
+	contenu(_Configuration, _Destination, [_Y | _]),
+	sup(_X, _Y, true).
+
+configuration_initiale([[1,2,3,4], [], []]).
+configuration_finale([[], [], [1,2,3,4]]).
+
+num(1).
+num(2).
+num(3).
+
+contenu([_X, _, _], 1, _X).
+contenu([_, _X, _], 2, _X).
+contenu([_, _, _X], 3, _X).
+
+oter_premier(_Configuration, _N, _Premier, _Configuration1) :-
+	contenu(_Configuration, _N, [_Premier | _Suite]),
+	remplacer(_Configuration, _N, _Suite, _Configuration1).
+
+ajouter_premier(_Configuration, _N, _Premier, _Configuration1) :-
+	contenu(_Configuration, _N, _Liste),
+	conc([_Premier], _Liste, _Liste1),
+	remplacer(_Configuration, _N, _Liste1, _Configuration1).
+
+remplacer([_, _T2, _T3], 1, _S, _T) :-
+	conc([_S], [_T2, _T3], _T).
+remplacer([_T1, _, _T3], 2, _S, _T) :-
+	conc([_T1], [_S], _T2),
+	conc(_T2, [_T3], _T).
+remplacer([_T1, _T2, _], 3, _S, _T) :-
+	conc([_T1, _T2], [_S], _T).
+
+membre(_X,[_X|_Y]).
+membre(_X,[_Y|_Z]) :- membre(_X,_Z).
+
+conc([],_A,_A).
+conc([_X|_L],_Y,[_X|_Q]) :- conc(_L,_Y,_Q).
+
+sup(_X, _Y, _Z) :- _Z is _X > _Y.
+inf(_X, _Y, _Z) :- _Z is _X < _Y.
+eq(_X, _Y, _Z) :- _Z is _X = _Y.
+not(_P) :- _P, !, fail.
+not(_P).
+

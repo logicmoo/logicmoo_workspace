@@ -1,0 +1,5 @@
+(note  "Canonical Test:  Exists x [  A(x) <=> B(x) ]")
+
+(canonicalize (thereExists ?X (equiv (Pred1 ?X) (Pred2 ?X))))
+
+

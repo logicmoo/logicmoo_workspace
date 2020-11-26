@@ -1,0 +1,19 @@
+(note "What is Fido?")
+
+(forAll ?X (implies (instance ?X Dog) (instance ?X Mammal))) 
+
+(instance Fido Dog)
+
+(query (findall ?What (instance Fido ?What)))
+
+(answer Dog)
+(answer Mammal)
+
+
+(end_of_file)
+
+
+
+
+
+

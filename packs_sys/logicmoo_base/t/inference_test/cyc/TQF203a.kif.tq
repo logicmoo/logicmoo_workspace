@@ -1,0 +1,21 @@
+(note TQF203a)
+
+(toLocation Y2Stage5-ThirteenthMEUEntersGulfOfOman GulfOfOman) 
+
+(instance Y2Stage5-ThirteenthMEUEntersGulfOfOman MilitaryEvent) 
+
+(existant Y2Stage5-ThirteenthMEUEntersGulfOfOman 
+ (DateInSituationFn CalendarDay 51 Y2ScenarioConflict)) 
+
+(query (findall ?ACT (and 
+   (instance ?ACT MilitaryEvent) 
+   (happensOnDate ?ACT 
+       (DateInSituationFn CalendarDay 51 Y2ScenarioConflict)) 
+   (or 
+       (toLocation ?ACT GulfOfOman) 
+       (fromLocation ?ACT GulfOfOman) 
+       (eventOccursAt ?ACT GulfOfOman)))))
+
+(answer ThirteenthMEUEntersGulfOfOman)
+
+(end_of_file)

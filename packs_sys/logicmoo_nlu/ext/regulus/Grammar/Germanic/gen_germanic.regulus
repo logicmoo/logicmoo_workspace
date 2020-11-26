@@ -1,0 +1,475 @@
+feature_value_space(tptypes, [[dcl, imp, ynq, none]]).
+feature_value_space(toptypes, [[user_command, system_response]]).
+%headtypes refers to whether the language moves phrases around the verb so you can have SOV or OVS or if it's strict SVO like English, where YNQs are formed only with Ts (auxes)
+feature_value_space(headtypes, [[germanic, english]]).
+feature_value_space(yesno, [[y, n]]).
+feature_value_space(alignment, [[left,right]]).
+feature_value_space(agr_vals, [[1, 2, 3], [sing, plur]]).
+feature_value_space(gender_vals, [[masc, fem, neu, none]]).
+feature_value_space(case_value, [[nom, acc, dat, gen, none]]).
+feature_value_space(vforms, [[base, finite, participle, subjunctive, inf, imp]]).
+feature_value_space(subcat_type, 
+        [[nx0v,                   % Intransitive 
+		      nx0vnx1,                % Simple transitive
+		      nx0vnx1nx2,              % Ditransitive
+		      nx0vvx1_modal,           %Aux
+		      nx0vcx                  % V taking CP complement 
+		     ]]).
+
+feature_value_space(nforms, [[normal, expletive]]).
+feature_value_space(n_type, [[agent, action, patient, benefactor, null]]).
+feature_value_space(definiteness, [[def, indef]]).
+feature_value_space(det_types, [[def, indef, numeric, pronoun, null]]).
+feature_value_space(post_mod_types, [[nominal, verbal, ellipsis]]).
+feature_value_space(gap_types, [[null, subj_gap, obj_gap, indir_obj_gap, pp_gap, adjp_gap, advp_gap]]).
+feature_value_space(vgap_types, [[null, v_gap, t_gap]]).
+feature_value_space(cp_types, [[topic, rel, inv, fin, inf]]).
+feature_value_space(adv_types, [[temp, manner, none]]).
+feature_value_space(pptypes, [[null, loc, gen, dat ]]).
+
+%Specifies if verb is in 2nd position, otherwise verb final.
+feature(vfinal, yesno).
+%lexical_feature_default(vfinal,n).
+
+feature(tptype, tptypes).
+lexical_feature_default(tptype, none).
+
+feature(post_mods, post_mod_types).
+
+feature(passive, yesno).
+lexical_feature_default(passive, n).
+
+feature(toptype, toptypes).
+
+feature(headtype, headtypes).
+
+%Specifies gender. Default is none for langs like English
+feature(gender, gender_vals).
+lexical_feature_default(gender ,none).
+
+feature(takes_det_type, det_types).
+
+
+feature(inv, yesno).
+%lexical_feature_default(inv, n).
+
+feature(takes_post_mods, yesno).
+feature(def, definiteness).
+feature(det_type, det_types).
+feature(agr, agr_vals).
+feature(case, case_value).
+%lexical_feature_default(case, none).
+
+feature(vform, vforms).
+
+%Specifies verb form. Default case is base form.
+feature(vp_vform, vforms).
+lexical_feature_default(vp_vform, base).
+
+feature(nform, nforms).
+feature(subj_nform, nforms).
+lexical_feature_default(subj_nform, normal).
+
+feature(subj_case, case_value).
+lexical_feature_default(subj_case, nom).
+
+feature(obj_case, case_value).
+lexical_feature_default(obj_case, acc).
+
+feature(indirobj_case, case_value).
+lexical_feature_default(indirobj_case, none).
+
+feature(sem_n_type, n_type).
+
+feature(gapsin, gap_types).
+feature(gapsout, gap_types).
+feature(v_gapin, vgap_types).
+feature(v_gapout, vgap_types).
+
+feature(cp_type, cp_types).
+
+feature(subcat, subcat_type).
+feature(subj_sem_n_type, n_type).
+
+feature(obj_sem_n_type, n_type).
+lexical_feature_default(obj_sem_n_type, null).
+
+feature(indirobj_sem_n_type, n_type).
+lexical_feature_default(indirobj_sem_n_type, null).
+
+feature(sem_n_type, n_type).
+lexical_feature_default(sem_n_type, null).
+
+feature(advp_align, alignment).
+
+feature(pp_type, pptypes).
+feature(takes_pp_type, pptypes).
+feature(takes_dp_type, n_type).
+
+%GAP MANAGEMENT
+%Need to specify more info for Prolog to know which Cbar it needs.
+feature(has_v_gap, yesno).
+
+feature(has_subj_gap, yesno).
+feature(has_obj_gap, yesno).
+feature(has_indirobj_gap,yesno).
+
+%ADVERBS
+feature(advtype, adv_types).
+
+feature(takes_adv_type, adv_types).
+lexical_feature_default(takes_adv_type, none).
+
+
+feature_instantiation_schedule(
+	[
+	[toptype, tptype],
+  [headtype],
+	[gapsin],
+	[gapsout],
+	[v_gapin],
+	[v_gapout],
+	[has_v_gap],
+	[has_subj_gap],
+	[has_obj_gap],
+	[has_indirobj_gap],
+	[advp_align],
+	[vform],
+	[vp_vform],
+	[advtype],
+	[takes_det_type],
+	[vfinal],
+	[nform],
+	[def],
+	[det_type],
+	[gender],
+	[post_mods],
+	[takes_post_mods],
+	[case],
+	[subcat],
+	[inv],
+	[subj_sem_n_type],
+	[cp_type],
+  [pp_type],
+  [takes_pp_type],
+  [takes_dp_type],
+	[subj_nform],
+	[nform],
+	[subj_case],
+	[subj_sem_n_type],
+	[obj_case],
+	[obj_sem_n_type],
+	[indirobj_case],
+	[indirobj_sem_n_type],
+	[sem_n_type],
+	[passive],
+	[agr],
+  [takes_adv_type]
+  /*
+	[takes_temp_advp],
+	[takes_manner_advp]
+  */
+	]).
+	
+
+category('.MAIN', [gsem]).
+category(top, [sem, toptype]).
+category(utterance, [sem]).
+
+category(tp, [sem, tptype, vform, agr, inv, gapsin, gapsout, v_gapin, v_gapout, vfinal, subj_sem_n_type, subj_case, obj_case, obj_sem_n_type, indirobj_case, indirobj_sem_n_type, subcat, takes_adv_type, advp_align, has_v_gap, has_subj_gap, has_obj_gap, has_indirobj_gap, takes_pp_type]).
+category(tbar, [sem, tptype, vform, agr, inv, gapsin, gapsout,v_gapin, v_gapout, vfinal, subj_sem_n_type, subj_case, obj_case, obj_sem_n_type, indirobj_case, indirobj_sem_n_type, subcat, takes_adv_type,advp_align, has_v_gap, has_subj_gap, has_obj_gap, has_indirobj_gap, takes_pp_type]).
+category(t, [sem, tptype, vform, inv, vfinal]).
+
+category(dp,[sem, agr, case, gender, def, det_type, nform, sem_n_type,gapsin, gapsout, has_subj_gap, has_obj_gap, has_indirobj_gap]).
+category(dbar,[sem, agr, case, gender, def, det_type, nform, sem_n_type,gapsin, gapsout]).
+category(d,[sem, agr, case, gender, def, det_type]).
+category(np, [sem, agr, case, gender, def, nform, sem_n_type,gapsin, gapsout, takes_det_type, takes_post_mods]).
+category(nbar, [sem, agr, case, gender, def, nform, sem_n_type,gapsin, gapsout, takes_post_mods, takes_det_type]).
+category(n, [sem, agr, case, gender, def, nform, sem_n_type, takes_det_type]).
+
+category(np_gap, []).
+category(v_gap, []).
+
+
+category(vp, [sem, agr, inv, vform, passive, takes_post_mods, gapsin, gapsout, v_gapin, v_gapout, vfinal, subj_case, subj_sem_n_type, obj_case, obj_sem_n_type, indirobj_case, indirobj_sem_n_type, takes_adv_type,advp_align, obj_case,subcat, has_v_gap, has_subj_gap, has_obj_gap, has_indirobj_gap, takes_pp_type]).
+%category(post_mods, [sem, post_mod_type, sem_n_type, takes_gap_mod, n_of_mod_type, takes_partitive, n_appositive_mod_type, takes_adv_type, gap, @pp_feats, gapsin, gapsout, relagr, v_gapin, v_gapout]).
+category(vbar, [sem, agr, subcat, inv, vform, passive, vp_vform, subj_case, subj_sem_n_type, obj_case, obj_sem_n_type,indirobj_case, indirobj_sem_n_type, vfinal, gapsout, gapsin, v_gapin, v_gapout, takes_adv_type, advp_align, has_v_gap, has_subj_gap, has_obj_gap, has_indirobj_gap, takes_pp_type]).
+category(v, [sem, agr, subcat, vform, vfinal, passive, subj_sem_n_type, obj_sem_n_type, subj_case, obj_case, indirobj_case, indirobj_sem_n_type, v_gapin, v_gapout, takes_adv_type, advp_align, inv, has_v_gap, takes_pp_type]).
+
+category(pp, [sem, pp_type, gapsin, gapsout]).
+category(pbar,[sem, pp_type]). 
+category(p,[sem, pp_type, takes_dp_type,obj_case]).
+
+category(cp,[sem, headtype, cp_type, vfinal, vform, agr, tptype, inv, v_gapin, v_gapout, has_v_gap, has_subj_gap, has_obj_gap, has_indirobj_gap]).
+category(cbar,[sem, headtype, agr, cp_type, tptype, gapsin, gapsout, v_gapin, v_gapout, vform, vfinal, subj_case, subj_sem_n_type, obj_case, indirobj_sem_n_type,indirobj_case,obj_sem_n_type,subcat, tptype, inv, takes_adv_type, advp_align, has_v_gap, has_subj_gap, has_obj_gap, has_indirobj_gap, takes_pp_type]).
+
+category(c, [sem]).
+
+category(advp, [sem, advtype, takes_adv_type, advp_align, gapsin, gapsout]).
+category(adv, [sem, advtype, takes_adv_type, gapsin, gapsout]).
+
+
+top_level_category('.MAIN').
+
+%-----------------------------------------------------------------------------------------
+
+%General Grammar Macros
+
+macro(subj_feats_for_vp([SubjType, NForm]),
+      [nform=NForm, subj_sem_n_type=SubjType]).
+
+macro(subj_feats_for_dp([SubjType, NForm]),
+      [nform=NForm, sem_n_type=SubjType, case=nom]).
+
+macro(v_feats_for_vp([Agr, VForm]),
+      [agr=Agr, vform=VForm]).
+
+macro(vbar_feats_for_vp([Subj, V]),
+      [@subj_feats_for_vp(Subj), @v_feats_for_vp(V)]).
+     
+
+%TOP RULES-------------------------------------------------------------------------------
+
+% Formal top rule, needed to define top-level Nuance rule
+'.MAIN':[gsem=[value=Sem]] -->
+           top:[sem=Sem, toptype=user_command].
+
+top:[sem=Utt] -->
+	utterance:[sem=Utt].
+
+/*
+UTTERANCE RULES ARE NOW DEFINED IN AN EXTERNAL FILE ../German/german.regulus, ../English/english.regulus, and so forth. 
+
+THIS WILL ALLOW NEW LANGUAGES TO BE CONFIGURED AND ADDED WITHOUT MAKING A MESS IN THE GRAMMAR. THIS FILE MUST BE INCLUDED IN CONFIG. 
+
+*/
+
+%GAP RULES ---------------------------------------------------------------------------------------
+
+% Simplify gaps to allow only one gap per clause - this to help compilation to CFG form
+/*
+% np_Gap - PSA rule
+% e.g. what do the fixed sensors say the pressure is []?
+np:[sem= @np_gap_sem, wh=n, nform=normal, sem_n_type=Type, conj=n, takes_post_mods=y,
+    n_of_mod_type=none, takes_partitive=n, n_appositive_mod_type=none, @takes_all_pps, pronoun=n, 
+    gapsin=np_gap, gapsout=null, syn_type=special] --> [].
+% pp_Gap - PSA rule
+% e.g. where are you []?
+pp:[sem= @pp_gap_sem, wh=n, sc=n, gap=y, sem_pp_type=Type, gapsin=pp_gap, gapsout=null] --> [].
+
+% adjp_Gap - Med rule
+% e.g. how severe are the headaches []?
+adjp:[sem= @pp_gap_sem, can_be_nbar=n, wh=n, gap=y, adjpos=pred, subj_sem_n_type=Type, gapsin=adjp_gap, gapsout=null] --> [].
+*/
+% advp_Gap - Med rule
+% e.g. how often do you have headaches []?
+advp:[sem= @advp_gap_sem, gapsin=advp_gap, gapsout=null] --> [].
+
+
+%v_gap
+v:[sem=@v_gap_sem, v_gapin=v_gap, v_gapout=null, obj_case=acc\/dat\/none, has_v_gap=y] --> [].
+
+%dp_gap
+%for topicalization with DP. This is obligatory in German, even for subj. This lets sub stay in the correct position relative to the main V, but we can also use this to topicalize in English or Swedish because it isn't dependent on a Vgap. Swedish needs the Vgap, but English needs no Vgap.
+
+dp:[sem=@dp_gap_sem, gapsin=subj_gap, gapsout=null, case=nom\/none, has_subj_gap=y] --> [].
+dp:[sem=@dp_gap_sem, gapsin=obj_gap, gapsout=null, case=acc\/dat\/none, has_obj_gap=y] --> [].
+dp:[sem=@dp_gap_sem, gapsin=indir_obj_gap, gapsout=null, case=acc\/dat\/none, has_indirobj_gap=y] --> [].
+	
+%CP RULES ----------------------------------------------------------------------------------------
+ 
+
+%inversion for V-first question (Ger, Swe)
+cp: [sem=Sem, headtype=HeadType, cp_type=inv, tptype=ynq, vform=finite, vfinal=V2, inv=y, has_v_gap=y, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n, agr=Agr] -->
+	cbar: [sem=Sem, headtype=HeadType, cp_type=inv, tptype=ynq, agr=Agr, v_gapin=v_gap, v_gapout=null, gapsin=null, gapsout=GapsOut, vfinal=V2, vform=finite, subj_case=SubjCase, subj_sem_n_type=SubjSem, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, inv=y, has_v_gap=y, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n].
+
+%inversion for Imperative
+cp: [sem=Sem, headtype=HeadType, cp_type=inv, tptype=imp, vform=imp, vfinal=V2, agr=Agr, inv=y,has_v_gap=y, has_subj_gap=y, has_obj_gap=n, has_indirobj_gap=n, has_v_gap=y] -->
+	cbar: [sem=Sem, headtype=HeadType, cp_type=inv, tptype=imp, v_gapin=v_gap, v_gapout=null, gapsin=subj_gap, gapsout=null, vfinal=V2, vform=imp, subj_case=SubjCase, subj_sem_n_type=SubSem, agr=Agr, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, inv=y,has_v_gap=y, has_subj_gap=y, has_obj_gap=n, has_indirobj_gap=n].
+
+%Subject raised
+cp: [sem=@cptopic_sem(XP, TP), headtype=HeadType, cp_type=topic, vfinal=V2, agr=Agr, tptype=dcl, inv=n, has_subj_gap=y, has_obj_gap=n, has_indirobj_gap=n, has_v_gap=VGap, v_gapin=VGapIn, v_gapout=VGapOut] -->
+	dp:[sem=XP, agr=Agr, def=Def, det_type=Det, nform=normal, sem_n_type=SubjSem, case=SubjCase, gender=Gender, gapsin=subj_gap, gapsout=subj_gap, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n],
+	cbar: [sem=TP, headtype=HeadType, cp_type=topic, tptype=dcl, v_gapin=VGapIn, v_gapout=VGapOut, gapsin=subj_gap, gapsout=null, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjSem, agr=Agr, inv=n, has_v_gap=VGap, has_subj_gap=y, has_obj_gap=n, has_indirobj_gap=n].
+
+%object raised
+cp: [sem=@cptopic_sem(XP, TP), headtype=HeadType, cp_type=topic, vfinal=V2, tptype=dcl, inv=n, has_subj_gap=n, has_obj_gap=y, has_indirobj_gap=n, has_v_gap=VGap] -->
+	dp:[sem=XP, def=Def, det_type=Det, nform=normal, sem_n_type=ObjSem, case=ObjCase, gender=Gender, gapsin=obj_gap, gapsout=obj_gap, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n],
+	cbar: [sem=TP,headtype=HeadType, cp_type=topic, tptype=dcl, v_gapin=v_gap, v_gapout=null, gapsin=obj_gap, gapsout=null, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjSem, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, inv=n, has_v_gap=VGap, has_subj_gap=n, has_obj_gap=y, has_indirobj_gap=n].
+
+%indirect object raised
+cp: [sem=@cptopic_sem(XP, TP), headtype=HeadType, cp_type=topic, vfinal=V2, tptype=dcl, inv=n, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=y, has_v_gap=VGap] -->
+	dp:[sem=XP, def=Def, det_type=Det, nform=normal, sem_n_type=IndirObjSem, case=IndirObjCase, gender=Gender, gapsin=indir_obj_gap, gapsout=indir_obj_gap, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n],
+	cbar: [sem=TP, headtype=HeadType, cp_type=topic, tptype=dcl, v_gapin=v_gap, v_gapout=null, gapsin=GapsIn, gapsout=GapsOut, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjSem, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, inv=n, has_v_gap=VGap, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=y].
+	
+%topicalized adverb phrase	
+cp: [sem=@cptopic_sem(XP, TP), headtype=HeadType, cp_type=topic, vfinal=V2, tptype=dcl, inv=n, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n, has_v_gap=Vgap] -->
+	advp:[sem=XP, advtype=TakesAdv, takes_adv_type=AdvType, advp_align=AdvAlign, gapsin=advp_gap, gapsout=advp_gap],
+	cbar: [sem=TP, cp_type=topic, tptype=dcl, v_gapin=v_gap, v_gapout=null, gapsin=advp_gap, gapsout=advp_gap, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjSem, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_sem_n_type=IndirObjSem,takes_adv_type=TakesAdv, advp_align=AdvAlign,inv=n, has_v_gap=Vgap, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n].	
+
+
+%CBAR RULES ---------------------------------------------------------------------------------------
+
+%THESE CBARS ARE FOR RAISED VERBS IN GERMAN-TYPE HEADS---------------------------------------------
+%PRIMARILY SELECTED BY has_v_gap=y
+%Inverted V for YNQ
+cbar:[sem=@cptopic_sem(V, TP), cp_type=inv, headtype=germanic, tptype=ynq, v_gapin=v_gap, v_gapout=null, gapsin=GapsIn, gapsout=GapsOut, vform=finite, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, agr=Agr, takes_adv_type=TakesAdv, advp_align=AdvAlign,inv=y, has_v_gap=y, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n, takes_pp_type=PPType] -->
+	v:[sem=V, agr=Agr, vfinal=V2, subcat=Subcat, vform=finite, subj_sem_n_type=SubjType, obj_case=Objcase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem,v_gapin=v_gap, v_gapout=null, subcat=Subcat, takes_adv_type=TakesAdv, advp_align=AdvAlign, inv=y, has_v_gap=n,takes_pp_type=PPType],
+	tp: [sem=TP, tptype=Type, vform=finite, agr=Agr, v_gapin=Vgapin, v_gapout=Vgapout, gapsin=GapsIn, gapsout=GapsOut, vfinal=V2, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, takes_adv_type=TakesAdv,advp_align=AdvAlign, inv=y, has_v_gap=VGap, has_subj_gap=n, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType].
+
+%Inverted V for IMP
+cbar:[sem=@np_vp_imperative_sem(V, TP), headtype=HeadType, cp_type=inv, tptype=imp, v_gapin=v_gap, v_gapout=null, gapsin=GapsIn, gapsout=GapsOut, vform=imp, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, agr=Agr, takes_adv_type=TakesAdv,advp_align=AdvAlign, inv=y, has_v_gap=y, has_subj_gap=y, has_obj_gap=n, has_indirobj_gap=n, takes_pp_type=PPType] -->
+	v:[sem=V, agr=Agr, vfinal=V2, subcat=Subcat, vform=imp, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem,v_gapin=v_gap, v_gapout=null, subcat=Subcat, takes_adv_type=TakesAdv, advp_align=AdvAlign, inv=y, has_v_gap=n, takes_pp_type=PPType],
+	tp: [sem=TP, tptype=Type, vform=VForm, agr=Agr, v_gapin=Vgapin, v_gapout=Vgapout, gapsin=subj_gap, gapsout=null, vfinal=V2, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, takes_adv_type=TakesAdv,advp_align=AdvAlign, inv=y, has_v_gap=y, has_subj_gap=y, has_obj_gap=n, has_indirobj_gap=n, takes_pp_type=PPType].
+/*
+%for dcl sentences WITH MODAL in verb raised CP (German/Swe)
+cbar:[sem=@cptopic_sem(V, TP), cp_type=topic, tptype=dcl, v_gapin=v_gap, v_gapout=null, gapsin=GapsIn, gapsout=GapsOut, vform=finite, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, agr=Agr, takes_adv_type=TakesAdv,advp_align=AdvAlign, inv=n, has_v_gap=y, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType] -->
+	v:[sem=V, agr=Agr, vfinal=V2, subcat=nx0vvx1_modal, vform=finite, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=Objcase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem,v_gapin=v_gap, v_gapout=null, subcat=Subcat, takes_adv_type=TakesAdv, advp_align=AdvAlign, inv=n, has_v_gap=n, takes_pp_type=PPType],
+	tp: [sem=TP, tptype=dcl, vform=finite, agr=Agr, inv=n, v_gapin=v_gap, v_gapout=Vgapout, gapsin=GapsIn, gapsout=GapsOut, vfinal=V2, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, takes_adv_type=TakesAdv, advp_align=AdvAlign,inv=n, has_v_gap=y, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGa, takes_pp_type=PPType].
+*/
+%THESE CBARS ARE FOR NON-VERB RAISING HEADS (ENGLISH)-------------------------------------------------
+%for dcl sentences
+cbar:[sem=TP, headtype=english, cp_type=topic, tptype=dcl,gapsin=GapsIn, gapsout=GapsOut, vform=finite, vfinal=VFinal, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, agr=Agr,inv=n, has_v_gap=n, has_subj_gap=y, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap] -->
+	tp: [sem=TP, tptype=dcl, vform=finite, agr=Agr, inv=n, v_gapin=Vgapin, v_gapout=VGapOut, gapsin=GapsIn, gapsout=GapsOut, vfinal=V2, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, takes_adv_type=TakesAdv, advp_align=AdvAlign, inv=n, has_v_gap=n, has_subj_gap=y, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType].
+
+%for dcl sentences in verb raised CP (German/Swe)
+cbar:[sem=@cptopic_sem(V, TP), headtype=germanic, cp_type=topic, tptype=dcl, v_gapin=v_gap, v_gapout=null, gapsin=GapsIn, gapsout=GapsOut, vform=finite, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, agr=Agr, takes_adv_type=TakesAdv,advp_align=AdvAlign, inv=n,has_v_gap=y, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType] -->
+	v:[sem=V, agr=Agr, vfinal=V2, subcat=Subcat, vform=finite, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=Objcase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem,v_gapin=v_gap, v_gapout=null, subcat=Subcat, takes_adv_type=TakesAdv, advp_align=AdvAlign, inv=n, has_v_gap=n, takes_pp_type=PPType],
+	tp: [sem=TP, tptype=dcl, vform=finite, agr=Agr, inv=n, v_gapin=Vgapin, v_gapout=Vgapout, gapsin=GapsIn, gapsout=GapsOut, vfinal=V2, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, takes_adv_type=TakesAdv, advp_align=AdvAlign,inv=n, has_v_gap=y, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGa, takes_pp_type=PPType].
+
+
+
+
+
+%TP RULES ----------------------------------------------------------------------------------------
+
+
+
+%This is the generic TP which is at the core of all sentences.
+
+tp:[sem=@tp_sem(DP,Tbar), tptype=Type, vform=VForm, agr=Agr, inv=Inv, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, vfinal=V2, vform=Vform, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat,takes_adv_type=TakesAdv,advp_align=AdvAlign, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType
+  ] -->
+   	dp:[sem=DP, nform=NForm, sem_n_type=SubjType,
+   	    agr=Agr, def=Def, case=SubjCase,
+   	    det_type=DetType,
+   	    gender=Gender,
+   	    gapsin=GapsIn, gapsout=GapsOut,
+   	    has_subj_gap=SubjGap
+	   ],
+	tbar:[sem=Tbar, tptype=Type, vform=VForm, agr=Agr, inv=Inv, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, vfinal=V2, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, takes_adv_type=TakesAdv, advp_align=AdvAlign,has_v_gap=Vgap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType
+	     ].
+
+%Tbar RULES ---------------------------------------------------------------------------------------
+
+tbar:[sem=VP, tptype=Type, vform=VForm, agr=Agr, inv=Inv, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, vfinal=V2, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, takes_adv_type=TakesAdv,advp_align=AdvAlign, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType] -->
+%	t:[sem=T, tptype=Type],
+	vp: [sem=VP, agr=Agr, inv=Inv, vform=Vform, passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout,vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat,takes_adv_type=TakesAdv, advp_align=AdvAlign, takes_pp_type=PPType].
+
+
+%DP RULES -----------------------------------------------------------------------------------------
+
+dp:[sem=@dp_sem(Dbar), agr=Agr, def=Def, det_type=Det, nform=normal, sem_n_type=SemType, case=Case, gender=Gender, gapsin=GapsIn, gapsout=GapsOut, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap] -->
+	dbar:[sem=Dbar, agr=Agr, def=Def, det_type=Det, nform=NForm, sem_n_type=SemType, case=Case, gender=Gender, gapsin=GapsIn, gapsout=GapsOut].
+
+
+%Dbar RULES ---------------------------------------------------------------------------------------
+
+
+dbar:[sem=@dbar_sem(Det, NP), agr=Agr, def=Def, det_type=DetType, nform=Nform, sem_n_type=Sem, case=Case, gender=Gender, gapsin=GapsIn, gapsout=GapsOut, sem_n_type=SemType] -->
+	d:[sem=Det, agr=Agr, case=Case, gender=Gender, def=Def, det_type=DetType],
+	np:[sem=NP, agr=Agr, case=Case, gender=Gender, def=Def, takes_det_type=DetType, nform=normal, sem_n_type=SemType, gapsin=GapsIn, gapsout=GapsOut, takes_post_mods=PM].
+
+dbar:[sem=@pronoun_sem(Pron), agr=Agr, def=Def, det_type=pronoun, nform=Nform, sem_n_type=Sem, case=Case, gender=Gender, gapsin=GapsIn, gapsout=GapsOut, sem_n_type=SemType] -->
+	d:[sem=Pron, agr=Agr, case=Case, gender=Gender, def=Def, det_type=pronoun].
+
+dbar:[sem=@bare_dbar_sem(NP), agr=Agr, def=Def, det_type=null, nform=Nform, sem_n_type=Sem, case=Case, gender=Gender, gapsin=GapsIn, gapsout=GapsOut, sem_n_type=SemType] -->
+	np:[sem=NP, agr=Agr, case=Case, gender=Gender, def=Def, takes_det_type=null, nform=normal, sem_n_type=SemType, gapsin=GapsIn, gapsout=GapsOut, takes_post_mods=PM].
+
+%NP RULES -----------------------------------------------------------------------------------------
+
+np:[sem=N, agr=Agr, case=Case, gender=Gender, def=Def, takes_det_type=DetType, nform=NForm, sem_n_type=SemType, gapsin=GapsIn, gapsout=GapsOut, takes_det_type=DetType, takes_post_mods=PM] -->
+	nbar: [sem=N, agr=Agr, case=Case, gender=Gender, def=Def, nform=Nform, sem_n_type=SemType, gapsin=GapsIn, gapsout=GapsOut, takes_det_type=DetType, takes_post_mods=PM].
+
+%Nbar RULES ---------------------------------------------------------------------------------------
+
+nbar: [sem=@simple_nbar_sem(N), agr=Agr, case=Case, gender=Gender, def=Def, nform=Nform, sem_n_type=SemType, gapsin=GapsIn, gapsout=GapsOut, takes_det_type=DetType, takes_post_mods=PM] -->
+	n:[sem=N, agr=Agr, case=Case, gender=Gender, def=Def, nform=Nform, sem_n_type=SemType, takes_det_type=DetType].
+
+%VP RULES -----------------------------------------------------------------------------------------
+
+%REGULAR VP
+vp: [sem=Vbar, agr=Agr, inv=Inv, vform=Vform, passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout,vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_adv_type=TakesAdv, advp_align=AdvAlign, takes_pp_type=PPType] -->
+	vbar:[sem=Vbar, agr=Agr, subcat=Subcat, inv=Inv, vform=Vform, passive=Passive, vfinal=V2,  subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, gapsout=GapsOut, gapsin=GapsIn, inv=Inv, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_adv_type=TakesAdv, advp_align=AdvAlign, takes_pp_type=PPType].
+
+
+%VPs WITH ADVERB PHRASE ADJUNCTS - LEFT ALIGNED
+%VP --> ADVP VP. Adverbs are modifying VP on the left side.
+vp: [sem=@adv_vp_sem(Adv, VP), agr=Agr, inv=Inv, vform=Vform, passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=left, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjSem, obj_case=ObjCase, obj_sem_n_type=ObjSem, subcat=Subcat, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap] -->
+	advp: [sem=Adv, advtype=TakesAdv, advp_align=left, gapsin=GapsIn, gapsout=GapsOut],
+	vp: [sem=VP, agr=Agr, inv=Inv, vform=Vform, subcat=Subcat, passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=left, vfinal=V2, subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, subj_case=SubjCase, obj_case=ObjCase, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType].
+/*
+%VPs WITH ADVERB PHRASE ADJUNCTS - RIGHT ALIGNED
+%VP --> VP ADVP. Adverbs are modifying VP on the right side.
+vp: [sem=@adv_vp_sem(Adv, VP), agr=Agr, inv=Inv, vform=Vform, passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=right, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjSem, obj_case=ObjCase, obj_sem_n_type=ObjSem, subcat=Subcat, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap] -->
+	vp: [sem=VP, agr=Agr, inv=Inv, vform=Vform, subcat=Subcat, passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=right, vfinal=V2, subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, subj_case=SubjCase, obj_case=ObjCase, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap],
+	advp: [sem=Adv, advtype=TakesAdv, advp_align=right, gapsin=GapsIn, gapsout=GapsOut].
+*/
+
+%VP Modified by PP 
+%VP --> PP VP This is for German
+vp: [sem=@pp_vp_sem(PP, VP), agr=Agr, inv=Inv, vform=Vform, passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=left, vfinal=V2, subj_case=SubjCase, subj_sem_n_type=SubjSem, obj_case=ObjCase, obj_sem_n_type=ObjSem, subcat=Subcat, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType] -->
+	pp:[sem=PP, pp_type=PPType, gapsin=GapsIn, gapsout=GapsOut],
+	vp: [sem=VP, agr=Agr, inv=Inv, vform=Vform, subcat=Subcat, passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=left, vfinal=V2, subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, subj_case=SubjCase, obj_case=ObjCase, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, subcat=Subcat, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap].
+
+%Vbar RULES --------------------------------------------------------------------------------------
+/*
+%MODAL VERB - HEAD FINAL
+%This is for German. Langs with conjugated modals want to use modal VPs. English will use T.
+vbar:[sem=@vp_v_vp_modal_sem(Verb, VP), agr=Agr, subcat=nx0vvx1_modal, inv=Inv, vform=Vform, passive=Passive, vp_vform=Vform, vfinal=y, gapsout=GapsOut, gapsin=GapsIn, v_gapin=Vgapin, v_gapout=Vgapout, subj_case=SubjCase, subj_sem_n_type=SubjSem, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, has_v_gap=y, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_adv_type=TakesAdv, advp_align=AdvAlign, takes_pp_type=PPType] -->	
+	vp: [sem=VP, vform=base, subcat=nx0v\/nx0vnx1\/nx0vnx1nx2,  passive=Passive, takes_post_mods=PM, gapsin=GapsIn, gapsout=GapsOut, takes_adv_type=TakesAdv, advp_align=AdvAlign, vfinal=y, subj_sem_n_type=SubjSem,subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem,indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, v_gapin=Vgap, v_gapout=VGap, has_v_gap=n, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap,takes_pp_type=PPType],
+	v:[sem=Verb, agr=Agr, vfinal=y, subcat=nx0vvx1_modal, vform=Vform, passive=Passive, v_gapin=Vgapin, v_gapout=Vgapout, inv=Inv, has_v_gap=y].
+*/
+
+%TRANSITIVE VERB - HEAD FINAL
+vbar:[sem=@vbar_transitive_sem(V,NP), agr=Agr, subcat=nx0vnx1, inv=Inv, vform=Vform, passive=Passive, vp_vform=Vform, vfinal=y, gapsout=GapsOut, gapsin=GapsIn, v_gapin=Vgapin, v_gapout=Vgapout, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_adv_type=TakesAdv, advp_align=AdvAlign, takes_pp_type=PPType] -->	
+	dp:[sem=NP, case=ObjCase, def=Def, det_type=Det, nform=normal, sem_n_type=ObjSem, gapsin=obj_gap\/null, gapsout=GapsOut],
+	v:[sem=V, agr=Agr, vfinal=y, subcat=nx0vnx1, vform=VForm, passive=Passive, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, v_gapin=Vgapin, v_gapout=Vgapout, inv=Inv, has_v_gap=Vgap, takes_adv_type=TakesAdv, advp_align=AdvAlign,takes_pp_type=PPType].
+
+
+%TRANSITIVE VERB - HEAD INITIAL
+vbar:[sem=@vbar_transitive_sem(V,NP), agr=Agr, subcat=nx0vnx1, inv=Inv, vform=Vform, passive=Passive, vp_vform=Vform, vfinal=n, gapsout=GapsOut, gapsin=GapsIn, v_gapin=Vgapin, v_gapout=Vgapout, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_adv_type=TakesAdv, advp_align=AdvAlign, takes_pp_type=PPType] -->
+	v:[sem=V, agr=Agr, vfinal=n, subcat=nx0vnx1, vform=finite, passive=Passive, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, v_gapin=Vgapin, v_gapout=Vgapout,takes_adv_type=TakesAdv, advp_align=AdvAlign, inv=Inv, takes_pp_type=PPType],	
+	dp:[sem=NP,  case=ObjCase, def=Def, det_type=Det, nform=normal, sem_n_type=ObjSem, gapsin=GapsIn, gapsout=GapsOut, has_obj_gap=ObjGap].
+
+
+%INTRANSITIVE VERB	
+vbar:[sem=Verb, agr=Agr, subcat=nx0v, inv=Inv, vform=Vform, passive=Passive, vp_vform=VPVform, vfinal=V2, gapsout=GapsOut, gapsin=GapsIn, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=AdvAlign,inv=Inv, takes_pp_type=PPType] -->	
+	v:[sem=Verb, agr=Agr, vfinal=V2, subcat=nx0v, vform=finite, passive=Passive, subj_sem_n_type=SubjType, subj_case=SubjCase, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=AdvAlign, inv=Inv, takes_pp_type=PPType].	
+
+
+%DITRANSITIVE VERB - HEAD FINAL
+vbar:[sem=@vp_v_np_np_sem(V, NP1, NP2), agr=Agr, subcat=nx0vnx1nx2, inv=Inv, vform=Vform, passive=Passive, vp_vform=Vform, vfinal=y, gapsout=GapsOut, gapsin=GapsIn, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv, advp_align=AdvAlign, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType] -->
+	dp:[sem=NP2, case=IndirObjCase, def=Def, det_type=Det, nform=normal, sem_n_type=IndirObjSem, gapsin=indir_obj_gap\/null, gapsout=indir_obj_gap\/null, has_indirobj_gap=IndirObjGap],
+	dp:[sem=NP1, case=ObjCase, def=Def, det_type=Det, nform=normal, sem_n_type=ObjSem, gapsin=obj_gap\/null, gapsout=obj_gap\/null, has_obj_gap=ObjGap],
+	v:[sem=V, agr=Agr, vfinal=y, subcat=Subcat, vform=VForm, passive=Passive, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, v_gapin=Vgapin, v_gapout=Vgapout, inv=Inv, has_v_gap=Vgap, takes_adv_type=TakesAdv, advp_align=AdvAlign, takes_pp_type=PPType].
+	
+	
+%DITRANSITIVE VERB - HEAD INITIAL
+vbar:[sem=@vp_v_np_np_sem(V, NP1, NP2), agr=Agr, subcat=nx0vnx1nx2, inv=Inv, vform=Vform, passive=Passive, vp_vform=Vform, vfinal=n, gapsout=GapsOut, gapsin=GapsIn, v_gapin=Vgapin, v_gapout=Vgapout, takes_adv_type=TakesAdv,advp_align=AdvAlign, subj_case=SubjCase, subj_sem_n_type=SubjType, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, has_v_gap=Vgap, has_subj_gap=SubjGap, has_obj_gap=ObjGap, has_indirobj_gap=IndirObjGap, takes_pp_type=PPType] -->
+	v:[sem=V, agr=Agr, vfinal=n, subcat=Subcat, vform=VForm, passive=Passive, subj_sem_n_type=SubjType, subj_case=SubjCase, obj_case=ObjCase, obj_sem_n_type=ObjSem, indirobj_case=IndirObjCase, indirobj_sem_n_type=IndirObjSem, v_gapin=Vgapin, v_gapout=Vgapout, inv=Inv, has_v_gap=Vgap, takes_adv_type=TakesAdv, advp_align=AdvAlign, takes_pp_type=PPType],		
+	dp:[sem=NP2, case=IndirObjCase, def=Def, det_type=Det, nform=normal, sem_n_type=IndirObjSem, gapsin=indir_obj_gap\/null, gapsout=indir_obj_gap\/null, has_indirobj_gap=IndirObjGap],
+	dp:[sem=NP1, case=ObjCase, def=Def, det_type=Det, nform=normal, sem_n_type=ObjSem, gapsin=obj_gap\/null, gapsout=obj_gap\/null, has_obj_gap=ObjGap].
+
+%PP RULES -------------------------------------------------------------------------------------------
+
+pp:[sem=@pp_sem(PP), pp_type=PPType, gapsin=GapsIn, gapsout=GapsOut] -->
+  pbar:[sem=PP, pp_type=PPType].
+
+pbar:[sem=@pbar_sem(Prep, DP), pp_type=PPType] --> 
+  p:[sem=Prep, pp_type=PPType, takes_dp_type=SemType, obj_case=ObjCase],
+  dp:[sem=DP, det_type=Det, nform=NForm, sem_n_type=SemType, case=ObjCase].
+
+%AdvP RULES ------------------------------------------------------------------------------------------
+
+advp: [sem=Adv, advtype=AdvType, takes_adv_type=TakesAdv, advp_align=AdvAlign,gapsin=GapsIn, gapsout=GapsOut] -->
+	adv: [sem=Adv, advtype=AdvType, takes_adv_type=TakesAdv, gapsin=GapsIn, gapsout=GapsOut].

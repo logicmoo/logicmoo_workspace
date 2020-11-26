@@ -1,0 +1,14 @@
+(note "Conjuntive Inference/Soundness 4  r(x) => All x [ p(x) ^ q(x) ] ")
+
+(forAll ?X (implies (instance ?X Giant)  (and (IsTall ?X) (behavourCapableOf ?X Walking))) )
+
+(forAll ?X (implies (instance ?X Tree)  (and (IsTall ?X) (not (behavourCapableOf ?X Walking))) ))
+
+(not (behavourCapableOf Jolly Walking))
+
+(IsTall Jolly )
+
+(queryyn (instance Jolly Giant))
+
+(answer No)
+

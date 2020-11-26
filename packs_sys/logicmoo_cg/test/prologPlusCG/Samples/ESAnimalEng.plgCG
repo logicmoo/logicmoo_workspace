@@ -1,0 +1,35 @@
+"animal is giraffe" :- "animal is ungulate", "animal has long neck", "animal has long legs", "animal has dark spots".
+
+"animal is ostrich" :- "animal is bird", "animal has long neck", "animal has long legs", "animal is black and white".
+
+"animal has black stripes".
+
+"animal is penguin" :- "animal is bird", "animal swims", "animal is black and white".
+
+"animal is zebra" :- "animal is ungulate", "animal has black stripes".
+
+"animal is mammal" :- "animal has hair".
+
+"animal has dark spots".
+
+"animal eats meat".
+
+"animal is ungulate" :- "animal is mammal", "animal has hoofs".
+"animal is ungulate" :- "animal is mammal", "animal chews cud".
+
+"animal has twany color".
+
+"animal is carnivore" :- "animal eats meat".
+"animal is carnivore" :- "animal has pointed teeth", "animal has claws", "animal has forward eyes".
+
+"animal has pointed teeth" :- fail.
+
+"animal is bird" :- "animal has feathers".
+"animal is bird" :- "animal flies", "animal lays eggs".
+
+"animal has hair".
+
+"animal is cheetah" :- "animal is mammal", "animal is carnivore", "animal has twany color", "animal has dark spots".
+
+"animal is tiger" :- "animal is mammal", "animal is carnivore", "animal has twany color", "animal has black stripes".
+

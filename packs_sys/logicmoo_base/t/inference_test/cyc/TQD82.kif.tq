@@ -1,0 +1,453 @@
+(note TQD82)
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (inRegion ?AREA ?COUNTRY1) 
+    (instance ?COUNTRY1 Country)) 
+    (maleficiary ?ATTACK ?COUNTRY1)) 
+
+(subrelation agent agent) 
+
+(different Libya SaudiArabia) 
+
+(inRegion HYP-SomethingExisting-57130746 SaudiArabia) 
+
+(eventOccursAt HYP-AttackOnTangible-47949934 HYP-SomethingExisting-57130746) 
+
+(instance Libya Country) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (maleficiary ?ATTACK ?VIC) 
+    (instance ?VIC Country) 
+    (agent ?ATTACK ?AG) 
+    (instance ?AG Country)) 
+  (actionViolatesObligation ?ATTACK NoFirstStrike)) 
+
+(agent HYP-AttackOnTangible-47949934 Libya) 
+
+(instance SaudiArabia Country) 
+
+(maleficiary HYP-AttackOnTangible-47949934 SaudiArabia) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ?OB) 
+    (obligationParts ?WIDE ?OB)) 
+  (actionViolatesObligation ?ACT ?WIDE)) 
+
+(actionViolatesObligation HYP-AttackOnTangible-47949934 NoFirstStrike) 
+
+(obligationParts ModernInternationalRelationsCOC NoFirstStrike) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?AGT) 
+    (instance ?AGT Country)) 
+  (believes InternationalCommunity 
+    (agent ?ATTACK ?AGT))) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (inRegion ?AREA ?COUNTRY1) 
+    (instance ?COUNTRY1 Country)) 
+  (maleficiary ?ATTACK ?COUNTRY1)) 
+
+(instance SaudiArabia Country) 
+
+(different Libya SaudiArabia) 
+
+(inRegion HYP-SomethingExisting-61240826 SaudiArabia) 
+
+(eventOccursAt HYP-AttackOnTangible-4211615 HYP-SomethingExisting-61240826) 
+
+(instance Libya Country) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (maleficiary ?ATTACK ?AGT2) 
+    (instance ?AGT2 Agent) 
+    (agent ?ATTACK ?AGT1)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?RETALIATION 
+      (and 
+        (instance ?RETALIATION AttackOnTangible) 
+        (maleficiary ?RETALIATION ?AGT1))) likelihood)) 
+
+(instance HYP-AttackOnTangible-4211615 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-4211615 Libya) 
+
+(instance SaudiArabia Agent) 
+
+(maleficiary HYP-AttackOnTangible-4211615 SaudiArabia) 
+
+(implies 
+ (instance ?COUNTRY Country) 
+ (desires ?COUNTRY 
+   (not 
+     (thereExists ?BLAME 
+       (and 
+         (instance ?BLAME Censuring-CommunicationAct) 
+         (senderOfInfo ?BLAME InternationalCommunity) 
+         (maleficiary ?BLAME ?COUNTRY)))))) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (inRegion ?AREA ?COUNTRY1) 
+    (instance ?COUNTRY1 Country)) 
+  (maleficiary ?ATTACK ?COUNTRY1))
+
+(subrelation agent agent) 
+
+(instance SaudiArabia Country) 
+
+(different Libya SaudiArabia) 
+
+(inRegion HYP-SomethingExisting-57130746 SaudiArabia) 
+
+(eventOccursAt HYP-AttackOnTangible-47949934 HYP-SomethingExisting-57130746) 
+
+(instance Libya Country) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(implies 
+ (instance ?AGT Agent) 
+ (desires ?AGT 
+   (not 
+     (thereExists ?ATTACK 
+       (and 
+         (instance ?ATTACK AttackOnTangible) 
+         (maleficiary ?ATTACK ?AGT))))))
+
+(instance Libya Agent) 
+
+(increasesCausally #$HYP-AttackOnTangible-4211615 
+ (thereExists ?RETALIATION 
+   (and 
+     (instance ?RETALIATION AttackOnTangible) 
+     (maleficiary ?RETALIATION Libya))) likelihood)
+
+(instance Libya Agent) 
+
+(implies 
+  (instance ?AGT Agent) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?ATTACK 
+        (and 
+          (instance ?ATTACK AttackOnTangible) 
+          (maleficiary ?ATTACK ?AGT))))))
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (inRegion ?AREA ?COUNTRY1) 
+    (instance ?COUNTRY1 Country)) 
+  (maleficiary ?ATTACK ?COUNTRY1))
+
+(subrelation agent agent) 
+
+(different Libya SaudiArabia) 
+
+(inRegion HYP-SomethingExisting-57130746 SaudiArabia) 
+
+(eventOccursAt HYP-AttackOnTangible-47949934 HYP-SomethingExisting-57130746) 
+
+(instance Libya Country) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (maleficiary ?ATTACK ?VIC) 
+    (instance ?VIC Country) 
+    (agent ?ATTACK ?AG) 
+    (instance ?AG Country)) 
+  (actionViolatesObligation ?ATTACK NoFirstStrike))
+
+(agent HYP-AttackOnTangible-47949934 Libya) 
+
+(instance SaudiArabia Country) 
+
+(maleficiary HYP-AttackOnTangible-47949934 SaudiArabia) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ?OB) 
+    (obligationParts ?WIDE ?OB)) 
+  (actionViolatesObligation ?ACT ?WIDE)) 
+
+(actionViolatesObligation HYP-AttackOnTangible-47949934 NoFirstStrike) 
+
+(obligationParts ModernInternationalRelationsCOC NoFirstStrike) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?AGT) 
+    (instance ?AGT Country)) 
+  (believes InternationalCommunity 
+    (agent ?ATTACK ?AGT)))
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (inRegion ?AREA ?COUNTRY1) 
+    (instance ?COUNTRY1 Country)) 
+  (maleficiary ?ATTACK ?COUNTRY1))
+
+(subrelation agent agent) 
+
+(instance SaudiArabia Country) 
+
+(different Libya SaudiArabia) 
+
+(inRegion HYP-SomethingExisting-57130746 SaudiArabia) 
+
+(eventOccursAt HYP-AttackOnTangible-47949934 HYP-SomethingExisting-57130746) 
+
+(instance Libya Country) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (maleficiary ?ATTACK ?AGT2) 
+    (instance ?AGT2 Agent) 
+    (agent ?ATTACK ?AGT1)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?RETALIATION 
+      (and 
+        (instance ?RETALIATION AttackOnTangible) 
+        (maleficiary ?RETALIATION ?AGT1))) likelihood))
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-47949934 Libya) 
+
+(instance SaudiArabia Agent) 
+
+(maleficiary HYP-AttackOnTangible-47949934 SaudiArabia) 
+
+(implies 
+  (instance ?AGT Agent) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?ATTACK 
+        (and 
+          (instance ?ATTACK AttackOnTangible) 
+          (maleficiary ?ATTACK ?AGT))))))
+
+(instance Libya Agent) 
+
+(increasesCausally #$HYP-AttackOnTangible-47949934 
+  (thereExists ?RETALIATION 
+    (and 
+      (instance ?RETALIATION AttackOnTangible) 
+      (maleficiary ?RETALIATION Libya))) likelihood)
+
+(desires Libya 
+  (not 
+    (thereExists ?ATTACK 
+      (and 
+        (instance ?ATTACK AttackOnTangible) 
+        (maleficiary ?ATTACK Libya)))))
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (inRegion ?AREA ?COUNTRY1) 
+    (instance ?COUNTRY1 Country)) 
+  (maleficiary ?ATTACK ?COUNTRY1))
+
+(subrelation agent agent) 
+
+(different Libya SaudiArabia) 
+
+(inRegion HYP-SomethingExisting-57130746 SaudiArabia) 
+
+(eventOccursAt HYP-AttackOnTangible-47949934 HYP-SomethingExisting-57130746) 
+
+(instance Libya Country) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (maleficiary ?ATTACK ?VIC) 
+    (instance ?VIC Country) 
+    (agent ?ATTACK ?AG) 
+    (instance ?AG Country)) 
+  (actionViolatesObligation ?ATTACK NoFirstStrike))
+
+(agent HYP-AttackOnTangible-47949934 Libya) 
+
+(instance SaudiArabia Country) 
+
+(maleficiary HYP-AttackOnTangible-47949934 SaudiArabia) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ?OB) 
+    (obligationParts ?WIDE ?OB)) 
+  (actionViolatesObligation ?ACT ?WIDE))
+
+(actionViolatesObligation HYP-AttackOnTangible-47949934 NoFirstStrike) 
+
+(obligationParts ModernInternationalRelationsCOC NoFirstStrike) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?AGT) 
+    (instance ?AGT Country)) 
+  (believes InternationalCommunity 
+    (agent ?ATTACK ?AGT)))
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (inRegion ?AREA ?COUNTRY1) 
+    (instance ?COUNTRY1 Country)) 
+  (maleficiary ?ATTACK ?COUNTRY1))
+
+(subrelation agent agent) 
+
+(instance SaudiArabia Country) 
+
+(different Libya SaudiArabia) 
+
+(inRegion HYP-SomethingExisting-57130746 SaudiArabia) 
+
+(eventOccursAt HYP-AttackOnTangible-47949934 HYP-SomethingExisting-57130746) 
+
+(instance Libya Country) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(instance HYP-AttackOnTangible-47949934 AttackOnTangible) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+    (believes InternationalCommunity 
+      (agent ?ACT ?AGT))) 
+  (increasesCausally ?ACT 
+    (thereExists ?SANCTION 
+      (and 
+        (instance ?SANCTION ImposingSanctions) 
+        (maleficiary ?SANCTION ?AGT))) likelihood))
+
+(actionViolatesObligation HYP-AttackOnTangible-47949934 ModernInternationalRelationsCOC) 
+
+(believes InternationalCommunity 
+ (agent HYP-AttackOnTangible-47949934 Libya)) 
+
+(implies 
+  (instance ?GEOPOL GeopoliticalEntity) 
+  (desires ?GEOPOL 
+    (not 
+      (thereExists ?SANCTION 
+        (and 
+          (instance ?SANCTION ImposingSanctions) 
+          (maleficiary ?SANCTION ?GEOPOL))))))
+
+(instance Libya GeopoliticalEntity) 
+
+(increasesCausally #$HYP-AttackOnTangible-47949934 
+  (thereExists ?SANCTION 
+    (and 
+      (instance ?SANCTION ImposingSanctions) 
+      (maleficiary ?SANCTION Libya))) likelihood)
+
+(desires Libya 
+  (not 
+    (thereExists ?SANCTION 
+      (and 
+        (instance ?SANCTION ImposingSanctions) 
+        (maleficiary ?SANCTION Libya)))))
+
+(query (findall ?PROP
+(implies 
+   (and 
+       (agent ?ACT Libya) 
+       (instance ?ACT AttackOnTangible) 
+       (eventOccursAt ?ACT ?TARGET) 
+       (inRegion ?TARGET SaudiArabia)) 
+   (or 
+       (and 
+           (desires Libya ?PROP) 
+           (decreasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires Libya 
+               (not ?PROP)) 
+           (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list  (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION Libya)))))
+ 
+(answer (list  (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME Libya)))))
+ 
+(answer (list 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (maleficiary ?SANCTION Libya))) ))
+ 
+(end_of_file)
+

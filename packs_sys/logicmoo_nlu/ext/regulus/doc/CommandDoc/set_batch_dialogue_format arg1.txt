@@ -1,0 +1,10 @@
+By default, the output of invoking {\tt BATCH\_\-DIALOGUE} and similar commands is to print all processing information. This command can be used to select other output formats, or to revert to the default format. The currently supported alternatives are the following:
+\begin{itemize}
+
+\item {\tt normal} Default format.
+
+\item {\tt no\_paraphrases} Suppress printing of fields related to paraphrasing.
+
+\item {\tt no\_datastructures} Suppress printing of all fields related to intermediate datastructures.
+
+\end{itemize}

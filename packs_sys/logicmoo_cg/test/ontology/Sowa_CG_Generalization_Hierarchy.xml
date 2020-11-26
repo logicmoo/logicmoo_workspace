@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\aminePlatform\aminePlatform\classes\aminePlatform\samples\ontology\Sowa_CG_Generalization_Hierarchy.xml</Name>
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>English</Language>
+  </Languages>
+  <MainLanguage>English</MainLanguage>
+  <RelationRoot>Relation</RelationRoot>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Universal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Universal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Relation</Key>
+        </Child>
+        <Child>
+          <Key>Entity</Key>
+        </Child>
+        <Child>
+          <Key>Act</Key>
+        </Child>
+        <Child>
+          <Key>Attribute</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Attribute</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Attribute</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Vigorous</Key>
+        </Child>
+        <Child>
+          <Key>Brown</Key>
+        </Child>
+        <Child>
+          <Key>Gray</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Gray</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Gray</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Brown</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Brown</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Vigorous</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Vigorous</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Attribute</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Act</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Act</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Wash</Key>
+        </Child>
+        <Child>
+          <Key>Chase</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Chase</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Chase</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Act</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Wash</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Wash</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Act</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Entity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Entity</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Animate</Key>
+        </Child>
+        <Child>
+          <Key>Inanimate</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Inanimate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Inanimate</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Truck</Key>
+        </Child>
+        <Child>
+          <Key>Desk</Key>
+        </Child>
+        <Child>
+          <Key>Chevrolet</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Entity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Chevrolet</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Chevrolet</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Inanimate</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Desk</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Desk</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Inanimate</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Truck</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Truck</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Inanimate</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Animate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Animate</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Robot</Key>
+        </Child>
+        <Child>
+          <Key>Animal</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Entity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Animal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Animal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Human</Key>
+        </Child>
+        <Child>
+          <Key>Dog</Key>
+        </Child>
+        <Child>
+          <Key>Cat</Key>
+        </Child>
+        <Child>
+          <Key>Mouse</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Animate</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Mouse</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Mouse</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Cat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Cat</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Yojo</Key>
+        </Child>
+        <Child>
+          <Key>Tigerlily</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Tigerlily</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Tigerlily</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Cat</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Cat</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Yojo</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Yojo</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Cat</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Cat</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Dog</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Dog</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Macula</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Macula</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Macula</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Dog</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Dog</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Human</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Human</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>President</Key>
+        </Child>
+        <Child>
+          <Key>Intern</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Intern</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Intern</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>President</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>President</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Robot</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Robot</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Animate</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>Relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Agnt</Key>
+        </Child>
+        <Child>
+          <Key>Thme</Key>
+        </Child>
+        <Child>
+          <Key>Arnd</Key>
+        </Child>
+        <Child>
+          <Key>Attr</Key>
+        </Child>
+        <Child>
+          <Key>Manr</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>Manr</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Manr</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>Attr</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Attr</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>Arnd</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Arnd</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>Thme</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Thme</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>Agnt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Agnt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

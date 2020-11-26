@@ -1,0 +1,24 @@
+(note "TQC92 - minimizeExtent")
+
+(not 
+ (agent HYP-AttackOnTangible-61389987 
+ (NavyFn Iran))) 
+
+(minimizeExtent agent) 
+
+
+(query
+
+ (implies 
+ (and 
+ (eventOccursAt ?EVT UnitedStatesOfAmerica) 
+ (maleficiary ?EVT UnitedStatesOfAmerica) 
+ (instance ?EVT AttackOnTangible) 
+ (directingAgent ?EVT Iran)) 
+ (not 
+ (agent ?EVT 
+ (NavyFn Iran)))))
+
+(answer HYP-AttackOnTangible-61389987 )  
+
+(end_of_file)

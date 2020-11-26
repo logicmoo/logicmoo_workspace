@@ -1,0 +1,3 @@
+[Average]<-mass-[Bus]-engn->[Engine]-
+       		             -fuel->[Gasoline],
+       		             -force->[Average]

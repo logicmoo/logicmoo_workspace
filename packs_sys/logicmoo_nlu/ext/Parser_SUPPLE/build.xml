@@ -1,0 +1,468 @@
+<!--
+
+Build file for SUPPLE
+
+This build file will only work with Ant 1.6.3 or later.
+
+If you are building the SWI or SICStus prolog versions of the parser,
+check the USER MODIFIABLE OPTIONS below and set the correct name and/or
+path to your prolog executable.  You will also need to pass this name/path
+to GATE at runtime.  See the GATE User Guide
+(http://gate.ac.uk/sale/tao/#sec:misc-creole:supple) for full details.
+
+Ian Roberts (i.roberts@dcs.shef.ac.uk), March 2006
+
+-->
+<project name="SUPPLEWrapper" default="plcafe" basedir=".">
+
+  <description>
+    Building the SUPPLE Wrapper
+  </description>
+
+  <!-- Prevent Ant from warning about includeantruntime not being set -->
+  <property name="build.sysclasspath" value="ignore" />
+
+
+   <!-- ###################################################################
+                            USER MODIFIABLE OPTIONS
+        ################################################################### -->
+         
+  <!-- Update this to point at your installation of GATE -->
+  <property name="gate.home" location="../.."/>
+
+  <property name="gate.jar" location="${gate.home}/bin/gate.jar"/>
+
+  <!-- If you are using GATE version 2, or version 3 with the Sun compiler for
+       JAPE grammars, uncomment the pathelement and, if necessary, change it to
+       point to the correct tools.jar.  This is only required if you intend to
+       run the test.* targets in this build file.
+
+       If you are using GATE 3 in the default configuration, leave this alone
+  -->
+  <path id="tools.jar.path">
+    <!--<pathelement location="${gate.home}/bin/tools14.jar" />-->
+  </path>
+
+  <!-- If you want to use your own installation of SWI prolog then change this
+       so that it points to the jpl.jar file in that distribution -->
+  <fileset id="jpl.jar" file="./lib/jpl.jar"/>
+
+  <!-- The SICStus prolog executable.  If sicstus is not on your PATH you will
+       need to give the full path here.  If you are not using SICStus ou can
+       ignore this setting. -->
+  <property name="sicstus.executable" value="sicstus" />
+
+  <!-- The SWI-prolog executable.  This has different names on different
+       platforms.  For Windows, you should use "plcon"; on Unix systems SWI is
+       typically installed as either "pl", "swipl" or "swi-prolog".  If it is
+       not on your PATH you must give the full path here.
+
+       If you are not using SWI Prolog, you can ignore this setting. -->
+  <property name="swi.executable" value="swipl" />
+  <!--<property name="swi.executable" value="plcon" />-->
+    
+  <!-- ###################################################################
+                        USER MODIFIABLE OPTIONS END HERE 
+       ################################################################### -->
+
+  <tstamp>
+    <format property="TODAY_UK" pattern="d-MMMM-yyyy" locale="en"/>
+  </tstamp>
+
+  <!-- Directory locations -->
+  <property name="prolog.dir" location="prolog"/>
+  <property name="grammar.dir" location="${prolog.dir}/grammar"/>
+  <property name="lib.dir" location="lib"/>
+  <property name="config.dir" location="config"/>
+  <property name="classes.dir" location="classes"/>
+  <property name="src.dir" location="src"/>
+  <property name="prologimpls.dir" location="prolog-impls" />
+  <property name="doc.dir" location="doc" />
+  <property name="javadoc.dir" location="${doc.dir}/javadoc" />
+
+  <!-- JAR file names -->
+  <property name="supple.jar" location="SUPPLE.jar" />
+
+  <!-- GATE libraries (if GATE version 2, this will be an empty fileset) -->
+  <fileset id="gate.libs" dir="${gate.home}">
+    <include name="lib/*.jar" />
+    <include name="lib/*.zip" />
+  </fileset>
+
+  <!-- Local libraries (lib directory) -->
+  <fileset id="local.libs" dir="${lib.dir}">
+    <include name="*.jar" />
+  </fileset>
+  
+  <!-- Classpath to use for compiling SUPPLE core classes -->
+  <path id="compile.classpath">
+    <pathelement location="${gate.jar}" />
+    <fileset refid="gate.libs" />
+    <fileset refid="local.libs" />
+  </path>
+
+  <!-- Classpath for compiling prolog implementations - all the above plus the
+       compiled SUPPLE.jar -->
+  <path id="prologimpl.compile.classpath" >
+    <path refid="compile.classpath" />
+    <pathelement location="${supple.jar}" />
+  </path>
+
+  <!-- Classpath for running tests.  You will need to add the appropriate
+       prolog implementation JAR file for the given test. -->
+  <path id="test.classpath" >
+    <path refid="compile.classpath" />
+    <path refid="tools.jar.path" />
+    <pathelement location="${supple.jar}" />
+  </path>
+
+  <!-- The prolog files used in dependency checking.  This is all the .pl files
+       in the prolog directory, *except* compiled_grammar.pl, which is
+       generated from the other grammar files -->
+  <fileset id="prolog.files" dir="${prolog.dir}">
+    <include name="**/*.pl" />
+    <exclude name="grammar/compiled_grammar.pl" />
+  </fileset>
+
+  <!-- Buid a distribution Zip file -->
+  <target name="dist" depends="clean,test.plcafe">
+    <delete file="SUPPLE-${TODAY_UK}.zip"/>
+    <zip destfile="SUPPLE-${TODAY_UK}.zip" basedir="${basedir}" excludes="classes/**, docs/**"/>
+  </target>
+
+
+  <!-- Build SUPPLE with all three prolog implementations -->
+  <target name="all" depends="plcafe,sicstus,swi"/>
+
+  <!-- remove compiled classes and the various prolog saved states -->
+  <target name="clean">
+    <delete dir="${classes.dir}" />
+    <delete file="supple.swi"/>
+    <delete file="supple.plcafe"/>
+    <delete file="supple.sicstus"/>
+    <delete file="${supple.jar}"/>
+    <delete>
+      <fileset dir="${prologimpls.dir}" includes="*.jar" />
+    </delete>
+    <delete dir="${plcafe.classes.dir}" />
+    <delete dir="${plcafe.gen-src.dir}" />
+    <delete dir="${sicstus.classes.dir}" />
+    <delete dir="${swi.classes.dir}" />
+  </target>
+
+  <!--======== Core SUPPLE classes ========-->
+
+  <!-- create the necessary directories -->
+  <target name="supple.prepare">
+    <mkdir dir="${classes.dir}" />
+  </target>
+  
+  <!-- Compile the core SUPPLE classes (including the various prolog wrappers
+       but not the translated PrologCafe predicates) -->
+  <target name="supple.compile" depends="supple.prepare">
+    <javac destdir="${classes.dir}" classpathref="compile.classpath"
+           debug="true" debuglevel="lines,source"
+           srcdir="${src.dir}" source="1.4" target="1.4"/>
+  </target>
+
+  <!-- Build JavaDoc documentation -->
+  <target name="doc.prepare">
+    <mkdir dir="${javadoc.dir}" />
+  </target>
+
+  <target name="javadoc" depends="doc.prepare">
+    <javadoc destdir="${javadoc.dir}" packagenames="*"
+             classpathref="compile.classpath"
+             encoding="UTF-8"
+             windowtitle="${plugin.name} JavaDoc"
+             source="1.6">
+      <sourcepath>
+        <pathelement location="${src.dir}" />
+      </sourcepath>
+      <link href="http://docs.oracle.com/javase/6/docs/api/" />
+      <link href="http://gate.ac.uk/gate/doc/javadoc/" />
+    </javadoc>
+  </target>
+
+
+  <!-- Build the core SUPPLE JAR file -->
+  <target name="supple.jar" depends="supple.compile">
+    <jar file="${supple.jar}" basedir="${classes.dir}" update="false"/>
+  </target>
+
+  <!--======== PrologCafe specifics ========-->
+  
+  <property name="plcafe.dir" location="${prologimpls.dir}/plcafe" />
+  <property name="plcafe.src.dir" location="${plcafe.dir}/src" />
+  <property name="plcafe.gen-src.dir" location="${plcafe.dir}/gen-src" />
+  <property name="plcafe.classes.dir" location="${plcafe.dir}/classes" />
+  <property name="plcafe-impl.jar"
+            location="${prologimpls.dir}/plcafe-impl.jar" />
+  
+  <!-- create the necessary directories -->
+  <target name="plcafe.prepare" >
+    <mkdir dir="${plcafe.gen-src.dir}"/>
+    <mkdir dir="${plcafe.classes.dir}"/>
+  </target>
+
+  <!-- check whether the prolog files have changed since the last time they
+       were translated into Java -->
+  <target name="plcafe.checkdepends" depends="plcafe.prepare">
+    <dependset>
+      <srcfileset refid="prolog.files" />
+      <targetfileset dir="${plcafe.gen-src.dir}" includes="**/*.java" />
+    </dependset>
+    <!-- Java files are up to date if any of them still exist after the
+         dependset -->
+    <condition property="plcafe.uptodate">
+      <length when="greater" length="0">
+        <fileset dir="${plcafe.gen-src.dir}" includes="**/*.java" />
+      </length>
+    </condition>
+  </target>
+  
+  <!-- Translate the prolog files into Java -->
+  <target name="plcafe.translate" unless="plcafe.uptodate" depends="plcafe.prepare">
+    <java fork="true" classname="jp.ac.kobe_u.cs.prolog.compiler.Compiler"
+          dir="${prolog.dir}">
+      <classpath>
+        <fileset refid="local.libs" />
+      </classpath>
+      <jvmarg value="-Xmx512m"/>
+      <arg value ="mkparser_plcafe.pl"/>
+    </java>
+    <mkdir dir="${plcafe.gen-src.dir}/shef/nlp/supple/prolog/cafe" />
+    <move todir="${plcafe.gen-src.dir}/shef/nlp/supple/prolog/cafe">
+      <fileset dir="${prolog.dir}" includes="*.java" />
+    </move>
+  </target>
+
+  <!-- compile the PrologCafe translated predicates and the prolog impl class -->
+  <target name="plcafe.compile"
+          depends="supple.jar, plcafe.prepare, plcafe.checkdepends, plcafe.translate">
+    <javac destdir="${plcafe.classes.dir}"
+           source="1.4"
+           target="1.4"
+           debug="true"
+           debuglevel="lines,source"
+           classpathref="prologimpl.compile.classpath">
+      <src>
+        <pathelement location="${plcafe.src.dir}" />
+        <pathelement location="${plcafe.gen-src.dir}" />
+      </src>
+    </javac>
+  </target>
+
+  <!-- package the translated predicate classes and prolog impl into a JAR -->
+  <target name="plcafe.jar" depends="plcafe.compile">
+    <jar file="${plcafe-impl.jar}"
+         basedir="${plcafe.classes.dir}"
+         update="false"/>
+  </target>
+
+  <!-- check whether supple.plcafe needs rebuilding -->
+  <target name="plcafe.uptodate" >
+    <uptodate property="supple.plcafe.uptodate" targetfile="supple.plcafe">
+      <srcfiles refid="prolog.files" />
+    </uptodate>
+  </target>
+  
+  <!-- build the PrologCafe saved state (unless it is already up to date) -->
+  <target name="plcafe" depends="supple.jar, plcafe.jar, plcafe.uptodate"
+          unless="supple.plcafe.uptodate">
+    <java classname="shef.nlp.supple.prolog.PrologCafe" dir="${grammar.dir}"
+          fork="true">
+      <classpath>
+        <pathelement location="${supple.jar}"/>
+        <pathelement location="${plcafe-impl.jar}"/>
+        <pathelement location="${gate.jar}" /><!-- for ExecutionException -->
+        <fileset refid="local.libs"/>
+      </classpath>
+      <jvmarg value="-Xmx512m"/>
+      <arg value="plcafe_load.pl"/>
+      <arg value="${basedir}/supple.plcafe"/>
+    </java>
+  </target>
+
+  <!--======== SICStus specifics ========-->
+
+  <property name="sicstus.dir" location="${prologimpls.dir}/sicstus" />
+  <property name="sicstus.src.dir" location="${sicstus.dir}/src" />
+  <property name="sicstus.classes.dir" location="${sicstus.dir}/classes" />
+  <property name="sicstus-impl.jar"
+            location="${prologimpls.dir}/sicstus-impl.jar" />
+
+
+  <!-- create the necessary directories -->
+  <target name="sicstus.prepare">
+    <mkdir dir="${sicstus.classes.dir}" />
+  </target>
+
+  <!-- Compile the SICStus prolog implementation classes -->
+  <target name="sicstus.compile" depends="supple.jar, sicstus.prepare">
+    <javac destdir="${sicstus.classes.dir}"
+           srcdir="${sicstus.src.dir}"
+           source="1.4"
+           target="1.4"
+           debug="true"
+           debuglevel="lines,source"
+           classpathref="prologimpl.compile.classpath"/>
+  </target>
+
+  <!-- package the SICStus prolog impl into a JAR -->
+  <target name="sicstus.jar" depends="sicstus.compile">
+    <jar file="${sicstus-impl.jar}"
+         basedir="${sicstus.classes.dir}"
+         update="false"/>
+  </target>
+
+  <!-- check whether supple.sicstus needs rebuilding -->
+  <target name="sicstus.uptodate" >
+    <uptodate property="supple.sicstus.uptodate" targetfile="supple.sicstus">
+      <srcfiles refid="prolog.files" />
+    </uptodate>
+  </target>
+
+  <!-- Build the SICStus saved state (unless it is already up-to-date) -->
+  <target name="sicstus" depends="supple.jar, sicstus.jar, sicstus.uptodate"
+          unless="supple.sicstus.uptodate">
+    <delete file="supple.sicstus"/>
+    <exec executable="${sicstus.executable}">
+      <arg value="-l"/>
+      <arg value="${prolog.dir}/mkparser_sicstus.pl"/>
+      <arg value="-a"/>
+      <arg value="-n"/>
+    </exec>
+    <move file="${prolog.dir}/supple.sicstus" tofile="supple.sicstus"/> 
+  </target>
+
+  <!--======== SWI-Prolog specifics ========-->
+
+  <property name="swi.dir" location="${prologimpls.dir}/swi" />
+  <property name="swi.src.dir" location="${swi.dir}/src" />
+  <property name="swi.classes.dir" location="${swi.dir}/classes" />
+  <property name="swi-impl.jar"
+            location="${prologimpls.dir}/swi-impl.jar" />
+
+  <!-- create the necessary directories -->
+  <target name="swi.prepare">
+    <mkdir dir="${swi.classes.dir}" />
+  </target>
+
+  <!-- Compile the SWI prolog implementation classes -->
+  <target name="swi.compile" depends="supple.jar, swi.prepare">
+    <javac destdir="${swi.classes.dir}"
+           srcdir="${swi.src.dir}"
+           source="1.4"
+           target="1.4"
+           debug="true"
+           debuglevel="lines,source"
+           classpathref="prologimpl.compile.classpath"/>
+  </target>
+
+  <!-- package the SWI prolog impl into a JAR -->
+  <target name="swi.jar" depends="swi.compile">
+    <jar file="${swi-impl.jar}"
+         basedir="${swi.classes.dir}"
+         update="false"/>
+  </target>
+
+  <!-- check whether supple.swi needs rebuilding -->
+  <target name="swi.uptodate" >
+    <uptodate property="supple.swi.uptodate" targetfile="supple.swi">
+      <srcfiles refid="prolog.files" />
+    </uptodate>
+  </target>
+
+  <!-- Build the SWI-Prolog saved state (unless it is already up-to-date) -->
+  <target name="swi" depends="supple.jar, swi.jar, swi.uptodate"
+          unless="supple.swi.uptodate">
+    <delete file="supple.swi"/>
+    <exec executable="${swi.executable}">
+      <arg value="-L0"/>
+      <arg value="-G8M"/>
+      <arg value="-A8M"/>
+      <arg value="-g"/>
+      <arg value="parse"/>
+      <arg value="-o"/>
+      <arg value="supple.swi"/>
+      <arg value="-c"/>
+      <arg value="${prolog.dir}/mkparser_swi.pl"/>
+    </exec>
+  </target>
+
+
+<!-- The final three targets provide routines for testing the parser using one
+     of the four Prolog interfaces provided as part of this package           -->
+
+  <target name="test.sicstus" depends="supple.jar,sicstus">
+    <java classname="shef.nlp.supple.TestSuite" fork="true">
+      <classpath>
+        <path refid="test.classpath" />
+        <pathelement location="${sicstus-impl.jar}" />
+      </classpath>
+      <jvmarg value="-Xmx512m"/>
+      <sysproperty key="gate.home" value="${gate.home}"/> 
+      <!-- use the executable specified above -->
+      <sysproperty key="supple.sicstus.executable" value="${sicstus.executable}"/> 
+      <arg value="${basedir}"/>
+      <arg value="${config.dir}/mapping.config"/>
+      <arg value="${config.dir}/feature_table.config"/>
+      <arg value="${basedir}/supple.sicstus"/>
+      <arg value="shef.nlp.supple.prolog.SICStusProlog"/>
+    </java>
+  </target>
+
+
+  <target name="test.plcafe" depends="supple.jar,plcafe.jar,plcafe">
+    <java classname="shef.nlp.supple.TestSuite" fork="true">
+      <classpath>
+        <path refid="test.classpath" />
+        <pathelement location="${plcafe-impl.jar}"/>
+      </classpath>
+      <jvmarg value="-Xmx512m"/>
+      <sysproperty key="gate.home" value="${gate.home}"/> 
+      <arg value="${basedir}"/>
+      <arg value="${config.dir}/mapping.config"/>
+      <arg value="${config.dir}/feature_table.config"/>
+      <arg value="${basedir}/supple.plcafe"/>
+      <arg value="shef.nlp.supple.prolog.PrologCafe"/>
+    </java>
+  </target>
+
+
+  <target name="test.swi" depends="supple.jar,swi">
+    <java classname="shef.nlp.supple.TestSuite" fork="true">
+      <classpath>
+        <path refid="test.classpath" />
+        <pathelement location="${swi-impl.jar}"/>
+      </classpath>
+      <jvmarg value="-Xmx512m"/>
+      <sysproperty key="gate.home" value="${gate.home}"/> 
+      <!-- use the executable specified above -->
+      <sysproperty key="supple.swi.executable" value="${swi.executable}"/> 
+      <arg value="${basedir}"/>
+      <arg value="${config.dir}/mapping.config"/>
+      <arg value="${config.dir}/feature_table.config"/>
+      <arg value="${basedir}/supple.swi"/>
+      <arg value="shef.nlp.supple.prolog.SWIProlog"/>
+    </java>
+  </target>
+
+  <target name="test.javaswi" depends="supple.jar,swi">
+    <java classname="shef.nlp.supple.TestSuite" fork="true">
+      <classpath>
+        <path refid="test.classpath" />
+        <pathelement location="${swi-impl.jar}"/>
+      </classpath>
+      <jvmarg value="-Xmx512m"/>
+      <sysproperty key="gate.home" value="${gate.home}"/> 
+      <arg value="${basedir}"/>
+      <arg value="${config.dir}/mapping.config"/>
+      <arg value="${config.dir}/feature_table.config"/>
+      <arg value="${basedir}/supple.swi"/>
+      <arg value="shef.nlp.supple.prolog.SWIJavaProlog"/>
+    </java>
+  </target>
+
+</project>

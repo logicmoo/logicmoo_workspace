@@ -1,0 +1,44 @@
+
+ff: parsing domain file
+domain 'ZEON' defined
+ ... done.
+ff: parsing problem file
+problem 'P11A' defined
+ ... done.
+
+
+
+Cueing down from goal distance:    8 into depth [1]
+                                   7            [1]
+
+Enforced Hill-climbing failed !
+switching to Best-first Search now.
+
+advancing to distance :    8
+                           7
+                           6
+                           5
+                           4
+                           3
+                           2
+                           0
+
+ff: found legal plan as follows
+
+step    0: FLY PLANE1 CITY0 CITY2 FL6 FL5
+        1: BOARD PERSON3 PLANE1 CITY2
+        2: FLY PLANE1 CITY2 CITY3 FL5 FL4
+        3: DEBARK PERSON3 PLANE1 CITY3
+        4: FLY PLANE3 CITY0 CITY1 FL3 FL2
+        5: BOARD PERSON1 PLANE3 CITY1
+        6: FLY PLANE3 CITY1 CITY3 FL2 FL1
+        7: DEBARK PERSON1 PLANE3 CITY3
+     
+
+time spent:    0.00 seconds instantiating 2101 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 108 facts and 661 actions
+               0.01 seconds creating final representation with 108 relevant facts
+               0.02 seconds building connectivity graph
+               0.32 seconds searching, evaluating 235 states, to a max depth of 1
+               0.35 seconds total time
+

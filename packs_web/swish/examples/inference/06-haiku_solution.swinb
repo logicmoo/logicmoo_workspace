@@ -1,0 +1,476 @@
+<div class="notebook">
+
+<div class="nb-cell html" name="htm4">
+<h2>Playing with WordNet</h2>
+
+<p> 
+As described in its <a href="https://en.wikipedia.org/wiki/WordNet">Wikipedia</a>
+article, <b>WordNet</b> is a lexical database for the English language. It groups
+English <i>words</i> into sets of <i>synonyms</i> called <i>synsets</i>, provides
+short definitions and usage examples, and records a number of relations among
+these synonym sets or their members. WordNet can thus be seen as a combination of
+dictionary and thesaurus. While it is accessible to human users via a web browser,
+its primary use is in automatic text analysis and artificial intelligence
+applications. 
+</p>
+<p>
+  Serious stuff, that is, but here we shall only play around with it a bit and write
+  a program that generates random haiku poetry. 
+</p>
+</div>
+
+<div class="nb-cell html" name="htm2">
+<h3>Haiku poetry</h3>
+
+<p>
+    Haiku is a Japanese form of poetry which in its classical form 
+    consists of seventeen syllables. In English haiku poems, 
+    these are distributed over three lines:
+</p>
+
+<ul>
+    <li>Five syllables</li>
+    <li>Seven syllables</li>
+    <li>Five syllables</li>
+</ul>
+
+<p>
+    Syntactically, they may for example look as follows:
+</p>
+
+<ul>
+    <li>Preposition+Determiner+Adjective+Noun</li>
+    <li>Determiner+Adjective+Noun+Particle+Verb</li>
+    <li>Modifier+Adverb</li>
+</ul>
+
+<p>
+    The loaded version of WordNet used contains 212558 wordforms, 
+    so the possibilities are endless. Most of the generated haikus 
+    are bad, but who knows, perhaps some really beautiful ones will
+    emerge in the process. (They are in there...)
+</p>
+</div>
+
+<div class="nb-cell html" name="htm3">
+<h3>Generating haikus</h3>
+
+<p>
+  The implementation needs to non-deterministically generate 
+  random words of particular parts of speech and calculate their 
+  number of syllables. It must also make sure that each line 
+  contains the correct number, and backtrack if not.
+</p>
+</div>
+
+<div class="nb-cell program" data-background="true" name="p1">
+/* Generating haiku poetry */
+
+% Load wordnet interface.
+% See http://www.swi-prolog.org/pack/file_details/wordnet/prolog/wn.pl
+
+:- use_module(library(wn)).
+:- use_module(library(mcintyre)).
+:- mc.
+:- begin_lpad.
+
+print_haiku :-
+    haiku_lines(Lines),
+    format("~w~n~w~n~w~n", Lines).
+
+haiku_lines([Line1, Line2, Line3]) :- 
+    line1(Line1),
+    line2(Line2),
+    line3(Line3).
+
+
+% preposition determiner adjective noun
+%    N11 + N12 =&lt; 3,
+%    N11 + N12 + N13 =&lt; 4,
+%    N11 + N12 + N13 + N14 =:= 5,
+line1(Line) :-
+    first_couple1(W1,W2,N0),
+    third_word1(W3,N0,N1),
+    fourth_word1(W4,N1),
+    atomic_list_concat([W1, W2, W3, W4], ' ',Line). 
+
+
+first_couple1(W1,W2,2):-
+	random_word_syll(preposition, 1,W1, 1),
+    random_word_syll(determiner, 1,W2, 1).
+first_couple1(W1,W2,3):-
+	random_word_syll(preposition, 1,W1, 2),
+    random_word_syll(determiner, 1,W2, 1).
+first_couple1(W1,W2,3):-
+	random_word_syll(preposition, 1,W1, 1),
+    random_word_syll(determiner, 1,W2, 2).
+
+
+third_word1(W3,2,3):-
+    random_word_syll(adjective, 1,W3, 1).
+
+third_word1(W3,2,4):-
+    random_word_syll(adjective, 1,W3, 2).
+
+fourth_word1(W4,3):-
+    random_word_syll(noun, 1,W4, 2).
+
+fourth_word1(W4,4):-
+    random_word_syll(noun, 1,W4, 1).
+
+% determiner adjective noun particle verb
+%    N21 + N22 =&lt; 4,
+%    N21 + N22 + N23 =&lt; 5,
+%    N21 + N22 + N23 + N24 =&lt; 6,
+%    N21 + N22 + N23 + N24 + N25 =:= 7,
+line2(Line) :-
+    first_couple2(W1,W2,N0),
+	third_word2(W3,N0,N1),
+    fourth_word2(W4,N1,N2),
+    fifth_word2(W5,N2),
+    atomic_list_concat([W1, W2, W3, W4, W5], ' ', Line).
+    
+
+first_couple2(W1,W2,2):-
+    random_word_syll(determiner,2, W1, 1),
+    random_word_syll(adjective,2, W2, 1).
+first_couple2(W1,W2,3):-
+    random_word_syll(determiner,2, W1, 1),
+    random_word_syll(adjective,2, W2, 2).
+first_couple2(W1,W2,3):-
+    random_word_syll(determiner,2, W1, 2),
+    random_word_syll(adjective,2, W2, 1).
+first_couple2(W1,W2,4):-
+    random_word_syll(determiner,2, W1, 1),
+    random_word_syll(adjective,2, W2, 3).
+first_couple2(W1,W2,4):-
+    random_word_syll(determiner,2, W1, 2),
+    random_word_syll(adjective,2, W2, 2).
+first_couple2(W1,W2,4):-
+    random_word_syll(determiner,2, W1, 3),
+    random_word_syll(adjective,2, W2, 1).
+
+third_word2(W3,2,3):-
+    random_word_syll(noun,2, W3, 1).
+third_word2(W3,2,4):-
+    random_word_syll(noun,2, W3, 2).
+third_word2(W3,2,5):-
+    random_word_syll(noun,2, W3, 3).
+
+third_word2(W3,3,4):-
+    random_word_syll(noun,2, W3, 1).
+third_word2(W3,3,4):-
+    random_word_syll(noun,2, W3, 1).
+third_word2(W3,4,5):-
+    random_word_syll(noun,2, W3, 2).
+third_word2(W3,5,5):-
+    random_word_syll(noun,2, W3, 1).
+
+fourth_word2(W4,3,4):-
+    random_word_syll(particle,2, W4, 1).
+fourth_word2(W4,3,5):-
+    random_word_syll(particle,2, W4, 2).
+fourth_word2(W4,3,6):-
+    random_word_syll(particle,2, W4, 3).
+fourth_word2(W4,4,5):-
+    random_word_syll(particle,2, W4, 1).
+fourth_word2(W4,4,6):-
+    random_word_syll(particle,2, W4, 2).
+fourth_word2(W4,5,6):-
+    random_word_syll(particle,2, W4, 1).
+
+fifth_word2(W5,4):-
+    random_word_syll(verb, 2,W5, 3).
+fifth_word2(W5,5):-
+    random_word_syll(verb, 2,W5, 2).
+fifth_word2(W5,6):-
+    random_word_syll(verb, 2,W5, 1).
+% modifier adverb
+%     N31 + N32  =:= 5.
+line3(Line) :-
+    random_word_syll(modifier,3, W1, 1),
+    random_word_syll(adverb,3, W2, 4), 
+    atomic_list_concat([W1, W2], ' ', Line).
+line3(Line) :-
+    random_word_syll(modifier,3, W1, 2),
+    random_word_syll(adverb,3, W2, 3), 
+    atomic_list_concat([W1, W2], ' ', Line).
+line3(Line) :-
+    random_word_syll(modifier,3, W1, 3),
+    random_word_syll(adverb,3, W2, 2), 
+    atomic_list_concat([W1, W2], ' ', Line).
+line3(Line) :-
+    random_word_syll(modifier,3, W1, 4),
+    random_word_syll(adverb,3, W2, 1), 
+    atomic_list_concat([W1, W2], ' ', Line).
+%!  random_word_syll(+PoS, +Line,-Word, -N) is nondet.
+%
+%	Given a part of speech, generate a random word and
+%	its number of syllables.
+
+random_word_syll(PoS,L, Word, N) :-
+    random_word(PoS,L,N, Word).
+
+%!  random_word(+PoS, Word) is nondet.
+%
+%	Given a part of speech, generate a random word.
+
+random_word(PoS,_, N,Word):uniform(Word,List) :-
+    findall(W, (call(PoS, W),count_syllables(W, N)), List),List\=[].
+
+%	Predicates for the parts of speech. The open word
+%	classes are fetched from WordNet, the closed ones
+%	(or some of them) are just enumerated. Note that
+%	the verbs are converted to their third person 
+%	singular forms.
+
+noun(Word) :-
+    wn_s(_, _, Word, n, _, _).
+
+adjective(Word) :-
+    wn_s(_, _, Word, a, _, _).
+
+verb(Word) :-
+    wn_s(_, _, Word0, v, _, _),
+    make_sg3_form(Word0, Word).
+
+adverb(Word) :-
+    wn_s(_, _, Word, r, _, _).
+
+preposition(in).
+preposition(on).
+preposition(to).
+preposition(from).
+preposition(around).
+preposition(besides).
+preposition(along).
+preposition(aboard).
+preposition(above).
+preposition(among).
+preposition(behind).
+preposition(inside).
+preposition(outside).
+preposition(under).
+preposition(without).
+preposition(within).
+
+determiner(a).
+determiner(the).
+determiner(any).
+determiner(your).
+determiner(each).
+determiner(her).
+determiner(his).
+determiner(my).
+determiner(one).
+determiner(our).
+determiner(their).
+determiner(some).
+determiner(this).
+
+particle(still).
+
+modifier(extremely).
+modifier(heavily).
+modifier(awfully).
+modifier(seemingly).
+modifier(dreadfully).
+modifier(alarmingly).
+modifier(exceedingly).
+modifier(intensely).
+modifier(distinctly).
+modifier(profoundly).
+modifier(tediously).
+modifier(very).
+modifier(outstandingly).
+modifier(unusually).
+modifier(decidedly).
+modifier(supremely).
+modifier(highly).
+modifier(remarkably).
+modifier(truly).
+modifier(seriously).
+modifier(frightfully).
+modifier(apparently).
+modifier(evidently).
+modifier(superficially).
+modifier(supposedly).
+
+%!  make_sg3_form(+Word, -NewWord) is det.
+%   
+% Create a third person singular word form.
+    
+% If the verb ends in y, remove it and add ies.
+make_sg3_form(Word, SG3) :-
+    atom_concat(Prefix, y, Word), 
+    atom_concat(_, C, Prefix),
+    consonant(C),
+    !,
+    atom_concat(Prefix, ies, SG3).
+% If the verb ends in o, ch, s, sh, x or z, add es.
+make_sg3_form(Word, SG3) :-
+    member(Suffix, [o, ch, s, sh, x, z]),
+    atom_concat(_Prefix, Suffix, Word), 
+    !,
+    atom_concat(Word, es, SG3).
+% By default just add s.
+make_sg3_form(Word, SG3) :-
+    atom_concat(Word, s, SG3).
+
+%!  count_syllables(+Word, -N) is det.
+%   
+% 	Count the number of syllables in a word
+%   form. This is in fact a hard problem so
+% 	here there is room for impreovements.
+
+count_syllables(Word, N) :-
+    atom_chars(Word, Chars),
+    count_syllables_chars(Chars, N).
+    
+count_syllables_chars([], 0) :- !.
+count_syllables_chars([C,l,e], 1) :-
+    consonant(C), !.
+count_syllables_chars([C,e], 0) :- 
+    consonant(C), !.
+count_syllables_chars([C|Cs], N) :- 
+    consonant(C), !,
+    count_syllables_chars(Cs, N).
+count_syllables_chars([_, C|Cs], N) :- 
+    vowel(C), !,
+    count_syllables_chars(Cs, NN), 
+    N is NN + 1.
+count_syllables_chars([_|Cs], N) :- 
+    count_syllables_chars(Cs, NN), 
+    N is NN + 1.
+
+
+vowel(a).
+vowel(e).
+vowel(i).
+vowel(o).
+vowel(u).
+vowel(y).
+
+consonant(b).
+consonant(c).
+consonant(d).
+consonant(f).
+consonant(g).
+consonant(h).
+consonant(j).
+consonant(k).
+consonant(l).
+consonant(m).
+consonant(n).
+consonant(p).
+consonant(q).
+consonant(r).
+consonant(s).
+consonant(t).
+consonant(v).
+consonant(x).
+consonant(z).
+:- end_lpad.
+
+haiku(Li1,Li2,Li3):-mc_sample_arg_first(haiku_lines([L1,L2,L3]),1,(L1,L2,L3),L),L=[(Li1,Li2,Li3)-_].
+</div>
+
+<div class="nb-cell query" name="q2">
+haiku(L1,L2,L3).
+</div>
+
+<div class="nb-cell html" name="htm5">
+<p>
+  To test it, run the following query:
+</p>
+</div>
+
+<div class="nb-cell query" name="q1">
+mc_sample_arg_first(print_haiku,1,X,L).
+</div>
+
+<div class="nb-cell html" name="htm1">
+<style type="text/css" media="screen">
+	ul {
+        margin: 10px 0 10px 15px;
+        padding: 0;
+        list-style: none;
+	}
+	.mytable {
+        margin: 20px 20px 2px 15px;
+	}
+   .bodhidharma {
+       cursor: pointer;
+   }
+   .haiku {
+        font-family: "Lucida Grande", "Century Gothic", "Trebuchet MS";
+        text-shadow: 4px 4px 12px gray;
+        font-size: 20px;
+        height: 15px;
+        margin: 15px 10px 10px 50px;
+    }
+</style>
+
+
+<h3>Meet the crazy haiku poet!</h3>
+
+<p>
+    Tickle him with your mouse pointer and he will produce a haiku poem. Make sure your sound isn't muted, and he will even speak!
+</p>
+
+<table cellspacing="5" cellpadding="5" border="0">
+  <tbody><tr>
+    <td>
+<img class="bodhidharma" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIoAAAChCAIAAACXjrDGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAgAElEQVR4Ae3ddbw1VdUH8BfBwlbEQsXubgzswi5sRcTuFltQxFYM7AAFXwxMsAsbu7u7Xgs7vrCO69nP3jNz5sy599zL5/OePy5zZnau+K3fWnvOwzb//ve//+f/P5tVAttt1oXNX9c3v/nNf/7znyc72cl++MMffu1rX/v5z39+pjOdaddddz3HOc4x0Pkf//jHL37xi5/+9Kc/+9nPdNRrm2220X777bc/61nPylhPfepTn/70p99pp53OcIYzDIyzmkfbHI+85wMf+MAnP/nJs53tbH/84x/J9x3veAf1/OEPfyDHP//5z7/5zW/+9re/XfjCF77sZS97tatd7YxnPOPzn/98T3fcccc99tjjnOc85zvf+U4jfPGLX/z1r3+tpQanOc1pTnCCE1CYcSjpJCc5CWmc6EQn+vjHP37iE59YF3Od//znp+8rX/nKnm677bar0UrOcrxRz49//ONXvvKVdMDqSZB6Pv3pT5/ylKe86lWvep7znOfrX//6Mcccc4pTnII+vvGNb1zgAhf461//Sg2//e1vv/3tb1/84he34X/96180d7nLXY64+coOO+xw8pOfnMSpJD4aaEZb4VWf//znP/jBD/JLmqMtvnXNa17zZje7GZ1tt9124XMpx3W6OB6oh8Tf+973vuc976GVv//972984xtJ+f73v/8PfvCDT33qU7/61a9+97vfUcAFL3hBYiU7+vjQhz7kEUFTHgw873nPe6Mb3egmN7kJdznhCU84UpR0RsdmN6wB9froRz/65S9/+VKXutSlL31pA5797GdfbyVtdvV84Qtf+MxnPvORj3yEdP7vuM/3vvc9Ur7d7W4nPJz73Of+0Y9+9LSnPY0oWbdr3nCJS1zife9732c/+1lR5KY3vel97nOfS17ykiNVMrcZ3PvSl770/ve/39/dd9/92te+NlXN7TW5waZQT/gHtLnSla5kJ8yfkUIe7nLUUUeFvb/+9a+/2MUupuW73/1uWgFofAh2afnVr36Vem584xuDLBgoSMAlF09/+tOvd73rTRbNQEex6mMf+xiw/dznPsdBH/zgB2MlA+0nP9oU6oEhhx12mFB/5jOf+UIXuhDhwpOLXvSiwslf/vIX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">
+    </td>
+    <td>
+        <div>
+            <div class="haiku" id="line1"></div>
+            <div class="haiku" id="line2"></div>
+            <div class="haiku" id="line3"></div>
+        
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    </td>
+  </tr>
+</tbody></table>
+
+<hr>
+
+<script>
+  notebook.$(".bodhidharma").on("mouseover", function() {
+    notebook.swish({ ask: "haiku(Line1,Line2,Line3)",
+                     ondata: function(data) {
+                        var haiku = data.Line1+", "+data.Line2+". "+data.Line3;
+						var utterance = new SpeechSynthesisUtterance(haiku);
+                        utterance.lang = 'en-US';
+        				speechSynthesis.speak(utterance);
+                        $('#line1').text(data.Line1.charAt(0).toUpperCase() + data.Line1.substring(1));
+                        $('#line2').text(data.Line2);
+                        $('#line3').text(data.Line3.charAt(0).toUpperCase() + data.Line3.substring(1));
+                    }
+                   });  
+  });
+</script>
+</div>
+</div>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="Calendar">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.5"/>
+    <property name="source" value="1.5"/>
+    <path id="Plug-in Dependencies.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.runtime_3.3.100.v20070530.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.osgi_3.3.2.R33x_v20080105.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.common_3.3.0.v20070426.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.jobs_3.3.1.R33x_v20070709.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.100.v20070316/runtime_registry_compatibility.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.registry_3.3.1.R33x_v20070802.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.preferences_3.2.101.R33x_v20080117.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.contenttype_3.2.100.v20070319.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.app_1.0.1.R33x_v20070828.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.emf.ecore_2.3.2.v200802051830.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.emf.common_2.3.2.v200802051830.jar"/>
+    </path>
+    <path id="Calendar.classpath">
+        <pathelement location="class"/>
+        <pathelement location="../../../Eclipse/Workspace/jdom-1.1/lib/ant.jar"/>
+        <pathelement location="regclient.jar"/>
+        <path refid="Plug-in Dependencies.libraryclasspath"/>
+        <pathelement location="../../../Eclipse/Workspace/jdom-1.1/build/jdom.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="class"/>
+        <copy includeemptydirs="false" todir="class">
+            <fileset dir="." excludes="**/*.launch, **/*.java"/>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="class"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="class" source="${source}" target="${target}">
+            <src path="."/>
+            <classpath refid="Calendar.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="Calendar (1)">
+        <java classname="issco.regulus.gui.Calendar" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="Calendar (2)">
+        <java classname="issco.calendar.gui.Calendar" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="CalendarPanel">
+        <java classname="issco.regulus.gui.CalendarPanel" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="ClientCom">
+        <java classname="issco.regulus.socket.ClientCom" failonerror="true" fork="yes">
+            <env key="REGULUS" value="D:/Regulus/"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DataPostproc4SER">
+        <java classname="issco.nbest.DataPostproc4SER" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DataPostproc4WER">
+        <java classname="issco.nbest.DataPostproc4WER" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DataPostprocessing">
+        <java classname="issco.nbest.DataPostprocessing" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DataPreparing (1)">
+        <java classname="issco.calendar.svm.DataPreparing" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DataPreproc">
+        <java classname="issco.nbest.DataPreproc" failonerror="true" fork="yes">
+            <arg line="&quot;D:/svm_light/calendar_data/nbest_training_data.pl&quot; &quot;D:/svm_light/calendar_data/nbest.xml&quot; &quot;D:/svm_light/calendar_data/&quot;"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DataPreprocessing">
+        <java classname="issco.nbest.DataPreprocessing" failonerror="true" fork="yes">
+            <arg line="&quot;D:/svm_light/calendar_data/nbest_training_data.pl&quot; &quot;D:/svm_light/calendar_data/nbest.xml&quot; &quot;D:/svm_light/calendar_data/&quot;"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DataPreprocNfold">
+        <java classname="issco.nbest.DataPreprocNfold" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DialogueHelpResult">
+        <java classname="issco.regulus.socket.DialogueHelpResult" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="Game">
+        <java classname="test.Game" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="InterpretationParser">
+        <java classname="net.sf.regulus.interpretation.InterpretationParser" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="Pk_v1">
+        <java classname="issco.eval.ts.Pk_v1" failonerror="true" fork="yes">
+            <arg line="&quot;C:/Documents and Settings/GEORGESC/Desktop/eval/ref/test.ref&quot; &quot;C:/Documents and Settings/GEORGESC/Desktop/eval/hyp/test.out&quot; 2 0.5"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="Pk_v2">
+        <java classname="issco.eval.ts.Pk_v2" failonerror="true" fork="yes">
+            <arg line="&quot;C:/Documents and Settings/GEORGESC/Desktop/eval/ref/test.ref&quot; &quot;C:/Documents and Settings/GEORGESC/Desktop/eval/hyp/test.out&quot; 2 0.5"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="Pr_error">
+        <java classname="issco.eval.ts.Pr_error" failonerror="true" fork="yes">
+            <arg line="&quot;C:/Documents and Settings/GEORGESC/Desktop/eval/ref/test.ref&quot; &quot;C:/Documents and Settings/GEORGESC/Desktop/eval/hyp/test.out&quot; 2 0.5"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="RegResultNBest">
+        <java classname="net.sf.regulus.RegResultNBest" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="svm_client">
+        <java classname="issco.calendar.socket.svm_client" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="svm_light_client">
+        <java classname="issco.calendar.socket.svm_light_client" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="Test">
+        <java classname="issco.regulus.gui.Test" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="TestFrame">
+        <java classname="issco.regulus.gui.TestFrame" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="TestOSProcess">
+        <java classname="issco.regulus.socket.TestOSProcess" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="TestPanel">
+        <java classname="issco.regulus.gui.TestPanel" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="TestRegResultInterpret">
+        <java classname="issco.regulus.socket.TestRegResultInterpret" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="TestWait">
+        <java classname="issco.regulus.gui.TestWait" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="TopicSegPk_v1Computation">
+        <java classname="issco.eval.TopicSegPk_v1Computation" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="TopicSegPk_v2Computation">
+        <java classname="issco.eval.TopicSegPk_v2Computation" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="TopicSegPrErrorComputation">
+        <java classname="issco.eval.TopicSegPrErrorComputation" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="WER4TwoAnnotFiles (1)">
+        <java classname="issco.eval.WER4TwoAnnotFiles" failonerror="true" fork="yes">
+            <arg line="&quot;D:\multiEval\ref.txt&quot; &quot;D:\multiEval\hyp.txt&quot;"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="WER4TwoAnnotFiles">
+        <java classname="issco.eval.WER4TwoAnnotFiles" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="WindowDiff">
+        <java classname="issco.eval.ts.WindowDiff" failonerror="true" fork="yes">
+            <arg line="&quot;C:/Documents and Settings/GEORGESC/Desktop/eval/ref/test.ref&quot; &quot;C:/Documents and Settings/GEORGESC/Desktop/eval/hyp/test.out&quot; 2"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="WordErrorRate (1)">
+        <java classname="issco.nbest.WordErrorRate" failonerror="true" fork="yes">
+            <arg line="&quot;aaa bbb ccc &quot; &quot;aaa ddd ccc&quot;"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="WordErrorRate (2)">
+        <java classname="issco.eval.WordErrorRate" failonerror="true" fork="yes">
+            <arg line="&quot;aaa bbb ccc&quot; &quot;aaa ddd ccc&quot;"/>
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="WordErrorRate">
+        <java classname="issco.calendar.eval.WordErrorRate" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+    <target name="DataPreproc4FeatSel">
+        <java classname="issco.nbest.DataPreproc4FeatSel" failonerror="true" fork="yes">
+            <classpath refid="Calendar.classpath"/>
+        </java>
+    </target>
+</project>

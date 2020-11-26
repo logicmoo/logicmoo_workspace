@@ -1,0 +1,314 @@
+(note TQF228c) 
+
+(implies 
+ (internationalOrg-MemberCountry OPEC ?COUNTRY) 
+ (socialParticipants Y1Stage1-OPECMeeting ?COUNTRY)) 
+
+(internationalOrg-MemberCountry OPEC Indonesia-TheNation) 
+
+(implies 
+ (and 
+ (instance ?EVENT1 Process) 
+ (instance ?EVENT2 Process) 
+ (startingDate ?EVENT1 
+ (DateInSituationFn CalendarDay ?M ?SIT)) 
+ (endingDate ?EVENT2 
+ (DateInSituationFn CalendarDay ?N ?SIT)) 
+ (greaterThan ?M ?N)) 
+ (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(instance Y1Stage1-OPECMeeting Process) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase2ScenarioConflict)) 
+
+(greaterThan 6 5) 
+
+(instance Y1Stage1-IranIssuesVeiledThreat1 Process) 
+
+(existant Y1Stage1-IranIssuesVeiledThreat1 
+ (DateInSituationFn CalendarDay 6 Y1Phase2ScenarioConflict)) 
+
+(subrelation existant startingDate) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase1ScenarioConflict)) 
+
+(existant Y1Stage1-IranIssuesVeiledThreat1 
+ (DateInSituationFn CalendarDay 6 Y1Phase1ScenarioConflict)) 
+
+(implies 
+ (and 
+ (greaterThan ?M ?N) 
+ (startingDate ?EVENT1 
+ (DateInSituationFn CalendarDay ?M ?SIT)) 
+ (endingDate ?EVENT2 
+ (DateInSituationFn CalendarDay ?N ?SIT))) 
+ (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(implies 
+ (and 
+ (instance ?EVENT1 Process) 
+ (instance ?EVENT2 Process) 
+ (startingDate ?EVENT1 
+ (DateInSituationFn CalendarDay ?M ?SIT)) 
+ (endingDate ?EVENT2 
+ (DateInSituationFn CalendarDay ?N ?SIT)) 
+ (greaterThan ?M ?N)) 
+ (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(instance Y1Stage1-OPECMeeting Process) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase2ScenarioConflict)) 
+
+(greaterThan 17 5) 
+
+(instance Y1Stage1-SADemandsApology Process) 
+
+(existant Y1Stage1-SADemandsApology 
+ (DateInSituationFn CalendarDay 17 Y1Phase2ScenarioConflict)) 
+
+(subrelation existant startingDate) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase1ScenarioConflict)) 
+
+(existant Y1Stage1-SADemandsApology 
+ (DateInSituationFn CalendarDay 17 Y1Phase1ScenarioConflict)) 
+
+(implies 
+ (agent ?EVT ?PERF) 
+ (doneBy ?EVT ?PERF)) 
+
+(agent Y1Stage1-IranIssuesVeiledThreat1 Iran) 
+
+(senderOfInfo Y1Stage1-SADemandsApology SaudiArabia) 
+
+(subrelation senderOfInfo doneBy) 
+
+(implies 
+ (internationalOrg-MemberCountry OPEC ?COUNTRY) 
+ (socialParticipants Y1Stage1-OPECMeeting ?COUNTRY)) 
+
+(internationalOrg-MemberCountry OPEC Indonesia-TheNation) 
+
+(maleficiary Y2Stage1-AzerbaijanSaudiAramcoDeal Iran) 
+
+(socialParticipants Y1Stage1-OPECMeeting Iran) 
+
+(socialParticipants Y1Stage1-OPECMeeting SaudiArabia) 
+
+(startsAfterEndingOf Y1Stage1-SADemandsApology Y1Stage1-OPECMeeting) 
+
+(instance Y1Stage1-SADemandsApology Objecting-CommunicationAct) 
+
+(doneBy Y1Stage1-SADemandsApology SaudiArabia) 
+
+(agent Y2Stage1-AzerbaijanSaudiAramcoDeal SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(agent Y2Stage1-AzerbaijanSaudiAramcoDeal Azerbaijan) 
+
+(socialParticipants Y1Stage1-OPECMeeting Indonesia-TheNation) 
+
+(implies 
+ (internationalOrg-MemberCountry OPEC ?COUNTRY) 
+ (socialParticipants Y1Stage1-OPECMeeting ?COUNTRY)) 
+
+(internationalOrg-MemberCountry OPEC Indonesia-TheNation) 
+
+(implies 
+ (and 
+ (instance ?EVENT1 Process) 
+ (instance ?EVENT2 Process) 
+ (startingDate ?EVENT1 
+ (DateInSituationFn CalendarDay ?M ?SIT)) 
+ (endingDate ?EVENT2 
+ (DateInSituationFn CalendarDay ?N ?SIT)) 
+ (greaterThan ?M ?N)) 
+ (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(instance Y1Stage1-OPECMeeting Process) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase2ScenarioConflict)) 
+
+(greaterThan 29 5) 
+
+(instance Y1Stage3-IranianCondemnation Process) 
+
+(existant Y1Stage3-IranianCondemnation 
+ (DateInSituationFn CalendarDay 29 Y1Phase2ScenarioConflict)) 
+
+(subrelation existant startingDate) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase1ScenarioConflict)) 
+
+(existant Y1Stage3-IranianCondemnation 
+ (DateInSituationFn CalendarDay 29 Y1Phase1ScenarioConflict)) 
+
+(implies 
+ (and 
+ (greaterThan ?M ?N) 
+ (startingDate ?EVENT1 
+ (DateInSituationFn CalendarDay ?M ?SIT)) 
+ (endingDate ?EVENT2 
+ (DateInSituationFn CalendarDay ?N ?SIT))) 
+ (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(implies 
+ (and 
+ (instance ?EVENT1 Process) 
+ (instance ?EVENT2 Process) 
+ (startingDate ?EVENT1 
+ (DateInSituationFn CalendarDay ?M ?SIT)) 
+ (endingDate ?EVENT2 
+ (DateInSituationFn CalendarDay ?N ?SIT)) 
+ (greaterThan ?M ?N)) 
+ (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(instance Y1Stage1-OPECMeeting Process) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase2ScenarioConflict)) 
+
+(greaterThan 17 5) 
+
+(instance Y1Stage1-SARequestsSecurityGuarantee Process) 
+
+(existant Y1Stage1-SARequestsSecurityGuarantee 
+ (DateInSituationFn CalendarDay 17 Y1Phase2ScenarioConflict)) 
+
+(subrelation existant startingDate) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase1ScenarioConflict)) 
+
+(existant Y1Stage1-SARequestsSecurityGuarantee 
+ (DateInSituationFn CalendarDay 17 Y1Phase1ScenarioConflict)) 
+
+(agent Y1Stage3-IranianCondemnation Iran) 
+
+(subrelation agent doneBy) 
+
+(senderOfInfo Y1Stage1-SARequestsSecurityGuarantee SaudiArabia) 
+
+(subrelation senderOfInfo doneBy) 
+
+(implies 
+ (internationalOrg-MemberCountry OPEC ?COUNTRY) 
+ (socialParticipants Y1Stage1-OPECMeeting ?COUNTRY)) 
+
+(internationalOrg-MemberCountry OPEC Indonesia-TheNation) 
+
+(maleficiary Y2Stage1-AzerbaijanSaudiAramcoDeal Iran) 
+
+(socialParticipants Y1Stage1-OPECMeeting Iran) 
+
+(socialParticipants Y1Stage1-OPECMeeting SaudiArabia) 
+
+(startsAfterEndingOf Y1Stage1-SARequestsSecurityGuarantee Y1Stage1-OPECMeeting) 
+
+(instance Y1Stage1-SARequestsSecurityGuarantee DiplomaticRequest) 
+
+(doneBy Y1Stage1-SARequestsSecurityGuarantee SaudiArabia) 
+
+(agent Y2Stage1-AzerbaijanSaudiAramcoDeal SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(agent Y2Stage1-AzerbaijanSaudiAramcoDeal Azerbaijan) 
+
+(socialParticipants Y1Stage1-OPECMeeting Indonesia-TheNation) 
+
+(implies 
+ (internationalOrg-MemberCountry OPEC ?COUNTRY) 
+ (socialParticipants Y1Stage1-OPECMeeting ?COUNTRY)) 
+
+(internationalOrg-MemberCountry OPEC Indonesia-TheNation) 
+
+(implies 
+ (and 
+ (instance ?EVENT1 Process) 
+ (instance ?EVENT2 Process) 
+ (startingDate ?EVENT1 
+ (DateInSituationFn CalendarDay ?M ?SIT)) 
+ (endingDate ?EVENT2 
+ (DateInSituationFn CalendarDay ?N ?SIT)) 
+ (greaterThan ?M ?N)) 
+ (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(instance Y1Stage1-OPECMeeting Process) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase2ScenarioConflict)) 
+
+(greaterThan 29 5) 
+
+(instance Y1Stage3-SAAttackOnIran Process) 
+
+(existant Y1Stage3-SAAttackOnIran 
+ (DateInSituationFn CalendarDay 29 Y1Phase2ScenarioConflict)) 
+
+(subrelation existant startingDate) 
+
+(endingDate Y1Stage1-OPECMeeting 
+ (DateInSituationFn CalendarDay 5 Y1Phase1ScenarioConflict)) 
+
+(existant Y1Stage3-SAAttackOnIran 
+ (DateInSituationFn CalendarDay 29 Y1Phase1ScenarioConflict)) 
+
+(implies 
+ (and 
+ (greaterThan ?M ?N) 
+ (startingDate ?EVENT1 
+ (DateInSituationFn CalendarDay ?M ?SIT)) 
+ (endingDate ?EVENT2 
+ (DateInSituationFn CalendarDay ?N ?SIT))) 
+ (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(implies 
+ (agent ?EVT ?PERF) 
+ (doneBy ?EVT ?PERF)) 
+
+(agent Y1Stage3-SAAttackOnIran SaudiArabia) 
+
+(maleficiary Y2Stage1-AzerbaijanSaudiAramcoDeal Iran) 
+
+(socialParticipants Y1Stage1-OPECMeeting Iran) 
+
+(socialParticipants Y1Stage1-OPECMeeting SaudiArabia) 
+
+(startsAfterEndingOf Y1Stage3-SAAttackOnIran Y1Stage1-OPECMeeting) 
+
+(instance Y1Stage3-SAAttackOnIran BombingMission) 
+
+(doneBy Y1Stage3-SAAttackOnIran SaudiArabia) 
+
+(agent Y2Stage1-AzerbaijanSaudiAramcoDeal SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(agent Y2Stage1-AzerbaijanSaudiAramcoDeal Azerbaijan) 
+
+(socialParticipants Y1Stage1-OPECMeeting Indonesia-TheNation) 
+
+(query (findall ?SITUATION
+(and 
+(situationInvolving AbuMusaIsland ?SITUATION) 
+(findAnalog Y2Scenario-AllStagesMt Y2ScenarioConflict HPKB-RealWorldMt ?SITUATION) 
+(not 
+(subProcess Y2ScenarioConflict ?SITUATION))) 
+))
+
+(answer AbuMusaConflict-1992)
+
+(answer Iran-UAEGulfIslandsDispute)
+
+
+(end_of_file)
+
+

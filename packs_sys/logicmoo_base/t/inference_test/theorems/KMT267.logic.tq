@@ -1,0 +1,9 @@
+(note "Kalish & Montague, Theorem 267")
+
+(forall ?X (equiv (F5 ?X) (not (F5 ?X))))
+
+(queryyn (exists ?X (and (F5 ?X) (not (F5  ?X))) ))
+
+(answer Yes)
+
+(end_of_file)

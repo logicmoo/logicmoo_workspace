@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\Amine8_Release\aminePlatform8\aminePlatform8Release\classes\aminePlatform\samples\ontology\cuisine.xml</Name>
+  <Ontologies2Import />
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>Fr</Language>
+    <Language>En</Language>
+  </Languages>
+  <MainLanguage>Fr</MainLanguage>
+  <RelationRoot>relation</RelationRoot>
+  <Root>
+    <Key>Cuisine</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Cuisine</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Cuisine</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>relation</Key>
+        </Child>
+        <Child>
+          <Key>ObjetNonAnime</Key>
+        </Child>
+        <Child>
+          <Key>ObjetAnime</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>ObjetAnime</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>ObjetAnime</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>ChefCuisinier</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Cuisine</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ChefCuisinier</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>ChefCuisinier</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Hamid</Key>
+        </Child>
+        <Child>
+          <Key>Rachida</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>ObjetAnime</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Rachida</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Rachida</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>ChefCuisinier</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>ChefCuisinier</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Hamid</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Hamid</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>ChefCuisinier</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>ChefCuisinier</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>ObjetNonAnime</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>ObjetNonAnime</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Ingredient</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Cuisine</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Ingredient</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Ingredient</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Legume</Key>
+        </Child>
+        <Child>
+          <Key>Fruit</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>ObjetNonAnime</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Fruit</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Fruit</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Fraise</Key>
+        </Child>
+        <Child>
+          <Key>Banane</Key>
+        </Child>
+        <Child>
+          <Key>Ananas</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Ingredient</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Ananas</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Ananas</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Fruit</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Banane</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Banane</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Fruit</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Fraise</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Fraise</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Fruit</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Legume</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Legume</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Tomate</Key>
+        </Child>
+        <Child>
+          <Key>PommeDeTerre</Key>
+        </Child>
+        <Child>
+          <Key>Carotte</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Ingredient</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Carotte</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Carotte</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Legume</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>PommeDeTerre</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>PommeDeTerre</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Legume</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Tomate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Tomate</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Legume</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Cuisine</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

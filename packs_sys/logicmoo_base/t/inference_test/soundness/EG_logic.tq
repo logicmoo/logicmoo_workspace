@@ -1,0 +1,13 @@
+(note "EG test")
+
+(F a)
+
+(queryyn 
+(exists ?Y (F ?Y))
+
+)
+
+(answer Yes)
+
+(end_of_file)
+

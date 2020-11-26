@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Eclipse-BundleShape: dir
+Bundle-ManifestVersion: 2
+Bundle-Name: PDT Connector
+Bundle-SymbolicName: org.cs3.pdt.connector;singleton:=true
+Bundle-Version: 3.1.2.qualifier
+Bundle-Activator: org.cs3.pdt.connector.PDTConnectorPlugin
+Export-Package: org.cs3.pdt.connector,
+ org.cs3.pdt.connector.load,
+ org.cs3.pdt.connector.registry,
+ org.cs3.pdt.connector.service,
+ org.cs3.pdt.connector.subscription,
+ org.cs3.pdt.connector.util,
+ org.cs3.pdt.connector.util.preferences
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.cs3.prolog.connector;bundle-version="[3.1.2,4.0.0)";visibility:=reexport,
+ org.eclipse.core.filesystem,
+ org.eclipse.jface.text,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.core.filebuffers
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: http://sewiki.iai.uni-bonn.de/research/pdt/docs

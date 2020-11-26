@@ -1,0 +1,12 @@
+From chrism@aipna.ed.ac.uk Tue Jan 23 09:38:01 1990
+From: Chris Mellish <chrism@aipna.ed.ac.uk>
+Date: Tue, 23 Jan 90 09:34:37 GMT
+To: geraldg%uk.ac.susx.cogs@syma.susx.ac.uk
+Subject: Prolog programs
+
+Graeme points out that some of our programs don't work under
+Edinburgh Prolog because they assume the existence of the
+predicate 'not' (Edinburgh Prolog calls this the mnemonic \+).
+It might be worth including a comment in the distribution
+stuff to warn people about this possible problem...
+

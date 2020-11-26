@@ -1,0 +1,18 @@
+(note TQA9)
+
+(exportRevenueFractionDuring Kuwait PetroleumProduct 
+ (YearFn 1997) 
+ (Percent 93)) 
+
+(query (findall (?FRACTION ?TIME) (thereExists ?NR 
+   (and 
+       (exportRevenueFractionDuring Kuwait PetroleumProduct ?TIME ?NR) 
+       (evaluate ?FRACTION 
+           (QuantityConversionFn Percent 
+               (DifferenceFn 1 ?NR))))) ))
+
+(answer 7.00000 1997 )
+
+(end_of_file)
+
+

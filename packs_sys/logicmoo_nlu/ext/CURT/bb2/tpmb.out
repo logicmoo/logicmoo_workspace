@@ -1,0 +1,31 @@
+interpretation( 1, [
+
+        predicate(event(_), [0]),
+
+        predicate(thing(_), [1]),
+
+        predicate(entity(_), [1]),
+
+        predicate(object(_), [0]),
+
+        predicate(organism(_), [1]),
+
+        predicate(animal(_), [0]),
+
+        predicate(person(_), [1]),
+
+        predicate(man(_), [0]),
+
+        predicate(woman(_), [1]),
+
+        predicate(male(_), [0]),
+
+        predicate(neuter(_), [0]),
+
+        predicate(female(_), [1]),
+
+        function(mia, [0]),
+
+        predicate(walk(_), [0])
+]).
+engine(mace).

@@ -1,0 +1,65 @@
+
+
+%----------------------------------------------------------------------
+
+% Order for expanding features when compiling to recognition grammar.
+% Order chosen here is based on that for the English grammar.
+
+%ignore_feature(v_type).
+
+feature_instantiation_schedule(
+	[[vform, lexical, v_type, special_v_type, voice],
+	 [stem_type, stem_type1, stem_type2],
+	 [na],
+	 [sc, pre_wa],
+	 [politeness],
+	 [sem_advp_type],
+	 [sem_pp_type],
+	 [sem_np_type],
+	 [sem_subj_type],
+	 [sem_obj_type],
+	 [sem_no_type],
+	 [sem_premod_type],
+	 [counter_type]]).
+
+%----------------------------------------------------------------------
+
+% These rules are currently only used in recognition
+
+% ku gatsu (ni) wa domna kaigi ga ari masu ka
+comps:[sem= @comps_topic_comps_sem(Np, Comps),
+       politeness=Polite, voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	np:[sem=Np, sem_np_type=NPType],
+	?p:[pre_wa=y, sem_np_type=NPType],
+	@j('は', wa, 'TOPIC'),
+	comps:[sem=Comps, politeness=Polite, voice=Voice, voice=active, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+% In a subordinate clause only, you can use 'no' to mark the subject
+% kanzaki kyoko san no syusseki suru kaigi wa itsu desu ka
+comps:[sem= @comps_subj_comps_sem(Np, Comps),
+       politeness=Polite, politeness=base, voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	np:[sem=Np, sem_np_type=SubjType],
+	@j('の', no, 'GEN'),
+	comps:[sem=Comps, politeness=Polite, voice=Voice, voice=active, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+% kubi wa dou desu ka?
+main_clause:[sem=concat([[manner, dou]], @vbar_np_copula_sem(Np, Copula))] -->
+	np:[sem=Np, sem_np_type=SubjType],
+	@j('は', wa, 'TOPIC'),
+	@j('どう', dou, 'HOW-ADV'),
+	copula:[sem=Copula, politeness=polite, sem_subj_type=SubjType, sem_obj_type=none].
+
+% mukou ni kagetsu kan de wa dou desu ka
+main_clause:[sem=concat([[manner, dou]], @vbar_pp_copula_sem(Pp, Copula))] -->
+	pp:[sem=Pp],
+	@j('は', wa, 'TOPIC'),
+	@j('どう', dou, 'HOW-ADV'),
+	copula:[sem=Copula, politeness=polite, sem_subj_type=none, sem_obj_type=none].
+
+% Frequency expression
+% syuu ikkai
+np:[sem= @np_frequency_np_sem(Np1, Np2), sem_np_type=temporal, lexical=n] -->
+	np:[sem=Np1, sem_np_type=frequency_time_unit],
+	np:[sem=Np2, sem_np_type=frequency],
+	softener:[].
+

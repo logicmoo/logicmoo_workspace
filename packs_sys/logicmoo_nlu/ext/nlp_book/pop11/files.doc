@@ -1,0 +1,418 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in POP-11"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Introduction       
+
+The programs discussed in the text have been organized as a set of
+"library files" that can be loaded independently.  A library file has
+a name that ends with ".p" and is generally referred to by the part of
+its name preceding this suffix.  The code uses the standard POP-11
+macros LIB and USES to load library files with given names.  This
+means that the directory in which the files are kept should appear as
+a string element of the global variable POPLIBLIST and POPUSESLIST:
+
+    ['XXXXXX' ^^popliblist] -> popliblist;
+    ['XXXXXX' ^^popuseslist] -> popuseslist;
+
+These assignments assume that the library files have been stored in
+the directory "XXXXXX".
+
+Using USES, each library file makes sure that, when it is loaded, any
+other library files which will automatically be required are also
+loaded.  This is why most of the files start with commands like:
+
+    lib subst;
+
+or
+
+    uses subst;
+
+USES differs from LIB, in that LIB will always load the library file,
+whereas USES will only load the file if it is not already loaded.
+USES decides that a library file has been loaded if a variable with
+the same name as the file has been declared and given a value.  This
+is why the library files often end with spurious introductions of
+variables like:
+
+    vars subst; true -> subst;
+
+If your POP-11 system does not provide a library facility and the USES
+macro, it is easy to define a version for yourself, although the exact
+format will depend on the structure of file names in your
+installation.  Here is one possible definition of USES:
+
+    define macro uses(file);
+       vars full_filename;
+       if identprops(file) = "undef" or isundef(valof(file)) then
+          'XXXXXX' >< file >< '.p' -> full_filename;
+          [loading ^full_filename]=>
+          compile(full_filename)
+       endif
+    enddefine;
+
+This procedure simply concatenates the directory name, "XXXXXX", the
+name provided and the ".p" suffix, loading the file with the resulting                     
+name.
+
+Brief description of some POP-11 facilities
+
+Although in the library programs we have attempted to be parsimonious
+in our use of facilities of POP-11, nevertheless we have inevitably
+used features that are not described in every single POP-11 text.  For
+completeness, therefore, we describe below the main features of POP-11
+that we use in the library programs but which are ommitted by any of
+Barrett et al (1985), Burton and Shadbolt (1987) and Laventhol (1987).
+
+The database
+
+POP-11 supports a simple "database" facility by providing a set of
+procedures that access the global variable DATABASE.  This variable is
+assumed to hold a list of items (usually themselves lists)
+representing "facts" of some kind.
+
+    present(PATTERN) - tests whether there is an element of DATABASE
+    that matches PATTERN, returning TRUE or FALSE.  PATTERN can be any
+    pattern that one could present to the POP-11 matcher.  If it
+    contains variable names preceded by "?" or "??", a TRUE result
+    will indicate that these variables will have been given values
+    corresponding to the appropriate parts of some entry in DATABASE.
+
+    add(ITEM) - adds ITEM to the list DATABASE
+
+The construction:
+
+    foreach PATTERN in LIST do
+     ACTIONS
+    endforeach;
+
+causes the ACTIONS to be carried out for each possible way the PATTERN
+matches an element in the LIST.  In general, the PATTERN will contain
+"?"s and/or "??"s, and so the variables preceded by these will have
+different values each time the ACTIONS are performed.  If the "in
+LIST" modifier is ommitted, it is assumed that the ACTIONS are to be
+performed for each way the PATTERN matches an element in DATABASE.
+
+Words, strings and characters
+
+    isword(ITEM) - tests whether ITEM is a word, returning TRUE or
+    FALSE
+
+    subscrw(N,WORD) - returns the Nth character of the word WORD
+
+    STRING1 >< STRING2 - returns the result of concatenating the
+    strings STRING1 and STRING2
+
+    gensym(WORD) - returns a new word which has WORD as a prefix
+
+The character quote (`) is used in POP-11 to indicate the character
+with a given printed form.  For instance,
+
+    `a` = subscrw(2,"pancake")
+
+is TRUE.
+
+Control facilities         
+
+    LABEL:
+     ...
+    goto LABEL;
+
+GOTO causes control to jump to the place in the current procedure
+which is marked by the LABEL followed by a ":".  LABELS are usually
+words.
+
+    return(RESULTS)
+
+RETURN causes the current procedure immediately to finish executing
+and control to return to the calling procedure.  Any arguments
+provided to RETURN will appear as the results of the call of the
+current procedure.
+
+    exitfrom(PROCEDURE)
+
+EXITFROM causes an error unless the system is in the middle of
+executing the given procedure.  It causes that procedure to
+immediately return, with no further work done.  Any values that are
+previously left on the stack will appear as the results of that
+procedure.
+
+    quitloop
+
+QUITLOOP causes the execution of the current looping construct (WHILE,
+REPEAT, UNTIL, FOR ...) immediately to finish and control to pass to
+whatever instructions follow that construct.
+
+    nextloop(N)
+
+NEXTLOOP is similar to QUITLOOP, except that control passes to just
+before the end of the looping construct, ready to go around again.
+The number N specifies which enclosing loop control is to go to the
+end of (1 means the immediately enclosing loop, 2 the one enclosing
+that, and so on).
+
+    repeat ACTIONS endrepeat
+
+This construction is used to cause ACTIONS to be executed repeatedly,
+until the program is interrupted or a control facility like QUITLOOP
+or RETURN is used to get out of the loop.
+
+List processing
+
+    member(ITEM,LIST) - tests whether ITEM is an element of LIST
+
+    cons(ITEM,LIST) - returns a list with head ITEM and tail LIST (as
+    does ::)
+
+    oneof(LIST) - returns a randomly chosen element of the list
+
+    islist(ITEM) - tests whether ITEM is a (possibly empty) list
+
+    length(LIST) - returns the number of elements in LIST
+
+    maplist(LIST,PROCEDURE) - applies the PROCEDURE to each element of
+    LIST in turn, returning the results generated in a list (each call
+    of the procedure must return exactly one result)
+
+The "decorated brackets" [% ... %] are used to make a list from a
+piece of computation "..." that may produce any number of results.
+The list consists of all the items that are on the POP-11 stack when
+the computation finishes, except for those that were already on the
+stack when it started.
+
+Other useful procedures         
+
+    newproperty(LIST,INTEGER,ITEM,BOOLEAN) - as with NEWASSOC, returns
+    a "property" which can be used to record values associated with
+    objects.
+
+    popval(LIST) - takes a list of items giving the textual form of a
+    POP-11 program and runs that piece of program, returning any
+    results that it produces
+
+    mishap(STRING,LIST) - signals that an error has occurred,
+    displaying STRING as an explanatory message and LIST as the list
+    of items that caused the problem
+
+    min(N1,N2) - returns the less of two numbers
+
+    isnumber(ITEM) - tests whether ITEM is a number
+
+    ITEM1 /= ITEM2 - tests whether ITEM1 and ITEM2 are not "=".
+
+Index of library files       
+
+<FILE> <CHAPTER> <CONTENTS> <PAGE>
+
+airdb1.p [9] Example database about airline companies
+airdb2.p [9] Example rulebase about airline companies
+airlines.p [8] PATR grammar, with semantics, for question-answering
+atnarcs1.p [3] Example ATN
+atnarcs2.p [3] Extended ATN
+atnrecog.p [3] Parsing using an ATN
+bckinfer.p [9] Backwards inference
+bubrecog.p [5] Bottom-up, breadth-first recognition for a CF-PSG
+buparse1.p [5] Bottom-up parsing for a CF-PSG
+buparse2.p [5] Bottom-up parser CF-PSG with less redundancy
+burecog.p [5] Bottom-up recognition for a CF-PSG
+cfpsgram.p [4] Example context free grammar in list format
+chart.p [6] Simple chart parser
+dagunify.p [7] Unification for DAGs
+dbq.p [9] Database query language evaluator
+disambig.p [8] PATR grammar showing disambiguation by semantic features
+eng_fre1.p [2] Simple FST for English-French translation
+eng_fre2.p [3] Simple PT for English-French translation
+english_1.p [2] FSTN for a fragment of English
+english_2.p [3] RTN for a fragment of English
+europe.p [9] Example database for question-answering
+families.p [9] Inference rules for family relationships
+fburecog.p [7] Bottom-up recognition for PATR grammars
+fchart.p [7] Chart parser for PATR grammars
+featexp.p [4] Expanding a feature-based grammar into a CF-PSG
+finite.p [2] Utilities for finite state networks
+forinfer.p [9] Forwards inference
+fsbgen.p [2] Breadth-first generation of sentences from a FSTN
+fsgen.p [2] Exhaustive generation of sentences from a FSTN
+fsrecog.p [2] Finite state recognition
+fstape.p [2] Tape-moving procedures for finite state networks
+fstgen.p [2] Exhaustive generation of sentence pairs from a FST
+fstrans.p [2] Finite state transduction
+inherits.p [9] Simple semantic net with default inheritance
+lexicon.p [7] Example lexical entries
+patrgram.p [7] Simple PATR grammar
+pdtransd.p [3] Pushdown transduction
+plan.p [10] Simple generation of plans involving illocutionary acts
+pop_patr.p [7] PATR rules and conditions
+predict.p [10] Prediction by plausible inference rules
+presupp.p [10] Presupposition grammar and inference rules
+randfgen.p [7] Random generation of sentences from a PATR grammar
+randftre.p [7] Random generation of trees from a PATR grammar
+randgen.p [4] Random generation from a CF-PSG
+randtree.p [4] Random generation of parse trees from a CF-PSG
+rtnrecog.p [3] Recognition using RTNs
+scripts.p [10] Script matching
+subst.p [7] Substitution utilities
+subsumes.p [7] Subsumption for DAGs
+tdparse.p [5] Top-down parser for a CF-PSG
+tdrecog.p [5] Top-down recognition for a CF-PSG
+termify.p [7] Translation from DAGs to terms
+tsubsume.p [7] Subsumption for terms
+tunify.p [7] Term unification
+
+Index of procedures defined       
+
+<PROCEDURE> <CHAPTER> <FILE> <PAGE>
+
+active_edge_procedure [6] chart.p
+active_edge_procedure [7] fchart.p
+add_edge [6] chart.p
+add_subst [7] subst.p
+addedge [7] fchart.p
+agenda_add [6] chart.p
+agenda_add [7] fchart.p
+apply_condition [7] pop_patr.p
+apply_path [7] pop_patr.p
+apply_subst [7] subst.p
+apply_wfc [7] lexicon.p
+atn_recognize [3] atnrecog.p
+atn_recognize_next [3] atnrecog.p
+atn_recognize_pop [3] atnrecog.p
+atn_recognize_push [3] atnrecog.p
+atn_recognize_traverse [3] atnrecog.p
+back_infer [9] bckinfer.p
+back_infer_all [9] bckinfer.p
+category [10] presupp.p
+category [4] randtree.p
+category [7] patrgram.p
+category [8] airlines.p
+category [8] disambig.p
+chart_parse [6] chart.p
+chart_parse [7] fchart.p
+combine_values [7] dagunify.p
+compose_substs [7] subst.p
+consequences [9] forinfer.p
+diff_tape [3] atnrecog.p
+doactions [3] atnrecog.p
+dopopactions [3] atnrecog.p
+dotests [3] atnrecog.p
+expand_rule [4] featexp.p
+fillout_rule [4] featexp.p
+final_actions [3] atnrecog.p
+final_nodes [2] finite.p
+final_nodes [3] atnrecog.p
+final_tests [3] atnrecog.p
+find [9] forinfer.p
+find_all [9] forinfer.p
+find_and_remove [7] subsumes.p
+find_feature_value [7] dagunify.p
+find_subtrees [5] tdparse.p
+find_trees [5] tdparse.p                     
+for_infer [9] forinfer.p
+g [7] randfgen.p
+generate [2] fsbgen.p
+generate [2] fsgen.p
+generate [4] randgen.p
+generate [4] randtree.p
+generate [7] randfgen.p
+generate [7] randftre.p
+generate2 [2] fstgen.p
+generate2_move [2] fstgen.p
+generate2_next [2] fstgen.p
+generate_all [4] randgen.p
+generate_all [4] randtree.p
+generate_all [7] randfgen.p
+generate_all [7] randftre.p
+generate_move [2] fstape.p
+generate_next [2] fsgen.p
+get_attr [9] inherits.p
+get_feature_val [4] featexp.p
+get_network [3] atnrecog.p
+get_network [3] pdtransd.p
+get_network [3] rtnrecog.p
+get_value [7] dagunify.p
+ground [7] subst.p
+inactive_edge_procedure [6] chart.p
+inactive_edge_procedure [7] fchart.p
+initial_actions [3] atnrecog.p
+initial_nodes [2] finite.p
+initial_nodes [3] atnrecog.p
+initial_regs [3] atnrecog.p
+initial_segment [5] buparse1.p
+initial_segment [5] buparse2.p
+initial_tests [3] atnrecog.p
+initialize_chart [6] chart.p
+initialize_chart [7] fchart.p
+isvar [7] subst.p
+lhs_match [7] pop_patr.p
+list [3] atnarcs1.p
+lookup_lex [7] lexicon.p
+lookup_subst [7] subst.p
+make_dag [7] pop_patr.p
+matching_rules [4] randgen.p
+matching_rules [4] randtree.p
+matching_rules [7] randfgen.p
+newvar [7] subst.p
+next [5] buparse1.p
+next [5] buparse2.p
+next [5] burecog.p
+next [5] tdrecog.p
+next [7] fburecog.p
+parse [5] buparse1.p
+parse [5] buparse2.p
+parse [5] tdparse.p                     
+plan [10] plan.p
+plan_next [10] plan.p
+predict [10] predict.p
+predict_all_ways [10] scripts.p
+put_value_in [7] dagunify.p
+query [9] dbq.p
+recognize [2] fsrecog.p
+recognize [5] bubrecog.p
+recognize [7] fburecog.p
+recognize_move [2] fstape.p
+recognize_next [2] fsrecog.p
+regs_used [3] atnrecog.p
+ren [7] subst.p
+rename [7] subst.p
+rename_var [7] subst.p
+retrieve_all [9] dbq.p
+rhs_match [7] pop_patr.p
+rtn_recognize [3] rtnrecog.p
+rtn_recognize_next [3] rtnrecog.p
+rtn_recognize_pop [3] rtnrecog.p
+rtn_recognize_push [3] rtnrecog.p
+rtn_recognize_traverse [3] rtnrecog.p
+rtn_transduce [3] pdtransd.p
+rtn_transduce_next [3] pdtransd.p
+same_dag [7] subsumes.p
+script_match [10] scripts.p
+simplify_features [7] dagunify.p
+subst_value [4] featexp.p
+subst_values [4] featexp.p
+subsumes [7] subsumes.p
+subsumes1 [7] subsumes.p
+termify_dag [7] termify.p
+termsubsumes [7] tsubsume.p
+termunify [7] tunify.p
+termunify1 [7] tunify.p
+tersubs1 [7] tsubsume.p
+transduce [2] fstrans.p
+transduce_move [2] fstrans.p
+transduce_next [2] fstrans.p
+transitions [2] finite.p
+transitions [3] atnrecog.p
+tree [10] presupp.p
+tree [6] chart.p
+tree [7] patrgram.p
+tree [8] airlines.p
+tree [8] disambig.p
+try_already_true [10] plan.p
+try_planners_own [10] plan.p
+try_to_achieve_can_do [10] plan.p
+try_to_make_true [10] plan.p
+unify [4] randgen.p
+unify [4] randtree.p
+unify [7] dagunify.p
+varstoequals [9] dbq.p

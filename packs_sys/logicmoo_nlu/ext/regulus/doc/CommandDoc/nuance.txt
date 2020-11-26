@@ -1,0 +1,10 @@
+
+Compile current Regulus grammar into Nuance GSL form. You won't be
+able to use this command in conjunction with a large general grammar,
+since it currently runs out of memory during compilation --- this why
+we need EBL. The {\tt NUANCE} command is useful for smaller Regulus
+grammars, e.g. the Toy1 grammar.
+
+The current Regulus grammar is defined by the {\tt regulus\_\-grammar}
+config file entry, and the location of the generated Nuance grammar by
+the {\tt nuance\_\-grammar} config file entry.

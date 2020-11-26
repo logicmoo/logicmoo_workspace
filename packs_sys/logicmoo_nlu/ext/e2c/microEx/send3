@@ -1,0 +1,74 @@
+%runs only under microPrologII
+
+% Cryptogrammes
+%
+% SEND+MORE=MONEY M. Van Caneghem  
+%
+% DONALD+GERALD=ROBERT I. Bratko avec dif
+%
+ 
+$ send :- sol_send([S,E,N,D,M,O,R,Y]),
+     write_send([S,E,N,D,M,O,R,Y]). 
+$ send2 :- dif(M,0),
+     sol_send([S,E,N,D,M,O,R,Y]),
+     write_send([S,E,N,D,M,O,R,Y]). 
+$ sol_send([S,E,N,D,M,O,R,Y]) :-  
+            are_dif([S,E,N,D,M,O,R,Y]), 
+            sum(R1,0,0,M,0), 
+            sum(R2,S,M,O,R1), 
+            sum(R3,E,O,N,R2), 
+            sum(X,N,R,E,R3), 
+            sum(0,D,E,Y,X). 
+ 
+$ donald :- sol_donald([D,O,N,A,L,G,E,R,B,T]),
+     write_donald([D,O,N,A,L,G,E,R,B,T]).
+$ donald2 :- sol_donald([5,O,N,A,L,G,E,R,B,T]),
+     write_donald([5,O,N,A,L,G,E,R,B,T]).
+$ sol_donald([D,O,N,A,L,G,E,R,B,T]) :- 
+            are_dif([D,O,N,A,L,G,E,R,B,T]), 
+            sum(0,D,D,T,Y),
+            sum(Y,L,L,R,X),
+            sum(X,A,A,E,R3),
+            sum(R3,N,R,B,R2),
+            sum(R2,O,E,O,R1),
+            sum(R1,D,G,R,0). 
+ 
+$ write_send([S,E,N,D,M,O,R,Y]) :- 
+              wl([' ',S,E,N,D]), 
+              wl(['+',M,O,R,E]), 
+              write('----------'), nl,
+              wl([M,O,N,E,Y]). 
+
+$ write_donald([D,O,N,A,L,G,E,R,B,T]) :-
+           wl([' ',D,O,N,A,L,D]), 
+           wl(['+',G,E,R,A,L,D]),
+           write(' -------------'), nl, 
+           wl([' ',R,O,B,E,R,T]). 
+
+% En commun
+%
+$ wl([]) :- nl.
+$ wl([X|Y]) :- write(X), write(' '), wl(Y). 
+
+$ sum(X,0,0,X,0) :- !, carry(X). 
+$ sum(R,X,Y,Z,R1) :- carry(R), digit(X), digit(Y), 
+                      plus(X,Y,X1), plus(X1,R,T1), 
+                      divi(T1,10,R1), mod(T1,10,Z).
+$ digit(0). 
+$ digit(1). 
+$ digit(2). 
+$ digit(3). 
+$ digit(4). 
+$ digit(5). 
+$ digit(6). 
+$ digit(7). 
+$ digit(8). 
+$ digit(9). 
+
+$ carry(0). 
+$ carry(1). 
+  
+$ are_dif([]). 
+$ are_dif([T|Q]) :- out_of(T,Q), are_dif(Q). 
+$ out_of(X,[]). 
+$ out_of(X,[T|Q]) :- dif(X,T), out_of(X,Q). 

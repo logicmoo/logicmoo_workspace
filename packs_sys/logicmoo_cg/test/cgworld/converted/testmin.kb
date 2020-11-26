@@ -1,0 +1,88 @@
+% [Cat*x][Mat*y](On?x?y)
+cgc(237,simple,'cat',[fs(num,sing)],[]).
+cgc(238,simple,'mat',[fs(num,sing)],[]).
+cg(239,[cgr(on, [237, 238], _)], 
+        [],
+        [fs(kind,normal)]).
+% [Cat:*x][Mat:*y](On?x?y)
+cgc(240,simple,'cat',[],[]).
+cgc(241,simple,'mat',[],[]).
+cg(242,[cgr(on, [240, 241], _)], 
+        [],
+        [fs(kind,normal)]).
+% (On[Cat:#this][Mat:#1234])
+cgc(243,simple,'cat',[fs(num,sing),fs(type,def),fs(refID,this)],[]).
+cgc(244,simple,'mat',[fs(num,sing),fs(type,def),fs(refID,1234)],[]).
+cg(245,[cgr(on, [243, 244], _)], 
+        [],
+        [fs(kind,normal)]).
+% (On[Cat:][Mat:])
+cgc(246,simple,'cat',[],[]).
+cgc(247,simple,'mat',[],[]).
+cg(248,[cgr(on, [246, 247], _)], 
+        [],
+        [fs(kind,normal)]).
+% NOT RECOGNISED   [Cat:@every*x][Mat:*y](On?x?y)
+% (On[Cat:@every][Mat:#])
+cgc(250,simple,'cat',[fs(num,sing),fs(quant,every)],[]).
+cgc(251,simple,'mat',[fs(num,sing),fs(type,def),fs(refID,)],[]).
+cg(252,[cgr(on, [250, 251], _)], 
+        [],
+        [fs(kind,normal)]).
+% NOT RECOGNISED   [[Cat:*x]~[(On?x[Mat:#])]]
+% NOT RECOGNISED   [Go:*x][Person:'John'*y][City:'Boston'*z][Bus:*w](Agnt?x?y)(Dest?x?z)(Inst?x?z)
+% NOT RECOGNISED   [Go*x][Person:'John'*y][City:'Boston'*z][Bus*w](Agnt?x?y)(Dest?x?z)(Inst?x?z)
+% [Go*x](Agnt?x[Person:'John'])(Dest?x[City:'Boston'])(Inst?x[Bus])
+cgc(258,simple,'go',[fs(num,sing)],[]).
+cgc(259,simple,'person',[fs(name,'John')],[]).
+cgc(261,simple,'city',[fs(name,'Boston')],[]).
+cgc(262,simple,'bus',[fs(num,sing)],[]).
+cg(260,[cgr(agnt, [258, 259], _),
+        cgr(dest, [258, 261], _),cgr(inst, [258, 262], _)], 
+        [],
+        [fs(kind,normal)]).
+% (Betw[Rock][Place*x][Person])(Attr?x[Hard])
+cgc(263,simple,'rock',[fs(num,sing)],[]).
+cgc(264,simple,'place',[fs(num,sing)],[]).
+cgc(265,simple,'person',[fs(num,sing)],[]).
+cgc(267,simple,'hard',[fs(num,sing)],[]).
+cg(266,[cgr(betw, [263, 265], _),
+        cgr(attr, [264, 267], _)], 
+        [],
+        [fs(kind,normal)]).
+% [Person*x][Rock*y][Place*z][Hard*w](betw?y?z?x)(attr?z?w)
+cgc(268,simple,'person',[fs(num,sing)],[]).
+cgc(269,simple,'rock',[fs(num,sing)],[]).
+cgc(270,simple,'place',[fs(num,sing)],[]).
+cgc(271,simple,'hard',[fs(num,sing)],[]).
+cg(272,[cgr(betw, [269, 268], _),
+        cgr(attr, [270, 271], _)], 
+        [],
+        [fs(kind,normal)]).
+% [Cat*x:'Yojo'(attr?x[Black])]
+cgc(274,simple,'black',[fs(num,sing)],[]).
+cg(275,[cgr(attr, [273, 274], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(273,complex,cat,[275],[fs(name,'Yojo')]).
+% (attr[Cat:'Yojo'][Black])
+cgc(276,simple,'cat',[fs(name,'Yojo')],[]).
+cgc(277,simple,'black',[fs(num,sing)],[]).
+cg(278,[cgr(attr, [276, 277], _)], 
+        [],
+        [fs(kind,normal)]).
+% NOT RECOGNISED   [Person:'Tom'*x1][Believe*x2](Expr?x2?x1)(Thme?x2[Proposition:[Person:'Mary'*x3][Want*x4](Expr?x4?x3)(Thme?x4[Situation:[Marry*x5](Agnt?x5?x3)(Thme?x5[Sailor])])])
+% [If:(On[Cat][Mat])[Then(Attr[Cat:#][Happy])]]
+cgc(281,simple,'cat',[fs(num,sing)],[]).
+cgc(282,simple,'mat',[fs(num,sing)],[]).
+cgc(285,simple,'cat',[fs(num,sing),fs(type,def),fs(refID,)],[]).
+cgc(286,simple,'happy',[fs(num,sing)],[]).
+cg(287,[cgr(attr, [285, 286], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(284,complex,then,[287],[fs(num,sing)]).
+cg(283,[cgr(on, [281, 282], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(280,complex,if,[283],[]).
+% NOT RECOGNISED   [If(GreaterThan[Integer:+453536*x][Number:-678.88e-34])[Then:[Number*y](Sum?x[Number:+.01]?y)]]

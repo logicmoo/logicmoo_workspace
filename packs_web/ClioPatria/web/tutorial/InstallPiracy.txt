@@ -1,0 +1,85 @@
+# Installing the pirates demo
+
+This page explains the preparations you need for running the demo.
+
+## Installing the demo on Windows
+
+You need the following components installed:
+
+  1. [[SWI-Prolog][http://www.swi-prolog.org./Download.html]] (It
+  is adviced to install the development version).
+  2. The [[GIT][http://git-scm.com/download]] version control system is needed
+  to download ClioPatria and install the demo package.
+  3. [[Graphzviz][http://www.graphviz.org/Download.php]] is needed to
+  render RDF graphs. This also requires an
+  [[SVG][http://www.w3.org/Graphics/SVG/]] capable browser such as
+  Firefox or IE9. Notable IE before version 9 will not work.
+
+Step (2) above created a desktop-icon named *|Git bash|*. Open this.
+This creates a GIT shell in your personal folder. Install ClioPatria
+into =Documents= and create a folder for running this demo using the
+commands below the Git shell-windows. In the example we use your
+Documents folder, but you can download ClioPatria and create the Pirates
+folder anywhere you like.
+
+  ==
+  $ cd Documents
+  $ git clone https://github.com/ClioPatria/ClioPatria.git
+  $ mkdir Pirates
+  ==
+
+Use the Windows explorer and enter the created ClioPatria folder. Open
+=|win-config.exe|=. If it prompts for a directory, specify the above created
+=Pirates= folder. Setup initializes a new ClioPatria project in the
+target folder. Use the Windows explorer, enter the =pirates= folder and
+open =|run.pl|=. This loads ClioPatria and starts the ClioPatria
+web-server. Your firewall will probably complain. Authorize web-access
+to SWI-Prolog.
+
+## Installation on other systems
+
+Getting the required software (Prolog, GIT and Graphviz) differ from
+system to system. We gathered some information for [[Linux
+distributions][http://www.swi-prolog.org/build/LinuxDistro.txt]].
+One you have the software, a few commands in a terminal do the trick:
+
+  ==
+  $ git clone https://github.com/ClioPatria/ClioPatria.git
+  $ mkdir Pirates
+  $ cd Pirates
+  $ ../ClioPatria/configure --with-localhost
+  ...
+  $ ./run.pl
+  ==
+
+The remainder of this tutorial applies to all systems.
+
+## Initial configuration (all systems)
+
+Use your browser and open http://localhost:3020/.  On first visit
+it requires you do specify a password for the =admin= user.  Use a
+password of at *|least six characters long|*.
+
+On Windows, open *|Admin/plugins|*, switch *localhost* to _link_ and
+click *|Update configuration|*. This tells the system that its primary
+access is =localhost=. Using localhost enables some additional
+development features and allows us to use the Google maps API without
+obtaining a key from Google.
+
+Finally, we need to install the pirates package that provides the demo
+data and some additional utilities. This package is installed from the
+Prolog window using the command below. This step requires GIT installed.
+
+  ==
+  ?- cpack_install(pirates).
+  ==
+
+You are now ready to [[explore the pirates domain][LoadPirates.txt]].
+
+With ClioPatria running, you can also examine this tutorial text from
+your local installation. See the *|Help/Tutorial|* entry of the
+ClioPatria toolbar in your browser.
+
+@see [[Tutorial index][Piracy.txt]]
+@tbd The setup could be streamlined if setup/configure would allow
+     selecting plugins.

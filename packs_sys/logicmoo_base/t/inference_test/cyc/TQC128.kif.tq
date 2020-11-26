@@ -1,0 +1,16 @@
+(note "TQC128 Hilog")
+
+(transportedInTypes BiologicalWeapon BallisticMissile) 
+
+
+
+(query (findall ?RELATIONSHIP
+
+ (or 
+ (?RELATIONSHIP BallisticMissile BiologicalWeapon) 
+ (?RELATIONSHIP BiologicalWeapon BallisticMissile))))
+
+(answer transportedInTypes)  
+
+
+(end_of_file)

@@ -1,0 +1,8 @@
+ERROR: Invalid ACE text:
+The word "makes" is unknown; did you mean "cakes"?
+The word "registration" is unknown.
+The word "registration" is unknown.
+The word "makes" is unknown; did you mean "cakes"?
+The word "registration" is unknown.
+"If a customer <> makes a registration and the customer is important and the customer wants a card then John gives the card to the customer after the registration.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+

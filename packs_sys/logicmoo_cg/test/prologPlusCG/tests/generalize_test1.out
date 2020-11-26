@@ -1,0 +1,3 @@
+{G=[Actor] -
+        -uses->[Tool],
+        -uses->[Material]}

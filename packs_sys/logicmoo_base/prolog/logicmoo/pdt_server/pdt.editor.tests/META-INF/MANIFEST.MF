@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PDT Editor Tests
+Bundle-SymbolicName: org.cs3.pdt.editor.editor.editor.tests;singleton:=true
+Bundle-Version: 3.2.0.qualifier
+Require-Bundle: org.cs3.pdt.editor,
+ org.junit,
+ org.eclipse.jface.text,
+ org.cs3.pdt.common

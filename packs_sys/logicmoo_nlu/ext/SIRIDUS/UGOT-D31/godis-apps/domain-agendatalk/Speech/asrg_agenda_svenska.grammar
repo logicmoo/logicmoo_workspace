@@ -1,0 +1,263 @@
+; nuance grammar for GoDiS agendatalk domain/lexicon
+
+.Asrg_agenda_svenska LexiconAgendaSvenska
+
+LexiconAgendaSvenska  [ (?[okej No] Answer)	
+			(?[okej No] ShortAns)
+			Question
+			Contradiction
+                        ICM
+ 			Greet
+			Quit
+			(?Yes Yes)
+			No
+			AMPM
+			ja			
+			]
+
+Greet [	hallå
+	hejsan
+	tjena		
+	tjenare
+	hej
+]
+Quit [	hejdå
+	(?nej ?Want avsluta ?samtalet)
+	adjö
+        sluta
+	(klart slut)
+	(tack för idag)
+	(tack för mig)
+	(det var allt)
+	(ingenting)
+]
+
+Yes [ 	ja
+        (-pau- ja)
+        jajamen
+	javisst	
+	okej
+	precis
+	japp
+	korrekt
+	(det stämmer)
+	(svar ja)
+	(det är korrekt)
+ ]
+
+No [ 	(nej det stämmer inte)
+	(nej det är fel)
+	nej
+        (-pau- nej)
+	(nej nej)
+	nä 
+]
+
+
+Contradiction [	(?nej inte Date ?Date) (?nej inte Event ?Event) (?nej inte Time ?Time) (?nej inte AMPM ?AMPM) (?nej inte Action ?Action) (?nej Date inte Date) (?nej Event inte Event) (?nej Time inte Time) (?nej AMPM inte AMPM) (?nej Action inte Action) (?nej inte tisdag torsdag) (?nej inte torsdag tisdag) (torsdag inte tisdag)
+]		
+
+;user answers***************
+
+Answer [ 
+( ?Want [([lägga lägg] [till in]) anteckna (boka ?[in upp]) (föra in) (skriv ner) (skriv upp) ] ?[Event EventKnown] ?DateTime) 
+(?[(lägg till att) (anteckna att) (skriv [upp ner] att) (ta bort att) ] jag ska ?[på till ha] [Event EventKnown] ?DateTime) 
+(jag har Event DateTime) 
+(lägg till information) 
+(Want hjälp) 
+(?Want kolla tiden ?för ?[Event EventKnown]) 
+(?Want [(ta bort) (tabort) radera avboka] [EventKnown Event (en bokning)] ?DateTime) 
+(?Want flytta ?WeekDayGen Event ?till ?DateTime ) 
+(?Want flytta ?[måndags tisdags onsdags fredags torsdags lördags söndags] EventKnown ?till ?DateTime ) 
+(?Want flytta [EventKnown Event] till ?DateTime) 
+(?Want ändra [datum tid tiden datumet] för [EventKnown Event] ?DateTime ?(till DateTime)) 
+(?Want ändra [EventKnown Event] ?till ?DateTime) 
+(?Want [byta byt] [datum tid dag tiden] ?([på för] en bokning)) 
+(?Want göra en ändring)
+(EventKnown [börjar startar är] ?DateTime)
+]
+
+Want [ (jag vill) (jag skulle vilja) (kan du hjälpa mig ?med att) (kan du) (jag måste) (jag behöver)
+]
+
+ShortAns [ DateTime (ett möte) AMPM  hjälp StartOver (?Want Action) (WeekDay [kväll natt morgon]) (Event ?DateTime) (EventKnown ?DateTime) AnalogHours (till Time) (till Date)]
+
+Action [ 
+(hjälp ?mig) 
+(kolla min kalender) 
+(kolla kalendern) 
+(fråga kalendern) 
+(?fråga ?om vilken tid) 
+(kolla tiden ?(för en bokning)) 
+(kolla om jag är bokad) 
+anteckning 
+anteckna 
+(göra en anteckning) 
+(anteckna i kalendern) 
+(boka [?in upp]) 
+(skriva ner en anteckning) 
+([för föra] in) 
+(ändra [datum tid datumet tiden informationen]) 
+(ta bort ?allt) 
+(tabort) 
+(radera ?allt) 
+(glöm allt) 
+([lägg lägga] [till in] ?(en bokning) ) 
+(ändra) 
+(flytta ?Event) 
+([flytta ändra] en bokning) 
+(boka om) 
+([byta byt] [datum tid] )
+]
+
+StartOver [ (börja om) toppnivå början (radera ?allt) (glöm allt) (börja om från början) (starta om) (gå upp) (gå tillbaka) (tillbaka) (gå tillbaks) (?gå tillbaka till toppnivå)
+]
+
+;user questions**********
+
+Question [ 
+(vad kan man göra)
+(jag vill [kolla fråga] [(vilken tid) när] EventKnown ?DateTime är) 
+([(vilken tid) när] [var är börjar startar ] EventKnown ?Date) 
+([(vilken tid) när] [var är börjar startar (har jag)] nästa Event ?Date) 
+([(vilken tid) när] ska jag ?[till på ha] ?nästa Event ?Date) 
+([(vilken tid) när] [var är] det jag ska ?[till på ha] ?nästa [Event EventKnown] ?Date)
+([(vilken tid) när] [var är börjar startar ] WeekDayGen EventKnown) 
+(kolla tiden) 
+(vilken tid) 
+(är jag [ledig uppbokad bokad inbokad upptagen] DateTime) 
+(vad gör jag DateTime) 
+(vad ska jag göra DateTime) 
+(vad står i min kalender ?DateTime) 
+(vad finns [antecknat bokat planerat] ?DateTime)
+(vad har jag ?bokat DateTime)
+(vad har jag på WeekDay)
+(vad har jag på schemat ?Date)
+(vad har jag att göra ?Date)
+(hur ser WeekDayGen schema ut)
+(hur ser schemat ut ?Date)
+(vad står det på schemat ?Date)
+(hur ser mitt schema ut ?Date) 
+(?Want se WeekDayGen [program schema])
+(?Want visa WeekDayGen [program schema])
+(har jag något [bokat planerat] DateTime) 
+(vad händer Date)
+(har jag ?[något någon] Event ?DateTime)
+( [har gör] jag något ?DateTime)
+(vilken dag är det idag)
+(vilket datum är det idag)
+(vad är det för dag idag)
+(vad är det för datum idag)
+(vad är dagens datum)
+(jag skulle vilja [veta (ha reda på)] [(vilken dag) (vilket datum)] det är idag)
+(jag skulle vilja [veta (ha reda på)] [när (vilken tid)] EventKnown [startar börjar är] ?(på WeekDay) )
+(jag skulle vilja [veta (ha reda på)] vad jag [(har bokat) (har planerat) (ska göra) (har på schemat)] ?DateTime)
+(jag skulle vilja [veta (ha reda på)] vad som [(är bokat) (är planerat) (ska göras) (finns på schemat) (står i min kalender)] ?DateTime)
+] 
+
+
+; ICM**************
+
+ICM [ förlåt
+	ursäkta
+	va
+      okej
+      visst
+      (?jag vet inte) 
+     (vad sa du) 
+	(jag förstår inte)
+	(jag hörde inte)
+        (jag hörde inte vad du sa)
+]
+
+;EVENTS**************
+
+EventKnown [ mötet presentationen föreläsningen lektionen festen partyt kalaset bion träffen fikat yogan träningen vattengympan styrketräningen klippning frissan frisören  tandläkaren tandläkartiden shoppingen resan konferensen seminariet tvätttiden middagen lunchen affärsmötet affärslunchen lunchmötet
+]
+Event [ (?ett möte) (?en presentation) (?en föreläsning) (?en lektion) (?en fest) bio (?ett biobesök) (?en träff) (?en fika) yoga träning träna simma workout simning jogging vattengympa aerobic taichi gymma styrketräning (?ett tandläkarbesök) tandläkaren (?en tandläkartid) klippning frissan frisören klipptid (?ett party) (?ett kalas) shoppa handla shopping (?en resa) (?en flygresa) (?en tågresa) (resa bort) (?en konferens) (?ett seminarie) (?en tvätttid) (?en middag) (?en lunch) (?en affärslunch) (?ett affärsmöte) (?ett lunchmöte) (?en konsert)
+]
+
+DateTime [ Date Time (Date Time) (Time Date) (Date [(nästa vecka) (denna vecka) (den här veckan) (hela dagen)])]
+
+;TIMES*************
+
+Time [ 
+(klockan halv AnalogHours) 
+(klockan kvart [över i] AnalogHours) ([klockan vid] Hour) 
+(klockan Hour ?och Min ) 
+(klockan [fem tio femton tjugo tjugofem] [över i] AnalogHours) 
+(prick Hour) 
+(klockan Hour noll noll) 
+(klockan Hour AMPM) 
+(vid midnatt) 
+(vid lunchtid)
+(tiden är Hour)
+(tid Hour)
+]
+
+AMPM [(?på morgonen) (?på eftermiddagen) (?på förmiddagen) (efter lunch) (före lunch) (på kvällen) (på natten) (i eftermiddag) (ikväll)
+]
+
+Hour [ Digit Teen tjugo (tjugoett) (tjugotvå) (tjugotre)
+]
+
+Min  [ Digit Teen (Twenty2Fifty ?Digit)
+]
+
+Twenty2Fifty [ tjugo trettio fyrtio femtio
+] 
+
+Digit [ noll ett två tre fyra fem sex sju åtta nio ]
+
+Teen [ tio elva tolv tretton fjorton femton sexton sjutton arton 
+       nitton ]
+
+AnalogHours [ ett två tre fyra fem sex sju åtta nio tio elva tolv ]
+
+;DATES************
+
+Date [ idag igår imorrn imorgon iövermorgon ikväll (på WeekDay) WeekDay (nästa WeekDay) (?WeekDay den Day ?Month) (Day Month) ]
+
+
+WeekDay [ 
+	måndag
+	tisdag
+	onsdag
+	torsdag
+	fredag
+	lördag
+	söndag 
+]
+
+WeekDayGen[ 
+	dagens
+	morgondagens
+	måndagens
+	tisdagens
+	onsdagens
+	torsdagens
+	fredagens
+	lördagens
+	söndagens 
+]
+
+
+Month [ januari
+	februari
+	mars
+	april
+	maj
+	juni
+	juli
+	augusti
+	september	
+	oktober
+	november
+	december ]
+
+Day [ första andra tredje fjärde femte sjätte sjunde åttonde nionde tionde elfte tolfte trettonde fjortonde femtonde sextonde sjuttonde artonde nittonde tjugonde tjugoförsta tjugoandra tjugotredje tjugofjärde tjugofemte tjugosjätte tjugosjunde tjugoåttonde tjugonionde trettionde trettiförsta
+	]
+
+
+
+

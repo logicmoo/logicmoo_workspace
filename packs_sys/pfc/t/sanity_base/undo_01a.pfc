@@ -1,0 +1,53 @@
+% -*-Prolog-*-
+
+:- include(test_header).
+
+% this Pfc example shows how to maintain a sum.	
+% Given a set of asssertions matching value(N), this rule
+% will maintain an assertion sum(S) where S is the sum of all of the values.
+
+
+:- dynamic(sum/1).
+
+
+% RULES
+
+value(X) ==> {addToSum(X)}.
+
+do_and_undo(addToSum(X), subFromSum(X)).
+
+addToSum(X) :-
+  retract(sum(S)),
+  !,
+  NewS is X+S,
+  assert(sum(NewS)).
+addToSum(X) :- assert(sum(X)).
+  
+subFromSum(X) :-
+  retract(sum(S)),
+  NewS is S-X,
+  assert(sum(NewS)),
+  !.
+subFromSum(X) :- 
+  format('~n I can''t find a sum to subtract ~w from.',[X]).
+
+
+
+% FACTS
+
+value(1).
+value(2).
+value(3).
+
+% TEST RESULTS
+:- mpred_test(sum(6)).
+
+% TEST REMOVAL HIT
+\+ value(2).
+:- mpred_test(sum(4)).
+
+% TEST REMOVAL MISS
+\+ value(2).
+:- mpred_test(sum(4)).
+
+

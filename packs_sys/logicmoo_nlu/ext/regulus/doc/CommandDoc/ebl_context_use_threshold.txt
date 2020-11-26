@@ -1,0 +1,4 @@
+Relevant to applications using grammar specialisation. Defines the
+minimum number of examples of a rule that must be present if the
+system is to use rule context anti-unification to further constrain
+that rule.

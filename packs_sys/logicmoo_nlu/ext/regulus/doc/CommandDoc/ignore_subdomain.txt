@@ -1,0 +1,9 @@
+Relevant to applications using grammar specialisation. Sometimes, you
+will have defined multiple subdomains, but you will only be carrying
+out development in one of them. In this case, you can speed up EBL
+training by temporarily adding ignore\_\-subdomain declarations in the
+config file. An ignore\_\-subdomain declaration has the form
+\begin{verbatim}
+regulus_config(ignore_subdomain, <Tag>).
+\end{verbatim}
+The effect is to remove all references to $\langle$Tag$\rangle$ when performing training, and not build any specialised grammar for $\langle$Tag$\rangle$. You may include any number of ignore\_\-subdomain declarations.

@@ -1,0 +1,15 @@
+Parameterised version of TRANSLATE\_\-SPEECH\_\-CORPUS. Process speech mode
+translation corpus, defined by the translation\_\-speech\_\-corpus($\langle$Arg$\rangle$)
+config file entry. The output file, defined by the
+translation\_\-speech\_\-corpus\_\-results($\langle$Arg) config file entry, contains
+question marks for translations that have not yet been judged. If
+these are replaced by valid judgements, currently 'good', 'ok' or
+'bad', the new judgements can be incorporated into the stored
+translation judgements file using the command
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH $\langle$Arg$\rangle$. A second output file,
+defined by the translation\_\-corpus\_\-tmp\_\-recognition\_\-judgements($\langle$Arg$\rangle$)
+config file entry, contains "blank" recognition judgements: here, the
+question marks should be replaced with either 'y' (acceptable
+recognition), or 'n' (unacceptable recognition). Recognition
+judgements can be updated using the UPDATE\_\-RECOGNITION\_\-JUDGEMENTS
+$\langle$Arg$\rangle$ command.

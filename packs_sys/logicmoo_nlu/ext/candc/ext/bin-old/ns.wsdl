@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="%{Service}%"
+ xmlns="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ targetNamespace="%{URL}%/%{Service}%.wsdl"
+ xmlns:tns="%{URL}%/%{Service}%.wsdl"
+ xmlns:ns="%{URL}%/ns.xsd">
+
+<types>
+ <schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  targetNamespace="%{URL}%/ns.xsd"
+  xmlns:ns="%{URL}%/ns.xsd">
+
+ </schema>
+</types>
+
+<message name="getQuoteRequest">
+ <part name="symbol" type="xsd:string"/>
+</message>
+
+<message name="getQuoteResponseRequest">
+ <part name="result" type="xsd:float"/>
+</message>
+
+<portType name="%{Service}%PortType">
+ <operation name="getQuote">
+  <documentation>Service definition of function ns__getQuote</documentation>
+  <input message="tns:getQuoteRequest"/>
+ </operation>
+ <operation name="getQuoteResponse">
+  <documentation>Service definition of function ns__getQuoteResponse</documentation>
+  <input message="tns:getQuoteResponseRequest"/>
+ </operation>
+</portType>
+
+<binding name="%{Service}%Binding" type="tns:%{Service}%PortType">
+ <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="getQuote">
+  <SOAP:operation soapAction="%{URI}%#getQuote"/>
+  <input>
+   <SOAP:body use="encoded" namespace="%{URI}%" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+ </operation>
+ <operation name="getQuoteResponse">
+  <SOAP:operation soapAction="%{URI}%#getQuoteResponse"/>
+  <input>
+   <SOAP:body use="encoded" namespace="%{URI}%" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+ </operation>
+</binding>
+
+<service name="%{Service}%">
+ <documentation>gSOAP 2.1.6b generated service definition</documentation>
+ <port name="%{Service}%Port" binding="tns:%{Service}%Binding">
+  <SOAP:address location="%{URL}%/%{Service}%.cgi"/>
+ </port>
+</service>
+
+</definitions>

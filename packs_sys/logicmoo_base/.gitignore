@@ -1,0 +1,16 @@
+prolog/cpack/
+*.tar
+*.tar.*
+*.jar
+*.exe
+*.msi
+*.zip
+*.tgz
+*.log
+*~
+~*
+*.qlf
+INDEX.pl
+*.o
+prolog/logicmoo/tptp/kbset/
+prolog/logicmoo/tptp/pie/

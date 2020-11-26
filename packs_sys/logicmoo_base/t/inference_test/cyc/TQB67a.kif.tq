@@ -1,0 +1,17 @@
+(note TQB67a)
+
+(instance Iraq IndependentCountry) 
+
+(opponentsInConflict Iraq SaudiArabia PersianGulfWar) 
+
+(query (findall ?COUNTRY
+ (and 
+ (instance ?COUNTRY IndependentCountry) 
+ (opponentsInConflict ?COUNTRY SaudiArabia PersianGulfWar))  ))
+
+(answer Iraq)
+
+
+(end_of_file)
+
+

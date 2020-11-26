@@ -1,0 +1,5 @@
+10,9835f182_00000828_42d5098f_0001_0000,LOG,ERROR,0,2005/07/13 14:31:12.101,TALKIE,java,2052,AUDIO,Mixer_Init,21,No control in Micro!
+10,9835f182_00000828_42d5098f_0001_0000,LOG,ERROR,0,2005/07/13 14:31:12.732,TALKIE,java,2052,AUDIO,SetInputVolume,31,MIC volume cannot be accessed!
+10,9835f182_00000828_42d5098f_0001_0000,LOG,ERROR,0,2005/07/13 14:31:12.732,TALKIE,java,2052,AUDIO,AudioObj::AudioObj,73,Initialization for provider "native" failed because "NUANCE_AUDIO_ERROR"
+10,-,LOG,ERROR,0,2005/07/13 14:31:12.732,TALKIE,java,424,SC,NuanceSpeechChannel::NuanceSpeechChannel,67,wait for RCEngine initialization failed because NUANCE_AUDIO_ERROR
+10,-,LOG,ERROR,0,2005/07/13 14:31:12.732,TALKIE,java,424,JNI,JNIChannel::Init,58,failed to create SpeechChannel because NUANCE_AUDIO_ERROR

@@ -1,0 +1,1 @@
+[Person:{John,Sam,Sue,Mary}]<-agnt-[Drive]-obj->[Car]-chrc->[Color : red]

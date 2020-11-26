@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Debugger.Tests</RootNamespace>
+    <AssemblyName>Debugger.Tests.Boo</AssemblyName>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A4C858C8-51B6-4265-A695-A20FCEBA1D19}</ProjectGuid>
+    <OutputPath>..\..\..\..\..\..\bin\UnitTests\</OutputPath>
+    <Optimize>False</Optimize>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <NoStdLib>False</NoStdLib>
+    <PlatformTarget>x86</PlatformTarget>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugType>Full</DebugType>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>219,414</NoWarn>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;TEST_CODE</DefineConstants>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>TRACE;TEST_CODE</DefineConstants>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\..\..\Tools\NUnit\nunit.framework.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration\AssemblyInfo.cs" />
+    <Compile Include="DebuggerTests.cs" />
+    <Compile Include="DebuggerTestsBase.cs" />
+    <Compile Include="TestPrograms\ArrayValue.cs" />
+    <Compile Include="TestPrograms\Break.cs" />
+    <Compile Include="TestPrograms\Breakpoint.cs" />
+    <Compile Include="TestPrograms\Callstack.cs" />
+    <Compile Include="TestPrograms\DebuggeeKilled.cs" />
+    <Compile Include="TestPrograms\DebugTypes.cs" />
+    <Compile Include="TestPrograms\DefinedTypes.cs" />
+    <Compile Include="TestPrograms\Exception.cs" />
+    <Compile Include="TestPrograms\ExceptionCustom.cs" />
+    <Compile Include="TestPrograms\Expressions.cs" />
+    <Compile Include="TestPrograms\FileRelease.cs" />
+    <Compile Include="TestPrograms\FunctionArgumentVariables.cs" />
+    <Compile Include="TestPrograms\FunctionLifetime.cs" />
+    <Compile Include="TestPrograms\FunctionLocalVariables.cs" />
+    <Compile Include="TestPrograms\FunctionVariablesLifetime.cs" />
+    <Compile Include="TestPrograms\GenericDictionary.cs" />
+    <Compile Include="TestPrograms\Generics.cs" />
+    <Compile Include="TestPrograms\HelloWorld.cs" />
+    <Compile Include="TestPrograms\MainThreadExit.cs" />
+    <Compile Include="TestPrograms\MemoryReadWrite.cs" />
+    <Compile Include="TestPrograms\Metadata.cs" />
+    <Compile Include="TestPrograms\MetadataIdentity.cs" />
+    <Compile Include="TestPrograms\ObjectValue.cs" />
+    <Compile Include="TestPrograms\PrimitiveValue.cs" />
+    <Compile Include="TestPrograms\PropertyVariable.cs" />
+    <Compile Include="TestPrograms\PropertyVariableForm.cs" />
+    <Compile Include="TestPrograms\SetIP.cs" />
+    <Compile Include="TestPrograms\SimpleProgram.cs" />
+    <Compile Include="TestPrograms\StackOverflow.cs" />
+    <Compile Include="TestPrograms\Stepping.cs" />
+    <Compile Include="TestPrograms\Symbols.cs" />
+    <Compile Include="TestPrograms\TerminatePausedProcess.cs" />
+    <Compile Include="TestPrograms\TerminateRunningProcess.cs" />
+    <Compile Include="TestPrograms\ThreadName.cs" />
+    <Compile Include="TestPrograms\ValueType.cs" />
+    <Compile Include="TestPrograms\_Template.cs" />
+    <EmbeddedResource Include="TestPrograms\*.xml" />
+    <EmbeddedResource Include="TestPrograms\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Debugger.Core\Debugger.Core.Boo.csproj">
+      <Project>{1D18D788-F7EE-4585-A23B-34DC8EC63CB8}</Project>
+      <Name>Debugger.Core.Boo</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+</Project>

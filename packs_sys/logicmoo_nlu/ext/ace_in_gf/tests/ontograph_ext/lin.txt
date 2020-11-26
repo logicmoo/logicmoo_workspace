@@ -1,0 +1,2223 @@
+TestAttempto: baseText (sText (s (vpS (pnNP mary_PN) (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N)))))))
+TestAttemptoAce: Mary is a traveler .
+TestAttemptoApe: Mary|pn_sg|Mary_PN|neutr is a traveler|noun_sg|traveler_N|masc .
+TestAttemptoBul: Джон е мъж .
+TestAttemptoCat: Mary és un viatger .
+TestAttemptoDan: Mary er en rejsende .
+TestAttemptoDut: Mary is een reiziger .
+TestAttemptoEng: Mary is a traveler .
+TestAttemptoEst: Mari on reisija .
+TestAttemptoFre: Mary est un voyageur .
+TestAttemptoGer: Mary ist ein Reisende .
+TestAttemptoGre: η Μαρία είναι ένας άνδρας .
+TestAttemptoIta: Mary è un viaggiatore .
+TestAttemptoLav: Mērija ir ceļotājs .
+TestAttemptoNor: Mary er ei reisende .
+TestAttemptoPol: Paryż jest mężczyzną .
+TestAttemptoRon: Mary este un călător .
+TestAttemptoRus: Mary путешественник .
+TestAttemptoSpa: Mary es un viajero .
+TestAttemptoSwe: Mary är en resenär .
+TestAttemptoUrd: Mary مسافر ہے
+
+TestAttempto: baseText (sText (s (neg_vpS (pnNP bill_PN) (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N)))))))
+TestAttemptoAce: Bill isn't a golfer .
+TestAttemptoApe: Bill|pn_sg|Bill_PN|masc isn't a golfer|noun_sg|golfer_N|masc .
+TestAttemptoBul: Джон не е мъж .
+TestAttemptoCat: Bill no és una golfista .
+TestAttemptoDan: Bill er ikke en golfspiller .
+TestAttemptoDut: Bill is niet een golfer .
+TestAttemptoEng: Bill isn't a golfer .
+TestAttemptoEst: Villem ei ole golfimängija .
+TestAttemptoFre: Bill n' est pas un golfeur .
+TestAttemptoGer: Bill ist nicht ein Golfer .
+TestAttemptoGre: ο Γιάννης δεν είναι ένας άνδρας .
+TestAttemptoIta: Bill non è un giocatore di golf .
+TestAttemptoLav: Bils nav golferis .
+TestAttemptoNor: Bill er ikke en golfspiller .
+TestAttemptoPol: Paryż nie jest mężczyzną .
+TestAttemptoRon: Bill nu este un jucător de golf .
+TestAttemptoRus: Bill не игрок в гольф .
+TestAttemptoSpa: Bill no es una golfista .
+TestAttemptoSwe: Bill är inte ett golfspelare .
+TestAttemptoUrd: Bill گولفر نہیں ہے
+
+TestAttempto: baseText (sText (s (np_coord_VPS (pnNP mary_PN) or_Conj (BaseVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N)))))))))
+TestAttemptoAce: Mary is an officer or is a golfer .
+TestAttemptoApe: Mary|pn_sg|Mary_PN|neutr is an officer|noun_sg|officer_N|masc or is a golfer|noun_sg|golfer_N|masc .
+TestAttemptoBul: Джон е мъж или е мъж .
+TestAttemptoCat: Mary és un oficial o és una golfista .
+TestAttemptoDan: Mary er en officer eller er en golfspiller .
+TestAttemptoDut: Mary is een officier of is een golfer .
+TestAttemptoEng: Mary is an officer or is a golfer .
+TestAttemptoEst: Mari on ohvitser või on golfimängija .
+TestAttemptoFre: Mary est un officier ou il est un golfeur .
+TestAttemptoGer: Mary ist ein Offizier oder ist ein Golfer .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: Mary è un ufficiale o è un giocatore di golf .
+TestAttemptoLav: Mērija ir amatpersona vai ir golferis .
+TestAttemptoNor: Mary er en offiser eller er en golfspiller .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: Mary es un funcionario o es una golfista .
+TestAttemptoSwe: Mary är en befäl eller är ett golfspelare .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (np_coord_VPS (pnNP sue_PN) and_Conj (BaseVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N)))))))))
+TestAttemptoAce: Sue is an officer and is a traveler .
+TestAttemptoApe: Sue|pn_sg|Sue_PN|fem is an officer|noun_sg|officer_N|masc and is a traveler|noun_sg|traveler_N|masc .
+TestAttemptoBul: Джон е мъж и е мъж .
+TestAttemptoCat: Sue és un oficial i és un viatger .
+TestAttemptoDan: Sue er en officer og er en rejsende .
+TestAttemptoDut: Sue is een officier en is een reiziger .
+TestAttemptoEng: Sue is an officer and is a traveler .
+TestAttemptoEst: Sue on ohvitser ja on reisija .
+TestAttemptoFre: Sue est un officier et elle est un voyageur .
+TestAttemptoGer: Sue ist ein Offizier und ist ein Reisende .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: Sue è un ufficiale ed è un viaggiatore .
+TestAttemptoLav: Sjū ir amatpersona un ir ceļotājs .
+TestAttemptoNor: Sue er en offiser og er ei reisende .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: Sue es un funcionario y es un viajero .
+TestAttemptoSwe: Sue är en befäl och är en resenär .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (vpS (pnNP mary_PN) (npVP (relNP (thereNP_as_NP (aNP (cn_as_VarCN woman_N))) (orRS (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N)))))))))))
+TestAttemptoAce: Mary is a woman that is an officer or that is a golfer .
+TestAttemptoApe: Mary|pn_sg|Mary_PN|neutr is a woman|noun_sg|woman_N|fem that is an officer|noun_sg|officer_N|masc or that is a golfer|noun_sg|golfer_N|masc .
+TestAttemptoBul: Джон е жена която е мъж или която е мъж .
+TestAttemptoCat: Mary és una dona que és un oficial o que és una golfista .
+TestAttemptoDan: Mary er en kvinde , som er en officer eller som er en golfspiller .
+TestAttemptoDut: Mary is een vrouw , dat een officier is of dat een golfer is .
+TestAttemptoEng: Mary is a woman that is an officer or that is a golfer .
+TestAttemptoEst: Mari on naine , kes on ohvitser või kes on golfimängija .
+TestAttemptoFre: Mary est une femme qui est un officier ou qui est un golfeur .
+TestAttemptoGer: Mary ist eine Frau , die ein Offizier ist oder die ein Golfer ist .
+TestAttemptoGre: η Μαρία είναι μία γυναίκα που είναι ένας άνδρας ή που είναι ένας άνδρας .
+TestAttemptoIta: Mary è una donna che è un ufficiale o che è un giocatore di golf .
+TestAttemptoLav: Mērija ir sieviete , kas ir amatpersona vai kas ir golferis .
+TestAttemptoNor: Mary er ei kvinne , som er en offiser eller som er en golfspiller .
+TestAttemptoPol: Paryż jest kobietą , która jest mężczyzną lub , która jest mężczyzną .
+TestAttemptoRon: Mary este o femeie care este un ofițer sau care este un jucător de golf .
+TestAttemptoRus: Mary женщина , которая офицер или , которая игрок в гольф .
+TestAttemptoSpa: Mary es una mujer que es un funcionario o que es una golfista .
+TestAttemptoSwe: Mary är en kvinna , som är en befäl eller som är ett golfspelare .
+TestAttemptoUrd: Mary عورت , جو افسر ہے یا جو گولفر ہے ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP mary_PN) (npVP (thereNP_as_NP (aNP (relCN (cn_as_VarCN woman_N) (orRS (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N)))))))))))))
+TestAttemptoAce: Mary is a woman that is an officer or that is a golfer .
+TestAttemptoApe: Mary|pn_sg|Mary_PN|neutr is a woman|noun_sg|woman_N|fem that is an officer|noun_sg|officer_N|masc or that is a golfer|noun_sg|golfer_N|masc .
+TestAttemptoBul: Джон е жена която е мъж или която е мъж .
+TestAttemptoCat: Mary és una dona que és un oficial o que és una golfista .
+TestAttemptoDan: Mary er en kvinde som er en officer eller som er en golfspiller .
+TestAttemptoDut: Mary is een vrouw die een officier is of die een golfer is .
+TestAttemptoEng: Mary is a woman that is an officer or that is a golfer .
+TestAttemptoEst: Mari on naine kes on ohvitser või kes on golfimängija .
+TestAttemptoFre: Mary est une femme qui est un officier ou qui est un golfeur .
+TestAttemptoGer: Mary ist eine Frau , die ein Offizier ist oder die ein Golfer ist .
+TestAttemptoGre: η Μαρία είναι μία γυναίκα , που είναι ένας άνδρας ή που είναι ένας άνδρας .
+TestAttemptoIta: Mary è una donna che è un ufficiale o che è un giocatore di golf .
+TestAttemptoLav: Mērija ir sieviete , kas ir amatpersona vai kas ir golferis .
+TestAttemptoNor: Mary er ei kvinne som er en offiser eller som er en golfspiller .
+TestAttemptoPol: Paryż jest kobietą , która jest mężczyzną lub , która jest mężczyzną .
+TestAttemptoRon: Mary este o femeie care este un ofițer sau care este un jucător de golf .
+TestAttemptoRus: Mary женщина , которая офицер или , которая игрок в гольф .
+TestAttemptoSpa: Mary es una mujer que es un funcionario o que es una golfista .
+TestAttemptoSwe: Mary är en kvinna som är en befäl eller som är ett golfspelare .
+TestAttemptoUrd: Mary عورت جو افسر ہے یا جو گولفر ہے ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (npVP (relNP (thereNP_as_NP (aNP (cn_as_VarCN man_N))) (andRS (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N)))))))))))
+TestAttemptoAce: John is a man that is an officer and that is a traveler .
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc that is an officer|noun_sg|officer_N|masc and that is a traveler|noun_sg|traveler_N|masc .
+TestAttemptoBul: Джон е мъж който е мъж и който е мъж .
+TestAttemptoCat: John és un home que és un oficial i que és un viatger .
+TestAttemptoDan: John er en mand , som er en officer og som er en rejsende .
+TestAttemptoDut: John is een man , dat een officier is en dat een reiziger is .
+TestAttemptoEng: John is a man that is an officer and that is a traveler .
+TestAttemptoEst: Jaan on mees , kes on ohvitser ja kes on reisija .
+TestAttemptoFre: John est un homme qui est un officier et qui est un voyageur .
+TestAttemptoGer: John ist ein Mann , der ein Offizier ist und der ein Reisende ist .
+TestAttemptoGre: ο Γιάννης είναι ένας άνδρας που είναι ένας άνδρας και που είναι ένας άνδρας .
+TestAttemptoIta: John è un uomo che è un ufficiale e che è un viaggiatore .
+TestAttemptoLav: Džons ir vīrietis , kas ir amatpersona un kas ir ceļotājs .
+TestAttemptoNor: John er en mann , som er en offiser og som er ei reisende .
+TestAttemptoPol: Jan jest mężczyzną , który jest mężczyzną i , który jest mężczyzną .
+TestAttemptoRon: John este un om care este un ofițer şi care este un călător .
+TestAttemptoRus: Иван человек , который офицер и , который путешественник .
+TestAttemptoSpa: John es un hombre que es un funcionario y que es un viajero .
+TestAttemptoSwe: John är en man , som är en befäl och som är en resenär .
+TestAttemptoUrd: John آدمی , جو افسر ہے اور جو مسافر ہے ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (npVP (thereNP_as_NP (aNP (relCN (cn_as_VarCN man_N) (andRS (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N)))))))))))))
+TestAttemptoAce: John is a man that is an officer and that is a traveler .
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc that is an officer|noun_sg|officer_N|masc and that is a traveler|noun_sg|traveler_N|masc .
+TestAttemptoBul: Джон е мъж който е мъж и който е мъж .
+TestAttemptoCat: John és un home que és un oficial i que és un viatger .
+TestAttemptoDan: John er en mand som er en officer og som er en rejsende .
+TestAttemptoDut: John is een man die een officier is en die een reiziger is .
+TestAttemptoEng: John is a man that is an officer and that is a traveler .
+TestAttemptoEst: Jaan on mees kes on ohvitser ja kes on reisija .
+TestAttemptoFre: John est un homme qui est un officier et qui est un voyageur .
+TestAttemptoGer: John ist ein Mann , der ein Offizier ist und der ein Reisende ist .
+TestAttemptoGre: ο Γιάννης είναι ένας άνδρας , που είναι ένας άνδρας και που είναι ένας άνδρας .
+TestAttemptoIta: John è un uomo che è un ufficiale e che è un viaggiatore .
+TestAttemptoLav: Džons ir vīrietis , kas ir amatpersona un kas ir ceļotājs .
+TestAttemptoNor: John er en mann som er en offiser og som er ei reisende .
+TestAttemptoPol: Jan jest mężczyzną , który jest mężczyzną i , który jest mężczyzną .
+TestAttemptoRon: John este un om care este un ofițer şi care este un călător .
+TestAttemptoRus: Иван человек , который офицер и , который путешественник .
+TestAttemptoSpa: John es un hombre que es un funcionario y que es un viajero .
+TestAttemptoSwe: John är en man som är en befäl och som är en resenär .
+TestAttemptoUrd: John آدمی جو افسر ہے اور جو مسافر ہے ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (npVP (relNP (thereNP_as_NP (aNP (cn_as_VarCN man_N))) (andRS (predRS which_RP (v2VP (V2by_as_V2 admire_V2) (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (slashRS which_RP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N))) (V2by_as_V2 see_V2))))))))
+TestAttemptoAce: John is a man that admires an officer and that a traveler sees .
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc that admires|tv_finsg|admire_V2 an officer|noun_sg|officer_N|masc and that a traveler|noun_sg|traveler_N|masc sees|tv_finsg|see_V2 .
+TestAttemptoBul: Джон е мъж който се страхува мъж и който мъж вижда .
+TestAttemptoCat: John és un home que admira un oficial i que un viatger veu .
+TestAttemptoDan: John er en mand , som beundrer en officer og som en rejsende ser .
+TestAttemptoDut: John is een man , dat een officier bewondert en dat een reiziger ziet .
+TestAttemptoEng: John is a man that admires an officer and that a traveler sees .
+TestAttemptoEst: Jaan on mees , kes imetleb ohvitseri ja kelle reisija näeb .
+TestAttemptoFre: John est un homme qui admire un officier et qu' un voyageur voit .
+TestAttemptoGer: John ist ein Mann , der einen Offizier bewundert und den ein Reisende sieht .
+TestAttemptoGre: ο Γιάννης είναι ένας άνδρας που φοβάται ένα άνδρα και τον οποίο ένας άνδρας βλέπει .
+TestAttemptoIta: John è un uomo che ammira un ufficiale e che un viaggiatore vede .
+TestAttemptoLav: Džons ir vīrietis , kas apbrīno amatpersonu un ko ceļotājs redz .
+TestAttemptoNor: John er en mann , som beundrer en offiser og som ei reisende ser .
+TestAttemptoPol: Jan jest mężczyzną , który czyta mężczyznę i , którego widzi mężczyzna .
+TestAttemptoRon: John este un om care admirează un ofițer şi pe care îl vede un călător .
+TestAttemptoRus: Иван человек , который боет офицер и , которого путешественник видит .
+TestAttemptoSpa: John es un hombre que admira un funcionario y que un viajero ve .
+TestAttemptoSwe: John är en man , som beundrar en befäl och som en resenär ser .
+TestAttemptoUrd: John آدمی , جو افسر کی تعریفتا ہے اور جس مسافر دیکھتا ہے ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (npVP (thereNP_as_NP (aNP (relCN (cn_as_VarCN man_N) (andRS (predRS which_RP (v2VP (V2by_as_V2 admire_V2) (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (slashRS which_RP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N))) (V2by_as_V2 see_V2))))))))))
+TestAttemptoAce: John is a man that admires an officer and that a traveler sees .
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc that admires|tv_finsg|admire_V2 an officer|noun_sg|officer_N|masc and that a traveler|noun_sg|traveler_N|masc sees|tv_finsg|see_V2 .
+TestAttemptoBul: Джон е мъж който се страхува мъж и който мъж вижда .
+TestAttemptoCat: John és un home que admira un oficial i que un viatger veu .
+TestAttemptoDan: John er en mand som beundrer en officer og som en rejsende ser .
+TestAttemptoDut: John is een man die een officier bewondert en die een reiziger ziet .
+TestAttemptoEng: John is a man that admires an officer and that a traveler sees .
+TestAttemptoEst: Jaan on mees kes imetleb ohvitseri ja kelle reisija näeb .
+TestAttemptoFre: John est un homme qui admire un officier et qu' un voyageur voit .
+TestAttemptoGer: John ist ein Mann , der einen Offizier bewundert und den ein Reisende sieht .
+TestAttemptoGre: ο Γιάννης είναι ένας άνδρας , που φοβάται ένα άνδρα και τον οποίο ένας άνδρας βλέπει .
+TestAttemptoIta: John è un uomo che ammira un ufficiale e che un viaggiatore vede .
+TestAttemptoLav: Džons ir vīrietis , kas apbrīno amatpersonu un ko ceļotājs redz .
+TestAttemptoNor: John er en mann som beundrer en offiser og som ei reisende ser .
+TestAttemptoPol: Jan jest mężczyzną , który czyta mężczyznę i , którego widzi mężczyzna .
+TestAttemptoRon: John este un om care admirează un ofițer şi pe care îl vede un călător .
+TestAttemptoRus: Иван человек , который боет офицер и , которого путешественник видит .
+TestAttemptoSpa: John es un hombre que admira un funcionario y que un viajero ve .
+TestAttemptoSwe: John är en man som beundrar en befäl och som en resenär ser .
+TestAttemptoUrd: John آدمی جو افسر کی تعریفتا ہے اور جس مسافر دیکھتا ہے ہے
+
+TestAttempto: baseText (sText (s (vpS (everyNP (cn_as_VarCN man_N)) (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N)))))))
+TestAttemptoAce: every man is a golfer .
+TestAttemptoApe: every man|noun_sg|man_N|masc is a golfer|noun_sg|golfer_N|masc .
+TestAttemptoBul: всеки мъж е мъж .
+TestAttemptoCat: cada home és una golfista .
+TestAttemptoDan: hver mand er en golfspiller .
+TestAttemptoDut: elke man is een golfer .
+TestAttemptoEng: every man is a golfer .
+TestAttemptoEst: iga mees on golfimängija .
+TestAttemptoFre: chaque homme est un golfeur .
+TestAttemptoGer: jeder Mann ist ein Golfer .
+TestAttemptoGre: κάθε άνδρας είναι ένας άνδρας .
+TestAttemptoIta: ogni uomo è un giocatore di golf .
+TestAttemptoLav: ikviens vīrietis ir golferis .
+TestAttemptoNor: hver mann er en golfspiller .
+TestAttemptoPol: każdy mężczyzna jest mężczyzną .
+TestAttemptoRon: orice om este un jucător de golf .
+TestAttemptoRus: каждый человек игрок в гольф .
+TestAttemptoSpa: cada hombre es una golfista .
+TestAttemptoSwe: varje man är ett golfspelare .
+TestAttemptoUrd: ہر آدمی گولفر ہے
+
+TestAttempto: baseText (sText (s (vpS (noNP (cn_as_VarCN golfer_N)) (npVP (thereNP_as_NP (aNP (cn_as_VarCN woman_N)))))))
+TestAttemptoAce: no golfer is a woman .
+TestAttemptoApe: no golfer|noun_sg|golfer_N|masc is a woman|noun_sg|woman_N|fem .
+TestAttemptoBul: 
+TestAttemptoCat: cap golfista és una dona .
+TestAttemptoDan: 
+TestAttemptoDut: geen golfer is een vrouw .
+TestAttemptoEng: no golfer is a woman .
+TestAttemptoEst: mitte ükski golfimängija on naine .
+TestAttemptoFre: aucun golfeur n' est une femme .
+TestAttemptoGer: kein Golfer ist eine Frau .
+TestAttemptoGre: κανένας άνδρας δεν είναι μία γυναίκα .
+TestAttemptoIta: nessuno giocatore di golf è una donna .
+TestAttemptoLav: neviens golferis nav sieviete .
+TestAttemptoNor: 
+TestAttemptoPol: żaden mężczyzna jest kobietą .
+TestAttemptoRon: niciun jucător de golf este o femeie .
+TestAttemptoRus: 
+TestAttemptoSpa: ninguna golfista es una mujer .
+TestAttemptoSwe: inget golfspelare är en kvinna .
+TestAttemptoUrd: کوی نہیں گولفر عورت ہے
+
+TestAttempto: baseText (sText (s (coordS and_Conj (vpS (everyNP (cn_as_VarCN woman_N)) (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (vpS (everyNP (cn_as_VarCN officer_N)) (npVP (thereNP_as_NP (aNP (cn_as_VarCN woman_N))))))))
+TestAttemptoAce: every woman is an officer and every officer is a woman .
+TestAttemptoApe: every woman|noun_sg|woman_N|fem is an officer|noun_sg|officer_N|masc and every officer|noun_sg|officer_N|masc is a woman|noun_sg|woman_N|fem .
+TestAttemptoBul: всяка жена е мъж и всеки мъж е жена .
+TestAttemptoCat: cada dona és un oficial i cada oficial és una dona .
+TestAttemptoDan: hver kvinde er en officer og hver officer er en kvinde .
+TestAttemptoDut: elke vrouw is een officier en elke officier is een vrouw .
+TestAttemptoEng: every woman is an officer and every officer is a woman .
+TestAttemptoEst: iga naine on ohvitser ja iga ohvitser on naine .
+TestAttemptoFre: chaque femme est un officier et chaque officier est une femme .
+TestAttemptoGer: jede Frau ist ein Offizier und jeder Offizier ist eine Frau .
+TestAttemptoGre: κάθε γυναίκα είναι ένας άνδρας και κάθε άνδρας είναι μία γυναίκα .
+TestAttemptoIta: ogni donna è un ufficiale ed ogni ufficiale è una donna .
+TestAttemptoLav: ikviena sieviete ir amatpersona un ikviena amatpersona ir sieviete .
+TestAttemptoNor: hver kvinne er en offiser og hver offiser er ei kvinne .
+TestAttemptoPol: każda kobieta jest mężczyzną i każdy mężczyzna jest kobietą .
+TestAttemptoRon: orice femeie este un ofițer şi orice ofițer este o femeie .
+TestAttemptoRus: каждая женщина офицер и каждый офицер женщина .
+TestAttemptoSpa: cada mujer es un funcionario y cada funcionario es una mujer .
+TestAttemptoSwe: varje kvinna är en befäl och varje befäl är en kvinna .
+TestAttemptoUrd: ہر عورت افسر ہے اور ہر افسر عورت ہے
+
+TestAttempto: baseText (sText (s (vpS (everyNP (relCN (cn_as_VarCN traveler_N) (neg_predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN woman_N))))))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N)))))))
+TestAttemptoAce: every traveler that isn't a woman is a golfer .
+TestAttemptoApe: every traveler|noun_sg|traveler_N|masc that isn't a woman|noun_sg|woman_N|fem is a golfer|noun_sg|golfer_N|masc .
+TestAttemptoBul: всеки мъж който не е жена е мъж .
+TestAttemptoCat: cada viatger que no és una dona és una golfista .
+TestAttemptoDan: hver rejsende som ikke er en kvinde er en golfspiller .
+TestAttemptoDut: elke reiziger die niet een vrouw is is een golfer .
+TestAttemptoEng: every traveler that isn't a woman is a golfer .
+TestAttemptoEst: iga reisija kes ei ole naine on golfimängija .
+TestAttemptoFre: chaque voyageur qui n' est pas une femme est un golfeur .
+TestAttemptoGer: jeder Reisende , der nicht eine Frau ist ist ein Golfer .
+TestAttemptoGre: κάθε άνδρας , που δεν είναι μία γυναίκα είναι ένας άνδρας .
+TestAttemptoIta: ogni viaggiatore che non è una donna è un giocatore di golf .
+TestAttemptoLav: ikviens ceļotājs , kas nav sieviete ir golferis .
+TestAttemptoNor: hver reisende som ikke er ei kvinne er en golfspiller .
+TestAttemptoPol: każdy mężczyzna , który nie jest kobietą jest mężczyzną .
+TestAttemptoRon: orice călător care nu este o femeie este un jucător de golf .
+TestAttemptoRus: каждый путешественник , который женщина игрок в гольф .
+TestAttemptoSpa: cada viajero que no es una mujer es una golfista .
+TestAttemptoSwe: varje resenär som inte är en kvinna är ett golfspelare .
+TestAttemptoUrd: ہر مسافر جو عورت نہیں ہے گولفر ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (everyNP (cn_as_VarCN traveler_N)) (neg_predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN woman_N)))))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N)))))))
+TestAttemptoAce: every traveler that isn't a woman is a golfer .
+TestAttemptoApe: every traveler|noun_sg|traveler_N|masc that isn't a woman|noun_sg|woman_N|fem is a golfer|noun_sg|golfer_N|masc .
+TestAttemptoBul: всеки мъж който не е жена е мъж .
+TestAttemptoCat: cada viatger que no és una dona és una golfista .
+TestAttemptoDan: hver rejsende , som ikke er en kvinde er en golfspiller .
+TestAttemptoDut: elke reiziger , dat niet een vrouw is is een golfer .
+TestAttemptoEng: every traveler that isn't a woman is a golfer .
+TestAttemptoEst: iga reisija , kes ei ole naine on golfimängija .
+TestAttemptoFre: chaque voyageur qui n' est pas une femme est un golfeur .
+TestAttemptoGer: jeder Reisende , der nicht eine Frau ist ist ein Golfer .
+TestAttemptoGre: κάθε άνδρας που δεν είναι μία γυναίκα είναι ένας άνδρας .
+TestAttemptoIta: ogni viaggiatore che non è una donna è un giocatore di golf .
+TestAttemptoLav: ikviens ceļotājs , kas nav sieviete ir golferis .
+TestAttemptoNor: hver reisende , som ikke er ei kvinne er en golfspiller .
+TestAttemptoPol: każdy mężczyzna , który nie jest kobietą jest mężczyzną .
+TestAttemptoRon: orice călător care nu este o femeie este un jucător de golf .
+TestAttemptoRus: каждый путешественник , который женщина игрок в гольф .
+TestAttemptoSpa: cada viajero que no es una mujer es una golfista .
+TestAttemptoSwe: varje resenär , som inte är en kvinna är ett golfspelare .
+TestAttemptoUrd: ہر مسافر , جو عورت نہیں ہے گولفر ہے
+
+TestAttempto: baseText (sText (s (np_coord_VPS (everyNP (cn_as_VarCN man_N)) or_Conj (BaseVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N))))) (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N)))))))))
+TestAttemptoAce: every man is a golfer or is a traveler .
+TestAttemptoApe: every man|noun_sg|man_N|masc is a golfer|noun_sg|golfer_N|masc or is a traveler|noun_sg|traveler_N|masc .
+TestAttemptoBul: всеки мъж е мъж или е мъж .
+TestAttemptoCat: cada home és una golfista o és un viatger .
+TestAttemptoDan: hver mand er en golfspiller eller er en rejsende .
+TestAttemptoDut: elke man is een golfer of is een reiziger .
+TestAttemptoEng: every man is a golfer or is a traveler .
+TestAttemptoEst: iga mees on golfimängija või on reisija .
+TestAttemptoFre: chaque homme est un golfeur ou il est un voyageur .
+TestAttemptoGer: jeder Mann ist ein Golfer oder ist ein Reisende .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: ogni uomo è un giocatore di golf o è un viaggiatore .
+TestAttemptoLav: ikviens vīrietis ir golferis vai ir ceļotājs .
+TestAttemptoNor: hver mann er en golfspiller eller er ei reisende .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: cada hombre es una golfista o es un viajero .
+TestAttemptoSwe: varje man är ett golfspelare eller är en resenär .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (np_coord_VPS (relNP (indefPronNP nobody_IPron) (orRS (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN man_N))))) (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N))))))) and_Conj (BaseVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))) (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N)))))))))
+TestAttemptoAce: nobody that is a man or that is a golfer is an officer and is a traveler .
+TestAttemptoApe: nobody that is a man|noun_sg|man_N|masc or that is a golfer|noun_sg|golfer_N|masc is an officer|noun_sg|officer_N|masc and is a traveler|noun_sg|traveler_N|masc .
+TestAttemptoBul: 
+TestAttemptoCat: ningú que és un home o que és una golfista és un oficial i és un viatger .
+TestAttemptoDan: ingen , som er en mand eller som er en golfspiller er en officer og er en rejsende .
+TestAttemptoDut: niemand , die een man is of die een golfer is is een officier en is een reiziger .
+TestAttemptoEng: nobody that is a man or that is a golfer is an officer and is a traveler .
+TestAttemptoEst: mitte keegi , kes on mees või kes on golfimängija on ohvitser ja on reisija .
+TestAttemptoFre: personne qui est un homme ou qui est un golfeur n' est un officier et elle n' est un voyageur .
+TestAttemptoGer: niemand , das ein Mann ist oder das ein Golfer ist ist ein Offizier und ist ein Reisende .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: nessuno che è un uomo o che è un giocatore di golf è un ufficiale ed è un viaggiatore .
+TestAttemptoLav: neviens , kas ir vīrietis vai kas ir golferis nav amatpersona un nav ceļotājs .
+TestAttemptoNor: ingen , som er en mann eller som er en golfspiller er en offiser og er ei reisende .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: nadie que es un hombre o que es una golfista es un funcionario y es un viajero .
+TestAttemptoSwe: ingen , som är en man eller som är ett golfspelare är en befäl och är en resenär .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (vpS (pnNP lisa_PN) (v2VP (V2by_as_V2 see_V2) (pnNP mary_PN)))))
+TestAttemptoAce: Lisa sees Mary .
+TestAttemptoApe: Lisa|pn_sg|Lisa_PN|fem sees|tv_finsg|see_V2 Mary|pn_sg|Mary_PN|neutr .
+TestAttemptoBul: Джон вижда Джон .
+TestAttemptoCat: Lisa veu Mary .
+TestAttemptoDan: Lisa ser Mary .
+TestAttemptoDut: Lisa ziet Mary .
+TestAttemptoEng: Lisa sees Mary .
+TestAttemptoEst: Liisa näeb Mari .
+TestAttemptoFre: Lisa voit Mary .
+TestAttemptoGer: Lisa sieht Mary .
+TestAttemptoGre: ο Γιάννης βλέπει τη Μαρία .
+TestAttemptoIta: Lisa vede Mary .
+TestAttemptoLav: Līza redz Mēriju .
+TestAttemptoNor: Lisa ser Mary .
+TestAttemptoPol: Paryż widzi Paryż .
+TestAttemptoRon: Lisa o vede pe Mary .
+TestAttemptoRus: Lisa видит Mary .
+TestAttemptoSpa: Lisa ve Mary .
+TestAttemptoSwe: Lisa ser Mary .
+TestAttemptoUrd: Lisa Mary دیکھتا ہے
+
+TestAttempto: baseText (sText (s (neg_vpS (pnNP mary_PN) (v2VP (V2by_as_V2 see_V2) (pnNP tom_PN)))))
+TestAttemptoAce: Mary doesn't see Tom .
+TestAttemptoApe: Mary|pn_sg|Mary_PN|neutr doesn't see|tv_infpl|see_V2 Tom|pn_sg|Tom_PN|masc .
+TestAttemptoBul: Джон не вижда Джон .
+TestAttemptoCat: Mary no veu Tom .
+TestAttemptoDan: Mary ser ikke Tom .
+TestAttemptoDut: Mary ziet niet Tom .
+TestAttemptoEng: Mary doesn't see Tom .
+TestAttemptoEst: Mari ei näe Toomast .
+TestAttemptoFre: Mary ne voit pas Tom .
+TestAttemptoGer: Mary sieht Tom nicht .
+TestAttemptoGre: η Μαρία δεν βλέπει τον Γιάννη .
+TestAttemptoIta: Mary non vede Tom .
+TestAttemptoLav: Mērija neredz Tomu .
+TestAttemptoNor: Mary ser ikke Tom .
+TestAttemptoPol: Paryż nie widzi Paryża .
+TestAttemptoRon: Mary nu îl vede pe Tom .
+TestAttemptoRus: Mary не видит Tom .
+TestAttemptoSpa: Mary no ve Tom .
+TestAttemptoSwe: Mary ser inte Tom .
+TestAttemptoUrd: Mary Tom نہیں دیکھتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP tom_PN) (v2VP (V2by_as_V2 buy_V2) (thereNP_as_NP (aNP (cn_as_VarCN picture_N)))))))
+TestAttemptoAce: Tom buys a picture .
+TestAttemptoApe: Tom|pn_sg|Tom_PN|masc buys|tv_finsg|buy_V2 a picture|noun_sg|picture_N|neutr .
+TestAttemptoBul: Джон купува мъж .
+TestAttemptoCat: Tom compra un imatge .
+TestAttemptoDan: Tom køber en billede .
+TestAttemptoDut: Tom koopt een schilderij .
+TestAttemptoEng: Tom buys a picture .
+TestAttemptoEst: Toomas ostab pildi .
+TestAttemptoFre: Tom achète une image .
+TestAttemptoGer: Tom kauft ein Bild .
+TestAttemptoGre: ο Γιάννης αγοράζει ένα άνδρα .
+TestAttemptoIta: Tom compra un immagine .
+TestAttemptoLav: Toms pērk attēlu .
+TestAttemptoNor: Tom kjøper ei bilde .
+TestAttemptoPol: Paryż kupi mężczyznę .
+TestAttemptoRon: Tom cumpără o imagine .
+TestAttemptoRus: Tom покупает картину .
+TestAttemptoSpa: Tom compra un imagen .
+TestAttemptoSwe: Tom köper en bild .
+TestAttemptoUrd: Tom تصویر کو خریدتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP mary_PN) (v2VP (V2by_as_V2 see_V2) (noNP (cn_as_VarCN man_N))))))
+TestAttemptoAce: Mary sees no man .
+TestAttemptoApe: Mary|pn_sg|Mary_PN|neutr sees|tv_finsg|see_V2 no man|noun_sg|man_N|masc .
+TestAttemptoBul: 
+TestAttemptoCat: Mary no veu cap home .
+TestAttemptoDan: 
+TestAttemptoDut: Mary ziet geen man .
+TestAttemptoEng: Mary sees no man .
+TestAttemptoEst: Mari näeb mitte ühegi mehe .
+TestAttemptoFre: Mary ne voit aucun homme .
+TestAttemptoGer: Mary sieht keinen Mann .
+TestAttemptoGre: η Μαρία δεν βλέπει κανέναν άνδρα .
+TestAttemptoIta: Mary non vede nessuno uomo .
+TestAttemptoLav: Mērija neredz nevienu vīrieti .
+TestAttemptoNor: 
+TestAttemptoPol: Paryż widzi żadnego mężczyznę .
+TestAttemptoRon: Mary vede niciun om .
+TestAttemptoRus: 
+TestAttemptoSpa: Mary no ve ningún hombre .
+TestAttemptoSwe: Mary ser ingen man .
+TestAttemptoUrd: Mary کوی نہیں آدمی دیکھتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (v2VP (V2by_as_V2 buy_V2) (relNP (thereNP_as_NP (indefTherePronNP something_IPron)) (neg_predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN present_N))))))))))
+TestAttemptoAce: John buys something that isn't a present .
+TestAttemptoApe: John|pn_sg|John_PN|masc buys|tv_finsg|buy_V2 something that isn't a present|noun_sg|present_N|neutr .
+TestAttemptoBul: Джон купува нещо което не е мъж .
+TestAttemptoCat: John compra quelcom que no és un presentar .
+TestAttemptoDan: John køber noget , som ikke er en gave .
+TestAttemptoDut: John koopt iets , die niet een cadeau is .
+TestAttemptoEng: John buys something that isn't a present .
+TestAttemptoEst: Jaan ostab mille , kes ei ole kingitus .
+TestAttemptoFre: John achète quelque chose qui n' est pas un cadeau .
+TestAttemptoGer: John kauft etwas , das nicht ein Geschenk ist .
+TestAttemptoGre: ο Γιάννης αγοράζει κάτι που δεν είναι ένας άνδρας .
+TestAttemptoIta: John compra qualche cosa che non è un regalo .
+TestAttemptoLav: Džons pērk kaut ko , kas nav dāvana .
+TestAttemptoNor: John kjøper noe , som ikke er ei gave .
+TestAttemptoPol: Jan kupi coś , które nie jest mężczyzną .
+TestAttemptoRon: John cumpără ceva care nu este un cadou .
+TestAttemptoRus: Иван покупает что-то , который подарок .
+TestAttemptoSpa: John compra algo que no es un regalo .
+TestAttemptoSwe: John köper något , som inte är en present .
+TestAttemptoUrd: John کوی چیز , جو پیش نہیں ہے کو خریدتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (v2VP (V2by_as_V2 see_V2) (nothing_butNP (cn_as_VarCN man_N))))))
+TestAttemptoAce: John sees nothing but men .
+TestAttemptoApe: John|pn_sg|John_PN|masc sees|tv_finsg|see_V2 nothing but men|noun_pl|man_N|masc .
+TestAttemptoBul: Джон вижда само мъже .
+TestAttemptoCat: John veu nomÈs homes .
+TestAttemptoDan: John ser kun mænd .
+TestAttemptoDut: John ziet slechts mannen .
+TestAttemptoEng: John sees nothing but men .
+TestAttemptoEst: Jaan näeb ainult mehed .
+TestAttemptoFre: John voit seulement des hommes .
+TestAttemptoGer: John sieht nur Männer .
+TestAttemptoGre: ο Γιάννης βλέπει μόνο άνδρες .
+TestAttemptoIta: John vede soltanto uomini .
+TestAttemptoLav: Džons redz tikai vīriešus .
+TestAttemptoNor: John ser kun menn .
+TestAttemptoPol: Jan widzi tylko mężczyzn .
+TestAttemptoRon: John vede doar nişte oameni .
+TestAttemptoRus: Иван видит единственных людь .
+TestAttemptoSpa: John ve solamente hombres .
+TestAttemptoSwe: John ser bara män .
+TestAttemptoUrd: John صرف آدمی دیکھتا ہے
+
+TestAttempto: baseText (sText (s (vpS (everyNP (cn_as_VarCN man_N)) (v2VP (V2by_as_V2 buy_V2) (thereNP_as_NP (aNP (cn_as_VarCN present_N)))))))
+TestAttemptoAce: every man buys a present .
+TestAttemptoApe: every man|noun_sg|man_N|masc buys|tv_finsg|buy_V2 a present|noun_sg|present_N|neutr .
+TestAttemptoBul: всеки мъж купува мъж .
+TestAttemptoCat: cada home compra un presentar .
+TestAttemptoDan: hver mand køber en gave .
+TestAttemptoDut: elke man koopt een cadeau .
+TestAttemptoEng: every man buys a present .
+TestAttemptoEst: iga mees ostab kingituse .
+TestAttemptoFre: chaque homme achète un cadeau .
+TestAttemptoGer: jeder Mann kauft ein Geschenk .
+TestAttemptoGre: κάθε άνδρας αγοράζει ένα άνδρα .
+TestAttemptoIta: ogni uomo compra un regalo .
+TestAttemptoLav: ikviens vīrietis pērk dāvanu .
+TestAttemptoNor: hver mann kjøper ei gave .
+TestAttemptoPol: każdy mężczyzna kupi mężczyznę .
+TestAttemptoRon: orice om cumpără un cadou .
+TestAttemptoRus: каждый человек покупает подарок .
+TestAttemptoSpa: cada hombre compra un regalo .
+TestAttemptoSwe: varje man köper en present .
+TestAttemptoUrd: ہر آدمی پیش کو خریدتا ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (predRS which_RP (v2VP (V2by_as_V2 buy_V2) (thereNP_as_NP (aNP (cn_as_VarCN present_N)))))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN man_N)))))))
+TestAttemptoAce: everything that buys a present is a man .
+TestAttemptoApe: everything that buys|tv_finsg|buy_V2 a present|noun_sg|present_N|neutr is a man|noun_sg|man_N|masc .
+TestAttemptoBul: всичко което купува мъж е мъж .
+TestAttemptoCat: tot que compra un presentar és un home .
+TestAttemptoDan: alt , som køber en gave er en mand .
+TestAttemptoDut: alles , dat een cadeau koopt is een man .
+TestAttemptoEng: everything that buys a present is a man .
+TestAttemptoEst: kõik , kes ostab kingituse on mees .
+TestAttemptoFre: tout qui achète un cadeau est un homme .
+TestAttemptoGer: alles , das ein Geschenk kauft ist ein Mann .
+TestAttemptoGre: τα πάντα που αγοράζουν ένα άνδρα είναι ένας άνδρας .
+TestAttemptoIta: tutto che compra un regalo è un uomo .
+TestAttemptoLav: jebkas , kas pērk dāvanu ir vīrietis .
+TestAttemptoNor: alt , som kjøper ei gave er en mann .
+TestAttemptoPol: wszystko , które kupi mężczyznę jest mężczyzną .
+TestAttemptoRon: totul care cumpără un cadou este un om .
+TestAttemptoRus: всё , которое покупает подарок человек .
+TestAttemptoSpa: todo que compra un regalo es un hombre .
+TestAttemptoSwe: allting , som köper en present är en man .
+TestAttemptoUrd: ہر چیز , جو پیش کو خریدتا ہے آدمی ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (slashRS which_RP (thereNP_as_NP (aNP (cn_as_VarCN man_N))) (V2by_as_V2 buy_V2))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN present_N)))))))
+TestAttemptoAce: everything that a man buys is a present .
+TestAttemptoApe: everything that a man|noun_sg|man_N|masc buys|tv_finsg|buy_V2 is a present|noun_sg|present_N|neutr .
+TestAttemptoBul: всичко което мъж купува е мъж .
+TestAttemptoCat: tot que un home compra és un presentar .
+TestAttemptoDan: alt , som en mand køber er en gave .
+TestAttemptoDut: alles , dat een man koopt is een cadeau .
+TestAttemptoEng: everything that a man buys is a present .
+TestAttemptoEst: kõik , kelle mees ostab on kingitus .
+TestAttemptoFre: tout qu' un homme achète est un cadeau .
+TestAttemptoGer: alles , das ein Mann kauft ist ein Geschenk .
+TestAttemptoGre: τα πάντα τα οποία ένας άνδρας αγοράζει είναι ένας άνδρας .
+TestAttemptoIta: tutto che un uomo compra è un regalo .
+TestAttemptoLav: jebkas , ko vīrietis pērk ir dāvana .
+TestAttemptoNor: alt , som en mann kjøper er ei gave .
+TestAttemptoPol: wszystko , które kupi mężczyzna jest mężczyzną .
+TestAttemptoRon: totul pe care îl cumpără un om este un cadou .
+TestAttemptoRus: всё , которое человек покупает подарок .
+TestAttemptoSpa: todo que un hombre compra es un regalo .
+TestAttemptoSwe: allting , som en man köper är en present .
+TestAttemptoUrd: ہر چیز , جس کو آدمی خریدتا ہے پیش ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (orRS (slashRS which_RP (thereNP_as_NP (aNP (cn_as_VarCN man_N))) (V2by_as_V2 buy_V2)) (slashRS which_RP (thereNP_as_NP (aNP (cn_as_VarCN woman_N))) (V2by_as_V2 admire_V2)))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN present_N)))))))
+TestAttemptoAce: everything that a man buys or that a woman admires is a present .
+TestAttemptoApe: everything that a man|noun_sg|man_N|masc buys|tv_finsg|buy_V2 or that a woman|noun_sg|woman_N|fem admires|tv_finsg|admire_V2 is a present|noun_sg|present_N|neutr .
+TestAttemptoBul: всичко което мъж купува или което жена се страхува е мъж .
+TestAttemptoCat: tot que un home compra o que una dona admira és un presentar .
+TestAttemptoDan: alt , som en mand køber eller som en kvinde beundrer er en gave .
+TestAttemptoDut: alles , dat een man koopt of dat een vrouw bewondert is een cadeau .
+TestAttemptoEng: everything that a man buys or that a woman admires is a present .
+TestAttemptoEst: kõik , kelle mees ostab või kelle naine imetleb on kingitus .
+TestAttemptoFre: tout qu' un homme achète ou qu' une femme admire est un cadeau .
+TestAttemptoGer: alles , das ein Mann kauft oder das eine Frau bewundert ist ein Geschenk .
+TestAttemptoGre: τα πάντα τα οποία ένας άνδρας αγοράζει ή τα οποία μία γυναίκα φοβάται είναι ένας άνδρας .
+TestAttemptoIta: tutto che un uomo compra o che una donna ammira è un regalo .
+TestAttemptoLav: jebkas , ko vīrietis pērk vai ko sieviete apbrīno ir dāvana .
+TestAttemptoNor: alt , som en mann kjøper eller som ei kvinne beundrer er ei gave .
+TestAttemptoPol: wszystko , które kupi mężczyzna lub , które czyta kobieta jest mężczyzną .
+TestAttemptoRon: totul pe care îl cumpără un om sau pe care îl admirează o femeie este un cadou .
+TestAttemptoRus: всё , которое человек покупает или , которое женщина боет подарок .
+TestAttemptoSpa: todo que un hombre compra o que una mujer admira es un regalo .
+TestAttemptoSwe: allting , som en man köper eller som en kvinna beundrar är en present .
+TestAttemptoUrd: ہر چیز , جس کو آدمی خریدتا ہے یا جس عورت کی تعریفتی ہے پیش ہے
+
+TestAttempto: baseText (sText (s (vpS (everyNP (cn_as_VarCN man_N)) (v2VP (V2by_as_V2 buy_V2) (nothing_butNP (cn_as_VarCN present_N))))))
+TestAttemptoAce: every man buys nothing but presents .
+TestAttemptoApe: every man|noun_sg|man_N|masc buys|tv_finsg|buy_V2 nothing but presents|noun_pl|present_N|neutr .
+TestAttemptoBul: всеки мъж купува само мъже .
+TestAttemptoCat: cada home compra nomÈs presentars .
+TestAttemptoDan: hver mand køber kun gaver .
+TestAttemptoDut: elke man koopt slechts cadeaus .
+TestAttemptoEng: every man buys nothing but presents .
+TestAttemptoEst: iga mees ostab ainult kingitused .
+TestAttemptoFre: chaque homme achète seulement des cadeaux .
+TestAttemptoGer: jeder Mann kauft nur Geschenke .
+TestAttemptoGre: κάθε άνδρας αγοράζει μόνο άνδρες .
+TestAttemptoIta: ogni uomo compra soltanto regali .
+TestAttemptoLav: ikviens vīrietis pērk tikai dāvanas .
+TestAttemptoNor: hver mann kjøper kun gaver .
+TestAttemptoPol: każdy mężczyzna kupi tylko mężczyzn .
+TestAttemptoRon: orice om cumpără doar nişte caoaoe .
+TestAttemptoRus: каждый человек покупает единственные подароки .
+TestAttemptoSpa: cada hombre compra solamente regalos .
+TestAttemptoSwe: varje man köper bara presentar .
+TestAttemptoUrd: ہر آدمی صرف پیش کو خریدتا ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (predRS which_RP (v2VP (V2by_as_V2 buy_V2) (nothing_butNP (cn_as_VarCN picture_N))))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN woman_N)))))))
+TestAttemptoAce: everything that buys nothing but pictures is a woman .
+TestAttemptoApe: everything that buys|tv_finsg|buy_V2 nothing but pictures|noun_pl|picture_N|neutr is a woman|noun_sg|woman_N|fem .
+TestAttemptoBul: всичко което купува само мъже е жена .
+TestAttemptoCat: tot que compra nomÈs imatges és una dona .
+TestAttemptoDan: alt , som køber kun billeder er en kvinde .
+TestAttemptoDut: alles , dat slechts schilderijen koopt is een vrouw .
+TestAttemptoEng: everything that buys nothing but pictures is a woman .
+TestAttemptoEst: kõik , kes ostab ainult pildid on naine .
+TestAttemptoFre: tout qui achète seulement des images est une femme .
+TestAttemptoGer: alles , das nur Bilder kauft ist eine Frau .
+TestAttemptoGre: τα πάντα που αγοράζουν μόνο άνδρες είναι μία γυναίκα .
+TestAttemptoIta: tutto che compra soltanto immagini è una donna .
+TestAttemptoLav: jebkas , kas pērk tikai attēlus ir sieviete .
+TestAttemptoNor: alt , som kjøper kun bilder er ei kvinne .
+TestAttemptoPol: wszystko , które kupi tylko mężczyzn jest kobietą .
+TestAttemptoRon: totul care cumpără doar nişte imagini este o femeie .
+TestAttemptoRus: всё , которое покупает единственные картины женщина .
+TestAttemptoSpa: todo que compra solamente imagenes es una mujer .
+TestAttemptoSwe: allting , som köper bara bildar är en kvinna .
+TestAttemptoUrd: ہر چیز , جو صرف تصویر کو خریدتا ہے عورت ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (predRS which_RP (v2VP (V2by_as_V2 see_V2) (thereNP_as_NP (indefTherePronNP something_IPron))))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N)))))))
+TestAttemptoAce: everything that sees something is an officer .
+TestAttemptoApe: everything that sees|tv_finsg|see_V2 something is an officer|noun_sg|officer_N|masc .
+TestAttemptoBul: всичко което вижда нещо е мъж .
+TestAttemptoCat: tot que veu quelcom és un oficial .
+TestAttemptoDan: alt , som ser noget er en officer .
+TestAttemptoDut: alles , dat iets ziet is een officier .
+TestAttemptoEng: everything that sees something is an officer .
+TestAttemptoEst: kõik , kes näeb mille on ohvitser .
+TestAttemptoFre: tout qui voit quelque chose est un officier .
+TestAttemptoGer: alles , das etwas sieht ist ein Offizier .
+TestAttemptoGre: τα πάντα που βλέπουν κάτι είναι ένας άνδρας .
+TestAttemptoIta: tutto che vede qualche cosa è un ufficiale .
+TestAttemptoLav: jebkas , kas redz kaut ko ir amatpersona .
+TestAttemptoNor: alt , som ser noe er en offiser .
+TestAttemptoPol: wszystko , które widzi coś jest mężczyzną .
+TestAttemptoRon: totul care vede ceva este un ofițer .
+TestAttemptoRus: всё , которое видит что-то офицер .
+TestAttemptoSpa: todo que ve algo es un funcionario .
+TestAttemptoSwe: allting , som ser något är en befäl .
+TestAttemptoUrd: ہر چیز , جو کوی چیز دیکھتا ہے افسر ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (slashRS which_RP (thereNP_as_NP (indefTherePronNP something_IPron)) (V2by_as_V2 see_V2))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N)))))))
+TestAttemptoAce: everything that something sees is an officer .
+TestAttemptoApe: everything that something sees|tv_finsg|see_V2 is an officer|noun_sg|officer_N|masc .
+TestAttemptoBul: всичко което нещо вижда е мъж .
+TestAttemptoCat: tot que quelcom veu és un oficial .
+TestAttemptoDan: alt , som noget ser er en officer .
+TestAttemptoDut: alles , dat iets ziet is een officier .
+TestAttemptoEng: everything that something sees is an officer .
+TestAttemptoEst: kõik , kelle mis näeb on ohvitser .
+TestAttemptoFre: tout que quelque chose voit est un officier .
+TestAttemptoGer: alles , das etwas sieht ist ein Offizier .
+TestAttemptoGre: τα πάντα τα οποία κάτι βλέπει είναι ένας άνδρας .
+TestAttemptoIta: tutto che qualche cosa vede è un ufficiale .
+TestAttemptoLav: jebkas , ko kaut kas redz ir amatpersona .
+TestAttemptoNor: alt , som noe ser er en offiser .
+TestAttemptoPol: wszystko , które widzi coś jest mężczyzną .
+TestAttemptoRon: totul pe care îl vede ceva este un ofițer .
+TestAttemptoRus: всё , которое что-то видит офицер .
+TestAttemptoSpa: todo que algo ve es un funcionario .
+TestAttemptoSwe: allting , som något ser är en befäl .
+TestAttemptoUrd: ہر چیز , جس کوی چیز دیکھتا ہے افسر ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (predRS which_RP (v2_byVP love_V2 (thereNP_as_NP (indefTherePronNP something_IPron))))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN person_N)))))))
+TestAttemptoAce: everything that is loved by something is a person .
+TestAttemptoApe: everything that is loved|tv_pp|love_V2 by something is a person|noun_sg|person_N|masc .
+TestAttemptoBul: всичко което е обичано чрез нещо е човек .
+TestAttemptoCat: tot que està estimat per quelcom és una persona .
+TestAttemptoDan: alt , som bliver elsket af noget er en person .
+TestAttemptoDut: alles , dat door iets liefgehad wordt is een persoon .
+TestAttemptoEng: everything that is loved by something is a person .
+TestAttemptoEst: kõik , keda armastatakse mille poolt on inimene .
+TestAttemptoFre: tout qui est aimé par quelque chose est une personne .
+TestAttemptoGer: alles , das durch etwas geliebt wird ist eine Person .
+TestAttemptoGre: τα πάντα που αγαπιούνται από κάτι είναι ένα πρόσωπο .
+TestAttemptoIta: tutto che viene amato da qualche cosa è una persona .
+TestAttemptoLav: jebkas , kas patīk kaut kam ir persona .
+TestAttemptoNor: alt , som blir elska av noe er en person .
+TestAttemptoPol: wszystko , które przez coś jest kochane jest mężczyzną .
+TestAttemptoRon: totul care este iubit de către ceva este o persoană .
+TestAttemptoRus: всё , которое с помощью чего-то любдится лицo .
+TestAttemptoSpa: todo que está amado por algo es una persona .
+TestAttemptoSwe: allting , som blir älskat av något är en person .
+TestAttemptoUrd: ہر چیز , جو کوی چیز سے پیار کرتا ہے شخص ہے
+
+TestAttempto: baseText (sText (s (np_coord_VPS (relNP (indefPronNP everything_IPron) (predRS which_RP (v2VP (V2by_as_V2 love_V2) (thereNP_as_NP (indefTherePronNP something_IPron))))) or_Conj (BaseVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N))))) (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N)))))))))
+TestAttemptoAce: everything that loves something is a traveler or is an officer .
+TestAttemptoApe: everything that loves|tv_finsg|love_V2 something is a traveler|noun_sg|traveler_N|masc or is an officer|noun_sg|officer_N|masc .
+TestAttemptoBul: всичко което обича нещо е мъж или е мъж .
+TestAttemptoCat: tot que estima quelcom és un viatger o és un oficial .
+TestAttemptoDan: alt , som elsker noget er en rejsende eller er en officer .
+TestAttemptoDut: alles , dat iets lief heeft is een reiziger of is een officier .
+TestAttemptoEng: everything that loves something is a traveler or is an officer .
+TestAttemptoEst: kõik , kes armastab mida on reisija või on ohvitser .
+TestAttemptoFre: tout qui aime quelque chose est un voyageur ou il est un officier .
+TestAttemptoGer: alles , das etwas liebt ist ein Reisende oder ist ein Offizier .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: tutto che ama qualche cosa è un viaggiatore o è un ufficiale .
+TestAttemptoLav: jebkas , kam patīk kaut kas ir ceļotājs vai ir amatpersona .
+TestAttemptoNor: alt , som elsker noe er ei reisende eller er en offiser .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: todo que ama algo es un viajero o es un funcionario .
+TestAttemptoSwe: allting , som älskar något är en resenär eller är en befäl .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (np_coord_VPS (relNP (indefPronNP everything_IPron) (slashRS which_RP (thereNP_as_NP (indefTherePronNP something_IPron)) (V2by_as_V2 love_V2))) or_Conj (BaseVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N))))) (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N)))))))))
+TestAttemptoAce: everything that something loves is a traveler or is an officer .
+TestAttemptoApe: everything that something loves|tv_finsg|love_V2 is a traveler|noun_sg|traveler_N|masc or is an officer|noun_sg|officer_N|masc .
+TestAttemptoBul: всичко което нещо обича е мъж или е мъж .
+TestAttemptoCat: tot que quelcom estima és un viatger o és un oficial .
+TestAttemptoDan: alt , som noget elsker er en rejsende eller er en officer .
+TestAttemptoDut: alles , dat iets lief heeft is een reiziger of is een officier .
+TestAttemptoEng: everything that something loves is a traveler or is an officer .
+TestAttemptoEst: kõik , keda mis armastab on reisija või on ohvitser .
+TestAttemptoFre: tout que quelque chose aime est un voyageur ou il est un officier .
+TestAttemptoGer: alles , das etwas liebt ist ein Reisende oder ist ein Offizier .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: tutto che qualche cosa ama è un viaggiatore o è un ufficiale .
+TestAttemptoLav: jebkas , kas kaut kam patīk ir ceļotājs vai ir amatpersona .
+TestAttemptoNor: alt , som noe elsker er ei reisende eller er en offiser .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: todo que algo ama es un viajero o es un funcionario .
+TestAttemptoSwe: allting , som något älskar är en resenär eller är en befäl .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (np_coord_VPS (relNP (indefPronNP everything_IPron) (predRS which_RP (v2_byVP see_V2 (thereNP_as_NP (indefTherePronNP something_IPron))))) or_Conj (BaseVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N))))) (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN aquarium_N)))))))))
+TestAttemptoAce: everything that is seen by something is a traveler or is an aquarium .
+TestAttemptoApe: everything that is seen|tv_pp|see_V2 by something is a traveler|noun_sg|traveler_N|masc or is an aquarium|noun_sg|aquarium_N|neutr .
+TestAttemptoBul: всичко което е видяно чрез нещо е мъж или е мъж .
+TestAttemptoCat: tot que està vist per quelcom és un viatger o és un aquari .
+TestAttemptoDan: alt , som bliver set af noget er en rejsende eller er en akvarium .
+TestAttemptoDut: alles , dat door iets gezien wordt is een reiziger of is een aquarium .
+TestAttemptoEng: everything that is seen by something is a traveler or is an aquarium .
+TestAttemptoEst: kõik , kes nähakse mille poolt on reisija või on akvaarium .
+TestAttemptoFre: tout qui est vu par quelque chose est un voyageur ou il est un aquarium .
+TestAttemptoGer: alles , das durch etwas gesehen wird ist ein Reisende oder ist ein Aquarium .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: tutto che viene visto da qualche cosa è un viaggiatore o è un acquario .
+TestAttemptoLav: jebkas , ko redz kaut kas ir ceļotājs vai ir akvārijs .
+TestAttemptoNor: alt , som blir sett av noe er ei reisende eller er en akvarium .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: todo que está visto por algo es un viajero o es un acuario .
+TestAttemptoSwe: allting , som blir sett av något är en resenär eller är en akvarium .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (vpS (pnNP tom_PN) (v2VP (V2by_as_V2 love_V2) (thereNP_as_NP (at_leastNP (digitsCard (IDig D_2)) (cn_as_VarCN officer_N)))))))
+TestAttemptoAce: Tom loves at least 2 officers .
+TestAttemptoApe: Tom|pn_sg|Tom_PN|masc loves|tv_finsg|love_V2 at least 2 officers|noun_pl|officer_N|masc .
+TestAttemptoBul: Джон обича почти 2 мъже .
+TestAttemptoCat: Tom estima almenys 2 oficials .
+TestAttemptoDan: Tom elsker mindst 2 officerer .
+TestAttemptoDut: Tom heeft ten minste 2 officieren lief .
+TestAttemptoEng: Tom loves at least 2 officers .
+TestAttemptoEst: Toomas armastab vähemalt 2 ohvitserit .
+TestAttemptoFre: Tom aime au moins 2 officiers .
+TestAttemptoGer: Tom liebt wenigstens 2 Offiziere .
+TestAttemptoGre: ο Γιάννης αγαπά τουλάχιστον 2 άνδρες .
+TestAttemptoIta: Tom ama almeno 2 ufficiali .
+TestAttemptoLav: Tomam patīk vismaz 2 amatpersonas .
+TestAttemptoNor: Tom elsker minst 2 offiserer .
+TestAttemptoPol: Paryż kocha co najmniej 2 mężczyzn .
+TestAttemptoRon: Tom iubeşte cel puţin 2 ofițere .
+TestAttemptoRus: Tom любдит по крайней мере 2 офицеры .
+TestAttemptoSpa: Tom ama al menos 2 funcionarios .
+TestAttemptoSwe: Tom älskar minst 2 befälar .
+TestAttemptoUrd: Tom کم از کم ۲ افسر کو پیار کرتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP lisa_PN) (v2VP (V2by_as_V2 buy_V2) (thereNP_as_NP (at_mostNP (digitsCard (IDig D_1)) (cn_as_VarCN present_N)))))))
+TestAttemptoAce: Lisa buys at most 1 present .
+TestAttemptoApe: Lisa|pn_sg|Lisa_PN|fem buys|tv_finsg|buy_V2 at most 1 present|noun_sg|present_N|neutr .
+TestAttemptoBul: Джон купува почти 1 мъж .
+TestAttemptoCat: Lisa compra com a màxim 1 presentar .
+TestAttemptoDan: Lisa køber højst 1 gave .
+TestAttemptoDut: Lisa koopt hooguit 1 cadeau .
+TestAttemptoEng: Lisa buys at most 1 present .
+TestAttemptoEst: Liisa ostab kuni 1 kingituse .
+TestAttemptoFre: Lisa achète au plus 1 cadeau .
+TestAttemptoGer: Lisa kauft höchstens 1 Geschenk .
+TestAttemptoGre: ο Γιάννης αγοράζει ένα το πολύ 1 άνδρα .
+TestAttemptoIta: Lisa compra al massimo 1 regalo .
+TestAttemptoLav: Līza pērk ne vairāk kā 1 dāvanu .
+TestAttemptoNor: Lisa kjøper høyst 1 gave .
+TestAttemptoPol: Paryż kupi co najwyżej 1 mężczyznę .
+TestAttemptoRon: Lisa cumpără cel mult 1 cadou .
+TestAttemptoRus: Lisa покупает не более 1 подарок .
+TestAttemptoSpa: Lisa compra como máximo 1 regalo .
+TestAttemptoSwe: Lisa köper högst 1 present .
+TestAttemptoUrd: Lisa زیادہ سے زیادہ ۱ پیش کو خریدتا ہے
+
+TestAttempto: baseText (sText (s (vpS (everyNP (cn_as_VarCN traveler_N)) (v2VP (V2by_as_V2 see_V2) (thereNP_as_NP (at_leastNP (digitsCard (IDig D_2)) (cn_as_VarCN aquarium_N)))))))
+TestAttemptoAce: every traveler sees at least 2 aquariums .
+TestAttemptoApe: every traveler|noun_sg|traveler_N|masc sees|tv_finsg|see_V2 at least 2 aquariums|noun_pl|aquarium_N|neutr .
+TestAttemptoBul: всеки мъж вижда почти 2 мъже .
+TestAttemptoCat: cada viatger veu almenys 2 aquarins .
+TestAttemptoDan: hver rejsende ser mindst 2 akvariumer .
+TestAttemptoDut: elke reiziger ziet ten minste 2 aquaria .
+TestAttemptoEng: every traveler sees at least 2 aquariums .
+TestAttemptoEst: iga reisija näeb vähemalt 2 akvaariumi .
+TestAttemptoFre: chaque voyageur voit au moins 2 aquariums .
+TestAttemptoGer: jeder Reisende sieht wenigstens 2 Aquariume .
+TestAttemptoGre: κάθε άνδρας βλέπει τουλάχιστον 2 άνδρες .
+TestAttemptoIta: ogni viaggiatore vede almeno 2 acquari .
+TestAttemptoLav: ikviens ceļotājs redz vismaz 2 akvārijus .
+TestAttemptoNor: hver reisende ser minst 2 akvariumer .
+TestAttemptoPol: każdy mężczyzna widzi co najmniej 2 mężczyzn .
+TestAttemptoRon: orice călător vede cel puţin 2 acvarii .
+TestAttemptoRus: каждый путешественник видит по крайней мере 2 аквариумы .
+TestAttemptoSpa: cada viajero ve al menos 2 acuarios .
+TestAttemptoSwe: varje resenär ser minst 2 akvariumar .
+TestAttemptoUrd: ہر مسافر کم از کم ۲ ایکویریم دیکھتا ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (predRS which_RP (v2VP (V2by_as_V2 buy_V2) (thereNP_as_NP (at_leastNP (digitsCard (IDig D_2)) (cn_as_VarCN present_N)))))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N)))))))
+TestAttemptoAce: everything that buys at least 2 presents is an officer .
+TestAttemptoApe: everything that buys|tv_finsg|buy_V2 at least 2 presents|noun_pl|present_N|neutr is an officer|noun_sg|officer_N|masc .
+TestAttemptoBul: всичко което купува почти 2 мъже е мъж .
+TestAttemptoCat: tot que compra almenys 2 presentars és un oficial .
+TestAttemptoDan: alt , som køber mindst 2 gaver er en officer .
+TestAttemptoDut: alles , dat ten minste 2 cadeaus koopt is een officier .
+TestAttemptoEng: everything that buys at least 2 presents is an officer .
+TestAttemptoEst: kõik , kes ostab vähemalt 2 kingitust on ohvitser .
+TestAttemptoFre: tout qui achète au moins 2 cadeaux est un officier .
+TestAttemptoGer: alles , das wenigstens 2 Geschenke kauft ist ein Offizier .
+TestAttemptoGre: τα πάντα που αγοράζουν τουλάχιστον 2 άνδρες είναι ένας άνδρας .
+TestAttemptoIta: tutto che compra almeno 2 regali è un ufficiale .
+TestAttemptoLav: jebkas , kas pērk vismaz 2 dāvanas ir amatpersona .
+TestAttemptoNor: alt , som kjøper minst 2 gaver er en offiser .
+TestAttemptoPol: wszystko , które kupi co najmniej 2 mężczyzn jest mężczyzną .
+TestAttemptoRon: totul care cumpără cel puţin 2 caoaoe este un ofițer .
+TestAttemptoRus: всё , которое покупает по крайней мере 2 подароки офицер .
+TestAttemptoSpa: todo que compra al menos 2 regalos es un funcionario .
+TestAttemptoSwe: allting , som köper minst 2 presentar är en befäl .
+TestAttemptoUrd: ہر چیز , جو کم از کم ۲ پیش کو خریدتا ہے افسر ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (slashRS which_RP (thereNP_as_NP (at_leastNP (digitsCard (IDig D_2)) (cn_as_VarCN officer_N))) (V2by_as_V2 buy_V2))) (npVP (thereNP_as_NP (aNP (cn_as_VarCN present_N)))))))
+TestAttemptoAce: everything that at least 2 officers buy is a present .
+TestAttemptoApe: everything that at least 2 officers|noun_pl|officer_N|masc buy|tv_infpl|buy_V2 is a present|noun_sg|present_N|neutr .
+TestAttemptoBul: всичко което почти 2 мъже купуват е мъж .
+TestAttemptoCat: tot que almenys 2 oficials compren és un presentar .
+TestAttemptoDan: alt , som mindst 2 officerer køber er en gave .
+TestAttemptoDut: alles , dat ten minste 2 officieren kopen is een cadeau .
+TestAttemptoEng: everything that at least 2 officers buy is a present .
+TestAttemptoEst: kõik , kelle vähemalt 2 ohvitserit ostavad on kingitus .
+TestAttemptoFre: tout qu' au moins 2 officiers achètent est un cadeau .
+TestAttemptoGer: alles , das wenigstens 2 Offiziere kaufen ist ein Geschenk .
+TestAttemptoGre: τα πάντα τα οποία τουλάχιστον 2 άνδρες αγοράζουν είναι ένας άνδρας .
+TestAttemptoIta: tutto che almeno 2 ufficiali comprano è un regalo .
+TestAttemptoLav: jebkas , ko vismaz 2 amatpersonas pērk ir dāvana .
+TestAttemptoNor: alt , som minst 2 offiserer kjøper er ei gave .
+TestAttemptoPol: wszystko , które kupi co najmniej 2 mężczyzn jest mężczyzną .
+TestAttemptoRon: totul pe care îl cumpără cel puţin 2 ofițere este un cadou .
+TestAttemptoRus: всё , которое по крайней мере 2 офицера покупают подарок .
+TestAttemptoSpa: todo que al menos 2 funcionarios compran es un regalo .
+TestAttemptoSwe: allting , som minst 2 befälar köper är en present .
+TestAttemptoUrd: ہر چیز , جس کو کم از کم ۲ افسر خریدتے ہیں پیش ہے
+
+TestAttempto: baseText (sText (s (vpS (everyNP (cn_as_VarCN officer_N)) (v2VP (V2by_as_V2 see_V2) (thereNP_as_NP (at_mostNP (digitsCard (IDig D_1)) (cn_as_VarCN aquarium_N)))))))
+TestAttemptoAce: every officer sees at most 1 aquarium .
+TestAttemptoApe: every officer|noun_sg|officer_N|masc sees|tv_finsg|see_V2 at most 1 aquarium|noun_sg|aquarium_N|neutr .
+TestAttemptoBul: всеки мъж вижда почти 1 мъж .
+TestAttemptoCat: cada oficial veu com a màxim 1 aquari .
+TestAttemptoDan: hver officer ser højst 1 akvarium .
+TestAttemptoDut: elke officier ziet hooguit 1 aquarium .
+TestAttemptoEng: every officer sees at most 1 aquarium .
+TestAttemptoEst: iga ohvitser näeb kuni 1 akvaariumi .
+TestAttemptoFre: chaque officier voit au plus 1 aquarium .
+TestAttemptoGer: jeder Offizier sieht höchstens 1 Aquarium .
+TestAttemptoGre: κάθε άνδρας βλέπει ένα το πολύ 1 άνδρα .
+TestAttemptoIta: ogni ufficiale vede al massimo 1 acquario .
+TestAttemptoLav: ikviena amatpersona redz ne vairāk kā 1 akvāriju .
+TestAttemptoNor: hver offiser ser høyst 1 akvarium .
+TestAttemptoPol: każdy mężczyzna widzi co najwyżej 1 mężczyznę .
+TestAttemptoRon: orice ofițer vede cel mult 1 acvariu .
+TestAttemptoRus: каждый офицер видит не более 1 аквариум .
+TestAttemptoSpa: cada funcionario ve como máximo 1 acuario .
+TestAttemptoSwe: varje befäl ser högst 1 akvarium .
+TestAttemptoUrd: ہر افسر زیادہ سے زیادہ ۱ ایکویریم دیکھتا ہے
+
+TestAttempto: baseText (sText (s (vpS (relNP (indefPronNP everything_IPron) (orRS (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN traveler_N))))) (predRS which_RP (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))))) (v2VP (V2by_as_V2 see_V2) (thereNP_as_NP (at_mostNP (digitsCard (IDig D_2)) (cn_as_VarCN aquarium_N)))))))
+TestAttemptoAce: everything that is a traveler or that is an officer sees at most 2 aquariums .
+TestAttemptoApe: everything that is a traveler|noun_sg|traveler_N|masc or that is an officer|noun_sg|officer_N|masc sees|tv_finsg|see_V2 at most 2 aquariums|noun_pl|aquarium_N|neutr .
+TestAttemptoBul: всичко което е мъж или което е мъж вижда почти 2 мъже .
+TestAttemptoCat: tot que és un viatger o que és un oficial veu com a màxim 2 aquarins .
+TestAttemptoDan: alt , som er en rejsende eller som er en officer ser højst 2 akvariumer .
+TestAttemptoDut: alles , dat een reiziger is of dat een officier is ziet hooguit 2 aquaria .
+TestAttemptoEng: everything that is a traveler or that is an officer sees at most 2 aquariums .
+TestAttemptoEst: kõik , kes on reisija või kes on ohvitser näeb kuni 2 akvaariumi .
+TestAttemptoFre: tout qui est un voyageur ou qui est un officier voit au plus 2 aquariums .
+TestAttemptoGer: alles , das ein Reisende ist oder das ein Offizier ist sieht höchstens 2 Aquariume .
+TestAttemptoGre: τα πάντα που είναι ένας άνδρας ή που είναι ένας άνδρας βλέπουν το πολύ 2 άνδρες .
+TestAttemptoIta: tutto che è un viaggiatore o che è un ufficiale vede al massimo 2 acquari .
+TestAttemptoLav: jebkas , kas ir ceļotājs vai kas ir amatpersona redz ne vairāk kā 2 akvārijus .
+TestAttemptoNor: alt , som er ei reisende eller som er en offiser ser høyst 2 akvariumer .
+TestAttemptoPol: wszystko , które jest mężczyzną lub , które jest mężczyzną widzi co najwyżej 2 mężczyzn .
+TestAttemptoRon: totul care este un călător sau care este un ofițer vede cel mult 2 acvarii .
+TestAttemptoRus: всё , которое путешественник или , которое офицер видит не более 2 аквариумы .
+TestAttemptoSpa: todo que es un viajero o que es un funcionario ve como máximo 2 acuarios .
+TestAttemptoSwe: allting , som är en resenär eller som är en befäl ser högst 2 akvariumar .
+TestAttemptoUrd: ہر چیز , جو مسافر ہے یا جو افسر ہے زیادہ سے زیادہ ۲ ایکویریم دیکھتا ہے
+
+TestAttempto: baseText (sText (s (vpS (noNP (cn_as_VarCN picture_N)) (refl_v2VP (V2by_as_V2 admire_V2)))))
+TestAttemptoAce: no picture admires itself .
+TestAttemptoApe: no picture|noun_sg|picture_N|neutr admires|tv_finsg|admire_V2 itself .
+TestAttemptoBul: 
+TestAttemptoCat: cap imatge es admira .
+TestAttemptoDan: 
+TestAttemptoDut: geen schilderij bewondert zich .
+TestAttemptoEng: no picture admires itself .
+TestAttemptoEst: mitte ükski pilt imetleb ennast .
+TestAttemptoFre: aucune image ne s' admire .
+TestAttemptoGer: kein Bild bewundert sich .
+TestAttemptoGre: κανένας άνδρας δεν φοβάται τον εαυτό του .
+TestAttemptoIta: nessuno immagine si ammira .
+TestAttemptoLav: neviens attēls neapbrīno sevi .
+TestAttemptoNor: 
+TestAttemptoPol: żaden mężczyzna czyta siebie .
+TestAttemptoRon: nicio imagine se admirează .
+TestAttemptoRus: 
+TestAttemptoSpa: ningún imagen se admira .
+TestAttemptoSwe: ingen bild beundrar sig .
+TestAttemptoUrd: کوی نہیں تصویر خود کی تعریفتا ہے
+
+TestAttempto: baseText (sText (s (vpS (everyNP (cn_as_VarCN man_N)) (refl_v2VP (V2by_as_V2 love_V2)))))
+TestAttemptoAce: every man loves himself .
+TestAttemptoApe: every man|noun_sg|man_N|masc loves|tv_finsg|love_V2 himself .
+TestAttemptoBul: всеки мъж се обича .
+TestAttemptoCat: cada home es estima .
+TestAttemptoDan: hver mand elsker sig .
+TestAttemptoDut: elke man heeft zich lief .
+TestAttemptoEng: every man loves himself .
+TestAttemptoEst: iga mees armastab ennast .
+TestAttemptoFre: chaque homme s' aime .
+TestAttemptoGer: jeder Mann liebt sich .
+TestAttemptoGre: κάθε άνδρας αγαπά τον εαυτό του .
+TestAttemptoIta: ogni uomo si ama .
+TestAttemptoLav: ikvienam vīrietim patīk NON_EXISTENT .
+TestAttemptoNor: hver mann elsker seg .
+TestAttemptoPol: każdy mężczyzna kocha siebie .
+TestAttemptoRon: orice om se iubeşte .
+TestAttemptoRus: каждый человек любдит себя .
+TestAttemptoSpa: cada hombre se ama .
+TestAttemptoSwe: varje man älskar sig .
+TestAttemptoUrd: ہر آدمی خود کو پیار کرتا ہے
+
+TestAttempto: baseText (sText (s (if_thenS (vpS (termNP X_Var) (v2VP (V2by_as_V2 see_V2) (termNP Y_Var))) (neg_vpS (termNP Y_Var) (v2VP (V2by_as_V2 love_V2) (termNP X_Var))))))
+TestAttemptoAce: if X sees Y then Y doesn't love X .
+TestAttemptoApe: if X sees|tv_finsg|see_V2 Y then Y doesn't love|tv_infpl|love_V2 X .
+TestAttemptoBul: [if_thenS] .
+TestAttemptoCat: si X veu Y llavors Y no estima X .
+TestAttemptoDan: hvis X ser Y så Y elsker ikke X .
+TestAttemptoDut: als X Y ziet , dan heeft Y niet X lief .
+TestAttemptoEng: if X sees Y then Y doesn't love X .
+TestAttemptoEst: kui X näeb Y siis Y ei armasta X .
+TestAttemptoFre: si X voit Y alors Y n' aime pas X .
+TestAttemptoGer: wenn X Y sieht , dann liebt Y X nicht .
+TestAttemptoGre: αν ο X βλέπει τον Y τότε ο Y δεν αγαπά τον X .
+TestAttemptoIta: si X vede Y allora Y non ama X .
+TestAttemptoLav: ja X redz Y tad Y nepatīk X .
+TestAttemptoNor: hvis X ser Y så Y elsker ikke X .
+TestAttemptoPol: jeżeli X widzi Y , to Y nie kocha X .
+TestAttemptoRon: dacă X îl vede pe Y atunci Y nu îl iubeşte pe X .
+TestAttemptoRus: если X видит Y то Y не любдит X .
+TestAttemptoSpa: si X ve Y entonces Y no ama X .
+TestAttemptoSwe: om X ser Y så Y älskar inte X .
+TestAttemptoUrd: اگر X Y دیکھتا ہے تو Y X کو پیار نہیں کرتا ہے
+
+TestAttempto: baseText (sText (s (if_thenS (vpS (termNP X_Var) (v2VP (V2by_as_V2 see_V2) (relNP (thereNP_as_NP (indefTherePronNP somebody_IPron)) (predRS which_RP (v2VP (V2by_as_V2 see_V2) (termNP Y_Var)))))) (vpS (termNP X_Var) (v2VP (V2by_as_V2 see_V2) (termNP Y_Var))))))
+TestAttemptoAce: if X sees somebody that sees Y then X sees Y .
+TestAttemptoApe: if X sees|tv_finsg|see_V2 somebody that sees|tv_finsg|see_V2 Y then X sees|tv_finsg|see_V2 Y .
+TestAttemptoBul: [if_thenS] .
+TestAttemptoCat: si X veu alg˙ que veu Y llavors X veu Y .
+TestAttemptoDan: hvis X ser nogen , som ser Y så X ser Y .
+TestAttemptoDut: als X iemand , die Y ziet ziet , dan ziet X Y .
+TestAttemptoEng: if X sees somebody that sees Y then X sees Y .
+TestAttemptoEst: kui X näeb kellegi , kes näeb Y siis X näeb Y .
+TestAttemptoFre: si X voit quelqu'un qui voit Y alors X voit Y .
+TestAttemptoGer: wenn X jemanden , das Y sieht sieht , dann sieht X Y .
+TestAttemptoGre: αν ο X βλέπει κάποιον που βλέπει τον Y τότε ο X βλέπει τον Y .
+TestAttemptoIta: si X vede qualcuno che vede Y allora X vede Y .
+TestAttemptoLav: ja X redz kādu , kas redz Y tad X redz Y .
+TestAttemptoNor: hvis X ser noen , som ser Y så X ser Y .
+TestAttemptoPol: jeżeli X widzi kogoś , który widzi Y , to X widzi Y .
+TestAttemptoRon: dacă X vede pe cineva care îl vede pe Y atunci X îl vede pe Y .
+TestAttemptoRus: если X видит кого-то , который видит Y то X видит Y .
+TestAttemptoSpa: si X ve alguien que ve Y entonces X ve Y .
+TestAttemptoSwe: om X ser någon , som ser Y så X ser Y .
+TestAttemptoUrd: اگر X کوی , جو Y دیکھتا ہے دیکھتا ہے تو X Y دیکھتا ہے
+
+TestAttempto: baseText (sText (s (if_thenS (vpS (termNP X_Var) (v2VP (V2by_as_V2 admire_V2) (termNP Y_Var))) (vpS (termNP X_Var) (v2VP (V2by_as_V2 see_V2) (termNP Y_Var))))))
+TestAttemptoAce: if X admires Y then X sees Y .
+TestAttemptoApe: if X admires|tv_finsg|admire_V2 Y then X sees|tv_finsg|see_V2 Y .
+TestAttemptoBul: [if_thenS] .
+TestAttemptoCat: si X admira Y llavors X veu Y .
+TestAttemptoDan: hvis X beundrer Y så X ser Y .
+TestAttemptoDut: als X Y bewondert , dan ziet X Y .
+TestAttemptoEng: if X admires Y then X sees Y .
+TestAttemptoEst: kui X imetleb Y siis X näeb Y .
+TestAttemptoFre: si X admire Y alors X voit Y .
+TestAttemptoGer: wenn X Y bewundert , dann sieht X Y .
+TestAttemptoGre: αν ο X φοβάται τον Y τότε ο X βλέπει τον Y .
+TestAttemptoIta: si X ammira Y allora X vede Y .
+TestAttemptoLav: ja X apbrīno Y tad X redz Y .
+TestAttemptoNor: hvis X beundrer Y så X ser Y .
+TestAttemptoPol: jeżeli X czyta Y , to X widzi Y .
+TestAttemptoRon: dacă X îl admirează pe Y atunci X îl vede pe Y .
+TestAttemptoRus: если X боет Y то X видит Y .
+TestAttemptoSpa: si X admira Y entonces X ve Y .
+TestAttemptoSwe: om X beundrar Y så X ser Y .
+TestAttemptoUrd: اگر X Y کی تعریفتا ہے تو X Y دیکھتا ہے
+
+TestAttempto: baseText (sText (s (if_thenS (vpS (termNP X_Var) (v2VP (V2by_as_V2 help_V2) (termNP Y_Var))) (vpS (termNP Y_Var) (v2VP (V2by_as_V2 admire_V2) (termNP X_Var))))))
+TestAttemptoAce: if X helps Y then Y admires X .
+TestAttemptoApe: if X helps|tv_finsg|help_V2 Y then Y admires|tv_finsg|admire_V2 X .
+TestAttemptoBul: [if_thenS] .
+TestAttemptoCat: si X ajuda Y llavors Y admira X .
+TestAttemptoDan: hvis X hjælper Y så Y beundrer X .
+TestAttemptoDut: als X Y helpt , dan bewondert Y X .
+TestAttemptoEng: if X helps Y then Y admires X .
+TestAttemptoEst: kui X aitab Y siis Y imetleb X .
+TestAttemptoFre: si X aide Y alors Y admire X .
+TestAttemptoGer: wenn X Y hilft , dann bewundert Y X .
+TestAttemptoGre: αν ο X σπρώχνει τον Y τότε ο Y φοβάται τον X .
+TestAttemptoIta: si X aiuta Y allora Y ammira X .
+TestAttemptoLav: ja X palīdz Y tad Y apbrīno X .
+TestAttemptoNor: hvis X hjelper Y så Y beundrer X .
+TestAttemptoPol: jeżeli X czyta Y , to Y czyta X .
+TestAttemptoRon: dacă X îl ajutează pe Y atunci Y îl admirează pe X .
+TestAttemptoRus: если X толкает Y то Y боет X .
+TestAttemptoSpa: si X ayuda Y entonces Y admira X .
+TestAttemptoSwe: om X assisterar Y så Y beundrar X .
+TestAttemptoUrd: اگر X Y متا ہے تو Y X کی تعریفتا ہے
+
+TestAttempto: baseText (sText (s (if_thenS (vpS (termNP X_Var) (v2VP (V2by_as_V2 love_V2) (termNP Y_Var))) (neg_vpS (termNP X_Var) (v2VP (V2by_as_V2 admire_V2) (termNP Y_Var))))))
+TestAttemptoAce: if X loves Y then X doesn't admire Y .
+TestAttemptoApe: if X loves|tv_finsg|love_V2 Y then X doesn't admire|tv_infpl|admire_V2 Y .
+TestAttemptoBul: [if_thenS] .
+TestAttemptoCat: si X estima Y llavors X no admira Y .
+TestAttemptoDan: hvis X elsker Y så X beundrer ikke Y .
+TestAttemptoDut: als X Y lief heeft , dan bewondert X niet Y .
+TestAttemptoEng: if X loves Y then X doesn't admire Y .
+TestAttemptoEst: kui X armastab Y siis X ei imetle Y .
+TestAttemptoFre: si X aime Y alors X n' admire pas Y .
+TestAttemptoGer: wenn X Y liebt , dann bewundert X Y nicht .
+TestAttemptoGre: αν ο X αγαπά τον Y τότε ο X δεν φοβάται τον Y .
+TestAttemptoIta: si X ama Y allora X non ammira Y .
+TestAttemptoLav: ja X patīk Y tad X neapbrīno Y .
+TestAttemptoNor: hvis X elsker Y så X beundrer ikke Y .
+TestAttemptoPol: jeżeli X kocha Y , to X nie czyta Y .
+TestAttemptoRon: dacă X îl iubeşte pe Y atunci X nu îl admirează pe Y .
+TestAttemptoRus: если X любдит Y то X не боет Y .
+TestAttemptoSpa: si X ama Y entonces X no admira Y .
+TestAttemptoSwe: om X älskar Y så X beundrar inte Y .
+TestAttemptoUrd: اگر X Y کو پیار کرتا ہے تو X Y نہیں کی تعریفتا ہے
+
+TestAttempto: baseText (sText (s (if_thenS (neg_vpS (thereNP_as_NP (aNP (apposVarCN man_N X_Var))) (v2VP (V2by_as_V2 admire_V2) (thereNP_as_NP (aNP (apposVarCN woman_N Y_Var))))) (neg_vpS (theNP (apposVarCN woman_N Y_Var)) (v2VP (V2by_as_V2 admire_V2) (theNP (apposVarCN man_N X_Var)))))))
+TestAttemptoAce: if a man X doesn't admire a woman Y then the woman Y doesn't admire the man X .
+TestAttemptoApe: if a man|noun_sg|man_N|masc X doesn't admire|tv_infpl|admire_V2 a woman|noun_sg|woman_N|fem Y then the woman|noun_sg|woman_N|fem Y doesn't admire|tv_infpl|admire_V2 the man|noun_sg|man_N|masc X .
+TestAttemptoBul: [if_thenS] .
+TestAttemptoCat: si un home X no admira una dona Y llavors la dona Y no admira l' home X .
+TestAttemptoDan: hvis en mand X beundrer ikke en kvinde Y så kvinden Y beundrer ikke manden X .
+TestAttemptoDut: als een man X niet een vrouw Y bewondert , dan bewondert de vrouw Y niet de man X .
+TestAttemptoEng: if a man X doesn't admire a woman Y then the woman Y doesn't admire the man X .
+TestAttemptoEst: kui mees X ei imetle naist Y siis naine Y ei imetle meest X .
+TestAttemptoFre: si un homme X n' admire pas une femme Y alors la femme Y n' admire pas l' homme X .
+TestAttemptoGer: wenn ein Mann X nicht eine Frau Y bewundert , dann bewundert die Frau Y den Mann X nicht .
+TestAttemptoGre: αν ένας άνδρας ο X δεν φοβάται μία γυναίκα τον Y τότε η γυναίκα ο Y δεν φοβάται τον άνδρα τον X .
+TestAttemptoIta: si un uomo X non ammira una donna Y allora la donna Y non ammira l' uomo X .
+TestAttemptoLav: ja vīrietis X neapbrīno sievieti Y tad sieviete Y neapbrīno vīrieti X .
+TestAttemptoNor: hvis en mann X beundrer ikke ei kvinne Y så kvinna Y beundrer ikke mannen X .
+TestAttemptoPol: jeżeli mężczyzna X nie czyta kobiety Y , to kobieta Y nie czyta mężczyzny X .
+TestAttemptoRon: dacă un om X nu admirează o femeie Y atunci femeia Y nu îl admirează pe omul X .
+TestAttemptoRus: если человек X не боет женщину Y то женщина Y не боет человек X .
+TestAttemptoSpa: si un hombre X no admira una mujer Y entonces la mujer Y no admira el hombre X .
+TestAttemptoSwe: om en man X beundrar inte en kvinna Y så kvinnan Y beundrar inte mannen X .
+TestAttemptoUrd: اگر آدمی X عورت Y نہیں کی تعریفتا ہے تو عورت Y آدمی X نہیں کی تعریفتی ہے
+
+TestAttempto: baseText (sText (s (if_thenS (neg_vpS (thereNP_as_NP (aNP (apposVarCN man_N X_Var))) (v2VP (V2by_as_V2 help_V2) (thereNP_as_NP (aNP (apposVarCN woman_N Y_Var))))) (neg_vpS (theNP (apposVarCN woman_N Y_Var)) (v2VP (V2by_as_V2 help_V2) (theNP (apposVarCN man_N X_Var)))))))
+TestAttemptoAce: if a man X doesn't help a woman Y then the woman Y doesn't help the man X .
+TestAttemptoApe: if a man|noun_sg|man_N|masc X doesn't help|tv_infpl|help_V2 a woman|noun_sg|woman_N|fem Y then the woman|noun_sg|woman_N|fem Y doesn't help|tv_infpl|help_V2 the man|noun_sg|man_N|masc X .
+TestAttemptoBul: [if_thenS] .
+TestAttemptoCat: si un home X no ajuda una dona Y llavors la dona Y no ajuda l' home X .
+TestAttemptoDan: hvis en mand X hjælper ikke en kvinde Y så kvinden Y hjælper ikke manden X .
+TestAttemptoDut: als een man X niet een vrouw Y helpt , dan helpt de vrouw Y niet de man X .
+TestAttemptoEng: if a man X doesn't help a woman Y then the woman Y doesn't help the man X .
+TestAttemptoEst: kui mees X ei aita naist Y siis naine Y ei aita meest X .
+TestAttemptoFre: si un homme X n' aide pas une femme Y alors la femme Y n' aide pas l' homme X .
+TestAttemptoGer: wenn ein Mann X nicht einer Frau Y hilft , dann hilft die Frau Y dem Mann X nicht .
+TestAttemptoGre: αν ένας άνδρας ο X δεν σπρώχνει μία γυναίκα τον Y τότε η γυναίκα ο Y δεν σπρώχνει τον άνδρα τον X .
+TestAttemptoIta: si un uomo X non aiuta una donna Y allora la donna Y non aiuta l' uomo X .
+TestAttemptoLav: ja vīrietis X nepalīdz sievietei Y tad sieviete Y nepalīdz vīrietim X .
+TestAttemptoNor: hvis en mann X hjelper ikke ei kvinne Y så kvinna Y hjelper ikke mannen X .
+TestAttemptoPol: jeżeli mężczyzna X nie czyta kobiety Y , to kobieta Y nie czyta mężczyzny X .
+TestAttemptoRon: dacă un om X nu ajutează o femeie Y atunci femeia Y nu îl ajutează pe omul X .
+TestAttemptoRus: если человек X не толкает женщину Y то женщина Y не толкает человек X .
+TestAttemptoSpa: si un hombre X no ayuda una mujer Y entonces la mujer Y no ayuda el hombre X .
+TestAttemptoSwe: om en man X assisterar inte en kvinna Y så kvinnan Y assisterar inte mannen X .
+TestAttemptoUrd: اگر آدمی X عورت Y نہیں متا ہے تو عورت Y آدمی X نہیں متی ہے
+
+TestAttempto: baseText (sText (s (falseS (neg_vpS (thereNP_as_NP (indefTherePronNP somebody_IPron)) (v2VP (V2by_as_V2 buy_V2) (thereNP_as_NP (exactlyNP (digitsCard (IDig D_3)) (cn_as_VarCN golfer_N))))))))
+TestAttemptoAce: it is false that somebody doesn't buy exactly 3 golfers .
+TestAttemptoApe: it is false that somebody doesn't buy|tv_infpl|buy_V2 exactly 3 golfers|noun_pl|golfer_N|masc .
+TestAttemptoBul: [falseS] .
+TestAttemptoCat: és fals que alg˙ no compra exactament 3 golfistes .
+TestAttemptoDan: det er falsk at nogen ikke køber præcis 3 golfspillerer .
+TestAttemptoDut: 't is onwaar dat iemand niet precies 3 golfers koopt .
+TestAttemptoEng: it is false that somebody doesn't buy exactly 3 golfers .
+TestAttemptoEst: on vale et keegi ei osta täpselt 3 golfimängijat .
+TestAttemptoFre: il est faux que quelqu'un n' achète pas exactement 3 golfeurs .
+TestAttemptoGer: es ist falsch dass jemand nicht genau 3 Golfer kauft .
+TestAttemptoGre: είναι ψευδής οτι κάποιος δεν αγοράζει ακριβώς 3 άνδρες .
+TestAttemptoIta: è falso che qualcuno non compra esattamente 3 giocatori di golf .
+TestAttemptoLav: nav tiesa , ka kāds nepērk tieši 3 golferus .
+TestAttemptoNor: det er falsk at noen ikke kjøper nøyaktig 3 golfspillerer .
+TestAttemptoPol: jest źle , że ktoś nie kupi dokładnie 3 mężczyzn .
+TestAttemptoRon: este fals cã cineva nu cumpără exact 3 jucător de goalfe .
+TestAttemptoRus: неверно , что кто-то не покупает ровно 3 игрок в гольфы .
+TestAttemptoSpa: es falso que alguien no compra exactamente 3 golfistas .
+TestAttemptoSwe: det är falskt att någon inte köper exakt 3 golfspelaren .
+TestAttemptoUrd: GlT کہ کوی TODO ۳ گولفر کو نہیں خریدتا ہے ہے
+
+TestAttempto: baseText (qsText (qs (slash_ipQS whatSg_IP (pnNP john_PN) (V2by_as_V2 buy_V2))))
+TestAttemptoAce: what does John buy ?
+TestAttemptoApe: what does John|pn_sg|John_PN|masc buy|tv_infpl|buy_V2 ?
+TestAttemptoBul: какъв купува Джон ?
+TestAttemptoCat: què compra John ?
+TestAttemptoDan: hvad køber John ?
+TestAttemptoDut: wat koopt John ?
+TestAttemptoEng: what does John buy ?
+TestAttemptoEst: mille Jaan ostab ?
+TestAttemptoFre: qu' achète John ?
+TestAttemptoGer: was kauft John ?
+TestAttemptoGre: τι αγοράζει ο Γιάννης ;
+TestAttemptoIta: che compra John ?
+TestAttemptoLav: ko Džons pērk ?
+TestAttemptoNor: hva kjøper John ?
+TestAttemptoPol: co kupi Jan ?
+TestAttemptoRon: ce cumpără John ?
+TestAttemptoRus: что Иван покупает ?
+TestAttemptoSpa: ¿ qué compra John ?
+TestAttemptoSwe: vad köper John ?
+TestAttemptoUrd: کس کو John خریدتا ہے
+
+TestAttempto: baseText (qsText (qs (neg_npqQS (ipNPQ (whichIP whichPl_IDet (cn_as_VarCN golfer_N))) (v2VP (V2by_as_V2 help_V2) (pnNP mary_PN)))))
+TestAttemptoAce: which golfers don't help Mary ?
+TestAttemptoApe: which golfers|noun_pl|golfer_N|masc don't help|tv_infpl|help_V2 Mary|pn_sg|Mary_PN|neutr ?
+TestAttemptoBul: [neg_npqQS] ?
+TestAttemptoCat: quins golfistes no ajuden Mary ?
+TestAttemptoDan: hvilke golfspillerer hjælper ikke Mary ?
+TestAttemptoDut: welke golfers helpen niet Mary ?
+TestAttemptoEng: which golfers don't help Mary ?
+TestAttemptoEst: [neg_npqQS] ?
+TestAttemptoFre: quels golfeurs n' aident pas Mary ?
+TestAttemptoGer: welche Golfer helfen Mary nicht ?
+TestAttemptoGre: [neg_npqQS] ;
+TestAttemptoIta: quali giocatori di golf non aiutano Mary ?
+TestAttemptoLav: kuri golferi nepalīdz Mērijai ?
+TestAttemptoNor: hvilke golfspillerer hjelper ikke Mary ?
+TestAttemptoPol: [neg_npqQS] ?
+TestAttemptoRon: [neg_npqQS] ?
+TestAttemptoRus: [neg_npqQS] ?
+TestAttemptoSpa: ¿ qué golfistas no ayudan Mary ?
+TestAttemptoSwe: vilka golfspelaren assisterar inte Mary ?
+TestAttemptoUrd: کون سے گولفر Mary نہیں متے ہیں
+
+TestAttempto: baseText (qsText (qs (vpqQS (everyNP (cn_as_VarCN man_N)) (v2VPQ (V2by_as_V2 see_V2) (ipNPQ whatSg_IP)))))
+TestAttemptoAce: every man sees what ?
+TestAttemptoApe: every man|noun_sg|man_N|masc sees|tv_finsg|see_V2 what ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: cada home veu què ?
+TestAttemptoDan: hver mand ser hvad ?
+TestAttemptoDut: elke man ziet wat ?
+TestAttemptoEng: every man sees what ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: chaque homme voit que ?
+TestAttemptoGer: jeder Mann sieht was ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: ogni uomo vede che ?
+TestAttemptoLav: ikviens vīrietis redz ko ?
+TestAttemptoNor: hver mann ser hva ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ cada hombre ve qué ?
+TestAttemptoSwe: varje man ser vad ?
+TestAttemptoUrd: ہر آدمی کیا دیکھتا ہے
+
+TestAttempto: baseText (qsText (qs (np_coord_VPSQ (everyNP (cn_as_VarCN man_N)) or_Conj (BaseVPSQ (vpq_as_posVPSQ (v2VPQ (V2by_as_V2 see_V2) (ipNPQ whatSg_IP))) (vpq_as_negVPSQ (v2VPQ (V2by_as_V2 admire_V2) (ipNPQ whoSg_IP)))))))
+TestAttemptoAce: every man sees what or doesn't admire who ?
+TestAttemptoApe: every man|noun_sg|man_N|masc sees|tv_finsg|see_V2 what or doesn't admire|tv_infpl|admire_V2 who ?
+TestAttemptoBul: [np_coord_VPSQ] ?
+TestAttemptoCat: cada home veu què o no admira qui ?
+TestAttemptoDan: hver mand ser hvad eller beundrer ikke hvem ?
+TestAttemptoDut: elke man ziet wat of bewondert wie niet ?
+TestAttemptoEng: every man sees what or doesn't admire who ?
+TestAttemptoEst: iga mees [vpq_as_posVPSQ] või [vpq_as_negVPSQ] ?
+TestAttemptoFre: chaque homme voit qu' ou il n' admire pas qui ?
+TestAttemptoGer: jeder Mann sieht was oder bewundert wen nicht ?
+TestAttemptoGre: [np_coord_VPSQ] ;
+TestAttemptoIta: ogni uomo vede che o non ammira chi ?
+TestAttemptoLav: [np_coord_VPSQ] ?
+TestAttemptoNor: hver mann ser hva eller beundrer ikke hvem ?
+TestAttemptoPol: [np_coord_VPSQ] ?
+TestAttemptoRon: [np_coord_VPSQ] ?
+TestAttemptoRus: [np_coord_VPSQ] ?
+TestAttemptoSpa: ¿ cada hombre ve qué o no admira quién ?
+TestAttemptoSwe: varje man ser vad eller beundrar inte vem ?
+TestAttemptoUrd: [np_coord_VPSQ]
+
+TestAttempto: baseText (qsText (qs (npqQS (ipNPQ (whichIP which_IDet (cn_as_VarCN man_N))) (v2VP (V2by_as_V2 love_V2) (thereNP_as_NP (indefTherePronVarNP somebody_IPron X_Var))))))
+TestAttemptoAce: which man loves somebody X ?
+TestAttemptoApe: which man|noun_sg|man_N|masc loves|tv_finsg|love_V2 somebody X ?
+TestAttemptoBul: [npqQS] ?
+TestAttemptoCat: quin home estima X ?
+TestAttemptoDan: hvilken mand elsker X ?
+TestAttemptoDut: welke man heeft X lief ?
+TestAttemptoEng: which man loves somebody X ?
+TestAttemptoEst: [npqQS] ?
+TestAttemptoFre: quel homme aime X ?
+TestAttemptoGer: welcher Mann liebt X ?
+TestAttemptoGre: [npqQS] ;
+TestAttemptoIta: quale uomo ama X ?
+TestAttemptoLav: kurš vīrietim patīk X ?
+TestAttemptoNor: hvilken mann elsker X ?
+TestAttemptoPol: [npqQS] ?
+TestAttemptoRon: [npqQS] ?
+TestAttemptoRus: [npqQS] ?
+TestAttemptoSpa: ¿ qué hombre ama X ?
+TestAttemptoSwe: vilken man älskar X ?
+TestAttemptoUrd: کون سا آدمی X کو پیار کرتا ہے
+
+TestAttempto: baseText (qsText (qs (npqQS (ipNPQ whatSg_IP) (v2_byVP buy_V2 (pnNP john_PN)))))
+TestAttemptoAce: what is bought by John ?
+TestAttemptoApe: what is bought|tv_pp|buy_V2 by John|pn_sg|John_PN|masc ?
+TestAttemptoBul: [npqQS] ?
+TestAttemptoCat: què està comprat per John ?
+TestAttemptoDan: hvad bliver købt af John ?
+TestAttemptoDut: wat wordt door John gekocht ?
+TestAttemptoEng: what is bought by John ?
+TestAttemptoEst: [npqQS] ?
+TestAttemptoFre: qu' est acheté par John ?
+TestAttemptoGer: was wird durch John gekauft ?
+TestAttemptoGre: [npqQS] ;
+TestAttemptoIta: che viene comprata da John ?
+TestAttemptoLav: ko pērk Džons ?
+TestAttemptoNor: hva blir kjøpt av John ?
+TestAttemptoPol: [npqQS] ?
+TestAttemptoRon: [npqQS] ?
+TestAttemptoRus: [npqQS] ?
+TestAttemptoSpa: ¿ qué está comprado por John ?
+TestAttemptoSwe: vad blir köpt av John ?
+TestAttemptoUrd: کیا John سے خریدتا ہے
+
+TestAttempto: baseText (qsText (qs (neg_npqQS (ipNPQ (whichIP whichPl_IDet (cn_as_VarCN golfer_N))) (v2_byVP help_V2 (pnNP mary_PN)))))
+TestAttemptoAce: which golfers aren't helped by Mary ?
+TestAttemptoApe: which golfers|noun_pl|golfer_N|masc aren't helped|tv_pp|help_V2 by Mary|pn_sg|Mary_PN|neutr ?
+TestAttemptoBul: [neg_npqQS] ?
+TestAttemptoCat: quins golfistes no estan ajudades per Mary ?
+TestAttemptoDan: hvilke golfspillerer bliver ikke hjælpete af Mary ?
+TestAttemptoDut: welke golfers worden niet door Mary gehelpt ?
+TestAttemptoEng: which golfers aren't helped by Mary ?
+TestAttemptoEst: [neg_npqQS] ?
+TestAttemptoFre: quels golfeurs ne sont pas aidés par Mary ?
+TestAttemptoGer: welche Golfer werden nicht durch Mary geholfen ?
+TestAttemptoGre: [neg_npqQS] ;
+TestAttemptoIta: quali giocatori di golf non vengono aiutati da Mary ?
+TestAttemptoLav: kuri golferiem nepalīdz Mērija ?
+TestAttemptoNor: hvilke golfspillerer blir ikke hjelpa av Mary ?
+TestAttemptoPol: [neg_npqQS] ?
+TestAttemptoRon: [neg_npqQS] ?
+TestAttemptoRus: [neg_npqQS] ?
+TestAttemptoSpa: ¿ qué golfistas no están ayudadas por Mary ?
+TestAttemptoSwe: vilka golfspelaren blir inte assisterade av Mary ?
+TestAttemptoUrd: کون سے گولفر Mary سے نہیں متے ہیں
+
+TestAttempto: baseText (qsText (qs (npqQS (ipNPQ whatSg_IP) (v2_byVP see_V2 (everyNP (cn_as_VarCN man_N))))))
+TestAttemptoAce: what is seen by every man ?
+TestAttemptoApe: what is seen|tv_pp|see_V2 by every man|noun_sg|man_N|masc ?
+TestAttemptoBul: [npqQS] ?
+TestAttemptoCat: què està vist per cada home ?
+TestAttemptoDan: hvad bliver set af hver mand ?
+TestAttemptoDut: wat wordt door elke man gezien ?
+TestAttemptoEng: what is seen by every man ?
+TestAttemptoEst: [npqQS] ?
+TestAttemptoFre: qu' est vu par chaque homme ?
+TestAttemptoGer: was wird durch jeden Mann gesehen ?
+TestAttemptoGre: [npqQS] ;
+TestAttemptoIta: che viene vista ogni uomo ?
+TestAttemptoLav: ko redz ikviens vīrietis ?
+TestAttemptoNor: hva blir sett av hver mann ?
+TestAttemptoPol: [npqQS] ?
+TestAttemptoRon: [npqQS] ?
+TestAttemptoRus: [npqQS] ?
+TestAttemptoSpa: ¿ qué está visto por cada hombre ?
+TestAttemptoSwe: vad blir sett av varje man ?
+TestAttemptoUrd: کیا ہر آدمی سے دیکھتا ہے
+
+TestAttempto: baseText (qsText (qs (npqQS (ipNPQ (whichIP which_IDet (cn_as_VarCN man_N))) (v2_byVP love_V2 (thereNP_as_NP (indefTherePronVarNP somebody_IPron X_Var))))))
+TestAttemptoAce: which man is loved by somebody X ?
+TestAttemptoApe: which man|noun_sg|man_N|masc is loved|tv_pp|love_V2 by somebody X ?
+TestAttemptoBul: [npqQS] ?
+TestAttemptoCat: quin home està estimat per X ?
+TestAttemptoDan: hvilken mand bliver elsket af X ?
+TestAttemptoDut: welke man wordt door X liefgehad ?
+TestAttemptoEng: which man is loved by somebody X ?
+TestAttemptoEst: [npqQS] ?
+TestAttemptoFre: quel homme est aimé par X ?
+TestAttemptoGer: welcher Mann wird durch X geliebt ?
+TestAttemptoGre: [npqQS] ;
+TestAttemptoIta: quale uomo viene amato da X ?
+TestAttemptoLav: kurš vīrietis patīk X ?
+TestAttemptoNor: hvilken mann blir elska av X ?
+TestAttemptoPol: [npqQS] ?
+TestAttemptoRon: [npqQS] ?
+TestAttemptoRus: [npqQS] ?
+TestAttemptoSpa: ¿ qué hombre está amado por X ?
+TestAttemptoSwe: vilken man blir älskad av X ?
+TestAttemptoUrd: کون سا آدمی X سے پیار کرتا ہے
+
+TestAttempto: baseText (qsText (qs (neg_vpqQS (pnNP john_PN) (v2_byVPQ love_V2 (ipNPQ whoSg_IP)))))
+TestAttemptoAce: John isn't loved by who ?
+TestAttemptoApe: John|pn_sg|John_PN|masc isn't loved|tv_pp|love_V2 by who ?
+TestAttemptoBul: [neg_vpqQS] ?
+TestAttemptoCat: John no està estimat per qui ?
+TestAttemptoDan: John bliver ikke elsket af hvem ?
+TestAttemptoDut: John wordt niet door wie liefgehad ?
+TestAttemptoEng: John isn't loved by who ?
+TestAttemptoEst: [neg_vpqQS] ?
+TestAttemptoFre: John n' est pas aimé par qui ?
+TestAttemptoGer: John wird nicht durch wen geliebt ?
+TestAttemptoGre: [neg_vpqQS] ;
+TestAttemptoIta: John non viene amato da chi ?
+TestAttemptoLav: Džons nepatīk kuram ?
+TestAttemptoNor: John blir ikke elska av hvem ?
+TestAttemptoPol: [neg_vpqQS] ?
+TestAttemptoRon: [neg_vpqQS] ?
+TestAttemptoRus: [neg_vpqQS] ?
+TestAttemptoSpa: ¿ John no está amado por quién ?
+TestAttemptoSwe: John blir inte älskad av vem ?
+TestAttemptoUrd: John کون سے پیار نہیں کرتا ہے
+
+TestAttempto: baseText (qsText (qs (npqQS (ipNPQ (whichIP which_IDet (cn_as_VarCN man_N))) (refl_v2VP (V2by_as_V2 love_V2)))))
+TestAttemptoAce: which man loves itself ?
+TestAttemptoApe: which man|noun_sg|man_N|masc loves|tv_finsg|love_V2 itself ?
+TestAttemptoBul: [npqQS] ?
+TestAttemptoCat: quin home es estima ?
+TestAttemptoDan: hvilken mand elsker sig ?
+TestAttemptoDut: welke man heeft zich lief ?
+TestAttemptoEng: which man loves itself ?
+TestAttemptoEst: [npqQS] ?
+TestAttemptoFre: quel homme s' aime ?
+TestAttemptoGer: welcher Mann liebt sich ?
+TestAttemptoGre: [npqQS] ;
+TestAttemptoIta: quale uomo si ama ?
+TestAttemptoLav: kurš vīrietim patīk NON_EXISTENT ?
+TestAttemptoNor: hvilken mann elsker seg ?
+TestAttemptoPol: [npqQS] ?
+TestAttemptoRon: [npqQS] ?
+TestAttemptoRus: [npqQS] ?
+TestAttemptoSpa: ¿ qué hombre se ama ?
+TestAttemptoSwe: vilken man älskar sig ?
+TestAttemptoUrd: کون سا آدمی خود کو پیار کرتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (v2VP (V2by_as_V2 inspect_V2) (thereNP_as_NP (aNP (ofCN picture_N (thereNP_as_NP (aNP (cn_as_VarCN man_N))))))))))
+TestAttemptoAce: John inspects a picture of a man .
+TestAttemptoApe: John|pn_sg|John_PN|masc inspects|tv_finsg|inspect_V2 a picture|noun_sg|picture_N|neutr of a man|noun_sg|man_N|masc .
+TestAttemptoBul: Джон яде мъж на мъж .
+TestAttemptoCat: John inspecciona un imatge d' un home .
+TestAttemptoDan: John inspicerer en billede af en mand .
+TestAttemptoDut: John inspecteert een schilderij van een man .
+TestAttemptoEng: John inspects a picture of a man .
+TestAttemptoEst: Jaan uurib pildi mehe .
+TestAttemptoFre: John inspecte une image d' un homme .
+TestAttemptoGer: John inspiziert ein Bild von einem Mann .
+TestAttemptoGre: ο Γιάννης τρώει ένα άνδρα ενός άνδρα .
+TestAttemptoIta: John ispeziona un immagine di un uomo .
+TestAttemptoLav: Džons apskata vīrieša attēlu .
+TestAttemptoNor: John inspiserer ei bilde av en mann .
+TestAttemptoPol: Jan czyta mężczyznę mężczyzny .
+TestAttemptoRon: John inspectează o imagine unui om .
+TestAttemptoRus: Иван кушает картину человека .
+TestAttemptoSpa: John inspecciona un imagen de un hombre .
+TestAttemptoSwe: John avsynar en bild av en man .
+TestAttemptoUrd: John آدمی کا تصویر معائتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (npVP (thereNP_as_NP (aNP (ofCN man_N (pnNP mary_PN))))))))
+TestAttemptoAce: John is a man of Mary .
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc of Mary|pn_sg|Mary_PN|neutr .
+TestAttemptoBul: Джон е мъж на Джон .
+TestAttemptoCat: John és un home de Mary .
+TestAttemptoDan: John er en mand af Mary .
+TestAttemptoDut: John is een man van Mary .
+TestAttemptoEng: John is a man of Mary .
+TestAttemptoEst: Jaan on mees Mari .
+TestAttemptoFre: John est un homme de Mary .
+TestAttemptoGer: John ist ein Mann von Mary .
+TestAttemptoGre: ο Γιάννης είναι ένας άνδρας της Μαρίας .
+TestAttemptoIta: John è un uomo di Mary .
+TestAttemptoLav: Džons ir Mērijas vīrietis .
+TestAttemptoNor: John er en mann av Mary .
+TestAttemptoPol: Jan jest mężczyzną Paryża .
+TestAttemptoRon: John este un om lui Mary .
+TestAttemptoRus: Иван человек Maryа .
+TestAttemptoSpa: John es un hombre de Mary .
+TestAttemptoSwe: John är en man av Mary .
+TestAttemptoUrd: John Mary کا آدمی ہے
+
+TestAttempto: baseText (sText (s (vpS (everyNP (ofCN picture_N (thereNP_as_NP (aNP (cn_as_VarCN golfer_N))))) (v2_byVP see_V2 (pnNP mary_PN)))))
+TestAttemptoAce: every picture of a golfer is seen by Mary .
+TestAttemptoApe: every picture|noun_sg|picture_N|neutr of a golfer|noun_sg|golfer_N|masc is seen|tv_pp|see_V2 by Mary|pn_sg|Mary_PN|neutr .
+TestAttemptoBul: всеки мъж на мъж е видян чрез Джон .
+TestAttemptoCat: cada imatge d' una golfista està vist per Mary .
+TestAttemptoDan: hver billede af en golfspiller bliver set af Mary .
+TestAttemptoDut: elk schilderij van een golfer wordt door Mary gezien .
+TestAttemptoEng: every picture of a golfer is seen by Mary .
+TestAttemptoEst: iga pilt golfimängija nähakse Mari poolt .
+TestAttemptoFre: chaque image d' un golfeur est vue par Mary .
+TestAttemptoGer: jedes Bild von einem Golfer wird durch Mary gesehen .
+TestAttemptoGre: κάθε άνδρας ενός άνδρα βλέπεται από τη Μαρία .
+TestAttemptoIta: ogni immagine di un giocatore di golf viene visto da Mary .
+TestAttemptoLav: ikvienu golfera attēlu redz Mērija .
+TestAttemptoNor: hver bilde av en golfspiller blir sett av Mary .
+TestAttemptoPol: każdy mężczyzna mężczyzny przez Paryż jest widziany .
+TestAttemptoRon: orice imagine unui jucător de golf este văzută de către Mary .
+TestAttemptoRus: каждая картина игрок в гольфа видится с помощью Maryа .
+TestAttemptoSpa: cada imagen de una golfista está visto por Mary .
+TestAttemptoSwe: varje bild av ett golfspelare blir sedd av Mary .
+TestAttemptoUrd: ہر گولفر کا تصویر Mary سے دیکھتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP lisa_PN) (npVP (thereNP_as_NP (aNP (ofCN present_N (everyNP (cn_as_VarCN aquarium_N)))))))))
+TestAttemptoAce: Lisa is a present of every aquarium .
+TestAttemptoApe: Lisa|pn_sg|Lisa_PN|fem is a present|noun_sg|present_N|neutr of every aquarium|noun_sg|aquarium_N|neutr .
+TestAttemptoBul: Джон е мъж на всеки мъж .
+TestAttemptoCat: Lisa és un presentar cada aquari .
+TestAttemptoDan: Lisa er en gave af hver akvarium .
+TestAttemptoDut: Lisa is een cadeau van elk aquarium .
+TestAttemptoEng: Lisa is a present of every aquarium .
+TestAttemptoEst: Liisa on kingitus iga akvaariumi .
+TestAttemptoFre: Lisa est un cadeau de chaque aquarium .
+TestAttemptoGer: Lisa ist ein Geschenk von jedem Aquarium .
+TestAttemptoGre: ο Γιάννης είναι ένας άνδρας κάθε άνδρα .
+TestAttemptoIta: Lisa è un regalo ogni acquario .
+TestAttemptoLav: Līza ir ikviena akvārija dāvana .
+TestAttemptoNor: Lisa er ei gave av hver akvarium .
+TestAttemptoPol: Paryż jest mężczyzną każdego mężczyzny .
+TestAttemptoRon: Lisa este un cadou oricărui acvariu .
+TestAttemptoRus: Lisa подарок каждого аквариума .
+TestAttemptoSpa: Lisa es un regalo de cada acuario .
+TestAttemptoSwe: Lisa är en present av varje akvarium .
+TestAttemptoUrd: Lisa ہر ایکویریم کا پیش ہے
+
+TestAttempto: baseText (qsText (qs (vpqQS (thereNP_as_NP (exactlyNP (digitsCard (IDig D_2)) (cn_as_VarCN officer_N))) (npqVPQ (aNPQ (ofnpqCN (cn_as_VarCN present_N) (ipNPQ whatSg_IP)))))))
+TestAttemptoAce: exactly 2 officers are a present of what ?
+TestAttemptoApe: exactly 2 officers|noun_pl|officer_N|masc are a present|noun_sg|present_N|neutr of what ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: exactament 2 oficials són un presentar de què ?
+TestAttemptoDan: præcis 2 officerer er en gave af hvad ?
+TestAttemptoDut: precies 2 officieren zijn een cadeau van wat ?
+TestAttemptoEng: exactly 2 officers are a present of what ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: exactement 2 officiers sont un cadeau de que ?
+TestAttemptoGer: genau 2 Offiziere sind ein Geschenk was ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: esattamente 2 ufficiali sono un regalo di che ?
+TestAttemptoLav: tieši 2 amatpersonas ir kā dāvana ?
+TestAttemptoNor: nøyaktig 2 offiserer er ei gave av hva ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ exactamente 2 funcionarios son un regalo de qué ?
+TestAttemptoSwe: exakt 2 befälar är en present av vad ?
+TestAttemptoUrd: TODO ۲ افسر کیا کا پیش ہیں
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (npVP (pnNP tom_PN)))))
+TestAttemptoAce: John is Tom .
+TestAttemptoApe: John|pn_sg|John_PN|masc is Tom|pn_sg|Tom_PN|masc .
+TestAttemptoBul: Джон е Джон .
+TestAttemptoCat: John és Tom .
+TestAttemptoDan: John er Tom .
+TestAttemptoDut: John is Tom .
+TestAttemptoEng: John is Tom .
+TestAttemptoEst: Jaan on Toomas .
+TestAttemptoFre: John est Tom .
+TestAttemptoGer: John ist Tom .
+TestAttemptoGre: ο Γιάννης είναι ο Γιάννης .
+TestAttemptoIta: John è Tom .
+TestAttemptoLav: Džons ir Toms .
+TestAttemptoNor: John er Tom .
+TestAttemptoPol: Jan jest Paryżem .
+TestAttemptoRon: John este Tom .
+TestAttemptoRus: Иван Tom .
+TestAttemptoSpa: John es Tom .
+TestAttemptoSwe: John är Tom .
+TestAttemptoUrd: John Tom ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (npVP (everyNP (cn_as_VarCN man_N))))))
+TestAttemptoAce: John is every man .
+TestAttemptoApe: John|pn_sg|John_PN|masc is every man|noun_sg|man_N|masc .
+TestAttemptoBul: Джон е всеки мъж .
+TestAttemptoCat: John és cada home .
+TestAttemptoDan: John er hver mand .
+TestAttemptoDut: John is elke man .
+TestAttemptoEng: John is every man .
+TestAttemptoEst: Jaan on iga mees .
+TestAttemptoFre: John est chaque homme .
+TestAttemptoGer: John ist jeder Mann .
+TestAttemptoGre: ο Γιάννης είναι κάθε άνδρας .
+TestAttemptoIta: John è ogni uomo .
+TestAttemptoLav: Džons ir ikviens vīrietis .
+TestAttemptoNor: John er hver mann .
+TestAttemptoPol: Jan jest każdym mężczyzną .
+TestAttemptoRon: John este orice om .
+TestAttemptoRus: Иван каждый человек .
+TestAttemptoSpa: John es cada hombre .
+TestAttemptoSwe: John är varje man .
+TestAttemptoUrd: John ہر آدمی ہے
+
+TestAttempto: baseText (sText (s (vpS (nothing_butNP (cn_as_VarCN man_N)) (v2VP (V2by_as_V2 see_V2) (pnNP mary_PN)))))
+TestAttemptoAce: nothing but men see Mary .
+TestAttemptoApe: nothing but men|noun_pl|man_N|masc see|tv_infpl|see_V2 Mary|pn_sg|Mary_PN|neutr .
+TestAttemptoBul: само мъже виждат Джон .
+TestAttemptoCat: nomÈs homes veuen Mary .
+TestAttemptoDan: kun mænd ser Mary .
+TestAttemptoDut: slechts mannen zien Mary .
+TestAttemptoEng: nothing but men see Mary .
+TestAttemptoEst: ainult mehed näevad Mari .
+TestAttemptoFre: seulement des hommes voient Mary .
+TestAttemptoGer: nur Männer sehen Mary .
+TestAttemptoGre: μόνο άνδρες βλέπουν τη Μαρία .
+TestAttemptoIta: soltanto uomini vedono Mary .
+TestAttemptoLav: tikai vīrieši redz Mēriju .
+TestAttemptoNor: kun menn ser Mary .
+TestAttemptoPol: tylko mężczyzn widzą Paryż .
+TestAttemptoRon: doar nişte oameni o văd pe Mary .
+TestAttemptoRus: единственные людь видят Mary .
+TestAttemptoSpa: solamente hombres ven Mary .
+TestAttemptoSwe: bara män ser Mary .
+TestAttemptoUrd: صرف آدمی Mary دیکھتے ہیں
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (npVP (termNP X_Var)))))
+TestAttemptoAce: John is X .
+TestAttemptoApe: John|pn_sg|John_PN|masc is X .
+TestAttemptoBul: Джон е X .
+TestAttemptoCat: John és X .
+TestAttemptoDan: John er X .
+TestAttemptoDut: John is X .
+TestAttemptoEng: John is X .
+TestAttemptoEst: Jaan on X .
+TestAttemptoFre: John est X .
+TestAttemptoGer: John ist X .
+TestAttemptoGre: ο Γιάννης είναι ο X .
+TestAttemptoIta: John è X .
+TestAttemptoLav: Džons ir X .
+TestAttemptoNor: John er X .
+TestAttemptoPol: Jan jest X .
+TestAttemptoRon: John este X .
+TestAttemptoRus: Иван X .
+TestAttemptoSpa: John es X .
+TestAttemptoSwe: John är X .
+TestAttemptoUrd: John X ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (v2VP (V2by_as_V2 see_V2) (termNP X_Var)))))
+TestAttemptoAce: John sees X .
+TestAttemptoApe: John|pn_sg|John_PN|masc sees|tv_finsg|see_V2 X .
+TestAttemptoBul: Джон вижда X .
+TestAttemptoCat: John veu X .
+TestAttemptoDan: John ser X .
+TestAttemptoDut: John ziet X .
+TestAttemptoEng: John sees X .
+TestAttemptoEst: Jaan näeb X .
+TestAttemptoFre: John voit X .
+TestAttemptoGer: John sieht X .
+TestAttemptoGre: ο Γιάννης βλέπει τον X .
+TestAttemptoIta: John vede X .
+TestAttemptoLav: Džons redz X .
+TestAttemptoNor: John ser X .
+TestAttemptoPol: Jan widzi X .
+TestAttemptoRon: John îl vede pe X .
+TestAttemptoRus: Иван видит X .
+TestAttemptoSpa: John ve X .
+TestAttemptoSwe: John ser X .
+TestAttemptoUrd: John X دیکھتا ہے
+
+TestAttempto: baseText (sText (s (vpS (termNP X_Var) (npVP (thereNP_as_NP (indefTherePronVarNP something_IPron X_Var))))))
+TestAttemptoAce: X is something X .
+TestAttemptoApe: X is something X .
+TestAttemptoBul: X е X .
+TestAttemptoCat: X és X .
+TestAttemptoDan: X er X .
+TestAttemptoDut: X is X .
+TestAttemptoEng: X is something X .
+TestAttemptoEst: X on X .
+TestAttemptoFre: X est X .
+TestAttemptoGer: X ist X .
+TestAttemptoGre: ο X είναι ο X .
+TestAttemptoIta: X è X .
+TestAttemptoLav: X ir X .
+TestAttemptoNor: X er X .
+TestAttemptoPol: X jest X .
+TestAttemptoRon: X este X .
+TestAttemptoRus: X X .
+TestAttemptoSpa: X es X .
+TestAttemptoSwe: X är X .
+TestAttemptoUrd: X X ہے
+
+TestAttempto: baseText (sText (s (neg_vpS (everyNP (apposVarCN man_N X_Var)) (v2VP (V2by_as_V2 see_V2) (thereNP_as_NP (aNP (apposVarCN woman_N Y_Var)))))))
+TestAttemptoAce: every man X doesn't see a woman Y .
+TestAttemptoApe: every man|noun_sg|man_N|masc X doesn't see|tv_infpl|see_V2 a woman|noun_sg|woman_N|fem Y .
+TestAttemptoBul: всеки мъж X не вижда жена Y .
+TestAttemptoCat: cada home X no veu una dona Y .
+TestAttemptoDan: hver mand X ser ikke en kvinde Y .
+TestAttemptoDut: elke man X ziet niet een vrouw Y .
+TestAttemptoEng: every man X doesn't see a woman Y .
+TestAttemptoEst: iga mees X ei näe naist Y .
+TestAttemptoFre: chaque homme X ne voit pas une femme Y .
+TestAttemptoGer: jeder Mann X sieht nicht eine Frau Y .
+TestAttemptoGre: κάθε άνδρας ο X δεν βλέπει μία γυναίκα τον Y .
+TestAttemptoIta: ogni uomo X non vede una donna Y .
+TestAttemptoLav: ikviens vīrietis X neredz sievieti Y .
+TestAttemptoNor: hver mann X ser ikke ei kvinne Y .
+TestAttemptoPol: każdy mężczyzna X nie widzi kobiety Y .
+TestAttemptoRon: orice om X nu vede o femeie Y .
+TestAttemptoRus: каждый человек X не видит женщину Y .
+TestAttemptoSpa: cada hombre X no ve una mujer Y .
+TestAttemptoSwe: varje man X ser inte en kvinna Y .
+TestAttemptoUrd: ہر آدمی X عورت Y نہیں دیکھتا ہے
+
+TestAttempto: baseText (sText (s (thereNP (indefTherePronNP something_IPron))))
+TestAttemptoAce: there is something .
+TestAttemptoApe: there is something .
+TestAttemptoBul: има нещо .
+TestAttemptoCat: hi ha quelcom .
+TestAttemptoDan: det findes noget .
+TestAttemptoDut: er is iets .
+TestAttemptoEng: there is something .
+TestAttemptoEst: on olemas mis .
+TestAttemptoFre: il y a quelque chose .
+TestAttemptoGer: es gibt etwas .
+TestAttemptoGre: υπάρχει κάτι .
+TestAttemptoIta: c' è qualche cosa .
+TestAttemptoLav: ir kaut kas .
+TestAttemptoNor: det finnes noe .
+TestAttemptoPol: jest coś .
+TestAttemptoRon: există ceva .
+TestAttemptoRus: существует что-то .
+TestAttemptoSpa: hay algo .
+TestAttemptoSwe: det finns något .
+TestAttemptoUrd: کوی چیز ہے
+
+TestAttempto: baseText (sText (s (thereNP (aNP (cn_as_VarCN man_N)))))
+TestAttemptoAce: there is a man .
+TestAttemptoApe: there is a man|noun_sg|man_N|masc .
+TestAttemptoBul: има мъж .
+TestAttemptoCat: hi ha un home .
+TestAttemptoDan: det findes en mand .
+TestAttemptoDut: er is een man .
+TestAttemptoEng: there is a man .
+TestAttemptoEst: on olemas mees .
+TestAttemptoFre: il y a un homme .
+TestAttemptoGer: es gibt einen Mann .
+TestAttemptoGre: υπάρχει ένας άνδρας .
+TestAttemptoIta: c' è un uomo .
+TestAttemptoLav: ir vīrietis .
+TestAttemptoNor: det finnes en mann .
+TestAttemptoPol: jest mężczyzna .
+TestAttemptoRon: există un om .
+TestAttemptoRus: существует человек .
+TestAttemptoSpa: hay un hombre .
+TestAttemptoSwe: det finns en man .
+TestAttemptoUrd: آدمی ہے
+
+TestAttempto: baseText (sText (s (thereNP (more_thanNP (digitsCard (IDig D_2)) (relCN (cn_as_VarCN man_N) (predRS which_RP (v2VP (V2by_as_V2 inspect_V2) (thereNP_as_NP (less_thanNP (digitsCard (IDig D_3)) (cn_as_VarCN person_N))))))))))
+TestAttemptoAce: there are more than 2 men that inspect less than 3 persons .
+TestAttemptoApe: there are more than 2 men|noun_pl|man_N|masc that inspect|tv_infpl|inspect_V2 less than 3 persons|noun_pl|person_N|masc .
+TestAttemptoBul: има повече от 2 мъже които ядат по-малко от 3 човека .
+TestAttemptoCat: hi ha més que 2 homes que inspeccionen menys que 3 persones .
+TestAttemptoDan: det findes mer end 2 mænd som inspicerer mindre end 3 personer .
+TestAttemptoDut: er zijn meer dan 2 mannen die minder dan 3 personen inspecteren .
+TestAttemptoEng: there are more than 2 men that inspect less than 3 persons .
+TestAttemptoEst: on olemas rohkem kui 2 meest kes uurib vähem kui 3 inimest .
+TestAttemptoFre: il y a plus que 2 hommes qui inspectent moins que 3 personnes .
+TestAttemptoGer: es gibt mehr als 2 Männer , die weniger als 3 Personen inspizieren .
+TestAttemptoGre: υπάρχουν πάνω από 2 άνδρες , που τρώνε λιγότερο από 3 πρόσωπα .
+TestAttemptoIta: ci sono più di 2 uomini che ispezionano meno di 3 persone .
+TestAttemptoLav: ir NON_EXISTENT 2 vīrieši , kas apskata mazāk nekā 3 personas .
+TestAttemptoNor: det finnes mer enn 2 menn som inspiserer mindre enn 3 personer .
+TestAttemptoPol: jest więcej niż 2 mężczyzn , którzy czytają mniej niż 3 mężczyzn .
+TestAttemptoRon: există mai mult decât 2 oameni care inspectează mai puţin decât 3 persoane .
+TestAttemptoRus: существует более чем 2 человека , которого кушает менее чем 3 лицoов .
+TestAttemptoSpa: hay más que 2 hombres que inspeccionan menos que 3 personas .
+TestAttemptoSwe: det finns mer än 2 män som avsynar mindre än 3 personer .
+TestAttemptoUrd: ۲ سے زیادہ آدمی جو ۳ سے کم شخص معائتے ہیں ہیں
+
+TestAttempto: baseText (sText (s (falseS (thereNP (at_leastNP (digitsCard (IDig D_1)) (cn_as_VarCN man_N))))))
+TestAttemptoAce: it is false that there is at least 1 man .
+TestAttemptoApe: it is false that there is at least 1 man|noun_sg|man_N|masc .
+TestAttemptoBul: [falseS] .
+TestAttemptoCat: és fals que hi ha almenys 1 home .
+TestAttemptoDan: det er falsk at det findes mindst 1 mand .
+TestAttemptoDut: 't is onwaar dat er ten minste 1 man is .
+TestAttemptoEng: it is false that there is at least 1 man .
+TestAttemptoEst: on vale et on olemas vähemalt 1 mees .
+TestAttemptoFre: il est faux que il y a au moins 1 homme .
+TestAttemptoGer: es ist falsch dass es wenigstens 1 Mann gibt .
+TestAttemptoGre: είναι ψευδής οτι υπάρχει ένας τουλάχιστον 1 άνδρας .
+TestAttemptoIta: è falso che c' è almeno 1 uomo .
+TestAttemptoLav: nav tiesa , ka ir vismaz 1 vīrietis .
+TestAttemptoNor: det er falsk at det finnes minst 1 mann .
+TestAttemptoPol: jest źle , że jest co najmniej 1 mężczyzna .
+TestAttemptoRon: este fals cã există cel puţin 1 om .
+TestAttemptoRus: неверно , что существует по крайней мере 1 человек .
+TestAttemptoSpa: es falso que hay al menos 1 hombre .
+TestAttemptoSwe: det är falskt att det finns minst 1 man .
+TestAttemptoUrd: GlT کہ کم از کم ۱ آدمی ہے ہے
+
+TestAttempto: baseText (sText (s (for_everyS (apposVarCN traveler_N X_Var) (vpS (indefPronNP everybody_IPron) (v2VP (V2by_as_V2 admire_V2) (termNP X_Var))))))
+TestAttemptoAce: for every traveler X everybody admires X .
+TestAttemptoApe: for every traveler|noun_sg|traveler_N|masc X everybody admires|tv_finsg|admire_V2 X .
+TestAttemptoBul: за всеки мъж X всеки се страхува X .
+TestAttemptoCat: per a cada viatger X tothom admira X .
+TestAttemptoDan: for hver rejsende X beundrer alle X .
+TestAttemptoDut: voor elke reiziger X bewonderen alle X .
+TestAttemptoEng: for every traveler X everybody admires X .
+TestAttemptoEst: igale reisijale X igaüks imetleb X .
+TestAttemptoFre: pour chaque voyageur X tout le monde admire X .
+TestAttemptoGer: für jeden Reisenden X bewundert jeder X .
+TestAttemptoGre: για κάθε άνδρα τον X όλοι φοβούνται τον X .
+TestAttemptoIta: per ogni viaggiatore X tutti ammirano X .
+TestAttemptoLav: NON_EXISTENT .
+TestAttemptoNor: for hver reisende X beundrer alle X .
+TestAttemptoPol: dla każdego mężczyzny X wszyscy czytają X .
+TestAttemptoRon: pentru orice călător X toţi îl admirează pe X .
+TestAttemptoRus: для каждого путешественника X все боют X .
+TestAttemptoSpa: para cada viajero X todos admiran X .
+TestAttemptoSwe: för varje resenär X beundrar alla X .
+TestAttemptoUrd: ہر مسافر X کیلیے ہر کوی X کی تعریفتا ہے
+
+TestAttempto: baseText (sText (s (vpS (indefPronVarNP everything_IPron X_Var) (npVP (thereNP_as_NP (aNP (cn_as_VarCN picture_N)))))))
+TestAttemptoAce: everything X is a picture .
+TestAttemptoApe: everything X is a picture|noun_sg|picture_N|neutr .
+TestAttemptoBul: X е мъж .
+TestAttemptoCat: X és un imatge .
+TestAttemptoDan: X er en billede .
+TestAttemptoDut: X is een schilderij .
+TestAttemptoEng: everything X is a picture .
+TestAttemptoEst: X on pilt .
+TestAttemptoFre: X est une image .
+TestAttemptoGer: X ist ein Bild .
+TestAttemptoGre: ο X είναι ένας άνδρας .
+TestAttemptoIta: X è un immagine .
+TestAttemptoLav: X ir attēls .
+TestAttemptoNor: X er ei bilde .
+TestAttemptoPol: X jest mężczyzną .
+TestAttemptoRon: X este o imagine .
+TestAttemptoRus: X картина .
+TestAttemptoSpa: X es un imagen .
+TestAttemptoSwe: X är en bild .
+TestAttemptoUrd: X تصویر ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (v2VP (V2by_as_V2 admire_V2) (relNP (thereNP_as_NP (aNP (cn_as_VarCN woman_N))) (neg_slashRS which_RP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N))) (V2by_as_V2 love_V2)))))))
+TestAttemptoAce: John admires a woman that a golfer doesn't love .
+TestAttemptoApe: John|pn_sg|John_PN|masc admires|tv_finsg|admire_V2 a woman|noun_sg|woman_N|fem that a golfer|noun_sg|golfer_N|masc doesn't love|tv_infpl|love_V2 .
+TestAttemptoBul: Джон се страхува жена която мъж не обича .
+TestAttemptoCat: John admira una dona que una golfista no estima .
+TestAttemptoDan: John beundrer en kvinde , som en golfspiller ikke elsker .
+TestAttemptoDut: John bewondert een vrouw , dat een golfer niet lief heeft .
+TestAttemptoEng: John admires a woman that a golfer doesn't love .
+TestAttemptoEst: Jaan imetleb naise , keda golfimängija ei armasta .
+TestAttemptoFre: John admire une femme qu' un golfeur n' aime pas .
+TestAttemptoGer: John bewundert eine Frau , die ein Golfer nicht liebt .
+TestAttemptoGre: ο Γιάννης φοβάται μία γυναίκα την οποία ένας άνδρας δεν αγαπά .
+TestAttemptoIta: John ammira una donna che un giocatore di golf non ama .
+TestAttemptoLav: Džons apbrīno sievieti , kas golferim nepatīk .
+TestAttemptoNor: John beundrer ei kvinne , som en golfspiller ikke elsker .
+TestAttemptoPol: Jan czyta kobietę , której nie kocha mężczyzna .
+TestAttemptoRon: John admirează o femeie pe care nu o iubeşte un jucător de golf .
+TestAttemptoRus: Иван боет женщину , которую игрок в гольф не любдит .
+TestAttemptoSpa: John admira una mujer que una golfista no ama .
+TestAttemptoSwe: John beundrar en kvinna , som ett golfspelare inte älskar .
+TestAttemptoUrd: John عورت , جس کو گولفر پیار نہیں کرتا ہے کی تعریفتا ہے
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (v2VP (V2by_as_V2 admire_V2) (thereNP_as_NP (aNP (relCN (cn_as_VarCN woman_N) (neg_slashRS which_RP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N))) (V2by_as_V2 love_V2)))))))))
+TestAttemptoAce: John admires a woman that a golfer doesn't love .
+TestAttemptoApe: John|pn_sg|John_PN|masc admires|tv_finsg|admire_V2 a woman|noun_sg|woman_N|fem that a golfer|noun_sg|golfer_N|masc doesn't love|tv_infpl|love_V2 .
+TestAttemptoBul: Джон се страхува жена която мъж не обича .
+TestAttemptoCat: John admira una dona que una golfista no estima .
+TestAttemptoDan: John beundrer en kvinde som en golfspiller ikke elsker .
+TestAttemptoDut: John bewondert een vrouw die een golfer niet lief heeft .
+TestAttemptoEng: John admires a woman that a golfer doesn't love .
+TestAttemptoEst: Jaan imetleb naise keda golfimängija ei armasta .
+TestAttemptoFre: John admire une femme qu' un golfeur n' aime pas .
+TestAttemptoGer: John bewundert eine Frau , die ein Golfer nicht liebt .
+TestAttemptoGre: ο Γιάννης φοβάται μία γυναίκα , την οποία ένας άνδρας δεν αγαπά .
+TestAttemptoIta: John ammira una donna che un giocatore di golf non ama .
+TestAttemptoLav: Džons apbrīno sievieti , kas golferim nepatīk .
+TestAttemptoNor: John beundrer ei kvinne som en golfspiller ikke elsker .
+TestAttemptoPol: Jan czyta kobietę , której nie kocha mężczyzna .
+TestAttemptoRon: John admirează o femeie pe care nu o iubeşte un jucător de golf .
+TestAttemptoRus: Иван боет женщину , которую игрок в гольф не любдит .
+TestAttemptoSpa: John admira una mujer que una golfista no ama .
+TestAttemptoSwe: John beundrar en kvinna som ett golfspelare inte älskar .
+TestAttemptoUrd: John عورت جس کو گولفر پیار نہیں کرتا ہے کی تعریفتا ہے
+
+TestAttempto: baseText (sText (s (np_coord_VPS (pnNP john_PN) and_Conj (BaseVPS (vp_as_posVPS (v2VP (V2by_as_V2 buy_V2) (thereNP_as_NP (aNP (cn_as_VarCN picture_N))))) (vp_as_negVPS (v2VP (V2by_as_V2 buy_V2) (thereNP_as_NP (aNP (cn_as_VarCN present_N)))))))))
+TestAttemptoAce: John buys a picture and doesn't buy a present .
+TestAttemptoApe: John|pn_sg|John_PN|masc buys|tv_finsg|buy_V2 a picture|noun_sg|picture_N|neutr and doesn't buy|tv_infpl|buy_V2 a present|noun_sg|present_N|neutr .
+TestAttemptoBul: Джон купува мъж и не купува мъж .
+TestAttemptoCat: John compra un imatge i no compra un presentar .
+TestAttemptoDan: John køber en billede og køber ikke en gave .
+TestAttemptoDut: John koopt een schilderij en koopt niet een cadeau .
+TestAttemptoEng: John buys a picture and doesn't buy a present .
+TestAttemptoEst: Jaan ostab pildi ja ei osta kingitust .
+TestAttemptoFre: John achète une image et il n' achète pas un cadeau .
+TestAttemptoGer: John kauft ein Bild und kauft nicht ein Geschenk .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: John compra un immagine e non compra un regalo .
+TestAttemptoLav: Džons pērk attēlu un nepērk dāvanu .
+TestAttemptoNor: John kjøper ei bilde og kjøper ikke ei gave .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: John compra un imagen y no compra un regalo .
+TestAttemptoSwe: John köper en bild och köper inte en present .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (np_coord_VPS (pnNP john_PN) and_Conj (ConsVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN man_N))))) (BaseVPS (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N))))) (vp_as_posVPS (npVP (thereNP_as_NP (aNP (cn_as_VarCN officer_N))))))))))
+TestAttemptoAce: John is a man , is a golfer and is an officer .
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc , is a golfer|noun_sg|golfer_N|masc and is an officer|noun_sg|officer_N|masc .
+TestAttemptoBul: Джон е мъж , е мъж и е мъж .
+TestAttemptoCat: John és un home i és una golfista és un oficial .
+TestAttemptoDan: John er en mand , er en golfspiller og er en officer .
+TestAttemptoDut: John is een man , is een golfer en is een officier .
+TestAttemptoEng: John is a man , is a golfer and is an officer .
+TestAttemptoEst: Jaan on mees , on golfimängija ja on ohvitser .
+TestAttemptoFre: John est un homme et il est un golfeur il est un officier .
+TestAttemptoGer: John ist ein Mann , ist ein Golfer und ist ein Offizier .
+TestAttemptoGre: [np_coord_VPS] .
+TestAttemptoIta: John è un uomo ed è un giocatore di golf è un ufficiale .
+TestAttemptoLav: Džons ir vīrietis , ir golferis un ir amatpersona .
+TestAttemptoNor: John er en mann , er en golfspiller og er en offiser .
+TestAttemptoPol: [np_coord_VPS] .
+TestAttemptoRon: [np_coord_VPS] .
+TestAttemptoRus: [np_coord_VPS] .
+TestAttemptoSpa: John es un hombre y es una golfista es un funcionario .
+TestAttemptoSwe: John är en man , är ett golfspelare och är en befäl .
+TestAttemptoUrd: [np_coord_VPS]
+
+TestAttempto: baseText (sText (s (vpS (pnNP john_PN) (v2VP (V2by_as_V2 admire_V2) (thereNP_as_NP (exactlyNP (digitsCard (IIDig D_1 (IIDig D_2 (IIDig D_3 (IIDig D_4 (IIDig D_5 (IIDig D_6 (IIDig D_7 (IIDig D_8 (IIDig D_9 (IDig D_0))))))))))) (cn_as_VarCN picture_N)))))))
+TestAttemptoAce: John admires exactly 1 2 3 4 5 6 7 8 9 0 pictures .
+TestAttemptoApe: John|pn_sg|John_PN|masc admires|tv_finsg|admire_V2 exactly 1 2 3 4 5 6 7 8 9 0 pictures|noun_pl|picture_N|neutr .
+TestAttemptoBul: Джон се страхува TODO 1 , 2 3 4 , 5 6 7 , 8 9 0 мъже .
+TestAttemptoCat: John admira exactament 1 2 3 4 5 6 7 8 9 0 imatges .
+TestAttemptoDan: John beundrer præcis 1 2 3 4 5 6 7 8 9 0 billeder .
+TestAttemptoDut: John bewondert precies 1 2 3 4 5 6 7 8 9 0 schilderijen .
+TestAttemptoEng: John admires exactly 1 2 3 4 5 6 7 8 9 0 pictures .
+TestAttemptoEst: Jaan imetleb täpselt 1 2 3 4 5 6 7 8 9 0 pilti .
+TestAttemptoFre: John admire exactement 1 2 3 4 5 6 7 8 9 0 images .
+TestAttemptoGer: John bewundert genau 1 2 3 4 5 6 7 8 9 0 Bilder .
+TestAttemptoGre: ο Γιάννης φοβάται ακριβώς 1 2 3 4 5 6 7 8 9 0 άνδρες .
+TestAttemptoIta: John ammira esattamente 1 2 3 4 5 6 7 8 9 0 immagini .
+TestAttemptoLav: Džons apbrīno tieši 1 2 3 4 5 6 7 8 9 0 attēlus .
+TestAttemptoNor: John beundrer nøyaktig 1 2 3 4 5 6 7 8 9 0 bilder .
+TestAttemptoPol: Jan czyta dokładnie 1 2 3 4 5 6 7 8 9 0 mężczyzn .
+TestAttemptoRon: John admirează exact 1 2 3 4 5 6 7 8 9 0 de imagini .
+TestAttemptoRus: Иван боет ровно 1 2 3 4 5 6 7 8 9 0 картины .
+TestAttemptoSpa: John admira exactamente 1 2 3 4 5 6 7 8 9 0 imagenes .
+TestAttemptoSwe: John beundrar exakt 1 2 3 4 5 6 7 8 9 0 bildar .
+TestAttemptoUrd: John TODO ۰ &+ ۹ &+ ۸ &+ ۷ &+ ۶ &+ ۵ &+ ۴ &+ ۳ &+ ۲ &+ ۱ تصویر کی تعریفتا ہے
+
+TestAttempto: consText (sText (s (vpS (pnNP john_PN) (npVP (thereNP_as_NP (aNP (cn_as_VarCN man_N))))))) (baseText (qsText (qs (npqQS (ipNPQ whoSg_IP) (npVP (pnNP mary_PN))))))
+TestAttemptoAce: John is a man . who is Mary ?
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc . who is Mary|pn_sg|Mary_PN|neutr ?
+TestAttemptoBul: Джон е мъж . [npqQS] ?
+TestAttemptoCat: John és un home . qui és Mary ?
+TestAttemptoDan: John er en mand . hvem er Mary ?
+TestAttemptoDut: John is een man . wie is Mary ?
+TestAttemptoEng: John is a man . who is Mary ?
+TestAttemptoEst: Jaan on mees . [npqQS] ?
+TestAttemptoFre: John est un homme . qui est Mary ?
+TestAttemptoGer: John ist ein Mann . wer ist Mary ?
+TestAttemptoGre: ο Γιάννης είναι ένας άνδρας . [npqQS] ;
+TestAttemptoIta: John è un uomo . chi è Mary ?
+TestAttemptoLav: Džons ir vīrietis . kurš ir Mērija ?
+TestAttemptoNor: John er en mann . hvem er Mary ?
+TestAttemptoPol: Jan jest mężczyzną . [npqQS] ?
+TestAttemptoRon: John este un om . [npqQS] ?
+TestAttemptoRus: Иван человек . [npqQS] ?
+TestAttemptoSpa: John es un hombre . ¿ quién es Mary ?
+TestAttemptoSwe: John är en man . vem är Mary ?
+TestAttemptoUrd: John آدمی ہے کون Mary ہے
+
+TestAttempto: baseText (qsText (qs (neg_vpqQS (pnNP john_PN) (npqVPQ (ipNPQ whatSg_IP)))))
+TestAttemptoAce: John isn't what ?
+TestAttemptoApe: John|pn_sg|John_PN|masc isn't what ?
+TestAttemptoBul: [neg_vpqQS] ?
+TestAttemptoCat: John no és què ?
+TestAttemptoDan: John er ikke hvad ?
+TestAttemptoDut: John is niet wat ?
+TestAttemptoEng: John isn't what ?
+TestAttemptoEst: [neg_vpqQS] ?
+TestAttemptoFre: John n' est pas que ?
+TestAttemptoGer: John ist nicht was ?
+TestAttemptoGre: [neg_vpqQS] ;
+TestAttemptoIta: John non è che ?
+TestAttemptoLav: Džons nav kas ?
+TestAttemptoNor: John er ikke hva ?
+TestAttemptoPol: [neg_vpqQS] ?
+TestAttemptoRon: [neg_vpqQS] ?
+TestAttemptoRus: [neg_vpqQS] ?
+TestAttemptoSpa: ¿ John no es qué ?
+TestAttemptoSwe: John är inte vad ?
+TestAttemptoUrd: John کیا نہیں ہے
+
+TestAttempto: baseText (qsText (qs (vpqQS (pnNP john_PN) (npqVPQ (aNPQ (ofnpqCN (cn_as_VarCN man_N) (ipNPQ whatSg_IP)))))))
+TestAttemptoAce: John is a man of what ?
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc of what ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: John és un home de què ?
+TestAttemptoDan: John er en mand af hvad ?
+TestAttemptoDut: John is een man van wat ?
+TestAttemptoEng: John is a man of what ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: John est un homme de que ?
+TestAttemptoGer: John ist ein Mann was ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: John è un uomo di che ?
+TestAttemptoLav: Džons ir kā vīrietis ?
+TestAttemptoNor: John er en mann av hva ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ John es un hombre de qué ?
+TestAttemptoSwe: John är en man av vad ?
+TestAttemptoUrd: John کیا کا آدمی ہے
+
+TestAttempto: baseText (qsText (qs (vpqQS (pnNP john_PN) (npqVPQ (theNPQ (ofnpqCN (cn_as_VarCN person_N) (ipNPQ whatSg_IP)))))))
+TestAttemptoAce: John is the person of what ?
+TestAttemptoApe: John|pn_sg|John_PN|masc is the person|noun_sg|person_N|masc of what ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: John és la persona de què ?
+TestAttemptoDan: John er personen af hvad ?
+TestAttemptoDut: John is de persoon van wat ?
+TestAttemptoEng: John is the person of what ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: John est la personne de que ?
+TestAttemptoGer: John ist die Person was ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: John è la persona di che ?
+TestAttemptoLav: Džons ir kā persona ?
+TestAttemptoNor: John er personen av hva ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ John es la persona de qué ?
+TestAttemptoSwe: John är personen av vad ?
+TestAttemptoUrd: John کیا کا شخص ہے
+
+TestAttempto: baseText (qsText (qs (vpqQS (pnNP john_PN) (npqVPQ (everyNPQ (ofnpqCN (cn_as_VarCN person_N) (ipNPQ whatSg_IP)))))))
+TestAttemptoAce: John is every person of what ?
+TestAttemptoApe: John|pn_sg|John_PN|masc is every person|noun_sg|person_N|masc of what ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: John és cada persona de què ?
+TestAttemptoDan: John er hver person af hvad ?
+TestAttemptoDut: John is elke persoon van wat ?
+TestAttemptoEng: John is every person of what ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: John est chaque personne de que ?
+TestAttemptoGer: John ist jede Person was ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: John è ogni persona di che ?
+TestAttemptoLav: Džons ir ikviena kā persona ?
+TestAttemptoNor: John er hver person av hva ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ John es cada persona de qué ?
+TestAttemptoSwe: John är varje person av vad ?
+TestAttemptoUrd: John ہر کیا کا شخص ہے
+
+TestAttempto: baseText (qsText (qs (vpqQS (pnNP john_PN) (npqVPQ (noNPQ (ofnpqCN (cn_as_VarCN man_N) (ipNPQ whatSg_IP)))))))
+TestAttemptoAce: John is no man of what ?
+TestAttemptoApe: John|pn_sg|John_PN|masc is no man|noun_sg|man_N|masc of what ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: John és cap home de què ?
+TestAttemptoDan: 
+TestAttemptoDut: John is geen man van wat ?
+TestAttemptoEng: John is no man of what ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: John est aucun homme de que ?
+TestAttemptoGer: John ist kein Mann was ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: John è nessuno uomo di che ?
+TestAttemptoLav: Džons ir neviens kā vīrietis ?
+TestAttemptoNor: 
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ John es ningún hombre de qué ?
+TestAttemptoSwe: John är ingen man av vad ?
+TestAttemptoUrd: John کوی نہیں کیا کا آدمی ہے
+
+TestAttempto: baseText (qsText (qs (np_coord_VPSQ (pnNP john_PN) and_Conj (ConsVPSQ (vp_as_posVPSQ (npVP (thereNP_as_NP (aNP (cn_as_VarCN man_N))))) (BaseVPSQ (vp_as_posVPSQ (npVP (thereNP_as_NP (aNP (cn_as_VarCN golfer_N))))) (vpq_as_posVPSQ (npqVPQ (ipNPQ whatSg_IP))))))))
+TestAttemptoAce: John is a man , is a golfer and is what ?
+TestAttemptoApe: John|pn_sg|John_PN|masc is a man|noun_sg|man_N|masc , is a golfer|noun_sg|golfer_N|masc and is what ?
+TestAttemptoBul: [np_coord_VPSQ] ?
+TestAttemptoCat: John és un home i és una golfista és què ?
+TestAttemptoDan: John er en mand , er en golfspiller og er hvad ?
+TestAttemptoDut: John is een man , is een golfer en is wat ?
+TestAttemptoEng: John is a man , is a golfer and is what ?
+TestAttemptoEst: Jaan on mees , on golfimängija ja [vpq_as_posVPSQ] ?
+TestAttemptoFre: John est un homme et il est un golfeur il est que ?
+TestAttemptoGer: John ist ein Mann , ist ein Golfer und ist was ?
+TestAttemptoGre: [np_coord_VPSQ] ;
+TestAttemptoIta: John è un uomo ed è un giocatore di golf è che ?
+TestAttemptoLav: [np_coord_VPSQ] ?
+TestAttemptoNor: John er en mann , er en golfspiller og er hva ?
+TestAttemptoPol: [np_coord_VPSQ] ?
+TestAttemptoRon: [np_coord_VPSQ] ?
+TestAttemptoRus: [np_coord_VPSQ] ?
+TestAttemptoSpa: ¿ John es un hombre y es una golfista es qué ?
+TestAttemptoSwe: John är en man , är ett golfspelare och är vad ?
+TestAttemptoUrd: [np_coord_VPSQ]
+
+TestAttempto: baseText (qsText (qs (vpqQS (pnNP john_PN) (v2VPQ (V2by_as_V2 admire_V2) (relNPQ (thereNP_as_NP (aNP (cn_as_VarCN woman_N))) (slashRSQ which_RP (ipNPQ whoSg_IP) (V2by_as_V2 love_V2)))))))
+TestAttemptoAce: John admires a woman that who loves ?
+TestAttemptoApe: John|pn_sg|John_PN|masc admires|tv_finsg|admire_V2 a woman|noun_sg|woman_N|fem that who loves|tv_finsg|love_V2 ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: John admira una dona que qui estima ?
+TestAttemptoDan: John beundrer en kvinde , som hvem elsker ?
+TestAttemptoDut: John bewondert een vrouw , dat wie lief heeft ?
+TestAttemptoEng: John admires a woman that who loves ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: John admire une femme que qui aime ?
+TestAttemptoGer: John bewundert eine Frau , die wer liebt ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: John ammira una donna che chi ama ?
+TestAttemptoLav: Džons apbrīno sievieti , kas kuram patīk ?
+TestAttemptoNor: John beundrer ei kvinne , som hvem elsker ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ John admira una mujer que quién ama ?
+TestAttemptoSwe: John beundrar en kvinna , som vem älskar ?
+TestAttemptoUrd: John عورت , جس کو کون پیار کرتا ہے کی تعریفتا ہے
+
+TestAttempto: baseText (qsText (qs (vpqQS (pnNP john_PN) (v2VPQ (V2by_as_V2 admire_V2) (relNPQ (thereNP_as_NP (aNP (cn_as_VarCN woman_N))) (neg_slashRSQ which_RP (ipNPQ whoSg_IP) (V2by_as_V2 love_V2)))))))
+TestAttemptoAce: John admires a woman that who doesn't love ?
+TestAttemptoApe: John|pn_sg|John_PN|masc admires|tv_finsg|admire_V2 a woman|noun_sg|woman_N|fem that who doesn't love|tv_infpl|love_V2 ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: John admira una dona que qui no estima ?
+TestAttemptoDan: John beundrer en kvinde , som hvem ikke elsker ?
+TestAttemptoDut: John bewondert een vrouw , dat wie niet lief heeft ?
+TestAttemptoEng: John admires a woman that who doesn't love ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: John admire une femme que qui n' aime pas ?
+TestAttemptoGer: John bewundert eine Frau , die wer nicht liebt ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: John ammira una donna che chi non ama ?
+TestAttemptoLav: Džons apbrīno sievieti , kas kuram nepatīk ?
+TestAttemptoNor: John beundrer ei kvinne , som hvem ikke elsker ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ John admira una mujer que quién no ama ?
+TestAttemptoSwe: John beundrar en kvinna , som vem inte älskar ?
+TestAttemptoUrd: John عورت , جس کو کون پیار نہیں کرتا ہے کی تعریفتا ہے
+
+TestAttempto: baseText (qsText (qs (vpqQS (pnNP john_PN) (v2VPQ (V2by_as_V2 buy_V2) (relNPQ (thereNP_as_NP (indefTherePronNP something_IPron)) (neg_predRSQ which_RP (npqVPQ (ipNPQ whatSg_IP))))))))
+TestAttemptoAce: John buys something that isn't what ?
+TestAttemptoApe: John|pn_sg|John_PN|masc buys|tv_finsg|buy_V2 something that isn't what ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: John compra quelcom que no és què ?
+TestAttemptoDan: John køber noget , som ikke er hvad ?
+TestAttemptoDut: John koopt iets , die niet wat is ?
+TestAttemptoEng: John buys something that isn't what ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: John achète quelque chose qui n' est pas que ?
+TestAttemptoGer: John kauft etwas , das nicht was ist ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: John compra qualche cosa che non è che ?
+TestAttemptoLav: Džons pērk kaut ko , kas nav kas ?
+TestAttemptoNor: John kjøper noe , som ikke er hva ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ John compra algo que no es qué ?
+TestAttemptoSwe: John köper något , som inte är vad ?
+TestAttemptoUrd: John کوی چیز , جو کیا نہیں ہے کو خریدتا ہے
+
+TestAttempto: baseText (qsText (qs (np_coord_VPSQ (pnNP john_PN) and_Conj (BaseVPSQ (vpq_as_posVPSQ (v2VPQ (V2by_as_V2 buy_V2) (ipNPQ whatSg_IP))) (vpq_as_negVPSQ (v2VPQ (V2by_as_V2 buy_V2) (ipNPQ whatSg_IP)))))))
+TestAttemptoAce: John buys what and doesn't buy what ?
+TestAttemptoApe: John|pn_sg|John_PN|masc buys|tv_finsg|buy_V2 what and doesn't buy|tv_infpl|buy_V2 what ?
+TestAttemptoBul: [np_coord_VPSQ] ?
+TestAttemptoCat: John compra què i no compra què ?
+TestAttemptoDan: John køber hvad og køber ikke hvad ?
+TestAttemptoDut: John koopt wat en koopt wat niet ?
+TestAttemptoEng: John buys what and doesn't buy what ?
+TestAttemptoEst: Jaan [vpq_as_posVPSQ] ja [vpq_as_negVPSQ] ?
+TestAttemptoFre: John achète qu' et il n' achète pas que ?
+TestAttemptoGer: John kauft was und kauft was nicht ?
+TestAttemptoGre: [np_coord_VPSQ] ;
+TestAttemptoIta: John compra che e non compra che ?
+TestAttemptoLav: [np_coord_VPSQ] ?
+TestAttemptoNor: John kjøper hva og kjøper ikke hva ?
+TestAttemptoPol: [np_coord_VPSQ] ?
+TestAttemptoRon: [np_coord_VPSQ] ?
+TestAttemptoRus: [np_coord_VPSQ] ?
+TestAttemptoSpa: ¿ John compra qué y no compra qué ?
+TestAttemptoSwe: John köper vad och köper inte vad ?
+TestAttemptoUrd: [np_coord_VPSQ]
+
+TestAttempto: baseText (qsText (qs (vpqQS (pnNP john_PN) (v2VPQ (V2by_as_V2 admire_V2) (relNPQ (thereNP_as_NP (aNP (cn_as_VarCN traveler_N))) (predRSQ which_RP (npqVPQ (ipNPQ (whichIP which_IDet (cn_as_VarCN person_N))))))))))
+TestAttemptoAce: John admires a traveler that is which person ?
+TestAttemptoApe: John|pn_sg|John_PN|masc admires|tv_finsg|admire_V2 a traveler|noun_sg|traveler_N|masc that is which person|noun_sg|person_N|masc ?
+TestAttemptoBul: [vpqQS] ?
+TestAttemptoCat: John admira un viatger que és quin persona ?
+TestAttemptoDan: John beundrer en rejsende , som er hvilken person ?
+TestAttemptoDut: John bewondert een reiziger , dat welke persoon is ?
+TestAttemptoEng: John admires a traveler that is which person ?
+TestAttemptoEst: [vpqQS] ?
+TestAttemptoFre: John admire un voyageur qui est quelle personne ?
+TestAttemptoGer: John bewundert einen Reisenden , der welche Person ist ?
+TestAttemptoGre: [vpqQS] ;
+TestAttemptoIta: John ammira un viaggiatore che è quale persona ?
+TestAttemptoLav: Džons apbrīno ceļotāju , kas ir kura persona ?
+TestAttemptoNor: John beundrer ei reisende , som er hvilken person ?
+TestAttemptoPol: [vpqQS] ?
+TestAttemptoRon: [vpqQS] ?
+TestAttemptoRus: [vpqQS] ?
+TestAttemptoSpa: ¿ John admira un viajero que es qué persona ?
+TestAttemptoSwe: John beundrar en resenär , som är vilken person ?
+TestAttemptoUrd: John مسافر , جو کون سا شخص ہے کی تعریفتا ہے
+
+TestAttempto: baseText (qsText (qs (neg_slash_ipQS whoSg_IP (pnNP john_PN) (V2by_as_V2 admire_V2))))
+TestAttemptoAce: who doesn't John admire ?
+TestAttemptoApe: who doesn't John|pn_sg|John_PN|masc admire|tv_infpl|admire_V2 ?
+TestAttemptoBul: кого не се страхува Джон ?
+TestAttemptoCat: qui no admira John ?
+TestAttemptoDan: hvem beundrer John ikke ?
+TestAttemptoDut: wie bewondert John niet ?
+TestAttemptoEng: who doesn't John admire ?
+TestAttemptoEst: keda Jaan ei imetle ?
+TestAttemptoFre: qui n' admire pas John ?
+TestAttemptoGer: wen bewundert John nicht ?
+TestAttemptoGre: ποιόν δεν φοβάται ο Γιάννης ;
+TestAttemptoIta: chi non ammira John ?
+TestAttemptoLav: kuru Džons neapbrīno ?
+TestAttemptoNor: hvem beundrer John ikke ?
+TestAttemptoPol: kogo nie czyta Jan ?
+TestAttemptoRon: pe cine nu admirează John ?
+TestAttemptoRus: кого Иван не боет ?
+TestAttemptoSpa: ¿ quién no admira John ?
+TestAttemptoSwe: vem beundrar John inte ?
+TestAttemptoUrd: کس کو John نہیں کی تعریفتا ہے
+
+TestAttempto: baseText (qsText (qs (npq_coord_VPS (ipNPQ (whichIP which_IDet (cn_as_VarCN golfer_N))) and_Conj (BaseVPS (vp_as_posVPS (v2VP (V2by_as_V2 admire_V2) (pnNP john_PN))) (vp_as_posVPS (v2VP (V2by_as_V2 inspect_V2) (thereNP_as_NP (aNP (cn_as_VarCN picture_N)))))))))
+TestAttemptoAce: which golfer admires John and inspects a picture ?
+TestAttemptoApe: which golfer|noun_sg|golfer_N|masc admires|tv_finsg|admire_V2 John|pn_sg|John_PN|masc and inspects|tv_finsg|inspect_V2 a picture|noun_sg|picture_N|neutr ?
+TestAttemptoBul: [npq_coord_VPS] ?
+TestAttemptoCat: quin golfista admira John i inspecciona un imatge ?
+TestAttemptoDan: hvilken golfspiller beundrer John og inspicerer en billede ?
+TestAttemptoDut: welke golfer bewondert John en inspecteert een schilderij ?
+TestAttemptoEng: which golfer admires John and inspects a picture ?
+TestAttemptoEst: [npq_coord_VPS] ?
+TestAttemptoFre: quel golfeur admire John et il inspecte une image ?
+TestAttemptoGer: welcher Golfer bewundert John und inspiziert ein Bild ?
+TestAttemptoGre: [npq_coord_VPS] ;
+TestAttemptoIta: quale giocatore di golf ammira John ed ispeziona un immagine ?
+TestAttemptoLav: [npq_coord_VPS] ?
+TestAttemptoNor: hvilken golfspiller beundrer John og inspiserer ei bilde ?
+TestAttemptoPol: [npq_coord_VPS] ?
+TestAttemptoRon: [npq_coord_VPS] ?
+TestAttemptoRus: [npq_coord_VPS] ?
+TestAttemptoSpa: ¿ qué golfista admira John e inspecciona un imagen ?
+TestAttemptoSwe: vilket golfspelare beundrar John och avsynar en bild ?
+TestAttemptoUrd: [npq_coord_VPS]
+
+TestAttempto: baseText (qsText (qs (np_coord_VPSQ (pnNP mary_PN) and_Conj (BaseVPSQ (vpq_as_posVPSQ (v2VPQ (V2by_as_V2 admire_V2) (ipNPQ whoSg_IP))) (vp_as_negVPSQ (v2VP (V2by_as_V2 admire_V2) (thereNP_as_NP (indefTherePronNP somebody_IPron))))))))
+TestAttemptoAce: Mary admires who and doesn't admire somebody ?
+TestAttemptoApe: Mary|pn_sg|Mary_PN|neutr admires|tv_finsg|admire_V2 who and doesn't admire|tv_infpl|admire_V2 somebody ?
+TestAttemptoBul: [np_coord_VPSQ] ?
+TestAttemptoCat: Mary admira qui i no admira alg˙ ?
+TestAttemptoDan: Mary beundrer hvem og beundrer ikke nogen ?
+TestAttemptoDut: Mary bewondert wie en bewondert niet iemand ?
+TestAttemptoEng: Mary admires who and doesn't admire somebody ?
+TestAttemptoEst: Mari [vpq_as_posVPSQ] ja ei imetle kedagi ?
+TestAttemptoFre: Mary admire qui et il n' admire pas quelqu'un ?
+TestAttemptoGer: Mary bewundert wen und bewundert nicht jemanden ?
+TestAttemptoGre: [np_coord_VPSQ] ;
+TestAttemptoIta: Mary ammira chi e non ammira qualcuno ?
+TestAttemptoLav: [np_coord_VPSQ] ?
+TestAttemptoNor: Mary beundrer hvem og beundrer ikke noen ?
+TestAttemptoPol: [np_coord_VPSQ] ?
+TestAttemptoRon: [np_coord_VPSQ] ?
+TestAttemptoRus: [np_coord_VPSQ] ?
+TestAttemptoSpa: ¿ Mary admira quién y no admira alguien ?
+TestAttemptoSwe: Mary beundrar vem och beundrar inte någon ?
+TestAttemptoUrd: [np_coord_VPSQ]
+
+

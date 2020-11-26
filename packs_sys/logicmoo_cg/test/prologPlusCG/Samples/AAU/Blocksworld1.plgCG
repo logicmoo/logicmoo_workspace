@@ -1,0 +1,198 @@
+//
+//      Blocksworld example
+//      Ulrik Petersen
+//      Version 1.2.0
+//      Created: September 10, 2001
+//      Last update: April 2, 2004
+//
+
+//
+// Text:
+//
+// There is one big green pyramid resting on the floor.
+// 
+// To the right of the big green pyramid, there is one small blue cube
+// resting on the floor.  This small blue cube supports a small red cube.
+// The small red cube supports a small green pyramid.
+// 
+// To the left of the big green pyramid, there is one big red cube
+// resting on the floor.  This big red cube supports a green sphere and a
+// small green cube.  This small green cube supports a small blue
+// pyramid.
+
+
+
+///////////////////////////////////////////////////////////
+//
+// The following part consists of facts about the
+// microworld.
+//
+///////////////////////////////////////////////////////////
+
+//
+// Type-hierarchy
+//
+// TODO: Fill in
+
+//
+// Object instances
+//
+Cube = BigRedCube, SmallGreenCube, SmallBlueCube, SmallRedCube.
+// TODO: Complete
+
+
+//
+// Direct support-relations
+//
+dirsupp([Cube : BigRedCube]<-SUPPORT-[Sphere : SmallGreenSphere]).
+dirsupp([Cube : BigRedCube]<-SUPPORT-[Cube : SmallGreenCube]).
+// TODO: Complete
+
+
+//
+// Sizes
+//
+attr([Cube : BigRedCube]-ATTR->[Big]).
+attr([Cube : SmallGreenCube]-ATTR->[Small]).
+// TODO: Complete
+
+
+//
+// Colors
+//
+attr([Cube : BigRedCube]-ATTR->[Red]).
+attr([Cube : SmallGreenCube]-ATTR->[Green]).
+// TODO: Complete
+
+
+//
+// Positions (you don't need anything else besides these two)
+//
+position([Cube : BigRedCube]<-LEFT-[Pyramid : BigGreenPyramid]).
+position([Pyramid : BigGreenPyramid]<-LEFT-[Cube : SmallBlueCube]).
+
+
+///////////////////////////////////////////////////////////
+//
+// The following part demonstrates predicates that use 
+// the above facts.
+//
+///////////////////////////////////////////////////////////
+
+//
+// Supports
+// This is a recursive predicate, very similar to the Ancestors predicate.
+// (See Ancestors1.plgCG)
+// Does O1 support O2, directly or indirectly?
+//
+// Usage: supports([Object1 : Referent1], [Object2 : Referent2]).
+//
+supports(O1, O2) :- dirsupp(O1<-SUPPORT-O2).
+supports(O1, O2) :- dirsupp(O3<-SUPPORT-O2), supports(O1, O3).
+
+
+//
+// LeftOf
+// Is O1 left of O2?
+//
+// Usage: LeftOf([Object1 : Referent1], [Object2 : Referent2]).
+//
+LeftOf(O1, O2) :- position(O1<-LEFT-O2).
+LeftOf(O1, O2) :- position(O1<-LEFT-O3), LeftOf(O3, O2).
+LeftOf(O1, O2) :- supports(O3, O1), LeftOf(O3, O2).
+LeftOf(O1, O2) :- supports(O3, O1), supports(O4, O2), LeftOf(O3, O4).
+
+
+//
+// RightOf
+//
+// Usage: RightOf([Object1 : Referent1], [Object2 : Referent2]).
+// 
+RightOf(O1, O2) :- LeftOf(O2, O1).
+
+//
+// Object O with a specific attribute A.
+// A can be any descendant of the Attribute type.
+//
+ObjectWithAttr(O,A) :- attr(O-ATTR->[A]).
+
+//
+// Object with a specific attribute supports another object
+// with a specific attribute
+//
+// Usage: ObjectWithAttrSupportsObjectWithAttr([Object : Referent], 
+//            Attribute, [Object : Referent], Attribute).
+//
+// Example: ObjectWithAttrSupportsObjectWithAttr([Cube : X],
+//          Big, O2, A2)
+//
+ObjectWithAttrSupportsObjectWithAttr(O1, A1, O2, A2) :-
+     ObjectWithAttr(O1,A1),
+     ObjectWithAttr(O2,A2),
+     supports(O1,O2).
+
+
+// 
+// Size
+IsSize(S) :- isSubType(S,Size).
+GetSize(O,S) :- attr([T : O]-ATTR->[S]), IsSize(S).
+
+
+// 
+// Consistency
+//
+// Rules:
+// - Cube supports everything
+// - Pyramid supports nothing
+// - Sphere supports nothing
+// - Big supports big
+// - Big supports small
+// - Small supports small
+// - Small does not support big
+
+// Only succeed if argument is a Pyramid or Sphere.
+// Fail if it is a Cube.
+SupporterIsSphereOrPyramid(Cube) :- fail.
+SupporterIsSphereOrPyramid(Pyramid).
+SupporterIsSphereOrPyramid(Sphere).
+
+// Only succeed if supporter's size is wrong.
+// Otherwise, fail.
+SupporterSizeIsWrong(Big, Big) :- fail.
+SupporterSizeIsWrong(Big, Small) :- fail.
+SupporterSizeIsWrong(Small, Small) :- fail.
+SupporterSizeIsWrong(Small, Big).
+
+//
+// Check whether type and sizes are wrong.
+TypeOrSizeIsWrong(_TSupporter, _SizeSupporter, _SizeSupportee) :-
+   SupporterIsSphereOrPyramid(_TSupporter), /.
+TypeOrSizeIsWrong(_TSupporter, _SizeSupporter, _SizeSupportee) :-
+   SupporterSizeIsWrong(_SizeSupporter,_SizeSupportee).
+
+//
+// Check whether _ESupporter is an entity which
+// supports something it cannot support.
+IsNotConsistent(_ESupporter) :-
+   dirsupp([_TSupporter : _ESupporter]<-SUPPORT-[_TSupportee : _ESupportee]),
+   GetSize(_ESupporter, _SizeSupporter),
+   GetSize(_ESupportee, _SizeSupportee),
+   TypeOrSizeIsWrong(_TSupporter, _SizeSupporter, _SizeSupportee).
+
+//
+// Check whether world is consistent.
+WorldIsConsistent :- IsNotConsistent(T), /, fail.
+WorldIsConsistent :- not(IsNotConsistent(T)).
+
+                     
+
+//
+// Exercise: Write new predicates, e.g.:
+//    - An object O1 with a specific attribute A1 is to the left of
+//      another object O2 with a specific attribute A2
+//    - An object O1 of a specific size S1 and color C1 supports
+//      another object O2 of a specific size S2 and color C2.
+//    - etc.
+//     
+
+

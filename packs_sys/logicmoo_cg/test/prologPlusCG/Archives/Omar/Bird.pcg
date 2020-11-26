@@ -1,0 +1,8 @@
+//Bird's diet 
+Bird( x, Food):: [Bird : x] <-actor- [Eat] -obj-> [Food = ["Verre_De_Terre", "cheese", "Baies_Sauvages"]].
+
+// the shelter of the agent Arthur
+Bird( x, State):: [Bird : x] <-actor-  [Live] -livesIn-> [Shelter = "nest"] -locatedIn-> [Location = "tree"].
+
+// inheritence predicat
+Bird(x,y)::B:-Animal(x,y)::B.

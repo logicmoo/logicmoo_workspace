@@ -1,0 +1,17 @@
+// Type-hierarchy
+Entity > Animal, Act.
+Animal > Carnivore, Herbivore.
+Act > Eat, Persuade.
+
+// Catalog of instances
+Carnivore = Wolf, Fox.
+Herbivore = Lamb, Chicken.
+
+// Graph facts
+gr(graph1, [Carnivore: Wolf]<-AGNT-[Eat]-PTNT->[Herbivore: Lamb]).
+gr(graph2, [Carnivore: Fox]<-AGNT-[Persuade]-PTNT->[Herbivore: Chicken]).
+
+// Rules
+CarnivoreEatsAnimal(L) :- gr(L, G), subsume([Carnivore]<-AGNT-[Eat]-PTNT->[Animal], G).
+AnimalActsOnAnimal(L) :- gr(L, G), subsume([Animal]<-AGNT-[Act]-PTNT->[Animal], G).
+AnimalPersuades(L) :- gr(L, G), subsume([Animal]<-AGNT-[Persuade], G).

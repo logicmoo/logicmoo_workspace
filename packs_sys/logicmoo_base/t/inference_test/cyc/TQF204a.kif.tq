@@ -1,0 +1,43 @@
+(note TQF204a)
+
+(agent UAEDemandsIranLeaveTumbs UnitedArabEmirates) 
+(agent RafsanjaniWarnsUAE Iran) 
+(infoTransferred RafsanjaniWarnsUAE IranianThreatAgainstUAE) 
+(communicationTarget RafsanjaniWarnsUAE UnitedArabEmirates) 
+(inReactionTo RafsanjaniWarnsUAE UAEDemandsIranLeaveTumbs) 
+
+(causes-ThingProp UAEDemandsIranLeaveTumbs 
+ (failureForAgents IranAndUAENegotiate UnitedArabEmirates)) 
+
+(recipientOfInfo UAEDemandsIranLeaveTumbs Iran) 
+(agent IranOccupiesTumbIslands-1971 Iran) 
+(instance IranOccupiesTumbIslands-1971 MilitaryOccupation) 
+(objectActedOn IranOccupiesTumbIslands-1971 GreaterTumbIsland) 
+(instance UAEDemandsIranLeaveTumbs Ordering-CommunicationAct) 
+(senderOfInfo UAEDemandsIranLeaveTumbs UnitedArabEmirates) 
+(adversarialResponseTo UAEDemandsIranLeaveTumbs IranReassertsSovereignty) 
+
+(query (findall  (?DAMAGETORELATIONS ?THREATTOUAE ?WARNINGTOUAE)   
+   (thereExists ?OCCUPATION 
+       (thereExists ?DEMAND 
+           (and 
+               (instance ?OCCUPATION MilitaryOccupation) 
+               (agent ?OCCUPATION Iran) 
+               (objectActedOn ?OCCUPATION GreaterTumbIsland) 
+               (adversarialResponseTo ?DEMAND IranReassertsSovereignty) 
+               (instance ?DEMAND Ordering-CommunicationAct) 
+               (senderOfInfo ?DEMAND UnitedArabEmirates) 
+               (recipientOfInfo ?DEMAND Iran) 
+               (agent ?DEMAND UnitedArabEmirates) 
+               (inReactionTo ?WARNINGTOUAE ?DEMAND) 
+               (agent ?WARNINGTOUAE Iran) 
+               (communicationTarget ?WARNINGTOUAE UnitedArabEmirates) 
+               (infoTransferred ?WARNINGTOUAE ?THREATTOUAE) 
+               (causes-ThingProp ?DEMAND ?DAMAGETORELATIONS))))))
+
+(answer (list  (failureForAgents IranAndUAENegotiate UnitedArabEmirates))  
+IranianThreatAgainstUAE RafsanjaniWarnsUAE)
+
+(end_of_file)
+
+

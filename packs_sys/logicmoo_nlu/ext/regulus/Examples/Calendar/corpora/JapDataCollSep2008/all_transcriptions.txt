@@ -1,0 +1,451 @@
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt01.wav saigo no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt02.wav saigo no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt03.wav saigi no saigo no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt04.wav dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt05.wav tsugi no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt06.wav basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt07.wav tsugi no juneevu de no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt08.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt09.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt10.wav kyou kara issyuukan no uchi ni kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt100.wav kyoto de hirakareta kaigi no basyo wo oshiete imasu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt101.wav syussekisya wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt11.wav raigetsu no kaigi ni wa dare ga syusseki shi masu
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt12.wav saraigetsu no kaigi no nittei wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt13.wav saraigetsu no kaigi no nittei wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt14.wav raigetsu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt15.wav raigetsu no kaigi no basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt16.wav saraigetsu no kaigi no basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt17.wav kanzaki kyoko san no syusseki suru kaigi no menbaa wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt18.wav kanzaki kyoko san no syusseki suru kaigi no wa nangatsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt19.wav kanzaki kyoko san no syusseki suru kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt20.wav kanzaki kyoko san no syusseki suru shi gatsu no kaigi menbaa wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt21.wav kanzaki kyoko san no shi gatsu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt22.wav kanzaki kyoko san no kaigi no syussekisya wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt23.wav kanzaki kyoko san no shi gatsu no kaigi no syussekisya wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt24.wav tsugi no kinyoubi ni juneevu de kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt25.wav go gatsu no kaigi no basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt26.wav go gatsu no kaigi wa doko de kaisai sare mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt27.wav go gatsu no kaigi no syussekisya wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt28.wav go gatsu no kaigi no basyo wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt29.wav kurikaeshite kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt30.wav kongetsu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt31.wav kongetsu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt32.wav asu no kaigi no kaishi wa nanji desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt33.wav asu no kaigi no kaishi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt34.wav ashita wa kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt35.wav asatte no kaigi no syuuryou jikan wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt36.wav asatte wa kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt37.wav nisen hachinen juu gatsu ni manii reinaa ga syusseki suru kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt38.wav sengetsu no kaigi no basyo wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt39.wav ni kagetsu mae ni kaigi wa kaisai sare mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt40.wav ni kagetsu mae ni kaigi wa kaisai sare masen deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt41.wav ni kagetsu mae ni kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt42.wav shichi gatsu ni kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt43.wav sensengetsu ni kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt44.wav ikkagetsu mae ni kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt45.wav beatorisu daiyu ga syusseki shita kaigi wa nan ken ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt46.wav tsugi no doyoubi ni nanto ga 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt47.wav tsugi no doyoubi ni nanto de kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt48.wav nisen hachinen juu ni gatsu no kaigi no basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt49.wav nisen hachinen ni gatsu no kaigi wa nannichi ni ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt50.wav basyo wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt51.wav menbaa wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt52.wav masuda hiroshi san ga syusseki suru juneevu de no kaigi wa nan gatsu nannichi desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt53.wav masuda hiroshi san ga syusseki suru juneevu de no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt54.wav masuda hiroshi san wa syusseki suru juneevu de no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt55.wav masuda hiroshi san ga syusseki suru juneevu de no kaigi wa nan gatsu nannichi deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt56.wav juu ichi gatsu kokonoka no kaigi no jikan wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt57.wav juu ichi gatsu kokonoka no kaigi no jikan wa nanji kara hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt58.wav syuuryou jikan wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt59.wav juu ichi gatsu kokonoka no kaigi no kaishi jikan wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt60.wav juu ichi gatsu kokonoka no kaigi no syuuryou jikan wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt61.wav juu gatsu tsuitachi no kaigi no jikan wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt62.wav juu gatsu tsuitachi no kaigi wa nanji kara hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt63.wav juu gatsu tsuitachi no kaigi wa nanji ni owari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt64.wav basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt65.wav nakao yukie san no denwa bangou wa nan ban desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt66.wav ku gatsu juu rokunichi no kaigi no syussekisya no denwa bangou wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt67.wav ku gatsu juu rokunichi no kaigi no syussekisya wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt68.wav masuda hiroshi san to mariko san no denwa bangou wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt69.wav masuda hiroshi no denwa bangou wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt70.wav meeru adoresu wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt71.wav masuda hiroshi san no meeru adoresu wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt72.wav mariko san no denwa bangou wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt73.wav mariko no meeru adoresu wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt74.wav juu ni gatsu no kaigi no nichiji wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt75.wav itsu kara itsu made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt76.wav juu ni gatsu no kaigi wa nanji kara nanji made desu  
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt77.wav juu ni gatsu no kaigi wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt78.wav juu ni gatsu no kaigi wa nanji kara hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt79.wav juu ni gatsu no kaigi wa nanji ni owari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt80.wav juu ni gatsu no kaigi wa nanji ni owari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt81.wav juu ni gatsu no kaigi wa itsu owari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt82.wav juu ni gatsu kaigi wa nanji ni owari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt83.wav juu ni gatsu no kaigi no basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt84.wav juu ni gatsu no kaigi no syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt85.wav igirisu de hirakareru kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt86.wav syussekisya wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt87.wav syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt88.wav igirisu de kaigi ga hirakareta no wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt89.wav syussekisya wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt90.wav reinaa no meeru adoresu wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt91.wav yumiko san no ie de hirakareta kaigi wa nan ken ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt92.wav tokyo de kaigi ga hirakareta no wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt93.wav basyo wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt94.wav syusse
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt95.wav syusseki shita no wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt96.wav saikin kyoto de hirakareta kaigi wa nanji kara nanji made deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt97.wav saikin kyoto de hirakareta kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt98.wav kyoto de hirakareta kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_mayuko/utt99.wav kyoto de hirakareta roku gatsu no kaigi no basyo wo oshiete kure masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt03.wav saigo no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt04.wav saigo no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt05.wav dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt06.wav tsugi no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt07.wav basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt08.wav tsugi no juneevu de no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt09.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt10.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt100.wav kyoto de 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt101.wav roku gatsu sanjuu ichinichi no kaigi no jikan wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt102.wav roku gatsu sanjuu ichinichi no kaigi no nichiji wo oshiete kuda
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt103.wav kyoto de kaigi ga hirakareta no wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt104.wav kyoto de okonawareta kaigi no jikan wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt105.wav kyoto no kaigi no jikan wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt107.wav kyoto no kaigi wa nanji kara deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt109.wav kyoto no kaigi ni wa dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt11.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt110.wav mou ichido kurikaeshite kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt12.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt13.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt14.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt15.wav tsugi no juneevu de no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt16.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt17.wav raisyuu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt18.wav raisyuu kaigi ga ari mashitakke
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt19.wav jaa raigetsu wa kaigi wa arun desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt20.wav raigetsu no kaigi wa arun desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt21.wav saraigetsu ni wa hakken mo kaigi wa nain de syou ne
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt22.wav kanzaki kyoko san wa
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt23.wav kanzaki kyoko san wa kaigi ni wa yoku korarerun desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt24.wav raigetsu no kaigi ni wa kanzaki kyoko san wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt25.wav tsugi no kaigi wa kinyoubi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt26.wav tsugi no kinyou no juneevu no kaigi ni wa dare ga de masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt27.wav tsugi no kinyoubi juneevu ni wa juneevu de kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt28.wav tsugi no kinyoubi ni juneevu de kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt29.wav go gatsu ni wa nankai kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt30.wav kongetsu no kaigi wa nan ken ni ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt31.wav asu no kaigi ni syusseki suru no wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt32.wav dewa asatte no kaigi ni wa dare ga syusseki shi masu 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt33.wav asatte no kaigi no syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt34.wav nisen hachinen juu gatsu no kaigi ni wa manii reinaa no hoka ni dare ga de masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt35.wav nisen hachinen juu gatsu kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt36.wav manii reinaa wa itsu ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt37.wav sengetsu no kaigi ni wa manii reinaa wa ki mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt38.wav sengetsu no kaigi ni manii reinaa wa ki mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt39.wav ni kagetsu mae no kaigi ni syusseki shita hito wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt40.wav beatorisu daiyu ga kuru kaigi wa itsu ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt41.wav tsugi no doyoubi ni nanto de okonawareru kaigi ni wa nannin no hito ga ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt42.wav tsugi no doyoubi ni nanto de okonawareru kaigi ni wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt43.wav tsugi no doyoubi ni kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt44.wav nisen hachinen juu gatsu kaigi ni wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt45.wav nisen hachinen juu ni gatsu no kaigi ni wa nannin ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt46.wav nisen hachinen juu ni gatsu ni wa kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt47.wav nisen hachinen juu ni gatsu ni wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt48.wav nisen hachinen juu ni no gatsu kaigi ni wa dare ga ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt49.wav nisen hachinen juu ni gatsu no kaigi ni wa dare ga ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt50.wav nisen hachinen juu ni gatsu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt51.wav nisen hachinen ni gatsu ni kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt52.wav nisen hachinen ni gatsu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt53.wav masuda hiroshi san ga juneevu ni irassyaru no wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt54.wav masuda hiroshi ga juneevu ni irassyaru no wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt55.wav masuda hiroshi ga juneevu ni kuru no wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt56.wav masuda hiroshi ga juneevu ni kuru hi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt57.wav masuda hiroshi ga syusseki suru kaigi wa doko de okonaware masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt58.wav masuda hiroshi ga syusseki suru kaigi wa doko de okonaware masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt59.wav masuda hiroshi ga juneevu ni kuru hi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt60.wav masuda hiroshi ga juneevu ni kuru kaigi wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt61.wav masuda hiroshi ga juneevu ni kuru no wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt62.wav juu ichi gatsu kokonoka no kaigi wa nanji kara hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt63.wav juu gatsu tsuitachi no kaigi no jikan wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt64.wav juu gatsu tsuitachi no kaigi wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt65.wav juu gatsu tsuitachi no kaigi wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt66.wav juu gatsu tsuitachi no kaigi wa nanji kara nanji made okonaware masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt67.wav juu gatsu tsuitachi no kaigi wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt68.wav juu gatsu tsuitachi no kaigi wa nanji kara hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt69.wav nakao yukie no denwa bangou wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt70.wav ku gatsu juu rokunichi no kaigi no syussekisya wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt71.wav ku gatsu juu rokunichi no kaigi no syussekisya wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt72.wav ku gatsu juu rokunichi no kaigi ni wa dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt73.wav masuda san no denwa bangou to meeru adoresu wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt74.wav masuda hiroshi san no meeru adoresu to denwa bangou wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt75.wav mariko san no denwa bangou wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt76.wav mariko san no meeru adoresu wa
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt77.wav juu ni gatsu no kaigi no nichiji wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt78.wav juu ni gatsu youka no kaigi wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt79.wav juu ni kaigi wa nanji kara hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt80.wav juu ni gatsu no nakao yukie taku de okonawareru kaigi no syussekisya wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt81.wav juu ni gatsu no kaigi no syussekisya wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt82.wav juu ni gatsu youka no kaigi no syusseki suru hito wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt83.wav juu ni gatsu no kaigi no syussekisya wa oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt84.wav juu ni gatsu no kaigi no syusseki suru hito
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt85.wav  juu ni gatsu no kaigi no syusseki suru hito wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt86.wav juu ni gatsu no kaigi no syussekisya wa oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt87.wav juu ni gatsu no kaigi no 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt88.wav juu ni gatsu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt89.wav igirisu de okonawareru kaigi wa itsu ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt90.wav shichi gatsu kokonoka no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt91.wav shichi gatsu no kaigi ni wa dare ga syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt92.wav igirisu de no kaigi ni wa dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt93.wav yumiko no meeru adoresu wa
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt94.wav yumiko no ie de okonawareta kaigi wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt95.wav yumiko no ie de okonawareta kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt96.wav yumiko san no ie de kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt97.wav tokyo de okonawareta kaigi no basyo wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt98.wav tokyo no kaigi wa dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-23_ozawa/utt99.wav kyoto de okonawareta kaigi no uchi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt02.wav saigo no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt03.wav dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt05.wav tsugi no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt06.wav basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt07.wav tsugi no juneevu de no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt08.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt09.wav raisyuu kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt10.wav juu gatsu kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt11.wav juu ichi gatsu ni kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt12.wav kanzaki kyoko san wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt13.wav tsugi no kinyoubi juneevu de kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt14.wav go gatsu ni kaigi wa nangen ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt15.wav go gatsu ni kaigi wa nan ken ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt16.wav kongetsu wa itsu kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt17.wav ashita no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt18.wav asatte no kaigi wa doko de ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt19.wav nisen hachi nen juu gastu no kaigi ni 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt20.wav nisen hachinen juu gatsu no kaigi ni manii reinaa san wa ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt21.wav sengetsu doko de kaigi ga ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt22.wav sensengetsu wa doko de kaigi ga ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt23.wav sengetsu 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt24.wav raigetsu daiyu san ga kuru kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt25.wav tsugi no doyoubi nanto de kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt26.wav tsugi no doyoubi nanto de kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt27.wav nisen hachinen juu ni gatsu ni kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt28.wav nisen hachinen ni gatsu no kaigi ni dare ga ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt29.wav nisen hachinen ni gatsu no kaigi wa doko de ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt30.wav nisen hachinen ni gatsu no kaigi wa itsu de
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt31.wav nisen hachinen ni gatsu no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt32.wav masuda hiroshi san ga syusseki shita juneevu no kaigi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt33.wav masuda hiroshi san 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt34.wav masuda san ga kuru juneevu no kaigi wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt35.wav masuda san ga ku ji ni kaigi ni desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt36.wav juuni gastu kokonoka no kaigi no jikan wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt37.wav juuni juuni gatsu kokonoka no kaigi wa nanji kara nanji made desu 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt38.wav juu ichi gatsu kokonoka no kaigi wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt39.wav juu ichi gatsu kokonoka no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt40.wav juu ichi gatsu kokonoka no kaigi wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt41.wav juu ichi gatsu kokonoka no kaigi wa nanji kara hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt42.wav juu gatsu tsuitachi no kaigi wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt43.wav juu gatsu tsuitachi no kaigi wa nanji ni owari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt44.wav juu gatsu tsuitachi no kaigi wa nanji ni hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt45.wav juu gatsu tsuitachi no kaigi wa doko de ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt46.wav nakao yukie san no denwa bangou wa nan ban desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt47.wav ku gatsu juu rokunichi no kaigi ni dare ga ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt48.wav ku gatsu juu rokunichi no 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt49.wav ku gatsu juu rokunichi no  
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt50.wav ku gatsu juu rokunichi no kaigi ni dare ga ki mashita 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt51.wav ku gatsu juu rokunichi no kaigi no syussekisya wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt52.wav masuda hiroshi san no denwa bangou wa nan ban desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt53.wav masuda hiroshi san no meeru adoresu wa nan desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt54.wav paron mariko no 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt55.wav paron mariko no denwa bangou wa nan ban desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt56.wav paron mariko san no 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt57.wav mariko san no meeru adoresu wa nan desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt58.wav juu ni gatsu no kaigi wa itsu ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt59.wav juu ni gatsu youka no kaigi ga nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt60.wav juu ni gatsu youka no kaigi wa doko de ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt61.wav juu ni gatsu youka no kaigi ni dare ga ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt62.wav igirisu no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt63.wav juu ni gatsu 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt64.wav igirisu no kaigi ni dare ga ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt65.wav igirisu no juu gatsu futsuka no kaigi ni dare ga ki masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt66.wav kono mae no igirisu no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt67.wav mae no igirisu no kaigi ga itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt68.wav mae no igirisu no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt69.wav igirisu de atta shichi gastu kokonoka no kaigi ni dare ga ki mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt70.wav shichi gatsu no kokonoka no kaigi ni dare ga ki mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt71.wav shichi gatsu kokonoka no kaigi ni dare ga ki mashita 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt72.wav shichi gatsu kokonoka no kaigi ni dare ga ki mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt73.wav yumiko san no ie de atta kaigi wa nangen ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt75.wav itsu tokyo de kaigi ga ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt76.wav tokyo no doko de ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt77.wav tokyo no kaigi wa doko de ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt78.wav dare ga ki mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt79.wav zenkai no 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt80.wav zenkai no kyoto no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt81.wav kyoto no kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt82.wav roku gatsu sanjuu ichinichi no kaigi wa doko de ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt83.wav nanji kara ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt84.wav nanji made deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-28_yuriko/utt85.wav dare ga ki mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt02.wav saigo no kaigi wa itsu deshita 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt04.wav dare ga syusseki 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt05.wav basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt06.wav basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt09.wav tsugi no juneevu no juneevu de no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt10.wav tsugi no juneevu de no kaigi ga itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt11.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt12.wav raisyuu kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt13.wav raigetsu wa kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt14.wav saraigetsu kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt15.wav raigetsu no kaigi ni kanzaki kyoko wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt16.wav tsugi no kinyoubi no kaigi wa juneevu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt17.wav go gatsu no kaigi wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt18.wav go gatsu no kaigi wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt19.wav kongetsu no kaigi wa dare ga de mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt20.wav sore wa wa dare ga de mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt21.wav ashita no kaigi ni kanzaki san wa de masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt22.wav asatte no kaigi ni nakao san wa de masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt23.wav asatte no kaigi wa doko de ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt24.wav nisen hachinen juu gatsu de manii reinaa san ga syusseki suru kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt25.wav hachi gatsu no kaigi wa doko de ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt26.wav hachi gatsu no kaigi wa doko de ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt27.wav shichi gatsu ni nakao san ga syusseki shita kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt28.wav beatorisu daiyu ga syusseki suru kaigi wa nan ken ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt29.wav tsugi no doyoubi nanto de no kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt30.wav nisen hachinen juu ni gatsu no kaigi no yotei wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt31.wav nisen hachinen ni gatsu no kaigi wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt32.wav sono kaigi wa dare ga de mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt33.wav syussekisya wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt34.wav juneevu de no kaigi de masuda hiroshi san ga sysseki shita no wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt35.wav masuda hiroshi ga syusseki shita juneevu deno kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt36.wav juneevu no kaigi ni masuda san wa sysseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt37.wav juneevu no kaigi ni masuda san wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt38.wav juu ichi gatsu kokonoka no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt39.wav nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt40.wav juu gatsu tsuitachi no kaigi no jikan to basyo wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt41.wav juu gatsu tsuitachi no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt42.wav juu gatsu tsuitachi no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt43.wav nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt44.wav basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt45.wav nakao san no denwa bangou wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt46.wav ku gatsu juu rokunichi no kaigi no syussekisya wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt47.wav ku gatsu juu rokunichi no kaigi no syussekisya wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt48.wav ku gatsu juu rokunichi no kaigi wa dare ga de mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt49.wav ku gatsu juu rokunichi no kaigi wa dare ga de mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt50.wav dare ga de mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt51.wav masuda san no denwa bangou wo oshiete 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt52.wav meeru adoresu wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt53.wav mariko san no denwa bangou wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt54.wav juu ni gatsu no kaigi no nichiji wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt55.wav juu ni gatsu no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt56.wav nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt57.wav nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt58.wav syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt59.wav 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt60.wav syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt61.wav igirisu de hirakareru kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt62.wav juu gatsu mikka no kaigi no syussekisya wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt63.wav juu gatsu mikka no kaigi no syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt64.wav juu gatsu mikka no kaigi no syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt65.wav juu gatsu mikka no kaigi wa kaigi wa dare ga de masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt66.wav dare ga de masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt67.wav igirisu de hirakareta kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt68.wav dare ga de mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt69.wav pieretto buiyon no meeru adoresu wo oshiete kudasai
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt70.wav yumiko san no ie de hirakareta kaigi wa nan ken ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt71.wav tokyo de hirakareta kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt72.wav basyo wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt73.wav syussekisya wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt74.wav kyoto de hirakareta kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt75.wav roku gatsu sanjuu ichinichi no kaigi wa nanji made deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt76.wav basyo wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-29_kikuko/utt77.wav syussekisya wa dare deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt02.wav saigo no kaigi wa itsu deshita 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt03.wav dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt04.wav tsugi no juneevu de no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt05.wav pieretto wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt06.wav raisyuu no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt07.wav raigetsu nan no kaigi ga ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt08.wav kaigi wa doko de ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt09.wav saraigetsu kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt10.wav kaigi wa nanyoubi ni ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt11.wav hitotsume no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt12.wav kaigi ni kanzaki kyoko san wa syusseki shimasu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt13.wav kaigi ni kanzaki kyoko san wa syusseki 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt14.wav kaigi ni kanzaki kyoko san wa syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt15.wav kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt16.wav tsugi no kinyoubi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt17.wav tsugi no kinyoubi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt18.wav juneevu de tsugi no kinyoubi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt19.wav tsugi no kinyoubi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt20.wav  kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt21.wav go gatsu wa nankai kaigi ga ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt22.wav dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt23.wav kongetsu doko de kaigi ga ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt24.wav ashita dare to dare ga kaigi ni syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt25.wav ashita dare to dare ga kaigi ni syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt26.wav ashita no kaigi wa  
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt27.wav asatte no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt28.wav nisen hachi nen juugastu no kaigi ni manii san wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt29.wav nisen hachi nen juugatsu no kaigi ni 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt30.wav nisen hachi nen juugatsu no kaigi ni 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt31.wav kinou kaigi ga ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt32.wav nisen hachinen juu gatsu manii san wa kaigi ni syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt33.wav sengetsu kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt34.wav sengetsu kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt35.wav hachi gatsu kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt36.wav sensengetsu kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt37.wav shichi gatsu kaigi wa ari mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt38.wav kaigi wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt39.wav beatorisu daiyu no jouken ni au kaigi wa nan ken ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt40.wav beatorisu daiyu san wa nan ken kaigi ni syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt41.wav beatorisu daiyu wa tsugi no juneevu de no kaigi ni syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt42.wav tsugi no doyoubi nanto de kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt43.wav tsugi no doyoubi nanto de kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt44.wav tsugi no doyoubi nanto de kaigi wa ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt45.wav nisen hachinen juu ni gatsu kaigi wa nan ken ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt46.wav kaigi wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt47.wav nisen hachinen ni gatsu kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt48.wav dare ga kaigi ni syusseki shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt49.wav kaigi no basyo wa doko desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt50.wav masuda hiroshi san ga syusseki suru kaigi wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt51.wav juneevu de 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt52.wav masuda hiroshi san wa juneevu de kaigi ni saika shi masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt53.wav juu ichi gatsu kokonoka no kaigi wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt54.wav juu ichi gatsu kokonoka no kaigi wa nanji ni hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt55.wav juu ichi gatsu kokonoka no kaigi wa nanji ni owari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt56.wav juu gatsu tsuitachi no kaigi wa nanji kara nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt57.wav juu gatsu tsuitachi no kaigi wa  
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt58.wav juu gatsu tsuitachi no kaigi no 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt59.wav juu gatsu tsuitachi no kaigi wa nanji ni hajimari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt60.wav juu gatsu tsuitachi no kaigi wa nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt61.wav nakao yukie san no denwa bangou wa nanban desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt62.wav ku gatsu juu rokunichi no kaigi no syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt63.wav ku gatsu juu rokunichi no kaigi wa dare ga syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt64.wav masuda san no denwa bangou wa nanban desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt65.wav mariko san no denwa bangou wa 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt66.wav masuda san no meeru adoresu wa nan desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt67.wav mariko san no meeru adoresu wa nan desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt68.wav juu ni gatsu no kaigi wa nanji kara desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt69.wav juu ni gatsu no kaigi wa nannichi ni ari masu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt70.wav syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt71.wav kaigi wa nanji made desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt72.wav igirisu de hirakareru kaigi wa nan gatsu nannichi desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt73.wav igirisu de hirakareru kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt74.wav syussekisya wa dare desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt75.wav igirisu de hirakareta kaigi wa itsu deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt76.wav dare ga kaigi ni syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt77.wav buiyon san no meeru adoresu wa nan desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt78.wav yumiko san no ie de nan ken kaigi ga hirakare mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt79.wav tokyo de itsu kaigi ga hirakare mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt80.wav basyo wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt81.wav dare ga kaigi ni syusseki shi mashita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt82.wav kyoto de hirakareta kaigi de 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt83.wav kyoto de hirakareta saigo no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt84.wav kyoto de hirakareta saikin no kaigi wa itsu desu ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt85.wav roku gatsu sanjuu ichinichi no kaigi wa nanji kara nanji made deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt86.wav doko de roku gatsu sanjuu ichinichi ni 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt87.wav doko de roku gatsu sanjuu ichinichi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt88.wav roku gatsu sanjuu ichinichi 
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt89.wav roku gatsu sanjuu ichinichi no kaigi wa doko deshita ka
+$REGULUS/examples/calendar/corpora/japdatacollsep2008/2008-09-30_miki/utt90.wav dare ga syusseki shi mashita ka

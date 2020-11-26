@@ -1,0 +1,8 @@
+Like {\tt BATCH\_HELP}, but input is taken from the file defined by
+\begin{verbatim}
+help_corpus(Arg1)
+\end{verbatim}
+and output is written to the file defined by
+\begin{verbatim}
+help_corpus_results(Arg1)
+\end{verbatim}

@@ -1,0 +1,46 @@
+
+% "singplur_value" is a feature value space with possible
+% values "sing" and "plur"
+feature_value_space(singplur_value, [[sing, plur]]).
+
+% "singplur" is a feature taking values in "singplur_value"
+feature(singplur, singplur_value).
+
+% ".MAIN" is a category which allows global slot-filling 
+% and has no syntactic features
+category('.MAIN', [gsem]).
+
+% "np", "spec" and "n" are all categories which allow a 
+% semantic return value and have one syntactic feature, "singplur" 
+category(np, [sem, singplur]).
+category(spec, [sem, singplur]).
+category(noun, [sem, singplur]).
+
+% ".MAIN" is a top-level grammar
+top_level_category('.MAIN').
+
+% ".MAIN" can be rewritten to "np"
+'.MAIN':[gsem=[value=S]] --> np:[sem=S].
+
+% "np" can be rewritten to "spec" "noun"
+%np:[sem=[[spec,S], [noun,N]], singplur=Singplur] -->
+np:[sem=strcat('[[', spec, ', ', S, '], [', noun, ', ', N, ']]'), singplur=Singplur] -->
+   spec:[sem=S, singplur=Singplur],
+   noun:[sem=N, singplur=Singplur].
+
+% Lexicon entries
+
+% "one" is a singular "spec"
+spec:[sem=1, singplur=sing] --> one.
+
+% "two" is a plural "spec"
+spec:[sem=2, singplur=plur] --> two.	
+
+% "cat" and "dog" are singular "n"s
+noun:[sem=felis_domesticus, singplur=sing] --> cat.
+noun:[sem=canis_domesticus, singplur=sing] --> dog.
+
+% "cat" and "dog" are plural "n"s
+noun:[sem=felis_domesticus, singplur=plur] --> cats.
+noun:[sem=canis_domesticus, singplur=plur] --> dogs.
+

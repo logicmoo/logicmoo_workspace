@@ -1,0 +1,15 @@
+[CITIZEN : x]<-memberOf-[COUNTRY : Oz] :- 
+     [PERSON: x]<-AGNT-[Being_Born]-LOC->[COUNTRY : Oz].
+
+[CITIZEN : x]<-memberOf-[COUNTRY : Oz] :- 
+     [PERSON: x]<-childOf-[PERSON: y], 
+     [CITIZEN : y]<-memberOf-[COUNTRY : Oz].
+
+[CITIZEN : x]<-memberOf-[COUNTRY : Oz] :- 
+     [PERSON : x]<-RCPT-[NATURALIZE]-LOC->[COUNTRY : Oz].
+
+[PERSON : Tinman]-
+	      -childOf->[GIRL : Dorothy],
+	      <-AGNT-[Being_Born]-LOC->[COUNTRY : Oz].
+
+

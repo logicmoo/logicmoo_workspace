@@ -1,0 +1,5 @@
+R1 overrides R2.
+R2 overrides R3.
+R1: John sleeps.
+R2: Bill waits.
+R3: John does not sleep.

@@ -1,0 +1,1852 @@
+\documentclass{book}
+
+
+%\usepackage{robinmacros2}
+%\usepackage{slmacros}
+%\usepackage{frames}
+\usepackage{mynamed}
+%% Robin's macros
+%
+%
+
+\newcommand{\ignore}[1]{}
+
+%
+% Reference the next example in the text:
+%
+\newcommand{\nexteg}[1]{\addtocounter{examplectr}{1}(\arabic{chapter}.\arabic{examplectr}{#1})\addtocounter{examplectr}{-1}}
+%
+% Reference the previous example in the text:
+%
+\newcommand{\preveg}[1]{(\arabic{chapter}.\arabic{examplectr}{#1})}
+%
+% Reference examples by relative offsets:
+%
+\newcommand{\egnum}[2]{\addtocounter{examplectr}{#1}(\arabic{chapter}.\arabic{examplectr}{#2})\addtocounter{examplectr}{-#1}}
+
+
+%
+% Examples Environments (RC)
+%
+\newcounter{examplectr}
+\newcounter{subexamplectr}[examplectr]
+\renewcommand{\thesubexamplectr}{\alph{subexamplectr}}
+%
+% Sub-example Macro:
+%
+\newenvironment{subex}%
+   {\begin{list}
+       {\alph{subexamplectr}.}%
+       {\setlength{\topsep}{0in}
+\setlength{\labelwidth}{1.0in}
+        \setlength{\leftmargin}{0.25in}
+        \setlength{\labelsep}{0.15in}
+ \usecounter{subexamplectr}}
+       }%
+   {\end{list}}
+
+%
+% Single Example Macro
+%
+\newenvironment{singex}
+{ \refstepcounter{examplectr}
+  \bigskip % vertical
+  \begin{list}
+    {
+      (\arabic{chapter}.\arabic{examplectr})\\
+    }%
+    {\setlength{\topsep}{0in}
+\setlength{\labelwidth}{0.5in}
+      \setlength{\leftmargin}{0.90in}
+      \setlength{\labelsep}{0.10in}% distance counter - minipage
+    }
+    \begin{minipage}[t]{4.5in} \item
+    }%
+    {\end{minipage}
+  \end{list}
+}
+
+\newcommand{\subegref}[2]{(\ref{#1}\ref{#2})}
+
+\newcommand{\beg}{\begin{singex}}
+\newcommand{\eeg}{\end{singex}}
+\newcommand{\bseg}{\begin{subex}}
+\newcommand{\eseg}{\end{subex}}
+
+
+\newcommand{\egstack}[1]{\begin{tabular}[t]{@{}l@{}} #1 \\ \\ \end{tabular}}
+% End of example macro
+
+% trindikit module
+\newcommand{\module}[1]{\textbf{#1}}
+
+% TrindiKit ``logo''
+\newcommand{\trindikit}[0]{\textsc{TrindiKit}}
+
+
+
+% GoDiS plans (SL)
+\newcommand{\plan}[2]{\textsc{issue : }#1\\\textsc{plan}:#2}
+\newcommand{\qplan}[2]{\textsc{issue : }#1\\\textsc{plan}:#2}
+\newcommand{\aplan}[3]{\textsc{action : }#1\\\textsc{plan}:#2\\\textsc{post : }#3}
+\newcommand{\sequence}[1]{$\langle$\\\vlist{#1}\\$\rangle$}
+\newcommand{\shortsequence}[1]{$\langle$#1$\rangle$}
+
+\newcommand{\algorithm}[1]{#1}
+
+\newcommand{\sort}[1]{\textsc{#1}}
+\newcommand{\sortsubcat}[2]{\sort{#1}$\left\{\vlist{#2}\right.$}
+
+% type
+\newcommand{\type}[1]{#1}
+% objects
+\newcommand{\object}[1]{\textsf{#1}}
+\newcommand{\objects}[1]{\textsf{\oplist{#1}}}
+% actions are objects
+\newcommand{\action}[1]{\object{#1}}
+
+
+% (rule) class
+\newcommand{\class}[1]{\object{#1}}
+
+% content
+%\newcommand{\content}[1]{#1}
+\newcommand{\cont}[1]{\textnormal{\textbf{#1}}}
+\newcommand{\content}[1]{\cont{#1}}
+
+% content type (question, proposition etc)
+\newcommand{\conttype}[1]{\type{#1}}
+
+
+% path
+\newcommand{\path}[1]{\textsc{#1}}
+\newcommand{\sel}[1]{\textsc{#1}}
+
+% path separator (outside implementation)
+\newcommand{\s}[1]{/}
+
+
+% TIS variable
+\newcommand{\tisvar}[1]{\path{#1}}
+
+% type declaration (variable is of type)
+\newcommand{\oftype}[0]{\textbf{:}\/}
+\newcommand{\typedecl}[2]{#1 \oftype\/ \type{#2}
+}
+
+% rule name
+\newcommand{\rulename}[1]{\textbf{#1}}
+%  update rule
+\newcommand{\urule}[4]{
+    {\sc rule:} \rulename{#1}\\
+    \textsc{class:} \class{#2}\\
+    {\sc pre:}  \oplist{
+      \op{#3}
+      }\\
+    {\sc eff:} \oplist{
+      \op{#4}
+      }
+  }
+
+\newcommand{\concept}[1]{\textsf{#1}}
+
+% dialogue move
+\newcommand{\move}[1]{\object{#1}}
+% \newcommand{\move}[2]{\class{#1}(\content{#2})}
+
+%Records
+
+\newcommand{\record}[1]{$\left[\mbox{\begin{tabular}{lcl}#1\end{tabular}}\right]$} 
+\newcommand{\field}[2]{\path{#1}&=&#2}
+\newcommand{\tfield}[2]{\path{#1} & : & \type{#2}}
+
+\newcommand{\vlist}[1]{\begin{tabular}{l}#1\end{tabular}}
+ 
+% set
+
+\newcommand{\set}[1]{$\left\{\vlist{#1}\right\}$}
+
+% stack
+
+\newcommand{\stack}[1]{$\langle\vlist{#1}\rangle$}
+
+% big []
+
+\newcommand{\sqbrack}[1]{$\left[\vlist{#1}\right]$}
+
+% big ()
+
+\newcommand{\roundbrack}[1]{$\left(\vlist{#1}\right)$}
+
+
+
+
+
+\newcommand{\prolog}[1]{\texttt{#1}}
+\newcommand{\godis}[0]{\textsc{GoDiS}}
+%\newcommand{\ibis}[0]{\godis}
+\bibliographystyle{mynamed}
+
+\parindent = 0pt
+\setlength{\parskip}{\baselineskip}
+
+\title{Manual for GoDiS\\DRAFT}
+\author{Staffan Larsson}
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+This manual is a work in progress.
+
+
+\chapter{Introduction}
+
+
+
+This document is intended as a manual for depeloping applications for
+GoDiS, an Issue-based dialogue system. For an explanation of the
+issue-based theory and its implementation in GoDiS, see \cite{larsson:thesis}.
+
+
+
+
+\chapter{Getting started}
+
+First, you need to download and install TrindiKit and GoDiS. See
+Appendix \ref{cha:install} for instructions. Optionally, you may also
+want to install OAA and any speech recognition and/or TTS engine that
+is installed on your computer\footnote{Note that you need to rebuild
+  your TrindiKit installation after you have installed OAA, Nuance
+  v8.0 or Nuance Vocalizer.}. It is also very useful to have a text
+editor such as Emacs installed.
+
+
+
+
+
+
+\section{Running an existing GoDiS application}
+
+
+To run the GoDiS VCR application using text input and output, open the
+file \prolog{start-vcr-text.pl} located in you GoDiS directory under
+\texttt{godis-apps/domain\_vcr} and consult it. When the prolog prompt
+reappears, type ``\texttt{run.}'' and press return. When the user
+input prompt (\texttt{\$U$>$}) appears, you may type e.g.
+``\texttt{add a program}'' (without quotes). Top the dialogue e.g. by
+typing ``\texttt{bye}''. If you don't want to see the rules and
+information states, stop the dialogue and type ``\texttt{quiet.}''. To
+see the rules again, type ``\texttt{verb.}'' (for ``verbose mode).
+
+
+\section{Copying and modifying an existing GoDiS application}
+
+
+
+A good way to get started on your own application is to copy an
+existing application directory and successively replacing the
+application components.
+
+\ignore{
+\section{Running the GUI}
+
+To run GoDiS with the \trindikit GUI (Graphical User Interface), do
+the following after loading but before running \godis{}:
+
+\texttt{setflag(gui,server)}
+
+Then, run the system as usual. This will start several DOS (or xterm)
+windows, one of which is called "tis". In this window, a port number
+will eventually appear. Now, start the GUI:
+
+\texttt{java -cp \$TRINDIKIT/classes se.gu.ling.trindikit.gui.TrindiGui}
+
+In the GUI, select File $\rightarrow$ Open Session. You are requested
+to give a host and a port number; the latter should be the one
+displayed in the "tis" window.
+
+Under Windows, for \texttt{host} type \texttt{localhost} or \texttt{127.0.0.1}.
+}
+
+
+
+
+\chapter{Elements of the information-state approach to dialogue management }
+
+In this section, we briefly outline the information state approach to
+dialogue management. We also explain the relation between toolkits,
+dialogue systems, and dialogue system applications. For a more
+in-depth presentation of the information state apporach, see
+\cite{larsson_traum:nle} or \cite{traum&larsson:isadm}.
+
+
+\section{The information state approach}
+
+The basic idea behind the ``information state approach'' is fairly
+simple. To begin with, we regard dialogue as a kind of game, where
+certain \textit{dialogue moves} are possible. A common kind of
+dialogue move is a verbal utterance. Each move in a dialogue has
+effects on some kind of state containing information, and each new
+move is selected based on such a state.  This is the basic idea, and
+it can be made more concrete, e.g., by considering the information
+state as (a part of) a \emph{mental} state of some agent.
+
+Dialogue is not, however, merely talking; it is also
+\textit{thinking}. Thinking can also, at least to some extent, be
+regarded as successive updates to an information state. To model
+thinking in this way, we use information state \textit{update rules}
+which have the form of conditionals: if $x$ holds of the current
+state, then modify the state by applying operation $y$. For example,
+one could implement a rule saying that ``if $p$ is in the current
+state, and $p\rightarrow q$ is also in the current state, then add $q$
+to the state''. This amounts to a forward-chanining modus ponens rule.
+In keeping with the ``dialogue as game'' terminology, we can regard
+update rules as ``silent moves''.
+
+We make one cruicial, and perhaps not obvious, assumption about the
+relation between dialogue moves and update rules. \textit{The relation
+  between dialogue moves and information states can be captured
+  completely by update rules.} That is, we don't have any
+representation of the preconditions and effects of dialogue moves
+beyond what is given in the update rules. The effects of a dialogue
+move $M$ will typically be represented in a rule which has as a
+precondition that $M$ was performed recently, and has not yet been
+integrated.
+
+Given what we have said so far, the information state is essentially a
+``blackboard'' structure [REF to hearsay II etc]. However, we assume
+that the information state is not just an unstructured jumble of
+information; it is an \texttt{object} of a certain \texttt{datatype}.
+In object-oriented programming, one defines classes of objects, and
+for each class a set of methods. A datatype is similar to a class;
+however, when definining datatypes we make a distinction between
+operations (which modify objects of that type) and relations,
+functions and selectors (which do not modify objects).
+
+To sum up, the information state update approach to dialogue
+management views utterances as dialogue moves which update, and are
+selected on the basis of, a structured information state by means of
+update rules. As such, this approach is fairly general and allows the
+implementation of many different theories of dialogue. 
+
+
+\section{\trindikit{} and the information state approach}
+
+
+
+How does \trindikit{} relate to all this? Actually, \trindikit{}
+currently makes some assumptions not inherent in the information state
+update appoach. For one thing, it requires that modules in a dialogue
+system do not communicate directly with one another, but \textit{only
+  via the information state}. The purpose of this is to some extent
+ideological; we belileve it is generally a good idea to have all the
+information processed in the system visible, both to other modules and
+to the designer of the system. If we force all communication to go via
+the information state, we guarantee that by looking and the successive
+updates to the information state we can completely capture all the
+interactions between the modules of our system. There are also other
+advantages; for example, keeping all information in the IS means that
+the modules don't have to have any information about each other; all
+they need to know is ehere to read and where to write in the IS. This,
+in effect, means that one module can be exchanged for another without
+causing disturbances or requiring modifications in other modules.
+Unfortunately, this strategy of keeping all information in the IS has
+one major disadvantage: the IS tends to become a bottleneck, slowing
+down the system. There are various ways of improving the situation,
+which we will not go into here; suffice to say that we are considering
+lifting this limitation in future releases of \trindikit{}.
+
+An additional requirement posed by \trindikit{} is that the algorithms
+controlling the internal distribution of work in the system (i.e.,
+when each module should start and stop working) is separate from
+algorithms for updating the information state and selecting dialogue
+moves. This simply makes sense to us as a design principle, and again
+the argument is modularity. Doing things this way allows us to modify
+the control algorithm of a dialogue system independently of any other
+components.
+
+Are there any theories which cannot be implemented using this
+approach? Well, a basic requirement is of course that the theory is or
+can be formalized
+
+
+\section{Toolkits, dialogue systems and applications}
+
+
+
+
+\section{Genre-specific systems: \godis-IOD and \godis-AOD}
+
+
+
+
+
+\chapter{Elements of Issue-based dialogue management}
+
+This section is intended to give a brief overview of the\godis{} system
+and how it works.
+
+
+
+
+\section{Total Information State}
+
+
+
+\subsection{Information state proper}
+
+The Information State (IS) is the main component of the Total
+Information State (TIS). 
+
+There is a basic division of IS into a record of information private
+to the system, and a record representing shared information.
+
+
+\begin{figure*}[htbp]
+\centering
+  \record{ 
+    \tfield{private}{ 
+      \record{
+        \tfield{agenda}{OpenQueue(Action)}\\
+        \tfield{plan}{OpenStack(PlanConstruct)}\\
+        \tfield{bel}{Set(Prop)}\\
+        \tfield{tmp}{
+          \record{
+            \tfield{usr}{
+              $Tmp$
+            }\\
+            \tfield{sys}{
+              $Tmp$
+            }\\
+          }
+        }\\
+        \tfield{nim}{OpenQueue(Pair(DP, Move))}\\
+      }
+    }\\
+    \tfield{shared}{ 
+      \record{
+        \tfield{com}{Set(Prop)}\\
+        \tfield{issues}{OpenStack(Question)}\\
+        \tfield{actions}{OpenStack(Action)}\\
+        \tfield{qud}{OpenStack(Question)}\\
+        \tfield{pm}{OpenQueue(Move)}\\
+        \tfield{lu}{
+          \record{
+            \tfield{speaker}{Participant}\\
+            \tfield{moves}{Set(Move)}\\
+                                %            \tfield{imoves}{Set(Move)} 
+          }  
+        }\\
+      }
+    }\\
+  }\\
+
+
+$Tmp$=
+  \record{
+    \tfield{com}{Set(Prop)}\\
+    \tfield{issues}{OpenStack(Question)}\\
+    \tfield{actions}{OpenStack(Action)}\\
+    \tfield{qud}{OpenStack(Question)}\\
+    \tfield{agenda}{OpenQueue(Action)}\\
+    \tfield{plan}{OpenStack(PlanConstruct)}
+  }
+
+  
+  \caption{\godis{-AOD} Information State type}
+  \label{fig:ibis4-is}
+\end{figure*}
+
+
+
+
+\paragraph{Agenda}
+
+
+
+The field \path{/private/agenda} is of type \type{Stack(Action)}. In
+general, we try to use datastructures which are as simple as possible;
+a stack is the simplest ordered structure so it is used as a default
+datastructure where order is needed as long as it is sufficient for
+the purposes at hand. The agenda is read by the selection rules to
+determine the next dialogue move to be performed by the system.
+
+
+\paragraph{Plan}
+
+
+
+The \path{/private/plan} is a stack of plan constructs. Some of the
+update rules for managing the plan have the form of rewrite rules
+which process complex plan constructs until some action is topmost on
+the plan. Other rules execute this action in case it is a system action
+or move it to the agenda in case it is a move-related action.
+
+
+\paragraph{Private beliefs}
+
+
+
+In \godis{}, the field \path{/private/bel}, a set of propositions, is used
+to store the results of database searches. Of course, the database
+(and the domain knowledge, and the lexicon) can be seen as a part of
+the system's private belief set, but in \path{/private/bel} we choose
+to represent only propositions which are directly relevant to the task
+at hand and which are the result of database searches. This is similar
+to seeing the database as a set of implicit beliefs, and database
+consultation as an inference process where implicit beliefs are made
+explicit. The reason for using a set is that a set is the simplest
+unordered datastructure.
+
+
+\paragraph{Questions Under Discussion}
+
+In \godis{} we define Questions Under Discussion, or QUD, to be an
+open stack of questions that can be addressed using short answers. The
+open stack has some set-like properties, but also retains a stack
+structure in case it should be useful for ellipsis
+resolution\footnote{Note that this is different from the way Ginzburg
+  \cite{ginzburg} defines QUD\index{QUD}, i.e.  as containing
+  questions which have been raised but not yet resolved, and thus
+  currently under discussion. For reasons given in chapter 5 of
+  \cite{larsson:thesis}, we have divided Ginzburgs QUD into two
+  structures: QUD and Issues.}.
+
+
+\paragraph{Issues}
+
+The field \path{issues} contains all questions which have been raised
+in a dialogue (explicitly or implicitly) but not yet resolved. It thus
+contains a collection of current, or ``live'' issues. A suitable data
+structure appears to be an open stack, i.e., a stack where non-topmost
+elements can be accessed. This allows a non-rigid modelling of current
+issues and task-related dialogue structure.
+
+
+
+
+\paragraph{Actions}
+
+
+The only addition from IOD to AOD is the \path{actions} field which
+has been added to \path{/shared} and \path{/private/tmp}. We assume
+the actions stack is an open stack, which is the same structure that
+we use for \path{issues}.
+
+
+\paragraph{Shared Committments}
+
+
+
+The field \path{/shared/com} contains the set of propositions that the
+user and the system have mutually agreed to during the dialogue. They
+need not actually be believed by either participant; the important
+thing is that the DPs have committed to these propositions, even if
+only for the purposes of the conversation.
+
+To reflect that the contents need not be true, or even privately
+believed by the DPS, and because we are not using situation
+semantics (where there is a distinction between facts
+and propositions) we use the label ``commitments'' or ``committed
+propositions'', abbreviated as \path{com}, instead of FACTS. These,
+then, are propositions to which the DPs are (taken to be) jointly
+committed.
+
+
+
+\paragraph{Latest utterance}
+
+
+
+In \path{/shared/lu} we represent information about the latest
+utterance: the speaker, and the move realized by the utterance. We
+assume for the moment that each utterance can realize only one
+move. This assumption will be removed in the next chapter.
+
+TMP
+
+\paragraph{Temporary store}
+
+
+To enable the system to backtrack if an optimistic assumption turns
+out to be mistaken, relevant parts of the information state is kept in
+\path{/private/tmp}. The \path{qud} and \path{com} fields may change
+when integrating an \move{ask} or \move{answer} move, respectively.
+The plan may also be modified, e.g., if a \action{raise} action is
+selected. Finally, if any actions are on the agenda when selection
+starts (which means they were put there during by the update module),
+these may have been removed during the move selection process. 
+
+
+\paragraph{Non-integrated moves}
+
+Since several moves can be performed per turn, \godis{} needs some way of
+keeping track of which moves have been interpreted. This is done by
+putting all moves in \tisvar{latest\_moves} in a queue structure
+called \path{nim}, for Non-Integrated Moves. This structure is
+private, since it is an internal matter for the system how many moves
+have been integrated so far. Once a move is assumed to be grounded on
+the understanding level the move is added to the
+\path{/shared/lu/moves} set. Since the move has now been understood on
+the pragmatic level, the content of the move will be a question or a
+full proposition (for short answers, the proposition resulting from
+combining it with a question on QUD).
+
+\paragraph{Previous moves}
+
+To be able to detect irrelevant followups, \godis{} needs to know what
+moves were performed (and grounded) in the previous utterance. These
+are stored in the \path{/shared/pm} field.
+
+
+\subsection{Module interface variables}
+
+
+\subsection{Resource interface variables}
+
+
+
+
+\section{Dialogue moves}
+
+While dialogue move types are often defined in terms of sentence mood,
+speaker intentions, and/or discourse relations (see e.g.
+\cite{core97coding}\/), we opt for a different solution. In our
+approach, the type of move realized by an utterance is determined by
+the relation between the content of the utterance, and the activity in
+which the utterance occurs.
+
+
+\subsection{Core dialogue moves in \godis-IOD}
+
+
+The following dialogue moves are used in \godis{}:
+
+\begin{itemize}
+\item \move{ask($q$)}, where $q$ \oftype\/ \conttype {Question}
+\item \move{answer($a$)}, where $a$ \oftype\/ \conttype{ShortAns} or $a$ \oftype\/  \conttype{Proposition}
+\item \move{greet} 
+\item \move{quit}
+\end{itemize}
+
+In inquiry-oriented dialogue\index{inquiry-oriented dialogue}, the
+central dialogue moves concern raising and addressing issues. This is
+done by the \move{ask} and \move{answer} moves, respectively.
+\ignore{; typically, the system will ask a number of questions that
+  the user must answer in order for the system to be able to provide
+  the desired service to the user.}  The \move{greet} and \move{quit}
+moves are used in the beginning and end of dialogues to greet the user
+and indicate that the dialogue is over, respectively.
+
+
+
+\subsection{Grounding moves}
+
+
+
+
+\subsection{Additional moves in \godis-AOD}
+
+
+In addition to the dialogue moves listed above, \godis{-AOD} uses the following two moves:
+
+\begin{itemize}
+\item \move{request($\alpha$)}, where $\alpha$ \oftype\/ \conttype{Action}
+\item \move{confirm($\alpha$)}, where  $\alpha$ \oftype\/  \conttype{Action}
+\end{itemize}
+
+
+These two moves are sufficient for activities where actions are
+performed instantly or near-instantly, and always succeed. If these
+requirements are not fulfilled, the \move{confirm} move can be
+replaced by or complemented with a more general \move{report($\alpha$,
+  $Status$)} move which reports on the status of action $\alpha$.
+Possible values of $Status$ could be \object{done}, \object{failed},
+\object{pending}, \object{initiated} etc.; \move{report($\alpha$,
+  \object{done})} would correspond to \move{confirm($\alpha$)}. 
+
+
+
+
+\section{Dialogue Move Engine}
+
+
+
+
+\subsection{Update module}
+
+
+
+\subsubsection{Move integration}
+
+
+\subsubsection{Grounding}
+
+
+
+\subsubsection{Question accommodation}
+
+
+\subsubsection{Plan execution}
+
+
+\subsubsection{Downdating QUD, ISSUES and ACTIONS}
+
+
+
+
+
+\subsection{Selection module}
+
+
+
+\subsubsection{Action selection}
+
+
+
+\subsubsection{Move selection}
+
+
+
+\section{Resource interface}
+
+
+
+The resource interface can be seen as a mediator between
+(domain-independent) modules and (domain-specific) resources.  The
+resource interface makes it possible to check and update resources is
+update rules. Since the TIS is abstract datastructure containing
+objects of various types, it makes sense that resources that are
+connected to the TIS should also be regarded as objects of certain
+datatypes. 
+
+A straighforward solution to this would be to let each
+resource contain a definition of the type of that resource, i.e. a
+list of relations, functions, selectors and operations that can be
+applied to the resource. However, it turns out that this leads to a
+lot of redundancy in the code since each resource object of a certain
+type has to define the same type. Instead, the definitions of resource
+types reside in the \emph{resource interface} file. The resource
+object merely exports a number of predicates in the normal Prolog
+way. The resource interface specification uses these predicates to
+define the relations etc. that determine how the resource can be
+accessed from the modules.
+
+
+
+
+
+
+\section{Dialogue plans}
+
+% EXTEND WITH PCs FROM LATER CHs
+
+In this section, we introduce a formalism for representing procedural
+plans as sequences of actions. Dialogue plans are implemented in the
+domain resource (see Section \ref{sec:domain-resource}).
+
+\subsection{Action sequences and actions}
+
+In the simplest case, a plan consists of a sequence of actions. More
+complex plans may also include e.g. conditionals (if-then-else).  In
+general, dialogue plans are built from so-called plan constructors.
+
+Action sequences have the form $\langle a_1, \ldots, a_n \rangle$
+where $a_i$ \oftype\/ \conttype{Action} ($1\leq i\leq n$). 
+
+
+All dialogue moves are actions, which means they can be included in
+dialogue plans. There are also more abstract actions which however are
+connected to dialogue moves. Third, there are actions for manipulating
+the information state in various ways. Third, there are actions for
+accessing resources, e.g. actions enabling database consultation and
+interaction with devices.
+
+In the following, $q$ is a question, $p$ is a proposition, and $a$ is
+an action or action sequence.
+
+\subsection{Actions connected to dialogue moves}
+
+In \godis, there are three action types closely related to dialogue
+move types.
+
+\paragraph{\action{findout($q$)}}
+Find the answer to $q$. This is typically done by asking a question to
+the user, i.e., by performing an \move{ask} move, and hoping for an
+answer.  The \action{findout} action is not removed until the question
+$q$ has been publically resolved. A question is publically resolved
+when a resolving answer to the question is in the set of jointly
+comitted propositions (i.e. \path{/shared/com})\footnote{Although they
+  have not yet been implemented in \godis{}, there are also in
+  principle other ways of achieving public resolvedness, e.g. that the
+  system finds the information by consulting some resource or by
+  inferring from its own private beliefs, and then provides this
+  information to the user.  Note that it is necessary that the answer
+  is communicated to the user for the findout action to be complete.}
+  
+\paragraph{\action{raise($q$)}}
+  Raise the question $q$. This action is similar to \action{findout},
+  except that it is removed from the plan as soon as the
+  \move{ask}-move is selected. This means that if the user does not
+  answer the question when it has been raised, it will not be raised
+  again. This is useful e.g., for requesting optional information.
+  
+\paragraph{\action{respond($q$)}}
+Provide an answer to question $q$. This is done by performing an
+\move{answer} move with content $p$, where $p$ is a resolving answer
+to $q$.
+
+
+
+
+\subsubsection{Actions for manipulating the information state}
+
+
+
+\paragraph{\action{bind($q$)}}
+
+\paragraph{\action{protect($q$)}}
+
+\paragraph{\action{forget($p$)}}
+
+\paragraph{\action{forget\_all}}
+
+\paragraph{\action{forget\_except($p$}}
+
+\paragraph{\action{assume($p$)}}
+
+\paragraph{\action{assume\_issue($q$)}}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Resource-related actions}
+
+
+
+\paragraph{\action{consultDB($q$)}}
+
+
+For a typical information-exchange task, the application is a static
+database\footnote{Note that ``static'' here does not mean that the
+  database cannot be updated. It only means that it is not updated by
+  the dialogue system\index{dialgue system}.}.
+
+The \action{consultDB($q$)} action (where $q$ is a question) which
+will trigger a database search which takes all the propositions in
+\path{/shared/com} and given this looks up the answer to $q$ in the
+database. The resulting proposition is stored in \path{/private/bel}.
+
+
+
+\paragraph{\action{dev\_do($dev, \alpha$)}}
+
+\paragraph{\action{dev\_set($dev, var, val$)}}
+
+\paragraph{\action{dev\_get($dev, var$)}}
+
+\paragraph{\action{dev\_query($dev, q$)}}
+
+\paragraph{\action{dev\_queryAll($dev, q$)}}
+
+
+\paragraph{\action{change\_domain}}
+
+\paragraph{\action{change\_language}}
+
+
+
+
+\subsubsection{Conditionals}
+
+\paragraph{\action{if\_then($p$, $a$)}}
+
+If $p$ is in \path{/private/bel} or \path{/shared/com}, then replace
+\action{if\_then($p$, $a$)} with $a$; otherwise, delete it.
+
+
+\paragraph{\action{if\_then\_else($p$, $a_1$, $a_2$)}}
+  
+If $p$ is in \path{/private/bel} or \path{/shared/com}, then replace
+\action{if\_then($p$, $a_1$, $a_2$)} with $a_1$; otherwise, replace it
+by $a_2$.
+
+
+
+\subsection{Some example plans}
+
+\beg
+\begin{tabbing}
+\plan{
+  \cont{?$x$.price($x$)}}{
+  \shortsequence{ \=\\
+\>    \action{findout(\cont{?$x.$means\_of\_transport($x$)})},\\
+\>    \action{findout(\cont{?$x.$dest\_city($x$)})},\\
+\>    \action{findout(\cont{?$x.$depart-city($x$)})},\\
+\>    \action{findout(\cont{?$x.$depart-month($x$)})},\\
+\>    \action{findout(\cont{?$x.$depart-day($x$)})},\\
+\>    \action{findout(\cont{?$x.$class($x$)})},\\
+\>    \action{findout(\cont{?return})},\\
+\>    \action{if\_then}( \cont{return}, $\langle$ \=     \action{findout(\cont{?$x.$return-month($x$)})},\\
+\>\>    \action{findout(\cont{?$x.$return-day($x$)})} $\rangle$ ),\\
+\>    \action{consultDB(\cont{?$x.$price($x$)})}\\
+}}
+\end{tabbing}
+\eeg
+
+\beg
+\bseg
+\item \aplan{\action{vcr\_add\_program}}{
+  \sequence{
+    \action{findout(\content{?$x$.channel\_to\_store($x$)})}\\
+    \action{findout(\content{?$x$.date\_to\_store($x$)})}\\
+    \action{findout(\content{?$x$.start\_time\_to\_store($x$)})}\\
+    \action{findout(\content{?$x$.stop\_time\_to\_store($x$)})}\\
+    \action{dev\_do(vcr, 'AddProgram')}}}{
+  \content{done('AddProgram')}}
+\eseg
+\eeg
+
+
+
+
+
+
+
+
+
+\section{Formal semantic representations}
+
+Here we describe the syntax of the simple formal semantic
+representation currently used in \godis{}\footnote{It should be noted
+  that the \godis{} DME is independent semantic formalism, as long as
+  the appropriate semantic properties and relations are defined for an
+  application. To implement a GoDiS application with a different kind
+  of semantics, the resource interface definitions
+  (\texttt{resource\_interfaces.pl}) need to be modified.}. This
+description defines a set of content types which are explained and
+exemplified below. The symbol ``:'' represents the of-type relation,
+i.e., $Expr$ \oftype\/ $Type$ means that $Expr$ is of type $Type$.
+
+\textbf{Atom types}
+
+\conttype{Pred$_n$}, where $n=0$ or $n=1$: n-place predicates, e.g., \cont{dest-city}, \cont{month}\\
+\conttype{Ind}: Individual constants, e.g., \cont{paris}, \cont{april}\\
+\conttype{Var}: Variables, e.g., $x, y, \ldots, Q, P, \ldots$
+
+
+\textbf{Sentences}\\
+
+$Expr$ \oftype\/ \conttype{Sentence} iff $Expr$ \oftype\/ \conttype{Proposition} or $Expr$ \oftype\/ \conttype{Question} or $Expr$ \oftype\/  \conttype{ShortAns}
+
+
+$Expr$ \oftype\/ \conttype{Proposition} if \\
+\begin{itemize}
+\item $Expr$ \oftype\/ \conttype{Pred$_0$} or
+\item $Expr$ = ${pred}_1$(${arg}$), where ${arg}$ \oftype\/ \conttype{Ind} and
+  ${pred}_1$ \oftype\/ \conttype{Pred$_1$} or
+\item $Expr$ = $\neg P$, where $P$ \oftype\/ \conttype{Proposition} or
+\item $Expr$ = \cont{fail($q$)}, where $q$ \oftype\/ \conttype{Question} \\
+\end{itemize}
+
+$Expr$ \oftype\/ \conttype{Question} if $Expr$ \oftype\/ \conttype{YNQ} or $Expr$ \oftype\/  \conttype{WHQ} or $Expr$ \oftype\/ \conttype{ALTQ}
+
+?$P$ \oftype\/ \conttype{YNQ} if $P$ \oftype\/ \conttype{Proposition}
+
+\cont{?$x.{pred}_1(x)$} \oftype\/ \conttype{WHQ} if  $x$ \oftype\/ \conttype{Var} and ${pred}_1$ \oftype\/  Pred$_1$
+
+\cont{\{${ynq}_1, \ldots, {ynq}_n$\}} \oftype\/ \conttype{ALTQ} if ${ynq}_i$ \oftype\/ \conttype{YNQ} for all $i$ such that $1\leq i\leq n$
+
+$Expr$ \oftype\/ \conttype{ShortAns} if
+\begin{itemize}
+\item $Expr$ = \cont{yes} or
+\item $Expr$ = \cont{no} or
+\item $Expr$ \oftype\/ \conttype{Ind} or
+\item $Expr$ = $\neg {arg}$ where $arg$ \oftype\/ \conttype{Ind} 
+\end{itemize}
+
+
+
+
+
+\subsection{Propositions}
+\label{sec:isis1-semantics}
+
+Propositions are represented by basic formulae of predicate logic
+consisting of an n-ary predicate together with constants representing
+its arguments, e.g., \cont{loves(john,mary)}.
+
+
+In a dialogue system\index{dialgue system} operating in a domain of
+limited size, it is often not necessary to keep a full semantic
+representation of utterances. For example, a user utterance of ``I
+want to go to Paris'' could normally be represented semantically as
+e.g., \cont{want(user, go-to(user, paris) )} or \cont{want(u,
+  go-to(u,p)) \& city(p) \& name(p, paris) \& user(u)}. \godis{} uses a
+\emph{reduced} semantic representation with a coarser,
+domain-dependent level of granularity; for example, the above example
+will be rendered as \cont{dest-city(paris)}. This reduced
+representation is in part a consequence of the use of keyword-spotting
+in interpreting utterances, but can arguably also be regarded as a
+reflection of the level of semantic granularity inherent in the
+underlying domain task. As an example of the latter, in a travel
+agency domain there is no point in representing the fact that it is
+the user (or customer) rather than the system (or clerk) who is going
+to Paris; it is implicitly assumed that this is always the case.
+
+As a consequence of using reduced semantics\index{semantics}, it will
+be useful to allow 0-ary predicates, e.g., \cont{return}, meaning
+``the user wants a return ticket''. 
+
+The advantage of this semantic representation is that the
+specification of domain-specific semantics\index{semantics} becomes
+simpler, and that unnecessary ``semantic clutter'' is avoided. On the
+other hand, it severely restricts the possibility of providing generic
+semantic analyses that can be extended to other domains.
+
+If the database search for an answer to a question $q$ fails the
+resulting proposition is \cont{fail($q$)}. We have chosen this
+representation because it provides a concise way of encoding a failure
+to find an answer to $q$ in the database. 
+
+
+
+
+
+
+\subsection{Questions}
+
+Three types of questions are handled by \godis: \textit{y/n}-questions,
+\textit{wh}-questions, and alternative questions. Here we describe how these
+are represented on a semantic level; the syntactic realization is
+defined in the lexicon.
+
+\begin{itemize}
+\item \textit{y/n}-questions are propositions preceded by a question mark,
+  e.g., \cont{?dest-city(london)} (``Do you want to go to London?'')
+\item \textit{wh}-questions are lambda-abstracts of propositions, with the
+  lambda replaced by a question mark, e.g., \cont{?$x$.dest-city($x$)}
+  (``Where do you want to go?'')
+\item alternative questions are sets of \textit{y/n}-questions, e.g.
+  \cont{\{?dest-city(london), ?dest-city(paris)\}} (``Do you want to go
+  to London or do you want to go to Paris?'') 
+\end{itemize}                  
+
+\subsection{Domain ontology (semantic sortal restrictions)}
+
+\godis{} uses a rudimentary ontology consisting of domain-dependent
+semantic sortal categories.  Sorts are useful e.g. for distinguishing
+non-meaningful propositions from meaningful ones. However, what is
+meaningful in one activity may not be meaningful in another, and vice
+versa. Therefore, the sortal system is implemented as a part of the
+domain knowledge. Another prominent use of sorts is to determine whether
+an answer is relevant to (\concept{about}, in Ginzburg\index{Ginzburg,
+  Jonathan}'s terminology) a certain question (see Section
+\ref{sec:aboutness}).
+
+
+\subsubsection{Individuals and sorts}
+
+
+All members of \conttype{Ind} are assigned a sort. For example, the
+travel agency domain includes the sorts \cont{city},
+\cont{means\_of\_transport}, \cont{class}, etc. The individual
+constant \cont{paris} has sort \cont{city} and \cont{flight} has sort
+\cont{means\_of\_transport}.
+
+
+
+
+
+
+\subsubsection{Sortal hierarchy}
+
+
+isa
+
+
+\subsubsection{Sortal correctness of propositions}
+
+
+The property of a proposition $P$ being sortally correct is
+implemented in \godis{} as \concept{sort-restr($P$)}. A proposition is
+sortally correct if its arguments fulfil the sortal constraints of the
+predicate. For example, the proposition \content{dest\_city($X$)} is
+sortally correct if the sort of $X$ is \cont{city}. Sortal constraints
+of predicates are implemented in the domain resource, as exemplified
+in \nexteg{}.
+
+\beg
+sort\_restr( \content{dest\_city($X$)} ) $\leftarrow$ sem\_sort( $X$, \content{city} ).
+\eeg
+
+
+
+
+
+
+
+
+
+
+\chapter{Non-DME modules used by GoDiS}
+
+
+
+This section describes the modules supplied with TrindiKit that are
+used by GoDiS.
+
+The \trindikit\/ package includes a couple of simple modules which can
+be used to quickly build prototype systems. 
+
+\begin{itemize}
+\item \module{input\_simpletext}: a simple module which reads text
+  input from the user and stores it in the TIS
+\item \module{output\_simpletext}: a simple text output module
+\item \module{intpret\_simple1}: an interpretation module which uses a
+  lexicon of key words and phrases to interpret user utterances in
+  terms of dialogue moves
+\item \module{generate\_simple1}: a generation module which uses a
+  lexicon of mainly canned sentences to generate system utterances
+  from moves
+\end{itemize}
+
+
+
+
+
+\section{Simple text input module}
+
+
+
+The input module  \module{input\_simpletext} reads a
+string (until new-line) from the keyboard, preceded by the printing
+of an input prompt. The system variable \tisvar{input} is then set to be the
+value read.
+
+
+
+\section{Text input with simulated recognitions score}
+
+
+
+\section{Nuance ASR input}
+
+
+
+
+\section{A simple interpretation module}
+\label{sec:module_interpret_simple}
+
+The interpretation module \module{interpret\_simple1}
+takes a string of text, turns it into a sequence of words (a
+``sentence'') and produces a set of moves.  The ``grammar'' consists
+of pairings between lists whose elements are words or semantically
+constrained variables.  Semantic constraints are implemented by a set
+of semantic categories (\content{location}, \content{month},
+ \content{means\_of\_transport} etc.) and synonymy sets.
+A synonymy set is a set of words which all are regarded as having the
+same meaning.
+
+The simplest kind of lexical entry is one without variables. For
+example, the word ``hello'' is assumed to realize a \move{greet}
+move.:
+
+\beg
+input\_form( [ hello ], \move{greet} )
+\eeg
+
+The following rule says that a phrase consisting of the word ``to''
+followed by a phrase $S$ constitutes an \move{answer} move with
+content \content{to($C$)} provided that the lexical semantics of $S$ is
+$C$, and $C$ is a \texttt{location}. The lexical semantics of a word
+is implemented by a coupling between a synset and a meaning; the
+lexical semantics of $S$ is $C$, provided that $S$ is a member of a
+synonymy set of words with the meaning $C$.
+
+\beg
+input\_form( [ to$\mid S$ ], \move{answer(to($C$))} $\leftarrow$ lexsem($S$, $C$), location(C).
+\eeg
+
+To put it simply, the parser tries to divide the sentence into a
+sequence of phrases (found in the lexicon), covering as many words as
+possible.
+
+
+
+\section{A simple generation module}
+
+The generation module \module{generate\_outputform} takes a
+sequence (list) of moves and outputs a string. The generation
+grammar/lexicon is a list of pairs of move templates and strings.
+
+\beg
+output\_form( \move{greet}, "Welcome to the travel agency!" ).
+\eeg
+
+To realize a list of Moves, the generator looks, for each move, in the
+lexicon for the corresponding output form (as a string), and then
+appends all these strings together. The output strings is appended in
+the same order as the moves.
+
+
+
+
+
+
+
+
+
+
+\section{Simple text output module}
+
+The output module \module{output\_simpletext} takes the string in the
+system variable \tisvar{output} and prints it on the computer screen,
+preceded by the printing of an output prompt. The contents of the
+\tisvar{output} variable is then deleted. The module also moves the
+contents of the system variable \tisvar{next\_moves} to the system
+variable \tisvar{latest\_moves}. Finally it sets the system variable
+\tisvar{latest\_speaker} to be the system.
+
+
+
+
+\subsection{Nuance Vocalizer output}
+
+
+\chapter{The components of a GoDiS application}
+
+This sections outlines the components of a \godis{} application.
+
+
+
+\section{File structure}
+
+It is highly advisable to keep trindikit, godis and godis applications
+in separate directories. This enables e.g. updating godis to a new
+version without touching the applications.
+
+\begin{itemize}
+\item trindikit
+\item godis/
+  \begin{itemize}
+  \item godis-basic
+  \item godis-grounding
+  \item godis-iod
+  \item godis-aod
+  \end{itemize}
+\item godis-apps/
+  \begin{itemize}
+  \item vcr-godis
+  \item ta-godis
+  \item $\ldots$
+  \end{itemize}
+\end{itemize}
+
+
+
+\section{The GoDiS application specification file}
+
+This file specifes datatypes, modules and resources used by your
+application, as well as additional parameters.
+
+Some applications may have variants, in which case each variant has a
+separate specification file (and start file). For example, an application might have one text-based variant and one speech-based variant.
+
+MORE
+
+
+\subsection{Selecting a GoDiS variant}
+
+Depending on the properties of your application domain, there is a
+choice between different variants of GoDiS.
+
+\begin{itemize}
+\item godis-basic: multiple simultaneous tasks, information sharing between plans
+\item godis-grounding: as godis-basic, plus grounding
+\item godis-iod: as godis-grounding, plus accommodation and associated grounding strategies
+\item godis-aod: as godis-iod, plus facilities for action-oriented dialogue 
+\end{itemize}
+
+\section{The start file}
+
+This file contains specification of directories and files that should
+be consulted when running \godis. To load \godis, this file should be
+consulted.
+ 
+When building a new application, this is where you specify which
+\godis{} version to use, the home directory of you application, the name
+of the \godis{} application specification file for your application, and any
+additional libraries used by the application.
+
+
+
+\section{Resources and the GoDiS resource interface}
+
+The methods available for a resource are not necessarily (or even
+usually) defined in the resources itself. Rather, the resource defines
+a set of prolog predicates which are utilized by the \textit{resource
+  interface}. This interface describes each resource as an object of
+some type, and for each type it defines a set of methods (relations,
+functions, selectors, and operations). These methods are defined in
+terms of the predicates exported from the resource itself.
+ 
+
+\section{The domain resource}
+
+
+\subsection{Dialogue plans}
+
+
+
+In GoDiS, the domain resource includes a set of dialogue
+  plans which contain information about what the system should do in
+order to achieve its goals. In dialogue, dialogue plans are loaded
+into the information state and executed by update rules, which
+``consume'' them step by step. Each plan is associated with a goal
+which can either be a question or an action. If the user asks a
+question $q$, there is an update rule which looks in the domain
+resource for a plan for dealing with $q$, and if one is found, loads
+it into the information state.
+
+See Section{sec:dialogue-plans} for an explanation of \godis{}
+dialogue plans. 
+
+
+Dialogue plans are mainly specified using the predicate
+\texttt{plan/2}, but there are also some additional predicates.
+
+\begin{itemize}
+\item \texttt{plan(Goal, Plan)}
+\item \texttt{postcond(Action, Plan)} 
+\item \texttt{depends( Q1, Q2)}
+\end{itemize}
+
+
+In the domain resource, sequences of actions are represented by prolog
+lists.
+
+The domain resource also specifies a domain-specific ontology which is
+used by the dialogue move engine to determine e.g. question-answer
+relations (relevance and resolvedness). 
+
+
+
+\subsection{Sortal restrictions}
+
+\godis{} uses a rudimentary system of domain-dependent semantic sortal
+categories.  For example, the travel agency domain includes the sorts
+\cont{city}, \cont{means\_of\_transport}, \cont{class}, etc. All
+members of \conttype{Ind} are assigned a sort; for example, the
+individual constant \cont{paris} has sort \cont{city} and
+\cont{flight} has sort \cont{means\_of\_transport}.
+
+Sorts make it possible to distinguish non-meaningful propositions from
+meaningful ones. However, what is meaningful in one activity may not
+be meaningful in another, and vice versa. Therefore, the sortal system
+is implemented as a part of the domain knowledge.  In \godis{}, the
+sorts are mainly used for determining whether an answer is relevant to
+(\concept{about}, in Ginzburg\index{Ginzburg, Jonathan}'s terminology)
+a certain question (see Section \ref{sec:aboutness}).
+
+The property of a proposition $P$ being sortally correct is
+implemented in \godis{}1 as \concept{sort-restr($P$)}. A proposition is
+sortally correct if its arguments fulfil the sortal constraints of the
+predicate. For example, the proposition \content{dest\_city($X$)} is
+sortally correct if the sort of $X$ is \cont{city}. Sortal constraints
+of predicates are implemented in the domain resource, as exemplified
+in \nexteg{}.
+
+\beg
+sort\_restr( \content{dest\_city($X$)} ) $\leftarrow$ sem\_sort( $X$, \content{city} ).
+\eeg
+
+
+\begin{table*}[htbp]
+  \centering
+  \begin{tabular}{|l|l|}
+    \hline
+    \textbf{proposition} & \textbf{restriction} \\
+    \hline
+    \cont{dest\_city($X$)} & $X\in$ \sort{city} \\
+    \cont{depart\_city($X$)} & $X\in$ \sort{city} \\
+    \cont{how($X$)} & $X\in$ \sort{means\_of\_transport} \\
+    \cont{depart\_month($X$)} & $X\in$ \sort{month} \\
+    \cont{depart\_day($X$)} & $X\in$ \sort{day} \\
+    \cont{class($X$)} & $X\in$ \sort{class} \\
+    \cont{price($X$)} & $X\in$ \sort{price} \\
+\hline
+  \end{tabular}
+  \caption{Sortal restrictions on propositions in the Travel Agency domain}
+  \label{tab:sortal_restr}
+\end{table*}
+
+RELATE TO PROLOG CODE
+
+\subsection{Sortal hierarchy}
+
+The sortal restrictions on proposition is defined in terms of a
+hierarchy of semantic sorts, defined by the \texttt{sem\_sort}/2
+relation. Since this hierarchy is also useful for the lexicon
+resource, it is kept in a separate file (\texttt{semsort\_\ldots.pl}).
+
+As an example, we show the sortal hierarchy from the travel agency domain:
+
+
+\sortsubcat{top}{
+  \sortsubcat{city}{
+    \object{paris}\\
+    \object{london}\\
+    \object{goteborg}\\
+    \ldots
+    }\\
+  \sortsubcat{means\_of\_transport}{
+    \object{plane}\\
+    \object{boat}\\
+    \object{train}
+    }\\
+  \sortsubcat{month}{
+    \object{january}\\
+    \object{february}\\
+    \ldots
+    }\\
+  \sortsubcat{day}{
+    \object{$1, 2, \ldots, 31$}
+    }\\
+  \sortsubcat{class}{
+    \object{economy}\\
+    \object{business}
+    }\\
+  \sortsubcat{price}{
+    \object{\type{Nat}}
+    }\\
+}
+
+RELATE TO PROLOG CODE
+
+\section{The device/database resource}
+
+\section{The lexicon resource}
+
+\section{The speech recognition grammar resource}
+
+
+\bibliography{/users/gslt/sl/Latex/sl,/users/gslt/sl/Latex/A-Z,/users/gslt/sl/Latex/trindi,/users/gslt/sl/Latex/SIRIDUS/siridus}
+
+%REFERENCES
+
+%Larsson, Staffan (2002): Issue-based Dialogue Management.
+
+
+
+
+\appendix
+
+
+\chapter{Installation instructions}
+
+
+
+This section describes the steps necessary to download and install
+GoDiS and TrindiKit, the toolkit on which GoDiS is built.
+
+
+\section{Downloading and installing TrindiKit}
+
+
+
+TrindiKit can be accessed either via the TrindiKit webpage
+(http://www.ling.gu.se/projekt/trindi//trindikit/), via the TrindiKit
+SourceForge website (http://sourceforge.net/projects/trindikit/), or
+via anonymous CVS from sourceforge. The latter is prefereable if you
+want to get the absolutely latest version; however, the documentation
+is not always up to date and some parts of the toolkit may be
+incomplete. If you want a well-documented release, the first two
+options are preferable.
+
+
+
+\subsection{Prerequisites}
+
+Trindikit runs under Windows, Unix and Linux. SICStus prolog 3.8 or 
+later is needed. In addition, you need the following:
+
+\begin{itemize}
+\item JDK 1.4 - needed to compile the java OAA agents and the GUI and to
+  run the build script
+\item  JRE 1.4 (Included in JDK) - needed to run the build script, see
+  INSTALLATION, and to use the java OAA agents and the GUI
+\end{itemize}
+  
+ 
+In addition the following software is useful but not necessary:
+        
+\begin{itemize}
+\item Nuance ASR 8 - speech recognition software, needed to use the
+  module \texttt{input\_nuance\_oaa\_basic.pl}
+        
+  
+
+\item  Nuance Vocalizer 1 - text-to-speech software, needed to use the module
+  \texttt{output\_nuance\_oaa\_basic.pl}
+  
+ 
+\item  Open Agent Architecture (OAA) 2.2 (or later) - needed to use the
+  TRINDIKIT OAA facilities, and the modules
+  \texttt{input\_nuance\_oaa\_basic.pl} and \texttt{output\_nuance\_oaa\_basic.pl}
+\end{itemize} 
+
+\subsection{Installing a CVS client}
+\label{sec:install-cvs}
+
+\paragraph{Windows}
+
+For Windows, we recommend TortoiseCVS, a graphical CVS client written in Java. I can be found at www.tortoisecvs.org. Download, unzip and install.
+
+
+\paragraph{UNIX/Linux}
+
+
+...
+
+Include the following in your .rc.user.d/chs/environment file:
+
+\texttt{setenv CVS\_RSH ssh}
+
+
+
+\subsection{Downloading and unzipping TrindiKit}
+
+
+
+\subsection{Accessing TrindiKit via anonymous CVS}
+
+
+\paragraph{Windows}
+
+Right-click on the desktop, and select ``CVS checkout''. A dialogue box
+will appear, which should be filled in thus:
+
+\begin{itemize}
+\item Protocol: \texttt{:pserver}
+\item Server: \texttt{cvs.trindikit.sourceforge.net}
+\item Repository folder: \texttt{/cvsroot/trindikit}
+\item User name: \texttt{anonymous}
+\item Module: \texttt{trindikit}
+\end{itemize}
+
+Click ``OK'' and follow the instructions. If you are asked for a
+password, just press ``Return'' or click ``OK''.
+
+
+
+\paragraph{UNIX/LINUX}
+
+
+cvs -d :pserver:anonymous@cvs.trindikit.sourceforge.net:/cvsroot/trindikit login  
+[supply no password if prompted]
+[to checkout our read-only version of trindikit]
+cvs -d :pserver:anonymous@cvs.trindikit.sourceforge.net:/cvsroot/trindikit checkout trindikit
+
+
+
+\subsection{Installing \trindikit}
+
+
+\subsubsection{Setting the TRINDIKIT environment variable}
+
+
+
+First, you need to set the TRINDIKIT environment variable. 
+
+
+
+
+
+\paragraph{Windows}
+
+In the Start menu, Go to ``settings''  $\rightarrow$ ``control panel''  $\rightarrow$ ``system'' $\rightarrow$ ``advanced''  $\rightarrow$ ``Environment variables''. Under ``System variables'' click ``New'' and fill in the fields thus:
+
+
+\begin{itemize}
+\item Variable name: \texttt{TRINDIKIT}
+\item Variable value: here, enter the path to the ``dist'' directory
+  located in your ``trindikit'' directory; the exact path depends on where
+  you saved \trindikit{} when downloading it. Example:
+  \texttt{C:$\backslash$MyCVS$\backslash$trindikit$\backslash$dist}.
+\end{itemize}
+
+\paragraph{UNIX/LINUX}
+
+setenv TRINDIKIT ....
+
+
+\subsubsection{Running the \trindikit{} build script}
+
+
+\paragraph{Windows}
+
+
+Open a DOS window (Start $\rightarrow$ Programs $\rightarrow$
+Accessories $\rightarrow$ Command interpreter), go to the
+\texttt{trindikit} folder (using the \texttt{cd} command, e.g.
+\texttt{cd C:$\backslash$MyCVS$\backslash$trindikit}), and type \texttt{build all}. If
+everything is okay, the system should report that the build was
+successful.
+
+
+\subsection{\trindikit{} directory structure (after installation)}
+
+\begin{verbatim}
+doc/api - api for the TRINDIKIT java classes
+doc/manual - the trindikit manual
+lib - external programs and utilities
+licenses - various licenses for external programs and utilities
+test - for testing 
+src/prolog/trindikit - "core" TRINDIKIT
+src/prolog/ae - 'agent environment', used for running TRINDIKIT 
+   asynchronously
+src/prolog/examples - example dialogue systems
+src/java - the TRINDIKIT java source tree, including OAA agents and the 
+   GUI
+dist/classes - the TRINDIKIT java class tree
+dist/prolog/trindikit - "core" TRINDIKIT (with appropriate search paths 
+   set)
+dist/prolog/ae - 'agent environment'
+examples - example dialogue systems built using TRINDIKIT
+examples/bin - scripts for running example systems
+examples/godis - an example system built using TRINDIKIT
+\end{verbatim}
+
+\section{Downloading and installing GoDiS}
+
+
+
+GoDiS currently has no webpage and is only available via anonymous CVS.
+
+
+
+\subsection{Prerequisites}
+
+SICStus Prolog 3.8 or later.
+
+
+\subsection{Accessing \godis{} via anonymous CVS}
+
+Make sure you have installed a CVS client (see Section
+\ref{sec:install-cvs}).
+
+\paragraph{Windows}
+
+Right-click on the desktop, and select ``CVS checkout''. A dialogue box
+will appear, which should be filled in thus:
+
+\begin{itemize}
+\item Protocol: \texttt{:ext}
+\item Server: \texttt{mozart.gslt.hum.gu.se}
+\item Repository folder: \texttt{/users/gslt/cvs/repository}
+\item User name: \texttt{anonymous}
+\item Module: \texttt{godis}
+\end{itemize}
+
+Click ``OK'' and follow the instructions.
+
+
+\paragraph{UNIX/LINUX}
+
+\begin{verbatim}
+  [first time you have to login]
+  cvs -d :pserver:anonymous@mozart.gslt.hum.gu.se:/users/gslt/cvs/repository login
+  [supply no password if prompted]
+  [to checkout our read-only version of GoDiS]
+  cvs -d :pserver:anonymous@mozart.gslt.hum.gu.se:/users/gslt/cvs/repository checkout godis
+\end{verbatim}
+
+\subsection{Installing \godis}
+
+
+\subsubsection{Setting the GODIS environment variable}
+
+\paragraph{Windows}
+
+In the Start menu, Go to ``settings''  $\rightarrow$ ``control panel''  $\rightarrow$ ``system'' $\rightarrow$ ``advanced''  $\rightarrow$ ``Environment variables''. Under ``System variables'' click ``New'' and fill in the fields thus:
+
+
+\begin{itemize}
+\item Variable name: \texttt{GODIS}
+\item Variable value: here, enter the path to the ``dist'' directory
+  located in your ``godis'' directory; the exact path depends on where
+  you saved GoDiS when downloading it. Example:
+  \texttt{C:$\backslash$MyCVS$\backslash$godis$\backslash$dist}.
+\end{itemize}
+
+
+\subsubsection{Running the build script}
+
+\paragraph{Windows}
+
+
+Open a DOS window (Start $\rightarrow$ Programs $\rightarrow$
+Accessories $\rightarrow$ Command interpreter), go to the
+\texttt{godis} folder (using the \texttt{cd} command, e.g.
+\texttt{cd C:$\backslash$MyCVS$\backslash$godis}), and type \texttt{build all}. If
+everything is okay, the system should report that the build was
+successful.
+
+\subsection{\godis{} directory structure}
+
+
+
+
+
+\chapter{Downloading and installing additional software}
+
+
+\section{Installing Java}
+
+
+\subsection{Windows}
+
+\textsc{RECOMMEND SOME JAVA DOWNLOAD!}
+
+Make sure that the PATH variable (under Windows) includes a path to
+the file \texttt{javac.exe}. If not, search for the file by selecting
+Start $\rightarrow$ Search $\rightarrow$ Files and folders. Then,
+manually edit the PATH variable as follows: In the Start menu, Go to
+``settings'' $\rightarrow$ ``control panel'' $\rightarrow$ ``system''
+$\rightarrow$ ``advanced'' $\rightarrow$ ``Environment variables''.
+Select ``PATH'' and go to the end; add ``;'' followed by the path to
+the \texttt{javac.exe} file.
+
+
+
+
+\section{Downloading and installing OAA}
+
+
+
+\section{Installing Nuance ASR}
+
+
+\subsection{Windows}
+
+
+
+\subsection{UNIX/Linux}
+
+
+
+\section{Installing Nuance Vocalizer}
+
+
+\subsection{Windows}
+
+
+
+\subsection{UNIX/Linux}
+
+
+
+
+\chapter{Using GoDiS with Nuance v8.0 and Vocalizer}
+\label{Using GoDiS with Nuance v8.0 and Vocalizer}
+
+
+
+\section{Getting Nuance and Vocalizer to run on your computer}
+
+
+
+
+\subsection{Testing Nuance ASR}
+
+
+
+\begin{verbatim}
+
+*kör igång en license-manager
+        (jag tror att jag gjorde en bat-fil som hette  start_nlm el. ngt)
+
+*öppna ett dosfönster
+
+*gå till C:\Program\Nuance\v8.0.0\sample-packages o skriv
+        'recserver -package digits' (el ngt annat igenkänningspaket)
+
+*öppna ett dosfönster till
+
+*gå till samma ställe, skriv 'Xapp -package digits lm.Addresses=localhost'
+\end{verbatim}
+
+
+
+\subsection{Testing Vocalizer}
+
+
+
+
+\section{Configuring your GoDiS application to use Nuance}
+
+
+
+
+\section{Running Nuance and Vocalizer with your application}
+
+Unfortunately, running GoDiS with Nuance and Volcalizer requires going
+through a number of steps to get everything running.
+
+
+\subsection*{Step 1: Compile your nuance grammars}
+
+Go to the directory where the .grammar files are and run the
+nuance-compile script on them.
+
+Example:
+
+\texttt{nuance-compile asrg\_travel\_english English.America.1 -auto\_pron
+lm.Addresses=localhost}
+
+\subsection*{Step 2: start the Nuance license manager}
+
+This is done by running the \texttt{nlm} script with your license number as argument.
+
+
+\subsection*{Step 3: Start OAA}
+
+
+Go to your OAA installation, go to the \texttt{runtime} subdirectory,
+and run the \texttt{fac} script.
+
+This requires that OAA is installed, and that the file
+\texttt{setup.pl} is directly under the \texttt{C:} directory. This is
+achieved by editing the file \texttt{setup1.pl} located in the OAA
+runtime directory, changing the text \texttt{ChangeMe} to the name of
+your machine.
+
+
+\subsection*{Edit the setup-nuance script}
+
+This is a script that executes a number of commands automatically. To
+make it work, you need to copy the script from an existing
+Nuance-connected GoDiS application and change all paths in the file to
+match your installations. The file should be stored in the application directory.
+\subsection*{Run setup-nuanuce}
+
+Go to your application directory, and type  \texttt{setup-nuance}.
+
+If no error messages have appeared, you can now start your GoDiS application.
+
+
+
+
+\end{document}

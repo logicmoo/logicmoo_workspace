@@ -1,0 +1,210 @@
+.Top Utterance
+
+Utterance [Single (?Initial Utt ?Final)]
+Single [Greet Quit ReqRep Accept Yes No]
+Initial [Greet Accept Yes No]
+Final Please
+
+Utt [ (?Q_Initial Q_Opt_As)	
+      (?Neg As ?(Repair Utt) )
+      ( ?[ Req_Initial Neg] Req_Opt_As )
+      ( ?[ Req_Initial Neg] Req_Opt_As ?(Repair Utt) )
+    ]
+
+Greet [hej hejsan tjena ]
+Quit [sluta avsluta (hej då)]
+ReqRep [ursäkta förlåt va (vad sa du) (jag hörde inte)]
+Accept [okej visst]
+Repair [nej vänta (nej förresten) (nej vänta)]
+Yes [ja japp jajamensan jajamen visst]
+No [ nej nä ]
+Neg nej
+Please [tack (är du snäll)]
+
+Q_Initial [ (jag undrar ?om) 
+            (jag [vill (skulle vilja)] [veta fråga])]
+
+Req_Initial [(jag skulle vilja) (jag vill)]
+
+;domain dependents
+            
+As [ 	As_Start_Specific 
+     	As_Start_Playlist
+     	As_Handle_Stations
+     	As_Playlist_Add
+     	As_Playlist_Del_Specific 
+     	As_Albums_By_Artist
+	As_Artists_Song
+	As_Artists_Album
+	As_Songs_By_Artist
+	As_Path
+]
+
+As_Start_Specific Index
+As_Start_Playlist (min favoritspellista)
+As_Handle_Stations Station
+As_Playlist_Add [ Song0 Artist0 (Artist0 med Song0) (Song0 med Artist0)]
+As_Playlist_Del_Specific (Index ?(från spellistan))
+
+As_Albums_By_Artist Artist0	
+As_Artists_Song Artist0
+As_Artists_Album Album0
+As_Songs_By_Artist Artist0
+As_Path ?[ Song0 Artist0 (Artist0 med Song0) (Song0 med Artist0)]
+
+Q_Opt_As [ 	(Q_Albums_By_Artist [As_Albums_By_Artist Pron]  Made)
+		(Q_Artists_Song [As_Artists_Song den])
+		(Q_Artists_Album [As_Artists_Album den])  
+		(Q_Songs_By_Artist [As_Songs_By_Artist Pron] gjort)  
+		(Q_Current_Song) 
+		(Q_Path ?As_Path)
+				
+	]
+
+Q_Albums_By_Artist (vilken [album skivor] har)
+Q_Artists_Song ([vem vilka] har Made)
+Q_Artists_Album ([vem vilka] har Made)
+Q_Songs_By_Artist ([(vilka låtar) (vilken låt)] har)
+Q_Current_Song [(vilken låt [(spelas nu) (är [detta (det här)])])
+                (vad heter [(den här) denna] [låt låten])]
+Q_Path (vilken sökväg)
+
+	
+Req_Opt_As [	Req_Top 
+	        Req_Up 
+		Req_Handle_Player
+		Req_Handle_Playlist
+		(Req_Handle_Stations ?As_Handle_Stations)
+		Req_Start
+		( Req_Start_Specific ?As_Start_Specific)
+		Req_Stop
+		Req_Pause
+		Req_Resume
+		Req_Fast_Rewind
+		(Req_Start_Playlist ?As_Start_Playlist)
+		Req_Fast_Forward
+		Req_Rewind
+		Req_Next_Song
+		Req_Previous_Song
+		(Req_Playlist_Add ?[As_Playlist_Add (en låt) (den ?låten)] ?(i spellistan)) 
+		( Req_Playlist_Del_Specific ?[As_Playlist_Del_Specific (den ?låten) (en låt)] ?(från spellistan))
+		Req_Playlist_Del
+		Req_Playlist_Shuffle
+		Req_Vol_Up
+		Req_Vol_Down		
+]
+
+Req_Top [(börja om)] 
+Req_Up tillbaka
+Req_Handle_Player [ (prata med spelaren) spelaren] 
+Req_Handle_Playlist [(hantera spellistor) (ändra i spellistan)]
+Req_Handle_Stations [(välja en radiostation) radio (lyssna på radio)]
+Req_Start [starta start plej]
+Req_Start_Specific [spela]
+Req_Stop [stoppa stopp stanna]
+Req_Pause [paus pausa pås]
+Req_Resume [risyum återuppta]
+Req_Fast_Rewind (spola i låten)
+Req_Start_Playlist (spela en viss spellista)
+Req_Fast_Forward (spola framåt)
+Req_Rewind (spola bakåt)
+Req_Next_Song (?spela nästa ?låt)
+Req_Previous_Song (?spela föregående ?låt)
+Req_Playlist_Add ([lägg lägga] till )
+Req_Playlist_Del_Specific (ta bort)
+Req_Playlist_Del (ta bort)
+Req_Playlist_Shuffle blanda
+Req_Vol_Up [(höj volymen) (höja volymen) höj höja (öka volymen)]
+Req_Vol_Down [(sänk volymen) (sänka volymen) sänk sänka (minska volymen)]
+
+	
+Song0 (?låten Song)
+Artist0 (?[gruppen artisten] Artist)
+Album0 (?[skivan albumet] Album)
+Index [(låt nummer Number) (nummer Number) Number (?den Cardinal ?låten)]
+
+Station [ (digital gunfire) (rant radio)]
+
+Album [violator]
+
+Song [	(blinkar blå)
+ 	(segla på ett moln)
+	(undantag)
+	(det hon vill ha)
+	(solglasögon)
+	(åtta hundra grader)
+	(kärlekens tunga)
+	(vem tänder stjärnorna)
+	(ängeln i rummet)
+	(vindarna)
+	(flickorna på tv två)
+	(du ska va president)
+	(precis som du)
+	(vara vänner)
+	(om du var här)
+	(kom ihåg mig)
+	(vem vet)
+	(himlen runt hörnet)
+	(diamanter)
+	(efter stormen)
+	(det finns)
+	(sarah)
+	(vingar)
+	(flickan och kråkan)
+	(vintersaga)
+	(hellre jagad av vargar)
+	(du får göra som du vill)
+	(håll om mig)
+	(säg som det är)
+	(vinden har vänt)
+	(lilla fågel blå)
+	(vem skall jag tro på)
+	(en del av mitt hjärta)
+	(sommaren är kort)
+	(öppna landskap)
+	(under ytan)
+	(teknikens under)
+]
+
+Artist [(adolphson och falk)
+	(annelie ryde)
+	(bo kaspers orkester)
+	(christer sandelin)
+	(docent död)
+	(ebba grön)
+	(eldkvarn)
+	(eva dahlgren)
+	(freda)
+	(gyllene tider)
+	(imperiet)
+	(irma)
+	(jakob hellman)
+	(kent)
+	(lars winnerbäck)
+	(lisa ekdahl)
+	(lisa nilsson)
+	(lustans lakejer)
+	(marie fredriksson)
+	(mauro scocco)
+	(mikael rickfors)
+	(mikael wiehe)
+	(monica törnell)
+	(orup)
+	(patrik isaksson)
+	(peter lemarc)
+	(petter)
+	(staffan hellstrand)
+	(thomas di leva)
+	(tomas ledin)
+	(ulf lundell)
+	(uno svenningsson)
+	(wilmer x)
+	
+]
+
+Number [ett två tre fyra fem sex sju åtta nio tio elva tolv tretton fjorton femton sexton sjutton arton nitton tjugo]
+
+Cardinal [ första andra tredje fjärde femte sjätte sjunde åttonde nionde tionde elfte tolfte trettonde fjortonde femtonde sextonde sjuttonde artonde nittonde tjugonde]
+
+Pron [han hon de dom]
+Made [gjort (spelat in) (sjungit in)]

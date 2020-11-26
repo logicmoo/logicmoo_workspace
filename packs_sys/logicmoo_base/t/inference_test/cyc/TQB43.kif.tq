@@ -1,0 +1,46 @@
+(note TQB43)
+
+(increasesImmediatelyCausally HYP-AerialAttack-35134279 HPKBScenarioConflict conflictLevel) 
+
+(implies 
+ (and 
+ (instance ?ACT ViolentAction) 
+ (agent ?ACT ?AGENT1) 
+ (maleficiary ?ACT ?AGENT2) 
+ (opponentsInConflict ?AGENT1 ?AGENT2 ?CONFLICT)) 
+ (increasesImmediatelyCausally ?ACT ?CONFLICT conflictLevel)) 
+
+(instance HYP-AerialAttack-35134279 AerialAttack) 
+
+(subclass AerialAttack ViolentAction) 
+
+(maleficiary HYP-AerialAttack-35134279 SaudiArabia) 
+
+(opponentsInConflict Iran SaudiArabia HPKBScenarioConflict) 
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+(opponentsInConflict SaudiArabia Iran HPKBScenarioConflict) 
+
+(agent HYP-AerialAttack-35134279 Iran) 
+
+(queryyn
+
+ (implies 
+ (and 
+ (instance ?ACT AerialAttack) 
+ (agent ?ACT Iran) 
+ (maleficiary ?ACT SaudiArabia) 
+ (temporallySubsumes 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 16 HPKBScenarioConflict)) ?ACT)) 
+ (increasesImmediatelyCausally ?ACT HPKBScenarioConflict conflictLevel))  )
+
+(answer Yes)
+
+
+(end_of_file)
+

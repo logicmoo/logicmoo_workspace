@@ -1,0 +1,50 @@
+Here is a way to do the entire problem with forward chaining rules.
+It seems reasonable, I think. 
+
+Given the facts:
+
+  full_name(finin,Tim Finin)
+  full_name(robin,Robin,McEntire)
+  host_name(finin,antares)
+  host_name(fritzson,hamlet)
+
+These rules end up adding the additional facts:
+
+  user(finin)
+  user(fritzson)
+  user(robin)
+
+  full_name(fritzson,unknown)
+  host_name(robin,unknown)
+
+  user(finin,Tim Finin,antares)
+  user(fritzson,unknown,hamlet)
+  user(robin,Robin,McEntire,unknown)
+
+Here are the rules:
+  
+  % if we learn that someone has a full name, then we know they are a user.
+  full_name(U,_) => user(U).
+  
+  % if we learn that someone has a host name, then we know they are a user.
+  host_name(U,_) => user(U).
+  
+  % when we know a user's full name and host name, make a user/3 assertion.
+  user(User),
+  full_name(User,Name),
+  host_name(User,Host) 
+    =>
+    user(User,Name,Host).
+  
+  % the default full_name for a user is 'unknown'.
+  user(User),
+  ~full_name(User,X)/(X\==unknown)
+    =>
+  full_name(User,unknown).
+  
+  % the default host_name for a user is 'unknown'.
+  user(User),
+  ~host_name(User,X)/(X\==unknown)
+    =>
+  host_name(User,unknown).
+  

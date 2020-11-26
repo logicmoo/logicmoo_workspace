@@ -1,0 +1,197 @@
+Script started on Fri 15 Nov 2002 12:35:05 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/constraints
+[1m~/aleph/test/examples/constraints[42]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1160056 bytes in 0.46 seconds ]
+
+yes
+   ?- read_all(fam).
+ [ reconsulting fam.b... ]
+ [ fam.b reconsulted 3560 bytes in 0.01 seconds ]
+[cannot open] [fam.f]
+[cannot open] [fam.n]
+
+yes
+   ?- induce_constraints.
+[sat] [0]
+[false]
+[reduce]
+[best label so far] [[0,0,0,-Inf]/0]
+[new refinement]
+false :-
+   human(A).
+[0/2]
+[new refinement]
+false :-
+   human(A), human(B).
+[0/4]
+[new refinement]
+false :-
+   human(A), male(A).
+[0/1]
+[new refinement]
+false :-
+   human(A), female(A).
+[0/1]
+[new refinement]
+false :-
+   human(A), not male(A).
+[0/1]
+[new refinement]
+false :-
+   human(A), not female(A).
+[0/1]
+[new refinement]
+false :-
+   human(A), male(A), human(B).
+[0/2]
+[new refinement]
+false :-
+   human(A), male(A), female(A).
+[0/0]
+[-------------------------------------]
+[found clause]
+false :-
+   human(A), male(A), female(A).
+[pos-neg] [0]
+[clause label] [[0,0,4,0]]
+[clauses constructed] [8]
+[-------------------------------------]
+[new refinement]
+false :-
+   human(A), male(A), not female(A).
+[0/1]
+[new refinement]
+false :-
+   human(A), female(A), human(B).
+[0/2]
+[new refinement]
+false :-
+   human(A), female(A), male(A).
+[0/0]
+[-------------------------------------]
+[good clause]
+false :-
+   human(A), female(A), male(A).
+[pos-neg] [0]
+[clause label] [[0,0,4,0]]
+[clauses constructed] [11]
+[-------------------------------------]
+[new refinement]
+false :-
+   human(A), female(A), not male(A).
+[0/1]
+[new refinement]
+false :-
+   human(A), not male(A), human(B).
+[0/2]
+[new refinement]
+false :-
+   human(A), not male(A), female(A).
+[0/1]
+[new refinement]
+false :-
+   human(A), not male(A), not female(A).
+[0/0]
+[-------------------------------------]
+[good clause]
+false :-
+   human(A), not male(A), not female(A).
+[pos-neg] [0]
+[clause label] [[0,0,4,0]]
+[clauses constructed] [15]
+[-------------------------------------]
+[new refinement]
+false :-
+   human(A), not female(A), human(B).
+[0/2]
+[new refinement]
+false :-
+   human(A), not female(A), male(A).
+[0/1]
+[new refinement]
+false :-
+   human(A), not female(A), not male(A).
+[0/0]
+[-------------------------------------]
+[good clause]
+false :-
+   human(A), not female(A), not male(A).
+[pos-neg] [0]
+[clause label] [[0,0,4,0]]
+[clauses constructed] [18]
+[-------------------------------------]
+[new refinement]
+false :-
+   human(A), human(B), human(C).
+[0/8]
+[new refinement]
+false :-
+   human(A), human(B), male(A).
+[0/2]
+[new refinement]
+false :-
+   human(A), human(B), male(B).
+[0/2]
+[new refinement]
+false :-
+   human(A), human(B), female(A).
+[0/2]
+[new refinement]
+false :-
+   human(A), human(B), female(B).
+[0/2]
+[new refinement]
+false :-
+   human(A), human(B), not male(A).
+[0/2]
+[new refinement]
+false :-
+   human(A), human(B), not male(B).
+[0/2]
+[new refinement]
+false :-
+   human(A), human(B), not female(A).
+[0/2]
+[new refinement]
+false :-
+   human(A), human(B), not female(B).
+[0/2]
+[clauses constructed] [27]
+[search time] [0.02]
+[best clause]
+false :-
+   human(A), male(A), female(A).
+[pos-neg] [0]
+
+[constraints]
+false :-
+   human(A), male(A), female(A).
+[pos-neg] [0]
+false :-
+   human(A), female(A), male(A).
+[pos-neg] [0]
+false :-
+   human(A), not male(A), not female(A).
+[pos-neg] [0]
+false :-
+   human(A), not female(A), not male(A).
+[pos-neg] [0]
+[total clauses constructed] [27]
+
+yes
+   ?- [1m~/aleph/test/examples/constraints[43]>[m exit
+exit
+
+script done on Fri 15 Nov 2002 12:35:42 GMT

@@ -1,0 +1,326 @@
+%======================================================================
+%----tptp2X.gen is used to create specific instances of generic TPTP 
+%----problems.
+%----
+%----Written by Geoff Sutcliffe, September 1994.
+%----Merged with tptp2X by Geoff Sutcliffe, February 1995.
+%======================================================================
+%======================================================================
+%----General stuff
+%======================================================================
+%----------------------------------------------------------------------
+%----Take literals, name base and status to make TPTP input_clauses
+make_input_clauses([],_,_,_,[]):-
+    !.
+
+make_input_clauses([FirstLiterals|RestOfLiteralsLists],NameBase,
+ClauseNumber,Status,[input_clause(Name,Status,FirstLiterals)|
+RestOfClauses]):-
+    concatenate_atoms([NameBase,'_',ClauseNumber],Name),
+    NextClauseNumber is ClauseNumber + 1,
+    make_input_clauses(RestOfLiteralsLists,NameBase,NextClauseNumber,
+Status,RestOfClauses).
+%----------------------------------------------------------------------
+%----Add a sign onto the front of a list of atoms
+make_literals_from_atoms(_,[],[]).
+
+make_literals_from_atoms(Sign,[FirstAtom|RestOfAtoms],[FirstLiteral|
+RestOfLiterals]):-
+    FirstLiteral =.. [Sign,FirstAtom],
+    make_literals_from_atoms(Sign,RestOfAtoms,RestOfLiterals).
+%----------------------------------------------------------------------
+%----Add argument to each of the same literal
+add_each_argument_to_literal(_,[],[]).
+
+%----Arguments are a list
+add_each_argument_to_literal(Literal,[[FirstFirstArguments|
+RestOfFirstArguments]|RestOfArguments],
+[FirstTransformedLiteral|RestOfTransformedLiterals]):-
+    !,
+    Literal =.. [Sign,Atom],
+    Atom =.. [Predicate|Arguments],
+    tptp2X_append(Arguments,[FirstFirstArguments|RestOfFirstArguments],
+NewArguments),
+    NewAtom =.. [Predicate|NewArguments],
+    FirstTransformedLiteral =.. [Sign,NewAtom],
+    add_each_argument_to_literal(Literal,RestOfArguments,
+RestOfTransformedLiterals).
+
+%----Single argument to be added
+add_each_argument_to_literal(Literal,[FirstArgument|RestOfArguments],
+[FirstTransformedLiteral|RestOfTransformedLiterals]):-
+    Literal =.. [Sign,Atom],
+    Atom =.. [Predicate|Arguments],
+    tptp2X_append(Arguments,[FirstArgument],NewArguments),
+    NewAtom =.. [Predicate|NewArguments],
+    FirstTransformedLiteral =.. [Sign,NewAtom],
+    add_each_argument_to_literal(Literal,RestOfArguments,
+RestOfTransformedLiterals).
+%----------------------------------------------------------------------
+%----Add arguments one by one from list
+add_argument_to_each_literal([],_,[]).
+
+%----List of arguments to be added
+add_argument_to_each_literal([FirstLiteral|RestOfLiterals],
+[[FirstFirstArguments|RestOfFirstArguments]|RestOfArguments],
+[FirstTransformedLiteral|RestOfTransformedLiterals]):-
+    !,
+    FirstLiteral =.. [Sign,Atom],
+    Atom =.. [Predicate|Arguments],
+    tptp2X_append(Arguments,[FirstFirstArguments|RestOfFirstArguments],
+NewArguments),
+    NewAtom =.. [Predicate|NewArguments],
+    FirstTransformedLiteral =.. [Sign,NewAtom],
+    add_argument_to_each_literal(RestOfLiterals,RestOfArguments,
+RestOfTransformedLiterals).
+
+%----Single argument to be added
+add_argument_to_each_literal([FirstLiteral|RestOfLiterals],
+[FirstArgument|RestOfArguments],[FirstTransformedLiteral|
+RestOfTransformedLiterals]):-
+    FirstLiteral =.. [Sign,Atom],
+    Atom =.. [Predicate|Arguments],
+    tptp2X_append(Arguments,[FirstArgument],NewArguments),
+    NewAtom =.. [Predicate|NewArguments],
+    FirstTransformedLiteral =.. [Sign,NewAtom],
+    add_argument_to_each_literal(RestOfLiterals,RestOfArguments,
+RestOfTransformedLiterals).
+%----------------------------------------------------------------------
+%----Add arguments to literals
+add_arguments_to_each_literal([],_,[]).
+
+%----List of arguments to be added
+add_arguments_to_each_literal([FirstLiteral|RestOfLiterals],
+[FirstFirstArguments|RestOfFirstArguments],[FirstTransformedLiteral|
+RestOfTransformedLiterals]):-
+    !,
+    FirstLiteral =.. [Sign,Atom],
+    Atom =.. [Predicate|Arguments],
+    tptp2X_append(Arguments,[FirstFirstArguments|RestOfFirstArguments],
+NewArguments),
+    NewAtom =.. [Predicate|NewArguments],
+    FirstTransformedLiteral =.. [Sign,NewAtom],
+    add_arguments_to_each_literal(RestOfLiterals,[FirstFirstArguments|
+RestOfFirstArguments],RestOfTransformedLiterals).
+
+%----Single argument to be added
+add_arguments_to_each_literal([FirstLiteral|RestOfLiterals],
+ExtraArgument,[FirstTransformedLiteral|RestOfTransformedLiterals]):-
+    FirstLiteral =.. [Sign,Atom],
+    Atom =.. [Predicate|Arguments],
+    tptp2X_append(Arguments,[ExtraArgument],NewArguments),
+    NewAtom =.. [Predicate|NewArguments],
+    FirstTransformedLiteral =.. [Sign,NewAtom],
+    add_arguments_to_each_literal(RestOfLiterals,ExtraArgument,
+RestOfTransformedLiterals).
+%----------------------------------------------------------------------
+%----Generate a list of terms from a name base and range of integers
+generate_terms(LowIndex,HighIndex,BaseSymbol,Terms):-
+    findall(Term,(
+        tptp2X_integer_in_range(LowIndex,HighIndex,Index),
+        concatenate_atoms([BaseSymbol,'_',Index],Term)),
+            Terms).
+%----------------------------------------------------------------------
+generate_literals(LowIndex,HighIndex,BaseSymbol,Terms,PositiveLiterals,
+NegativeLiterals):-
+    generate_terms(LowIndex,HighIndex,BaseSymbol,Terms),
+    make_literals_from_atoms(++,Terms,PositiveLiterals),
+    make_literals_from_atoms(--,Terms,NegativeLiterals).
+%----------------------------------------------------------------------
+%======================================================================
+%----Control of generation
+%======================================================================
+%----------------------------------------------------------------------
+%----Make a simple generation specifier from the user specification
+%----SOTA case. Needs to be first as sota is an atom.
+make_generation(sota,SOTASpecifications,SOTAGeneration):-
+    !,
+    tptp2X_member(SOTASpecification,SOTASpecifications),
+    make_generation(SOTASpecification,SOTASpecifications,SOTAGeneration).
+
+%----unknown case (not for real users)
+make_generation(unknown,_,3):-
+    !,
+%----Take this out for testing sota size on all
+    fail,
+    write('Default size 3 taken for unknown SOTA size'),
+    nl.
+
+%----An integer is OK
+make_generation(Atomic,_,Atomic):-
+    atomic(Atomic),
+    !.
+
+%----A : separated list for multiple parameters
+make_generation(FirstSpecification:RestOfSpecifications,
+SOTAGenerations,FirstGeneration:RestOfGenerations):-
+%----Need to deal with each SOTA generation separately
+    tptp2X_member(FirstSOTAGenerations:RestOfSOTAGenerations,
+SOTAGenerations),
+%----Do first and second parts
+    make_generation(FirstSpecification,[FirstSOTAGenerations],FirstGeneration),
+    make_generation(RestOfSpecifications,[RestOfSOTAGenerations],
+RestOfGenerations).
+
+%----A list of generation specifications. Do each with backtracking.
+make_generation([FirstSpecification|RestOfSpecifications],
+SOTAGenerations,Generation):-
+    tptp2X_member(ASpecification,[FirstSpecification|RestOfSpecifications]),
+    make_generation(ASpecification,SOTAGenerations,Generation).
+
+%----A range of integer sizes. 
+make_generation(FirstSize .. LastSize,SOTASize,Size):-
+    make_generation(FirstSize,SOTASize,RealFirstSize),
+    make_generation(LastSize,SOTASize,RealLastSize),
+    RealLastSize >= RealFirstSize,
+    tptp2X_integer_in_range(RealFirstSize,RealLastSize,Size).
+%----------------------------------------------------------------------
+%----Make a generation and check it's legal
+make_legal_generation(GenerationSpecification,GenerationFormat,
+GenerationConstraints,SOTAGenerations,GenerationFormat):-
+    make_generation(GenerationSpecification,SOTAGenerations,
+GenerationFormat),
+%----Execute the constraints to ensure the values are OK
+    GenerationConstraints.
+%----------------------------------------------------------------------
+%----Make all the legal generation parameters. At least some parameters 
+%----must be created
+make_generation_parameters(BaseInputName,GenerationSpecification,
+[FirstGeneration|RestOfGenerations]):-
+%----Get the format and constraints
+    get_tptp2X_file_information(BaseInputName,generator,GenerationFormat,
+GenerationConstraints,SOTAGenerations),
+%----Make all the legal generations
+    findall(AGeneration,
+        make_legal_generation(GenerationSpecification,GenerationFormat,
+GenerationConstraints,SOTAGenerations,AGeneration),
+        [FirstGeneration|RestOfGenerations]),
+    !.
+
+%----If none can be made then there's a syntax error
+make_generation_parameters(BaseInputName,GenerationSpecification,_):-
+    get_tptp2X_file_information(BaseInputName,generator,GenerationFormat,
+GenerationConstraints,SOTAGenerations),
+    write('ERROR : Generation specification '),
+    write(GenerationSpecification),
+    write(' for '),
+    write(BaseInputName),
+    write(' is invalid.'),
+    nl,
+    numbervars(GenerationFormat,0,_),
+    write('Format required : '),
+    write(GenerationFormat),
+    nl,
+    write('Constraints     : '),
+    write(GenerationConstraints),
+    nl,
+    write('SOTA sizes      : '),
+    write(SOTAGenerations),
+    nl,
+    fail.
+%----------------------------------------------------------------------
+%----Make a list from - separated sizes. Don't know which way - will
+%----bind for sure, so play it safe.
+make_size_list(First:Last,SizeList):-
+    !,
+    make_size_list(First,FirstSizeList),
+    make_size_list(Last,LastSizeList),
+    tptp2X_append(FirstSizeList,LastSizeList,SizeList).
+
+%----A single size
+make_size_list(Size,[Size]).
+%----------------------------------------------------------------------
+%----From the size parameter make the size and file name part atoms
+generation_size_lists([],_,_,[],[],[]).
+
+%----One size
+generation_size_lists([FirstSize|RestOfSizes],LabelNumber,
+PunctuationASCII,[Label-FirstSize|RestOfLabeledSizes],UserAtomSizeASCII,
+DotSizeASCII):-
+%----Make a SIZE<N> label
+    concatenate_atoms(['SIZE',LabelNumber],Label),
+%----Get ASCII for sizes
+    tptp2X_integer_name(FirstSize,FirstSizeASCII),
+%----Make start of user atom ASCII
+    tptp2X_append(PunctuationASCII,FirstSizeASCII,FirstUserAtomSizeASCII),
+%----Make a 3 digit version
+    (   [D1,D2,D3] = FirstSizeASCII ;
+        [D1,D2,D3] = [48|FirstSizeASCII] ;
+        [D1,D2,D3] = [48,48|FirstSizeASCII] ),
+    tptp2X_append(PunctuationASCII,[D1,D2,D3],FirstDotSizeASCII),
+%----Make the rest of the ASCIIs
+    NextLabelNumber is LabelNumber + 1,
+    generation_size_lists(RestOfSizes,NextLabelNumber,".",
+RestOfLabeledSizes,RestOfUserAtomSizeASCII,RestOfDotSizeASCII),
+%----Append the ASCIIs together
+    tptp2X_append(FirstUserAtomSizeASCII,RestOfUserAtomSizeASCII,
+UserAtomSizeASCII),
+    tptp2X_append(FirstDotSizeASCII,RestOfDotSizeASCII,DotSizeASCII).
+
+generation_size(Size,LabeledAtomSizes,UserAtomSize,DotSize):-
+%----Make a list of the sizes (this is not good code)
+    make_size_list(Size,SizeList),
+%----Remember to strip the . off the Atom version
+    generation_size_lists(SizeList,1,".",LabeledAtomSizes,
+[_|UserAtomSizeASCII],DotSizeASCII),
+    name(UserAtomSize,UserAtomSizeASCII),
+    name(DotSize,DotSizeASCII).
+%----------------------------------------------------------------------
+%----Make replacements in a specified field of the header
+replace_in_header_field(Replacements,FieldName,FileHeader,
+UpdatedFileHeader):-
+    tptp2X_append(EarlierFields,[FieldName-FieldLines|
+RestOfFields],FileHeader),
+    replace_in_atoms(Replacements,FieldLines,UpdatedFieldLines),
+    tptp2X_append(EarlierFields,[FieldName-UpdatedFieldLines|
+RestOfFields],UpdatedFileHeader).
+%----------------------------------------------------------------------
+%----Update the header with size information
+update_header_sizes(Size,FileHeader,UpdatedFileHeader,DotSize):-
+%----Generate various formats of the sizes. Labeled is ['SIZE1'-value|...],
+%----AtomSize is a user readable version of all the sizes ['SIZE'-value],
+%----and DotSize is a neat one for the File field, with a leading .
+    generation_size(Size,LabeledAtomSizes,UserAtomSize,DotSize),
+%----Replace in the File field
+    replace_in_header_field(['.SIZE'-DotSize],'File',FileHeader,
+FileHeader1),
+%----Replace the user readable one in the Problem and English fields
+    tptp2X_append(LabeledAtomSizes,['SIZE'-UserAtomSize],
+UserReadableReplacements),
+    replace_in_header_field(UserReadableReplacements,'Problem',
+FileHeader1,FileHeader2),
+    replace_in_header_field(UserReadableReplacements,'English',
+FileHeader2,UpdatedFileHeader).
+%----------------------------------------------------------------------
+%----Generate the clauses by calling the entry point in the file.
+generate_clauses(BaseInputName,Generation,Clauses,Status):-
+    Query =.. [BaseInputName,Generation,Clauses,Status],
+    (Query ->
+        true;
+        (   write('ERROR : The generation from '),
+            write(BaseInputName),
+            write(' with parameter '),
+            write(Generation),
+            write(' failed.'),
+            nl,
+            fail)).
+%----------------------------------------------------------------------
+%----Generate clauses and sort out problem name. Have to backtrack over
+%----the versions and sizes requested
+generate_clauses_and_header(BaseInputName,FileHeader,GenerationSpecification,
+BaseOutputName,UpdatedFileHeader,Clauses,Generation):-
+%----Make generation parameters from the users specification. This ensures
+%----that they are within the limits too.
+    make_generation_parameters(BaseInputName,GenerationSpecification,
+Generations),
+%----Choose each one in turn
+    tptp2X_member(Generation,Generations),
+%----Call the entry point to generate the clauses
+    generate_clauses(BaseInputName,Generation,Clauses,Status),
+%----Update the header with size information
+    update_header_sizes(Generation,FileHeader,FileHeader1,DotSize),
+%----Update the Status field
+    replace_in_header_field(['STATUS'-Status],'Status',FileHeader1,
+UpdatedFileHeader),
+    concatenate_atoms([BaseInputName,DotSize],BaseOutputName).
+%----------------------------------------------------------------------

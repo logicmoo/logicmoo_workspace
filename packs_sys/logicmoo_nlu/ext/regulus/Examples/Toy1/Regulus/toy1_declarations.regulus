@@ -1,0 +1,25 @@
+
+% Declarations for toy1 grammar
+
+feature_value_space(singplur_value, [[sing, plur]]).
+feature_value_space(vform_value, [[imperative, finite]]).
+feature_value_space(vtype_value, [[transitive, switch, be]]).
+feature_value_space(sem_np_type_value, [[n, location, switchable, dimmable]]).
+
+feature(singplur, singplur_value).
+feature(vform, vform_value).
+feature(vtype, vtype_value).
+feature(sem_np_type, sem_np_type_value).
+feature(obj_sem_np_type, sem_np_type_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(utterance, [sem]).
+category(command, [sem]).
+category(yn_question, [sem]).
+category(np, [sem, singplur, sem_np_type]).
+category(location_pp, [sem]).
+category(noun, [sem, singplur, sem_np_type]).
+category(verb, [sem, singplur, vform, vtype, obj_sem_np_type]).
+category(onoff, [sem]).

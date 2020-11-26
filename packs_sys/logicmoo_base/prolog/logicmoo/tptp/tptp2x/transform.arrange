@@ -1,0 +1,155 @@
+%======================================================================
+%----Procedures for rearranging clauses in TPTP format, using standard
+%----Prolog. 
+%----
+%----Written by Geoff Sutcliffe, November 1992.
+%----Revised by Geoff Sutcliffe, January 1994.
+%======================================================================
+%----------------------------------------------------------------------
+%----Reverse the literals in each input clause
+reverse_literals_in_clauses([],[]).
+
+reverse_literals_in_clauses([input_clause(Name,Status,Literals)|
+Rest_of_input_clauses],[input_clause(Name,Status,Reversed_literals)|
+Rest_of_new_input_clauses]):-
+    fast_reverse_list(Literals,[],Reversed_literals),
+    reverse_literals_in_clauses(Rest_of_input_clauses,
+Rest_of_new_input_clauses).
+%----------------------------------------------------------------------
+%----Randomize a list of literals
+randomize_literals([],0,[]).
+
+randomize_literals(Literals,NumberOfLiterals,[SelectedLiteral|
+RestOfRandomizedLiterals]):-
+    tptp2X_random_integer(1,NumberOfLiterals,LiteralToSelect),
+    tptp2X_select_Nth(SelectedLiteral,Literals,LiteralToSelect,
+OtherLiterals),
+    NewNumberOfLiterals is NumberOfLiterals - 1,
+    randomize_literals(OtherLiterals,NewNumberOfLiterals,
+RestOfRandomizedLiterals).
+%----------------------------------------------------------------------
+%---Put the clauses in random order, with randomly ordered literals
+randomize_clauses([],0,[]).
+
+randomize_clauses(InputClauses,NumberOfInputClauses,[input_clause(
+Name,Status,RandomizedLiterals)|RestOfOutputClauses]):-
+    tptp2X_random_integer(1,NumberOfInputClauses,ClauseToSelect),
+    tptp2X_select_Nth(input_clause(Name,Status,Literals),InputClauses,
+ClauseToSelect,OtherInputClauses),
+    tptp2X_length(Literals,NumberOfLiterals),
+    randomize_literals(Literals,NumberOfLiterals,RandomizedLiterals),
+    NewNumberOfInputClauses is NumberOfInputClauses - 1,
+    randomize_clauses(OtherInputClauses,NewNumberOfInputClauses,
+RestOfOutputClauses).
+%----------------------------------------------------------------------
+%----Randomly reorder formulae
+randomize_formulae([],0,[]).
+
+randomize_formulae(InputFormulae,NumberOfInputFormulae,[RandomFormula|
+RestOfOutputFormulae]):-
+    tptp2X_random_integer(1,NumberOfInputFormulae,FormulaToSelect),
+    tptp2X_select_Nth(RandomFormula,InputFormulae,FormulaToSelect,
+OtherInputFormulae),
+    NewNumberOfInputFormulae is NumberOfInputFormulae - 1,
+    randomize_formulae(OtherInputFormulae,NewNumberOfInputFormulae,
+RestOfOutputFormulae).
+%----------------------------------------------------------------------
+%----Reverse a unit equality clause
+reverse_unit_equality(input_clause(Name,Status,[Literal]),input_clause(
+Name,Status,[ReversedLiteral])):-
+    Literal =.. [Sign,'$tptp_equal'(T1,T2)],
+    ReversedLiteral =.. [Sign,'$tptp_equal'(T2,T1)].
+%----------------------------------------------------------------------
+%----Reverse all the terms in only unit equality clauses (fail if
+%----anything else appears)
+reverse_unit_equalities([],[]).
+
+reverse_unit_equalities([input_clause(Name,Status,[Literal])|RestOfClauses],
+[ReversedClause|RestOfReversedClauses]):-
+%----Check it's a unit equality
+    Literal =.. [_,'$tptp_equal'(_,_)],
+    !,
+    reverse_unit_equality(input_clause(Name,Status,[Literal]),ReversedClause),
+    reverse_unit_equalities(RestOfClauses,RestOfReversedClauses).
+
+reverse_unit_equalities([FirstClause|RestOfClauses],[FirstClause|
+RestOfReversedClauses]):-
+    reverse_unit_equalities(RestOfClauses,RestOfReversedClauses).
+%----------------------------------------------------------------------
+%----Randomly reverse terms in unit equalities
+randomly_reverse_unit_equalities([],[]).
+
+%----If a unit equality and the random number says yeah, then reverse
+randomly_reverse_unit_equalities([input_clause(Name,Status,[Literal])|
+RestOfClauses],[ReversedClause|RestOfReversedClauses]):-
+    Literal =.. [_,'$tptp_equal'(_,_)],
+%----Cannot unify here as that might cause shit in the random number
+%----generator (which might expect to produce what ever)
+    tptp2X_random_integer(1,2,OneOrTwo),
+    OneOrTwo == 1,
+    !,
+    reverse_unit_equality(input_clause(Name,Status,[Literal]),
+ReversedClause),
+    randomly_reverse_unit_equalities(RestOfClauses,RestOfReversedClauses).
+
+%----Otherwise leave as is
+randomly_reverse_unit_equalities([FirstClause|RestOfClauses],[FirstClause|
+RestOfReversedClauses]):-
+    randomly_reverse_unit_equalities(RestOfClauses,RestOfReversedClauses).
+%----------------------------------------------------------------------
+%----Depending on the option, rearrange the clauses accordingly
+none(Clauses,Dictionary,none,Clauses,Dictionary,'').
+
+%----For reversing literals in clauses
+lr(InputClauses,Dictionary,lr,OutputClauses,Dictionary,'+lr'):-
+    tptp_clauses(InputClauses),
+    reverse_literals_in_clauses(InputClauses,OutputClauses).
+
+%----For reversing CNF clause order
+cr(InputClauses,Dictionary,cr,OutputClauses,Dictionary,'+cr'):-
+    tptp_clauses(InputClauses),
+    fast_reverse_list(InputClauses,[],OutputClauses).
+
+%----For reversing clause and literal order
+clr(InputClauses,Dictionary,clr,OutputClauses,Dictionary,'+clr'):-
+    tptp_clauses(InputClauses),
+    fast_reverse_list(InputClauses,[],IntermediateClauses),
+    reverse_literals_in_clauses(IntermediateClauses,OutputClauses).
+
+%----For reversing FOF formulae order
+fr(InputFormulae,Dictionary,fr,OutputFormulae,Dictionary,'+fr'):-
+    tptp_formulae(InputFormulae),
+    fast_reverse_list(InputFormulae,[],OutputFormulae).
+
+%----For randomly reordering literals and clauses
+random(InputClauses,Dictionary,random,OutputClauses,Dictionary,'+ran'):-
+    tptp_clauses(InputClauses),
+    tptp2X_length(InputClauses,NumberOfInputClauses),
+    randomize_clauses(InputClauses,NumberOfInputClauses,OutputClauses).
+
+random(InputFormulae,Dictionary,random,OutputFormulae,Dictionary,'+ran'):-
+    tptp_formulae(InputFormulae),
+    tptp2X_length(InputFormulae,NumberOfInputFormulae),
+    randomize_formulae(InputFormulae,NumberOfInputFormulae,OutputFormulae).
+
+%----For reversing equalities in unit equality clauses
+er(InputClauses,Dictionary,er,OutputClauses,Dictionary,'+er'):-
+    tptp_clauses(InputClauses),
+    reverse_unit_equalities(InputClauses,OutputClauses).
+
+%----For randomly reversing equalities in unit equality clauses
+ran_er(InputClauses,Dictionary,ran_er,OutputClauses,Dictionary,'+rer'):-
+    tptp_clauses(InputClauses),
+    randomly_reverse_unit_equalities(InputClauses,OutputClauses).
+%----------------------------------------------------------------------
+arrange_file_information(transform,none,'').
+arrange_file_information(transform,lr,'Literals reversed').
+arrange_file_information(transform,cr,'Clauses reversed').
+arrange_file_information(transform,clr,'Clauses and literals reversed').
+arrange_file_information(transform,random,
+    'Clauses and literals randomly reordered').
+arrange_file_information(transform,fr,'Formulae reversed').
+arrange_file_information(transform,er,'Equality arguments reversed').
+arrange_file_information(transform,ran_er,
+'Equality arguments randomly reversed').
+%----------------------------------------------------------------------

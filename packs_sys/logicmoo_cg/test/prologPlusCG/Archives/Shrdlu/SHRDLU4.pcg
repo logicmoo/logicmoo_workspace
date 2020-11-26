@@ -1,0 +1,255 @@
+lexicon("push", verb, Push).
+lexicon("create", verb, Create).
+lexicon("open", verb, Open).
+
+lexicon(_verb, verb, _Type, _Sem) :-
+   lexicon(_verb, verb, _Type),
+   getSemantic(_Type, _Sem).
+
+simpleExample(g) :-
+   g is Man:getDefinition().
+
+getSemantic(_Type, _Sem) :-
+   _Sem is  _Type:getCanon(),
+   dif(_Sem, null).
+
+getSemantic(_Type, _Sem) :-
+   _EnumSitDescr  is  _Type:getSituationsDescription(),
+   dif(_EnumSitDescr, null),
+   _ListSitDescr is "aminePlatform.util.AmineObjects":enumeration2AmineList(_EnumSitDescr),
+   member(_Sem, _ListSitDescr).
+
+lexicon("is", aux_verb, _).
+
+lexicon("pyramid", noun, Pyramid).
+lexicon("cube", noun, Cube).
+lexicon("sphere", noun, Sphere).
+lexicon("man", noun, Man).
+lexicon("woman", noun, Woman).
+
+lexicon("openbox", noun, Open_Box).
+lexicon("key", noun, Key).
+lexicon("box", noun, Box).
+lexicon("door", noun, Door).
+lexicon("book", noun, Book).
+lexicon("shop", noun, Shop).
+lexicon("store", noun, Shop).
+
+lexicon("twelve", noun, [Time = twelve]).
+
+lexicon("small", adj, sizeOf, Size, small).
+lexicon("big", adj, sizeOf, Size, big).
+lexicon("red", adj, colorOf, Color, red).
+lexicon("blue", adj, colorOf, Color, blue).
+
+lexicon("on", prep, on).
+lexicon("under", prep, under).
+lexicon("left", prep, left).
+lexicon("right", prep, right).
+lexicon("at", prep, ptime).
+
+lexicon("the", art, x).
+lexicon("a", art, x).
+
+lexicon(".", punctuation, _).
+lexicon("!", punctuation, _).
+lexicon("?", punctuation, _).
+
+Verb(v, G) :- 
+   lexicon(v, verb, _, G).
+
+isVerb(["is"|P], P).
+
+Prep([v|P], P, T) :- lexicon(v, prep, T).
+
+Art([v|P], P, T) :- lexicon(v, art, T), !.
+Art(P, P, undefined).
+
+Noun([v|P], P, S) :- lexicon(v, noun, S).
+
+Adj(A, R, T, V) :- lexicon(A, adj, R, T, V).
+
+Shrdlu :-
+  writeln("**** Welcome to the SHRDLU_PCG Program *******"),
+  //new(aShrdlu_Canvas3D, "PrologPlusCG.Shrdlu_Canvas3D", ()),
+  readSentence(_sentence),
+  ShrdluDialog(_sentence), !.
+
+ShrdluDialog(["end", "."]) :- !.
+ShrdluDialog(_sentence) :-
+  Semantic_Analysis(_sentence, _CG),
+  writeln(_CG),	
+  _CG,
+  readSentence(_s),
+  ShrdluDialog(_s), !.
+
+Semantic_Analysis(_sentence, _CG) :- 
+   imperative_sentence(_sentence, _CG).
+
+nlp :-
+   readSentence(P),
+   analyze_sentence(P, G),
+   writeln(G), !.
+
+analyze_sentence(P, G) :-
+   imperative_sentence(P, G), !.
+analyze_sentence(P, G) :-
+   declarative_sentence(P, G).
+
+imperative_sentence(P, [Action = G]-modalityOf->[Modality = imperative]) :- 
+   ActiveVP(P, G).
+
+declarative_sentence(P, [T_TypeOfSentence = G]-modalityOf->[Modality = declarative]) :-
+   NP(P, P1, G_NP, E_NP),
+   stativeOrActiveVP(P1, G_NP, E_NP, T_TypeOfSentence, G).
+
+stativeOrActiveVP(P, G_NP, E_NP, State, G) :-
+   isVerb(P, R),
+   stativePart(R, G_NP, E_NP, G), !.
+stativeOrActiveVP(P, G_NP, E_NP, Action, G) :-
+   ActiveVP(P, G_NP, E_NP, G).
+
+// ex: Ahmed is black
+ stativePart([A, "."], G_NP, E_NP, G) :-
+   Adj(A, R1, T1, V1), !, 
+   eq([N : A1], E_NP),
+   eq(G, [N : A1]-R1->[T1 = V1]), 
+   branchOfCG(B, [N : A1]-R1->[T1 = V1], G),
+   E_N is B:getSourceConcept(),
+   G:specialize(E_N, G_NP, E_NP).
+
+// ex: Ahmed is a big man
+stativePart(P, G_NP, E_NP, G_NP) :-
+   NP(P, ["."], G_NP1, E_NP1),
+   G_NP:specialize(E_NP, G_NP1, E_NP1).
+
+// Unlike SHRDLU2, we attempt to join the subject with the verb first, then we consider the complements.
+ActiveVP([V|P1], G_SUBJ, E_SUBJ, G) :-
+   Verb(V, G_lexicon),
+   G is G_lexicon:copy(),
+   or(branchOfCG(B_Branch, [Action]-agnt->[_], G),
+       branchOfCG(B_Branch, [Action]-pat->[_], G)),
+   E_G_SUBJ is B_Branch:getTargetConcept(),
+   G:specialize(E_G_SUBJ, G_SUBJ, E_SUBJ),
+   NP(P1, P2, G_COD, E_NP1),
+   branchOfCG(B2_Branch, [T_Verb]-obj->[_], G),
+   E_GV_COD is B2_Branch:getTargetConcept(),
+   G:specialize(E_GV_COD, G_COD, E_NP1),
+   complement(P2, T_Verb, G).
+ActiveVP([V|P1], G) :-
+   Verb(V, G_lexicon),
+   G is G_lexicon:copy(),
+   NP(P1, P2, G_COD, E_NP1),
+   branchOfCG(B_Branch, [T_Verb]-obj->[X], G),
+   E_GV_COD is B_Branch:getTargetConcept(),
+   G:specialize(E_GV_COD, G_COD, E_NP1),
+   complement(P2, T_Verb, G).
+
+complement(["."], _, G) :- !.
+complement(P2, T_Verb, G) :-
+   Prep(P2, P3, s_prep),
+   NP(P3, ["."], G_NP, E_G_NP),
+   branchOfCG(B_Branch, [T_Verb]-s_prep->[X], G),
+   E_COD is B_Branch:getTargetConcept(),
+   G:specialize(E_COD, G_NP, E_G_NP).
+
+NP(P, P1, G, E) :-
+   Art(P, P2, A1),
+   AdjsSynt(P2, P3, L_Adjs),
+   Noun(P3, P4, N),
+   suiteNP(P4, P1, N, A1, L_Adjs, G, E), !.
+
+suiteNP([N1|P1], P1, N, A1, L_Adjs, G, E) :-
+   not(lexicon(N1, _, _)),
+   not(lexicon(N1, _, _, _, _)),
+   SemAdjs(L_Adjs, N, N1, G, E), !.
+suiteNP(P4, P1, N, A1, L_Adjs, G, E) :-
+   SemAdjs(L_Adjs, N, A1, S, E1),
+   AdjsSynt(P4, P1, L_Adjs2),
+   SemAdjs(L_Adjs2, N, A1, S1, E11),
+   maximalJoin(S, E1, S1, E11, G, E).
+
+maximalJoin(G1, E1, G2, E2, G3, E3) :-
+   _resMatchCG is G1:maximalJoin(E1, G2, E2),
+   G3 is _resMatchCG:getCG(),
+   E3 is _resMatchCG:getConcept().
+
+
+AdjsSynt([A|P], P1, [A|L_Adjs]) :-
+  lexicon(A, adj, _, _, _),
+  AdjsSynt(P, P1, L_Adjs), !.
+AdjsSynt(P, P, []).
+
+SemAdjs([A|P], [_Type : _Designator = _Descriptor], A1, S, E_N_S) :-
+   Adj(A, R1, T1, V1),
+   eq(G, [_Type : _Designator = _Descriptor]-R1->[T1 = V1]), 
+   branchOfCG(B, [_Type : _Designator = _Descriptor]-R1->[T1 = V1], G),
+   E_N is B:getSourceConcept(),
+   SemAdjs2(P, G, E_N, [_Type : _Designator = _Descriptor], A1, S, E_N_S), !.
+SemAdjs([A|P], N, A1, S, E_N_S) :-
+   Adj(A, R1, T1, V1),
+   eq(G, [N : A1]-R1->[T1 = V1]), 
+   branchOfCG(B, [N : A1]-R1->[T1 = V1], G),
+   E_N is B:getSourceConcept(),
+   SemAdjs2(P, G, E_N, N, A1, S, E_N_S), !.
+SemAdjs([], [_Type : _Designator = _Descriptor], A1, G, C) :-
+   eq(G, [_Type : _Designator = _Descriptor]).
+   C is G:toConcept().
+SemAdjs([], N, A1, G, C) :-
+   eq(G, [N : A1]),
+   C is G:toConcept().
+
+SemAdjs2([A|P], G, E_N, [_Type : _Designator = _Descriptor], A1, S, E_S) :-
+   Adj(A, R, T, V),
+   eq(G1,[_Type : _Designator = _Descriptor]-R->[T = V]),
+   branchOfCG(B, [_Type : _Designator = _Descriptor]-R->[T = V], G1),
+   E_N1 is B:getSourceConcept(),
+   maximalJoin(G, E_N, G1, E_N1, G2, E_N2), 
+   SemAdjs2(P, G2, E_N2, [_Type : _Designator = _Descriptor], A1, S, E_S), !.
+SemAdjs2([A|P], G, E_N, N, A1, S, E_S) :-
+   Adj(A, R, T, V),
+   eq(G1, [N : A1]-R->[T = V]),
+   branchOfCG(B, [N : A1]-R->[T = V], G1),
+   E_N1 is B:getSourceConcept(),
+   maximalJoin(G, E_N, G1, E_N1, G2, E_N2), 
+   SemAdjs2(P, G2, E_N2, N, A1, S, E_S), !.
+SemAdjs2([], G, E, _, _, G, E).
+
+// **** Interpretation of the semantic: it can be action or goals to perform, like the following :
+[Create]-obj->[T_Obj : _IdObj]-colorOf->[Color = C] :-
+   asserta(object([T_Obj : _IdObj]-colorOf->[Color = C]), []),
+   writeln([T_Obj, _IdObj, C]),
+   //execMethod(void, "PrologPlusCG.Shrdlu_Canvas3D", T_Obj, (_IdObj, C)),
+   !.
+
+[Push] -
+       -agnt->[A : R],
+       -obj->[_Object],
+       -on->[_On] :-  
+     writeln(""),
+     write("Goal of "), write(A), write(" "),  write(R), write(" is to push "), 
+     write(_Object), write(" on "), write(_On), writeln(".") .
+
+[_Type = G]-modalityOf->[Modality = imperative] :- 
+    [Push] -
+       -agnt->[A : R],
+       -obj->[_Object],
+       -on->[_On] = G,
+    [Push] -
+       -agnt->[A : R],
+       -obj->[_Object],
+       -on->[_On].
+
+
+// *******   utilities
+member(e, [e|_]).
+member(e, [_|q]) :- member(e, q).
+
+not(p) :- p, !, fail.
+not(p).
+
+or(p, q) :- p, !.
+or(p, q) :- q.
+
+eq(x, x).
+dif(x, y) :- not(eq(x,y)).

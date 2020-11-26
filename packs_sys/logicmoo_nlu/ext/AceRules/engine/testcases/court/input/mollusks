@@ -1,0 +1,11 @@
+If there is a cephalopod then it is a mollusk.
+If there is a nautilus then it is a cephalopod.
+Mollusk-Rule: If there is a mollusk then it is a shellbearer.
+Cephalopond-Rule: If there is a cephalopod then it is not a shellbearer.
+Nautilus-Rule: If there is a nautilus then it is a shellbearer.
+Molly is a mollusk.
+Sophie is a cephalopod.
+Natalie is a nautilus.
+Nautilus-Rule overrides Cephalopond-Rule.
+Cephalopond-Rule overrides Mollusk-Rule.
+Nautilus-Rule overrides Mollusk-Rule.

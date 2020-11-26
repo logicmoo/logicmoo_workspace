@@ -1,0 +1,96 @@
+<title>/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis</title><h1>Directory listing of /projekt/talk/software/code/TALK_unimodal_grammar_lib/godis</h1>
+<p><pre><hr noshade>======================================================================
+GoDiS Libraries README
+
+This distribution contains the GoDiS dialogue move engine and the files
+supporting it, i.e. the GoDiS libraries. It does not contain GoDiS 
+dialogue system(s), but rather the files shared by GoDiS applications. 
+
+To use the GoDiS libraries, Trindikit must be installed. Trindikit 
+can be downloaded from  http://sourceforge.net/projects/trindikit. The 
+latest, possibly unstable, version can also be accessed via anonymous 
+cvs from the same site. Download and unzip, or check out to a nice 
+location and follow the instructions in the Trindikit readme file for 
+instructions on how to build Trindikit.
+
+After installing Trindikit, the environent variable TRINDIKIT must be
+set. Set Trindikit to the full search path of the Trindikit directory, 
+e.g: '/home/david/trindikit-3.2.0'. For compability reasons, TRINDIKIT 
+values like '/home/david/trindikit-3.2.0/dist' will be allowed for a 
+while...
+
+======================================================================
+CONTENTS
+
+general:
+ Files shared by all GoDiS applications, e.g. concurrency settings, 
+ prolog operators and definitions of data types
+
+godis-basic:
+ Information state definition, DME modules, control module and 
+ resource interfaces for the godis-basic dialogue system (IBiS1) 
+ (not very maintained). godis-basic is a very basic version of GoDiS for 
+ information seeking dialogue
+
+godis-grounding:
+ Information state definition, DME modules, control module and 
+ resource interfaces for the godis-grounding dialogue system (IBiS2) 
+ (not very maintained). godis-grounding has the same DM capabilities as 
+ godis-basic, but implements grounding as well
+
+godis-iod:
+ Information state definition, DME modules, control module and 
+ resource interfaces for  godis-iod dialogue systems (quite maintained).
+ godis-iod extends the DM capabilities of godis-grounding by 
+ implementing task and question accommodation. This is probably the 
+ library to use if you should implement a information-seeking-only 
+ GoDiS application
+
+godis-aod:
+ information state definition, DME modules, control module and 
+ resource interfaces for  godis-aod dialogue systems (most maintained).
+ godis-aod extends the DM capabilities of godis-iod with
+ action-oriented dialogue management capabilities. This is currently
+ the most used GoDiS library.
+
+godis-all:
+ to be written
+
+search_paths_all.pl, search_paths_basic.pl, search_paths_grounding.pl, 
+search_paths_iod.pl, search_paths_aod.pl :  
+
+ Assert prolog file search paths and library directories for the 
+ different godis libraries. Consult the proper file for your library of 
+ choice, e.g. like this for godis-aod:
+
+  :- ensure_loaded('$GODIS/search_paths_aod.pl').
+
+ This assumes that the environment variable GODIS has been set to the 
+ GoDiS installation directory
+
+search_paths_common.pl:
+ loaded by the other search_paths-files
+=======================================================================
+USAGE
+
+Check out the godis-apps distribution (available via cvs) to see how 
+GoDiS applications can be built using the GoDiS libraries. Also take
+a look at (VAR ÄR MANUALEN?)
+</pre><pre>
+<dl compact><hr noshade><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib>Previous Directory</a><dd><dt><a name=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/CVS><a href=/(diract,unfold)/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/CVS?1431729560><img border=0 src=/(internal,image)/unfold alt=""></a><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/CVS/?1431729561><img border=0 src=internal-gopher-menu alt=""> CVS/                     </a>                  Directory
+</a></a><dt><a name=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/doc><a href=/(diract,unfold)/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/doc?1431729560><img border=0 src=/(internal,image)/unfold alt=""></a><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/doc/?1431729561><img border=0 src=internal-gopher-menu alt=""> doc/                     </a>                  Directory
+</a></a><dt><a name=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/general><a href=/(diract,unfold)/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/general?1431729560><img border=0 src=/(internal,image)/unfold alt=""></a><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/general/?1431729561><img border=0 src=internal-gopher-menu alt=""> general/                 </a>                  Directory
+</a></a><dt><a name=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-all><a href=/(diract,unfold)/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-all?1431729560><img border=0 src=/(internal,image)/unfold alt=""></a><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-all/?1431729561><img border=0 src=internal-gopher-menu alt=""> godis-all/               </a>                  Directory
+</a></a><dt><a name=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-aod><a href=/(diract,unfold)/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-aod?1431729560><img border=0 src=/(internal,image)/unfold alt=""></a><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-aod/?1431729561><img border=0 src=internal-gopher-menu alt=""> godis-aod/               </a>                  Directory
+</a></a><dt><a name=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-basic><a href=/(diract,unfold)/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-basic?1431729560><img border=0 src=/(internal,image)/unfold alt=""></a><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-basic/?1431729561><img border=0 src=internal-gopher-menu alt=""> godis-basic/             </a>                  Directory
+</a></a><dt><a name=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-grounding><a href=/(diract,unfold)/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-grounding?1431729560><img border=0 src=/(internal,image)/unfold alt=""></a><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-grounding/?1431729561><img border=0 src=internal-gopher-menu alt=""> godis-grounding/         </a>                  Directory
+</a></a><dt><a name=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-iod><a href=/(diract,unfold)/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-iod?1431729560><img border=0 src=/(internal,image)/unfold alt=""></a><a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/godis-iod/?1431729561><img border=0 src=internal-gopher-menu alt=""> godis-iod/               </a>                  Directory
+</a></a><dt>   <a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/LICENSE.txt><img border=0 src=internal-gopher-text alt=""> LICENSE.txt              </a>   363 bytes  text/plain
+</a><dt>   <a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/README><img border=0 src=internal-gopher-binary alt=""> README                   </a>  3257 bytes  application/octet-stream
+</a><dt>   <a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/search_paths_all.pl><img border=0 src=internal-gopher-binary alt=""> search_paths_all.pl      </a>   518 bytes  application/x-perl
+</a><dt>   <a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/search_paths_aod.pl><img border=0 src=internal-gopher-binary alt=""> search_paths_aod.pl      </a>   518 bytes  application/x-perl
+</a><dt>   <a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/search_paths_basic.pl><img border=0 src=internal-gopher-binary alt=""> search_paths_basic.pl    </a>   526 bytes  application/x-perl
+</a><dt>   <a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/search_paths_common.pl><img border=0 src=internal-gopher-binary alt=""> search_paths_common.pl   </a>  2992 bytes  application/x-perl
+</a><dt>   <a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/search_paths_grounding.pl><img border=0 src=internal-gopher-binary alt=""> search_paths_grounding.pl</a>   542 bytes  application/x-perl
+</a><dt>   <a href=/projekt/talk/software/code/TALK_unimodal_grammar_lib/godis/search_paths_iod.pl><img border=0 src=internal-gopher-binary alt=""> search_paths_iod.pl      </a>   518 bytes  application/x-perl
+</a></dl><hr noshade></pre>

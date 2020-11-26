@@ -1,0 +1,301 @@
+feature_value_space(n_type,
+			[[findable,makable,direction,cardinal,formfeature,weapon,locatable,velocity]]).
+			
+feature_value_space(adv_types,[[direction, cardinal, rotation]]).			
+
+
+%VERBS ==========================================================================================
+
+%VERBS RELATED TO FINDING OBJECTS
+
+	@v_transitive([find,finds,found,found,finding],
+			[action,find],[agent, findable],[]).
+
+	%This is intended to reset lost/found state.
+	@v_transitive([lose,loses,lost,lost,losing],
+			[action,lose],[agent, findable],[]).
+
+
+	@v_transitive([locate,locates,located,located,locating],
+			[action,find],[agent,findable],[]).
+
+
+%VERBS FOR INTERACTING WITH FOUND OBJECTS
+
+	@v_transitive([circle,circles,circled,circled,circling],
+			[action,circle],[agent,findable],
+			[]).
+
+	@v_transitive([surround, surrounds, surrounded, surrounded, surrounding],
+			[action,surround],[agent,findable],[]).
+
+	@v_transitive([guard,guards,guarded,guarded,guarding],
+			[action,guard],[agent,findable],[]).              
+
+	@v_transitive([rescue,rescues,rescued,rescued,rescuing],
+			[action,rescue],[agent,findable],[]).
+
+	@v_transitive([stalk,stalks,stalked,stalked,stalking],
+			[action,stalk],[agent,findable],[]).
+	
+
+	
+%VERBS RELATED TO MAKING SHAPES
+
+	@v_transitive([make,makes,made,made,making],
+			[action,make],[agent, makable],
+			[]).
+	@v_transitive([form,forms,formed,formed,forming],
+			[action,make],[agent,makable],
+			[]).
+	@v_transitive([do,does,did,done,doing],
+			[action,make],[agent,makable],
+			[]).
+
+
+%VERBS RELATED TO MOTION
+
+/*
+
+	%Go north for three meters. Go one meter forward.	
+	@v_transitive([go, goes, went, gone, going],
+		      [action, move], [agent, (locatable\/dir_value)], [can_be_gerund=y, takes_to_pp=y, takes_adv_type=(direction\/cardinal)]).	
+	
+	%Go toward the human.
+	@v_pp([go, goes, went, gone, going],
+		      [action, move], [agent, loc], [can_be_gerund=y]).
+
+*/
+
+	@v_intransitive([go, goes, went, gone, going],
+			[action,move], [agent], [takes_adv_type=(direction\/cardinal), takes_pp_type=loc]).		      
+
+/*		      
+	@v_transitive([move, moves, moved, moved, moving],
+		      [action, move], [agent, dir_value], [can_be_gerund=y, takes_to_pp=y, takes_adv_type=(direction\/cardinal)]).		      
+*/
+
+	@v_intransitive([move, moves, moved, moved, moving],
+			[action,move], [agent], [takes_adv_type=(direction\/cardinal)]).
+/*		      
+	@v_transitive([face, faces, faced, faced, facing],
+		      [action, rotate],[agent,(findable\/dir_value)],[can_be_gerund=y, takes_duration_pp=y, takes_adv_type=(direction\/cardinal)]).		      
+
+	@v_pp([face, faces, faced, faced, facing],
+		      [action, rotate], [agent, loc], [can_be_gerund=y]).
+*/
+	@v_intransitive([face, faces, faced, faced, facing],
+			[action,rotate], [agent], [takes_adv_type=(direction\/cardinal\/rotation)]).
+/*			
+	@v_transitive([turn,turns,turned,turned,turning],
+			[action,rotate],[agent,rot_value],[can_be_gerund=y, takes_adv_type=(direction\/cardinal)]).
+*/
+	@v_intransitive([turn,turns,turned,turned,turning],
+			[action,rotate], [agent], [takes_adv_type=(direction\/cardinal\/rotation)]).
+/*
+	@v_pp([turn,turns,turned,turned,turning],
+		      [action, rotate], [agent, loc], [can_be_gerund=y, takes_loc_pp=y]).
+			
+	@v_transitive([rotate,rotates,rotated,rotated,rotating],
+			[action,rotate],[agent,rot_value],[can_be_gerund=y, takes_duration_pp=y, takes_adv_type=(direction\/cardinal)]).			
+
+	@v_pp([rotate,rotates,rotated,rotated,rotating],
+		      [action, rotate], [agent, (loc\/duration)], [can_be_gerund=y, takes_duration_pp=y, takes_adv_type=direction]).
+	*/	      
+	@v_intransitive([rotate,rotates,rotated,rotated,rotating],
+			[action,rotate], [agent], [takes_adv_type=(direction\/cardinal\/rotation)]).		      
+	/*	      
+	@v_transitive([increase,increases,increased,increased,increasing],
+			[action,increase],[agent,(formfeature\/velocity)],[takes_frequency_pp=y]).
+			
+	@v_transitive([decrease,decreases,decreased,decreased,decreasing],
+			[action,decrease],[agent,(formfeature\/velocity)],[takes_frequency_pp=y]).	
+*/
+
+%VERBS TO STOP ACTION
+
+	@v_intransitive([stop,stops,stopped,stopped,stopping],
+			[action,stop], [agent], []).
+			
+    %	@v_vp_ing([stop,stops,stopped,stopped,stopping],
+    %	[state_change,stop], [agent], []).			
+			
+	@v_intransitive([halt,halts,halted,halted,halting],
+			[action,stop], [agent], []).
+	
+	@v_intransitive([quit,quits,quit,quit,quitting],
+			[action,stop], [agent], []).
+
+    %@v_vp_ing([quit,quits,quit,quit,quitting],
+    %	[state_change,stop], [agent], []).
+
+%VERBS FOR OUR AMUSEMENT
+
+	@v_transitive([fire,fires,fired,fired,firing],
+			[action,fire],[agent, weapon],[]).
+	
+
+%NOUNS =========================================================================================
+
+%NOUNS THAT ARE OBJECTS WE CAN FIND
+
+	@noun([human, humans],
+		[object,human],[findable],[takes_det_type=def\/indef]).
+
+	@noun([victim, victims],
+		[object, victim], [findable],[takes_det_type=(def\/indef)]).
+
+	@noun([friend, friends],
+		[object,friend],[findable],[takes_det_type=indef]).
+		
+		
+%NOUNS THAT ARE LOCATIONS
+/*	
+	@uninflected_noun(home,
+		[location,home],[locatable], sing, [takes_det_type=null]).	
+*/
+
+
+
+	
+	
+%NOUNS FOR DIRECTION
+
+/*
+	@uninflected_noun(north,
+		[cardinal, north], [cardinal], sing, [takes_det_type=(null\/def)]).
+
+	@uninflected_noun(south,
+		[cardinal, south], [cardinal], sing, [takes_det_type=(null\/def)]).
+
+	@uninflected_noun(east,
+		[cardinal, east], [cardinal], sing, [takes_det_type=(null\/def)]).
+
+	@uninflected_noun(west,
+		[cardinal, west], [cardinal], sing, [takes_det_type=(null\/def)]).	
+
+	@uninflected_noun(left,
+		[direction, left], [direction], sing, [takes_det_type=(null\/def)]).
+
+	@uninflected_noun(right,
+		[direction, right], [direction], sing, [takes_det_type=(null\/def)]).
+
+	@uninflected_noun(around,
+		[direction, around], [direction], sing, [takes_det_type=null]).
+*/
+
+
+%NOUNS FOR FORMATIONS
+
+	@noun([triangle, triangles],
+		[shape,triangle],[makable],
+		[takes_det_type=indef]).
+
+  /*
+	@noun([(isosceles,triangle),(isosceles,triangles)],
+		[shape,iso_triangle],[makable],
+		[takes_det_type=indef]).
+		
+	@noun([(equilateral,triangle),(equilateral, triangles)],
+		[shape,equi_triangle],[makable],
+		[takes_det_type=indef]).
+		
+	@noun([(right,triangle),(right,triangles)],
+		[shape,right_triangle],[makable],
+		[takes_det_type=indef]).
+	
+	@noun([circle,circles],
+		[shape,circle],[makable],
+		[takes_det_type=indef]).
+*/
+
+
+%NOUNS FOR FUN SHAPES AND THINGS
+		
+	@noun([trick,tricks],
+		[shape,trick],[makable],
+		[takes_det_type=indef\/null]).	
+/*
+	@noun([(attack,formation,delta), (attack,formation,delta)],
+		[shape,delta],[makable],
+		[takes_det_type=null]).
+*/		
+	@noun([laser, lasers],
+		[weapon, laser], [weapon],
+		[takes_det_type=def\/null]).
+
+
+%ADVERBS ===========================================================================
+
+/*
+	adv:[sem= @adv_sem(direction, left), advpos=(postvp\/postv), adv_type=direction] --> left.
+	
+	adv:[sem= @adv_sem(direction, right), advpos=(postvp\/postv), adv_type=direction] --> right.
+	
+	adv:[sem= @adv_sem(direction, forward), advpos=(postvp\/postv), adv_type=direction] --> forward.
+	
+	adv:[sem= @adv_sem(direction, forward), advpos=(postvp\/postv), adv_type=direction] --> forwards.
+	
+	adv:[sem= @adv_sem(direction, left), advpos=(postvp\/postv), adv_type=direction] --> backward.
+	
+	adv:[sem= @adv_sem(direction, left), advpos=(postvp\/postv), adv_type=direction] --> backwards.
+	
+	
+	adv:[sem= @adv_sem(rotation, around), advpos=(postvp\/postv), adv_type=rotation] --> around.
+	
+	
+	adv:[sem= @adv_sem(cardinal, north), advpos=(postvp\/postv), adv_type=cardinal] --> north.
+	
+	adv:[sem= @adv_sem(cardinal, south), advpos=(postvp\/postv), adv_type=cardinal] --> south.
+	
+	adv:[sem= @adv_sem(cardinal, east), advpos=(postvp\/postv), adv_type=cardinal] --> east.
+	*/
+adv:[sem= @adv_sem(cardinal, west),advtype=cardinal] --> west.
+adv:[sem= @adv_sem(cardinal, east),advtype=cardinal] --> east.
+adv:[sem= @adv_sem(cardinal, north),advtype=cardinal] --> north.
+adv:[sem= @adv_sem(cardinal, south),advtype=cardinal] --> south.
+	
+adv:[sem= @adv_sem(direction, left),advtype=direction] --> left.
+adv:[sem= @adv_sem(direction, right),advtype=direction] --> right.
+adv:[sem= @adv_sem(direction, back),advtype=direction] --> back.
+adv:[sem= @adv_sem(direction, forward),advtype=direction] --> forward.
+adv:[sem= @adv_sem(direction, back),advtype=direction] --> backward.
+adv:[sem= @adv_sem(direction, back),advtype=direction] --> backwards.
+
+adv:[sem= @adv_sem(rotation, around),advtype=direction] --> around.
+
+
+%PREPOSITIONS =========================================================================
+/*
+	%point at the human
+	@preposition(at, at_dir, [loc, findable],[]).
+
+	%rotate by 90 degrees, increase speed by 10
+	@preposition(by, by_amount, [duration, rot_value],[]).
+	
+	%go north by 10 meters
+	@preposition(by, by_amount, [to, dir_value],[]).
+	
+	%increase angle by ten degrees. increase speed by 50 percent
+	@preposition(by, by_amount, [frequency, (rot_value\/percentage)],[]).
+	
+	%go north for 10 meters
+	@preposition(for, by_amount, [to, dir_value],[]).
+
+	%are you near something
+	@preposition(near,near,[loc,(findable\/locatable)],[]).
+
+	%circle around the human
+	@preposition(around, around,[loc,(findable\/locatable)],[]).
+
+	% to the north, to the left, go to the location
+	@preposition(to, to_dir, [loc, (cardinal\/findable\/direction\/locatable)], []).
+	
+	%toward north, toward the human, toward home
+	@preposition(toward, toward_dir, [loc, (cardinal\/findable\/direction\/locatable)], []).
+	@preposition(towards,toward_dir,[loc,(cardinal\/findable\/direction\/locatable)],[]).
+	
+	% search for the victim
+	@preposition(for, for_ob, [loc, findable], []).
+
+*/

@@ -1,0 +1,1327 @@
+:- include(test_header).
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY einsteins_riddle "http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#"
+     xml:base="http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:einsteins_riddle="http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl">
+        <dc:description rdf:datatype="&xsd;string">   1. There are five houses.
+   2. The Englishman lives in the red house.
+   3. The Spaniard owns the dog.
+   4. Coffee is drunk in the green house.
+   5. The Ukrainian drinks tea.
+   6. The green house is immediately to the right of the ivory house.
+   7. The Old Gold smoker owns snails.
+   8. Kools are smoked in the yellow house.
+   9. Milk is drunk in the middle house.
+  10. The Norwegian lives in the first house.
+  11. The man who smokes Chesterfields lives in the house next to the man with the fox.
+  12. Kools are smoked in a house next to the house where the horse is kept. 
+  13. The Lucky Strike smoker drinks orange juice.
+  14. The Japanese smokes Parliaments.
+  15. The Norwegian lives next to the blue house.
+
+Now, who drinks water? Who owns the zebra?
+
+In the interest of clarity, it must be added that each of the five houses is painted a different color, has a single inhabitant, and the inhabitants are of different national extractions, own different pets, drink different beverages and smoke different brands of American cigarettes. In statement 6, right refers to the reader&apos;s right.</dc:description>
+        <dc:date rdf:datatype="&xsd;string">Created: February 5, 2010
+Updated for compliance: November 4, 2013</dc:date>
+        <dc:creator rdf:datatype="&xsd;string">Denis Ponomaryov</dc:creator>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/creator -->
+
+    <owl:AnnotationProperty rdf:about="&dc;creator"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/date -->
+
+    <owl:AnnotationProperty rdf:about="&dc;date"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/description -->
+
+    <owl:AnnotationProperty rdf:about="&dc;description"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#drinks -->
+
+    <owl:ObjectProperty rdf:about="&einsteins_riddle;drinks">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:range rdf:resource="&einsteins_riddle;Beverage"/>
+        <rdfs:domain rdf:resource="&einsteins_riddle;Man"/>
+    </owl:ObjectProperty>
+    <rdf:Description>
+        <owl:inverseOf rdf:resource="&einsteins_riddle;drinks"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#has_color -->
+
+    <owl:ObjectProperty rdf:about="&einsteins_riddle;has_color">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:range rdf:resource="&einsteins_riddle;Color"/>
+        <rdfs:domain rdf:resource="&einsteins_riddle;House"/>
+    </owl:ObjectProperty>
+    <rdf:Description>
+        <owl:inverseOf rdf:resource="&einsteins_riddle;has_color"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#lives_in -->
+
+    <owl:ObjectProperty rdf:about="&einsteins_riddle;lives_in">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:range rdf:resource="&einsteins_riddle;House"/>
+        <rdfs:domain rdf:resource="&einsteins_riddle;Man"/>
+    </owl:ObjectProperty>
+    <rdf:Description>
+        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#owns -->
+
+    <owl:ObjectProperty rdf:about="&einsteins_riddle;owns">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="&einsteins_riddle;Man"/>
+        <rdfs:range rdf:resource="&einsteins_riddle;Pet"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#right_to -->
+
+    <owl:ObjectProperty rdf:about="&einsteins_riddle;right_to">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="&einsteins_riddle;House"/>
+        <rdfs:range rdf:resource="&einsteins_riddle;House"/>
+    </owl:ObjectProperty>
+    <rdf:Description>
+        <owl:inverseOf rdf:resource="&einsteins_riddle;right_to"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#smokes -->
+
+    <owl:ObjectProperty rdf:about="&einsteins_riddle;smokes">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:range rdf:resource="&einsteins_riddle;Cigarette"/>
+        <rdfs:domain rdf:resource="&einsteins_riddle;Man"/>
+    </owl:ObjectProperty>
+    <rdf:Description>
+        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+    </rdf:Description>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Beverage -->
+
+    <owl:Class rdf:about="&einsteins_riddle;Beverage">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&einsteins_riddle;orange_juice"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;tea"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;water"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;coffee"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;milk"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;drinks"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom rdf:resource="&einsteins_riddle;Man"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Cigarette -->
+
+    <owl:Class rdf:about="&einsteins_riddle;Cigarette">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&einsteins_riddle;Kools"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;Lucky_Strike"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;Parliaments"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;Chesterfields"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;Old_Gold"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom rdf:resource="&einsteins_riddle;Man"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Color -->
+
+    <owl:Class rdf:about="&einsteins_riddle;Color">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&einsteins_riddle;green"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;red"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;blue"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;yellow"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;ivory"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;has_color"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom rdf:resource="&einsteins_riddle;House"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#House -->
+
+    <owl:Class rdf:about="&einsteins_riddle;House">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&einsteins_riddle;house-2"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;house-3"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;house-1"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;house-4"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;house-5"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                        <owl:someValuesFrom rdf:resource="&einsteins_riddle;Color"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty>
+                            <rdf:Description>
+                                <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                            </rdf:Description>
+                        </owl:onProperty>
+                        <owl:someValuesFrom rdf:resource="&einsteins_riddle;Man"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Man -->
+
+    <owl:Class rdf:about="&einsteins_riddle;Man">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&einsteins_riddle;Ukrainian"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;Spaniard"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;Norwegian"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;Englishman"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;Japanese"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;drinks"/>
+                        <owl:someValuesFrom rdf:resource="&einsteins_riddle;Beverage"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom rdf:resource="&einsteins_riddle;House"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                        <owl:someValuesFrom rdf:resource="&einsteins_riddle;Pet"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;smokes"/>
+                        <owl:someValuesFrom rdf:resource="&einsteins_riddle;Cigarette"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Pet -->
+
+    <owl:Class rdf:about="&einsteins_riddle;Pet">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&einsteins_riddle;zebra"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;horse"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;snails"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;dog"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;fox"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;owns"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom rdf:resource="&einsteins_riddle;Man"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Nothing -->
+
+    <owl:Class rdf:about="&owl;Nothing"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Chesterfields -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Chesterfields">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                                        <owl:someValuesFrom>
+                                            <owl:Restriction>
+                                                <owl:onProperty>
+                                                    <rdf:Description>
+                                                        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                                                    </rdf:Description>
+                                                </owl:onProperty>
+                                                <owl:someValuesFrom>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                                                        <owl:hasValue rdf:resource="&einsteins_riddle;fox"/>
+                                                    </owl:Restriction>
+                                                </owl:someValuesFrom>
+                                            </owl:Restriction>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                    <owl:Restriction>
+                                        <owl:onProperty>
+                                            <rdf:Description>
+                                                <owl:inverseOf rdf:resource="&einsteins_riddle;right_to"/>
+                                            </rdf:Description>
+                                        </owl:onProperty>
+                                        <owl:someValuesFrom>
+                                            <owl:Restriction>
+                                                <owl:onProperty>
+                                                    <rdf:Description>
+                                                        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                                                    </rdf:Description>
+                                                </owl:onProperty>
+                                                <owl:someValuesFrom>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                                                        <owl:hasValue rdf:resource="&einsteins_riddle;fox"/>
+                                                    </owl:Restriction>
+                                                </owl:someValuesFrom>
+                                            </owl:Restriction>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment>11. The man who smokes Chesterfields lives in the house next to the man with the fox.</rdfs:comment>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">11. The man who smokes Chesterfields lives in the house next to the man with the fox.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Chesterfields"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                                        <owl:someValuesFrom>
+                                            <owl:Restriction>
+                                                <owl:onProperty>
+                                                    <rdf:Description>
+                                                        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                                                    </rdf:Description>
+                                                </owl:onProperty>
+                                                <owl:someValuesFrom>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                                                        <owl:hasValue rdf:resource="&einsteins_riddle;fox"/>
+                                                    </owl:Restriction>
+                                                </owl:someValuesFrom>
+                                            </owl:Restriction>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                    <owl:Restriction>
+                                        <owl:onProperty>
+                                            <rdf:Description>
+                                                <owl:inverseOf rdf:resource="&einsteins_riddle;right_to"/>
+                                            </rdf:Description>
+                                        </owl:onProperty>
+                                        <owl:someValuesFrom>
+                                            <owl:Restriction>
+                                                <owl:onProperty>
+                                                    <rdf:Description>
+                                                        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                                                    </rdf:Description>
+                                                </owl:onProperty>
+                                                <owl:someValuesFrom>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                                                        <owl:hasValue rdf:resource="&einsteins_riddle;fox"/>
+                                                    </owl:Restriction>
+                                                </owl:someValuesFrom>
+                                            </owl:Restriction>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Englishman -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Englishman">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;red"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment>2. The Englishman lives in the red house.</rdfs:comment>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">2. The Englishman lives in the red house.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Englishman"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;red"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Japanese -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Japanese">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdfs:comment>14. The Japanese smokes Parliaments.</rdfs:comment>
+        <einsteins_riddle:smokes rdf:resource="&einsteins_riddle;Parliaments"/>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">14. The Japanese smokes Parliaments.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Japanese"/>
+        <owl:annotatedTarget rdf:resource="&einsteins_riddle;Parliaments"/>
+        <owl:annotatedProperty rdf:resource="&einsteins_riddle;smokes"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Kools -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Kools">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;yellow"/>
+                            </owl:Restriction>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                                        <owl:someValuesFrom>
+                                            <owl:Restriction>
+                                                <owl:onProperty>
+                                                    <rdf:Description>
+                                                        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                                                    </rdf:Description>
+                                                </owl:onProperty>
+                                                <owl:someValuesFrom>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                                                        <owl:hasValue rdf:resource="&einsteins_riddle;horse"/>
+                                                    </owl:Restriction>
+                                                </owl:someValuesFrom>
+                                            </owl:Restriction>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                    <owl:Restriction>
+                                        <owl:onProperty>
+                                            <rdf:Description>
+                                                <owl:inverseOf rdf:resource="&einsteins_riddle;right_to"/>
+                                            </rdf:Description>
+                                        </owl:onProperty>
+                                        <owl:someValuesFrom>
+                                            <owl:Restriction>
+                                                <owl:onProperty>
+                                                    <rdf:Description>
+                                                        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                                                    </rdf:Description>
+                                                </owl:onProperty>
+                                                <owl:someValuesFrom>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                                                        <owl:hasValue rdf:resource="&einsteins_riddle;horse"/>
+                                                    </owl:Restriction>
+                                                </owl:someValuesFrom>
+                                            </owl:Restriction>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment>12. Kools are smoked in a house next to the house where the horse is kept.    
+8. Kools are smoked in the yellow house.</rdfs:comment>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">8. Kools are smoked in the yellow house.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Kools"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;yellow"/>
+                            </owl:Restriction>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">12. Kools are smoked in the house next to the house where the horse is kept.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Kools"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                                        <owl:someValuesFrom>
+                                            <owl:Restriction>
+                                                <owl:onProperty>
+                                                    <rdf:Description>
+                                                        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                                                    </rdf:Description>
+                                                </owl:onProperty>
+                                                <owl:someValuesFrom>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                                                        <owl:hasValue rdf:resource="&einsteins_riddle;horse"/>
+                                                    </owl:Restriction>
+                                                </owl:someValuesFrom>
+                                            </owl:Restriction>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                    <owl:Restriction>
+                                        <owl:onProperty>
+                                            <rdf:Description>
+                                                <owl:inverseOf rdf:resource="&einsteins_riddle;right_to"/>
+                                            </rdf:Description>
+                                        </owl:onProperty>
+                                        <owl:someValuesFrom>
+                                            <owl:Restriction>
+                                                <owl:onProperty>
+                                                    <rdf:Description>
+                                                        <owl:inverseOf rdf:resource="&einsteins_riddle;lives_in"/>
+                                                    </rdf:Description>
+                                                </owl:onProperty>
+                                                <owl:someValuesFrom>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                                                        <owl:hasValue rdf:resource="&einsteins_riddle;horse"/>
+                                                    </owl:Restriction>
+                                                </owl:someValuesFrom>
+                                            </owl:Restriction>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Lucky_Strike -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Lucky_Strike">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;drinks"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;orange_juice"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment>13. The Lucky Strike smoker drinks orange juice.</rdfs:comment>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">13. The Lucky Strike smoker drinks orange juice.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Lucky_Strike"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;drinks"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;orange_juice"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Norwegian -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Norwegian">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                <owl:someValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                                <owl:someValuesFrom>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue"/>
+                                    </owl:Restriction>
+                                </owl:someValuesFrom>
+                            </owl:Restriction>
+                            <owl:Restriction>
+                                <owl:onProperty>
+                                    <rdf:Description>
+                                        <owl:inverseOf rdf:resource="&einsteins_riddle;right_to"/>
+                                    </rdf:Description>
+                                </owl:onProperty>
+                                <owl:someValuesFrom>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue"/>
+                                    </owl:Restriction>
+                                </owl:someValuesFrom>
+                            </owl:Restriction>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment>10. The Norwegian lives in the first house.
+15. The Norwegian lives next to the blue house.</rdfs:comment>
+        <einsteins_riddle:lives_in rdf:resource="&einsteins_riddle;house-1"/>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">10. The Norwegian lives in the first house.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Norwegian"/>
+        <owl:annotatedTarget rdf:resource="&einsteins_riddle;house-1"/>
+        <owl:annotatedProperty rdf:resource="&einsteins_riddle;lives_in"/>
+    </owl:Axiom>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">15. The Norwegian lives next to the blue house.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Norwegian"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                <owl:someValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                                <owl:someValuesFrom>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue"/>
+                                    </owl:Restriction>
+                                </owl:someValuesFrom>
+                            </owl:Restriction>
+                            <owl:Restriction>
+                                <owl:onProperty>
+                                    <rdf:Description>
+                                        <owl:inverseOf rdf:resource="&einsteins_riddle;right_to"/>
+                                    </rdf:Description>
+                                </owl:onProperty>
+                                <owl:someValuesFrom>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue"/>
+                                    </owl:Restriction>
+                                </owl:someValuesFrom>
+                            </owl:Restriction>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Old_Gold -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Old_Gold">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;snails"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment> 7. The Old Gold smoker owns snails.</rdfs:comment>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">7. The Old Gold smoker owns snails.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Old_Gold"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;smokes"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;owns"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;snails"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Parliaments -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Parliaments">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Spaniard -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Spaniard">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdfs:comment>3. The Spaniard owns the dog.</rdfs:comment>
+        <einsteins_riddle:owns rdf:resource="&einsteins_riddle;dog"/>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">3. The Spaniard owns the dog.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Spaniard"/>
+        <owl:annotatedTarget rdf:resource="&einsteins_riddle;dog"/>
+        <owl:annotatedProperty rdf:resource="&einsteins_riddle;owns"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#Ukrainian -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;Ukrainian">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdfs:comment>5. The Ukrainian drinks tea.</rdfs:comment>
+        <einsteins_riddle:drinks rdf:resource="&einsteins_riddle;tea"/>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">5. The Ukrainian drinks tea.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;Ukrainian"/>
+        <owl:annotatedProperty rdf:resource="&einsteins_riddle;drinks"/>
+        <owl:annotatedTarget rdf:resource="&einsteins_riddle;tea"/>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#blue -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;blue">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#coffee -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;coffee">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;drinks"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;green"/>
+                            </owl:Restriction>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment>4. Coffee is drunk in the green house.</rdfs:comment>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">4. Coffee is drunk in the green house.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;coffee"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;drinks"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:someValuesFrom>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;green"/>
+                            </owl:Restriction>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#dog -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;dog">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#fox -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;fox">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#green -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;green">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;has_color"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                        <owl:someValuesFrom>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;ivory"/>
+                            </owl:Restriction>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment>6. The green house is immediately to the right of the ivory house.</rdfs:comment>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">6. The green house is immediately to the right of the ivory house.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;green"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;has_color"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                        <owl:someValuesFrom>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;ivory"/>
+                            </owl:Restriction>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#horse -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;horse">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#house-1 -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;house-1">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&einsteins_riddle;right_to"/>
+                <owl:allValuesFrom rdf:resource="&owl;Nothing"/>
+            </owl:Restriction>
+        </rdf:type>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#house-2 -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;house-2">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <einsteins_riddle:right_to rdf:resource="&einsteins_riddle;house-1"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#house-3 -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;house-3">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <einsteins_riddle:right_to rdf:resource="&einsteins_riddle;house-2"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#house-4 -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;house-4">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <einsteins_riddle:right_to rdf:resource="&einsteins_riddle;house-3"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#house-5 -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;house-5">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;right_to"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:allValuesFrom rdf:resource="&owl;Nothing"/>
+            </owl:Restriction>
+        </rdf:type>
+        <einsteins_riddle:right_to rdf:resource="&einsteins_riddle;house-4"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#ivory -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;ivory">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#milk -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;milk">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;drinks"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;house-3"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdfs:comment>9. Milk is drunk in the middle house.</rdfs:comment>
+    </owl:Thing>
+    <owl:Axiom>
+        <rdfs:comment rdf:datatype="&xsd;string">9. Milk is drunk in the middle house.</rdfs:comment>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;milk"/>
+        <owl:annotatedProperty rdf:resource="&rdf;type"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty>
+                    <rdf:Description>
+                        <owl:inverseOf rdf:resource="&einsteins_riddle;drinks"/>
+                    </rdf:Description>
+                </owl:onProperty>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&einsteins_riddle;lives_in"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;house-3"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#orange_juice -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;orange_juice">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#red -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;red">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#snails -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;snails">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#tea -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;tea">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#water -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;water">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#yellow -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;yellow">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#zebra -->
+
+    <owl:Thing rdf:about="&einsteins_riddle;zebra">
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDifferent"/>
+        <owl:distinctMembers rdf:parseType="Collection">
+            <rdf:Description rdf:about="&einsteins_riddle;Chesterfields"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Englishman"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Japanese"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Kools"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Lucky_Strike"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Norwegian"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Old_Gold"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Parliaments"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Spaniard"/>
+            <rdf:Description rdf:about="&einsteins_riddle;Ukrainian"/>
+            <rdf:Description rdf:about="&einsteins_riddle;blue"/>
+            <rdf:Description rdf:about="&einsteins_riddle;coffee"/>
+            <rdf:Description rdf:about="&einsteins_riddle;dog"/>
+            <rdf:Description rdf:about="&einsteins_riddle;fox"/>
+            <rdf:Description rdf:about="&einsteins_riddle;green"/>
+            <rdf:Description rdf:about="&einsteins_riddle;horse"/>
+            <rdf:Description rdf:about="&einsteins_riddle;house-1"/>
+            <rdf:Description rdf:about="&einsteins_riddle;house-2"/>
+            <rdf:Description rdf:about="&einsteins_riddle;house-3"/>
+            <rdf:Description rdf:about="&einsteins_riddle;house-4"/>
+            <rdf:Description rdf:about="&einsteins_riddle;house-5"/>
+            <rdf:Description rdf:about="&einsteins_riddle;ivory"/>
+            <rdf:Description rdf:about="&einsteins_riddle;milk"/>
+            <rdf:Description rdf:about="&einsteins_riddle;orange_juice"/>
+            <rdf:Description rdf:about="&einsteins_riddle;red"/>
+            <rdf:Description rdf:about="&einsteins_riddle;snails"/>
+            <rdf:Description rdf:about="&einsteins_riddle;tea"/>
+            <rdf:Description rdf:about="&einsteins_riddle;water"/>
+            <rdf:Description rdf:about="&einsteins_riddle;yellow"/>
+            <rdf:Description rdf:about="&einsteins_riddle;zebra"/>
+        </owl:distinctMembers>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

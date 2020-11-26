@@ -1,0 +1,13 @@
+=================================================================================
+                                 LICENSES
+=================================================================================
+
+
+VerbAtlas is licensed under the CC BY-NC-SA 4.0 License.
+See VERBATLAS-LICENSE.txt for the full license.
+
+WordNet is licensed under the WordNet 3.0 License.
+See WORDNET-LICENSE.txt for the full license.
+
+BabelNet is licensed under the BabelNet 4.0 License.
+See BABELNET-LICENSE.txt for the full license.

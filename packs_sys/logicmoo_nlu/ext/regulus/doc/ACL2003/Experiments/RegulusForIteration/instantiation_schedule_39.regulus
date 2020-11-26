@@ -1,0 +1,88 @@
+
+feature_instantiation_schedule(
+	[[toptype,stype,politeness_pos,interjection_type,wh,
+	  vform,inv,whmoved,operator_wrapped,gap,
+	  subcat,vp_vform,vp_passivised,passivised,passive_subj,
+	  postposition,conj,prenumber,adjpos,advpos,
+	  case,takes_post_mods,post_mod_type,can_be_premod,takes_advp,
+	  gapsin,gapsout,nform,subj_nform,pronoun,
+	  agr,relagr,num_type,time_type,can_be_np,
+	  sem_pp_type,pp_sem_pp_type,sem_p_type,takes_gap_mod],
+
+	 [takes_loc_pp],[takes_from_pp],[takes_to_pp],[takes_with_pp],[takes_duration_pp],[takes_date_pp],[takes_time_pp],[takes_attrib_pp],[takes_about_pp],[takes_cost_pp],[takes_passive_by_pp],[def,subj_def,obj_def,indobj_def],[adv_type],[takes_adv_type],[det_type],[takes_det_type],[sem_n_type],[subj_sem_n_type],[obj_sem_n_type],[indobj_sem_n_type],[rel_sem_n_type],[n_pre_mod_type],[n_post_mod_type],[n_of_mod_type],[syn_type],[subj_syn_type],[obj_syn_type],[indobj_syn_type],[sem_n_type_1,def_1,syn_type_1]
+     ]).
+
+%ignore_feature(toptype).
+%ignore_feature(stype).
+%ignore_feature(politeness_pos).
+%ignore_feature(interjection_type).
+%ignore_feature(wh).
+%ignore_feature(vform).
+%ignore_feature(inv).
+%ignore_feature(whmoved).
+%ignore_feature(operator_wrapped).
+%ignore_feature(gap).
+%ignore_feature(subcat).
+%ignore_feature(vp_vform).
+%ignore_feature(vp_passivised).
+%ignore_feature(passivised).
+%ignore_feature(passive_subj).
+%ignore_feature(postposition).
+%ignore_feature(conj).
+%ignore_feature(prenumber).
+%ignore_feature(adjpos).
+%ignore_feature(advpos).
+%ignore_feature(case).
+%ignore_feature(takes_post_mods).
+%ignore_feature(post_mod_type).
+%ignore_feature(can_be_premod).
+%ignore_feature(takes_advp).
+%ignore_feature(gapsin).
+%ignore_feature(gapsout).
+%ignore_feature(nform).
+%ignore_feature(subj_nform).
+%ignore_feature(pronoun).
+%ignore_feature(agr).
+%ignore_feature(relagr).
+%ignore_feature(num_type).
+%ignore_feature(time_type).
+%ignore_feature(can_be_np).
+%ignore_feature(sem_pp_type).
+%ignore_feature(pp_sem_pp_type).
+%ignore_feature(sem_p_type).
+%ignore_feature(takes_gap_mod).
+ignore_feature(takes_loc_pp).
+ignore_feature(takes_from_pp).
+ignore_feature(takes_to_pp).
+ignore_feature(takes_with_pp).
+ignore_feature(takes_duration_pp).
+ignore_feature(takes_date_pp).
+ignore_feature(takes_time_pp).
+ignore_feature(takes_attrib_pp).
+ignore_feature(takes_about_pp).
+ignore_feature(takes_cost_pp).
+ignore_feature(takes_passive_by_pp).
+ignore_feature(def).
+ignore_feature(subj_def).
+ignore_feature(obj_def).
+ignore_feature(indobj_def).
+ignore_feature(adv_type).
+ignore_feature(takes_adv_type).
+ignore_feature(det_type).
+ignore_feature(takes_det_type).
+ignore_feature(sem_n_type).
+ignore_feature(subj_sem_n_type).
+ignore_feature(obj_sem_n_type).
+ignore_feature(indobj_sem_n_type).
+ignore_feature(rel_sem_n_type).
+ignore_feature(n_pre_mod_type).
+ignore_feature(n_post_mod_type).
+ignore_feature(n_of_mod_type).
+ignore_feature(syn_type).
+ignore_feature(subj_syn_type).
+ignore_feature(obj_syn_type).
+ignore_feature(indobj_syn_type).
+ignore_feature(sem_n_type_1).
+ignore_feature(def_1).
+ignore_feature(syn_type_1).
+

@@ -1,0 +1,26 @@
+BabelNet Non-Commercial License
+
+Release: 4.0.1
+
+This is a human-readable summary of (and not a substitute for) the license (http://babelnet.org/full-license) 
+(you should read the full terms and conditions of the BabelNet license before using the material).
+
+BabelNet is a collection of heterogeneous resources with different licenses and inter-resource links. 
+The various resources can be distributed and adapted according to their own licenses, while the inter-resource 
+links (which make up BabelNet) are subject to the following terms:
+
+ If You belong to a research institution, You are free to:
+
+Share — copy and redistribute the material in any medium or format by making it available only to 
+research institutions (alternatively to sharing the offline indices under the above conditions, 
+and much simpler, a link to the BabelNet website can be provided for download of the official data).
+
+Adapt — remix, transform, and build upon the material, provided that you make explicit that what you 
+release contains or “is a processed version of BabelNet [APPROPRIATE_VERSION_HERE, e.g. v4] downloaded 
+from http://babelnet.org, made available with the BabelNet license (see http://babelnet.org/license)”. 
+Alternatively, a link to the BabelNet website can be provided for download of the official data and 
+code for the creation of the Adaptation can be provided to any user.
+
+The licensor cannot revoke these freedoms as long as you follow the license terms.
+
+For any commercial use, please contact info@babelscape.com

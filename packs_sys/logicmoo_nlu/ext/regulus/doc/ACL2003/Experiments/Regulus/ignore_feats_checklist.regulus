@@ -1,0 +1,6 @@
+
+ignore_feature(case).
+ignore_feature(adv_type).
+ignore_feature(takes_adv_type).
+ignore_feature(pronoun).
+

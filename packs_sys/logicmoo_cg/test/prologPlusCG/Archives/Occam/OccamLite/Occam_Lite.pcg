@@ -1,0 +1,127 @@
+// ex: ?- integrateSituation([Robot]<-agnt-[Wash]-thme->[Car], [Robot, Wash, Car]).
+integrateSituation(G, L) :-
+    getOntology(_ontology),
+    "aminePlatform.engines.dynamicOntology.DynamicOntology":integrateSituation(_ontology, G, L), !.
+
+runSBL:-
+	event(zz1,[X = G1]),
+	integrateSituation(G1,[Goal, plan, Success_Goal_Outcome]),
+	event(rr1,[Y = G2]),
+	integrateSituation(G2,[Goal, plan, Failure_Goal_Outcome]),
+	event(dd1,[Z = G3]),
+	integrateSituation(G3, [Goal, plan, Success_Goal_Outcome]),
+	event(pp1,[F = G4]),
+	integrateSituation(G4, [Goal, plan, Success_Goal_Outcome]),
+	event(cc1,[E = G5]),
+	integrateSituation(G5, [Goal, plan, Success_Goal_Outcome]).
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+run_ebl(_generalisation, _generOut) :- 
+	event(coerce,G),
+//	ask(G,L,g1),
+	schema(G,T),	// normalement : schema(G,g1,T). avec g1 the more specific schema
+	genRule(T,_generalisation),
+	chainage(_generalisation, _generOut).
+//	integrateSituation(([X = _descrX]-result->[Y = _descrY]-enables->[Z = _descrZ]-result->[S = _descrS], L).
+	
+
+//chaine explanation
+chainage(_generalisation, _generOut):-
+	_generalisation = [X = _descrX]-result->[Y = _descrY]-enables->[Z = _descrZ]-result->[S = _descrS],
+	rules(G1),
+         G1 = [X1 = _descrX1]-result->[Y1 = _descrY1],
+         [X1 = _descrX1] = [X = _descrX],
+         _descrYY1 is _descrY:maximalJoin(_descrY1),
+         Y_Y1 is Y:getMaxComSubType(Y1),
+         //[X1 = _descrX1]-result->[Y1 = _descrY1] = [X = _descrX]-result->[Y = _descrY],
+	rules(G2),
+	G2 = [Y2 = _descrY2]-enables->[Z2 = _descrZ2],
+	[Z2 = _descrZ2] = [Z = _descrZ],
+         _descrYY1Y2 is _descrYY1:maximalJoin(_descrY2),
+	Y_Y1Y2 is Y_Y1:getMaxComSubType(Y2),
+         //[Y2 = _descrY2]-enables->[Z2 = _descrZ2] = [Y = _descrY]-enables->[Z = _descrZ],		
+	rules(G3),
+	G3 = [Z3 = _descrZ3]-result->[S3 = _descrS3],
+	[Z3 = _descrZ3]-result->[S3 = _descrS3] = [Z = _descrZ]-result->[S = _descrS],
+         _descrZ23 is _descrZ2:maximalJoin(_descrZ3),
+	Z23 is Z2:getMaxComSubType(Z3),
+	Z_Z23 is Z:getMaxComSubType(Z23),
+         _generOut =  [X1 = _descrX1]-result->[Y_Y1Y2 = _descrYY1Y2]-enables->[Z_Z23 = _descrZ23]-result->[S3 = 				_descrS3], !.
+
+//checher most specific schema : ask
+ask(G, L,g1) :-
+    getOntology(_ontology),
+    _rslt is "aminePlatform.engines.dynamicOntology.DynamicOntology":ask(_ontology, G, L),
+    writeRslt(_rslt, g1),!.
+
+writeRslt(_rslt,g1) :-
+    member(e, _rslt),
+    s1 is e:getResultInString(),
+    eq(s1,"MORE_SPECIFIC"),
+    g1 is e:getCG(), !.
+writeRslt(_, g1).
+
+writeRslt1(_rslt) :-
+    member(e, _rslt),
+    write("The description is : "),
+    s1 is e:getResultInString(),
+    write(s1),
+    writeln(" to/than the known"),
+    g1 is e:getCG(),
+    writeln(g1),
+    fail.
+writeRslt1(_).
+
+member(e, [e|_]).
+member(e, [_|L]) :- 
+    member(e, L).
+
+eq(x,x).
+
+chain([Act = [Atrans : sell]-
+			-Actor->[Polity = _act],
+			-Object->[Object = _obj],
+			-to->[Polity = _targ],
+			-State_Value->[State_Value:No_State_Value]
+		]
+	 -result->[Y = _descrY]
+ -enables-> [Act = [Atrans : sell]-
+			-Actor->[Polity = [Country : South_africa]-
+						-Language->[Language : English],
+						-Location->[Location : Southern_hemisphere],
+						-Business_relationship->[Polity = _targ],
+						-Continent->[Continent : Africa],
+						-Exports->[Object = _obj],
+						-Imports->[Object = Oil]
+				 ],
+			-Object->[Object = _obj],
+			-Price->[Price = [Money = 3000000]-
+						-currency->[Currency : Dollars],
+						-value->[value : sup_market]
+				 ],
+			-to->[Polity = _targ],
+			-State_Value->[State_Value:Yes_State_Value]
+			]
+
+   -result->[State = [Possess]-
+			-Actor->[Polity = _targ],
+			-State_Value->[State_Value:Yes_State_Value],
+			-Object->[Object = _obj]
+	     ]).
+
+
+schema(G,T) :-
+	//event(coerce,G),
+	[Act = [Coerce]-
+                  	  -actor->[Polity = _actor],
+                  	  -object->[_Object = _obj],
+                  	  -target->[Polity = _target],
+                  	  -demand->[Act = _demand],
+                  	  -threat->[Act = _threat],
+			  -response->[Act = _response],
+                  	  -result->[State = _result]
+		   ] = G,
+	[Act = _threat]-after->[Act = _response]-after->[State = _result]=T,
+	[Act = [_Act1]-object->[_Object = _obj]]
+	-after->[Act = [_Act2]-object->[_Object = _obj]]
+	-after->[State = [State_Value: _StValue]<-State_Value-[_State]-object->[_Object = _obj]]=T.

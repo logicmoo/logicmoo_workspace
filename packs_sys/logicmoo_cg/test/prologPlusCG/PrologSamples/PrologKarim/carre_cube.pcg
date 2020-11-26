@@ -1,0 +1,9 @@
+calcul(_x, _y) :-
+	inf(_x, 0, true),
+	_y is _x * _x.
+
+calcul(_x, _y) :-
+	inf(_x, 0, false),
+	_y is _x * _x *_x.
+
+inf(_x, _y, _z) :- _z is _x < _y.

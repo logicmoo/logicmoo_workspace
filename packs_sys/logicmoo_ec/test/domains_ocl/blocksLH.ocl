@@ -1,0 +1,135 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: ron
+ *  Institution: University of Huddersfield
+ *  Date created: Wed Oct 27 12:33:09 BST 2004
+ *  Date last modified: 2004/12/18 at 07:58:53 PM GMT
+ *  Description:
+ *    Version of blocks world with Life History Interface
+ * Object Life History : blockGripper.gfx
+ */
+
+domain_name(blocksLH).
+
+% Sorts
+sorts(primitive_sorts,[gripper,block]).
+
+% Objects
+objects(gripper,[grip1]).
+objects(block,[a,b,c]).
+
+% Predicates
+predicates([
+    busy(gripper,block),
+    free(gripper),
+    held(block),
+    onTop(block,block),
+    baseTop(block),
+    base(block),
+    on(block,block)]).
+
+% Object Class Definitions
+substate_classes(gripper,Gripper,[
+    [busy(Gripper,Block)],
+    [free(Gripper)]]).
+substate_classes(block,Block,[
+    [held(Block)],
+    [onTop(Block,Block2)],
+    [baseTop(Block)],
+    [base(Block)],
+    [on(Block,Block2)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(putOnBottom(Gripper,Block,Block2),
+    % prevail
+    [],
+    % necessary
+    [     sc(gripper,Gripper,[busy(Gripper,Block)]=>[free(Gripper)]),
+     sc(block,Block,[held(Block)]=>[onTop(Block,Block2)]),
+     sc(block,Block2,[baseTop(Block2),ne(Block,Block2)]=>[base(Block2)])],
+    % conditional
+    []).
+operator(putOnBase(Gripper,Block),
+    % prevail
+    [],
+    % necessary
+    [     sc(gripper,Gripper,[busy(Gripper,Block)]=>[free(Gripper)]),
+     sc(block,Block,[held(Block)]=>[baseTop(Block)])],
+    % conditional
+    []).
+operator(putOn(Gripper,Block,Block2,Block3),
+    % prevail
+    [],
+    % necessary
+    [     sc(gripper,Gripper,[busy(Gripper,Block)]=>[free(Gripper)]),
+     sc(block,Block,[held(Block)]=>[onTop(Block,Block2)]),
+     sc(block,Block2,[onTop(Block2,Block3),ne(Block,Block2)]=>[on(Block2,Block3)])],
+    % conditional
+    []).
+operator(takeOffBottom(Gripper,Block,Block2),
+    % prevail
+    [],
+    % necessary
+    [     sc(gripper,Gripper,[free(Gripper)]=>[busy(Gripper,Block)]),
+     sc(block,Block,[onTop(Block,Block2)]=>[held(Block)]),
+     sc(block,Block2,[base(Block2),ne(Block,Block2)]=>[baseTop(Block2)])],
+    % conditional
+    []).
+operator(takeOff(Gripper,Block,Block2,Block3),
+    % prevail
+    [],
+    % necessary
+    [     sc(gripper,Gripper,[free(Gripper)]=>[busy(Gripper,Block)]),
+     sc(block,Block,[onTop(Block,Block2)]=>[held(Block)]),
+     sc(block,Block2,[on(Block2,Block3),ne(Block,Block2)]=>[onTop(Block2,Block3)])],
+    % conditional
+    []).
+operator(takeOffBase(Gripper,Block),
+    % prevail
+    [],
+    % necessary
+    [     sc(gripper,Gripper,[free(Gripper)]=>[busy(Gripper,Block)]),
+     sc(block,Block,[baseTop(Block)]=>[held(Block)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(block,c,[base(c)]),
+     se(block,b,[on(b,c)]),
+     se(block,a,[onTop(a,b)])],
+    % INIT States
+    [
+     ss(block,a,[base(a)]),
+     ss(block,b,[on(b,a)]),
+     ss(block,c,[onTop(c,b)]),
+     ss(gripper,grip1,[free(grip1)])]).
+planner_task(2,
+    % Goals
+    [
+     se(block,c,[base(c)]),
+     se(block,a,[on(a,c)]),
+     se(block,b,[onTop(b,a)])],
+    % INIT States
+    [
+     ss(block,a,[base(a)]),
+     ss(block,b,[on(b,a)]),
+     ss(block,c,[onTop(c,b)]),
+     ss(gripper,grip1,[free(grip1)])]).

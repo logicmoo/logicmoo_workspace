@@ -1,0 +1,4 @@
+Convert the current EBL training set, defined by the {\tt ebl\_\-corpus}
+config file entry, into a form that can be used as training data by
+the Nuance {\tt compute-grammar-probs utility}. The output training data is
+placed in the file defined by the {\tt ebl\_\-grammar\_\-probs} config file entry.

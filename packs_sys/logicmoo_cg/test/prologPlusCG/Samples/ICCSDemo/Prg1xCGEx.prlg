@@ -1,0 +1,39 @@
+
+Universal > Person, Action, Object.
+Action > Realiser, eat.
+Object > walnut, shell.
+shell = myShell.
+
+cg([Person]<-agnt-[Realiser]-obj->[Action = 34]).
+cg([Person]<-agnt-[Realiser]-obj->[Action = [eat]-
+        			  -obj->[walnut = wal2]-part->[shell : myShell = toto],
+        			  -instr->[spoon]-matr->[shell : myShell]                      ]-instr->[Roulette]).
+
+cg([cc3]-
+         <-re1-[cc1],
+         <-re2-[cc2],
+         -re1->[cc5],
+         -re3->[cc4 : ccc4]-re4->[cc6 :ccc6]-re4->[cc7]-
+           		                  -re5->[cc6 : ccc6],
+		                  <-re7-[cc4 : ccc4]).
+cg([conc : cc1]-rel1->[type2]-attr->[conc : cc1]).
+cg([eat]-
+        -obj->[walnut = wal2]-part->[shell : sh1 = toto],
+        -instr->[spoon]-matr->[shell : sh1]).
+
+cg([type : ref = val]).
+
+
+cg([Realiser]-
+               -obj->[Projet :ProjA]-car->[Complique]-attr->[Peur]-
+			                  -agnt->[Etudiante :Fatima],
+			                  -consq->[Aider : aider1];,
+              -agnt->[Etudiante : Fatima]-
+		<-qui-[Aider : aider1]-agnt->[Professeur : Prof],
+		-act->[Remercier]-dest->[Professeur :Prof]-attr->[Gentil]).
+
+cg({[spoon : sp]-matr->[shell : sh]  &
+      [eat]-
+         -agnt->[monkey],
+         -instr->[spoon : sp],
+         -obj->[walnut]-part->[shell : sh]}).

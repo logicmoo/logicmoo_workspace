@@ -1,0 +1,72 @@
+;; This file contains general axioms that are used by the TQs.  
+;; Accordingly, it should be loaded before any of the TQ files.
+
+(=>
+   (instance ?REL SymmetricRelation)
+   (forall (?INST1 ?INST2)
+      (=>
+         (holds ?REL ?INST1 ?INST2)
+         (holds ?REL ?INST2 ?INST1))))
+
+(=>
+   (instance ?REL TransitiveRelation)
+   (forall (?INST1 ?INST2 ?INST3)
+      (=>
+         (and
+            (holds ?REL ?INST1 ?INST2)
+            (holds ?REL ?INST2 ?INST3))
+         (holds ?REL ?INST1 ?INST3))))
+
+(=>
+   (inverse ?REL1 ?REL2)
+   (forall (?INST1 ?INST2)
+      (<=>
+         (holds ?REL1 ?INST1 ?INST2)
+         (holds ?REL2 ?INST2 ?INST1))))
+
+(=>
+   (and
+      (subrelation ?REL1 ?REL2)
+      (holds ?REL1 ?INST1 ?INST2))
+   (holds ?REL2 ?INST1 ?INST2))
+
+(=>
+   (and
+      (subrelation ?REL1 ?REL2)
+      (holds ?REL1 ?INST1 ?INST2 ?INST3))
+   (holds ?REL2 ?INST1 ?INST2 ?INST3))
+
+(=>  
+   (and
+       (instance ?INST ?CLASS1)
+       (subclass ?CLASS1 ?CLASS2))
+   (instance ?INST ?CLASS2))
+
+;; The following axiom is not needed.  One should simply declare that "inRegion" is a 
+;; 'ReflexiveRelation' or, better, use the SUMO relation 'located', which is already 
+;; asserted to be a 'ReflexiveRelation'.
+
+;;(=>
+;;  (instance ?X Country)
+;;  (inRegion ?X ?X))
+
+;; The following axioms are a short-term workaround for Vampire's apparent inability to 
+;; respond correctly to queries that involve a "look-up" of an equality assertion.
+
+(instance equalSuper BinaryPredicate)
+(instance equalSuper EquivalenceRelation)
+(instance equalSuper RelationExtendedToQuantities)
+(domain equalSuper 1 Entity)
+(domain equalSuper 2 Entity)
+(documentation equalSuper "This is not a SUMO term.  It is a temporary term, which is intended to cover directly asserted cases of the equality operator, equalAsserted, and cases which are reached by inference, &%equal.")
+
+(subrelation equal equalSuper)
+
+(subrelation equalAsserted equalSuper)
+
+(=>
+   (equalSuper ?ENTITY1 ?ENTITY2)
+   (or
+      (equal ?ENTITY1 ?ENTITY2)
+      (equalAsserted ?ENTITY1 ?ENTITY2))) 
+  

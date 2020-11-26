@@ -1,0 +1,381 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCl Domain from  GIPO Version 1.0
+ *
+ *  Author: Doris Lui
+ *  Institution: University of Huddersfield
+ *  Date created: April 2000
+ *  Date last modified: 2001/10/24 at 03:49:26 PM BST
+ *  Description:
+ *    This is a fairly complex transportation domain
+ */
+
+domain_name(warehouse).
+
+% Sorts
+sorts(primitive_sorts,[crate,driver,truck,crane,shelf,space]).
+
+% Objects
+objects(crate,[crate1,crate2,crate3]).
+objects(driver,[driver1]).
+objects(truck,[truck1]).
+objects(crane,[crane1]).
+objects(shelf,[shelf6,shelf7,shelf9,shelf10,shelf14]).
+objects(space,[s1,s2,s3,s4,s6,s7,s8,s9,s10,s12,s13,s14,s16]).
+
+% Predicates
+predicates([
+    crate_at(crate,space),
+    on_floor(crate),
+    loaded_on_truck(crate),
+    loaded_on_crane(crate),
+    stacked(crate,shelf),
+    truck_loaded(truck,crate),
+    truck_at(truck,space),
+    truck_empty(truck),
+    driver_on_floor(driver),
+    driver_at(driver,space),
+    driver_on_truck(driver,truck),
+    crane_loaded(crane,crate),
+    crane_lowered(crane),
+    crane_at(crane,space),
+    crane_raised(crane),
+    crane_empty(crane),
+    used(space),
+    unused(space),
+    connect(space,shelf),
+    connect(shelf,space),
+    connect(space,space),
+    next(space,space)]).
+
+% Object Class Definitions
+substate_classes(crate,Ct,[
+    [crate_at(Ct,S),on_floor(Ct)],
+    [crate_at(Ct,S),loaded_on_truck(Ct)],
+    [crate_at(Ct,S),loaded_on_crane(Ct)],
+    [crate_at(Ct,S),stacked(Ct,Shelf)]]).
+substate_classes(truck,T,[
+    [truck_at(T,S),truck_loaded(T,Ct)],
+    [truck_at(T,S),truck_empty(T)]]).
+substate_classes(driver,D,[
+    [driver_on_floor(D),driver_at(D,S)],
+    [driver_on_truck(D,T),driver_at(D,S)]]).
+substate_classes(crane,Cn,[
+    [crane_at(Cn,S),crane_lowered(Cn),crane_loaded(Cn,Ct)],
+    [crane_at(Cn,S),crane_raised(Cn),crane_loaded(Cn,Ct)],
+    [crane_at(Cn,S),crane_raised(Cn),crane_empty(Cn)],
+    [crane_at(Cn,S),crane_lowered(Cn),crane_empty(Cn)]]).
+substate_classes(space,S,[
+    [used(S)],
+    [unused(S)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    connect(s6,shelf6),
+    connect(shelf6,s6),
+    connect(s7,s6),
+    connect(s6,s7),
+    connect(s7,shelf7),
+    connect(shelf7,s7),
+    connect(s10,s6),
+    connect(s6,s10),
+    connect(s10,s9),
+    connect(s9,s10),
+    connect(s9,shelf9),
+    connect(shelf9,s9),
+    connect(s14,s10),
+    connect(s10,s14),
+    connect(s10,shelf10),
+    connect(shelf10,s10),
+    connect(s14,shelf14),
+    connect(shelf14,s14),
+    next(s1,s2),
+    next(s2,s1),
+    next(s2,s3),
+    next(s3,s2),
+    next(s4,s3),
+    next(s3,s4),
+    next(s6,s7),
+    next(s7,s6),
+    next(s8,s7),
+    next(s7,s8),
+    next(s9,s10),
+    next(s10,s9),
+    next(s14,s13),
+    next(s13,s14),
+    next(s13,s9),
+    next(s9,s13),
+    next(s6,s2),
+    next(s2,s6),
+    next(s6,s10),
+    next(s10,s6),
+    next(s14,s10),
+    next(s10,s14),
+    next(s3,s7),
+    next(s7,s3),
+    next(s8,s4),
+    next(s4,s8),
+    next(s8,s12),
+    next(s12,s8),
+    next(s16,s12),
+    next(s12,s16),
+    between(s7,s6,shelf6),
+    between(s3,s7,shelf7),
+    between(s13,s9,shelf9),
+    between(s13,s14,shelf14),
+    between(s9,s10,shelf10),
+    on(s1,s1),
+    on(s2,s2),
+    on(s3,s3),
+    on(s4,s4),
+    on(s6,s6),
+    on(s7,s7),
+    on(s8,s8),
+    on(s9,s9),
+    on(s10,s10),
+    on(s12,s12),
+    on(s13,s13),
+    on(s14,s14),
+    on(s16,s16)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+inconsistent_constraint([stacked(Crate,Shelf),on_floor(Crate)]).
+inconsistent_constraint([unused(X),crate_at(Crate,X),on_floor(Crate)]).
+inconsistent_constraint([truck_loaded(Truck,Crate),truck_empty(Truck)]).
+inconsistent_constraint([truck_at(Truck,SpaceX),truck_at(Truck,SpaceY),ne(SpaceX,SpaceY)]).
+inconsistent_constraint([crane_at(Crane,SpaceX),crane_at(Crane,SpaceY),ne(SpaceX,SpaceY)]).
+inconsistent_constraint([crane_raised(Crane),crane_lowered(Crane)]).
+inconsistent_constraint([crane_loaded(Crane,Crate),crane_empty(Crane)]).
+inconsistent_constraint([crate_at(Crate,SpaceX),on_floor(Crate),crate_at(Crate,SpaceY),on_floor(Crate),ne(SpaceX,SpaceY)]).
+inconsistent_constraint([driver_on_truck(Driver,Truck),driver_on_floor(Driver)]).
+inconsistent_constraint([loaded_on_truck(Crate),stacked(Crate,Shelf)]).
+inconsistent_constraint([loaded_on_truck(Crate),loaded_on_crane(Crate)]).
+inconsistent_constraint([loaded_on_truck(Crate),truck_empty(Truck)]).
+inconsistent_constraint([truck_loaded(Truck,Crate),crane_loaded(Crane,Crate)]).
+inconsistent_constraint([loaded_on_truck(Crate),on_floor(Crate)]).
+inconsistent_constraint([truck_at(Truck,SpaceX),truck_empty(Truck),crate_at(Crate,SurfceX),on_floor(Crate)]).
+inconsistent_constraint([loaded_on_crane(Crate),stacked(Crate,Shelf)]).
+inconsistent_constraint([loaded_on_crane(Crate),on_floor(Crate)]).
+inconsistent_constraint([loaded_on_crane(Crate),crane_empty(Crane)]).
+inconsistent_constraint([driver_at(Driver,Space),driver_at(Driver,Space2),ne(Space,Space2)]).
+inconsistent_constraint([used(Space),unused(Space)]).
+inconsistent_constraint([unused(X),driver_at(Driver,X)]).
+inconsistent_constraint([unused(X),crate_at(Driver,X)]).
+inconsistent_constraint([unused(X),truck_at(Truck,X)]).
+inconsistent_constraint([truck_at(Truck,Space),crate_at(Crate,Space),on_floor(Crate)]).
+inconsistent_constraint([truck_at(Truck,Space),driver_on_floor(Driver),driver_at(Driver,Space)]).
+
+% Operators
+operator(stack(Space,Crate,Shelf,Crane),
+    % prevail
+    [     se(space,Space,[unused(Space)])],
+    % necessary
+    [     sc(crate,Crate,[crate_at(Crate,Space),loaded_on_crane(Crate)]=>[crate_at(Crate,Space),stacked(Crate,Shelf)]),
+     sc(crane,Crane,[crane_at(Crane,Space),crane_raised(Crane),crane_loaded(Crane,Crate)]=>[crane_at(Crane,Space),crane_raised(Crane),crane_empty(Crane)])],
+    % conditional
+    []).
+operator(unstack(Space,Crate,Shelf,Crane),
+    % prevail
+    [     se(space,Space,[unused(Space)])],
+    % necessary
+    [     sc(crate,Crate,[crate_at(Crate,Space),stacked(Crate,Shelf)]=>[crate_at(Crate,Space),loaded_on_crane(Crate)]),
+     sc(crane,Crane,[crane_at(Crane,Space),crane_raised(Crane),crane_empty(Crane)]=>[crane_at(Crane,Space),crane_raised(Crane),crane_loaded(Crane,Crate)])],
+    % conditional
+    []).
+operator(crane_load(Crate,X,Crane),
+    % prevail
+    [],
+    % necessary
+    [     sc(crate,Crate,[crate_at(Crate,X),on_floor(Crate)]=>[crate_at(Crate,X),loaded_on_crane(Crate)]),
+     sc(crane,Crane,[crane_at(Crane,X),crane_lowered(Crane),crane_empty(Crane)]=>[crane_at(Crane,X),crane_lowered(Crane),crane_loaded(Crane,Crate)]),
+     sc(space,X,[used(X)]=>[unused(X)])],
+    % conditional
+    []).
+operator(crane_unload(Crate,X,Crane),
+    % prevail
+    [],
+    % necessary
+    [     sc(crate,Crate,[crate_at(Crate,X),loaded_on_crane(Crate)]=>[crate_at(Crate,X),on_floor(Crate)]),
+     sc(crane,Crane,[crane_at(Crane,X),crane_lowered(Crane),crane_loaded(Crane,Crate)]=>[crane_at(Crane,X),crane_lowered(Crane),crane_empty(Crane)]),
+     sc(space,X,[unused(X)]=>[used(X)])],
+    % conditional
+    []).
+operator(drive_load(Truck,X,Crate,Y),
+    % prevail
+    [],
+    % necessary
+    [     sc(truck,Truck,[truck_at(Truck,X),truck_loaded(Truck,Crate),next(X,Y),ne(X,Y)]=>[truck_at(Truck,Y),truck_loaded(Truck,Crate)]),
+     sc(crate,Crate,[crate_at(Crate,X),loaded_on_truck(Crate)]=>[crate_at(Crate,Y),loaded_on_truck(Crate)]),
+     sc(space,X,[used(X)]=>[unused(X)]),
+     sc(space,Y,[unused(Y)]=>[used(Y)])],
+    % conditional
+    []).
+operator(truck_load(Driver,Truck,Y,Crate,X),
+    % prevail
+    [     se(driver,Driver,[driver_on_truck(Driver,Truck),driver_at(Driver,Y)]),
+     se(space,Y,[used(Y)])],
+    % necessary
+    [     sc(crate,Crate,[crate_at(Crate,X),on_floor(Crate),next(X,Y),ne(X,Y)]=>[crate_at(Crate,Y),loaded_on_truck(Crate)]),
+     sc(truck,Truck,[truck_at(Truck,Y),truck_empty(Truck)]=>[truck_at(Truck,Y),truck_loaded(Truck,Crate)]),
+     sc(space,X,[used(X)]=>[unused(X)])],
+    % conditional
+    []).
+operator(truck_unload(Driver,Truck,X,Crate,Y),
+    % prevail
+    [     se(driver,Driver,[driver_on_truck(Driver,Truck),driver_at(Driver,X)]),
+     se(space,X,[used(X)])],
+    % necessary
+    [     sc(crate,Crate,[crate_at(Crate,X),loaded_on_truck(Crate),next(X,Y),ne(X,Y)]=>[crate_at(Crate,Y),on_floor(Crate)]),
+     sc(truck,Truck,[truck_at(Truck,X),truck_loaded(Truck,Crate)]=>[truck_at(Truck,X),truck_empty(Truck)]),
+     sc(space,Y,[unused(Y)]=>[used(Y)])],
+    % conditional
+    []).
+operator(drive_truck(Truck,X,Y,Driver),
+    % prevail
+    [],
+    % necessary
+    [     sc(truck,Truck,[truck_at(Truck,X),truck_empty(Truck),next(X,Y),ne(X,Y)]=>[truck_at(Truck,Y),truck_empty(Truck)]),
+     sc(driver,Driver,[driver_on_truck(Driver,Truck),driver_at(Driver,X)]=>[driver_on_truck(Driver,Truck),driver_at(Driver,Y)]),
+     sc(space,X,[used(X)]=>[unused(X)]),
+     sc(space,Y,[unused(Y)]=>[used(Y)])],
+    % conditional
+    []).
+operator(get_in_truck(Truck,Y,Driver,X),
+    % prevail
+    [     se(truck,Truck,[truck_at(Truck,Y)]),
+     se(space,Y,[used(Y)])],
+    % necessary
+    [     sc(driver,Driver,[driver_on_floor(Driver),driver_at(Driver,X),next(X,Y),ne(X,Y)]=>[driver_on_truck(Driver,Truck),driver_at(Driver,Y)]),
+     sc(space,X,[used(X)]=>[unused(X)])],
+    % conditional
+    []).
+operator(get_out_of_truck(Truck,X,Driver,Y),
+    % prevail
+    [     se(truck,Truck,[truck_at(Truck,X)]),
+     se(space,X,[used(X)])],
+    % necessary
+    [     sc(driver,Driver,[driver_on_truck(Driver,Truck),driver_at(Driver,X),next(X,Y),ne(X,Y)]=>[driver_on_floor(Driver),driver_at(Driver,Y)]),
+     sc(space,Y,[unused(Y)]=>[used(Y)])],
+    % conditional
+    []).
+operator(walk(Driver,X,Y),
+    % prevail
+    [],
+    % necessary
+    [     sc(driver,Driver,[driver_on_floor(Driver),driver_at(Driver,X),next(X,Y),ne(X,Y)]=>[driver_on_floor(Driver),driver_at(Driver,Y)]),
+     sc(space,X,[used(X)]=>[unused(X)]),
+     sc(space,Y,[unused(Y)]=>[used(Y)])],
+    % conditional
+    []).
+operator(raise_crane(X,Crane),
+    % prevail
+    [     se(space,X,[unused(X)])],
+    % necessary
+    [     sc(crane,Crane,[crane_at(Crane,X),crane_lowered(Crane),crane_empty(Crane)]=>[crane_at(Crane,X),crane_raised(Crane),crane_empty(Crane)])],
+    % conditional
+    []).
+operator(lower_crane(X,Crane),
+    % prevail
+    [     se(space,X,[unused(X)])],
+    % necessary
+    [     sc(crane,Crane,[crane_at(Crane,X),crane_raised(Crane),crane_empty(Crane)]=>[crane_at(Crane,X),crane_lowered(Crane),crane_empty(Crane)])],
+    % conditional
+    []).
+operator(raise_load(Crate,X,Crane),
+    % prevail
+    [     se(crate,Crate,[crate_at(Crate,X),loaded_on_crane(Crate)]),
+     se(space,X,[unused(X)])],
+    % necessary
+    [     sc(crane,Crane,[crane_at(Crane,X),crane_lowered(Crane),crane_loaded(Crane,Crate)]=>[crane_at(Crane,X),crane_raised(Crane),crane_loaded(Crane,Crate)])],
+    % conditional
+    []).
+operator(lower_load(Crate,X,Crane),
+    % prevail
+    [     se(crate,Crate,[crate_at(Crate,X),loaded_on_crane(Crate)]),
+     se(space,X,[unused(X)])],
+    % necessary
+    [     sc(crane,Crane,[crane_at(Crane,X),crane_raised(Crane),crane_loaded(Crane,Crate)]=>[crane_at(Crane,X),crane_lowered(Crane),crane_loaded(Crane,Crate)])],
+    % conditional
+    []).
+operator(move_crane(X,Y,Crane),
+    % prevail
+    [     se(space,X,[unused(X)]),
+     se(space,Y,[unused(Y)])],
+    % necessary
+    [     sc(crane,Crane,[crane_at(Crane,X),crane_lowered(Crane),crane_empty(Crane),next(X,Y),ne(X,Y)]=>[crane_at(Crane,Y),crane_lowered(Crane),crane_empty(Crane)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(crate,crate3,[stacked(crate3,shelf9)]),
+     se(space,s10,[used(s10)]),
+     se(space,s6,[unused(s6)]),
+     se(space,s3,[unused(s3)]),
+     se(space,s2,[used(s2)])],
+    % INIT States
+    [
+     ss(truck,truck1,[truck_at(truck1,s12),truck_empty(truck1)]),
+     ss(space,s1,[used(s1)]),
+     ss(space,s2,[used(s2)]),
+     ss(space,s3,[used(s3)]),
+     ss(space,s4,[unused(s4)]),
+     ss(space,s6,[unused(s6)]),
+     ss(space,s7,[used(s7)]),
+     ss(space,s8,[unused(s8)]),
+     ss(space,s9,[used(s9)]),
+     ss(space,s10,[unused(s10)]),
+     ss(space,s12,[used(s12)]),
+     ss(space,s13,[used(s13)]),
+     ss(space,s14,[used(s14)]),
+     ss(space,s16,[used(s16)]),
+     ss(driver,driver1,[driver_on_truck(driver1,truck1),driver_at(driver1,s3)]),
+     ss(crate,crate1,[crate_at(crate1,s12),loaded_on_crane(crate1)]),
+     ss(crate,crate2,[crate_at(crate2,s2),loaded_on_crane(crate2)]),
+     ss(crate,crate3,[crate_at(crate3,s12),stacked(crate3,shelf7)]),
+     ss(crane,crane1,[crane_at(crane1,s14),crane_raised(crane1),crane_loaded(crane1,crate1)])]).
+planner_task(2,
+    % Goals
+    [
+     se(crate,crate3,[loaded_on_crane(crate3)]),
+     se(driver,driver1,[driver_at(driver1,s8),driver_on_floor(driver1)]),
+     se(space,s16,[used(s16)]),
+     se(space,s13,[unused(s13)]),
+     se(space,s12,[unused(s12)]),
+     se(space,s8,[used(s8)]),
+     se(space,s7,[unused(s7)]),
+     se(space,s3,[unused(s3)]),
+     se(space,s1,[unused(s1)]),
+     se(truck,truck1,[truck_at(truck1,s9)])],
+    % INIT States
+    [
+     ss(truck,truck1,[truck_at(truck1,s10),truck_empty(truck1)]),
+     ss(space,s1,[unused(s1)]),
+     ss(space,s2,[used(s2)]),
+     ss(space,s3,[used(s3)]),
+     ss(space,s4,[unused(s4)]),
+     ss(space,s6,[unused(s6)]),
+     ss(space,s7,[used(s7)]),
+     ss(space,s8,[unused(s8)]),
+     ss(space,s9,[used(s9)]),
+     ss(space,s10,[used(s10)]),
+     ss(space,s12,[unused(s12)]),
+     ss(space,s13,[unused(s13)]),
+     ss(space,s14,[used(s14)]),
+     ss(space,s16,[used(s16)]),
+     ss(driver,driver1,[driver_on_truck(driver1,truck1),driver_at(driver1,s14)]),
+     ss(crate,crate1,[crate_at(crate1,s10),loaded_on_crane(crate1)]),
+     ss(crate,crate2,[crate_at(crate2,s14),stacked(crate2,shelf9)]),
+     ss(crate,crate3,[crate_at(crate3,s16),stacked(crate3,shelf14)]),
+     ss(crane,crane1,[crane_at(crane1,s13),crane_lowered(crane1),crane_loaded(crane1,crate1)])]).

@@ -1,0 +1,20 @@
+(note TQD77)
+
+(relationInstanceExistsMany possesses Iran MustardGas) 
+
+(instance MustardGas MilitaryWeaponTypeByFunction) 
+
+(subclass MustardGas ChemicalAgent) 
+
+(query (findall ?POTENTIALWEAPON
+ (and 
+   (subclass ?POTENTIALWEAPON ChemicalAgent) 
+   (instance ?POTENTIALWEAPON MilitaryWeaponTypeByFunction) 
+   (relationInstanceExistsMany possesses Iran ?POTENTIALWEAPON)) 
+))
+
+(answer MustardGas
+)
+
+(end_of_file)
+

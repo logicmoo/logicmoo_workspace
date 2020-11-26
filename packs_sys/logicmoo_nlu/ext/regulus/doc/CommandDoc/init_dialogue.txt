@@ -1,0 +1,5 @@
+In dialogue mode, initialises the dialogue state. For this to make
+sense, you need to have previously invoked the {\tt LOAD\_\-DIALOGUE}
+command, and the predicate {\tt initial\_\-dialogue\_\-state/1} needs
+to be defined. This predicate will be called to obtain the new
+dialogue state.

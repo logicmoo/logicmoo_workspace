@@ -1,0 +1,1262 @@
+%%%%
+% NOTAS
+
+% Faltan acentos
+% Las referencias estan en comentarios
+
+% La estructura del cap es la siguiente:
+%
+% 1.1 Planificaci\'on
+%		1.1.1 formulaci\'on de problemas de planificaci\'on
+%		1.1.2 STRIPS
+% 1.2 PDDL
+%		1.2.1 Caracteristicas del Lenguaje
+%		1.2.2 Ancestros de PDDL
+%		1.2.3 Evoluci\'on de la especificacion de PDDL
+% 1.3 Definicion de Problemas de planificaci\'on en PDDL
+%		1.3.1 Definici\'on de Dominios en PDDL
+%		1.3.2 Definici\'on de Problemas en PDDL 
+% 1.4 Subconjunto PDDL considerado (falta)
+%	1.4.1.EBNF syntax description of PDDL subset
+%	1.4.2. Requerimientos
+
+
+
+
+\chapter{El Lenguaje PDDL} \label{pagcap2}
+
+%introduccion del cap\'itulo
+
+El {\bf lenguaje de definici\'on de dominios de planificaci\'on (PDDL)} 
+es un lenguaje de\-sa\-rro\-lla\-do originalmente por el comit\'e organizador 
+de la competencia AIPS-98\footnote{\emph{The Fourth International Conference
+on Artificial Intelligence Planning Systems 1998}. \url{http://www.cs.cmu.edu/~aips98/}. 
+Actualmente, AIPS es ICAPS (\emph{International Conference 
+on Automated Planning \& Scheduling (ICAPS)})
+\url{http://www.icaps-conference.org/index.php/Main/HomePage}. Disponibles
+en Septiembre de 2012.}
+para la definici\'on de dominios y problemas de planificaci\'on.
+La primera definici\'on del lenguaje fue propuesta por 
+Drew McDermott\footnote{Drew
+  McDermott. \url{http://cs-www.cs.yale.edu/homes/dvm/}. Disponible en
+Septiembre de 2012.} en 1998. 
+
+%ademas de contar con un est\'andar para comparar la performance de los sistemas de planificacin sobre un conjunto de problemas de prueba utilizados en las competencias como la referenciada anteriormente.
+
+El lenguaje PDDL es soportado por muchos planificadores y, al igual
+que STRIPS \cite{fn:str}, 
+se basa en la suposici\'on de mundo cerrado\footnote{\emph{Closed World Assumption}. 
+Asume que el conocimiento es completo. Esto significa que las proposiciones no incluidas en el estado 
+inicial de un problema, son consideradas falsas \cite{poole:_artif_intel}.}. Esto permite 
+que la transformaci\'on de estados pueda ser calculada agregando o eliminando literales de 
+la descripci\'on del estado de partida. Est\'a factorizado en un conjunto de caracter\'isticas, 
+llamadas \emph{requerimientos}, que permiten 
+a los planificadores determinar si son aptos para trabajar sobre el dominio actual. 
+En la actualidad, se est\'a dedicando mucha investigaci\'on y desarrollo sobre su 
+especificaci\'on a fin de alcanzar nuevos objetivos tales como la comparaci\'on emp\'irica 
+de la performance de los planificadores y el desarrollo de un conjunto est\'andar de 
+problemas en notaciones comparables.
+
+El prop\'osito del presente cap\'itulo es hacer un breve repaso de los lenguajes de planificaci\'on, 
+tomando como referencia al lenguaje STRIPS y analizar PDDL desde 
+su versi\'on inicial, publicada en 1998, hasta la actualizaci\'on m\'as
+reciente. Adem\'as, mostrar c\'omo los problemas y los dominios de
+planificaci\'on son expresados en el lenguaje.
+En la secci\'on \ref{cap1:Lenguajes de planificaci\'on} se estudia
+la formulaci\'on de 
+problemas de planificaci\'on y la importancia de contar con un adecuado lenguaje 
+para expresar estos problemas. A continuaci\'on, en la secci\'on \ref{cap1:PDDL}, 
+se analiza en profundidad el lenguaje PDDL, sus caracter\'isticas, sus predecesores 
+y una cronolog\'ia de c\'omo fue evolucionando su especificaci\'on. 
+Por \'ultimo, en la secci\'on \ref{cap1:Definicion de Problemas de planificaci\'on en PDDL}, 
+se describe c\'omo modelar problemas y dominios en PDDL y se ilustran algunos ejemplos 
+que ser\'an usados a lo largo de este trabajo.
+
+
+\section{Planificaci\'on} \label{cap1:Lenguajes de planificaci\'on}
+
+
+\subsection{Introducci\'on a la Planificaci\'on}
+
+Russell y Norving \cite{gbraun:Rus09} definen a la {\bf planificaci\'on} como la tarea de
+obtener una secuencia de acciones para lograr una meta y, para
+hacer esto posible, la planificaci\'on necesita de un lenguaje de representaci\'on
+de problemas y de un algoritmo planificador. 
+
+Un lenguaje de representaci\'on debe permitir la definici\'on de estados, acciones
+y metas y, adem\'as, posibilitar que los algoritmos de planificaci\'on
+puedan obtener ventajas de la estructura l\'ogica de los problemas.
+La clave es encontrar un lenguaje que sea lo suficientemente expresivo
+para describir una gran cantidad de problemas pero, a su vez, lo suficientemente
+restrictivo para permitir que los algoritmos operen eficientemente.
+
+Una formulaci\'on simple de un problema de planificaci\'on consta de
+los siguientes aspectos:
+
+\begin{enumerate}
+
+\item una descripci\'on del \emph{estado inicial} del mundo en alg\'un lenguaje,
+
+\item una descripci\'on de las \emph{metas} del agente, en alg\'un lenguaje, y
+
+\item una descripci\'on de las posibles acciones que pueden ser ejecutadas. 
+Esta \'ultima descripci\'on es llamada \emph{teor\'ia de dominio}.
+
+\end{enumerate} %weld
+
+Como ejemplos de lenguajes de representaci\'on de problemas podemos mencionar al
+lenguaje {\bf STRIPS}, que ser\'a detallado luego, y a {\bf PDDL}, lenguaje
+abordado en este trabajo.
+
+Por otro lado, los algoritmos de planificaci\'on, conocidos simplemente 
+como {\bf planificadores}, son algoritmos que solucionan problemas 
+(expresados en un determinado lenguaje) produciendo {\bf planes}, 
+es decir, secuencias de acciones. La salida de un planificador consiste 
+en un conjunto de acciones que, cuando son ejecutadas en un
+mundo que satisface la descripci\'on del estado inicial, permiten alcanzar la meta. 
+
+Desde un enfoque te\'orico, la planificaci\'on puede dividirse en dos tipos claramente
+identificados: la planificaci\'on ``cl\'asica'' y la planificaci\'on en 
+ambientes reales o ``no cl\'asica''. En la primera, los ambientes en que
+el agente opera tienen caracter\'isticas determin\'isticas,
+finitas, est\'aticas, dis\-cre\-tas y completamente
+observables. Los algoritmos de planificaci\'on cl\'asica son, por ejemplo,
+el Planificador de Order Parcial (POP) \cite{gbraun:pop:1991} y los algoritmos
+de B\'usqueda basados en Gr\'afos como Graphplan \cite{gbraun:graphplan}, entre
+otros. Por su parte, en planificaci\'on ``no cl\'asica'', el ambiente tiene
+caracter\'isticas contrarias a las anteriores, ya que se presenta estoc\'astico
+y parcialmente observable. Dentro de la planificaci\'on no
+cl\'asica se incluyen a los algoritmos que tratan con restricciones
+de tiempo y recursos, Redes de Tareas Jer\'arquicas o 
+HTN\footnote{En Ingl\'es, \emph{Hierarchical Task
+Networks}.} \cite{gbaun:Erol:1996:HTN:238496}, entre otros.
+Adem\'as, en \cite{gbraun:Rus09}, Russell y Norving, postulan
+que otra de las alternativas para trabajar en ambientes reales
+es la {\bf planificaci\'on continua}. Este tipo de planificaci\'on ser\'a
+abordada en el cap\'itulo \ref{pagcap4}.
+
+Luego de haber definido los principales conceptos subyacentes a
+la planificaci\'on, vamos a enfocar nuestro estudio en los lenguajes
+de representaci\'on de problemas. Comenzaremos por STRIPS y luego
+analizaremos PDDL, lenguaje de particular inter\'es para el presente trabajo.
+
+\subsection{STRIPS} \label{cap1: STRIPS}
+
+Uno de los primeros lenguajes de representaci\'on y uno de los m\'as referenciados en la
+literatura de Inteligencia Artificial, es STRIPS\footnote{\emph{STanford Research Institute 
+Problem Solver}.} \cite{fn:str}. 
+La representaci\'on STRIPS describe el estado inicial del mundo mediante 
+un conjunto completo de literales b\'asicos (\emph{ground}) y 
+a las metas como una conjunci\'on proposicional. 
+La teor\'ia de dominio, es decir, la descripci\'on formal de las acciones disponibles para el agente, 
+completa la descripci\'on del problema de planificaci\'on.
+
+En la representaci\'on STRIPS cada acci\'on es descripta por dos f\'ormulas: la f\'ormula 
+de precondici\'on y la de poscondici\'on. Ambas est\'an constituidas por una conjunci\'on de 
+literales y definen una funci\'on de transici\'on de un mundo a otro. Una acci\'on puede ser 
+ejecutada en cualquier mundo $w$ que satisfaga la f\'ormula de precondici\'on. 
+El resultado de ejecutar una acci\'on en un mundo $w$ es especificado tomando la 
+descripci\'on de $w$, adicionando cada literal de la poscondici\'on de la acci\'on y 
+eliminando literales contradictorios.
+
+En general, un esquema de acci\'on en la representaci\'on STRIPS consta de tres listas:
+
+\begin{itemize}
+
+\item {\bf Lista de Precondiciones}: es una conjunci\'on de literales que deben ser verdaderos 
+en un estado previo para que la acci\'on pueda ser ejecutada. 
+
+\item {\bf Lista de Borrados}: es un conjunto de \'atomos que dejan de ser verdaderos
+ luego de la ejecuci\'on de la acci\'on.
+
+\item {\bf Lista de Agregados}: es conjunto de \'atomos que se vuelven verdaderos 
+en el estado posterior a la ejecuci\'on de la acci\'on.
+
+\end{itemize}
+
+STRIPS est\'a basado en la idea de que algunas relaciones en el mundo 
+no son afectadas por la ejecuci\'on de una acci\'on. 
+Estas restricciones (entre varias otras como tiempo at\'omico, no
+existencia de eventos ex\'ogenos, 
+efectos determin\'isticos en acciones, etc.) permiten trabajar 
+con algoritmos de planificaci\'on m\'as simples y eficientes, pero dificultan la 
+descripci\'on de problemas m\'as complejos o de problemas reales.
+
+A continuaci\'on, mostraremos un ejemplo de la representaci\'on STRIPS para el 
+conocido pro\-ble\-ma del ``Mundo de Bloques''\footnote{Los problemas del Mundo de 
+Bloques son problemas t\'ipicos en Inteligencia Artificial. Es un mundo ficticio
+en el que s\'olo existen bloques que pueden encontrarse sobre una mesa o apilados. 
+Un plan para resolverlo debe reordenar los bloques para conseguir una meta. Se 
+permite mover un bloque (siempre que \'este no tenga ninguno encima) a la mesa o 
+encima de otro bloque.}.
+
+
+\begin{ejemplo}\label{cap2:MBSTRIPS}
+
+La acci\'on \texttt{pickup(X,Y)} permite tomar el bloque \texttt{X} 
+desde el bloque \texttt{Y} (cuando \texttt{X} y el agente est\'an
+libres) y, la acci\'on \texttt{stack(X,Y)} permite apilar el bloque 
+\texttt{X} sobre el \texttt{Y} (cuando el agente tiene 
+\texttt{X} e \texttt{Y} est\'a libre). El problema STRIPS
+especifica un posible estado inicial.
+
+ \begin{verbatim}
+
+% pickup(X,Y)
+Precondiciones: clear(X), armempty
+Borrados: clear(X), armempty
+Agregados: holding(X)
+
+% stack(X,Y)
+Precondiciones: clear(Y), holding(X)
+Borrados: clear(Y), holding(X)
+Agregados: armempty, clear(X), on(X,Y)
+
+
+% Problema STRIPS
+holds(ontable(c),init)
+holds(ontable(b),init)
+holds(on(a,c),init)
+holds(clear(a),init)
+holds(clear(b),init)
+holds(armempty,init)
+ \end{verbatim}
+\end{ejemplo}
+
+
+Nombraremos a este formalismo {\bf STRIPS est\'andar}. Dicho
+nombre nos permitir\'a distinguir este lenguaje de las dem\'as variantes STRIPS,
+al momento de clasificarlas, seg\'un sus respectivos niveles de expresividad.
+
+
+\section{PDDL} \label{cap1:PDDL}
+
+
+\subsection{Caracter\'isticas del Lenguaje}
+
+La necesidad de un lenguaje con un poder expresivo mucho mayor que los existentes 
+hasta el momento, impuls\'o, a fines de los 90's, el desarrollo  del lenguaje de 
+representaci\'on PDDL (\emph{Planning Domain Definition Language}) \cite{mder:pddl}. 
+En la actualidad, PDDL es considerado el \emph{est\'andar de facto}\footnote{Un est\'andar de facto 
+es una norma que se caracteriza por no haber sido consensuada ni legitimada 
+por un organismo de estandarizaci\'on. Se trata de una norma generalmente aceptada
+y ampliamente utilizada por iniciativa propia de un gran n\'umero de interesados.} 
+de los lenguajes de representaci\'on. 
+
+PDDL es un lenguaje \emph{action-centred} (centrado en acciones) y est\'a inspirado 
+en la formulaci\'on de los ya nombrados problemas de planificaci\'on en STRIPS. 
+Su n\'ucleo es una simple estandarizaci\'on de la sintaxis para expresar la 
+sem\'antica familiar de acciones, usando pre y pos condiciones para describir la aplicabilidad y 
+los efectos de las acciones. Su sintaxis es similar a la del lenguaje
+Lisp\footnote{\emph{LISt Processing}.} \cite{gbraun:lisp}, 
+por lo tanto, la estructura de 
+una definici\'on es una lista de expresiones parentizadas. PDDL intenta expresar 
+la \emph{f\'isica} del dominio, es decir, 
+cu\'ales son los predicados, qu\'e acciones son posibles, 
+cu\'al es la estructura de las acciones compuestas y cu\'ales son los efectos de las acciones. 
+
+El lenguaje separa la definici\'on del dominio (con acciones parametrizadas)
+de la definici\'on de los problemas (con objetos espec\'ificos, metas 
+y condiciones iniciales). Un problema de planificaci\'on 
+es creado asociando una descripci\'on de un dominio y una descripci\'on de un problema, 
+permitiendo que una misma descripci\'on de dominio pueda ser asociada a diferentes problemas. 
+Esto permite expresar distintos problemas de planificaci\'on sobre un mismo dominio.
+
+A pesar de que el n\'ucleo de PDDL es el formalismo STRIPS, 
+PDDL se extiende m\'as all\'a de este simple lenguaje. 
+Este poder expresivo extendido incluye la capacidad de 
+definir estructuras de tipos, tipos de par\'ametros, 
+restricciones, acciones con precondiciones negativas 
+y efectos condicionales y el uso de cuantificaci\'on en pre y pos condiciones.
+
+El siguiente es un ejemplo b\'asico PDDL del ``Mundo de Bloques'', equivalente
+a la especificaci\'on STRIPS presentada en el ejemplo \ref{cap2:MBSTRIPS}.  
+
+\begin{ejemplo} \label{pddl:examplebase}
+ \begin{verbatim}
+
+% Dominio PDDL
+(define (domain bkw)
+(:requirements :strips)
+(:predicates (clear ?x)
+             (ontable ?x)
+             (armempty)
+             (holding ?x)
+             (on ?x ?y))
+
+(:action pickup
+  :parameters (?ob)
+  :precondition (and (clear ?ob) (armempty))
+  :effect (and (holding ?ob) (not (clear ?ob)) (not (armempty))))
+
+(:action stack
+  :parameters  (?ob ?underob)
+  :precondition (and  (clear ?underob) (holding ?ob))
+  :effect (and (clear ?ob) (on ?ob ?underob) (armempty)
+               (not (clear ?underob)) (not (holding ?ob))))
+)
+
+% Problema PDDL
+(define (problem pb1)
+   (:domain bkw)
+   (:objects a b c)
+   (:goal (on a b))
+   (:init (ontable c) (ontable b) 
+          (on a c) (clear a) (clear b) (armempty))
+)
+ \end{verbatim}
+\end{ejemplo}
+
+PDDL incluye, a trav\'es de la etiqueta \texttt{requirements}, 
+una representaci\'on sint\'actica sobre el nivel de expresividad 
+requerido en la descripci\'on de un dominio particular. 
+Esta definici\'on de requerimientos permite identificar el poder 
+expresivo de estos problemas y qu\'e planificadores son capaces 
+de manejar estas caracter\'isticas del lenguaje.
+
+
+\subsection{Ancestros de PDDL} %PDDL1.2
+
+PDDL es descendiente de los siguientes formalismos:
+
+\begin{itemize}
+
+\item {\bf ADL} \cite{gbraun:Pednault:1989:adl}. 
+El lenguaje ADL\footnote{\emph{Action Description 
+Lenguage}.} fue propuesto por Pednault\footnote{Edwin P. 
+Pednault. \url{http://researcher.watson.ibm.com/researcher/view.php?person=us-pednault}. Disponible
+en Septiembre de 2012.}
+como un formalismo de planificaci\'on con el poder expresivo del Calculo 
+Situacional \cite{gbraun:McCHay69} y los beneficios 
+computacionales del lenguaje STRIPS. %adl.pdf
+ADL soporta \emph{equality} como un predicado
+\emph{built-in} y las precondiciones pueden contener
+negaci\'on, disyunci\'on y cuantificaci\'on. Adem\'as, permite
+efectos condicionales y los objetos pueden tener
+tipos asociados.
+
+\item {\bf SIPE-2} \cite{gbraun:AICPub443:1997}. El sistema de planificaci\'on 
+SIPE-2\footnote{\emph{System for Interactive Planning and Execution}.} prove\'e 
+un formalismo para descripci\'on de acciones y utiliza el conocimiento 
+contenido en el formalismo, junto con sus heur\'isticas de combinatoria de problemas, 
+para generar planes y alcanzar las metas en diversos pro\-ble\-mas de planificaci\'on. 
+SIPE-2 es un sistema de planificaci\'on de orden parcial, 
+jer\'arquico e independiente del dominio. 
+
+\item {\bf Prodigy4.0l} \cite{gbraun:prodigy}. Prodigy es una arquitectura para resolver problemas
+independiente del dominio usada en planificaci\'on, aprendizaje y adquisici\'on de 
+conocimiento. El poder de Prodigy es, en parte, debido a la flexibilidad y
+expresividad de su lenguaje de representaci\'on. Los dominios de planificaci\'on
+consisten de tipos para la entidades, un conjunto de operadores, reglas de 
+inferencia y reglas para el control de b\'usqueda. El lenguaje de representaci\'on
+es una extensi\'on de STRIPS.
+
+\item {\bf UMCP} \cite{gbraun:1994:umcp}. UMCP\footnote{\emph{Universal Method 
+Composition Planner}.} es una formalizaci\'on del procedimiento de planificaci\'on 
+HTN\footnote{\emph{Hierarchical Task-Network}.} \cite{gbaun:Erol:1996:HTN:238496}.
+Hereda la sintaxis y sem\'antica del formalismo HTN con los conceptos de 
+\emph{Goal tasks}, \emph{Primitive tasks}, \emph{Compound tasks}. 
+Las \emph{Goal tasks} son equivalentes a las metas en STRIPS; 
+las \emph{Primitive tasks} son tareas que pueden
+lograrse ejecutando la acci\'on correpondiente; 
+y las \emph{Compound tasks} denotan cambios
+deseados que involucran varias \emph{goal tasks} and \emph{primitive tasks}. 
+Todas estas tareas son conectadas mediante \emph{task networks}, tambi\'en
+llamadas ``redes procedurales''.
+
+\item {\bf UNPOP} \cite{gbraun:unpop}. El planificador 
+UNPOP\footnote{\emph{un-Partial Order Planner}.}
+no est\'a restringido s\'olo a representaciones STRIPS, sino que tambi\'en,
+soporta lenguajes m\'as expresivos como ADL. Fue desarrollado por 
+Drew McDermott.
+
+\item {\bf UCPOP} \cite{gbraun:ucpop}. El lenguaje de representaci\'on de
+UCPOP\footnote{\emph{Universal, Conditional Partial-Order Planner}.} es 
+un subconjunto de KRSL\footnote{\emph{Knowledge Representation Specification 
+Language}.} \cite{gbraun:krsl} que se corresponde estrechamente a ADL con respecto 
+al contenido expresivo y al lenguaje de representaci\'on de Prodigy. 
+En particular, el lenguaje de representaci\'on de UCPOP permite definir 
+acciones usando efectos condicionales y cuantificaciones anidadas. 
+Tambi\'en, permite la declaraci\'on de axiomas de dominio, restricciones y hechos.
+
+\end{itemize}
+
+
+\subsection{Evoluci\'on de la especificaci\'on de PDDL} 
+
+% PDDL 1.2
+% PDDL 2.1
+% PDDL 2.2
+% PDDL 3.0
+% PDDL 3.1
+% PDDL OPT
+% PDDL +
+
+% http://cs-www.cs.yale.edu/homes/dvm/
+
+La Competencia Internacional de Planificaci\'on (IPC)\footnote{\emph{International Planning 
+Competition}. La IPC se desarrolla en el contexto de la ICAPS y tiene, 
+como metas, estudiar el estado del arte de los sistemas de 
+planificaci\'on autom\'aticos, la evaluaci\'on de diferentes enfoques
+a la planificaci\'on automatizadas y promover la aceptaci\'on y 
+aplicaci\'on de estas tecnolog\'ias.} en una importante
+referencia para la investigaci\'on de t\'opicos relacionados a la planificaci\'on y la 
+adopci\'on de PDDL como un lenguaje com\'un. La especificaci\'on de problemas es 
+uno de los resultados m\'as importantes de este tipo de competiciones. 
+
+La evoluci\'on de PDDL en el tiempo tiene algunos hitos importantes, principalmente
+en sucesivas competiciones, con la definici\'on de nuevas extensiones del lenguaje.
+Las versiones reconocidas son: {\bf PDDL 1.2} (IPC 1998), 
+{\bf PDDL 2.1} (IPC 2002), {\bf PDDL 2.2} (IPC 2004), {\bf PDDL 3.0} (IPC 2006) y
+{\bf PDDL 3.1} (IPC 2008). Tambi\'en, existen algunas otras extensiones como
+{\bf PDDL+} \cite{gbraun:pddl+} y {\bf Opt} \cite{gbraun:opt}, pero est\'an fuera del alcance 
+del presente trabajo.
+
+A continuaci\'on, y en forma cronol\'ogica, vamos a describir las
+caracter\'isticas m\'as importantes de cada versi\'on del lenguaje.
+
+\subsubsection{PDDL 1.2}
+
+La versi\'on original de PDDL fue la 1.2 del a\~{n}o 1998 \cite{gbraun:pddl12}.
+Esta versi\'on soporta acciones b\'asicas de estilo STRIPS 
+(precondiciones y efectos), efectos 
+condicionales\footnote{En Ingl\'es, \emph{conditional effects}.}
+y cuantificaci\'on universal sobre universos din\'amicos. 
+Adem\'as, permite especificar restricciones de 
+seguridad\footnote{En Ingl\'es, \emph{safety constraints}.}
+y jerarqu\'ia de subacciones y submetas. Por \'ultimo, incluye
+la posibilidad de reutilizar dominios en varios planificadores
+que manejen diferentes niveles de expresividad.
+
+A continuaci\'on, damos una breve descripci\'on de las principales
+caracter\'isticas de PDDL 1.2.
+
+	\begin{itemize}
+	
+	\item {\bf Efectos condicionales}. Los efectos condicionales permiten 
+	definir acciones cuyos efectos son dependientes
+	del contexto. Para esto, PDDL define una sentencia \texttt{when} que
+	tiene dos argumentos, antecedente y consecuente. Este requerimiento
+	PDDL ser\'a ampliado en la secci\'on \ref{gbraun:subpddl}.
+
+	\item {\bf Cuantificaci\'on universal sobre universos din\'amicos}. % Weld
+	Esta cuantificaci\'on permite que los efectos de las acciones puedan crear 
+	y eliminar nuevos objetos. Es posible modelar la creaci\'on de objetos 
+	teniendo el efecto \texttt{(book dict)} y tambi\'en 
+	la destrucci\'on de objetos con el efecto \texttt{(not (book dict))}. 
+	Sin embargo, para definir el universo
+	de un tipo dado (por ejemplo, \texttt{book}), es necesario considerar
+	todos los \texttt{books} que son creados por las acciones,
+	posiblemente ejecutadas, antes de la acci\'on actual.
+	
+	\item {\bf Restricciones de Seguridad}. %PDDL 1.2
+	Las restricciones de seguridad son metas \emph{background} que deben
+	ser verdaderas al finalizar el plan. Cualquier violaci\'on sobre alguna restricci\'on
+	debe ser salvada al momento de finalizaci\'on del plan. En PDDL, se declara 
+	como: \texttt{safety-constraints}. A continuaci\'on, presentamos un ejemplo.
+	
+	\begin{ejemplo}
+	
+	El ejemplo muestra una restricci\'on para un robot que evita 
+	eliminar archivos que no tienen copia de seguridad:
+	
+        \begin{verbatim}	
+(:safety
+   (forall (?f)
+       (or (file ?f) 
+           (written-to-tape ?f)))
+)
+        \end{verbatim} 	
+	\end{ejemplo}
+	\end{itemize}
+
+
+\subsubsection{PDDL 2.1}
+
+La versi\'on original reci\'en fue modificada hacia el a\~{n}o 2002.
+PDDL 2.1 \cite{gbraun:pddl211} adiciona dos importantes caracter\'isticas: 
+acciones durativas\footnote{En Ingl\'es, \emph{durative actions}.} y 
+funciones objetivo\footnote{En Ingl\'es, \emph{objetive functions}.}.
+
+	\begin{itemize}
+
+	\item {\bf Acciones durativas}. Las acciones durativas son aquellas
+	que requieren una determinada cantidad de tiempo para ejecutarse. En
+	PDDL 2.1 se definieron dos formas de acciones durativas: discretizadas
+	y continuas. En la especificaci\'on del lenguaje, Maria 
+	Fox\footnote{Maria
+          Fox. \url{https://personal.cis.strath.ac.uk/~maria/}. Disponible
+        en Septiembre de 2012.} y Derek 
+	Long\footnote{Derek
+          Long. \url{https://personal.cis.strath.ac.uk/~derek/}. Disponible
+        en Septiembre de 2012.},
+	definen la diferencia entre ambas acciones. 
+	Las acciones discretizadas son aquellas que toman
+	una cantidad fija de tiempo y un ejemplo claro de esto es un agente
+	viajando entre dos ciudades. 
+	Sin embargo, este tipo de acciones puede condicionar la performance del 
+	agente teniendo en cuenta que podr\'ia completar
+	la acci\'on en menor tiempo que el definido. Por otro lado, las acciones
+	continuas no parecen tener este problema ya que permiten al agente detener
+	el proceso en cualquier punto consistente con las restricciones definidas
+	sobre la duraci\'on de la acci\'on.
+	
+	Una acci\'on durativa es definida de la siguiente manera:
+	
+	\begin{ejemplo}
+	
+	La siguiente acci\'on define la carga de un transporte sin
+	restricciones de capacidad.
+	
+	\begin{verbatim}
+(:durative-action load-truck
+   :parameters (?t - truck) (?l - location)
+               (?o - cargo) (?c - crane)
+   :duration (= ?duration 5)
+   :condition (and (at start (at ?t ?l))
+                   (at start (at ?o ?l))
+                   (at start (empty ?c)
+                   (over all (at ?t ?l))
+                   (at end (holding ?c ?o))
+   :effect (and (at end (in ?o ?t))
+                (at start (holding ?c ?o))
+                (at start (not (at ?o ?l)))
+                (at end (not (holding ?c ?o)))
+)
+	\end{verbatim}
+	\end{ejemplo}
+
+	\item {\bf Funciones objetivo}. La inclusi\'on de m\'etricas en PDDL
+	es consecuencia de la adopci\'on de una extensi\'on num\'erica estable
+	(esto es, permitir funciones de tipo $Object^{n} \longrightarrow \Re$
+	para una colecci\'on finita de objetos y funciones finitas de aridad $n$).
+	El nuevo campo opcional se define como \texttt{:metric} y es incluido
+	en la especificaci\'on de problemas PDDL. Las m\'etricas permiten especificar
+	c\'omo un plan ser\'a evaluado y permiten a los modeladores explorar los efectos
+	de diferentes m\'etricas en la construcci\'on de soluciones a problemas con un
+	mismo dominio. 
+
+	El siguiente ejemplo muestra la definici\'on de una m\'etrica:
+
+	\begin{ejemplo}
+	
+	La m\'etrica define una funci\'on que minimiza
+	el consumo de combustible total.
+	
+	\begin{verbatim}
+	(:metric minimize (total-fuel-used))
+	\end{verbatim}
+	\end{ejemplo}
+
+        En contraposici\'on y, luego del ejemplo anterior, 
+	la inclusi\'on de m\'etricas en problemas
+	de planificaci\'on es compleja y requiere un manejo cuidadoso.
+
+	\end{itemize}
+
+
+
+\subsubsection{PDDL 2.2}
+
+La tercer actualizaci\'on de PDDL fue publicada en el a\~{n}o 2004. 
+La versi\'on 2.2 \cite{gbraun:pddl22} incluye, como nuevas
+caracter\'isticas, a los predicados derivados\footnote{En Ingl\'es, \emph{Derivated
+predicates}.} y a los literales acotados en 
+tiempo\footnote{En Ingl\'es, \emph{Timed initial literals}.}. 
+
+	\begin{itemize}
+	
+	\item {\bf Predicados derivados}. Los predicados derivados son aquellos que 
+	no son afectados por ninguna de las acciones disponibles para el planificador.
+	Los valores de verdad de estos predicados son derivados a
+        partir de un conjunto de reglas
+	de la forma $P \Rightarrow Q$. 
+	Los dominios PDDL que incluyen predicados derivados deben declarar el
+	requerimiento \texttt{durative-predicates}.
+	A continuaci\'on, damos un ejemplo de c\'omo
+	PDDL define estos predicados.
+	
+	\begin{ejemplo}%{Predicados derivados en Mundo de Bloques}
+	
+	Dados los bloques \texttt{x} e \texttt{y}, el predicado \texttt{above} es verdadero
+	si \texttt{x} est\'a transitivamente sobre \texttt{y}.
+	
+	\begin{verbatim}
+(:derived (above ?x ?y)
+          (or on(?x ?y)
+          exists (?z) (and (on ?x ?z)
+                           (above ?z ?y))))
+)             
+	\end{verbatim}
+	\end{ejemplo}
+	
+	Estos predicados combinan varios aspectos
+	claves. Ellos prove\'en una manera concisa y conveniente
+	para expresar la clausura transitiva de una relaci\'on.
+	Los predicados pueden ser compilados a un formalismo 
+	menos expresivo introduciendo acciones y hechos 
+	equivalentes. Por \'ultimo, no causan un \emph{overhead}
+	significativo en algunos planificadores, como por ejemplo,
+	\emph{Forward Search} \cite{russell03:_artif_intel}. 
+	
+	\item {\bf Literales acotados en tiempo}. Son una 
+	manera muy simple de expresar un evento restringido en el tiempo. 
+	Los hechos se volver\'an \emph{true} o \emph{false} en puntos del tiempo
+	que son conocidos, previamente por el planificador,
+	sin considerar las acciones que son
+	eligidas para ejecutar. Esta extensi\'on de PDDL es relevante
+	ya que eventos determin\'isticos son muy comunes en el mundo real
+        (por ejemplo, tiempo en el que una persona trabaja). 
+        Un dominio PDDL que utiliza estos literales debe incluir
+        el requerimiento \texttt{timed-initial-literals}.
+        El siguiente ejemplo indica c\'omo incluir este requerimiento 
+        en un dominio PDDL.
+    
+    \begin{ejemplo}%{Literales acotados en tiempo}
+    
+    La acci\'on \texttt{go-shopping} requiere que el \texttt{shop}
+    est\'e abierto como precondici\'on. El \texttt{shop} abre al p\'ublico
+    a las 9 horas y cierra sus puertas a las 20 horas.
+    
+    \begin{verbatim}
+(:init
+    (at 9 (shop-open))
+    (at 20 (not (shop-open)))
+)
+    \end{verbatim}
+    \end{ejemplo}
+    \end{itemize}
+
+
+
+\subsubsection{PDDL 3.0}
+
+La generaci\'on de planes de \emph{buena calidad} es uno
+de los intereses centrales en aquellos
+dominios de planificaci\'on que modelan problemas del
+mundo real. Esta extensi\'on de PDDL propone una mejor
+caracterizaci\'on para obtener planes de calidad permitiendo
+la definici\'on de restricciones sobre la estructura
+de los planes.
+La versi\'on del lenguaje es la 3.0 \cite{gbraun:pddl301}, \cite{gbraun:pddl30}
+y fue actualizada en 2006. Incluye restricciones\footnote{En Ingl\'es,
+\emph{Constraints}.} y 
+preferencias\footnote{En Ingl\'es, \emph{Preferences}.}.
+
+	\begin{itemize}
+	
+	\item {\bf Restricciones}. PDDL define restricciones sobre
+	un conjunto v\'alido de planes expresadas en l\'ogica temporal.
+	Las restricciones establecen condiciones que deben ser cumplidas
+	por la secuencia de estados visitados durante la ejecuci\'on del 
+	plan. Las condiciones son expresadas con operadores modales, como
+	por ejemplo, \texttt{always}, \texttt{sometime}, \texttt{at-most-once}
+	y \texttt{at-end}. Las restricciones son incluidas en problemas y dominios PDDL
+	usando la declaraci\'on \texttt{:contraints}\footnote{\texttt{constraints} pueden
+	ser vistas como \texttt{safety-constraints}.}.
+	A continuaci\'on, mostramos un ejemplo con la definici\'on de una restricci\'on.
+	
+	\begin{ejemplo}%{Restricciones en el Mundo de Bloques}
+	
+	El siguiente ejemplo restringe la cantidad de bloques que 
+	pueden estar apilados sobre otro. En este caso, no m\'as de un bloque.
+	
+	\begin{verbatim}
+(:constraints
+    (and (always (forall (?b1 ?b2 - block)
+                 (implies (and (fragile ?b1) (on ?b2 ?b1)) 
+                               (clear ?b2)))))
+)
+	\end{verbatim}
+	\end{ejemplo} 
+	
+	\item {\bf Preferencias}. Las preferencias son tambi\'en denominadas
+	restricciones \emph{soft}. Son restricciones que no necesitan ser
+	satisfechas por un plan pero decrementan la calidad del mismo si no se 
+	satisfacen. La sintaxis de las preferencias tiene dos partes bien
+	identificadas. Primero, la identificaci\'on de la restricci\'on y segundo,
+	la descripci\'on de c\'omo la satisfacci\'on, o la falta de ella, afecta la 
+	calidad del plan.
+	
+	Las preferencias pueden introducirse en dominios y problemas
+        declarando la cl\'ausula
+	\texttt{:pre\-fe\-ren\-ces}. Las preferencias sobre las restricciones de estados
+	son expresadas luego de la definici\'on de \texttt{(:contraints ...)} y
+	las preferencias sobre la meta son expresadas en \texttt{(:goal ...)}.
+	
+	Los pr\'oximos ejemplos muestran definiciones de preferencias en
+	dominios y problemas.
+	
+	\begin{ejemplo}%{Preferencias en el dominio PDDL del Mundo de Bloques}
+	
+	La restricci\'on incluye la preferencia por apilar
+	bloques del mismo color.
+	
+	\begin{verbatim}
+(:constraints
+    (and (preference
+         (always (forall (?b1 ?b2 - block ?c1 ?c2 - color)
+                         (implies (and (on ?b1 ?b2)
+                                       (color ?b1 ?c1)
+                                       (color ?b2 ?c2))
+                                       (= ?c1 ?c2))))))
+)
+        \end{verbatim}
+	\end{ejemplo}
+	
+	\begin{ejemplo}%{Preferencias en Problemas PDDL}
+	
+	La siguiente meta implica que el \texttt{package1}
+	est\'e en \texttt{london} con la restricci\'on de que el
+	transporte est\'e vac\'io.
+	
+	\begin{verbatim}
+(:goal (and (at package1 london) 
+            (preference (clean truck1)))
+)
+	\end{verbatim}        
+	\end{ejemplo}
+	\end{itemize}
+	
+
+\subsubsection{PDDL 3.1}
+
+Finalmente, la \'ultima versi\'on de PDDL que estudiaremos es 
+la versi\'on 3.1 del a\~{n}o 2008 \cite{gbraun:pddl31}. 
+Entre las principales extensiones incluye
+\emph{fluents} de objetos\footnote{En Ingl\'es, \emph{object fluents}.} y costos en 
+acciones\footnote{En Ingl\'es, \emph{action-costs}.}.
+
+
+
+	\begin{itemize}
+	
+	\item {\bf Fluents objeto}. Los \emph{fluents} de objetos
+        son an\'alogos a los \emph{fluents} num\'ericos\footnote{Un \emph{fluent} es una variable/predicado 
+	de estado cuyo valor es num\'erico y que permiten
+        modelar recursos tales como tiempo, energ\'ia,
+        distancia, etc. en dominios PDDL. El rango de estos \emph{fluents}
+        son n\'umeros enteros o reales. Por ejemplo, el \emph{fluent}
+        num\'erico \texttt{(total-cost)} mantiene el costo total
+        de una acci\'on. Entonces, para que el valor de la acci\'on sea computado, su efecto deber\'a
+        definir el incremento de este costo de la siguiente manera:
+        \texttt{:effect (increase (total-cost))}.}, sin embargo, el
+        rango de estos \emph{fluents} tambi\'en puede incluir objetos
+        del dominio.
+	Este nuevo requerimiento es definido en PDDL como \texttt{:object-fluents} y,
+	cuando es usado, tanto la definici\'on de
+	dominios como los problemas pueden hacer uso de estos \emph{fluents}.
+	
+	\begin{ejemplo}%{Definicion de fluents}
+	
+	El ejemplo muestra la definici\'on de un \emph{fluent}
+	\texttt{(on-block ?x - block) - block} cuyo rango es un objeto
+        tipo \texttt{block} que puede ser retornado por la funci\'on
+        \texttt{on-block ?x}. El argumento de la funci\'on tambi\'en
+        debe ser un objeto. En el segundo \emph{fluent}, la funci\'on
+        tambi\'en retorna el bloque que est\'a \emph{in-hand}.
+	
+	\begin{verbatim}  
+(:functions  (in-hand) - block
+             (on-block ?x - block) - block)
+
+)
+	\end{verbatim}
+	\end{ejemplo}
+	
+	
+	\item {\bf Costos en acciones}. Cuando el requerimiento es
+	incluido en una especificaci\'on PDDL, mediante \texttt{:action-costs}, 
+	el uso de \emph{fluents} num\'ericos es habilitado. Estos costos en
+	acciones enfatizan a\'un m\'as la importancia de la calidad del plan.
+	
+	\begin{ejemplo}%{Especificando costos para acciones PDDL}
+	
+	Para incluir costos en acciones es necesario definir un \emph{fluent}
+	que permita registrar el costo, especificar que el \emph{fluent} es
+	modificado por la ejecuci\'on de una acci\'on, inicializar el \emph{fluent} y
+	definir una m\'etrica. A continuaci\'on, mostramos un ejemplo acotado con un
+	dominio y un problema PDDL con estas definiciones.
+	
+	\begin{verbatim}
+(define (domain travel)
+	...
+ (:functions (distance ?from ?to)
+            (total-cost))
+ (:action go
+   :parameters (?from ?to)
+   :precondition (and (in ?from) (road ?from ?to))
+   :effect (and (not (in ?from)) (in ?to)
+           (increase (total-cost) (distance ?from ?to))))
+ )
+ 
+(define (problem travelp)
+...
+ (:init ...
+    (= (distance A B) 10)
+    (= (distance A C) 35)
+...
+ )
+...
+)
+	\end{verbatim}
+	\end{ejemplo}
+	\end{itemize}
+ 
+
+
+\section{Definici\'on de Problemas de Planificaci\'on en PDDL} \label{cap1:Definicion de Problemas de planificaci\'on en PDDL}
+
+Una definici\'on PDDL consiste de dos partes: un dominio y un problema.
+Ambos pueden o no estar definidos en archivos separados pero, esto
+tambi\'en, puede ser una condici\'on del planificador que se est\'e utilizando.
+
+A continuaci\'on, se detallan la estructuras correspondientes
+a dominios y problemas PDDL.
+
+\subsection{Definici\'on de Dominios}
+
+La definici\'on de un dominio contiene predicados, operadores 
+(llamados \emph{acciones} en PDDL) y requerimientos. Los dominios 
+b\'asicos PDDL tienen la siguiente sintaxis:
+
+ \begin{verbatim}
+(define (domain DOMAIN_NAME)
+  (:requirements [:strips] [:equality] [:typing] [:adl])
+  (:typing ...)
+  (:constants ...)
+  (:predicates (PREDICATE_1_NAME ?A1 ?A2 ... ?AN)
+               (PREDICATE_2_NAME ?A1 ?A2 ... ?AN)
+	       ...)
+  (:action ACTION_1_NAME
+    [:parameters (?P1 ?P2 ... ?PN)]
+    [:precondition PRECOND_FORMULA]
+    [:effect EFFECT_FORMULA]
+   )
+  (:action ACTION_2_NAME
+      ...)
+
+...)
+ \end{verbatim}
+donde cada etiqueta tiene la siguiente descripci\'on:
+
+\begin{itemize}
+
+\item {\bf Requerimientos:} el campo \texttt{:requirements} incluye una lista 
+de los requerimientos usados en la definici\'on del dominio. 
+Si ning\'un requerimiento es especificado, el poder expresivo 
+del problema de planificaci\'on es equivalente al del lenguaje STRIPS.
+
+\item {\bf Tipos:} el campo \texttt{:typing} prove\'e una declaraci\'on de tipos. 
+Es una lista de nombres donde cada uno de ellos 
+representa un tipo diferente.
+
+\begin{ejemplo}%{Tipos en PDDL}
+
+La sentencia \texttt{(:types agent wumpus gold square)} 
+define cuatro tipos de objetos 
+\texttt{agent}, \texttt{wumpus}, \texttt{gold} y \texttt{square}.
+
+\end{ejemplo}
+
+\item {\bf Constantes:} el campo \texttt{:constants} puede declarar una lista de nombres 
+con tipos o bien una de nombres sin tipos. Una lista de constantes 
+con tipos es simplemente una lista de nombres los cuales pueden incluir tipos 
+precedidos por un signo \texttt{`-'} (menos). Este campo es opcional.
+
+\begin{ejemplo}%{Constantes en PDDL}
+
+La sentencia \texttt{(:constants b1 b2 - block)} declara dos constantes:
+\texttt{b1} y \texttt{b2} de tipo \texttt{block}. 
+
+\end{ejemplo}
+
+\item {\bf Predicados:} el campo requerido \texttt{:predicates} 
+consiste de una lista de declaraciones de predicados. 
+La lista indica qu\'e predicados ser\'an usados en el dominio y
+cu\'ales son los argumentos y la la aridad de cada uno. 
+En caso de que se hayan declarado tipos, 
+la lista de variables es la misma que la declarada 
+para la definici\'on de constantes con tipos. 
+El predicado de igualdad \texttt{`='} es un predicado predefinido 
+que puede tomar dos argumentos de cualquier tipo.
+
+\begin{ejemplo}%{Predicados en PDDL}
+
+La sentencia \texttt{(:predicates (clear ?x) (on-table ?x))} declara los pre\-di\-ca\-dos 
+\texttt{clear(x)} y \texttt{on-table(x)} ambos de aridad 1. 
+
+\end{ejemplo} 
+
+\item {\bf Acciones:} la declaraci\'on de una acci\'on involucra tres campos 
+\texttt{:parameters} (par\'ametros), 
+\texttt{:precondition} (precondici\'on) y \texttt{:effect} (efecto). 
+El campo par\'ametros es una lista de variables, es decir, los argumentos 
+sobre los cuales operan los predicados. Los par\'ametros pueden
+tambi\'en incluir tipos. 
+Los campos precondici\'on y efecto son conjunciones de li\-te\-ra\-les. 
+En ambos casos, todas las variables de estos componentes 
+deben aparecer en la lista de par\'ametros.
+
+\begin{ejemplo}
+
+La acci\'on \texttt{stack} tiene los par\'ametros \texttt{ob}
+y \texttt{underob}. La precondici\'on y efectos son conjunciones con
+variables que est\'an en la lista de par\'ametros. Los predicados son
+aquellos definidos en la secci\'on \texttt{predicates} del dominio PDDL.
+
+ \begin{verbatim}
+(:action stack
+  :parameters  (?ob ?underob)
+  :precondition (and  (clear ?underob) (holding ?ob))
+  :effect (and (clear ?ob) (on ?ob ?underob) (armempty)
+               (not (clear ?underob)) (not (holding ?ob))))
+)
+ \end{verbatim}
+\end{ejemplo}
+
+Una instancia de una acci\'on es aplicable a un estado \emph{$S$}, 
+si y s\'olo si, su precondici\'on es verdadera en \emph{$S$}. 
+El nuevo estado \emph{$S^{'}$} es generado adicionando todos los \'atomos 
+positivos que aparecen en la lista de efectos y eliminando desde \emph{$S$} 
+todas las f\'ormulas at\'omicas negativas que aparecen en la lista de efectos.
+Las restantes f\'ormulas at\'omicas \emph{ground} verdaderas son tambi\'en
+agregadas a \emph{$S$}.
+
+
+
+\end{itemize} 
+ 
+%Problemas en PDDL
+
+\subsection{Definici\'on de Problemas}
+
+Un problema es lo que un planificador trata de resolver 
+y es definido con respecto a un dominio. B\'asicamente, un problema espec\'ifica 
+una situaci\'on inicial y una meta a ser alcanzada. 
+
+Los problemas PDDL tienen la siguiente sintaxis: %strips-pddl-subset
+
+ \begin{verbatim} 
+(define (problem PROBLEM_NAME)
+  (:domain DOMAIN_NAME)
+  (:objects OBJ1 OBJ2 ... OBJ_N)
+  (:init ATOM1 ATOM2 ... ATOM_N)
+  (:goal CONDITION_FORMULA)
+  )
+ \end{verbatim}
+donde cada etiqueta tiene la siguiente descripci\'on:
+
+\begin{itemize}
+
+\item {\bf Dominio:} el campo \texttt{:domain} declara el dominio 
+asociado al problema actual.
+
+\begin{ejemplo}%{Declaracion de dominio en PDDL}
+
+La sentencia \texttt{(:domain typed-blocksworld)} indica que el problema 
+est\'a siendo definido para el dominio llamado \texttt{typed-blocksworld}.
+
+\end{ejemplo}
+
+\item {\bf Estado Inicial:} el campo \texttt{:init} incluye una lista con 
+todos los \'atomos \emph{ground} que son verdaderos en el estado inicial.
+
+\begin{ejemplo}%{Estado Inicial en PDDL}
+
+La sentencia \texttt{(:init (clear A) (on A B) (on B C) (on-table C) (empty H))} 
+define que los \'atomos \texttt{clear(A)}, 
+\texttt{on(A,B)}, \texttt{on(B,C)}, \texttt{on-table(C)} y \texttt{empty(H)} son verdaderos.
+
+\end{ejemplo}
+ 
+\item {\bf Objetos:} el campo \texttt{:objects} lista los 
+objetos que existen en el problema y 
+puede ser un super conjunto de aquellos objetos 
+que aparecen en la definici\'on del estado inicial. 
+En el caso que la definici\'on incluya tipos, el 
+campo, es una lista de objetos con tipos inmediatamente 
+precedidos por el signo \texttt{`-'} (menos). Este campo es obligatorio. 
+
+\begin{ejemplo}%{Declaracion de objectos en PDDL}
+
+La siguiente definici\'on de objetos \texttt{(:objects H - hand A B C - block)} 
+declara que el objeto \texttt{H} es de tipo \texttt{hand} y 
+que los objetos \texttt{A, B, C} son de tipo \texttt{block}.
+
+\end{ejemplo}
+
+\item {\bf Meta:} la meta, \texttt{:goal}, de la definici\'on de un problema, 
+es una conjunci\'on de \'atomos \emph{ground}.
+
+\begin{ejemplo}%{Definicion de la meta en PDDL}
+
+La meta para el problema actual es 
+\texttt{(:goal (and (on C B) (on B A)))}
+
+\end{ejemplo}
+
+\end{itemize}
+
+A diferencia de las precondiciones en las acciones del dominio, 
+tanto el estado inicial como el final, tienen que contener f\'ormulas \emph{ground}. 
+Esto significa que los argumentos de todos estos predicados deben estar 
+instanciados a objetos o nombres de constantes.
+
+La soluci\'on a un problema es una serie de acciones tal que:
+
+\begin{enumerate}
+
+	\item La secuencia de acciones, incluidas en el plan,
+	es aplicable a partir de la situaci\'on inicial, y
+
+	\item La meta es verdadera en la situaci\'on que 
+	resulta de la ejecuci\'on de dicha secuencia de acciones.
+
+\end{enumerate}
+
+
+
+\section{Requerimientos PDDL adicionales} \label{gbraun:subpddl}
+
+	Como mencionamos en la secci\'on \ref{cap1:PDDL}, el n\'ucleo de
+	PDDL es el formalismo STRIPS. Este formalismo
+	es soportado por la mayor\'ia de los planificadores existentes,
+        como por ejemplo, POP \cite{gbraun:pop:1991}, entre otros.
+	Sin embargo, PDDL se extiende m\'as all\'a de este simple lenguaje STRIPS.
+	El incremento en la complejidad del lenguaje hace que muchos de los planificadores
+	estudiados se vuelvan obsoletos para tratar con caracter\'isticas que incluyen, por
+	ejemplo, l\'ogicas temporales.
+	
+	Ante este problema, existen dos alternativas principales de soluci\'on. La primera implica la 
+	adaptaci\'on del algoritmo de planificaci\'on para manejar extensiones
+	de PDDL. Este enfoque es, normalmente, m\'as eficiente pero su implementaci\'on puede
+	ser compleja.
+	
+	Por otro lado, la segunda propuesta es \emph{compilar}
+        los requerimientos adicionales
+	generando una salida equivalente en un lenguaje m\'as simple, en nuestro caso, 
+	STRIPS. Este \'ultimo enfoque es el adoptado para nuestro
+        trabajo. De esta manera, logramos combinar la expresividad de
+        PDDL con un planificador de tipo continuo que
+        analizaremos con mayor detalle en el pr\'oximo cap\'itulo.
+
+        Debido a que PDDL es un lenguaje muy general y muchos planificadores
+	soportan s\'olo un subconjunto de \'el, los dominios declaran requerimientos.
+	Los requerimientos definen la sem\'antica subyacente en los problemas de 
+	planificaci\'on en los que son declarados y permiten clasificar a los
+	planificadores seg\'un los requerimientos que pueden procesar estos
+	algoritmos. El requerimiento por defecto para cualquier especificaci\'on
+	PDDL es \texttt{strips}.
+	
+	En esta secci\'on vamos a detallar cada uno de los requerimientos
+	PDDL incluidos en nuestro trabajo. 
+        Como parte de este trabajo de tesis, cada uno de estos
+        requerimientos es \emph{compilado} 
+        generando una salida equivalente en lenguaje STRIPS.
+        
+        Una lista m\'as exhaustiva de todos los requerimiento que incluye el lenguaje
+	puede encontrarse en \cite{gbraun:pddl31}.
+
+
+% GB: justificar porque lo elegimos?
+
+	\subsubsection{Strips}
+	
+	Como mencionamos previamente, STRIPS
+	es el lenguaje b\'asico de representaci\'on y es el n\'ucleo de PDDL.
+	Los detalles de STRIPS fueron discutidos en la secci\'on \ref{cap1: STRIPS}.
+	La declaraci\'on de este requerimiento en un dominio PDDL se
+        realiza mediante \texttt{:strips}. 
+
+	\subsubsection{Igualdad}
+	
+	Este requerimiento indica que la descripci\'on 
+	del modelo soporta el operador \texttt{`='} como un predicado 
+	\emph{built-in}.
+	La declaracion de este requerimiento en un dominio PDDL se
+        realiza mediante  
+	\texttt{:equality}. 
+	
+	La siguiente es una acci\'on sobre el problema del ``Mundo de Bloques'' 
+	que utiliza este predicado para la comparaci\'on de par\'ametros.
+
+	\begin{ejemplo}%{Igualdad en dominios PDDL}
+        En este caso, la acci\'on \texttt{stack}
+        permite apilar un bloque s\'olo si el destino es 
+        la mesa. \texttt{table} es una
+        constante.
+	\begin{verbatim}
+(:action stack
+   :parameters (?X ?Y)
+   :precondition (and (clear table) (= ?Y table)) 
+   :effect (and (on ?X table) (not (clear table)))
+)                
+	\end{verbatim}
+	\end{ejemplo}
+
+	\subsubsection{Efectos condicionales}
+	
+	Los efectos condicionales 
+	son utilizados para describir acciones cuyos efectos son 
+	dependientes del contexto. 	
+	Sint\'acticamente, se incluye una cl\'ausula especial \texttt{when} 
+	en los efectos de las acciones que recibe dos argumentos: 
+	\emph{antecente} y \emph{consecuente}. 
+	La acci\'on tendr\'a los efectos del consecuente si el antecedente 	
+	se cumple inmediatamente antes de la ejecuci\'on de la acci\'on. 
+	El antecedente es llamado precondici\'on 
+	secundaria y, por lo tanto, se refiere al estado del mundo antes 
+	que la acci\'on sea ejecutada, mientras que el consecuente, se 
+	refiere al estado del mundo luego de la ejecuci\'on de dicha acci\'on.
+	Los efectos condicionales son usados en PDDL declarando
+	el requerimiento \texttt{conditional-effects}.
+
+	A continuaci\'on, ilustramos el uso los efectos condicionales
+        con un ejemplo.
+
+	\begin{ejemplo}%{Efectos condicionales en PDDL}
+	
+	Redefinimos la acci\'on \texttt{stack} del ``Mundo de Bloques''
+	para incluir efectos condicionales. En esta nueva acci\'on,
+        el bloque \texttt{?X} ser\'a apilado sobre \texttt{?Z}
+        siempre que \texttt{?X} est\'e previamente apilado sobre
+        \texttt{?Y}.
+	
+	\begin{verbatim}
+(:action stack
+   :parameters (?X ?Y ?Z)
+   :precondition (and (clear ?X) (clear ?Z) (on ?X ?Y))
+   :effects (and (on ?X ?Z) (clear ?Y) (not (on ?X ?Y)) 
+                 (when (block ?Z) (not (clear ?Z))))
+)
+	\end{verbatim}
+
+        Analicemos el efecto condicional
+        definido para la acci\'on \texttt{stack}. La cl\'ausula \texttt{(when (block ?Z) (not (clear ?Z)))}
+        define la precondici\'on secundaria \texttt{(block ?Z)},
+        por lo tanto, \texttt{(not (clear ?Z))} ser\'a agregado 
+        al conjunto de efectos de la acci\'on si \texttt{?Z} es un
+        bloque. 
+	\end{ejemplo}
+	
+
+
+	\subsubsection{Precondiciones disyuntivas}
+	
+	Este requerimiento implica la inclusi\'on de la cl\'ausula
+	especial \texttt{`or'} en la definici\'on 
+	de las acciones en PDDL. Las precondiciones disyuntivas 
+        permiten expresar que una acci\'on puede ser ejecutada si s\'olo 
+        algunas de las precondiciones son verdaderas.
+
+	En el siguiente ejemplo vemos c\'omo se modela en PDDL
+        usando disyunci\'on en las precondiciones de las acciones.
+	
+	\begin{ejemplo}%{Disyuncion en precondiciones PDDL}
+	
+	Esta acci\'on modela una variante de la acci\'on
+	\texttt{stack} del ``Mundo de Bloques'' presentada
+	previamente. 
+        La precondici\'on incluye el nuevo requerimiento \texttt{or} 
+        estableciendo que un objeto \texttt{?X} puede ser apilado sobre
+	\texttt{?Z} si \texttt{?Z} es la mesa (\texttt{istable}) u 
+        otro bloque, sin ning\'un otro bloque apilado.
+	
+	\begin{verbatim}		  
+(:action stack
+   :parameters (?X ?Y ?Z)
+   :precondition (and (or (istable ?Z) (clear ?Z))
+                      (clear ?X) (on ?X ?Y))
+   :effect (and (on ?X ?Z) (clear ?Y)
+                (not (clear ?Y)) (not (on ?X ?Y)))
+)	
+	\end{verbatim}
+	\end{ejemplo}
+	  
+
+	\subsubsection{Precondiciones universales} 
+	
+	La definici\'on de este requerimiento implica 
+	la inclusi\'on de una nueva cl\'ausula especial,
+	llamada \texttt{forall}, en las especificaciones de las acciones PDDL. 
+	La cuantificaci\'on universal permite modelar acciones que ser\'an ejecutadas 
+	si todos los objetos, considerados en el mundo que se est\'a modelando, 
+	cumplen con la precondici\'on correspondiente. 
+
+	En el siguiente ejemplo vemos como las precondiciones 
+	las precondiciones universales son empleadas en 
+	una especificaci\'on PDDL:
+	
+	\begin{ejemplo}%{Cuantificaci\'on universal en PDDL}
+
+	Esta es una variante de la acci\'on \texttt{stack} del 
+        ``Mundo de Bloques''. La acci\'on permitir\'a apilar un
+        bloque sobre otro si todos los bloques, especificados en la
+        definici\'on del pro\-ble\-ma, est\'an posicionados sobre
+        la mesa. Notar que los bloques sobre la mesa pueden estar, a
+        su vez, tambi\'en apilados sobre otros.
+	
+	Antes de definir la acci\'on \texttt{stack} vamos a 
+	declarar el problema PDDL con los respectivos objetos.
+	
+	\begin{verbatim}
+(define (problem pb1)
+   (:domain bkwup)
+   (:objects a b c)
+   (:goal (on a b))
+   (:init (ontable c) (ontable b) (ontable a) 
+          (on a c) (clear a)  (clear b) (armempty))
+)
+	\end{verbatim}
+	
+	Luego, la definici\'on de la acci\'on \texttt{stack} 
+	es la siguiente:
+	
+	\begin{verbatim}
+(:action stack
+  :parameters  (?ob ?underob)
+  :precondition (and (forall (?block) (ontable ?block))
+                     (clear ?underob) (holding ?ob))
+  :effect (and (clear ?ob) (on ?ob ?underob) (armempty)
+               (not (clear ?underob)) (not (holding ?ob))))
+	\end{verbatim}
+	\end{ejemplo}
+\ \\
+En resumen, hicimos un breve repaso de los formalismos de
+planificaci\'on comenzando con el lenguaje STRIPS. Luego, estudiamos
+las prinicipales caracter\'isticas de PDDL, su evoluci\'on como
+est\'andar y algunos de sus ancestros. Por \'ultimo,
+analizamos con m\'as detalle los requerimientos PDDL que ser\'an
+compilados a STRIPS como parte de nuestro trabajo de tesis.
+\ \\
+
+En el pr\'oximo cap\'itulo presentaremos el Framework de
+Planificaci\'on Continua, repasaremos sus principales
+caracter\'isticas y analizaremos la integraci\'on del traductor PDDL a
+su arquitectura modular.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

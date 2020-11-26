@@ -1,0 +1,41 @@
+(note TQD20)
+
+
+(exportAmountDuring Iran PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 2.40000)) 
+
+(implies 
+ (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME 
+ (MillionBarrelsPerDay ?X)) 
+ (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME 
+ (BarrelsPerDay 
+ (TimesFn ?X 1000000)))) 
+
+(implies 
+ (exportAmountDuring ?REGION ?PRODUCT-TYPE 
+ (YearFn ?X) 
+ (BarrelsPerDay ?Y)) 
+ (exportAmountDuring ?REGION ?PRODUCT-TYPE 
+ (YearFn ?X) 
+ (Barrel-UnitOfVolume 
+ (TimesFn ?Y 365)))) 
+
+
+(query (findall (?CHANGE  ?TIME) 
+
+(thereExists ?NR 
+   (and 
+       (exportAmountDuring Iran PetroleumProduct ?TIME 
+           (Barrel-UnitOfVolume ?NR)) 
+       (evaluate ?CHANGE 
+           (QuantityConversionFn BillionDollars 
+               (TimesFn ?NR 
+                   (Dollar-UnitedStates 5))))))
+))
+
+(answer 4.38000 1997
+)
+
+(end_of_file)
+

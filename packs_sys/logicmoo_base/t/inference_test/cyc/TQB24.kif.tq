@@ -1,0 +1,26 @@
+(note TQB24)
+(abort)
+
+(startsDuring (YearFn 1995) 
+ (TimeIntervalInclusiveFn (YearFn 1980) (YearFn 1998)))
+
+(query (findall ?EXPORTER
+  (thereExists ?TIME 
+    (and 
+      (startsDuring ?TIME 
+        (TimeIntervalInclusiveFn (YearFn 1980) (YearFn 1998))) 
+      (nthLargestElement ?COUNTRY 1 
+        (TheSetOf ?X 
+          (hasMembers GulfCooperationCouncil ?X))
+        (FunctionToArg 2 
+          (Kappa 
+            (?EXPORTER ?AMOUNT) 
+            (and 
+              (instance ?AMOUNT FlowRate) 
+              (exportAmountDuring ?EXPORTER PetroleumProduct ?TIME ?AMOUNT))))))) ))
+
+(answer SaudiArabia)
+
+(end_of_file)
+
+

@@ -1,0 +1,21 @@
+
+(note "Olga Implies/TheExists")
+
+(operatesOnHardwareType ED SPARC)
+(hardwareType virginia SPARC)
+
+(implies
+	(and
+		(operatesOnHardwareType ?Application ?HostType)
+		(hardwareType ?Host ?HostType))
+	(runs ?Application ?Host HardwareType))
+
+(implies
+	(thereExists ?Host
+			(runs ?Application ?Host HardwareType))
+	(behaviorCapable ?Application Executable))
+
+
+( query (behaviorCapable ED Executable))
+
+(end_of_file)

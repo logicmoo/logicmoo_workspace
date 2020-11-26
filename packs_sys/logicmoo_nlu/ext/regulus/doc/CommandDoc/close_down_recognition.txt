@@ -1,0 +1,3 @@
+If you are doing recognition from the Regulus command-line (cf. Section~\ref{Section:CommandLineSpeechInput}), you may want to use this command to close down the relevant processes after you are finished. This command lets you do it, though it currently only works under Windows/Cygwin.
+
+

@@ -1,0 +1,282 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+
+## Logicmoo Utils Examples
+
+ from https://github.com/TeamSPoon/logicmoo_utils.git
+
+ Install locally with
+
+ ````prolog
+ ?- pack_install('https://github.com/TeamSPoon/logicmoo_utils.git').
+ ````
+
+
+
+
+
+
+# Control local side effects on each REDO 
+
+Example usages: 
+
+````prolog
+       
+ % Scope *when* a prolog flag is set
+ with_prolog_flag(Flag,Value,Goal):- 
+    current_prolog_flag(Flag,Was),
+     each_call_cleanup( 
+	 set_prolog_flag(Flag,Value), 
+	  Goal, 
+	   set_prolog_flag(Flag,Was)). 
+  
+
+````
+
+
+## no_repeats
+New ways to avoid duplicate solutions
+
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+
+?- use_module(library(lm_utils/no_repeats)).
+
+?- no_repeats( X , member(X-Y,[3-2,1-4,1-5,2-1])).
+% X = 3, Y = 2 ;
+% X = 1, Y = 4 ;
+% X = 2, Y = 1.
+
+
+ ?- no_repeats(member(X,[3,1,1,1,3,2])).
+% X = 3 ;
+% X = 1 ;
+% X = 2.
+
+
+</div>
+
+<div class="nb-cell markdown">
+
+
+
+## loop_check
+New simple loop checking
+
+Allows code to declare special locations that loop prevention will occur
+
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+?- use_module(library(lm_utils/no_loops)).
+true.
+
+?-  TODO Doc this
+
+</div>
+
+<div class="nb-cell markdown">
+
+
+
+## sub_clause_expansion
+
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+
+:- use_module(library(file_scope)).
+
+:- set_prolog_flag_until_eof(access_level, system).
+
+:- assert_until_eof(( term_expansion(.,.) :- .. )).
+
+</div>
+
+<div class="nb-cell markdown">
+
+## hook_hybrid
+Hook and/or override assert, retract, call, clause, erase, etc for specific predicates
+
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+?- use_module(library(hook_hybrid)).
+true.
+
+?-  TODO Doc this
+
+</div>
+
+<div class="nb-cell markdown">
+
+
+## clause_attvars
+An alternate interface to the clause database to allow attributed variables to be asserted/read
+
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+?- use_module(library(hybrid_db/clause_attvars)).
+true.
+
+?-  TODO Doc this
+
+</div>
+
+<div class="nb-cell markdown">
+
+
+## attvar_reader
+
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+?- use_module(library(hybrid_db/attvar_reader)).
+true.
+
+?-  TODO Doc this
+
+</div>
+
+<div class="nb-cell markdown">
+ 
+
+
+
+# with_thread_local
+Call a Goal with local assertions
+
+   locally_each( :Effect, :Call) is nondet.
+ 
+   Temporally have :Effect (see locally/2)
+ 
+   But Ensure Non-determism is respected (effect is undone between _each_ Redo)
+ 
+   uses each_call_cleanup/3 instead of setup_call_cleanup/3 (slightly slower?)
+ 
+  for example,
+ 
+   locally_each/2 works (Does not throw)
+</div>
+
+<div class="nb-cell program prolog" data-background="false"> 
+  ?- current_prolog_flag(xref,Was), 
+      locally_each(set_prolog_flag(xref,true),
+      assertion(current_prolog_flag(xref,true));assertion(current_prolog_flag(xref,true))),
+      assertion(current_prolog_flag(xref,Was)),fail.
+</div>
+
+<div class="nb-cell markdown">
+ 
+   locally/2 is little less carefull so it should _not_ work (it throws instead)
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+?- current_prolog_flag(xref,Was), 
+    locally(set_prolog_flag(xref,true),
+    assertion(current_prolog_flag(xref,true));assertion(current_prolog_flag(xref,true))),
+    assertion(current_prolog_flag(xref,Was)),fail.
+</div>
+
+<div class="nb-cell markdown">
+
+   locally( :Effect, :Call) is nondet.
+ 
+  Effect may be of type:
+ 
+   set_prolog_flag -
+      Temporarily change prolog flag
+ 
+   op/3 - 
+      change op
+ 
+   $gvar=Value -
+      set a global variable
+ 
+   Temporally (thread_local) Assert some :Effect 
+ 
+   use locally_each/3 if respecting Non-determism is important 
+  (slightly slower?)
+ 
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+  ?- current_prolog_flag(xref,Was), 
+      locally(set_prolog_flag(xref,true),
+      assertion(current_prolog_flag(xref,true))),
+      assertion(current_prolog_flag(xref,Was)). 
+</div>
+
+<div class="nb-cell markdown">
+
+
+:- set_prolog_flag_until_eof(access_level,system).
+
+:- assert_until_eof(( term_expansion(.,.) :- .. )).
+
+</div>
+
+<div class="nb-cell markdown">
+
+
+# Utilities to open various objects for read/write
+
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+:- use_module(library(lmu/filestreams)).
+
+</div>
+
+<div class="nb-cell markdown">
+
+# mass wildcard expansions
+</div>
+
+<div class="nb-cell program prolog" data-background="false">
+:- use_module(library(lmu/filesystem)).
+
+</div>
+
+<div class="nb-cell markdown">
+
+
+</div>
+
+<div class="nb-cell query">
+draw_goal(Tree).
+</div>
+<div class="nb-cell markdown">
+Draw the tree and print the latex code:
+</div>
+<div class="nb-cell query">
+draw_goal(Tree),format("~s",[Tree]).
+</div>
+<div class="nb-cell program prolog" data-background="false">
+:- use_module(library(sldnfdraw)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(sldnf).
+:- endif.
+
+:- sldnf.
+
+:- begin_program.
+
+member(X ,[X|_T]).
+member(X ,[_H|T]):-
+  member(X,T).
+
+:-end_program.
+
+:-begin_query.
+
+member(X,[1,2]), \+ member(X,[1,3]).
+
+:-end_query.
+</div>
+
+</div>

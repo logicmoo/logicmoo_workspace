@@ -1,0 +1,6 @@
+i -conversion=finite System/sys_domain_lamps_english.gf
+i -conversion=finite System/sys_domain_lamps_svenska.gf
+i -conversion=finite System/sys_domain_lamps_sem.gf
+
+pm -utf8 -utf8id -printer=header | wf sys_domain_lamps.gfcm
+pm -utf8 -utf8id -printer=cfgm | wf sys_domain_lamps.cfgm

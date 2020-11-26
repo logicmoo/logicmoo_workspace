@@ -1,0 +1,100 @@
+(note TQB104)
+
+(temporallySubsumes 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 32 HPKBScenarioConflict) 
+    (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) Stage4-AttackOnKuwaitiTanker36)
+
+(implies 
+  (and 
+    (instance ?EVT Process) 
+    (instance ?N PositiveInteger) 
+    (greaterThanOrEqualTo ?N ?NUM-2) 
+    (greaterThanOrEqualTo ?END ?N) 
+    (subclass ?TYPE Date) 
+    (instance ?TYPE CalendarCoveringType) 
+    (endingDate ?EVT 
+      (DateInSituationFn ?TYPE ?NUM-2 ?SIT)) 
+    (instance ?SIT Situation-Temporal) 
+    (endingDate ?SIT 
+      (DateInSituationFn ?TYPE ?END ?SIT)) 
+    (startingDate ?EVT 
+      (DateInSituationFn ?TYPE ?NUM-1 ?SIT)) 
+    (greaterThanOrEqualTo ?NUM-1 ?M) 
+    (instance ?M PositiveInteger)) 
+  (temporallySubsumes 
+    (TimeIntervalInclusiveFn 
+      (DateInSituationFn ?TYPE ?M ?SIT) 
+      (DateInSituationFn ?TYPE ?N ?SIT)) ?EVT)) 
+
+(instance Stage4-AttackOnKuwaitiTanker36 Process) 
+
+(endingDate Stage4-AttackOnKuwaitiTanker36 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(existant Stage4-AttackOnKuwaitiTanker36 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(subrelation existant endingDate) 
+
+(startingDate Stage4-AttackOnKuwaitiTanker36 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(subrelation existant startingDate) 
+(subclass CalendarDay Date) 
+(instance CalendarDay CalendarCoveringType) 
+(instance HPKBScenarioConflict Situation-Temporal) 
+
+(endingDate HPKBScenarioConflict 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(termOfUnit 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 32 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 32 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict))) 
+
+(termOfUnit 
+ (DateInSituationFn CalendarDay 32 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 32 HPKBScenarioConflict)) 
+
+(termOfUnit 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(instance Stage4-AttackOnKuwaitiTanker36 MilitaryEvent) 
+
+(decreasesImmediately Stage4-AttackOnKuwaitiTanker36 
+  (thereExists ?SHIPPING 
+    (and 
+      (pathway-Partial ?SHIPPING PersianGulf) 
+      (hasHeadquartersInCountry ?COMPANY Kuwait) 
+      (instance ?SHIPPING 
+        (TransportViaFn Ship)) 
+      (objectMoving ?SHIPPING ?SHIP) 
+      (owns ?COMPANY ?SHIP))) likelihood) 
+
+(query (findall ?THING
+  (and 
+    (instance ?ACT MilitaryEvent) 
+    (temporallySubsumes 
+      (TimeIntervalInclusiveFn 
+        (DateInSituationFn CalendarDay 32 HPKBScenarioConflict) 
+        (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) ?ACT) 
+    (decreasesImmediately ?ACT 
+      (thereExists ?SHIPPING 
+        (and 
+          (pathway-Partial ?SHIPPING PersianGulf) 
+          (hasHeadquartersInCountry ?COMPANY Kuwait) 
+          (instance ?SHIPPING 
+            (TransportViaFn Ship)) 
+          (objectMoving ?SHIPPING ?SHIP) 
+          (owns ?COMPANY ?SHIP))) likelihood))))
+
+(answer Stage4-AttackOnKuwaitiTanker36)
+
+(end_of_file)
+
+

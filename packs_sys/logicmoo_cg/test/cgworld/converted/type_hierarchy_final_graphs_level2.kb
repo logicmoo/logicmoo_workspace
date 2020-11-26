@@ -1,0 +1,14 @@
+%Type and Relation Hierarchy
+isa(entity,univ).
+isa(block,entity).
+isa(hand,entity).
+isa(location,entity).
+isa(pickup,act).
+isa(putdown,act).
+isa(movehand,act).
+isa(moveblock,act).
+isa_rel(at,relation).
+isa_rel(above,relation).
+isa_rel(ontable,relation).
+isa_rel(top,relation).
+isa_rel(emptyhand,relation).

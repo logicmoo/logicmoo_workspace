@@ -1,0 +1,289 @@
+% PSA-dependent declarations
+
+feature_value_space(n_type,[[env,device,switch,aperture,sensor,abstract]]).
+
+% Interjections
+
+interjection:[sem= @interjection_sem(stop), interjection_type=stop_continue] --> stop.
+interjection:[sem= @interjection_sem(continue), interjection_type=stop_continue] --> continue.
+interjection:[sem= @interjection_sem(again), interjection_type=stop_continue] --> again.
+interjection:[sem= @interjection_sem(continue), interjection_type=stop_continue] --> carry,on.
+interjection:[sem= @interjection_sem(go_back), interjection_type=stop_continue] --> go,back.
+interjection:[sem= @interjection_sem(do_that_again), interjection_type=stop_continue] --> same,again.
+interjection:[sem= @interjection_sem(do_that_again), interjection_type=stop_continue] --> do,that,again.
+
+% Verbs
+
+macro(verb_like_move_to(Forms, Sem),  
+      @verb(Forms, Sem, [subcat=nx0vpnx1, inv=n, subj_sem_n_type=agent, pp_sem_pp_type=to])).
+
+@verb_like_move_to([move, moves, moved, moved, moving],  [ @verb_sem(action, move)]).
+@verb_like_move_to([go, goes, went, gone, going],  [ @verb_sem(action, go)]).
+@verb_like_move_to([fly, flies, flew, flown, flying],  [ @verb_sem(action, fly)]).
+
+macro(verb_like_increase(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0v, inv=n, subj_sem_n_type=env, takes_time_pp=y, takes_loc_pp=y, takes_attrib_pp=y])).
+
+@verb_like_increase([increase, increases, increased, increased, increasing],  [ @verb_sem(action, increase)]).
+@verb_like_increase([rise, rises, rose, risen, rising],  [ @verb_sem(action, rise)]).
+@verb_like_increase([decrease, decreases, decreased, decreased, decreasing],  [ @verb_sem(action, decrease)]).
+@verb_like_increase([fall, falls, fell, fallen, falling],  [ @verb_sem(action, fall)]).
+@verb_like_increase([(go, up), (goes, up), (went, up), (gone, up), (going, up)],  [ @verb_sem(action, go_up)]).
+@verb_like_increase([(go, down), (goes, down), (went, down), (gone, down), (going, down)],  [ @verb_sem(action, go_down)]).
+
+@verb([measure, measures, measured, measured, measuring], [ @verb_sem(action, measure)], 
+      [subcat=nx0v, inv=n, subj_sem_n_type=agent, takes_loc_pp=y]).
+
+@verb([repeat, repeats, repeated, repeated, repeating], [ @verb_sem(action, repeat)], 
+      [subcat=nx0v, inv=n, takes_with_pp=y, subj_sem_n_type=agent]).
+
+@verb([repeat, repeats, repeated, repeated, repeating], [ @verb_sem(action, repeat)], 
+      [subcat=nx0vnx1, inv=n, subj_sem_n_type=agent, obj_sem_n_type=abstract, obj_def=_, obj_syn_type=_, takes_with_pp=y]).
+
+macro(verb_like_measure(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vnx1, inv=n, subj_sem_n_type=agent, obj_sem_n_type=env, obj_syn_type=_, 
+                         takes_time_pp=y, takes_loc_pp=y, takes_with_pp=y, takes_attrib_pp=y])).
+
+@verb_like_measure([measure, measures, measured, measured, measuring],  [ @verb_sem(action, measure)]).
+@verb_like_measure([record, records, recorded, recorded, recording],  [ @verb_sem(action, record)]).
+@verb_like_measure([monitor, monitors, monitored, monitored, monitoring],  [ @verb_sem(action, monitor)]).
+@verb_like_measure([check, checks, checked, checked, checking],  [ @verb_sem(action, check)]).
+
+@verb([check, checks, checked, checked, checking], [ @verb_sem(action, check)],
+      [subcat=nx0vnx1, inv=n, subj_sem_n_type=agent, obj_sem_n_type=loc, obj_syn_type=_, 
+       takes_time_pp=y, takes_loc_pp=y, takes_with_pp=y, takes_attrib_pp=y]).
+
+macro(verb_like_say_that(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vs1,inv=n,subj_sem_n_type=agent])).
+
+@verb_like_say_that([say, says, said, said, saying],  [ @verb_sem(action, say_that)]).
+
+macro(verb_like_discover_whether(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vsq1, inv=n, subj_sem_n_type=agent])).
+
+@verb_like_discover_whether([discover, discovers, discovered, discovered, discovering],  [ @verb_sem(action, discover_whether)]).
+@verb_like_discover_whether([(find, out), (finds, out), (found, out), (found, out), (finding, out)],  [ @verb_sem(action, find_out_whether)]).
+
+macro(verb_like_start_doing(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vvx1_nonmodal, inv=n, vp_vform=ing, takes_time_pp=y])).
+
+@verb_like_start_doing([start, starts, started, started, starting],  [ @verb_sem(action, start)]).
+@verb_like_start_doing([stop, stops, stopped, stopped, stopping],  [ @verb_sem(action, stop)]).
+
+macro(verb_like_open(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vnx1, inv=n, subj_sem_n_type=agent, obj_sem_n_type=aperture, obj_syn_type=_, takes_time_pp=y])).
+
+@verb_like_open([open, opens, opened, opened, opening],  [ @verb_sem(action, open)]).
+@verb_like_open([close, closes, closed, closed, closing],  [ @verb_sem(action, close)]).
+@verb_like_open([shut, shuts, shut, shut, shutting],  [ @verb_sem(action, shut)]).
+
+macro(verb_like_switch(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vnx1pl\/nx0vplnx1, inv=n, subj_sem_n_type=agent, obj_sem_n_type=switch\/device, obj_syn_type=_, sem_p_type=onoff, takes_time_pp=y, takes_loc_pp=y])).
+
+@verb_like_switch([switch, switches, switched, switched, switching],  [ @verb_sem(action, switch)]).
+@verb_like_switch([turn, turns, turned, turned, turning],  [ @verb_sem(action, turn)]).
+
+macro(verb_like_give(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vnx1x2, inv=n, subj_sem_n_type=agent, obj_sem_n_type=env, obj_syn_type=_, indobj_sem_n_type=agent, indobj_syn_type=_])).
+
+@verb_like_give([give, gives, gave, given, giving],  [ @verb_sem(action, give)]).
+
+@verb([set, sets, set, set, setting],  [ @verb_sem(action, set)], [subcat=nx0vnx1pl, inv=n, subj_sem_n_type=agent, obj_sem_n_type=switch, obj_syn_type=_, sem_p_type=onoff]).
+
+@verb([start, starts, started, started, starting],  [ @verb_sem(action, start)], [subcat=nx0vnx1, inv=n, subj_sem_n_type=agent, obj_sem_n_type=switch, obj_syn_type=_, takes_time_pp=y]).
+
+@verb([reach, reaches, reached, reached, reaching],  [ @verb_sem(action, reach)], [subcat=nx0vnx1, inv=n, subj_sem_n_type=env, obj_sem_n_type=unit, obj_syn_type=_, takes_time_pp=y]).
+
+% Mainly "do the same for" 
+@verb([do, does, did, did, doing],  [ @verb_sem(action, do)], [subcat=nx0vnx1, inv=n, subj_sem_n_type=agent, 
+      obj_sem_n_type=(env\/loc\/abstract), obj_syn_type=_, takes_with_pp=y, takes_loc_pp=y]).
+
+@be_verb( [ @verb_sem(verb, be)], [subcat=nx0vpnx1, subj_sem_n_type=agent\/loc\/device, pp_sem_pp_type=loc, takes_loc_pp=n, takes_time_pp=y]).
+@be_verb( [ @verb_sem(verb, be)], [subcat=nx0vpnx1, subj_sem_n_type=env, pp_sem_pp_type=compare, takes_loc_pp=y, takes_time_pp=y]).
+@be_verb( [ @verb_sem(verb, be)], [subcat=nx0vnx1_be, subj_sem_n_type=env\/loc, obj_sem_n_type=env\/loc\/unit, obj_syn_type=_, takes_loc_pp=y, takes_time_pp=n]).
+@be_verb([@verb_sem(verb, be)], [subcat=nx0va1, takes_loc_pp=y, takes_time_pp=y]).
+
+% Prepositions
+
+p:[sem= @prep_sem(at_loc), sem_pp_type=loc, obj_sem_n_type=loc] --> at.
+p:[sem= @prep_sem(in_loc), sem_pp_type=loc, obj_sem_n_type=loc] --> in.
+
+p:[sem= @prep_sem(to_loc), sem_pp_type=to, obj_sem_n_type=loc] --> to.
+
+p:[sem= @prep_sem(off), sem_pp_type=none, obj_sem_n_type=none,sem_p_type=onoff] --> off.
+p:[sem= @prep_sem(on), sem_pp_type=loc, obj_sem_n_type=loc,sem_p_type=onoff] --> on.
+
+p:[sem= @prep_sem(in_time), sem_pp_type=time, obj_sem_n_type=timeunit] --> in.
+p:[sem= @prep_sem(at_time), sem_pp_type=time, obj_sem_n_type=time] --> at.
+p:[sem= @prep_sem(during), sem_pp_type=time, obj_sem_n_type=time\/timeunit] --> during.
+
+p:[sem= @prep_sem(ago), postposition=y,sem_pp_type=time,obj_sem_n_type=timeunit] --> ago.
+
+p:[sem= @prep_sem(according_to), sem_pp_type=attribution,obj_sem_n_type=sensor] --> according,to.
+p:[sem= @prep_sem(with), sem_pp_type=attribution,obj_sem_n_type=sensor] --> with.
+
+p:[sem= @prep_sem(for), sem_pp_type=with, obj_sem_n_type=(loc\/env\/sensor)] --> for.
+
+p:[sem= @prep_sem(over_compare), sem_pp_type=compare,obj_sem_n_type=unit] --> over.
+p:[sem= @prep_sem(under_compare), sem_pp_type=compare,obj_sem_n_type=unit] --> under.
+p:[sem= @prep_sem(around_compare), sem_pp_type=compare,obj_sem_n_type=unit] --> around.
+p:[sem= @prep_sem(about_compare), sem_pp_type=compare,obj_sem_n_type=unit] --> about.
+p:[sem= @prep_sem(near_compare), sem_pp_type=compare,obj_sem_n_type=unit] --> near.
+p:[sem= @prep_sem(close_to), sem_pp_type=compare,obj_sem_n_type=unit] --> close,to.
+p:[sem= @prep_sem(higher_than), sem_pp_type=compare,obj_sem_n_type=env\/unit] --> higher,than.
+p:[sem= @prep_sem(greater_than), sem_pp_type=compare,obj_sem_n_type=env\/unit] --> greater,than.
+p:[sem= @prep_sem(lower_than), sem_pp_type=compare,obj_sem_n_type=env\/unit] --> lower,than.
+p:[sem= @prep_sem(less_than), sem_pp_type=compare,obj_sem_n_type=env\/unit] --> less,than.
+
+% Names
+
+name:[sem= @name_sem(buzz), agr=(3/\sing), sem_n_type=agent] --> buzz.
+name:[sem= @name_sem(pumpkin), agr=(3/\sing), sem_n_type=agent] --> pumpkin.
+
+% Nouns
+
+macro(environmental_parameter_noun(Word, Sem),
+      ( n:[sem=Sem, agr=sing, sem_n_type=env, n_pre_mod_type=loc, n_of_mod_type=loc, takes_det_type=def\/null, 
+           takes_loc_pp=y, takes_time_pp=y, takes_attrib_pp=y] --> Word )).
+
+@environmental_parameter_noun(temperature,  @noun_sem(env_param, temperature)).
+@environmental_parameter_noun(pressure,  @noun_sem(env_param, pressure)).
+@environmental_parameter_noun((atmospheric, pressure),  @noun_sem(env_param, pressure)).
+@environmental_parameter_noun(radiation,  @noun_sem(env_param, radiation)).
+@environmental_parameter_noun(oxygen,  @noun_sem(env_param, oxygen)).
+@environmental_parameter_noun((carbon, dioxide),  @noun_sem(env_param, carbon_dioxide)).
+@environmental_parameter_noun((c, o, two),  @noun_sem(env_param, carbon_dioxide)).
+@environmental_parameter_noun((c, oh, two),  @noun_sem(env_param, carbon_dioxide)).
+@environmental_parameter_noun(tetrions,  @noun_sem(env_param, tetrions)).
+@environmental_parameter_noun((tetrion, emissions),  @noun_sem(env_param, tetrions)).
+@environmental_parameter_noun(tachyons,  @noun_sem(env_param, tachyons)).
+
+macro(abstract_parameter_noun(Words, Sem),
+      @noun(Words, [sem=Sem, sem_n_type=env, n_pre_mod_type=env, n_of_mod_type=loc, takes_det_type=def\/null, 
+            takes_loc_pp=y, takes_time_pp=y, takes_attrib_pp=y])).
+
+@abstract_parameter_noun([level, levels], @noun_sem(env_param, level)).
+@abstract_parameter_noun([reading, readings], @noun_sem(env_param, reading)).
+
+macro(specific_location_noun(Word, Sem),
+      ( n:[sem=Sem, agr=sing, sem_n_type=loc, @takes_no_pps, takes_det_type=def\/null] --> Word )).
+
+@specific_location_noun((flight, deck),  @noun_sem(loc, flight_deck)).
+@specific_location_noun((mid, deck),  @noun_sem(loc, mid_deck)).
+@specific_location_noun((lower, deck),  @noun_sem(loc, lower_deck)).
+@specific_location_noun((commanders, seat),  @noun_sem(loc, commanders_seat)).
+@specific_location_noun((pilots, seat),  @noun_sem(loc, pilots_seat)).
+@specific_location_noun((access, ladder),  @noun_sem(loc, access_ladder)).
+@specific_location_noun((flight, deck, access, ladder),  @noun_sem(loc, access_ladder)).
+@specific_location_noun((sleep, stations),  @noun_sem(loc, sleep_stations)).
+@specific_location_noun((sleep, station),  @noun_sem(loc, sleep_stations)).
+@specific_location_noun(sleep,  @noun_sem(loc, sleep_stations)).
+
+n:[sem=area, agr=sing, sem_n_type=loc, n_pre_mod_type=loc, @takes_no_pps, takes_det_type=def\/null] --> area.
+
+macro(specific_location_or_aperture_noun(Word, Sem),
+      ( n:[sem=Sem, agr=sing, sem_n_type=loc\/aperture, @takes_no_pps, takes_det_type=def\/null] --> Word )).
+
+@specific_location_or_aperture_noun(storage,  @noun_sem(loc, storage)).
+@specific_location_or_aperture_noun((storage, lockers),  @noun_sem(loc, storage_lockers)).
+@specific_location_or_aperture_noun((storage, locker),  @noun_sem(loc, storage_lockers)).
+@specific_location_or_aperture_noun((crew, hatch),  @noun_sem(loc, crew_hatch)).
+@specific_location_or_aperture_noun((access, ladder),  @noun_sem(loc, access_ladder)).
+@specific_location_or_aperture_noun((access, hatch),  @noun_sem(loc, access_hatch)).
+
+macro(specific_aperture_noun(Word, Sem),
+      ( n:[sem=Sem, agr=sing, sem_n_type=aperture, takes_loc_pp=y, takes_det_type=def\/null] --> Word )).
+
+@specific_aperture_noun(hatch,  @noun_sem(loc, hatch)).
+@specific_aperture_noun((pod, bay, door),  @noun_sem(loc, pod_bay_door)).
+@specific_aperture_noun((pod, bay, doors),  @noun_sem(loc, pod_bay_door)).
+
+macro(system_switch_noun(Word, Sem),
+      ( n:[sem=Sem, agr=sing, sem_n_type=switch, takes_loc_pp=n, takes_time_pp=n, takes_attrib_pp=n, takes_det_type=null] --> Word )).
+
+@system_switch_noun(confirmation, @noun_sem(noun, confirmation)).
+@system_switch_noun(confirm, @noun_sem(noun, confirmation)).
+@system_switch_noun(ellipsis, @noun_sem(noun, ellipsis)).
+@system_switch_noun((ellipsis, processing), @noun_sem(noun, ellipsis)).
+@system_switch_noun(logging, @noun_sem(noun, logging)).
+@system_switch_noun((confirmation, without, waiting), @noun_sem(noun, confirmation_without_waiting)). 
+@system_switch_noun((system, stuff), @noun_sem(noun, system_stuff)).
+@system_switch_noun((fire, scenario), @noun_sem(noun, system_stuff)).
+
+macro(sensor_noun(Words, Sem),
+      @noun(Words, [sem=Sem, sem_n_type=sensor,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=def\/null])).
+
+@sensor_noun([sensor, sensors], @noun_sem(noun, sensor)). 
+@sensor_noun([(fixed, sensor), (fixed, sensors)], @noun_sem(noun, fixed_sensor)).
+@sensor_noun([(p, s, a, sensor), (p, s, a, sensors)], @noun_sem(noun, psa_sensor)).
+
+macro(date_noun(Words, Sem),
+      @noun(Words, [sem=Sem, sem_n_type=date, @takes_no_pps, takes_det_type=def\/quant])).
+
+@date_noun([week, weeks], @noun_sem(noun, week)).
+@date_noun([month, months], @noun_sem(noun, month)).
+
+@noun([deck, decks], [sem= @noun_sem(noun, deck), sem_n_type=loc,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=numeric\/def\/quant]).
+
+@noun([door, doors], [sem= @noun_sem(noun, door), sem_n_type=aperture,n_pre_mod_type=loc,takes_loc_pp=y,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=numeric\/def\/indef\/quant\/null]).
+
+@noun([fan, fans], [sem= @noun_sem(noun, fan), sem_n_type=device,n_pre_mod_type=loc,takes_loc_pp=y,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=numeric\/def\/indef\/quant\/null]).
+
+@noun([seat, seats], [sem= @noun_sem(noun, seat), sem_n_type=loc,n_pre_mod_type=agent,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=numeric\/def\/indef\/quant]).
+
+n:[sem= @noun_sem(noun, clock), agr=sing,sem_n_type=switch,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=def\/null] --> clock.
+
+n:[sem= @noun_sem(noun, scenario), agr=sing,sem_n_type=switch,n_post_mod_type=numeric,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=def\/null] --> scenario.
+
+n:[sem= @noun_sem(noun, psa), agr=sing,sem_n_type=agent\/sensor,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=def\/null] --> p,s,a.
+
+n:[sem= @noun_sem(noun, current_position), agr=sing,sem_n_type=loc,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=def\/null] --> current,position.
+
+n:[sem= @noun_sem(noun, current_location), agr=sing,sem_n_type=loc,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=def\/null] --> current,location.
+
+@noun([thing, things],
+      [sem= @noun_sem(noun, thing), sem_n_type=abstract, takes_det_type=quant\/def\/null]).
+
+@noun([measurement, measurements],
+      [sem= @noun_sem(noun, thing), sem_n_type=abstract, takes_det_type=quant\/def\/null]).
+
+macro(sing_or_plur_unit_noun(Words, Sem),
+      @noun(Words, [sem=Sem, sem_n_type=unit, @takes_no_pps, takes_det_type=numeric])).
+
+@sing_or_plur_unit_noun([degree, degrees], @noun_sem(noun, degree)).
+@sing_or_plur_unit_noun([(degree, celsius), (degrees, celsius)], @noun_sem(noun, degree)).
+
+macro(sing_or_plur_timeunit_noun(Words, Sem),
+      @noun(Words, [sem=Sem, sem_n_type=timeunit, @takes_no_pps, takes_det_type=numeric])).
+
+@sing_or_plur_timeunit_noun([minute, minutes], @noun_sem(noun, minute)).
+@sing_or_plur_timeunit_noun([hour, hours], @noun_sem(noun, hour)).
+
+macro(plur_only_unit_noun(Word, Sem),
+      ( n:[sem=Sem, sem_n_type=unit,takes_loc_pp=n,takes_time_pp=n,takes_attrib_pp=n,takes_det_type=numeric] --> Word )).
+
+@plur_only_unit_noun(percent, @noun_sem(noun, percent)).
+@plur_only_unit_noun((p, s, i), @noun_sem(noun, psi)).
+
+% Adjectives
+
+adj:[sem= @adj_sem(on), adjpos=pred, subj_sem_n_type=device] --> on.
+adj:[sem= @adj_sem(off), adjpos=pred, subj_sem_n_type=device] --> off.
+
+adj:[sem= @adj_sem(turned_on), adjpos=(postnom\/pred), subj_sem_n_type=device] --> turned,on.
+adj:[sem= @adj_sem(turned_off), adjpos=(postnom\/pred), subj_sem_n_type=device] --> turned,off.
+adj:[sem= @adj_sem(switched_on), adjpos=(postnom\/pred), subj_sem_n_type=device] --> switched,on.
+adj:[sem= @adj_sem(switched_off), adjpos=(postnom\/pred), subj_sem_n_type=device] --> switched,off.
+
+adj:[sem= @adj_sem(open), adjpos=(pred), subj_sem_n_type=aperture] --> open.
+adj:[sem= @adj_sem(closed), adjpos=(prenom\/pred), subj_sem_n_type=aperture] --> closed.
+
+adj:[sem= @adj_sem(hot), adjpos=(prenom\/pred), subj_sem_n_type=loc] --> hot.
+
+adj:[sem= @adj_sem(stable), adjpos=(prenom\/pred), subj_sem_n_type=env] --> stable.
+
+% Advs
+
+adv:[sem= @adv_sem(temporal, again), advpos=postvp, adv_type=temporal] --> again.
+adv:[sem= @adv_sem(temporal, now), advpos=postvp\/fronted, adv_type=temporal] --> now.
+

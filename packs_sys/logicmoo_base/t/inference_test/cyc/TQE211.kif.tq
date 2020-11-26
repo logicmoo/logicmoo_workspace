@@ -1,0 +1,58 @@
+(note TQE211)
+
+(instance GroupOfIranianHostages-DiplomatsAndCitizens Agent) 
+(objectActedOn TalibanTakeHostages GroupOfIranianHostages-DiplomatsAndCitizens) 
+(instance TalibanTakeHostages TakingSomeoneHostage) 
+
+(instance GroupOfIranianHostages-DiplomatsAndCitizens 
+ (GroupFn 
+ (CitizensFn Iran))) 
+
+(implies 
+  (and 
+    (instance ?AGENT Agent) 
+    (objectActedOn ?ACTION ?AGENT)) 
+  (affectedAgent-Direct ?ACTION ?AGENT)) 
+
+(objectActedOn TalibanTakeHostages GroupOfIranianHostages-DiplomatsAndCitizens) 
+(instance GroupOfIranianHostages-DiplomatsAndCitizens Agent) 
+
+(instance GroupOfIranianHostages-DiplomatsAndCitizens 
+ (GroupFn 
+ (CitizensFn Iran))) 
+
+(instance Iran IndependentCountry) 
+(maleficiary TalibanTakeHostages Iran) 
+(instance TalibanTakeHostages TakingSomeoneHostage) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY IndependentCountry) 
+    (maleficiary ?ACTION ?COUNTRY) 
+    (objectActedOn ?ACTION ?AGENT) 
+    (instance ?AGENT Agent) 
+    (instance ?AGENT 
+      (GroupFn 
+        (CitizensFn ?COUNTRY)))) 
+  (affectedAgent-Direct ?ACTION ?COUNTRY)) 
+
+(query (findall ?DIRECTLY-AFFECTED-INTERNATIONAL-AGENTS
+  (exists 
+    (?KIDNAPPING) 
+    (exists 
+      (?HOSTAGES) 
+      (and 
+        (instance ?KIDNAPPING TakingSomeoneHostage) 
+        (instance ?HOSTAGES 
+          (GroupFn 
+            (CitizensFn Iran))) 
+        (objectActedOn ?KIDNAPPING ?HOSTAGES) 
+        (affectedAgent-Direct ?KIDNAPPING
+          ?DIRECTLY-AFFECTED-INTERNATIONAL-AGENTS))))))
+
+(answer GroupOfIranianHostages-DiplomatsAndCitizens)
+
+(answer Iran)
+
+(end_of_file)
+

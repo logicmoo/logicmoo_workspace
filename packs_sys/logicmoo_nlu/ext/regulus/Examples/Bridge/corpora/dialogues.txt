@@ -1,0 +1,117 @@
+
+Hand:
+
+North  43:9743:AQ5:KT87
+South  AK6:AT8:K93:QJ96
+
+Contract: 3NT
+Lead: H5
+
+C: how are you going to play the hand?
+H: play the five of diamonds
+C: you have to follow suit
+H: win the trick in dummy
+C: you don't have a winner in dummy
+H: play the six of hearts
+C: you don't have the six of hearts
+H: play small
+C: ok, playing the three of hearts. 
+[Shows on screen. East goes up with the queen ]
+H: play the ace
+C: ok, playing the eight of hearts
+[Shows on screen]
+H: i said play the ace 
+C: sorry, playing the ace of hearts
+[Shows on screen]
+H: who 's on lead
+C: you are
+H: am i in hand
+C: yes
+H: play the king
+C: which king do you mean
+H: the king of spades
+C: ok, playing the king of spades
+[Shows on screen]
+H: can i have my card back
+C: ok
+[Shows on screen]
+H: i want to play the ace
+C: ok, playing the ace of spades [ideally adds a sigh]. 
+[Shows on screen. Plays small from W]
+C: [after a pause] What do you want from dummy?
+H: play small from dummy
+C: ok, playing the three of spades
+H: now i want to play the queen of clubs
+C: ok...
+H: put the king on it
+C: ok...
+[The ace still hasn't shown up]
+H: now play the jack of clubs
+C: you are on table
+H: sorry lead the seven of clubs 
+C: you don't need to apologise
+[Shows, and covers with the ace]
+H: now i 'm going to play the jack
+C: ok...
+H: can i take that back
+C: ok...
+H: i want to play the six instead
+C: ok...
+
+----------------------------------------------------
+
+Hand:
+
+North  43:9743:AQ5:KT87
+South  AK6:AT8:K93:QJ96
+
+Contract: 3NT
+Lead: H5
+
+C: how are you going to play the hand?
+H: i have seven top tricks
+C: did you say you have seven top tricks?
+H: yes
+C: tell me what top tricks you have
+H: two spades one heart and three diamonds
+C: that's six top tricks
+H: oh yes i have six top tricks
+C: how many more tricks do you need?
+H: i need three more tricks
+C: where will your extra tricks come from?
+H: i want to set up the club suit
+C: good! how will you set up the club suit?
+H: i am going to knock out the ace
+C: then how many club tricks will you have?
+H: i will have three club tricks
+C: is that enough to make the contract?
+H: yes that will be nine tricks
+
+----------------------------------------------------
+
+Hand:
+
+North  K3:Q52:KJ987:654
+South  A64:AJ:T53:AKQJT
+
+Contract: 3NT
+Lead: 5S
+
+C: how are you going to play the hand?
+H: i 'm going to duck the spade
+C: have you added up your winners?
+H: i have seven winners
+C: are you sure?
+H: i have two spades one heart and five clubs
+C: so you have eight tricks?
+H: yes i have eight tricks
+C: so where are you going to find the ninth trick?
+H: i will finesse in hearts
+C: and if that wins you will have nine tricks?
+H: yes
+C: and if the finesse loses?
+H: i will still have two heart tricks
+C: how do you get to the queen of hearts?
+H: i will use the king of spades as a entry
+
+

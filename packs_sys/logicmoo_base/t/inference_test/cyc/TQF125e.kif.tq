@@ -1,0 +1,49 @@
+(note "TQF125e - needs work")
+
+(abort)
+
+(nearestCommonIsa GulfCooperationCouncil OAPEC InternationalOrganizationOfCountries) 
+(internationalOrg-MemberCountry GulfCooperationCouncil SaudiArabia) 
+(internationalOrg-MemberCountry OAPEC SaudiArabia) 
+
+(implies 
+  (?PRED ?OBJ ?VAL) 
+  (standsInRelationship ?OBJ ?PRED 1 
+   (TheSet ?VAL))) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Qatar) 
+(internationalOrg-MemberCountry OAPEC Qatar) 
+(internationalOrg-MemberCountry GulfCooperationCouncil UnitedArabEmirates) 
+(internationalOrg-MemberCountry OAPEC UnitedArabEmirates) 
+(internationalOrg-MemberCountry GulfCooperationCouncil Bahrain) 
+(internationalOrg-MemberCountry OAPEC Bahrain) 
+(internationalOrg-MemberCountry GulfCooperationCouncil Kuwait) 
+(internationalOrg-MemberCountry OAPEC Kuwait) 
+
+(query (findall ?INSTANCE-OF ?RELATION-ARG1 ?RELATION-TO)
+(or 
+   (and 
+       (nearestCommonIsa GulfCooperationCouncil OAPEC ?INSTANCE-OF) 
+       (not 
+           (quotedCollection ?INSTANCE-OF))) 
+   (and 
+       (standsInRelationship GulfCooperationCouncil ?RELATION-ARG1 1 
+           (TheSet ?RELATION-TO)) 
+       (standsInRelationship OAPEC ?RELATION-ARG1 1 
+           (TheSet ?RELATION-TO)) 
+       (different ?RELATION-ARG1 instance)) 
+   (and 
+       (standsInRelationship GulfCooperationCouncil ?RELATION-ARG2 2 
+           (TheSet ?RELATION-TO)) 
+       (standsInRelationship OAPEC ?RELATION-ARG2 2 
+           (TheSet ?RELATION-TO))))))
+
+(answer InternationalOrganizationOfCountries ?? ??) 
+(answer ?? internationalOrg-MemberCountry SaudiArabia) 
+(answer ?? internationalOrg-MemberCountry Qatar) 
+(answer ?? internationalOrg-MemberCountry UnitedArabEmirates) 
+(answer ?? internationalOrg-MemberCountry Bahrain) 
+(answer ?? internationalOrg-MemberCountry Kuwait) 
+
+(end_of_file)
+

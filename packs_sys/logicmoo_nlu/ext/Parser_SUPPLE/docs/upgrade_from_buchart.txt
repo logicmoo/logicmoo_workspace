@@ -1,0 +1,23 @@
+Upgrading to SUPPLE from BuChart
+================================
+
+In theory upgrading your application to use SUPPLE instead of the now
+deprecated BuChart parser should be relatively straightforward. Basically any
+instance of BuChart needs to be replaced by SUPPLE. Changes you need to make or
+be aware of are:
+
+    * The compiled parser files are now supple.swi, supple.sicstus, or
+      supple.plcafe
+    * The GATE wrapper parameter buchartFile is now SUPPLEFile
+    * The Prolog wrappers now start shef.nlp.supple.prolog instead of
+      shef.nlp.buchart.prolog
+    * If you are using SICStus or SWI prolog, and your prolog binary is not on
+      your path or is installed under a non-standard name, you will need to
+      specify its location via a system property supple.sicstus.executable (or
+      supple.swi.executable as appropriate).
+    * The mapping.conf file now has lines starting SUPPLE; instead of Buchart;
+    * Most importantly the main wrapper class is now called
+      shef.nlp.supple.SUPPLE
+
+Making these changes to existing code should be trivial and allow you to
+benefit from future improvements to SUPPLE.

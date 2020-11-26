@@ -1,0 +1,22 @@
+(note TQD21)
+
+
+(exportRevenueFractionDuring Libya PetroleumProduct 
+ (YearFn 1997) 
+ (Percent 95)) 
+
+
+(query (findall (?FRACTION ?TIME)
+ (thereExists ?NR 
+   (and 
+       (exportRevenueFractionDuring Libya PetroleumProduct ?TIME ?NR) 
+       (evaluate ?FRACTION 
+           (QuantityConversionFn Percent 
+               (DifferenceFn 1 ?NR))))) 
+))
+
+(answer 5.00000 1997
+)
+
+(end_of_file)
+

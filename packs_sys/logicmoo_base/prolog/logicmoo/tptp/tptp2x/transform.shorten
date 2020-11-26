@@ -1,0 +1,261 @@
+%====================================================================
+%----This module holds the clauses for shortening all the symbols in
+%----a TPTP input set.
+
+%----Written by Geoff Sutcliffe, March, 1993.
+%----Revised by Geoff Sutcliffe, January 1994.
+%====================================================================
+%--------------------------------------------------------------------
+%----Select the first letter of the short symbol.
+%----Constants
+short_symbol_letter(_,term,0,c):-
+    !.
+
+%----Types
+short_symbol_letter(_,type,0,t):-
+    !.
+
+%----Functors
+short_symbol_letter(_,term,Arity,f):-
+    Arity > 0,
+    !.
+
+%----Predicate symbols
+short_symbol_letter(_,atom,_,p).
+%----------------------------------------------------------------------
+%----Make a shortened version of a symbol.
+%----Don't shorten reserved synbols
+shorten_symbol(Symbol,_,_,Index,Shortenings,Symbol,Index,Shortenings):-
+    name(Symbol,[36|_]),
+    !.
+
+%----Don't shorten numbers
+shorten_symbol(Number,_,_,Index,Shortenings,Number,Index,Shortenings):-
+    integer(Number),
+    !.
+
+%----Lists for strings
+shorten_symbol([H|T],_,_,Index,Shortenings,[H|T],Index,Shortenings):-
+    !.
+
+%----This symbol has been seen before.
+shorten_symbol(Symbol,_,_,Index,Shortenings,ShortenedSymbol,Index,
+Shortenings):-
+    tptp2X_member(Symbol-ShortenedSymbol,Shortenings),
+    !.
+
+%----Second case is this symbol has been seen before.
+shorten_symbol(Symbol,ExpressionType,Arity,Index,Shortenings,
+ShortenedSymbol,NewIndex,[Symbol-ShortenedSymbol|Shortenings]):-
+    short_symbol_letter(Symbol,ExpressionType,Arity,SymbolLetter),
+    concatenate_atoms([SymbolLetter,Index],ShortenedSymbol),
+    NewIndex is Index + 1.
+%--------------------------------------------------------------------
+%----Shorten an expression, either an atom or term
+%----Variable are done via the dictionary
+shorten_expression(Variable,term,Index,Shortenings,Variable,Index,
+Shortenings):-
+    var(Variable),
+    !.
+
+shorten_expression(Expression,ExpressionType,NextIndex,Shortenings,
+ShortenedExpression,NewIndex,NewShortenings):-
+%----Break off the symbol and arguments
+    Expression =.. [Symbol|Arguments],
+    tptp2X_length(Arguments,Arity),
+%----Shorten the principle symbol
+    shorten_symbol(Symbol,ExpressionType,Arity,NextIndex,Shortenings,
+ShortenedSymbol,MiddleIndex,MiddleShortenings),
+%----Shorten the arguments
+    shorten_terms(Arguments,MiddleIndex,MiddleShortenings,
+ShortenedArguments,NewIndex,NewShortenings),
+%----Put it all back together again
+    ShortenedExpression =.. [ShortenedSymbol|ShortenedArguments].
+%--------------------------------------------------------------------
+%----Shorten each term in a list of terms
+shorten_terms([],Index,Shortenings,[],Index,Shortenings):-
+    !.
+
+shorten_terms([FirstTerm|RestOfTerms],NextIndex,Shortenings,
+[ShortenedFirstTerm|RestOfShortenedTerms],NewIndex,NewShortenings):-
+    shorten_expression(FirstTerm,term,NextIndex,Shortenings,
+ShortenedFirstTerm,MiddleIndex,MiddleShortenings),
+    shorten_terms(RestOfTerms,MiddleIndex,MiddleShortenings,
+RestOfShortenedTerms,NewIndex,NewShortenings).
+%--------------------------------------------------------------------
+%----Convert all the literals' predicate symbols and functors
+shorten_literals([],Index,Shortenings,[],Index,Shortenings):-
+    !.
+
+shorten_literals([FirstLiteral|RestOfLiterals],NextIndex,
+Shortenings,[ShortenedFirstLiteral|RestOfShortenedLiterals],NewIndex,
+NewShortenings):-
+%----Strip off the sign
+    FirstLiteral =.. [Sign,Atom],
+%----Shorten the atom
+    shorten_expression(Atom,atom,NextIndex,Shortenings,ShortenedAtom,
+MiddleIndex,MiddleShortenings),
+%----Put back on the sign
+    ShortenedFirstLiteral =.. [Sign,ShortenedAtom],
+%----Do the rest of the literals
+    shorten_literals(RestOfLiterals,MiddleIndex,MiddleShortenings,
+RestOfShortenedLiterals,NewIndex,NewShortenings).
+%--------------------------------------------------------------------
+%----Convert all the predicate symbols and functors to short ones
+shorten_clauses([],ClauseIndex,ClauseIndex,Index,Index,
+Shortenings,Shortenings,[]):-
+    !.
+
+shorten_clauses([input_clause(_Name,Status,Literals)|RestOfClauses],
+ClauseIndex,NewClauseIndex,NextIndex,NewIndex,Shortenings,
+NewShortenings,[input_clause(IndexedName,Status,ShortenedLiterals)|
+RestOfShortenedClauses]):-
+    concatenate_atoms([clause_,ClauseIndex],IndexedName),
+    MiddleClauseIndex is ClauseIndex + 1,
+    shorten_literals(Literals,NextIndex,Shortenings,
+ShortenedLiterals,MiddleIndex,MiddleShortenings),
+    shorten_clauses(RestOfClauses,MiddleClauseIndex,NewClauseIndex,
+MiddleIndex,NewIndex,MiddleShortenings,NewShortenings,
+RestOfShortenedClauses).
+%--------------------------------------------------------------------
+%----Shorten each type of formula
+shorten_formula(QuantifiedFormula,Index,Shortenings,
+ShortenedQuantifiedFormula,NewIndex,NewShortenings):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,
+Formula),
+%DEBUG write('qunatified '),write(QuantifiedFormula),nl,
+    !,
+    shorten_formula(Formula,Index,Shortenings,ShortenedFormula,
+MiddleIndex,MiddleShortenings),
+    shorten_terms(Variables,MiddleIndex,MiddleShortenings,ShortenedVariables,
+NewIndex,NewShortenings),
+    tptp_quantified_formula(ShortenedQuantifiedFormula,Quantifier,
+ShortenedVariables,ShortenedFormula).
+
+shorten_formula(BinaryFormula,Index,Shortenings,ShortenedBinaryFormula,
+NewIndex,NewShortenings):-
+    tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS),
+%DEBUG write('binary '),write(BinaryFormula),nl,
+    !,
+    shorten_formula(LHS,Index,Shortenings,ShortenedLHS,MiddleIndex,
+MiddleShortenings),
+    shorten_formula(RHS,MiddleIndex,MiddleShortenings,ShortenedRHS,
+NewIndex,NewShortenings),
+    tptp_binary_formula(ShortenedBinaryFormula,BinaryConnective,
+ShortenedLHS,ShortenedRHS).
+
+shorten_formula(UnaryFormula,Index,Shortenings,ShortenedUnaryFormula,
+NewIndex,NewShortenings):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula),
+%DEBUG write('unary '),write(UnaryFormula),nl,
+    !,
+    shorten_formula(Formula,Index,Shortenings,ShortenedFormula,
+NewIndex,NewShortenings),
+    tptp_unary_formula(ShortenedUnaryFormula,UnaryConnective,
+ShortenedFormula).
+
+shorten_formula(Symbol: '$tType',Index,Shortenings,ShortenedSymbol : '$tType',
+NewIndex,NewShortenings):-
+    !,
+%DEBUG write('new type '),write(Symbol: Signature),nl,
+    shorten_expression(Symbol,type,Index,Shortenings,
+ShortenedSymbol,NewIndex,NewShortenings).
+
+shorten_formula(Symbol: '$o',Index,Shortenings,
+ShortenedSymbol : '$o',NewIndex,NewShortenings):-
+    !,
+%DEBUG write('proposition type '),write(Symbol: Signature),nl,
+    shorten_expression(Symbol,atom,Index,Shortenings,
+ShortenedSymbol,NewIndex,NewShortenings).
+
+shorten_formula(Symbol: Arguments > '$o',Index,Shortenings,
+ShortenedSymbol : ShortenedArguments > '$o',NewIndex,NewShortenings):-
+    !,
+%DEBUG write('predicate type '),write(Symbol: Signature),nl,
+    shorten_expression(Symbol,atom,Index,Shortenings,
+ShortenedSymbol,MiddleIndex,MiddleShortenings),
+    shorten_expression(Arguments,type,MiddleIndex,MiddleShortenings,
+ShortenedArguments,NewIndex,NewShortenings).
+
+shorten_formula(Symbol: Signature,Index,Shortenings,
+ShortenedSymbol : ShortenedSignature,NewIndex,NewShortenings):-
+    !,
+%DEBUG write('type '),write(Symbol: Signature),nl,
+    shorten_expression(Symbol,term,Index,Shortenings,
+ShortenedSymbol,MiddleIndex,MiddleShortenings),
+    shorten_expression(Signature,type,MiddleIndex,MiddleShortenings,
+ShortenedSignature,NewIndex,NewShortenings).
+
+shorten_formula(AtomicFormula,Index,Shortenings,ShortenedAtomicFormula,
+NewIndex,NewShortenings):-
+%DEBUG write('atom '),write(AtomicFormula),nl,
+    shorten_expression(AtomicFormula,atom,Index,Shortenings,
+ShortenedAtomicFormula,NewIndex,NewShortenings).
+%--------------------------------------------------------------------
+shorten_formulae([],FormulaIndex,FormulaIndex,Index,Index,
+Shortenings,Shortenings,[]):-
+    !.
+
+shorten_formulae([FirstFormula|RestOfFormulae],FormulaIndex,NewFormulaIndex,
+NextIndex,NewIndex,Shortenings,NewShortenings,[FirstShortenedFormula|
+RestOfShortenedFormulae]):-
+    FirstFormula =.. [Type,_Name,Status,Formula|Rest],
+    tptp2X_member(Type,[fof,tff,thf]),
+    concatenate_atoms([formula_,FormulaIndex],IndexedName),
+    MiddleFormulaIndex is FormulaIndex + 1,
+    shorten_formula(Formula,NextIndex,Shortenings,ShortenedFormula,
+MiddleIndex,MiddleShortenings),
+    FirstShortenedFormula =.. [Type,IndexedName,Status,ShortenedFormula|Rest],
+    shorten_formulae(RestOfFormulae,MiddleFormulaIndex,NewFormulaIndex,
+MiddleIndex,NewIndex,MiddleShortenings,NewShortenings,
+RestOfShortenedFormulae).
+%--------------------------------------------------------------------
+%----Shorten the variables in one clause
+shorten_variables_in_clause([],_,[]):-
+    !.
+
+shorten_variables_in_clause([_=Variable|RestOfList],
+VariableNumber,[NewVariableName=Variable|RestOfNewList]):-
+    concatenate_atoms(['X',VariableNumber],NewVariableName),
+    NewVariableNumber is VariableNumber + 1,
+    shorten_variables_in_clause(RestOfList,NewVariableNumber,
+RestOfNewList).
+%--------------------------------------------------------------------
+%----Put in short variable names for all variables
+shorten_variables([],[]):-
+    !.
+
+%----If a numbervars case, then ignore
+shorten_variables([[numbervars=Term]|RestOfDictionary],
+[[numbervars=Term]|RestOfNewDictionary]):-
+    shorten_variables(RestOfDictionary,RestOfNewDictionary).
+
+shorten_variables([ClauseList|RestOfDictionary],
+[NewClauseList|RestOfNewDictionary]):-
+    shorten_variables_in_clause(ClauseList,1,NewClauseList),
+    shorten_variables(RestOfDictionary,RestOfNewDictionary).
+%--------------------------------------------------------------------
+%----Entry point for these routines
+shorten(InputClauses,Dictionary,shorten,ShortenedClauses,NewDictionary,
+'+short'):-
+    tptp_clauses(InputClauses),
+%----Prevent shortening '$tptp_equal'/2
+    shorten_clauses(InputClauses,1,_,1,_,['$tptp_equal'-'$tptp_equal'],_,
+ShortenedClauses),
+    shorten_variables(Dictionary,NewDictionary).
+
+shorten(Formulae,Dictionary,shorten,ShortenedFormulae,NewDictionary,
+'+short'):-
+    tptp_formulae(Formulae),
+    shorten_formulae(Formulae,1,_,1,_,
+[
+'$tptp_equal'-'$tptp_equal',
+'*'-'*',
+'>'-'>',
+':'-':'
+],_,ShortenedFormulae),
+    shorten_variables(Dictionary,NewDictionary).
+%--------------------------------------------------------------------
+shorten_file_information(transform,shorten,
+'Replace identifiers with short meaningless ones').
+%--------------------------------------------------------------------

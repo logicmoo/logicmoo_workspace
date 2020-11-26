@@ -1,0 +1,109 @@
+.Asrg_travel_english LexiconTravelEnglish
+
+LexiconTravelEnglish [ 	+(?([SimpleStuff ICM ] -pau-) ?Answer) 
+			+(?([SimpleStuff ICM ] -pau- ) ?Question)
+			yes
+			yep
+			yeah	
+			no
+			bye 
+			quit	 ]
+
+;user questions
+Question [ (do i need ?a) visa
+	   (price ?(information please))
+		
+ 	   (?(are there ?any) connecting flights) ]
+
+Answer [NegAnswer PosAnswer]
+PosAnswer [FullAnswer EllipticalAnswer]
+
+;full answers
+FullAnswer [ (to City)
+	     (from City)
+	     (by MeansOfTravel)
+	     (in Month)
+	     (the Day)
+	     Class
+	     (not return)
+	     (one way)
+	     (return)
+            ]
+
+;general negation 010419 
+NegAnswer  (not PosAnswer)
+
+;elliptical answers e.g. "london"
+EllipticalAnswer [
+	City
+	Country
+	MeansOfTravel
+	Month
+	Day
+	Class ]
+
+;simple stuff
+SimpleStuff [ hello ]
+
+; ICM
+ICM [ pardon
+      okay
+      (dont know) ]
+
+
+City [  malmoe
+	paris
+	london
+	gothenburg
+	washington
+	seattle
+	hongkong ]
+
+Country [ sweden
+	 britain
+ 	 usa
+	 china
+	 france ]
+
+MeansOfTravel [ flight 
+		flights	
+		plane
+		fly
+		airplane
+		boat
+		train
+		rail
+		railway ]
+
+Month [ january
+	february
+	march
+	april
+	may
+	june
+	july
+	august
+	september	
+	october
+	november
+	december ]
+
+Day [  first second third fourth fifth sixth seventh eighth ninth tenth eleventh twelfth thirteenth fourteenth fifteenth sixteenth eeventeenth eighteenth nineteenth twentieth twentyfirst twentysecond twentythird twentyfourth twentyfifth twentysixth twentyseventh twentyeigth twentyninth thirtieth thirtyfirst
+	]
+
+Class [ cheap
+	(as cheap as possible)
+	(second class)
+	second 
+	first
+	(first class)
+	expensive
+	(business_class) ]
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter12/BrokenDevice.e
+loading foundations/Root.e
+loading foundations/EC.e
+16 variables and 30 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+BrokenSwitch(Device1).
+PluggedIn(Device1).
+Happens(TurnOn(Nathan, Device1), 0).
+1
+P
+Ab1(Device1, 0).
+Ab1(Device1, 1).
+!Happens(TurnOn(Nathan, Device1), 1).
+!ReleasedAt(BrokenSwitch(Device1), 0).
+!ReleasedAt(BrokenSwitch(Device1), 1).
+!ReleasedAt(On(Device1), 0).
+!ReleasedAt(On(Device1), 1).
+!ReleasedAt(PluggedIn(Device1), 0).
+!ReleasedAt(PluggedIn(Device1), 1).
+BrokenDevice: 1 predicates, 0 functions, 3 fluents, 1 events, 7 axioms
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

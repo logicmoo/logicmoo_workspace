@@ -1,0 +1,47 @@
+macro(form_of_be(Word, Singplur),
+%      (  verb:[sem=[[state, be]], vform=finite, vtype=be, singplur=Singplur,
+      (  verb:[sem=strcat('[[', state, ', ', be, ']]'), vform=finite, vtype=be, singplur=Singplur,      
+	       obj_sem_np_type=n] --> Word )).
+
+@form_of_be(is, sing).
+@form_of_be(are, plur).
+
+macro(switch_verb(Word, Sem),
+%      (  verb:[sem=[[action, Sem]], vform=imperative, vtype=switch, singplur=sing,
+      (  verb:[sem=strcat('[[', action, ', ', Sem, ']]'), vform=imperative, vtype=switch, singplur=sing,       
+	       obj_sem_np_type=switchable] --> Word )).
+
+@switch_verb(switch, switch).
+@switch_verb(turn, switch).
+
+%verb:[sem=[[action, dim]], vform=imperative, vtype=transitive, singplur=sing,
+verb:[sem=strcat('[[', action, ', ', dim, ']]'), vform=imperative, vtype=transitive, singplur=sing,
+      obj_sem_np_type=dimmable] --> dim.
+
+macro(dev_noun([SingForm, PlurForm], Sem, NPType),
+%      (   noun:[sem=[[device, Sem]], sem_np_type=NPType, singplur=sing] -->
+      (   noun:[sem=strcat('[[', device, ', ', Sem, ']]'), sem_np_type=NPType, singplur=sing] -->      
+	  SingForm )).
+macro(dev_noun([SingForm, PlurForm], Sem, NPType),
+%      (   noun:[sem=[[device, Sem]], sem_np_type=NPType, singplur=plur] -->
+      (   noun:[sem=strcat('[[', device, ', ', Sem, ']]'), sem_np_type=NPType, singplur=plur] -->      
+	  PlurForm )).
+
+%@dev_noun([light, lights], light, switchable\/dimmable).
+@dev_noun([light, lights], light, switchable\/dimmable).
+%@dev_noun([fan, fans], fan, switchable).
+@dev_noun([fan, fans], fan, switchable).
+
+macro(loc_noun(SingForm, Sem),
+%      (   noun:[sem=[[location, Sem]], sem_np_type=location, singplur=sing] -->
+      (   noun:[sem=strcat('[[', location, ', ', Sem, ']]'), sem_np_type=location, singplur=sing] -->      
+	  SingForm )).
+
+@loc_noun(kitchen, kitchen).
+@loc_noun((living, room), living_room).
+
+%macro(onoff_word(Word, OnOff), ( onoff:[sem=[[onoff, OnOff]]] --> Word )).
+macro(onoff_word(Word, OnOff), ( onoff:[sem=strcat('[[', onoff, ', ', OnOff, ']]')] --> Word )).
+
+@onoff_word((?switched, on), on).
+@onoff_word((?switched, off), off).

@@ -1,0 +1,5 @@
+Parse all sentences in current EBL training set, defined by the {\tt
+ebl\_\-corpus} config file entry, to create a treebank file. Sentences that
+fail to parse are printed out with warning messages, and a summary
+statistic is produced at the end of the run. This is very useful for
+checking where you are with coverage.

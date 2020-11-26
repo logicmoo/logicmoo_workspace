@@ -1,0 +1,12 @@
+touch V4
+cat boot.lsp >> V4
+cat ../microUt/clecteur.lsp >> V4
+cat lecteur.lsp >> V4
+cat blocs.lsp >> V4
+cat ../microUt/cutili.lsp >> V4
+cat unify.lsp >> V4
+cat ../microUt/cunify.lsp >> V4
+cat resol.lsp >> V4
+cat pred.lsp >> V4
+cat ../microUt/cpred.lsp >> V4
+mv V4 V4.lsp

@@ -1,0 +1,23 @@
+AceRules Interface: Todo list
+=============================
+
+
+Bugs:
+
+- Trace area should show "not available" if trace is not supported by the current mode. DONE.
+
+
+Modifications/Extensions:
+
+- Show multiple answers. DONE.
+- More examples
+- Overriding existing saved programs should be possible
+- Update the examples for the latest version of the AceRules engine
+- Show "simple rules"
+
+
+Clean-up and Documentation:
+
+- Write help articles for all relevant topics. DONE.
+- General clean-up
+- Code documentation

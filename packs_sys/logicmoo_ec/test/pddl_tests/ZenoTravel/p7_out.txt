@@ -1,0 +1,57 @@
+
+ff: parsing domain file
+domain 'ZEON' defined
+ ... done.
+ff: parsing problem file
+problem 'P7' defined
+ ... done.
+
+
+
+Cueing down from goal distance:   17 into depth [1]
+                                  16            [1]
+                                  13            [1]
+                                  12            [1]
+                                  11            [1][2][3]
+                                  10            [1][2]
+                                   9            [1]
+                                   8            [1][2][3]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1][2]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step    0: BOARD PERSON2 PLANE1 CITY0
+        1: FLY PLANE1 CITY0 CITY1 FL6 FL5
+        2: BOARD PERSON1 PLANE1 CITY1
+        3: FLY PLANE1 CITY1 CITY3 FL5 FL4
+        4: FLY PLANE1 CITY3 CITY4 FL4 FL3
+        5: DEBARK PERSON2 PLANE1 CITY4
+        6: BOARD PERSON2 PLANE1 CITY4
+        7: FLY PLANE1 CITY4 CITY2 FL3 FL2
+        8: DEBARK PERSON1 PLANE1 CITY2
+        9: BOARD PERSON1 PLANE1 CITY2
+       10: FLY PLANE1 CITY2 CITY3 FL2 FL1
+       11: DEBARK PERSON1 PLANE1 CITY3
+       12: DEBARK PERSON2 PLANE1 CITY3
+       13: BOARD PERSON2 PLANE1 CITY3
+       14: BOARD PERSON1 PLANE1 CITY3
+       15: FLY PLANE1 CITY3 CITY4 FL1 FL0
+       16: REFUEL PLANE1 CITY0 FL0 FL1
+       17: DEBARK PERSON1 PLANE1 CITY4
+       18: FLY PLANE1 CITY4 CITY2 FL1 FL0
+       19: DEBARK PERSON2 PLANE1 CITY2
+     
+
+time spent:    0.00 seconds instantiating 2104 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 110 facts and 664 actions
+               0.01 seconds creating final representation with 110 relevant facts
+               0.02 seconds building connectivity graph
+               0.26 seconds searching, evaluating 125 states, to a max depth of 3
+               0.29 seconds total time
+

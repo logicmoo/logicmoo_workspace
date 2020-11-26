@@ -1,0 +1,483 @@
+Script started on Mon Jun 28 14:09:31 2004
+[1m~[41]>[m cd ~/aleph/test/examples/interactive
+[1m~/aleph/test/examples/interactive[42]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 5
+Last modified: Fri Jun  4 12:52:32 BST 2004
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1219884 bytes in 0.51 seconds ]
+
+yes
+   ?- read_all(mem).
+ [ reconsulting mem.b... ]
+ [ mem.b reconsulted 3768 bytes in 0.0 seconds ]
+[cannot open] [mem.f]
+[cannot open] [mem.n]
+
+yes
+   ?- read_all(mem).
+ [ reconsulting mem.b... ]
+ [ mem.b reconsulted 3500 bytes in 0.0 seconds ]
+[cannot open] [mem.f]
+[cannot open] [mem.n]
+
+yes
+   ?- set(interactive,true).
+
+yes
+   ?- induce_clauses.
+
+    Options:
+        -> "ok." to accept default example
+        -> Enter an example
+        -> ctrl-D or "none." to end
+
+    Response [default:none] ?
+   |: mem(1,[1]).
+[sat] [1]
+[mem(1,[1])]
+
+[bottom clause]
+mem(A,B) :-
+   B=[A|C].
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[0,0,0,-Inf]/0]
+mem(A,B).
+[1/0]
+[-------------------------------------]
+[found clause]
+mem(A,B).
+[pos-neg] [1]
+[clause label] [[1,0,1,1]]
+[clauses constructed] [1]
+[-------------------------------------]
+[clauses constructed] [1]
+[search time] [0.01]
+[best clause]
+mem(A,B).
+[pos-neg] [1]
+[hypothesis]
+mem(A,B).
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: overgeneral.
+
+[added new constraint]
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: show(constraints).
+
+[definition] [false/0]
+false :-
+   hypothesis(A,B,C), 
+   goals_to_list(B,D), 
+   clause_to_list(mem(E,F),G), 
+   aleph_subsumes([A|D],G).
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: none.
+
+
+
+    Options:
+        -> "ok." to accept default example
+        -> Enter an example
+        -> ctrl-D or "none." to end
+
+    Response [default:mem(1,[1])] ?
+   |: ok.
+[sat] [1]
+[mem(1,[1])]
+
+[bottom clause]
+mem(A,B) :-
+   B=[A|C].
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[0,0,0,-Inf]/0]
+mem(A,B).
+[constraint violated]
+[1/0]
+mem(A,B) :-
+   B=[A|C].
+[1/0]
+[-------------------------------------]
+[found clause]
+mem(A,B) :-
+   B=[A|C].
+[pos-neg] [1]
+[clause label] [[1,0,1,1]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.0]
+[best clause]
+mem(A,B) :-
+   B=[A|C].
+[pos-neg] [1]
+[hypothesis]
+mem(A,B) :-
+   B=[A|C].
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: ok.
+
+[added new clause]
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: none.
+
+
+
+    Options:
+        -> "ok." to accept default example
+        -> Enter an example
+        -> ctrl-D or "none." to end
+
+    Response [default:mem(1,[1])] ?
+   |: mem(1,[2,1]).
+[sat] [2]
+[mem(1,[2,1])]
+
+[bottom clause]
+mem(A,B) :-
+   B=[C|D], 
+   mem(C,B), 
+   mem(A,D), 
+   D=[A|E].
+[literals] [5]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[0,0,0,-Inf]/0]
+mem(A,B).
+[constraint violated]
+[2/0]
+mem(A,B) :-
+   B=[C|D].
+[2/0]
+[-------------------------------------]
+[found clause]
+mem(A,B) :-
+   B=[C|D].
+[pos-neg] [2]
+[clause label] [[2,0,1,2]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.01]
+[best clause]
+mem(A,B) :-
+   B=[C|D].
+[pos-neg] [2]
+[hypothesis]
+mem(A,B) :-
+   B=[C|D].
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: overgeneral because not(mem(1,[2,3])).
+
+[added new negative example]
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: none.
+
+
+
+    Options:
+        -> "ok." to accept default example
+        -> Enter an example
+        -> ctrl-D or "none." to end
+
+    Response [default:mem(1,[2,1])] ?
+   |: ok.
+[sat] [2]
+[mem(1,[2,1])]
+
+[bottom clause]
+mem(A,B) :-
+   B=[C|D], 
+   mem(C,B), 
+   mem(A,D), 
+   D=[A|E].
+[literals] [5]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[0,0,0,-Inf]/0]
+mem(A,B).
+[constraint violated]
+[2/1]
+mem(A,B) :-
+   B=[C|D].
+[2/1]
+mem(A,B) :-
+   B=[C|D], 
+   mem(C,B).
+[2/1]
+mem(A,B) :-
+   B=[C|D], 
+   mem(A,D).
+[2/0]
+[-------------------------------------]
+[found clause]
+mem(A,B) :-
+   B=[C|D], 
+   mem(A,D).
+[pos-neg] [2]
+[clause label] [[2,0,2,2]]
+[clauses constructed] [4]
+[-------------------------------------]
+[clauses constructed] [4]
+[search time] [0.01]
+[best clause]
+mem(A,B) :-
+   B=[C|D], 
+   mem(A,D).
+[pos-neg] [2]
+[hypothesis]
+mem(A,B) :-
+   B=[C|D], 
+   mem(A,D).
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: ok.
+
+[added new clause]
+
+    Options:
+        -> "ok." to accept clause
+        -> "prune." to prune clause and its refinements from the search
+        -> "overgeneral." to add clause as a constraint
+        -> "overgeneral because not(E)." to add E as a negative example
+        -> "overspecific." to add clause as a positive example
+        -> "overspecific because E." to add E as a positive example
+        -> any Aleph command
+        -> ctrl-D or "none." to end
+
+    Response?
+   |: none.
+
+
+
+    Options:
+        -> "ok." to accept default example
+        -> Enter an example
+        -> ctrl-D or "none." to end
+
+    Response [default:mem(1,[2,1])] ?
+   |: 
+[theory]
+
+[Rule 1] [Pos cover = 1 Neg cover = 0]
+mem(A,B) :-
+   B=[A|C].
+
+[Rule 2] [Pos cover = 1 Neg cover = 0]
+mem(A,B) :-
+   B=[C|D], 
+   mem(A,D).
+
+
+[positives]
+mem(1,[1]).
+mem(1,[2,1]).
+
+[negatives]
+mem(1,[2,3]).
+
+[definition] [false/0]
+false :-
+   hypothesis(A,B,C), 
+   goals_to_list(B,D), 
+   clause_to_list(mem(E,F),G), 
+   aleph_subsumes([A|D],G).
+
+[definition] [prune/1]
+[time taken] [0.08]
+
+yes
+   ?- [1m~/aleph/test/examples/interactive[43]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 5
+Last modified: Fri Jun  4 12:52:32 BST 2004
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1219884 bytes in 0.51 seconds ]
+
+yes
+   ?- read_all(animals).
+ [ reconsulting animals.b... ]
+ [ animals.b reconsulted 32020 bytes in 0.01 seconds ]
+[consulting pos examples] [animals.f]
+[cannot open] [animals.n]
+
+yes
+   ?- set(interactive,true).
+
+yes
+   ?- induce_tree.
+[constructing tree]
+
+Extending path: 
+---------------
+class(A,B).
+    Split Information
+    -----------------
+
+    No.    Split
+    ---    -----
+    1    has_covering(A,hair)
+            Succeeded (Right Branch): 6
+            Failed    (Left Branch) : 14
+            Cost Reduction          : 0.881291
+
+    2    has_gills(A)
+            Succeeded (Right Branch): 4
+            Failed    (Left Branch) : 16
+            Cost Reduction          : 0.117744
+
+    -> Select Split Number (or "none.")
+   |: 1.
+[found clauses]
+class(A,B) :-
+   has_covering(A,hair).
+[entropy] [-0.0]
+class(A,B) :-
+   not has_covering(A,hair).
+[entropy] [-0.0]
+[expected cost reduction] [0.881291]
+[pruning clauses]
+[best clause]
+class(A,B) :-
+   has_covering(A,hair), B=mammal.
+[atoms left] [14]
+[best clause]
+class(A,B) :-
+   not has_covering(A,hair), B=nmammal.
+[atoms left] [0]
+[construction time] [0.01]
+
+[theory]
+
+[Rule 1] [Pos cover = 6 Neg cover = 0]
+class(A,B) :-
+   has_covering(A,hair), B=mammal.
+
+[Rule 2] [Pos cover = 14 Neg cover = 0]
+class(A,B) :-
+   not has_covering(A,hair), B=nmammal.
+
+[Training set performance]
+          Actual
+       +        - 
+     + 20        0        20 
+Pred 
+     - 0        0        0 
+
+       20        0        20 
+
+Accuracy = 1.0
+[Training set summary] [[20,0,0,0]]
+
+yes
+   ?- [1m~/aleph/test/examples/interactive[44]>[m exit
+exit
+
+script done on Mon Jun 28 16:18:57 2004

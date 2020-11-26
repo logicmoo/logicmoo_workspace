@@ -1,0 +1,31 @@
+#!/usr/bin/env swipl
+
+% Quick fwd test
+:- include(test_header).
+
+:- use_module(library(statistics)).
+
+%:- mpred_notrace_exec.
+% reset runtime counter
+:- statistics(runtime,_Secs).
+:- cls.
+
+~path(X,Y)/call(X=Y).
+
+
+path(1,2).
+path(2,3).
+path(3,4).
+path(1,1).
+
+
+:- mpred_test(path(3, 4)).
+:- mpred_test(path(2, 3)).
+:- mpred_test(path(1, 2)).
+:- mpred_test(~path(1,1)).
+:- mpred_test(~path(2,2)).
+:- mpred_test(\+path(1,1)).
+:- mpred_test(\+path(2,2)).
+:- mpred_test(\+path(3,1)).
+:- mpred_test(\+ ~path(1,5)).
+

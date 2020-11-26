@@ -1,0 +1,36 @@
+
+ %Evaluation de formules booleennes
+ % (inspire de Giannesini et al pp92-101)
+ %
+
+   $ vb(0,0).
+   $ vb(1,1).
+   $ vb(et(P,Q),R) :- vb(P,P1), vb(Q,Q1), comb_et(P1,Q1,R).
+   $ vb(ou(P,Q),R) :- vb(P,P1), vb(Q,Q1), comb_ou(P1,Q1,R).
+   $ vb(non(P),R) :- vb(P,R1), bascule(R1,R).
+   $ comb_et(1,1,1) :- !.
+   $ comb_et(X,Y,0).
+   $ comb_ou(0,0,0) :- !.
+   $ comb_ou(X,Y,1).
+   $ tvb :- vb(ou(1,et(ou(1,0),non(et(0,1)))),X), wb(X).
+   $ tvb1 :- vb(ou(0,et(ou(1,0),non(et(0,1)))),X), wb(X).
+   $ tvb2 :- vb(ou(0,et(ou(non(1),0),non(et(0,1)))),X), wb(X).
+   
+  %On ameliore
+   $ vbool(0,0).
+   $ vbool(1,1).
+   $ vbool(et(P,Q),R) :- vbool(P,P1), cont_et(P1,Q,R).
+   $ vbool(ou(P,Q),R) :- vbool(P,P1), cont_ou(P1,Q,R).
+   $ vbool(non(P),R) :- vbool(P,R1), bascule(R1,R).
+   $ cont_et(0,F,0).
+   $ cont_et(1,Y,R) :- vbool(Y,R).
+   $ cont_ou(1,F,1).
+   $ cont_ou(0,Y,R) :- vbool(Y,R).
+   $ tvbool :- vbool(ou(1,et(ou(1,0),non(et(0,1)))),X), wb(X).
+   $ tvbool1 :- vbool(ou(0,et(ou(1,0),non(et(0,1)))),X), wb(X).
+   $ tvbool2 :- vbool(ou(0,et(ou(non(1),0),non(et(0,1)))),X), wb(X).
+  
+   $ tv :- tvb, tvb1, tvb2, nl, tvbool, tvbool1,tvbool2.
+
+   $ bascule(0,1).
+   $ bascule(1,0).

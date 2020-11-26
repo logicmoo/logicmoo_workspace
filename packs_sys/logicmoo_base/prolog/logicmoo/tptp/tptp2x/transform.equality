@@ -1,0 +1,474 @@
+%==============================================================================
+%----Procedures for removing equality clauses in TPTP problems
+%----
+%----Written  by Geoff Sutcliffe, January 1994.
+%----Extended by Max Moser, April 1994.
+%----Parameterized add_equality by Geoff Sutcliffe, August 2004.
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Determine the type of axioms required
+%----Default is clauses if there is nothing there
+determine_formula_format(Clauses,'-'):-
+    tptp_clauses(Clauses),
+    !.
+
+determine_formula_format(Formulae,'+'):-
+    tptp_formulae(Formulae).
+%------------------------------------------------------------------------------
+check_there_is_equality(Clauses,UnsignedPredicateStructures):-
+    tptp_clauses(Clauses),
+    tptp2X_member(input_clause(_,_,Literals),Clauses),
+    tptp2X_member(Literal,Literals),
+    Literal =.. [_,'$tptp_equal'(_,_)],
+    !,
+%----Get the predicate structures
+    examine_formulae_for_predicates(Clauses,_,UnsignedPredicateStructures,_).
+    
+check_there_is_equality(Formulae,UnsignedPredicateStructures):-
+    tptp_formulae(Formulae),
+    examine_formulae_for_predicates(Formulae,_,UnsignedPredicateStructures,_),
+    tptp2X_member('$tptp_equal'/2,UnsignedPredicateStructures),
+    !.
+%------------------------------------------------------------------------------
+%----Set if two clauses have the same literals, modulo renaming
+%----Need to avoid instantiation here
+same_literals([],[],_).
+
+same_literals([Literal1|RestOfLiterals1],Literals2,NumberFrom):-
+    tptp2X_select(Literal2,Literals2,RestOfLiterals2),
+    numbervars(Literal1,NumberFrom,NextNumberFrom),
+    numbervars(Literal2,NumberFrom,NextNumberFrom),
+    Literal1 == Literal2,
+    same_literals(RestOfLiterals1,RestOfLiterals2,NextNumberFrom).
+%------------------------------------------------------------------------------
+%----Check if two formulae are the same, both formats
+same_formula(input_clause(_,_,Literals1),input_clause(_,_,Literals2)):-
+    \+ \+ same_literals(Literals1,Literals2,0).
+
+%----This assumes same format as I generate them in.
+same_formula(fof(_,_,Formula1),fof(_,_,Formula2)):-
+    \+ \+ (
+        numbervars(Formula1,0,N),
+        numbervars(Formula2,0,N),
+        Formula1 = Formula2 ).
+%------------------------------------------------------------------------------
+%----Check each clause for predicate substitution, function 
+%----substitution, and equality.
+% remove_equality([],[],[],[],_,_,[],[]).
+
+remove_equality([],[],_,_,_,_,[],[]).
+
+%----Unwanted formula
+remove_equality([UnwantedFormula|RestOfFormulae],[_|RestOfDictionary],
+AxiomsToRemove,AxiomsToKeep,AxiomsRemovedSoFar,AxiomsKeptSoFar,
+StrippedClauses,StrippedDictionary):-
+%DEBUG write('Do we want to remove '),writeq(UnwantedFormula),nl,
+    tptp2X_select(AxiomToRemove,AxiomsToRemove,RestOfAxiomsToRemove),
+    UnwantedFormula =.. [_,_,Type|_],
+%----Don't remove the conjecture
+    Type \== conjecture,
+    Type \== negated_conjecture,
+%DEBUG write('Compare against '),writeq(AxiomToRemove),nl,
+    same_formula(UnwantedFormula,AxiomToRemove),
+%DEBUG write('Yep we do!'),nl,
+    !,
+    remove_equality(RestOfFormulae,RestOfDictionary,RestOfAxiomsToRemove,
+AxiomsToKeep,[UnwantedFormula|AxiomsRemovedSoFar],AxiomsKeptSoFar,
+StrippedClauses,StrippedDictionary).
+
+%----Wanted formula
+remove_equality([WantedFormula|RestOfFormulae],[WantedDictionary|
+RestOfDictionary],AxiomsToRemove,AxiomsToKeep,AxiomsRemovedSoFar,
+AxiomsKeptSoFar,[WantedFormula|StrippedClauses],[WantedDictionary|
+StrippedDictionary]):-
+    tptp2X_select(AxiomToKeep,AxiomsToKeep,RestOfAxiomsToKeep),
+    same_formula(WantedFormula,AxiomToKeep),
+    !,
+    remove_equality(RestOfFormulae,RestOfDictionary,AxiomsToRemove,
+RestOfAxiomsToKeep,AxiomsRemovedSoFar,[WantedFormula|AxiomsKeptSoFar],
+StrippedClauses,StrippedDictionary).
+
+%----Non-equality clause - keep it unless a duplicate => fail
+remove_equality([FirstFormula|RestOfFormulae],[FirstDictionary|
+RestOfDictionary],AxiomsToRemove,AxiomsToKeep,AxiomsRemovedSoFar,
+AxiomsKeptSoFar,[FirstFormula|StrippedFormulae],[FirstDictionary|
+StrippedDictionary]):-
+%----Check it has not been removed already
+    \+ (tptp2X_member(AxiomAlreadyRemoved,AxiomsRemovedSoFar),
+        same_formula(FirstFormula,AxiomAlreadyRemoved)),
+%----Check it has not been kept already
+    \+ (tptp2X_member(AxiomAlreadyKept,AxiomsKeptSoFar),
+        same_formula(FirstFormula,AxiomAlreadyKept)),
+    !,
+    remove_equality(RestOfFormulae,RestOfDictionary,AxiomsToRemove,
+AxiomsToKeep,AxiomsRemovedSoFar,AxiomsKeptSoFar,StrippedFormulae,
+StrippedDictionary).
+%------------------------------------------------------------------------------
+%----Find which of the equality axioms are missing
+%----No more equality axioms to check for
+missing_equality([],_,[],[]):-
+    !.
+
+%----Axiom that is there
+missing_equality([EqualityAxiom|RestOfEqualityAxioms],Formulae,
+MissingAxioms,MissingDictionary):-
+    tptp2X_select(WantedAxiom,Formulae,RestOfFormulae),
+    same_formula(WantedAxiom,EqualityAxiom),
+    !,
+    missing_equality(RestOfEqualityAxioms,RestOfFormulae,MissingAxioms,
+MissingDictionary).
+
+%----Axiom is missing - note dictionary is not created. Just accept
+%----numbervars in tptp2X final output code.
+missing_equality([EqualityAxiom|RestOfEqualityAxioms],Formulae,
+[EqualityAxiom|RestOfMissingAxioms],[[]|RestOfMissingDictionary]):-
+    missing_equality(RestOfEqualityAxioms,Formulae,RestOfMissingAxioms,
+RestOfMissingDictionary).
+%------------------------------------------------------------------------------
+%----This position
+substitute_an_argument_variable([OneVariable|RestOfVariables],Variable1,
+Variable2,RestOfVariables,[Variable1|RestOfVariables],[Variable2|
+RestOfVariables],Position,Position):-
+    var(OneVariable).
+
+%----Do next position
+substitute_an_argument_variable([OneVariable|RestOfVariables],Variable1,
+Variable2,[OneVariable|RestOfOtherVariables],[OneVariable|RestOfVariables1],
+[OneVariable|RestOfVariables2],CurrentPosition,Position):-
+    NextPosition is CurrentPosition + 1,
+    substitute_an_argument_variable(RestOfVariables,Variable1,Variable2,
+RestOfOtherVariables,RestOfVariables1,RestOfVariables2,NextPosition,Position).
+%------------------------------------------------------------------------------
+substitute_in_position_to_make_two_copies(Variable1,Variable2,
+OtherVariables,Template,Copy1,Copy2,Position):-
+    Template =.. [Symbol|ArgumentVariables],
+    substitute_an_argument_variable(ArgumentVariables,
+Variable1,Variable2,OtherVariables,Arguments1,Arguments2,1,Position),
+    Copy1 =.. [Symbol|Arguments1],
+    Copy2 =.. [Symbol|Arguments2].
+%------------------------------------------------------------------------------
+make_two_templates_with_substitution(Symbol/Arity,Template1,Template2,
+Variable1,Variable2,OtherVariables,AxiomName):-
+    concatenate_atoms([Symbol,'_substitution'],Root),
+    functor(Template,Symbol,Arity),
+    substitute_in_position_to_make_two_copies(Variable1,Variable2,
+OtherVariables,Template,Template1,Template2,Position),
+    concatenate_atoms([Root,'_',Position],AxiomName).
+%------------------------------------------------------------------------------
+%----Generate a function substitution axiom for one of the listed
+%----function structures.
+%----CNF case
+generate_function_substitutivity_axiom(FunctorStructures,'-',
+input_clause(AxiomName,axiom,
+    [--'$tptp_equal'(Variable1,Variable2),
+     ++'$tptp_equal'(Function1,Function2)])
+):-
+    tptp2X_member(Structure,FunctorStructures),
+    make_two_templates_with_substitution(Structure,Function1,Function2,
+Variable1,Variable2,_,AxiomName).
+
+%----FOF case
+generate_function_substitutivity_axiom(FunctorStructures,'+',
+fof(AxiomName,axiom,
+    ! [Variable1,Variable2|OtherVariables] :
+      ( '$tptp_equal'(Variable1,Variable2) 
+     => '$tptp_equal'(Function1,Function2) )   )
+):-
+    tptp2X_member(Structure,FunctorStructures),
+    make_two_templates_with_substitution(Structure,Function1,Function2,
+Variable1,Variable2,OtherVariables,AxiomName).
+%------------------------------------------------------------------------------
+%----Generate a function substitution axiom for one of the listed
+%----predicate structures.
+%----CNF case
+generate_predicate_substitutivity_axiom(PredicateStructures,'-',
+input_clause(AxiomName,axiom,
+    [--'$tptp_equal'(Variable1,Variable2),
+     --Predicate1,
+     ++Predicate2])
+):-
+    tptp2X_member(Structure,PredicateStructures),
+    make_two_templates_with_substitution(Structure,Predicate1,Predicate2,
+Variable1,Variable2,_,AxiomName).
+
+%----FOF case
+generate_predicate_substitutivity_axiom(PredicateStructures,'+',
+fof(AxiomName,axiom,
+    ! [Variable1,Variable2|OtherVariables] :
+      ( ( '$tptp_equal'(Variable1,Variable2) 
+        & Predicate1 ) 
+     => Predicate2 )   )
+):-
+    tptp2X_member(Structure,PredicateStructures),
+    make_two_templates_with_substitution(Structure,Predicate1,Predicate2,
+Variable1,Variable2,OtherVariables,AxiomName).
+%------------------------------------------------------------------------------
+%----Generate a specific axiom set in some form
+generate_equality_axioms(r,'+',_,_,[
+fof(reflexivity,axiom,
+    ! [X] : '$tptp_equal'(X,X)   )
+]).
+
+generate_equality_axioms(r,'-',_,_,[
+input_clause(reflexivity,axiom,
+    [++'$tptp_equal'(X,X)])
+]).
+
+generate_equality_axioms(s,'+',_,_,[
+fof(symmetry,axiom,
+    ! [X,Y] : 
+      ( '$tptp_equal'(X,Y)
+     => '$tptp_equal'(Y,X) )   )
+]).
+
+generate_equality_axioms(s,'-',_,_,[
+input_clause(symmetry,axiom,
+    [--'$tptp_equal'(X,Y),
+     ++'$tptp_equal'(Y,X)])
+]).
+
+generate_equality_axioms(t,'+',_,_,[
+fof(transitivity,axiom,
+    ! [X,Y,Z] : 
+      ( ( '$tptp_equal'(X,Y)
+        & '$tptp_equal'(Y,Z) )
+     => '$tptp_equal'(X,Z) )   )
+]).
+
+generate_equality_axioms(t,'-',_,_,[
+input_clause(transitivity,axiom,
+    [--'$tptp_equal'(X,Y),
+     --'$tptp_equal'(Y,Z),
+     ++'$tptp_equal'(X,Z)])
+]).
+
+generate_equality_axioms(f,FormulaFormat,_,FunctorStructures,
+FunctionSubstitutivityAxioms):-
+    findall(Axiom,generate_function_substitutivity_axiom(
+FunctorStructures,FormulaFormat,Axiom),FunctionSubstitutivityAxioms).
+
+generate_equality_axioms(p,FormulaFormat,PredicateStructures,_,
+PredicateSubstitutivityAxioms):-
+    findall(Axiom,generate_predicate_substitutivity_axiom(
+PredicateStructures,FormulaFormat,Axiom),PredicateSubstitutivityAxioms).
+%------------------------------------------------------------------------------
+%----Generate the axioms to remove and to keep
+generate_axioms_to_remove_and_keep([],[],_,_,_,[],[]).
+
+%----Axioms to remove
+generate_axioms_to_remove_and_keep([Flag|RestOfAllFlags],ToRemoveFlags,
+FormulaFormat,PredicateStructures,FunctorStructures,AxiomsToRemove,
+AxiomsToKeep):-
+    tptp2X_select(Flag,ToRemoveFlags,RestOfToRemoveFlags),
+    !,
+%DEBUG write('PredicateStructures are '),write(PredicateStructures),nl,
+%DEBUG write('FunctorStructures are '),write(FunctorStructures),nl,
+    generate_equality_axioms(Flag,FormulaFormat,PredicateStructures,
+FunctorStructures,Axioms),
+    generate_axioms_to_remove_and_keep(RestOfAllFlags,RestOfToRemoveFlags,
+FormulaFormat,PredicateStructures,FunctorStructures,RestOfAxiomsToRemove,
+AxiomsToKeep),
+    tptp2X_append(Axioms,RestOfAxiomsToRemove,AxiomsToRemove).
+
+%----Axioms to keep
+generate_axioms_to_remove_and_keep([Flag|RestOfAllFlags],ToRemoveFlags,
+FormulaFormat,PredicateStructures,FunctorStructures,AxiomsToRemove,
+AxiomsToKeep):-
+    generate_equality_axioms(Flag,FormulaFormat,PredicateStructures,
+FunctorStructures,Axioms),
+    generate_axioms_to_remove_and_keep(RestOfAllFlags,ToRemoveFlags,
+FormulaFormat,PredicateStructures,FunctorStructures,AxiomsToRemove,
+RestOfAxiomsToKeep),
+    tptp2X_append(Axioms,RestOfAxiomsToKeep,AxiomsToKeep).
+%------------------------------------------------------------------------------
+%----Keep only the first letter of each token
+%----r for reflexivity
+sort_equality_flags(UnsortedList,[r|OtherSortedList]):-
+    tptp2X_select(114,UnsortedList,OtherUnsortedList),
+    !,
+    sort_equality_flags(OtherUnsortedList,OtherSortedList).
+
+%----s for symmetry
+sort_equality_flags(UnsortedList,[s|OtherSortedList]):-
+    tptp2X_select(115,UnsortedList,OtherUnsortedList),
+    !,
+    sort_equality_flags(OtherUnsortedList,OtherSortedList).
+
+%----t for transitivity
+sort_equality_flags(UnsortedList,[t|OtherSortedList]):-
+    tptp2X_select(116,UnsortedList,OtherUnsortedList),
+    !,
+    sort_equality_flags(OtherUnsortedList,OtherSortedList).
+
+%----f for functional reflexivity
+sort_equality_flags(UnsortedList,[f|OtherSortedList]):-
+    tptp2X_select(102,UnsortedList,OtherUnsortedList),
+    !,
+    sort_equality_flags(OtherUnsortedList,OtherSortedList).
+
+%----p for predicate substitutivity
+sort_equality_flags(UnsortedList,[p|OtherSortedList]):-
+    tptp2X_select(112,UnsortedList,OtherUnsortedList),
+    !,
+    sort_equality_flags(OtherUnsortedList,OtherSortedList).
+
+%----No more left is cooel
+sort_equality_flags([],[]):-
+    !.
+
+%----Others are ignored
+sort_equality_flags(Illegal,[]):-
+    write('WARNING : The equality flags '),
+    write(Illegal),
+    write(' are invalid and have been ignored.'),
+    nl.
+%------------------------------------------------------------------------------
+%----Shorten flags from full words
+shorten_flags([],[]).
+
+shorten_flags([FirstFlag|RestOfFlags],[FirstShortenedFlag|
+RestOfShortenedToRemoveFlags]):-
+    name(FirstFlag,[FirstLetter|_]),
+    name(FirstShortenedFlag,[FirstLetter]),
+    shorten_flags(RestOfFlags,RestOfShortenedToRemoveFlags).
+%------------------------------------------------------------------------------
+%----Convert each literal to a equality with true
+convert_literals_to_equality([],[]).
+
+%----Skip equality literals
+convert_literals_to_equality([Literal|RestOfLiterals],[Literal|
+RestOfEqualityLiterals]):-
+    Literal =.. [_,Atom],
+    Atom =.. ['$tptp_equal',_,_],
+    !,
+    convert_literals_to_equality(RestOfLiterals,RestOfEqualityLiterals).
+
+%----Wrap all other literals
+convert_literals_to_equality([Literal|RestOfLiterals],[EqualityLiteral|
+RestOfEqualityLiterals]):-
+    Literal =.. [Sign,Atom],
+    EqualityAtom =.. ['$tptp_equal',Atom,'$true'],
+    EqualityLiteral =.. [Sign,EqualityAtom],
+    convert_literals_to_equality(RestOfLiterals,RestOfEqualityLiterals).
+%------------------------------------------------------------------------------
+%----Convert each clause to equality
+convert_each_clause_to_equality([],[]).
+
+convert_each_clause_to_equality([input_clause(Name,Status,Literals)|
+RestOfClauses],[input_clause(Name,Status,EqualityLiterals)|
+RestOfEqualityClauses]):-
+    convert_literals_to_equality(Literals,EqualityLiterals),
+    convert_each_clause_to_equality(RestOfClauses,RestOfEqualityClauses).
+%------------------------------------------------------------------------------
+%----Common start up for equality transformations
+check_equality_flags_and_syntax(Formulae,Flags,SortedFlags,PredicateStructures,
+FunctorStructures,FormulaFormat):-
+    name(Flags,ASCIIList),
+    sort_equality_flags(ASCIIList,SortedFlags),
+%----Check if there is equality
+    check_there_is_equality(Formulae,UnsignedPredicateStructures),
+%----Remove equality it to prevent transitivity being created
+    tptp2X_select('$tptp_equal'/2,UnsignedPredicateStructures,
+PredicateStructures),
+    examine_formulae_for_functors(Formulae,FunctorStructures,_),
+%----Determine the type of axioms required
+    determine_formula_format(Formulae,FormulaFormat).
+%------------------------------------------------------------------------------
+%----Depending on the option, rearrange the clauses accordingly
+rm_equality(Formulae,Dictionary,rm_equality:ToRemoveFlags,StrippedFormulae,
+StrippedDictionary,NameSuffix):-
+    check_equality_flags_and_syntax(Formulae,ToRemoveFlags,SortedToRemoveFlags,
+PredicateStructures,FunctorStructures,FormulaFormat),
+    !,
+%----Generate the axioms to remove and to keep
+%DEBUG write('PredicateStructures are '),write(PredicateStructures),nl,
+%DEBUG write('FunctorStructures are '),write(FunctorStructures),nl,
+    generate_axioms_to_remove_and_keep([r,s,t,f,p],SortedToRemoveFlags,
+FormulaFormat,PredicateStructures,FunctorStructures,AxiomsToRemove,
+AxiomsToKeep),
+%DEBUG write('AxiomsToRemove are '),writeq(AxiomsToRemove),nl,
+%DEBUG write('AxiomsToKeep are '),writeq(AxiomsToKeep),nl,
+%----Remove which ever are not wanted, checking that all are there
+    remove_equality(Formulae,Dictionary,AxiomsToRemove,AxiomsToKeep,
+[],[],StrippedFormulae,StrippedDictionary),
+%DEBUG write('StrippedFormulae are '),write(StrippedFormulae),nl,
+    concatenate_atoms(['+rm_eq_'|SortedToRemoveFlags],NameSuffix).
+
+%----If no equality then do nothing
+rm_equality(Formulae,Dictionary,rm_equality:ToRemoveFlags,Formulae,
+Dictionary,NameSuffix):-
+    name(ToRemoveFlags,ToRemoveASCIIList),
+    sort_equality_flags(ToRemoveASCIIList,SortedToRemoveFlags),
+    concatenate_atoms(['+rm_eq_'|SortedToRemoveFlags],NameSuffix).
+
+%----Remove all entry point
+rm_equality(Formulae,Dictionary,rm_equality,StrippedFormulae,
+StrippedDictionary,NameSuffix):-
+    rm_equality(Formulae,Dictionary,rm_equality:rstfp,StrippedFormulae,
+StrippedDictionary,NameSuffix).
+%------------------------------------------------------------------------------
+%----Convert to equality representation
+to_equality(Clauses,Dictionary,to_equality,EqualityClauses,Dictionary,
+'+2eq'):-
+    tptp_clauses(Clauses),
+    convert_each_clause_to_equality(Clauses,EqualityClauses).
+%------------------------------------------------------------------------------
+%----Add missing equality axioms
+add_equality(Formulae,Dictionary,add_equality:ToAddFlags,AddedFormulae,
+AddedDictionary,NameSuffix):-
+    check_equality_flags_and_syntax(Formulae,ToAddFlags,SortedToAddFlags,
+PredicateStructures,FunctorStructures,FormulaFormat),
+    !,
+%----Generate the axioms to remove and to keep
+    tptp2X_list_difference([r,s,t,f,p],SortedToAddFlags,ToRemoveFlags),
+    generate_axioms_to_remove_and_keep([r,s,t,f,p],ToRemoveFlags,FormulaFormat,
+PredicateStructures,FunctorStructures,_,AxiomsToAdd),
+    missing_equality(AxiomsToAdd,Formulae,MissingAxioms,MissingDictionary),
+%----Add the missing axioms to the start of the formula list
+    tptp2X_append(MissingAxioms,Formulae,AddedFormulae),
+    tptp2X_append(MissingDictionary,Dictionary,AddedDictionary),
+    concatenate_atoms(['+eq_'|SortedToAddFlags],NameSuffix).
+
+%----If no equality do nothing
+add_equality(Formulae,Dictionary,add_equality:_,Formulae,Dictionary,'+noeq').
+
+%----Add all entry point
+add_equality(Formulae,Dictionary,add_equality,AddedFormulae,
+AddedDictionary,NameSuffix):-
+    add_equality(Formulae,Dictionary,add_equality:rstfp,AddedFormulae,
+AddedDictionary,NameSuffix).
+%------------------------------------------------------------------------------
+%----Set equality axioms
+set_equality(Formulae,Dictionary,set_equality:ToSetFlags,SetFormulae,
+SetDictionary,NameSuffix):-
+    check_equality_flags_and_syntax(Formulae,ToSetFlags,SortedToSetFlags,
+PredicateStructures,FunctorStructures,FormulaFormat),
+    !,
+    generate_axioms_to_remove_and_keep([r,s,t,f,p],[],FormulaFormat,
+PredicateStructures,FunctorStructures,_,AxiomsToAdd),
+    missing_equality(AxiomsToAdd,Formulae,MissingAxioms,MissingDictionary),
+%----Add the missing axioms to the start of the formula list
+    tptp2X_append(MissingAxioms,Formulae,AllEqualityFormulae),
+    tptp2X_append(MissingDictionary,Dictionary,AllEqualityDictionary),
+%----Generate the axioms to remove
+    tptp2X_list_difference([r,s,t,f,p],SortedToSetFlags,ToRemoveFlags),
+    generate_axioms_to_remove_and_keep([r,s,t,f,p],ToRemoveFlags,FormulaFormat,
+PredicateStructures,FunctorStructures,AxiomsToRemove,AxiomsToKeep),
+%----Remove which ever are not wanted, checking that all are there
+    remove_equality(AllEqualityFormulae,AllEqualityDictionary,AxiomsToRemove,
+AxiomsToKeep,[],[],SetFormulae,SetDictionary),
+    concatenate_atoms(['+seq_'|SortedToSetFlags],NameSuffix).
+
+%----If no equality do nothing
+set_equality(Formulae,Dictionary,set_equality:_,Formulae,Dictionary,'+noeq').
+%------------------------------------------------------------------------------
+equality_file_information(transform,rm_equality:rstfp,
+'Use any combination of these letters to remove reflexivity, symmetry, transitivity, function subsitution, and predicate substitution').
+
+equality_file_information(transform,to_equality,'Convert to pure equality').
+
+equality_file_information(transform,add_equality:rstfp,
+'Add missing equality axioms').
+
+equality_file_information(transform,set_equality:rstfp,'Set equality axioms').
+%------------------------------------------------------------------------------

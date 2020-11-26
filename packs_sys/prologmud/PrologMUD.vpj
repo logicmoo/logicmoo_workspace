@@ -1,0 +1,1297 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+	Version="10.0"
+	VendorName="SlickEdit"
+	WorkingDir="."
+	BuildSystem="automakefile"
+	BuildMakeFile="Makefile.mk">
+	<Config
+		Name="Release"
+		OutputFile=""
+		CompilerConfigName="GCC-4.8.2-i686-pc-cygwin">
+		<Menu>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				SaveOption="SaveModified"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1"
+				Verbose="1"
+				Beep="1">
+				<Exec CmdLine='make -f "Makefile.mk" CFG=%b'/>
+			</Target>
+		</Menu>
+		<PreBuildCommands StopOnError="1"/>
+		<PostBuildCommands StopOnError="1"/>
+	</Config>
+	<CustomFolders>
+	</CustomFolders>
+	<Files AutoFolders="DirectoryView">
+		<Folder Name="../../">
+			<F N="../../.gitattributes"/>
+			<F N="../../.gitignore"/>
+			<F N="../../.gitmodules"/>
+			<F N="../../.hgignore"/>
+			<F N="../../LICENSE"/>
+			<F N="../../LogicMOO.vpw"/>
+			<F N="../../README.md"/>
+			<F N="../../StartMUDServer.bat"/>
+			<F N="../../startMUDServer.sh"/>
+		</Folder>
+		<Folder Name="../func">
+			<Folder Name="prolog">
+				<Folder Name="func">
+					<F N="../func/prolog/func/issue_11.pl"/>
+				</Folder>
+				<F N="../func/prolog/func.pl"/>
+			</Folder>
+			<Folder Name="t">
+				<F N="../func/t/apply.pl"/>
+				<F N="../func/t/compose.pl"/>
+				<F N="../func/t/compose_apply.pl"/>
+				<F N="../func/t/examples.pl"/>
+				<F N="../func/t/issue-11.pl"/>
+			</Folder>
+			<F N="../func/.gitignore"/>
+			<F N="../func/History.md"/>
+			<F N="../func/LICENSE"/>
+			<F N="../func/pack.pl"/>
+			<F N="../func/README.md"/>
+		</Folder>
+		<Folder Name="../../games">
+			<F
+				N="../../games/*.*"
+				Recurse="1"
+				Refilter="0"
+				Excludes=""/>
+		</Folder>
+		<Folder Name="../logicmoo_base">
+			<Folder Name="prolog">
+				<Folder Name="logicmoo">
+					<Folder Name="util">
+						<F N="../logicmoo_base/prolog/logicmoo/util/logicmoo_util_all.pl"/>
+						<F N="../logicmoo_base/prolog/logicmoo/util/logicmoo_util_bb_env.pl"/>
+						<F N="../logicmoo_base/prolog/logicmoo/util/logicmoo_util_bugger.pl"/>
+						<F N="../logicmoo_base/prolog/logicmoo/util/logicmoo_util_filestreams.pl"/>
+						<F N="../logicmoo_base/prolog/logicmoo/util/logicmoo_util_strings.pl"/>
+						<F N="../logicmoo_base/prolog/logicmoo/util/logicmoo_util_structs.pl"/>
+						<F N="../logicmoo_base/prolog/logicmoo/util/rec_lambda.pl"/>
+					</Folder>
+					<F N="../logicmoo_base/prolog/logicmoo/logicmoo_engine.pl"/>
+				</Folder>
+			</Folder>
+			<F
+				N="../logicmoo_base/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes=".git/;.svn/;*~/;.*/"/>
+		</Folder>
+		<Folder Name="../logicmoo_nlu">
+			<Folder Name="prolog">
+				<Folder Name="AceRules">
+					<Folder Name="webapp">
+						<Folder Name="src">
+							<Folder Name="ch">
+								<Folder Name="uzh">
+									<Folder Name="ifi">
+										<Folder Name="attempto">
+											<Folder Name="acerules">
+												<Folder Name="help">
+													<Folder Name="page">
+														<Folder Name="error">
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/ContainsQuery.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/CyclicProgram.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/DistPluralNotSupported.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/DoubleNegation.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/EmptyProgPage.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/FactHeadNegation.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/FunctionwordApposition.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/InexistentLabel.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/InvalidIdentity.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/InvalidPriorities.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/InvalidSentence.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/ModalityNotSupported.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/NafInTopLevel.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/NoAnswer.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/NoFullStopPage.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/NoSavedPrograms.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/NoSpaceForPrograms.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/NotFlatInsideOfNeg.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/NotFlatInsideOfThen.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/NotLiteralsInIf.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/PrioritiesNotSupported.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/ProgramTooLarge.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/PropernameApposition.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/RedefinedVariable.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/ThatSubordNotSupported.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/TooManySavedPrograms.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/UnknownWord.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/UnresolvedAnaphor.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/error/ViolatedAtomRestr.java"/>
+														</Folder>
+														<Folder Name="ref">
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/ref/Fuchs2006.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/ref/Gelfond1988.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/ref/Gelfond1991.java"/>
+															<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/ref/Grosof1997.java"/>
+														</Folder>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/AboutPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/AcePage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/AnswerAreaPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/CourteousPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/CyclicPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/FactExamplesPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/IntroductionPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/MenuBarPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/ModePage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/NotAvailablePage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/Page.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/PrioritiesPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/ProgramAreaPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/QuickStartPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/RuleExamplesPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/ShortcutsPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/StableNegPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/StablePage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/SyntaxBasicsPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/TraceAreaPage.java"/>
+														<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/page/TwoNegationsPage.java"/>
+													</Folder>
+													<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/HelpButton.java"/>
+													<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/HelpLink.java"/>
+													<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/HelpWindow.java"/>
+													<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/PageManager.java"/>
+													<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/help/WebLink.java"/>
+												</Folder>
+												<Folder Name="style">
+													<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/style/Styles.java"/>
+												</Folder>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/AnswerArea.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/App.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/ErrorMessage.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/History.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/LoadExampleWindow.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/LoadProgramWindow.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/MenuBar.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/NormalButton.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/ProgramArea.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/Request.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/SavedPrograms.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/SaveProgramWindow.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/Servlet.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/SquareButton.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/TraceArea.java"/>
+												<F N="../logicmoo_nlu/prolog/AceRules/webapp/src/ch/uzh/ifi/attempto/acerules/UserInterface.java"/>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="ape">
+					<Folder Name="java">
+						<Folder Name="src">
+							<Folder Name="main">
+								<Folder Name="java">
+									<Folder Name="ch">
+										<Folder Name="uzh">
+											<Folder Name="ifi">
+												<Folder Name="attempto">
+													<Folder Name="ape">
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/ACEParser.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/ACEParserException.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/ACEParserResult.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/ACEText.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/ACEUtils.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/APELocal.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/APESocket.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/APEWebservice.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/FunctionWords.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/Gender.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/Lexicon.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/LexiconEntry.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/Message.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/MessageContainer.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/OutputType.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/package-info.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/PrologUtils.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/main/java/ch/uzh/ifi/attempto/ape/SyntaxBoxes.java"/>
+													</Folder>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="test">
+								<Folder Name="java">
+									<Folder Name="ch">
+										<Folder Name="uzh">
+											<Folder Name="ifi">
+												<Folder Name="attempto">
+													<Folder Name="ape">
+														<F N="../logicmoo_nlu/prolog/ape/java/src/test/java/ch/uzh/ifi/attempto/ape/APELocalTest.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/test/java/ch/uzh/ifi/attempto/ape/APESocketTest.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/test/java/ch/uzh/ifi/attempto/ape/APEWebserviceTest.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/test/java/ch/uzh/ifi/attempto/ape/LexiconEntryTest.java"/>
+														<F N="../logicmoo_nlu/prolog/ape/java/src/test/java/ch/uzh/ifi/attempto/ape/Testcase.java"/>
+													</Folder>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="candc">
+					<Folder Name="ext">
+						<Folder Name="bin-old">
+							<Folder Name="wsdlcpp">
+								<F N="../logicmoo_nlu/prolog/candc/ext/bin-old/wsdlcpp/NodeSearch.java"/>
+								<F N="../logicmoo_nlu/prolog/candc/ext/bin-old/wsdlcpp/NsNode.java"/>
+								<F N="../logicmoo_nlu/prolog/candc/ext/bin-old/wsdlcpp/NsNodeSearch.java"/>
+								<F N="../logicmoo_nlu/prolog/candc/ext/bin-old/wsdlcpp/wsdlcpp.java"/>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="e2c">
+					<Folder Name="backup">
+						<F N="../logicmoo_nlu/prolog/e2c/backup/as"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/callbacks.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/doom1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/doom3.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/kepatches.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/mudsystem.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/mudtool.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/reindex.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/startrek-narts.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/startrek.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/backup/starttrek.lisp"/>
+					</Folder>
+					<Folder Name="cl">
+						<Folder Name="emacs-cl">
+							<Folder Name="contrib">
+								<Folder Name="closette">
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/closette/closette-tests.lisp"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/closette/closette.lisp"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/closette/README"/>
+								</Folder>
+								<Folder Name="gabriel">
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/benchmark.lisp"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/boyer.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/browse.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/CHANGES"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/control.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/ctak.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/dderiv.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/deriv.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/destru-mod.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/destru.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/div2.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/fft-mod.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/fft.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/fprint.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/fread.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/frpoly-mod.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/frpoly.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/integer.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/make-declare.lsp"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/puzzle-mod-noproclaim.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/puzzle-mod.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/puzzle-mod1.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/puzzle-mod2.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/puzzle-noproclaim.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/puzzle-sda.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/puzzle.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/README"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/stak.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/tak-mod.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/tak.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/takl.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/takr.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/tprint.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/traverse.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/triang-mod.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/triang-old-mod.cl"/>
+									<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/gabriel/triang.cl"/>
+								</Folder>
+								<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/.cvsignore"/>
+								<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/contrib/iclm.el"/>
+							</Folder>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/.cvsignore"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/batch.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/BUGS"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-arrays.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-characters.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-compile.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-conditions.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-conses.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-environment.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-eval.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-evaluation.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-filenames.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-files.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-flow.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-format.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-hash.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-iteration.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-loop.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-numbers.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-objects.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-packages.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-printer.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-reader.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-sequences.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-streams.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-strings.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-structures.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-subtypep.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-symbols.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-system.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-typep.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/cl-types.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/COPYING"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/emacs-cl"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/func.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/HACKING"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/HOWTO"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/INSTALL"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/interaction.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/load-cl.el"/>
+							<F
+								N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/Makefile"
+								Type="Makefile"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/populate.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/README"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/tests.el"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/tests.lisp"/>
+							<F N="../logicmoo_nlu/prolog/e2c/cl/emacs-cl/utils.el"/>
+						</Folder>
+					</Folder>
+					<Folder Name="cogbotstuff">
+						<F N="../logicmoo_nlu/prolog/e2c/cogbotstuff/cogbot-init.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cogbotstuff/cogbot-ke.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cogbotstuff/cogbot-parser-semtrans.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cogbotstuff/cogbot-parser-template.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cogbotstuff/cogbot-parser-tests.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cogbotstuff/cogbot-parser.ke"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cogbotstuff/cogbot-parser.lisp"/>
+					</Folder>
+					<Folder Name="cynd">
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-init.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-ke.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-parser-stemplate.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-parser-template.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-parser-tests.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-parser-vp.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-parser-works.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-parser.ke"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/cogbot-parser.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/common.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/doom-agent-planner-instructions.text"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/doom.c"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/doom.h"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/doom.trans"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/kepatches.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim-agent-planner-html.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim-agent-planner-workarounds.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim-agent-planner.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim-bindings.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim-creation.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim-methods.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim-nl.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim-sksi.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/osim.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/paip-parser.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/paip-prolog.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cynd/startrek.lisp"/>
+					</Folder>
+					<Folder Name="cyndpandor3">
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/doom-bindings.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/doom-creation.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/doom-methods.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/doom-sksi.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/doom.c"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/doom.h"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/doom.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/doom.trans"/>
+						<F N="../logicmoo_nlu/prolog/e2c/cyndpandor3/startrek.lisp"/>
+					</Folder>
+					<Folder Name="microEx">
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/arith"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/bool"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/bratko"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/chap3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/chemins3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/cut"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/dbleconso3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/deborde"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/deriv"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/elisa"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/enigme3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/eras3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/erasto3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/fact"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/famille"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/filtre"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/flat"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/instant.pl"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/instant3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/lireliste"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/listes"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/listes.pl"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/myinstant.pl"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/path"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/path.pl"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/perm3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/predeval3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/queen"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/queen.pl"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/queen3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/rapport3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/send3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/sort"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/test3"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microEx/zebre3"/>
+					</Folder>
+					<Folder Name="microPrologIIV4">
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/blocs.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/boot.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/lecteur.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/Make"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/mlg.Start"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/pred.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/resol.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/unify.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microPrologIIV4/V4.lsp"/>
+					</Folder>
+					<Folder Name="microUt">
+						<F N="../logicmoo_nlu/prolog/e2c/microUt/clecteur.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microUt/cpred.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microUt/cunify.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microUt/cutili.lsp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/microUt/mlg.Start"/>
+					</Folder>
+					<Folder Name="paip">
+						<F N="../logicmoo_nlu/prolog/e2c/paip/auxfns.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/clos.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/cmacsyma.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/compile1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/compile2.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/compile3.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/compopt.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/edge-tab.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/eliza-pm.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/eliza.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/eliza1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/examples.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/gps-srch.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/gps.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/gps1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/grammar.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/interp1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/interp2.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/interp3.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/intro.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/iterative-template-parser.lisp.txt"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/krep.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/krep1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/krep2.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/lexicon.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/loop.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/macsyma.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/macsymar.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/mycin-r.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/mycin.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/othello.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/othello2.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/overview.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/paip.zip"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/patmatch.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/prolog.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/prolog1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/prologc.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/prologc1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/prologc2.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/prologcp.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/pttp-1i.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/README.html"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/search.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/simple.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/student.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/syntax1.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/syntax2.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/syntax3.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/tutor.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/unifgram.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/unify.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/paip/waltz.lisp"/>
+					</Folder>
+					<Folder Name="pjb-micro-prolog-ii">
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/benchmark.pl"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/blocs.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/boot.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/clecteur.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/cpred.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/cunify.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/cutili.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/init.pl"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/lecteur.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/loader.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/packages.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/pred.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/repl.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/resol.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/pjb-micro-prolog-ii/unify.lisp"/>
+					</Folder>
+					<Folder Name="setup">
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom-bindings-tail.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom-bindings.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom-creation.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom-methods.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom-sksi.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom.c"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom.h"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom.lisp"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/doom.trans"/>
+						<F N="../logicmoo_nlu/prolog/e2c/setup/startrek.lisp"/>
+					</Folder>
+					<F N="../logicmoo_nlu/prolog/e2c/cb-prolog.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cb-pttp.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cb_prolog.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cl.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cogbot-init.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cogbot-ke.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cogbot-parser-semtrans-nonvar.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cogbot-parser-semtrans.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cogbot-parser-template.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cogbot-parser-tests.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cogbot-parser.ke"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cogbot-parser.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/common.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/common.lisp.old"/>
+					<F N="../logicmoo_nlu/prolog/e2c/common_lisp.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/common_lisp2.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/const-renamer.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cyc-init.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cycdcg.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/cycdcg_test.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/doom-agent-planner-instructions.text"/>
+					<F N="../logicmoo_nlu/prolog/e2c/doom.c"/>
+					<F N="../logicmoo_nlu/prolog/e2c/doom.h"/>
+					<F N="../logicmoo_nlu/prolog/e2c/doom.trans"/>
+					<F N="../logicmoo_nlu/prolog/e2c/e2c-new-0.ke"/>
+					<F N="../logicmoo_nlu/prolog/e2c/e2c-new.ke"/>
+					<F N="../logicmoo_nlu/prolog/e2c/e2c.ke"/>
+					<F N="../logicmoo_nlu/prolog/e2c/e2c.pl"/>
+					<F N="../logicmoo_nlu/prolog/e2c/e2c_unused.ke"/>
+					<F N="../logicmoo_nlu/prolog/e2c/emacs.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/export.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/f.p"/>
+					<F N="../logicmoo_nlu/prolog/e2c/kb_interface.pl"/>
+					<F N="../logicmoo_nlu/prolog/e2c/kepatches.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/kif-loader.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/km.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/kmp.subl"/>
+					<F N="../logicmoo_nlu/prolog/e2c/logicmoo.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/microPrologII.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/mlg.Start"/>
+					<F N="../logicmoo_nlu/prolog/e2c/ner-utils.subl"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim-agent-planner-html.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim-agent-planner-workarounds.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim-agent-planner.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim-bindings.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim-creation.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim-methods.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim-nl.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim-sksi.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/osim.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/paip-parser.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/paip-prolog.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/prologmud.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/startrek.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/subl-grep.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/sublisp-cl.lisp"/>
+					<F N="../logicmoo_nlu/prolog/e2c/trace.lisp"/>
+				</Folder>
+				<Folder Name="Parser_SUPPLE">
+					<Folder Name="prolog-impls">
+						<Folder Name="plcafe">
+							<Folder Name="gen-src">
+								<Folder Name="shef">
+									<Folder Name="nlp">
+										<Folder Name="supple">
+											<Folder Name="prolog">
+												<Folder Name="cafe">
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$9261_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_compile_grammar46pl_0_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_compile_grammar46pl_1_5.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_compile_grammar46pl_2_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_compile_grammar46pl_3_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_0_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_10_11.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_11_17.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_12_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_13_13.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_14_10.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_15_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_16_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_1_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_2_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_3_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_4_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_5_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_6_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_7_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_8_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_parse_file46pl_9_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_plcafe_supple_io46pl_0_6.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_plcafe_supple_io46pl_1_6.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_plcafe_supple_io46pl_2_13.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_plcafe_supple_io46pl_3_14.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_plcafe_supple_io46pl_4_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_plcafe_supple_io46pl_5_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_plcafe_supple_io46pl_6_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_semantics46pl_0_16.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_semantics46pl_1_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_semantics46pl_2_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_semantics46pl_3_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_semantics46pl_4_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_semantics46pl_5_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple46pl_0_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple46pl_1_15.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple46pl_2_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple46pl_3_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple46pl_4_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple46pl_5_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple_utils46pl_0_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple_utils46pl_1_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_$dummy_supple_utils46pl_2_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_add_default_values_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_add_edge_11.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_add_to_sorted_edges_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_assert_edge_10.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_assert_edge_list_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_assertlist_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_best_parse_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_best_parse_cats_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_best_parse_cats_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_best_parse_file_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_best_parse_highest_edge_5.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_best_parse_loop_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_best_parse_vertex_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_best_parse_vertex_6.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_bracketed_parses_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_buchart_debug_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_buchart_gensym_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_calculate_skip_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_chart_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_chart_5.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_chart_file_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_child_edges_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_clean_predicate_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_clean_semantics_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_combine_edge_8.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_features_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_grammar2_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_grammar3_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_grammar_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_grammars2_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_grammars_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_grammars_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_last_grammar_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compile_lexicon_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compiled_rule_5.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_compiled_word_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_conc_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_count_edges_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_cvsid_best_parse_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_cvsid_buchart_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_cvsid_buchart_io_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_cvsid_compile_grammar_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_cvsid_parse_file_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_cvsid_semantics_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_dcall_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_debug_on_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_default_table_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_delete_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_best_parse_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_best_parse_stats_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_bracketed_tree2_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_bracketed_tree_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_tdm_attributes_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_tdm_attributes_5.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_tdm_child_attributes_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_tdm_ne_attributes_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_tree2_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_tree_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_tree_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_display_tree_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_dnl_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_do_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_dwrite_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_dwrite_list_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_edge_10.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_error_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_external_sem_file_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_extract_match_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_feature_table_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_filter_chart_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_filter_grammar_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_find_daughter_edges_6.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_foreach_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_generate_name_match_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_generate_uninstantiated_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_gensymmark_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_get_best_parse_edges_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_get_best_parse_edges_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_grammar_file_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_instantiate_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_is_better_than_score_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_is_list_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_lower_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_lower_chars_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_markup_file_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_member_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_member__3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_memberchk_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_name_conc1_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_name_conc_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_ne_tag_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_next_edges_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_not_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_once_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_output_file_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_chart2_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_chart_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_charts2_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_charts_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_edges_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_file_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_parse_file_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_pick_better_score_edge_6.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_read_chart_file_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_read_charts_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_replace_whitespace_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_rule_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_see_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_seen_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_semantic_output_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_semantics_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_semantics_4.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_semflatten_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_sort_edges_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_sort_edges_5.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_string_to_number_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_tell_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_telling_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_to_lower_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_to_upper_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_told_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_unify_features_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_update_match_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_update_match_bis_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_update_match_element_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_update_name_match_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_upper_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_upper_chars_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_vcall_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_verbose_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_verbose_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_verbose_output_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_vertex_best_parse_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_vertex_best_parse_3.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_vnl_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_vwrite_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_vwrite_list_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_word_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_best_parse_cats_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_chart_file_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_compiled_grammar_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_compiled_grammar_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_compiled_lexicon_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_edges_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_list2_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_list3_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_list_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_newcharts_0.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_nl_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_qlf_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_qlf_2.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_sem_list3_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_sem_list_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_semantics_1.java"/>
+													<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/gen-src/shef/nlp/supple/prolog/cafe/PRED_write_semantics_2.java"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="src">
+								<Folder Name="shef">
+									<Folder Name="nlp">
+										<Folder Name="supple">
+											<Folder Name="prolog">
+												<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/plcafe/src/shef/nlp/supple/prolog/PrologCafe.java"/>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="sicstus">
+							<Folder Name="src">
+								<Folder Name="shef">
+									<Folder Name="nlp">
+										<Folder Name="supple">
+											<Folder Name="prolog">
+												<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/sicstus/src/shef/nlp/supple/prolog/AbstractSICStusProlog.java"/>
+												<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/sicstus/src/shef/nlp/supple/prolog/SICStusProlog.java"/>
+												<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/sicstus/src/shef/nlp/supple/prolog/SICStusProlog3.java"/>
+												<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/sicstus/src/shef/nlp/supple/prolog/SICStusProlog4.java"/>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="swi">
+							<Folder Name="src">
+								<Folder Name="shef">
+									<Folder Name="nlp">
+										<Folder Name="supple">
+											<Folder Name="prolog">
+												<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/swi/src/shef/nlp/supple/prolog/SWIJavaProlog.java"/>
+												<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/prolog-impls/swi/src/shef/nlp/supple/prolog/SWIProlog.java"/>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+					<Folder Name="src">
+						<Folder Name="shef">
+							<Folder Name="nlp">
+								<Folder Name="supple">
+									<Folder Name="category">
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/category/Category.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/category/Chart.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/category/Edge.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/category/FeatureValue.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/category/InitialEdge.java"/>
+									</Folder>
+									<Folder Name="mapping">
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/mapping/BrillToSUPPLE.java"/>
+									</Folder>
+									<Folder Name="prolog">
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/prolog/Prolog.java"/>
+									</Folder>
+									<Folder Name="utils">
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/BestParseOutput.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/EmptyFeatureMap.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/IllegalCategoryName.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/InvalidPosCategory.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/SemOutput.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/SortedAnnotationList.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/SynOutput.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/SynSemPair.java"/>
+										<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/utils/SynSemTriple.java"/>
+									</Folder>
+									<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/SUPPLE.java"/>
+									<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/SUPPLERecord.java"/>
+									<F N="../logicmoo_nlu/prolog/Parser_SUPPLE/src/shef/nlp/supple/TestSuite.java"/>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="pldata">
+					<Folder Name="nltk_3.0a3">
+						<Folder Name="javasrc">
+							<Folder Name="org">
+								<Folder Name="nltk">
+									<Folder Name="mallet">
+										<F N="../logicmoo_nlu/prolog/pldata/nltk_3.0a3/javasrc/org/nltk/mallet/CRFInfo.java"/>
+										<F N="../logicmoo_nlu/prolog/pldata/nltk_3.0a3/javasrc/org/nltk/mallet/RunCRF.java"/>
+										<F N="../logicmoo_nlu/prolog/pldata/nltk_3.0a3/javasrc/org/nltk/mallet/TrainCRF.java"/>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="regulus">
+					<Folder Name="Examples">
+						<Folder Name="Calendar">
+							<Folder Name="java">
+								<Folder Name="issco">
+									<Folder Name="calendar">
+										<Folder Name="gui">
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/ApplicationState.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/Calendar.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/CalendarConfiguration.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/CalendarFrame.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/CalendarPanel.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/InlineHelp.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/Language.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/RegSettings.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/StatusBar.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/gui/Utils.java"/>
+										</Folder>
+										<Folder Name="socket">
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/ClientCom.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/DialogueHelpResult.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/DialogueServerHandler.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/InitializationProcessHandler.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/IProcessHandler.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/OSProcess.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/ProcessHandler.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/RecognitionHandler.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/RunnableRecognition.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/calendar/socket/ServerConnectionException.java"/>
+										</Folder>
+									</Folder>
+									<Folder Name="eval">
+										<Folder Name="ts">
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/ts/MetricComputation.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/ts/Pk_v1.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/ts/Pk_v2.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/ts/Pr_error.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/ts/WindowDiff.java"/>
+										</Folder>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/ErrorRate.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/ERs4TwoAnnotFiles.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/SemanticErrorRate.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/eval/WordErrorRate.java"/>
+									</Folder>
+									<Folder Name="nbest">
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/DataPostProc4ER.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/DataPostproc4SER.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/DataPostproc4WER.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/DataPostprocessing.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/DataPreproc.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/DataPreproc4FeatSel.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/DataPreproc4Learning.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/DataPreprocNfold.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/Feature.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/nbest/ParsePrologData.java"/>
+									</Folder>
+									<Folder Name="util">
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/issco/util/mgDebug.java"/>
+									</Folder>
+								</Folder>
+								<Folder Name="src">
+									<Folder Name="gui">
+										<Folder Name="transact">
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/DialServResponseParser.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/IProcessHandler.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/Transaction.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrAvailable.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrConstants.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrExitApp.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrInitDialClient.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrInitDialServ.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrInitGlobalProcesses.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrInitSpeech.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrPlayBack.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrReady.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrRecognise.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/transact/TrState.java"/>
+										</Folder>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/ApplicationState.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/Calendar.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/CalendarConfiguration.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/CalendarFrame.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/CalendarPanel.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/Dialogue.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/Language.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/RegSettings.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/StatusBar.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/gui/Utils.java"/>
+									</Folder>
+									<Folder Name="socket">
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/socket/ClientCom.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/socket/DialogueHelpResult.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/socket/DialogueServerHandler.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/socket/OSProcess.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/socket/ProcessHandler.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/socket/ServerConnectionException.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/socket/SpeechHandler.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/src/socket/svm_client.java"/>
+									</Folder>
+								</Folder>
+								<Folder Name="test">
+									<Folder Name="socket">
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/test/socket/ClientComTest.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/test/socket/DialogueHelpResultTest.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/Examples/Calendar/java/test/socket/DialogueServerHandlerTest.java"/>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="Toy0">
+							<Folder Name="java">
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy0/java/JDemo.java"/>
+							</Folder>
+						</Folder>
+						<Folder Name="Toy1">
+							<Folder Name="java">
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1/java/DialogueManager.java"/>
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1/java/InputManager.java"/>
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1/java/OutputManager.java"/>
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1/java/Toy1app.java"/>
+							</Folder>
+						</Folder>
+						<Folder Name="Toy1Dynamic">
+							<Folder Name="java">
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1Dynamic/java/JDemo.java"/>
+							</Folder>
+						</Folder>
+						<Folder Name="Toy1Specialised">
+							<Folder Name="java">
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1Specialised/java/DialogueManager.java"/>
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1Specialised/java/InputManager.java"/>
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1Specialised/java/OutputManager.java"/>
+								<F N="../logicmoo_nlu/prolog/regulus/Examples/Toy1Specialised/java/Toy1Specialisedapp.java"/>
+							</Folder>
+						</Folder>
+					</Folder>
+					<Folder Name="Java">
+						<Folder Name="JudgeGUI">
+							<F N="../logicmoo_nlu/prolog/regulus/Java/JudgeGUI/Frame2.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/JudgeGUI/JudgeGUI.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/JudgeGUI/TranslationTable.java"/>
+						</Folder>
+						<Folder Name="RegulusGUI">
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/AvailableMenus.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/AvailableMenusForFrame2.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/AvailableMenusForFrame3.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/AvailableMenusForFrame4.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/CommandInBackGround.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/CommandInBackGroundList.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/CorpusInBackGround.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/CorpusPane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/CreateCorpusMeny.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/CreateFrame3.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/DesktopMenus.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/DialoguePane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/DialogueProcessingResult.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/DynamicTree.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/EditDynamicTree.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/Frame2.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/Frame3.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/Frame4.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/FromInterlinguaTrace.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/HelpPane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/JudgeMenu.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/JudgePane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/LoadErrorPane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/partTreeNode.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/ProgressDisplay.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/progressLoadRecognition.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/progressPane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/ReadManyCommands.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/ReadOneCommandFile.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/ReadOneCorpusFile.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/ReadTwoCorpusFiles.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/RegulusGUI.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/RegulusMenus.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/RegulusSummaryItem.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/RegulusTree.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/rulesPane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/specialisationMenu.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/SpeechCommandInBackGround.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/swingWorkerTest.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/SysTray.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/ToInterlinguaTrace.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/ToSourceDiscourceTrace.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/TrainingPane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/TranslationResult.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/treeNode.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/TreePane.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/UnavailableCommands.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/UnavailableCommandsForFrame2.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/UnavailableCommandsForFrame3.java"/>
+							<F N="../logicmoo_nlu/prolog/regulus/Java/RegulusGUI/UnAvailableCommandsForFrame4.java"/>
+						</Folder>
+						<Folder Name="TestGUI">
+							<F N="../logicmoo_nlu/prolog/regulus/Java/TestGUI/TestGUI.java"/>
+						</Folder>
+					</Folder>
+					<Folder Name="RegulusSpeechServer">
+						<Folder Name="java">
+							<Folder Name="net">
+								<Folder Name="sf">
+									<Folder Name="regulus">
+										<Folder Name="interpretation">
+											<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/interpretation/InterpretationParser.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/interpretation/InterpretationParserConstants.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/interpretation/InterpretationParserTokenManager.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/interpretation/ParseException.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/interpretation/SimpleCharStream.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/interpretation/Token.java"/>
+											<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/interpretation/TokenMgrError.java"/>
+										</Folder>
+										<Folder Name="plugins">
+											<Folder Name="protege">
+												<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/plugins/protege/ProtegeExporter.java"/>
+											</Folder>
+										</Folder>
+										<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/Interpretation.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/NBestBean.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/NBestRegResult.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/RegClient.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/RegClientException.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/RegResult.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/RegResultNBest.java"/>
+										<F N="../logicmoo_nlu/prolog/regulus/RegulusSpeechServer/java/net/sf/regulus/Utils.java"/>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="SIRIDUS">
+					<Folder Name="dbaseAgent">
+						<Folder Name="src">
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/dbaseAgent/src/Dbase.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/dbaseAgent/src/DbaseAgent.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/dbaseAgent/src/MakeDbase.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/dbaseAgent/src/SearchDbase.java"/>
+						</Folder>
+					</Folder>
+					<Folder Name="icalAgent">
+						<Folder Name="src">
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/Add.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/Adder3.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/Adder4.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/BuildCalendar.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/BuildDb.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/CalToDb.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/Db.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/DbToCal.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/Deleter.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/EmptyCal.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/Find.java"/>
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/icalAgent/src/FindAgent.java"/>
+						</Folder>
+					</Folder>
+					<Folder Name="TALK_unimodal_grammar_lib">
+						<Folder Name="tkit_inout_nuance">
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/TALK_unimodal_grammar_lib/tkit_inout_nuance/InOutNuanceScore.java"/>
+						</Folder>
+						<Folder Name="tkit_inout_text">
+							<F N="../logicmoo_nlu/prolog/SIRIDUS/TALK_unimodal_grammar_lib/tkit_inout_text/InOutTextScore.java"/>
+						</Folder>
+						<Folder Name="trindikit4">
+							<Folder Name="examples">
+								<Folder Name="godis-basic">
+									<Folder Name="Agents">
+										<F N="../logicmoo_nlu/prolog/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/Agents/TextIO.java"/>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+					<Folder Name="UGOT-D31">
+						<Folder Name="godis-apps">
+							<Folder Name="domain-medical">
+								<Folder Name="Database">
+									<Folder Name="org">
+										<Folder Name="mitre">
+											<Folder Name="midiki">
+												<Folder Name="workshop">
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/DiagnosticTest.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/Disease.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/DiseaseServer.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/DiseaseToSymptomMapping.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/MedicalHistory.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/NetworkServer.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/QueryResponse.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/SocketUtil.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/Symptom.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/Synonym.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/ThreadedDiseaseServer.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/UrlConverter.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/WorkshopDatabase.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/WorkshopDatabaseFactory.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/WorkshopDatabaseTest.java"/>
+													<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/org/mitre/midiki/workshop/WorkshopErrorHandler.java"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Database/OAAWorkshopDatabase.java"/>
+								</Folder>
+							</Folder>
+							<Folder Name="domain-player">
+								<Folder Name="DBaseAgent">
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-player/DBaseAgent/CurrentMusicDb.java"/>
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-player/DBaseAgent/MusicDbAgent.java"/>
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-player/DBaseAgent/MusicDbCreator.java"/>
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-player/DBaseAgent/SetMusicDb.java"/>
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-player/DBaseAgent/Song.java"/>
+								</Folder>
+								<Folder Name="inoutnuance">
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-player/inoutnuance/InOutNuanceScore2.java"/>
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-player/inoutnuance/InOutTextScore.java"/>
+								</Folder>
+							</Folder>
+							<Folder Name="domain-vcr">
+								<Folder Name="Trash">
+									<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/godis-apps/domain-vcr/Trash/try2.java"/>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="trindikit4-0.1alpha">
+							<Folder Name="examples">
+								<Folder Name="godis-basic">
+									<Folder Name="Agents">
+										<F N="../logicmoo_nlu/prolog/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/Agents/TextIO.java"/>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<F N="../logicmoo_nlu/prolog/parser_all.pl"/>
+				<F N="../logicmoo_nlu/prolog/parser_e2c.pl"/>
+				<F N="../logicmoo_nlu/prolog/parser_stanford.pl"/>
+				<F N="../logicmoo_nlu/prolog/POSTaggerParser.java"/>
+			</Folder>
+		</Folder>
+		<Folder Name="../MUD_ircbot">
+			<Folder Name="prolog">
+				<F N="../MUD_ircbot/prolog/eggdrop.pl"/>
+			</Folder>
+		</Folder>
+		<Folder Name="prolog">
+			<F
+				N="prolog/*.*"
+				Recurse="1"
+				Refilter="0"
+				Excludes=".git/;*.*~;*~/"/>
+		</Folder>
+		<Folder Name="runtime">
+			<F
+				N="runtime/*.*"
+				Recurse="1"
+				Refilter="0"
+				Excludes=".git/;*.*~;*~/"/>
+		</Folder>
+		<F
+			N="Makefile.mk"
+			Type="Makefile"/>
+	</Files>
+</Project>

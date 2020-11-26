@@ -1,0 +1,67 @@
+//
+// maximalJoin example
+//
+// Available in the AAU directory as maximalJoin.plgCG
+//
+// Ulrik Petersen
+// Created: September 20, 2003
+// Last update: September 20, 2003
+//
+
+// Type hierarchy
+Entity > Physical, Abstract.
+Abstract > Proposition, Property.
+Property > Manner, Attribute.
+Manner > Indignantly.
+Attribute > Beautiful, Evil, Ugly, New, Scandalous.
+Physical > Object, Process.
+Process > Act.
+Act > Buy, Say.
+Object > Person, Artefact.
+Arteface > Dress.
+Person > Man, Woman, Married.
+Man > Husband.
+Woman > Wife.
+Married > Husband, Wife.
+
+// Catalog of instances
+Woman = Sue, Gill.
+Man = Mark.
+
+// Graphs
+
+// Sue says indignantly to Mark: "Gill bought a new, scandalous dress".
+graph(graph1, [Say]-
+        -AGNT->[Woman: Sue],
+        -RCPT->[Man: Mark],
+        -MANR->[Indignantly],
+        -THME->[Proposition =
+             [Buy]-
+                -AGNT->[Woman: Gill],
+                -THME->[Dress]-
+                      -ATTR->[New],
+                      -ATTR->[Scandalous]
+                 ]).
+
+// Sue is a beautiful married person, 
+// and she has a husband whose name is Mark.
+graph(graph2, [Married: Sue]-
+                -POSS->[Husband : Mark],
+                -ATTR->[Beautiful]).
+
+// Sue says to the married person Mark: "Gill is an ugly, evil woman".
+graph(graph3, [Say]-
+          -AGNT->[Woman: Sue],
+          -RCPT->[Married: Mark],
+          -THME->[Proposition =
+                [Woman: Gill]-
+                   -ATTR->[Ugly],
+                   -ATTR->[Evil]
+                ]).
+
+// Rule
+
+join(L1, L2, g3) :-
+     graph(L1, g1),
+     graph(L2, g2),
+     maximalJoin(g1, g2, g3).

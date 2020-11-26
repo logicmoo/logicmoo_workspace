@@ -1,0 +1,400 @@
+
+% Declarations
+ 
+feature_value_space(yesno_value,
+		    [[yes, no]]).
+feature_value_space(numtype_value,
+		    [[one, ohdigit, dayofmonth, month, year, hour, minute_or_second, none]]).
+feature_value_space(tense_value,
+		    [[present, past]]).
+
+feature(numtype, numtype_value).
+feature(tense, tense_value).
+feature(meeting_mentioned, yesno_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(aggregate, [sem]).
+category(at_location, [sem]).
+category(at_time, [sem]).
+category(date, [sem]).
+category(datime, [sem]).
+category(during_interval, [sem]).
+category(error, [sem]).
+category(having_affiliation, [sem]).
+category(interval, [sem]).
+category(meeting, [sem, meeting_mentioned]).
+category(month, [sem]).
+category(name, [sem]).
+category(number, [sem, numtype]).
+category(on_date, [sem]).
+category(question, [sem]).
+category(question_body, [sem, meeting_mentioned]).
+category(question_type, [sem, meeting_mentioned, tense]).
+category(referent, [sem]).
+category(referent_list, [sem]).
+category(referent_from_context, [sem, meeting_mentioned]).
+category(tense, [sem, tense]).
+category(time, [sem]).
+category(utterance, [sem]).
+category(with_attendee, [sem]).
+
+%---------------------------------------------------------------
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=S] -->
+	(   question:[sem=S]
+	;   error:[sem=S]
+	).
+
+question:[sem=concat(QType, Tense, Body)] -->
+	question_body:[sem=Body, meeting_mentioned=MeetingMentioned],
+	question_type:[sem=QType, meeting_mentioned=MeetingMentioned, tense=SynTense],
+	tense:[sem=Tense, tense=SynTense],
+	ka.
+
+%---------------------------------------------------------------
+
+error:[sem=[error(no_referent_for(i))]] -->
+	anata, no, onamae, wa, nan, desu, ka.
+
+error:[sem=[error(several_referents_for(_Referent, ReferentList))]] -->
+	referent_list:[sem=ReferentList].
+
+referent_list:[sem=[]] --> [].
+
+referent_list:[sem=[F | R]] -->
+	referent:[sem=F], desu, ka,
+	referent_list:[sem=R].
+
+referent:[sem=Name] -->
+	name:[sem=Name].
+
+referent:[sem=Date] -->
+	date:[sem=Date].
+
+%---------------------------------------------------------------
+
+question_body:[sem=concat(Time, Date, Interval, Location,
+			  Attendee, Affiliation, Aggregate,
+			  ReferentFromContext),
+	       meeting_mentioned=MeetingMentioned] -->
+	referent_from_context:[sem=ReferentFromContext, meeting_mentioned=MeetingMentioned],
+	?at_time:[sem=Time],
+	?on_date:[sem=Date],
+	?during_interval:[sem=Interval],
+	?at_location:[sem=Location],
+	?with_attendee:[sem=Attendee],
+	?having_affiliation:[sem=Affiliation],
+	?aggregate:[sem=Aggregate].	
+
+%---------------------------------------------------------------
+
+aggregate:[sem=[aggregate(next_n_meetings(1), Body)]] -->
+	tsugi, no,
+	question_body:[sem=Body].
+
+aggregate:[sem=[aggregate(last_n_meetings(1), Body)]] -->
+	saigo, no,
+	question_body:[sem=Body].
+
+%---------------------------------------------------------------
+
+during_interval:[sem=[in_interval=Interval]] -->
+	interval:[sem=Interval].
+
+on_date:[sem=[on_date=Date]] -->
+	date:[sem=Date],
+	%no.
+	ni.
+
+at_time:[sem=[at_time=Time]] -->
+	time:[sem=Time],
+	no.
+
+at_location:[sem=[meeting_loc=LocName]] -->
+	name:[sem=LocName],
+	de.
+	%no.
+
+with_attendee:[sem=[attendee=referent(person(Person))]] -->
+	name:[sem=Person],
+	issyo,
+	no.
+
+with_attendee:[sem=[attendee=Person]] -->
+	name:[sem=Person],
+	issyo,
+	no.
+
+having_affiliation:[sem=[affiliation=Name]] -->
+	name:[sem=Name],
+	de,
+	no.
+
+%---------------------------------------------------------------
+
+interval:[sem=interval(Datime1, Datime2)] -->
+	datime:[sem=Datime1],
+	kara,
+	datime:[sem=Datime2],
+	made.
+	%no.
+
+interval:[sem=interval(Datime1, Datime2)] -->
+	time:[sem=Datime1],
+	kara,
+	time:[sem=Datime2],
+	made.
+	%no.
+
+date:[sem=datime(Year, Month, Day, 0, 0, 0)] -->
+	number:[sem=Year, numtype=year],
+	'/',
+	number:[sem=Month, numtype=month],
+	'/',
+	number:[sem=Day, numtype=dayofmonth].
+	
+time:[sem=datime(generic, generic, generic, Hour, Minute, Second)] -->
+	number:[sem=Hour, numtype=hour],
+	':',
+	number:[sem=Minute, numtype=minute_or_second].
+
+datime:[sem=datime(Year, Month, Day, Hour, Minute, Second)] -->
+	number:[sem=Year, numtype=year],
+	'/',
+	number:[sem=Month, numtype=month],
+	'/',
+	number:[sem=Day, numtype=dayofmonth],
+	number:[sem=Hour, numtype=hour],
+	':',
+	number:[sem=Minute, numtype=minute_or_second].	
+
+%---------------------------------------------------------------
+
+question_type:[sem=concat(M, [utterance_type=whq, query_object=when]),
+	       tense=present, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], nanji, desu.
+question_type:[sem=concat(M, [utterance_type=whq, query_object=when]),
+	       tense=past, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], nanji, deshita.
+
+question_type:[sem=concat(M, [utterance_type=whq, query_object=start_time]),
+	       tense=present, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], nanji, hajimarimasu.
+question_type:[sem=concat(M, [utterance_type=whq, query_object=start_time]),
+	       tense=past, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], nanji, hajimarimashita.
+
+question_type:[sem=concat(M, [utterance_type=whq, query_object=end_time]),
+	       tense=present, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], nanji, owarimasu.
+question_type:[sem=concat(M, [utterance_type=whq, query_object=end_time]),
+	       tense=past, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], nanji, owarimashita.
+
+question_type:[sem=concat(M, [utterance_type=whq, query_object=where]),
+	       tense=present, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], doko, desu.
+question_type:[sem=concat(M, [utterance_type=whq, query_object=where]),
+	       tense=past, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], doko, deshita.
+
+question_type:[sem=concat(M, [utterance_type=whq, query_object=attendee]),
+	       tense=present, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], dare, ga, syusseki, shimasu.
+question_type:[sem=concat(M, [utterance_type=whq, query_object=attendee]),
+	       tense=past, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], dare, ga, syusseki, shimashita.
+
+question_type:[sem=[attendee=Person,
+		    utterance_type=whq,
+		    query_object=phone_number],
+	       tense=present] -->
+	name:[sem=Person], no, denwa, bangou, ga, nani, desu.
+question_type:[sem=[attendee=Person,
+		    utterance_type=whq,
+		    query_object=phone_number],
+	       tense=past] -->
+	name:[sem=Person], no, denwa, bangou, ga, nani, deshita.
+
+question_type:[sem=[attendee=Person,
+		    utterance_type=whq,
+		    query_object=attendee_address],
+	       tense=present] -->
+	name:[sem=Person], no, juusyo, ga, nani, desu.
+question_type:[sem=[attendee=Person,
+		    utterance_type=whq,
+		    query_object=attendee_address],
+	       tense=past] -->
+	name:[sem=Person], no, juusyo, ga, nani, deshita.
+
+question_type:[sem=[attendee=Person,
+		    utterance_type=whq,
+		    query_object=email_address], tense=present] -->
+	name:[sem=Person], no, meeru, adoresu, ga, nani, desu.
+question_type:[sem=[attendee=Person,
+		    utterance_type=whq,
+		    query_object=email_address],
+	       tense=past] -->
+	name:[sem=Person], no, meeru, adoresu, ga, nani, deshita.
+
+question_type:[sem=concat(M, [utterance_type=whq]),
+	       tense=present, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], nani, desu.
+question_type:[sem=concat(M, [utterance_type=whq]),
+	       tense=past, meeting_mentioned=MeetingMentioned] -->
+	meeting:[sem=M, meeting_mentioned=MeetingMentioned], nani, deshita.
+
+question_type:[sem=[utterance_type=ynq],
+	       tense=present, meeting_mentioned=no] -->
+	kaigi, wa, arimasu.
+question_type:[sem=[utterance_type=ynq],
+	       tense=past, meeting_mentioned=no] -->
+	kaigi, wa, arimashita.
+
+question_type:[sem=[utterance_type=ynq],
+	       tense=present, meeting_mentioned=yes] -->
+	desu.
+question_type:[sem=[utterance_type=ynq],
+	       tense=past, meeting_mentioned=yes] -->
+	deshita.
+
+%---------------------------------------------------------------
+
+%tense:[sem=[tense_information=interval(Now, datime(2100, 0, 0, 0, 0, 0))], tense=present] --> [].
+
+tense:[sem=[tense_information=interval(datime(1980, 0, 0, 0, 0, 0), Now)], tense=past] --> [].
+
+tense:[sem=[], tense=present] --> [].
+
+%---------------------------------------------------------------
+
+referent_from_context:[sem=[referent_from_context=meeting],
+		       meeting_mentioned=no] -->
+	[].
+
+referent_from_context:[sem=[],
+		       meeting_mentioned=no] -->
+	[].
+
+referent_from_context:[sem=[referent_from_context=meeting, meeting=_],
+		       meeting_mentioned=yes] -->
+	kono, kaigi, wa.
+
+referent_from_context:[sem=[meeting=_],
+		       meeting_mentioned=yes] -->
+	kono, kaigi, wa.
+
+meeting:[sem=[], meeting_mentioned=no] --> kaigi, wa.
+
+meeting:[sem=[], meeting_mentioned=yes] --> [].
+
+%---------------------------------------------------------------
+
+number:[sem=0, numtype=hour\/minute_or_second] --> '00'.
+
+number:[sem=1, numtype=one] --> '1'.
+number:[sem=2, numtype=none] --> '2'.
+number:[sem=3, numtype=none] --> '3'.
+number:[sem=4, numtype=none] --> '4'.
+number:[sem=5, numtype=none] --> '5'.
+number:[sem=6, numtype=none] --> '6'.
+number:[sem=7, numtype=none] --> '7'.
+number:[sem=8, numtype=none] --> '8'.
+number:[sem=9, numtype=none] --> '9'.
+
+number:[sem=1, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '01'.
+number:[sem=2, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '02'.
+number:[sem=3, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '03'.
+number:[sem=4, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '04'.
+number:[sem=5, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '05'.
+number:[sem=6, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '06'.
+number:[sem=7, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '07'.
+number:[sem=8, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '08'.
+number:[sem=9, numtype=ohdigit\/month\/dayofmonth\/hour\/minute_or_second] --> '09'.
+
+number:[sem=10, numtype=month\/dayofmonth\/hour\/minute_or_second] --> '10'.
+number:[sem=11, numtype=month\/dayofmonth\/hour\/minute_or_second] --> '11'.
+number:[sem=12, numtype=month\/dayofmonth\/hour\/minute_or_second] --> '12'.
+number:[sem=13, numtype=dayofmonth\/hour\/minute_or_second] --> '13'.
+number:[sem=14, numtype=dayofmonth\/hour\/minute_or_second] --> '14'.
+number:[sem=15, numtype=dayofmonth\/hour\/minute_or_second] --> '15'.
+number:[sem=16, numtype=dayofmonth\/hour\/minute_or_second] --> '16'.
+number:[sem=17, numtype=dayofmonth\/hour\/minute_or_second] --> '17'.
+number:[sem=18, numtype=dayofmonth\/hour\/minute_or_second] --> '18'.
+number:[sem=19, numtype=dayofmonth\/hour\/minute_or_second] --> '19'.
+number:[sem=20, numtype=dayofmonth\/hour\/minute_or_second] --> '20'.
+number:[sem=21, numtype=dayofmonth\/hour\/minute_or_second] --> '21'.
+number:[sem=22, numtype=dayofmonth\/hour\/minute_or_second] --> '22'.
+number:[sem=23, numtype=dayofmonth\/hour\/minute_or_second] --> '23'.
+number:[sem=24, numtype=dayofmonth\/minute_or_second] --> '24'.
+number:[sem=25, numtype=dayofmonth\/minute_or_second] --> '25'.
+number:[sem=26, numtype=dayofmonth\/minute_or_second] --> '26'.
+number:[sem=27, numtype=dayofmonth\/minute_or_second] --> '27'.
+number:[sem=28, numtype=dayofmonth\/minute_or_second] --> '28'.
+number:[sem=29, numtype=dayofmonth\/minute_or_second] --> '29'.
+number:[sem=30, numtype=dayofmonth\/minute_or_second] --> '30'.
+number:[sem=31, numtype=dayofmonth\/minute_or_second] --> '31'.
+number:[sem=32, numtype=minute_or_second] --> '32'.
+number:[sem=33, numtype=minute_or_second] --> '33'.
+number:[sem=34, numtype=minute_or_second] --> '34'.
+number:[sem=35, numtype=minute_or_second] --> '35'.
+number:[sem=36, numtype=minute_or_second] --> '36'.
+number:[sem=37, numtype=minute_or_second] --> '37'.
+number:[sem=38, numtype=minute_or_second] --> '38'.
+number:[sem=39, numtype=minute_or_second] --> '39'.
+number:[sem=40, numtype=minute_or_second] --> '40'.
+number:[sem=41, numtype=minute_or_second] --> '41'.
+number:[sem=42, numtype=minute_or_second] --> '42'.
+number:[sem=43, numtype=minute_or_second] --> '43'.
+number:[sem=44, numtype=minute_or_second] --> '44'.
+number:[sem=45, numtype=minute_or_second] --> '45'.
+number:[sem=46, numtype=minute_or_second] --> '46'.
+number:[sem=47, numtype=minute_or_second] --> '47'.
+number:[sem=48, numtype=minute_or_second] --> '48'.
+number:[sem=49, numtype=minute_or_second] --> '49'.
+number:[sem=50, numtype=minute_or_second] --> '50'.
+number:[sem=51, numtype=minute_or_second] --> '51'.
+number:[sem=52, numtype=minute_or_second] --> '52'.
+number:[sem=53, numtype=minute_or_second] --> '53'.
+number:[sem=54, numtype=minute_or_second] --> '54'.
+number:[sem=55, numtype=minute_or_second] --> '55'.
+number:[sem=56, numtype=minute_or_second] --> '56'.
+number:[sem=57, numtype=minute_or_second] --> '57'.
+number:[sem=58, numtype=minute_or_second] --> '58'.
+number:[sem=59, numtype=minute_or_second] --> '59'.
+
+number:[sem=2005, numtype=year] --> '2005'.
+number:[sem=2006, numtype=year] --> '2006'.
+number:[sem=2007, numtype=year] --> '2007'.
+number:[sem=2008, numtype=year] --> '2008'.
+number:[sem=2009, numtype=year] --> '2009'.
+number:[sem=2010, numtype=year] --> '2010'.
+
+month:[sem=1] --> 'January'.
+month:[sem=2] --> 'February'.
+month:[sem=3] --> 'March'.
+month:[sem=4] --> 'April'.
+month:[sem=5] --> 'May'.
+month:[sem=6] --> 'June'.
+month:[sem=7] --> 'July'.
+month:[sem=8] --> 'August'.
+month:[sem=9] --> 'September'.
+month:[sem=10] --> 'October'.
+month:[sem=11] --> 'November'.
+month:[sem=12] --> 'December'.
+
+
+macro(place_name(Surface, Sem),
+      ( name:[sem=Sem] --> Surface )
+     ).
+
+macro(person_name(Surface, Sem),
+      ( name:[sem=Sem] --> Surface )
+     ).

@@ -1,0 +1,245 @@
+%==============================================================================
+%----Procedures for writing out clauses in TPTP format, using standard
+%----Prolog. 
+%----
+%----Written by Geoff Sutcliffe, November 1992.
+%----Revised by Geoff Sutcliffe, January 1994.
+%----Extended to FFOL by Geoff Sutcliffe, September 1994.
+%----Converted to oldtptp by Geoff Sutcliffe, October 2004.
+%==============================================================================
+%==============================================================================
+%----Generic output
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Output variables 
+oldtptp_output_variable(Variable):-
+    prolog_dialect(swi),
+    !,
+    write_term(Variable,[numbervars(true)]).
+
+
+oldtptp_output_variable(Variable):-
+    write(Variable).
+%------------------------------------------------------------------------------
+oldtptp_output_atom_list(Language,[One]):-
+    !,
+    oldtptp_output_atom(Language,One).
+
+oldtptp_output_atom_list(Language,[One,Two|Rest]):-
+    oldtptp_output_atom(Language,One),
+    write(','),
+    oldtptp_output_atom_list(Language,[Two|Rest]).
+%------------------------------------------------------------------------------
+oldtptp_output_atom(_,Variable):-
+    looks_like_a_variable(Variable),
+    !,
+    oldtptp_output_variable(Variable).
+
+oldtptp_output_atom(Language,'$tptp_equal'(X,Y)):-
+    !,
+    oldtptp_output_atom(Language,equal(X,Y)).
+
+oldtptp_output_atom(Language,'$tptp_not_equal'(X,Y)):-
+    !,
+    write('~ '),
+    oldtptp_output_atom(Language,equal(X,Y)).
+
+oldtptp_output_atom(Language,Reserved):-
+    atom(Reserved),
+    name(Reserved,[36|WordASCII]),
+    !,
+    name(Word,WordASCII),
+    oldtptp_output_atom(Language,Word).
+
+oldtptp_output_atom(_,Atom):-
+    atomic(Atom),
+    !,
+    write(Atom).
+
+oldtptp_output_atom(Language,Term):-
+    Term =.. [Functor|Arguments],
+    write(Functor),
+    write('('),
+    oldtptp_output_atom_list(Language,Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+simple_oldtptp_status(Status-_,FinalStatus):-
+    !,
+    simple_oldtptp_status(Status,FinalStatus).
+
+%----Until systems learn about negated_conjecture
+simple_oldtptp_status(negated_conjecture,conjecture):-
+    !.
+
+%----Until systems learn about lemma
+simple_oldtptp_status(definition,axiom):-
+    !.
+
+simple_oldtptp_status(lemma,axiom):-
+    !.
+
+simple_oldtptp_status(Status,Status).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----FOF format
+%==============================================================================
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in oldtptp format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+oldtptp_quantified_format('',' [',',','] : ','').
+
+%----FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,FormulaSuffix
+oldtptp_binary_format('( ','',' ',' )').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+oldtptp_unary_format('',' ','').
+%------------------------------------------------------------------------------
+%----Write a oldtptp formula in fof form
+output_oldtptp_formula(Format,fof(Name,Status,Formula)):-
+    simple_oldtptp_status(Status,SimpleStatus),
+    write('input_formula('),
+    writeq(Name),
+    write(','),
+    write(SimpleStatus),
+%----Bracket formula to avoid confusing with other arguments (esp |
+%----becomes ; of wrong precedence)
+    write(',('),
+    nl,
+    output_generic_formula(Format,fof,Formula),
+    write('   )).'),
+    nl.
+%------------------------------------------------------------------------------
+%----Write out each formula in TPTP format
+output_oldtptp_formulae(Format,[OneFormula]):-
+    !,
+    output_oldtptp_formula(Format,OneFormula).
+
+output_oldtptp_formulae(Format,[FirstFormula|RestOfFormulae]):-
+    output_oldtptp_formula(Format,FirstFormula),
+    nl,
+    output_oldtptp_formulae(Format,RestOfFormulae).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----CNF format
+%==============================================================================
+%----Calculate the text length of the literals. 
+%----Random length for variables. Won't be there in reality.
+oldtptp_term_text_length(Variable,2):-
+    var(Variable),
+    !.
+
+oldtptp_term_text_length([],0):-
+    !.
+
+%----A single term in list, no ,
+oldtptp_term_text_length([OneTerm],Length):-
+    !,
+    oldtptp_term_text_length(OneTerm,Length).
+
+%----A list of terms, add 1 for ,
+oldtptp_term_text_length([FirstTerm|RestOfTerms],Length):-
+    !,
+    oldtptp_term_text_length(FirstTerm,FirstLength),
+    oldtptp_term_text_length(RestOfTerms,RestLength),
+    Length is FirstLength + RestLength + 1.
+
+oldtptp_term_text_length(Atom,AtomLength):-
+    atomic(Atom),
+    !,
+    name(Atom,AtomASCII),
+    tptp2X_length(AtomASCII,AtomLength).
+
+%----Complex term, add 2 for ()
+oldtptp_term_text_length(Complex,Length):-
+    Complex =.. [Symbol|Arguments],
+    oldtptp_term_text_length(Symbol,SymbolLength),
+    oldtptp_term_text_length(Arguments,ArgumentsLength),
+    Length is SymbolLength + ArgumentsLength + 2.
+%------------------------------------------------------------------------------
+%----Make a final decision about writing all the literals on one line
+decide_one_line_of_oldtptp_literals(_,no,no).
+
+%----If propositional, check total length
+decide_one_line_of_oldtptp_literals(Literals,yes,no):-
+    oldtptp_term_text_length(Literals,Length),
+%----Allow 8 places for "    [" and "])."
+    Length > (75 - 8),
+    !.
+
+decide_one_line_of_oldtptp_literals(_,yes,yes).
+%------------------------------------------------------------------------------
+%----Output oldtptp format literals
+output_oldtptp_literal(++Atom):-
+    write('++'),
+    oldtptp_output_atom(cnf,Atom).
+
+output_oldtptp_literal(--Atom):-
+    write('--'),
+    oldtptp_output_atom(cnf,Atom).
+%------------------------------------------------------------------------------
+%----Write out the literals, one per line indented by 5
+%----In case there's an empty clause (after my simplification)
+output_oldtptp_literals([],_):-
+    !.
+
+output_oldtptp_literals([OneLiteral],_):-
+    !,
+    output_oldtptp_literal(OneLiteral).
+
+output_oldtptp_literals([FirstLiteral|RestOfLiterals],OneLineOfLiterals):-
+    output_oldtptp_literal(FirstLiteral),
+    write(','),
+    (OneLineOfLiterals == yes ->
+        true ;
+        (   nl,
+            write('     '))),
+    output_oldtptp_literals(RestOfLiterals,OneLineOfLiterals).
+%------------------------------------------------------------------------------
+%----Write out a TPTP clause, one literal per line
+output_oldtptp_clause(input_clause(Name,Status,Literals),OneLineOfLiterals):-
+    simple_oldtptp_status(Status,SimpleStatus),
+    write('input_clause('),
+    writeq(Name),
+    write(','),
+    write(SimpleStatus),
+    write(','),
+    nl,
+    write('    ['),
+%----Make a final decision about one line of literals
+    decide_one_line_of_oldtptp_literals(Literals,OneLineOfLiterals,
+FinalOneLineChoice),
+    output_oldtptp_literals(Literals,FinalOneLineChoice),
+    write(']).'),
+    nl.
+%------------------------------------------------------------------------------
+%----This writes out a list of clauses in TPTP format
+%----If only one clause left, then no new line
+output_oldtptp_clauses([OneClause],OneLineOfLiterals):-
+    !,
+    output_oldtptp_clause(OneClause,OneLineOfLiterals).
+
+output_oldtptp_clauses([FirstClause|RestOfClauses],OneLineOfLiterals):-
+    output_oldtptp_clause(FirstClause,OneLineOfLiterals),
+    nl,
+    output_oldtptp_clauses(RestOfClauses,OneLineOfLiterals).
+%------------------------------------------------------------------------------
+%----This writes out TPTP format clauses
+oldtptp(oldtptp,Clauses,_):-
+    tptp_clauses(Clauses),
+%----If propositional then literals may be output on one line.
+    (   tptp_propositional(Clauses) ->
+        output_oldtptp_clauses(Clauses,yes);
+        output_oldtptp_clauses(Clauses,no)).
+
+oldtptp(oldtptp,Formulae,_):-
+    tptp_formulae(Formulae),
+    tptp_normal_formulae(Formulae),
+    output_oldtptp_formulae(oldtptp,Formulae).
+%------------------------------------------------------------------------------
+%----Provide information about the TPTP format
+oldtptp_format_information('%','.oldtptp').
+%------------------------------------------------------------------------------
+%----Provide information about the TPTP file
+oldtptp_file_information(format,tptp,'TPTP format').
+%------------------------------------------------------------------------------

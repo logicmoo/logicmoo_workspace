@@ -1,0 +1,230 @@
+#--------------------------------------------------------------
+#
+#				Definition of general macros
+#
+#--------------------------------------------------------------
+
+LIB_SOURCES = $(foreach lib, $(LIB_NAMES), $(LIB_$(lib)_SOURCES))
+
+LIB_OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%$(OBJ_SUFFIX), \
+			$(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%$(OBJ_SUFFIX), $(LIB_SOURCES))) 
+
+LIB_TARGETS = $(foreach lib, $(LIB_NAMES), $(LIBDIR)/$(LIB_PREFIX)$(lib).$(LIB_BIN_SUFFIX))
+
+
+EXE_SOURCES = $(foreach exe, $(EXE_NAMES), \
+			$(wildcard $(SRCDIR)/$(prog).c) \
+			$(wildcard $(SRCDIR)/$(prog).cpp) \
+			$(EXE_$(exe)_SOURCES)) \
+	
+EXE_OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%$(OBJ_SUFFIX), \
+			$(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%$(OBJ_SUFFIX), $(EXE_SOURCES)))
+
+EXE_TARGETS = $(foreach exe, $(EXE_NAMES), $(BINDIR)/$(exe))
+
+
+ALL_SOURCES = $(LIB_SOURCES) $(EXE_SOURCES)
+
+ALL_OBJECTS = $(LIB_OBJECTS) $(EXE_OBJECTS)
+
+ALL_DEPENDS = $(patsubst $(SRCDIR)/%.cpp, $(DEPDIR)/%.d, \
+			$(patsubst $(SRCDIR)/%.c, $(DEPDIR)/%.d, $(ALL_SOURCES)))
+
+#-------------------------------------------------------------------
+
+
+all: headers libraries executables
+	@echo "---- [INFO] [Building $(MODULE_NAME) completed]"
+
+
+#-------------------------------------------------------------------
+#
+#	Cancel the default build rules which tend to place
+#	the compilation output in the source directory.
+#
+#-------------------------------------------------------------------
+
+%$(OBJ_SUFFIX): %.c
+
+%$(OBJ_SUFFIX): %.cpp
+
+
+#-------------------------------------------------------------------
+#
+#	Header releated rules.
+#
+#-------------------------------------------------------------------
+
+headers:
+	@echo "---- [INFO] [---- ENTER ----] [Headers]";
+	@if [ -n "$(EXPORTED_HEADERS)" ]; then \
+		$(MAKE) $(INCDIR) $(addprefix $(INCDIR)/, $(EXPORTED_HEADERS)); \
+	fi
+	@echo "---- [INFO] [---- LEAVE ----] [Headers]";
+
+
+$(INCDIR)/%.h: $(SRCDIR)/%.h
+	@install-sh $< $(@D)
+
+$(INCDIR)/%.hpp: $(SRCDIR)/%.hpp
+	@install-sh $< $(@D)
+
+$(INCDIR)/%.inl: $(SRCDIR)/%.inl
+	@install-sh $< $(@D)
+
+#-------------------------------------------------------------------
+#
+#	Shared library related rules
+#
+#-------------------------------------------------------------------
+
+LIB_x_TARGET  = $(LIBDIR)/$(LIB_PREFIX)$*.$(LIB_BIN_SUFFIX);
+LIB_x_LDFLAGS = $(LIB_$*_LDFLAGS)
+LIB_x_OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%$(OBJ_SUFFIX), \
+	$(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%$(OBJ_SUFFIX), $(LIB_$*_SOURCES)))
+
+libraries:
+	@for lib in $(LIB_NAMES) "" ; do \
+		if [ -n "$$lib" ]; then \
+			libx_CCFLAGS="-D_"`echo $$lib | tr '[\-a-z ]' '[_A-Z_]'`"_DLL" ; \
+			libx_TARGET=$$lib"-library" ; \
+			$(MAKE) MOD_CCFLAGS=$$libx_CCFLAGS $$libx_TARGET ; \
+		fi; \
+	done;
+
+
+%-library:
+	@echo "---- [INFO] [---- ENTER ----] [Library $*]"
+	@$(MAKE) IMPORT_DEPS=1 $(OBJDIR) $(LIB_x_OBJECTS)
+	@$(MAKE) $(BINDIR) $(LIBDIR)
+	$(LIB_GENERATOR) $(LIB_x_OBJECTS) $(LDFLAGS) $(LIB_x_LDFLAGS) -o $(LIB_x_TARGET) 
+	@echo "---- [INFO] [---- LEAVE ----] [Library $*]"
+
+
+
+#-------------------------------------------------------------------
+#
+#	Executable related rules
+#
+#-------------------------------------------------------------------
+
+
+EXE_x_TARGET  = $(BINDIR)/$*$(EXE_SUFFIX);
+EXE_x_LDFLAGS = $(EXE_$*_LDFLAGS)
+EXE_x_OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%$(OBJ_SUFFIX), \
+	$(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%$(OBJ_SUFFIX), $(EXE_$*_SOURCES)))
+
+
+executables:
+	@echo "---- [INFO] [---- ENTER ----] [Executables]"
+	@for exe in $(EXE_NAMES) "" ; do \
+		if [ -n "$$exe" ]; then \
+			exex_TARGET=$$exe"-executable" ; \
+			$(MAKE) MOD_CCFLAGS="" $$exex_TARGET ; \
+		fi; \
+	done;
+	@echo "---- [INFO] [---- LEAVE ----] [Executables]"
+
+%-executable:
+	@echo "---- [INFO] [---- ENTER ----] [Executable $*]"
+	@$(MAKE) IMPORT_DEPS=1 $(OBJDIR) $(EXE_x_OBJECTS)
+	@$(MAKE) $(BINDIR)
+	$(EXE_GENERATOR) $(EXE_x_OBJECTS) $(LDFLAGS) $(EXE_x_LDFLAGS) -o $(EXE_x_TARGET)
+	@echo "---- [INFO] [---- LEAVE ----] [Executable $*]"
+
+
+
+#-------------------------------------------------------------------
+#
+#	Dependencies related rules
+#
+#-------------------------------------------------------------------
+
+depends:
+	@echo "---- [INFO] [---- ENTER ----] [Dependencies]";
+	@if [ -n "$(ALL_DEPENDS)" ]; then \
+		$(MAKE) $(DEPDIR) $(ALL_DEPENDS); \
+	fi
+	@echo "---- [INFO] [---- LEAVE ----] [Dependencies]";
+
+
+$(DEPDIR)/%.d: $(SRCDIR)/%.c
+	@echo "---- [INFO] [Dependencies for: $*.c]"
+	@mkdir -p $(@D)
+	@$(DEPXX) $< | sed -e 's+\(.*\)\.o:+$$(OBJDIR)/\1$(OBJ_SUFFIX):+' \
+		-e 's+ \([^ ]*\.[^ ]*\)+ $$(firstword $$(wildcard $$(SRCDIR)/\1 \
+			$$(INCDIR)/\1 $$(VOICE_BROWSER_INCDIR)/\1)) +g' > $@
+
+
+$(DEPDIR)/%.d: $(SRCDIR)/%.cpp
+	@echo "---- [INFO] [Dependencies for: $*.cpp]"
+	@mkdir -p $(@D)
+	@$(DEPXX) $< | sed -e 's+\(.*\)\.o:+$$(OBJDIR)/\1$(OBJ_SUFFIX):+' \
+		-e 's+ \([^ ]*\.[^ ]*\)+ $$(firstword $$(wildcard $$(SRCDIR)/\1 \
+			$$(INCDIR)/\1 $$(VOICE_BROWSER_INCDIR)/\1)) +g' > $@
+
+
+EXISTING_DEPENDS := $(wildcard $(ALL_DEPENDS))
+
+ifneq ($(IMPORT_DEPS),)
+	ifneq ($(EXISTING_DEPENDS), )
+		include $(EXISTING_DEPENDS)
+	endif
+endif
+
+
+#-------------------------------------------------------------------
+#
+#	Generic build options
+#
+#-------------------------------------------------------------------
+
+$(OBJDIR)/%$(OBJ_SUFFIX): $(SRCDIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(MOD_CCFLAGS) $(CCFLAGS) $(OPTION_FLAGS) -c -o $@ $<
+
+$(OBJDIR)/%$(OBJ_SUFFIX): $(SRCDIR)/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(MOD_CCFLAGS) $(CXXFLAGS) $(OPTION_FLAGS) -c -o $@ $<
+
+
+#-------------------------------------------------------------------
+#
+#	Directory construction rules. Check and/or contruct
+# 	a destination directory.
+#
+#-------------------------------------------------------------------
+
+$(INCDIR) $(BINDIR) $(LIBDIR) $(DEPDIR) $(OBJDIR):
+	@echo "---- [INFO] [Creating directory $@]";
+	@if [ -d $@ ]; then \
+		echo "---- [INFO] [Directory $@ exists]"; \
+	else \
+		echo "---- [INFO] [Creating directory $@]"; \
+		mkdir -p $@; \
+		sync; sync; \
+	fi
+
+
+#-------------------------------------------------------------------
+#
+#	Directory structure cleanup routines.
+#
+#-------------------------------------------------------------------
+
+clean:
+	@echo "---- [INFO] [---- ENTER ----] [Cleanup]"
+	-rm -rf ./obj/$(MACHINE_TYPE)/*
+	-rm -rf ./obj/$(MACHINE_TYPE) 
+	-rm -rf core
+	@echo "---- [INFO] [---- LEAVE ----] [Cleanup]"
+
+
+pristine: clean
+	@echo "---- [INFO] [---- ENTER ----] [Pristine]"
+	-rm -rf ./dep/$(MACHINE_TYPE)/*
+	-rm -rf ./dep/$(MACHINE_TYPE)
+	-rm -rf ./dep
+	-rm -rf ./obj
+	@echo "---- [INFO] [---- LEAVE ----] [Pristine]"
+	

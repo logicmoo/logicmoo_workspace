@@ -1,0 +1,20 @@
+(note TQF128c)
+
+(givesSupportToAgent Iran PFLP-GeneralCommand 
+ (HighAmountFn EconomicSupport)) 
+
+(query (findall (?DEGREE ?IRAN-RELATED-TO-PFLP-GC ?TRUST)
+(thereExists ?IRAN-RELATION-TO-PFLP-GC 
+   (or 
+       (?PFLP-GC-RELATED-TO-IRAN PFLP-GeneralCommand Iran) 
+       (?IRAN-RELATION-TO-PFLP-GC Iran PFLP-GeneralCommand) 
+       (?PFLP-GC-RELATED-TO-IRAN PFLP-GeneralCommand Iran ?DEGREE) 
+       (?IRAN-RELATED-TO-PFLP-GC Iran PFLP-GeneralCommand ?DEGREE) 
+       (?PFLP-GC-RELATED-TO-IRAN PFLP-GeneralCommand ?OTHER Iran) 
+       (?IRAN-RELATED-TO-PFLP-GC Iran ?OTHER PFLP-GeneralCommand) 
+       (?PFLP-GC-RELATED-TO-IRAN ?OTHER PFLP-GeneralCommand Iran) 
+       (?IRAN-RELATED-TO-PFLP-GC ?OTHER Iran PFLP-GeneralCommand)))))
+
+(answer (list (HighAmountFn EconomicSupport)) givesSupportToAgent)
+
+(end_of_file)

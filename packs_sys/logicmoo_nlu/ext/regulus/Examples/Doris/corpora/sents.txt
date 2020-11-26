@@ -1,0 +1,347 @@
+Fetch my laptop.
+It's on the desk near the window in my office.
+Enter my office.
+Sit behind the desk.
+There is a bottom drawer.
+Open it.
+My wallet is in it.
+Bring it to me.
+Fetch my phone.
+It is in my office on the desk to the right.
+Get my notebook from the top drawer of the cabinet.
+The notebook is green.
+The notebook is in the front of the drawer in a folder.
+Get my mug.
+It should be on my desk.
+Go to my office.
+Get my diary.
+It is in my desk.
+It is red.
+Bring my diary.
+It is in the top drawer of my desk.
+Bring the book from my suitcase on the floor beneath the desk.
+Get me my laptop.
+It is near my desk.
+Bring to me my diary.
+The door to the office is unlocked.
+The handle is a meter from the floor on the left of the door.
+Push the handle down.
+At the same time push the handle away from you.
+The door opens inwards into the office.
+The diary is near my desk near the door.
+Bring the big diary.
+The diary is black.
+Get the records.
+They should be on the desk.
+They are probably under something.
+Bring my calendar.
+It is in my office near the telephone.
+Bring the binder on my bookshelf.
+It's red.
+It is thick.
+Fetch the leftmost papers on the leftmost table in my office.
+Go to my office.
+Locate my phone on my desk.
+Bring it to me.
+Fetch my pen in my office.
+The pen is on the desk near the folder.
+Fetch my phone from my desk.
+It is near the keyboard.
+Unplug it from the red cable first.
+There is a document on the printer on the side of the desk.
+Bring it to me.
+Go to my room.
+Get the phone on the desk.
+Bring me my coffee in my office.
+It's on the windowsill.
+Go to my desk.
+Click on the link on my monitor.
+Then enter commands.
+Print a copy of the commands.
+Bring me the printouts.
+Go to my office.
+Get me my diary.
+It is on my desk near the phone.
+Fetch my mug.
+It is in my office on the desk near the phone.
+Go to office.
+Open door.
+Enter office.
+Turn left.
+Proceed to the bookcase.
+Take black folder from bookcase.
+Hold black folder.
+Bring black folder to meeting-room.
+Go to my office.
+Find a red book on the bottom of my bookshelf.
+Get the picture on the notice board on the wall in my office.
+My mug is in my office.
+Go into my office.
+Get my mug.
+It is on top of the cabinet on the left of my desk.
+Go to my office.
+Open the door.
+Go to the front of my desk.
+Open the top drawer on the left of the front of the desk.
+Take out the small red address-book.
+Bring the book to me here.
+Get my keys for me.
+They are in my bag under my desk.
+Take a left turn at the second desk from the office door.
+Return my laptop on my desk.
+Get my book from my office.
+It's green.
+It's in my drawer on the right of my desk.
+Fetch my notebook for me.
+It is in my office on my desk.
+Stand in the door of my office.
+My notebook is on the left of the desk.
+Get my book in my office.
+It is on the right of my desk.
+Get my mug for me.
+It is on my desk near my computer.
+Bring me my pen.
+It is in the cup on the right of the desk.
+The pen is red.
+Fetch my laptop from my office.
+Bring it here.
+Bring me my mug.
+It's a yellow mug.
+It should be near my screen.
+Get my mug.
+It is red.
+It is on my davenport in my office.
+Get my bottle of scotch from the top shelf of the glass cabinet at the rear of my office.
+Fetch my laptop from my office.
+Bring it here.
+It is on my desk to the right of the grey bookshelf.
+I also need the grey adapter.
+Go to my office.
+Open the door.
+Go to my desk.
+Pick up my diary.
+Give the diary to me.
+I forgot my pen.
+Grab one from my office.
+There should be a pen on my desk.
+Grab a pen from my office.
+There should be one on my desk.
+Fetch my laptop.
+It's on my desk near my monitor.
+Go to my office.
+Open the door.
+Walk to my desk.
+Pick up the black folder near the telephone on the right of my desk.
+Bring it back to me.
+Fetch my diary from my office.
+The diary is green.
+The diary is on the desk to the right.
+Fetch me Anna's red cup on her table in the left of my office?
+Get my phone.
+It's in my office on the main desk.
+Get my keys from my office.
+They are on top of my desk to the right of the lamp.
+Go to my office.
+Fetch my diary.
+Open the door.
+It is on the table directly near you.
+It is a blue small book.
+Bring me my glasses from my office.
+They are on my desk.
+Open the door.
+Turn Left.
+There is a bookcase near you.
+Look at the shelf from the top.
+Find a blue book.
+Bring it to me.
+Go to my office.
+Go inside.
+Move to the table in the centre of the room.
+Pick up the red book on the table near the phone.
+Bring the red book to the room.
+Give it to me.
+Go to my room.
+Pick up my phone on my desk.
+The phone is black.
+It is near the mouse on the desk.
+My bowl of soup is on the desk in my office.
+Fetch my bowl for me.
+Go to my office.
+Fetch a memo for today's meeting.
+Enter the door.
+Just move straight.
+Come to the desk.
+Look right.
+The memo should be in the printer on the left of the desk in the pickup tray.
+Just grab all the papers.
+Give them to me.
+Get the glass-pewter chicken on the windowsill.
+Bring my keys from the office.
+They are in the drawer.
+Fetch my glasses from my office.
+They are on the desk.
+Pick up my notebook.
+It's on the desk in my office.
+There is a pile of papers in my tray.
+Bring the green document from the pile.
+My important disc is in my office.
+Quickly bring me the disc in the computer.
+Eject it from the computer on my desk.
+Get my diary from my office.
+It's on the windowsill.
+Enter my office.
+Go to my desk on the side of the seat.
+Open the second drawer on the right side.
+Take the beige folder.
+It should be the bottom folder in the drawer.
+Take the contents of the folder.
+Bring it to me.
+Go to my office.
+Look on the desk.
+Bring me the green folder.
+Get the file from my personal directory.
+Display for my eyes only.
+Get the blue pen on top of my desk.
+It is large.
+Fetch the adapter for my computer.
+It is on my desk in my office.
+Disconnect it from the outlet first.
+Get my telephone in my office.
+It's on the desk by the window.
+Get my car keys from the pocket of the jacket on the back of the chair near my desk.
+Enter my room.
+Go to my table.
+Get the laptop on the table.
+Open the door.
+Go to the desk near the window.
+The cup will be on the desk near the terminal.
+Pick up the cup.
+Bring it to me.
+Get the oven from my office.
+It's under the desk on the left.
+Get my item from the cupboard inside my office opposite the door.
+Go to my office.
+Get my cup on my desk.
+Fetch my diary.
+It is on my desk near the keyboard.
+Get my mug.
+The blue one.
+It's in my office on the desk to the left of the computer.
+Bring me my phone from my office.
+The phone is in my jacket.
+The jacket is on a hook behind the door.
+Get the gun.
+It's inside a book.
+Fetch my diary from my room.
+It is on my desk.
+It is a small black diary.
+Fetch mug from desk on left of my office.
+Mug in right corner of desk.
+Go to my office.
+Fetch my mug.
+It is on the desk to the left of the keyboard.
+Get the book.
+It should be in the bookshelf.
+Go into my office.
+Get my diary.
+It is near the window.
+It is on the shelf.
+Bring my organizer from my desk near my computer on the left.
+Go into my office.
+Get my coat.
+It should be behind the door.
+Go to my office.
+Enter the office.
+Find my phone.
+Bring it back to me.
+Grab my mug on the desk along the wall of my office.
+Enter the office.
+Go to the smallest cabinet.
+There is a briefcase in the drawer.
+Bring it to me.
+Get the black diary on my desk.
+There is a telephone on my desk.
+Go to my office.
+Open the door.
+Enter the room.
+Go to the desk to the right of the door.
+Pick up the bottle on the desk.
+Carry the bottle to the room.
+Go to my office.
+Open the door.
+There is a red cardigan on my chair.
+Gently bring it to me.
+Get my phone in my office.
+It is on my desk on the left near the computer.
+Bring me my diary.
+It's a brown small book on my desk.
+Bring my cup.
+The cup is near my monitor.
+It is on the small table.
+Go to my office.
+Go to my drawer.
+Bring me my diary.
+The small one.
+Hurry back.
+Bring me my yellow notepad from my office.
+It is in a pile of books near computer.
+Go inside the office.
+Turn left.
+There is a cupboard.
+Open the door of the cupboard.
+Retrieve the book.
+Return it to me.
+Go to my office.
+Get a crossword from the drawer of my desk.
+Go to my office.
+Open the door by depressing the handle.
+Move into the office.
+There is a desk near you.
+There is a big red book on top of the desk.
+Bring the book to me.
+Get the briefings from my office.
+They should be on the table.
+I forgot my diary.
+Fetch it from my office.
+It's on the top drawer of my desk.
+Fetch my diary from my office.
+It's on the top drawer of my desk.
+Get my pen.
+It's on my desk to the left of the computer.
+It's near the keyboard.
+Go inside my office.
+Collect from my desk my white mug near my computer.
+My desk is on the right of the office.
+Bring me a book from my office.
+The book is in a shelf on my desk.
+Enter my office.
+The cabinet is on top of my desk.
+The book is in the cabinet.
+It is black.
+Fetch my mug from my office.
+It is on the table.
+Go into my study.
+Find my blue book.
+Go to the desk.
+There is a diary in the drawer on the right of the desk.
+Open the drawer.
+Take out the diary.
+Close the drawer.
+Bring me the diary.
+Fetch my phone from my office.
+Open the door to my office.
+My desk is against the wall opposite the door.
+My phone is on the desk near the white phone on the left of the desk.
+Bring the phone back to me.
+Find my folder in my office.
+Bring the folder now.
+Go into my office.
+Find my diary.
+Go into my office.
+Turn left.
+Walk towards the desk.
+Pick up black folder on the desk.
+Return it to me in the meeting-room.
+Bring me my laptop in my case in the bottom drawer of the cabinet.
+Get the gun.
+It's inside the desk.

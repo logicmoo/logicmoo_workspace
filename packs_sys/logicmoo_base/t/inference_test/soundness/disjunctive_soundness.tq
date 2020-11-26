@@ -1,0 +1,10 @@
+(note "Disjuntive Inference/Soundness 1  r(x) => All x [ p(x) v q(x) v t(x) ] ")
+
+(forAll ?X (implies (instance ?X Human)  (or (IsTall ?X) (IsShort ?X) (IsAverageHeight ?X))))
+
+(instance Joel Human)
+
+(queryyn (IsTall Joel))
+
+(answer Unproven)
+

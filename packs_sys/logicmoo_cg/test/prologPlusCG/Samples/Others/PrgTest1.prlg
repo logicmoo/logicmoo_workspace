@@ -1,0 +1,5 @@
+frere(_X, _, sim).
+frere(err, "tro &67 ", _Yes45) :- p.
+frere(s, 45, ()) :- dp(34), dps(ps, (_Y, toto, "titi et mimi", (im), (non, imbrique, (45, (l))), rq)),
+	  pred(re, predImb(45, cher), predDbleImb(56, toto(xt, _Y))).
+autre(34) :- frere(s, _x, _).

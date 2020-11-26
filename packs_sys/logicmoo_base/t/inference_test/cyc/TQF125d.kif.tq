@@ -1,0 +1,119 @@
+(note "TQF125d - needs work")
+(abort)
+
+(unknownFormula 
+ (startingDate OPEC 
+ (YearFn 1968))) 
+
+(startingDate OAPEC 
+ (YearFn 1968)) 
+
+(unknownFormula 
+ (startingDate OAPEC 
+ (MonthFn September 
+ (YearFn 1960)))) 
+
+(startingDate OPEC 
+ (MonthFn September 
+ (YearFn 1960))) 
+
+(unknownFormula 
+ (internationalOrg-MemberCountry OAPEC Iran)) 
+
+(internationalOrg-MemberCountry OPEC Iran) 
+
+(unknownFormula 
+ (internationalOrg-MemberCountry OAPEC Nigeria)) 
+
+(internationalOrg-MemberCountry OPEC Nigeria) 
+
+(unknownFormula 
+ (internationalOrg-MemberCountry OAPEC Venezuela)) 
+
+(internationalOrg-MemberCountry OPEC Venezuela) 
+
+(unknownFormula 
+ (internationalOrg-MemberCountry OAPEC Indonesia-TheNation)) 
+
+(internationalOrg-MemberCountry OPEC Indonesia-TheNation) 
+
+(unknownFormula 
+ (controllingSuborganizations OPEC MinisterialCouncil-OAPEC)) 
+
+(controllingSuborganizations OAPEC MinisterialCouncil-OAPEC) 
+
+(unknownFormula 
+ (subOrganizations OAPEC MinisterialMonitoringSubcommittee-OPEC)) 
+
+(subOrganizations OPEC MinisterialMonitoringSubcommittee-OPEC) 
+
+(unknownFormula 
+ (hasLeaders OAPEC SaudiArabia)) 
+
+(hasLeaders OPEC SaudiArabia) 
+
+(unknownFormula 
+ (subOrganizations OPEC JudicialTribunal-OAPEC)) 
+
+(subOrganizations OAPEC JudicialTribunal-OAPEC) 
+
+(query (findall (?RELATION-ARG1 ?VALUE-OAPEC ?VALUE-OPEC)
+(or 
+   (and 
+       (assertedFormula 
+           (instance OPEC ?ONLY-OPEC-ISA)) 
+       (not 
+           (instance OAPEC ?ONLY-OPEC-ISA))) 
+   (and 
+       (assertedFormula 
+           (instance OAPEC ?ONLY-OAPEC-ISA)) 
+       (not 
+           (instance OPEC ?ONLY-OAPEC-ISA))) 
+   (and 
+       (?RELATION-ARG1 OPEC ?VALUE-OPEC) 
+       (unknownFormula 
+           (?RELATION-ARG1 OAPEC ?VALUE-OPEC)) 
+       (not 
+           (instance ?RELATION-ARG1 DocumentationConstant)) 
+       (not 
+           (instance ?RELATION-ARG1 #$LanguageDescribingPredicate)) 
+       (different ?RELATION-ARG1 instance)) 
+   (and 
+       (?RELATION-ARG1 OAPEC ?VALUE-OAPEC) 
+       (unknownFormula 
+           (?RELATION-ARG1 OPEC ?VALUE-OAPEC)) 
+       (not 
+           (instance ?RELATION-ARG1 DocumentationConstant)) 
+       (not 
+           (instance ?RELATION-ARG1 #$LanguageDescribingPredicate)) 
+       (different ?RELATION-ARG1 instance)) 
+   (and 
+       (?RELATION-ARG2 ?VALUE-OPEC OPEC) 
+       (unknownFormula 
+           (?RELATION-ARG2 ?VALUE-OPEC OAPEC)) 
+       (not 
+           (instance ?RELATION-ARG2 Role))) 
+   (and 
+       (?RELATION-ARG2 ?VALUE-OAPEC OAPEC) 
+       (unknownFormula 
+           (?RELATION-ARG2 ?VALUE-OAPEC OPEC)) 
+       (not 
+           (instance ?RELATION-ARG2 Role)))) 
+))
+
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+
+(end_of_file)
+

@@ -1,0 +1,96 @@
+; nuance grammar for GoDiS legoturtle domain/lexicon
+
+
+
+.Asrg_legoturtle_english LexiconTurtleEnglish
+
+
+
+LexiconTurtleEnglish  [ ( ?(+TurtleICM) -pau- ?ShortAns ?RequestSeq ) 
+
+			( ?(+TurtleICM) -pau- ?TurtleQuestion )  
+
+ 			hello
+
+			 bye 
+
+			quit
+
+			yes
+
+			(no ?RequestSeq) ]
+
+
+
+
+
+TurtleICM [ pardon okay (dont know) ]
+
+
+
+;QUESTIONS
+
+TurtleQuestion [ none ]
+
+
+
+;short answers
+
+
+ShortAns [ Degrees Steps ]
+
+
+
+;requests 
+
+
+
+RequestSeq [ TurtleTop DirectCommand ]
+
+TurtleTop (  ?top  )
+
+DirectCommand  [  (forward ?Steps) 
+		  (backward ?Steps)
+		  (left ?Degrees)
+		  (right ?Degrees) ] 
+
+
+
+
+;subgrammars
+
+
+
+Steps (Number_0_to_99 ?steps )
+
+Degrees (Number_0_to_360 ?degrees )
+
+
+
+
+Number_0_to_99 (?not [ Digit Teen Tens ])
+
+Number_0_to_360 (?not [ Digit Teen Tens (Digit hundred and Teen )
+	(Digit hundred and Tens ) ] )
+
+
+
+
+
+Digit [zero one two three four five six seven eight nine ]
+
+Teen [ ten eleven twelve thirteen fourteen fifteen sixteen seventeen eightteen 
+
+       nineteen ]
+
+Tens [ Ten ?Digit ]
+
+Ten  [ twenty thirty forty fifty sixty seventy eighty ninety ]
+
+
+
+
+
+
+
+

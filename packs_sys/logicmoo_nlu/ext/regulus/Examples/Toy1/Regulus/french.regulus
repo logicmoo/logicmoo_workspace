@@ -1,0 +1,87 @@
+
+% Declarations
+
+feature_value_space(singplur_value, [[sing, plur]]).
+feature_value_space(gender_value, [[masc, fem]]).
+feature_value_space(vform_value, [[imperative, finite]]).
+feature_value_space(vtype_value, [[transitive, être]]).
+feature_value_space(sem_np_type_value, [[n, location, device]]).
+
+feature(singplur, singplur_value).
+feature(gender, gender_value).
+feature(vform, vform_value).
+feature(vtype, vtype_value).
+feature(sem_np_type, sem_np_type_value).
+feature(obj_sem_np_type, sem_np_type_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(utterance, [sem]).
+category(command, [sem]).
+category(yn_question, [sem]).
+category(np, [sem, singplur, gender, sem_np_type]).
+category(location_pp, [sem]).
+category(verb, [sem, singplur, gender, vform, vtype, obj_sem_np_type]).
+category(onoff, [sem, singplur, gender, sem_np_type]).
+
+%---------------------------------------------------------------
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=S] -->
+	(   command:[sem=S] ;
+	    yn_question:[sem=S]
+	).
+
+command:[sem=concat([[utterance_type, command]], concat(Verb, concat(Np, Loc)))] -->
+	verb:[sem=Verb, vform=imperative, vtype=transitive, obj_sem_np_type=ObjType],
+	np:[sem=Np, sem_np_type=ObjType],
+	?location_pp:[sem=Loc].
+
+yn_question:[sem=concat([[utterance_type, query]], concat(Verb, concat(Adj, concat(Np, Loc))))] -->
+	np:[sem=Np, singplur=N, gender=Gen, sem_np_type=SubjType],
+	verb:[sem=Verb, vform=finite, vtype=être, singplur=N, gender=Gen, obj_sem_np_type=n],
+	onoff:[sem=Adj, sem_np_type=SubjType, singplur=N, gender=Gen],
+	?location_pp:[sem=Loc].
+
+location_pp:[sem=Loc] -->
+	dans,
+	np:[sem=Loc, sem_np_type=location].
+
+%---------------------------------------------------------------
+
+% Lexicon
+
+verb:[sem=[[state, être]], vform=finite, vtype=être, singplur=sing, gender=masc,
+	obj_sem_np_type=n] --> 'est-il'.
+verb:[sem=[[state, être]], vform=finite, vtype=être, singplur=plur, gender=masc,
+	obj_sem_np_type=n] --> 'sont-ils'.
+verb:[sem=[[state, être]], vform=finite, vtype=être, singplur=sing, gender=fem,
+	obj_sem_np_type=n] --> 'est-elle'.
+verb:[sem=[[state, être]], vform=finite, vtype=être, singplur=plur, gender=fem,
+	obj_sem_np_type=n] --> 'sont-elles'.
+
+verb:[sem=[[action, allumer]], vform=imperative, vtype=transitive, singplur=plur, 
+	obj_sem_np_type=device] --> allumez.
+
+verb:[sem=[[action, baisser]], vform=imperative, vtype=transitive, singplur=plur, 
+	obj_sem_np_type=device] --> baissez.
+verb:[sem=[[action, éteindre]], vform=imperative, vtype=transitive, singplur=plur, 
+	obj_sem_np_type=device] --> éteignez.
+
+np:[sem=[[device, lampe]], sem_np_type=device, singplur=sing, gender=fem] --> la, lampe.
+np:[sem=[[device, ventilateur]], sem_np_type=device, singplur=sing, gender=masc] --> le, ventilateur.
+
+np:[sem=[[location, cuisine]], sem_np_type=location, singplur=sing, gender=fem] --> la, cuisine.
+np:[sem=[[location, salon]], sem_np_type=location, singplur=sing, gender=masc] --> le, salon.
+
+onoff:[sem=[[onoff, allumé]], singplur=sing, gender=masc] --> allumé.
+onoff:[sem=[[onoff, allumé]], singplur=sing, gender=fem] --> allumée.
+
+onoff:[sem=[[onoff, éteint]], singplur=sing, gender=masc] --> éteint.
+onoff:[sem=[[onoff, éteint]], singplur=sing, gender=fem] --> éteinte.
+

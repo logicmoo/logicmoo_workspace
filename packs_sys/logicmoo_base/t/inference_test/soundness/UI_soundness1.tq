@@ -1,0 +1,10 @@
+(note "universal implication soundness check1")
+
+(queryyn 
+(implies (forall ?X (F ?X)) (F ?X))
+)
+
+(answer Unproven)
+
+(end_of_file)
+

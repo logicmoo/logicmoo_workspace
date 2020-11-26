@@ -1,0 +1,128 @@
+(note TQF231a)
+(abort)
+
+(implies 
+ (purposeInEvent ?AGENT ?ACTION ?GOAL) 
+ (cfImplies 
+ (not 
+ (eventOccurs ?ACTION)) 
+ (desires ?AGENT 
+ (thereExists ?OPTION 
+ (and 
+ (agent ?OPTION ?AGENT) 
+ (increasesCausally ?OPTION ?GOAL likelihood)))))) 
+
+(purposeInEvent UnitedStatesOfAmerica USFormsDesertShieldCoalition 
+ (thereExists ?WITHDRAWAL 
+ (and 
+ (instance ?WITHDRAWAL MilitaryWithdrawal) 
+ (agent ?WITHDRAWAL 
+ (ArmyFn Iraq)) 
+ (toLocation ?WITHDRAWAL Iraq) 
+ (fromLocation ?WITHDRAWAL Kuwait)))) 
+
+(cfImplies 
+ (not 
+ (eventOccurs USFormsDesertShieldCoalition)) 
+ (desires UnitedStatesOfAmerica 
+ (thereExists ?OPTION 
+ (and 
+ (agent ?OPTION UnitedStatesOfAmerica) 
+ (increasesCausally ?OPTION 
+ (thereExists ?WITHDRAWAL 
+ (and 
+ (instance ?WITHDRAWAL MilitaryWithdrawal) 
+ (agent ?WITHDRAWAL 
+ (ArmyFn Iraq)) 
+ (toLocation ?WITHDRAWAL Iraq) 
+ (fromLocation ?WITHDRAWAL Kuwait))) likelihood)))) ) 
+
+(directingAgent USFormsDesertShieldCoalition UnitedStatesOfAmerica) 
+
+(adversarialResponseTo USFormsDesertShieldCoalition IraqInvadingKuwait) 
+
+(instance USFormsDesertShieldCoalition FoundingAnOrganization) 
+
+(decreasesCausally USFormsDesertShieldCoalition 
+ (thereExists ?FORCE 
+ (and 
+ (instance ?FORCE ModernMilitaryOrganization) 
+ (inRegion ?FORCE Kuwait) 
+ (officialArmedForces 
+ (GovernmentFn Iraq) ?FORCE))) likelihood) 
+
+(implies 
+ (decreases-Generic ?EVENT ?THING ?SLOT) 
+ (cfImplies 
+ (not 
+ (eventOccurs ?EVENT)) 
+ (remainsStableImmediately 
+ (STIB ?EVENT) ?THING ?SLOT))) 
+
+(decreases-Generic USFormsDesertShieldCoalition 
+ (thereExists ?FORCE 
+ (and 
+ (instance ?FORCE ModernMilitaryOrganization) 
+ (inRegion ?FORCE Kuwait) 
+ (officialArmedForces 
+ (GovernmentFn Iraq) ?FORCE))) likelihood) 
+
+(cfImplies 
+ (not 
+ (eventOccurs USFormsDesertShieldCoalition)) 
+ (remainsStableImmediately 
+ (STIB USFormsDesertShieldCoalition) 
+ (thereExists ?FORCE 
+ (and 
+ (instance ?FORCE ModernMilitaryOrganization) 
+ (inRegion ?FORCE Kuwait) 
+ (officialArmedForces 
+ (GovernmentFn Iraq) ?FORCE))) likelihood) ) 
+
+(directingAgent USFormsDesertShieldCoalition UnitedStatesOfAmerica) 
+
+(adversarialResponseTo USFormsDesertShieldCoalition IraqInvadingKuwait) 
+
+(instance USFormsDesertShieldCoalition FoundingAnOrganization) 
+
+(query (findall ( ?EFFECT-WITHOUT-EVENT    ?ESTABLISHING )
+
+(ist PersianGulfWarMt 
+(and 
+(instance ?ESTABLISHING FoundingAnOrganization) 
+(directingAgent ?ESTABLISHING UnitedStatesOfAmerica) 
+(adversarialResponseTo ?ESTABLISHING IraqInvadingKuwait) 
+(cfImplies 
+(not 
+(eventOccurs ?ESTABLISHING)) ?EFFECT-WITHOUT-EVENT)))
+
+))
+
+(answer (list   (desires UnitedStatesOfAmerica 
+ (thereExists ?OPTION 
+ (and 
+ (agent ?OPTION UnitedStatesOfAmerica) 
+ (increasesCausally ?OPTION 
+ (thereExists ?WITHDRAWAL 
+ (and 
+ (instance ?WITHDRAWAL MilitaryWithdrawal) 
+ (agent ?WITHDRAWAL 
+ (ArmyFn Iraq)) 
+ (toLocation ?WITHDRAWAL Iraq) 
+ (fromLocation ?WITHDRAWAL Kuwait))) likelihood))))
+))
+
+(answer (list  (remainsStableImmediately 
+ (STIB USFormsDesertShieldCoalition) 
+ (thereExists ?FORCE 
+ (and 
+ (instance ?FORCE ModernMilitaryOrganization) 
+ (inRegion ?FORCE Kuwait) 
+ (officialArmedForces 
+ (GovernmentFn Iraq) ?FORCE))) likelihood)
+))
+
+(end_of_file)
+
+
+

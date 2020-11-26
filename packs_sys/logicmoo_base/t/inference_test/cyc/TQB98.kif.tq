@@ -1,0 +1,49 @@
+(note TQB98)
+
+(implies 
+  (and 
+    (instance ?COUNTRY Country) 
+    (populationDuring ?COUNTRY (MonthFn ?MONTH (YearFn ?X)) ?NR)) 
+  (populationDuring ?COUNTRY (YearFn ?X) ?NR)) 
+
+(instance Kuwait Country) 
+(instance SaudiArabia Country) 
+(populationDuring SaudiArabia (YearFn 1996) 18800000) 
+(populationDuring SaudiArabia (MonthFn July (YearFn 1996)) 19409058) 
+(populationDuring Kuwait (MonthFn July (YearFn 1996)) 1950047) 
+(grossDomesticProduct SaudiArabia (YearFn 1996) (BillionDollars 205.600)) 
+(grossDomesticProduct Kuwait (YearFn 1996) (BillionDollars 32.5000)) 
+
+(query (findall ?GREATER (findall ?TIME
+  (thereExists ?LESSER 
+    (thereExists ?G-GDP 
+      (thereExists ?G-POP 
+        (thereExists ?L-GDP 
+          (thereExists ?L-POP 
+            (thereExists ?GREATER-PER-CAPITA-GDP 
+              (thereExists ?LESSER-PER-CAPITA-GDP 
+                (and 
+                  (greaterThan ?GREATER-PER-CAPITA-GDP ?LESSER-PER-CAPITA-GDP) 
+                  (grossDomesticProduct ?GREATER ?TIME ?G-GDP) 
+                  (grossDomesticProduct ?LESSER ?TIME ?L-GDP) 
+                  (populationDuring ?GREATER ?TIME ?G-POP) 
+                  (populationDuring ?LESSER ?TIME ?L-POP) 
+                  (evaluate ?GREATER-PER-CAPITA-GDP 
+                    (QuantityConversionFn Dollar-UnitedStates 
+                      (QuotientFn ?G-GDP ?G-POP))) 
+                  (evaluate ?LESSER-PER-CAPITA-GDP 
+                    (QuantityConversionFn Dollar-UnitedStates 
+                      (QuotientFn ?L-GDP ?L-POP)))
+                  (or 
+                    (and 
+                      (equals SaudiArabia ?GREATER) 
+                      (equals Kuwait ?LESSER)) 
+                    (and 
+                      (equals Kuwait ?GREATER) 
+                      (equals SaudiArabia ?LESSER))))))))))))))
+
+(answer Kuwait 1996)
+
+(end_of_file)
+
+

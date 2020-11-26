@@ -1,0 +1,1530 @@
+
+                     BIBLIOGRAPHY
+
+Abramson, Harvey, 'Definite clause translation grammars,' in 1984
+International Symposium on Logic Programming, pp. 233-240,
+IEEE Computer Society Press, Silver Spring, MD, 1984.
+
+Abramson, Harvey, 'Sequential and concurrent deterministic logic
+grammars,' in Proceedings of the Third International Confer-
+ence on Logic Programming, ed. Ehud Shapiro, pp. 389-395,
+Springer, Berlin, 1986.
+
+Ahlswede, Thomas E., 'A tool kit for lexicon building,' ACL
+Proceedings, 23rd Annual Meeting, pp. 268-276, 1985.
+
+Aho, Alfred V., 'Indexed grammars-an extension of context-free
+grammars,' Journal of the ACM, vol. 15, pp. 647-671, 1968.
+
+Aho, Alfred V., John E. Hopcroft, and Jeffrey D. Ullman, Data
+Structures and Algorithms, Addison Wesley, Reading, Ma,
+1982.
+
+Aho, Alfred V. and Jeffrey D. Ullman, The Theory of Parsing,
+Translation, and Compiling, Prentice-Hall, Englewood Cliffs,
+New Jersey, 1972.
+
+Aho, Alfred V. and Jeffrey D. Ullman, Principles of Compiler
+Design, Addison Wesley, Reading, Ma, 1977.
+
+Alam, Yukiko Sasaki, 'A two-level morphological analysis of
+Japanese,' Texas Linguistic Forum, vol. 22, pp. 229-252,
+1983.
+
+Allen, James F., 'Recognizing intentions from natural language
+utterances,' in Computational Models of Discourse, ed.
+Michael Brady and Robert C. Berwick, pp. 107-166, MIT Press,
+Cambridge, Ma., 1983.
+
+Allen, James, Natural Language Understanding, Benjamin/Cummings,
+Menlo Park, 1987.
+
+Allen, James F. and C. Raymond Perrault, 'Analyzing intention in
+utterances,' Artificial Intelligence, vol. 15, no. 3, pp.
+143-178, 1980.
+Reprinted in Readings in Natural Language Processing, ed.
+Barbara J. Grosz, Karen Sparck-Jones and Bonnie Lynn Webber,
+pp. 441-458, Morgan Kaufmann, Los Altos, 1986 (1980).
+
+Alshawi, Hiyan, Memory and Context for Language Interpretation,
+Cambridge University Press, Cambridge, 1987.
+
+Alshawi, Hiyan, Branimir K. Boguraev, and Edward J. Briscoe, 'To-
+wards a dictionary support environment for real time pars-
+ing,' ACL Proceedings, Second European Conference, pp. 171-
+178, 1985.
+
+Appelt, Douglas E., Planning English Sentences, Cambridge Univer-
+sity Press, Cambridge, 1985.
+
+Ballard, Bruce W. and Mark A. Jones, 'Computational linguistics,'
+in Encyclopaedia of Artificial Intelligence, ed. Stuart C.
+Shapiro, pp. 133-151, Wiley, New York, 1987.
+
+Barnett, Brigitte, Hubert Lehmann, and Magdalena Zoeppritz, 'A
+word database for natural language processing,' COLING-86,
+pp. 435-440, 1986.
+
+Barr, Avron and Edward A. Feigenbaum, eds., The Handbook of Ar-
+tificial Intelligence, 1, William Kaufmann., Palo Alto,
+1981.
+
+Barton Jr., G. Edward, Robert C. Berwick, and Eric Sven Ristad,
+Computational Complexity and Natural Language, MIT Press,
+Cambridge, Ma., 1987.
+
+Bartsch, Renate, 'Frame representations and discourse representa-
+tions,' Theoretical Linguistics, vol. 14, no. 1, pp. 65-117,
+1987.
+
+Barwise, Jon, 'Some computational aspects of situation seman-
+tics,' ACL Proceedings, 19th Annual Meeting, pp. 109-111,
+1981.
+
+Barwise, Jon and John Perry, Situations and Attitudes, MIT Press,
+Cambridge MA, 1983.
+
+Bates, Madeleine, 'The theory and practice of ATN grammars,' in
+Natural Language Communication with Computers, ed. L. Bolc,
+pp. ??-??, Springer Verlag, Berlin, 1978.
+
+Bear, John, 'Morphology with two-level rules and negative rule
+features,' COLING-88, pp. 28-31, 1988.
+
+Beierle, Christoph and Udo Pletat, 'Feature graphs and abstract
+data types: a unifying approach,' COLING-88, pp. 40-45,
+1988.
+
+Benthem, Johan van and Alice ter Meulen, Generalized quantifiers
+in natural language, Foris, Dordrecht, 1985.
+
+Bla^berg, Olli, 'A two-level description of Swedish,' in Computa-
+tional Morphosyntax: Report on Research 1981-1984, ed. Fred
+Karlsson, pp. 43-62, University of Helsinki, Helsinki, 1985.
+
+Black, Alan, Graeme Ritchie, Steve Pulman, and Graham Russell,                     
+'Formalisms for morphographemic description,' ACL Proceed-
+ings, Third European Conference, pp. 11-18, 1987.
+
+Blank, Glenn D., 'A new kind of finite-state automation: register
+vector grammar,' IJCAI-85, vol. 2, pp. 749-755, 1985.
+
+Bobrow, Danny G. and J. Bruce Fraser, 'An augmented state transi-
+tion network analysis procedure,' IJCAI-69, pp. 557-567,
+1969.
+
+Boguraev, Branimir K., Edward J. Briscoe, John Carroll, David
+Carter, and Claire Grover, 'The derivation of grammatically
+indexed lexicon from the Longman Dictionary of Contemporary
+English,' ACL Proceedings, 25th Annual Meeting, pp. 193-200,
+1987.
+
+Boguraev, Branimir K., David Carter, and Ted Briscoe, 'A multi-
+purpose interface to an on-line dictionary,' ACL Proceed-
+ings, Third European Conference, pp. 63-69, 1987.
+
+Bolc, ed., Leonard, Natural Language Question Answering Systems,
+Hanser, Munich, 1980.
+
+Bouma, Gosse, 'Modifiers and specifiers in categorial unification
+grammar,' Linguistics, vol. 26, no. 1, pp. 21-46, 1988.
+
+Boyer, Michel, 'Towards functional logic grammars,' in Natural
+Language Understanding and Logic Programming, ed. Veronica
+Dahl and Patrick Saint-Dizier, pp. 45-61, North-Holland, Am-
+sterdam, 1988.
+
+Brachman, Ronald J. and Hector J. Levesque, Readings in Knowledge
+Representation, Morgan Kaufmann, Los Altos, 1985.
+
+Brachman, Ronald J. and J. Schmolze, 'An overview of the KL-ONE
+knowledge representation system,' Cognitive Science, vol. 9,
+no. 2, pp. 171-216, 1985.
+
+Bratko, Ivan, Prolog Programming for Artificial Intelligence,
+Addison Wesley, Wokingham, 1986.
+
+Briscoe, Edward J. and Branimir K. Boguraev, Computational Lexi-
+cography for Natural Language Processing, Longman/Wiley,
+London/New York, 1988.
+
+Brodda, Benny, 'BetaText: an event driven text processing and
+text analyzing system,' COLING-86, pp. 421-422, 1986.
+
+Bruce, Bertram C. and M.G. Moser, 'Case grammar,' in Encyclo-
+paedia of Artificial Intelligence, ed. Stuart C. Shapiro,
+pp. 333-339, Wiley, New York, 1987.
+
+Bundy, Alan, The Computer Modelling of Mathematical Reasoning,                     
+Academic Press, London, 1983.
+
+Bunt, Harry C., 'The resolution of quantificational ambiguities
+in the TENDUM computational linguistics research system,'
+COLING-84, pp. 130-133, 1984.
+
+Calder, Jonathan, Ewan Klein, and Henk Zeevat, 'Unification
+Categorial Grammar: a concise, extendable grammar for natur-
+al language processing,' COLING-88, pp. 83-86, 1988.
+
+Calzolari, Nicoletta and Eugenio Picchi, 'Acquisition of semantic
+information from an on-line dictionary,' COLING-88, pp. 87-
+92, 1988.
+
+Carden, Guy, 'The non-finite-state-ness of the word formation
+component,' Linguistic Inquiry, vol. 14, pp. 537-541, 1983.
+
+Carlson, Lauri and Krister Linden, 'Unification as a grammatical
+tool,' Nordic Journal of Linguistics, vol. 10, no. 2, pp.
+111-136, 1987.
+
+Carson, Julie, 'Unification and transduction in computational
+phonology,' COLING-88, pp. 106-111, 1988.
+
+Cercone, Nick, Max Krause, and John Boates, 'Minimal and almost
+minimal perfect hash function search with application to na-
+tural language lexicon design,' Computers and Mathematics
+with Applications, vol. 9, no. 1, pp. 215-231, 1983.
+
+Charniak, Eugene, 'Jack and Jane in search of a theory of
+knowledge,' in Readings in Natural Language Processing, ed.
+Barbara J. Grosz, Karen Sparck-Jones and Bonnie Lynn Webber,
+pp. 331-337, Morgan Kaufmann, Los Altos, 1986 (1973).
+
+Charniak, Eugene, 'A parser with something for everyone,' in
+Parsing Natural Language, ed. Margaret King, pp. 117-149,
+Academic Press, London, 1983.
+
+Charniak, Eugene and Robert Goldman, 'A logic for semantic in-
+terpretation,' ACL Proceedings, 26th Annual Meeting, pp.
+00-00, 1988.
+
+Charniak, Eugene and Drew V. McDermott, Introduction to Artifi-
+cial Intelligence, Addison Wesley, Reading, Ma, 1985.
+
+Charniak, Eugene, Christopher K. Riesbeck, and Drew V. McDermott,
+Artificial Intelligence Programming, Lawrence Erlbaum,
+Hillsdale, 1980.
+
+Choffrut, Christian and Karel Culik II, 'Properties of finite and                     
+pushdown transducers,' SIAM Journal of Computing, vol. 12,
+no. 2, pp. 300-315, 1983.
+
+Church, Kenneth W., 'A finite-state parser for use in speech
+recognition,' ACL Proceedings, 21st Annual Meeting, pp. 91-
+97, 1983.
+
+Church, Kenneth W., 'Phrase Structure Parsing: A Method for Tak-
+ing Advantage of Allophonic Constraints,' MIT PhD Disserta-
+tion, Indiana University Linguistics Club, Bloomington,
+1983.
+
+Church, Kenneth W. and Ramesh Patil, 'Coping with syntactic ambi-
+guity or how to put the block in the box on the table,'
+American Journal of Computational Linguistics, vol. 8, no.
+3-4, pp. 139-149, 1982.
+
+Clocksin, William and Christopher Mellish, Programming in Prolog,
+Springer-Verlag, Berlin, 1981.
+
+Coelho, Helder and Jose' C. Cotta, Prolog by Example, Springer,
+Berlin, 1988.
+
+Cohen, Philip R., 'Referring as requesting,' COLING-84, pp. 207-
+211, 1984.
+
+Cohen, Philip R. and Hector J. Levesque, 'Speech acts and ra-
+tionality,' ACL Proceedings, 23rd Annual Meeting, pp. 49-60,
+1985.
+
+Cohen, Philip R. and C. Raymond Perrault, 'Elements of a plan-
+based theory of speech acts,' in Readings in Natural
+Language Processing, ed. Barbara J. Grosz, Karen Sparck-
+Jones and Bonnie Lynn Webber, pp. 423-440, Morgan Kaufmann,
+Los Altos, 1986 (1979).
+
+Colmerauer, Alain, 'Metamorphosis grammars,' in Natural Language
+Communication with Computers, ed. L. Bolc, pp. 133-189,
+Springer Verlag, Berlin, 1978.
+
+Conway, M.E., 'Design of a separable transition-diagram com-
+piler,' Communications of the ACM, vol. 6, no. 7, pp. 396-
+408, 1963.
+
+Cooper, Robin, Quantification and Syntactic Theory, Reidel, Dor-
+drecht, 1983.
+
+Cooper, Robin, 'Meaning representation in Montague grammar and
+situation semantics,' Computational Intelligence, vol. 3,
+no. 1, pp. 35-44, 1987.
+
+Cullingford, Richard E., 'SAM,' in Readings in Natural Language
+Processing, ed. Barbara J. Grosz, Karen Sparck-Jones and
+
+Bonnie Lynn Webber, pp. 627-649, Morgan Kaufmann, Los Altos,
+1986 (1981).
+
+Culy, Christopher, 'The complexity of the vocabulary of Bambara,'
+Linguistics and Philosophy, vol. 8, no. 3, pp. 345-351,
+1985.
+
+Daelemans, Walter M. P., 'A tool for the automatic creation, ex-
+tension and updating of lexical knowledge bases,' ACL
+Proceedings, Third European Conference, pp. 70-74, 1987.
+
+Dahl, Veronica and Harvey Abramson, 'On gapping grammars,'
+Proceedings of the Second International Conference on Logic
+Programming, pp. 77-88, Ord & Form, Uppsala, Sweden, July
+1984.
+
+Dahl, Veronica and Michael C. McCord, 'Treating coordination in
+logic grammars,' American Journal of Computational Linguis-
+tics, vol. 9, no. 2, pp. 69-91, 1983.
+
+Dahl, Veronica and Patrick Saint-Dizier, eds., Natural Language
+Understanding and Logic Programming, North-Holland, Amster-
+dam, 1985.
+
+Dahl, Veronica and Patrick Saint-Dizier, eds., Natural Language
+Understanding and Logic Programming, II, North-Holland, Am-
+sterdam, 1988.
+
+Kathleen Dahlgren, Naive Semantics for Na-
+tural Language Understanding, Kluwer, Boston, 1988.
+
+Daly, R. T., Applications of the Mathematical Theory of Linguis-
+tics, Mouton, The Hague, 1974.
+
+De Smedt, Koenraad, 'Using object-oriented knowledge-
+representation techniques in morphology and syntax program-
+ming,' ECAI-84, pp. 181-184, 1984.
+
+Domenig, Marc and Patrick Shann, 'Towards a dedicated database
+management system for dictionaries,' COLING-86, pp. 91-96,
+1986.
+
+Dowty, David R., Lauri Karttunen, and Arnold M. Zwicky, eds., Na-
+tural Language Parsing, Cambridge University Press, Cam-
+bridge, 1985.
+
+Dowty, David R., Robert Wall, and P. Stanley Peters, Introduction
+to Montague Semantics, Reidel, Dordrecht, 1981.
+
+Dyer, Michael G., Richard E. Cullingford, and S. Alvarado,
+'Scripts,' in Encyclopaedia of Artificial Intelligence, ed.
+Stuart C. Shapiro, pp. 980-994, Wiley, New York, 1987.
+
+Earley, Jay, 'An efficient context-free parsing algorithm,' Com-                     
+munications of the ACM, vol. 14, pp. 453-460, 1970.
+Reprinted in Readings in Natural Language Processing, ed. Barbara J.
+Grosz, Karen Sparck-Jones and Bonnie Lynn Webber, pp. 25-33,
+Morgan Kaufmann, Los Altos, 1986 (1970).
+
+Eisele, Andreas and Jochen Do'rre, 'A lexical functional grammar
+system in PROLOG,' COLING-86, pp. 551-553, 1986.
+
+Ejerhed, Eva, 'The processing of unbounded dependencies in Swed-
+ish,' in Readings on Unbounded Dependencies in Scandinavian
+Languages, ed. Elisabet Engdahl and Eva Ejerhed, pp. 99-149,
+Almqvist & Wiksell, Stockholm, 1982.
+
+Ejerhed, Eva and Kenneth W. Church, 'Finite state parsing,' in
+Papers from the Seventh Scandinavian Conference of Linguis-
+tics, ed. Fred Karlsson, pp. 410-432, University of Hel-
+sinki, Helsinki, 1983.
+
+Engdahl, Elisabet, Constituent Questions, Reidel, Dordrecht,
+1986.
+
+Etherington, David W., Reasoning with Incomplete Information,
+Pitman/Morgan Kaufmann, London/Los Altos, 1988.
+
+Evans, David A., 'A situation semantics approach to the analysis
+of speech acts,' ACL Proceedings, 19th Annual Meeting, pp.
+113-116, 1981.
+
+Evans, David A. and Sandra Katz, 'A practical lexicon for con-
+strained NLP,' in ESCOL'86 Proceedings of the Third Eastern
+States Conference on Linguistics, ed. Fred Marshall, Ann
+Miller and Zheng-sheng Zhang, pp. 151-162, Ohio State
+University, Columbus, 1986.
+
+Evans, David A. and Dana S. Scott, 'Concepts as procedures,' in
+ESCOL'86 Proceedings of the Third Eastern States Conference
+on Linguistics, ed. Fred Marshall, Ann Miller and Zheng-
+sheng Zhang, pp. 533-543, Ohio State University, Columbus,
+1986.
+
+Evey, R. James, 'Application of pushdown-store machines,' in
+Proceedings of the 1963 Fall Joint Computer Conference, pp.
+215-227, AFIPS Press, Montvale, N.J., 1963.
+
+Fenstad, Jens Erik, Per-Kristian Halvorsen, Tore Langholm, and
+Johan van Benthem, Situations, Language and Logic, Reidel,
+Dordrecht, 1987.
+
+Fillmore, Charles J., 'The case for case,' in Universals in
+Linguistic Theory, ed. Emmon Bach and Robert Harms, pp. 1-
+88, Holt, Rinehart and Winston, New York, 1968.
+
+Flickinger, Daniel P., Carl J. Pollard, and Thomas Wasow,
+'Structure-sharing in lexical representation,' ACL Proceed-
+ings, 23rd Annual Meeting, pp. 262-267, 1985.
+
+Frazier, Lyn and Janet D. Fodor, 'The sausage machine: a new two
+stage parsing model,' Cognition, vol. 6, pp. 291-325, 1978.
+
+Friedman, Joyce, Douglas B. Moran, and David S. Warren, 'An in-
+terpretation system for Montague grammar,' American Journal
+of Computational Linguistics, vol. 5, 1978.  Microfiche 74
+
+Friedman, Joyce, Douglas B. Moran, and David S. Warren, 'Explicit
+finite intensional Models for PTQ,' American Journal of Com-
+putational Linguistics, vol. 5, 1978.  Microfiche 74
+
+Frisch, Alan M., 'Parsing with restricted quantification: an ini-
+tial demonstration,' Computational Intelligence, vol. 2, no.
+3, pp. 142-150, 1986.
+
+Gajek, Oliver, Hanno T. Beck, Diane Elder, and Greg Whittemore,
+'KIMMO Lisp implementation,' Texas Linguistic Forum, vol.
+22, pp. 187-202, 1983.
+
+Gallaire, H. and Jack Minker, Logic and Databases, Plenum, New
+York, 1978.
+
+Gallier, Jean H., Logic for Computer Science, Harper & Row, New
+York, 1986.
+
+Ga'denfors, Peter, Generalized Quantifiers, Reidel, Dordrecht,
+1987.
+
+Garnham, Alan, 'What's wrong with story grammars?,' Cognition,
+vol. 15, pp. 145-154, 1983.
+
+Gazdar, Gerald, Geoffrey K. Pullum, Robert Carpenter, Ewan Klein,
+Thomas E. Hukari, and Robert D. Levine, 'Category struc-
+tures,' Computational Linguistics, vol. 14, no. 1, pp. 1-19,
+1988.
+
+Gazdar, Gerald, 'Review article: finite state morphology,'
+Linguistics, vol. 23, no. 4, pp. 597-607, 1985.
+
+Gazdar, Gerald, 'Linguistic applications of default inheritance
+mechanisms,' in Linguistic Theory & Computer Applications,
+ed. Peter Whitelock, Mary McGee Wood, Harold L. Somers, Rod
+L. Johnson and Paul Bennett, pp. 37-67, Academic Press, Lon-
+don, 1987.
+
+Gazdar, Gerald, 'Applicability of indexed grammars to natural
+languages,' in Natural Language Parsing and Linguistic
+Theories, ed. U. Reyle and C. Rohrer, pp. 69-94, D. Reidel,
+Dordrecht, 1988.
+
+Gazdar, Gerald, Alex Franz, Karen Osborne, and Roger Evans, Na-
+tural Language Processing in the 1980s: A Bibliography,
+University of Chicago Press, Chicago, 1987.
+
+Gazdar, Gerald and Geoffrey K. Pullum, 'Computationally relevant
+properties of natural languages and their grammars,' New
+Generation Computing, vol. 3, pp. 273-306, 1985.
+
+Gazdar, Gerald, Ewan Klein, Geoffrey Pullum, and Ivan Sag, Gen-
+eralized Phrase Structure Grammar, Blackwell, Oxford, 1985.
+
+Genesereth, Michael R. and Nils J. Nilsson, Logical Foundations
+of Artificial Intelligence, Morgan Kaufmann, Los Altos,
+1987.
+
+Gersting, Judith L., Mathematical Structures for Computer Sci-
+ence, W.H. Freeman, San Francisco, 1982.
+
+Gibbon, Dafydd, 'Finite state processing of tone systems,' ACL
+Proceedings, Third European Conference, pp. 291-297, 1987.
+
+Ginsberg, Matthew L., Readings in Nonmonotonic Reasoning, Morgan
+Kaufmann, Los Altos, 1987.
+
+Go'rz, Gu'nther, 'GLP: a general linguistic processor,' IJCAI-81,
+vol. 1, pp. 429-431, 1981.
+
+Go'rz, Gu'nther, 'Applying a chart parser to speech understanding,'
+ECAI-82, pp. 257-258, 1982.
+
+Go'rz, Gu'nther and Dietrich Paulus, 'A finite state approach to
+German verb morphology,' COLING-88, pp. 212-215, 1988.
+
+Gold, E. Mark, 'Language identification in the limit,' Informa-
+tion and Control, vol. 10, pp. 447-474, 1967.
+
+Gray, Peter, Logic, Algebra and Databases, Ellis Horwood, Chi-
+chester, 1984.
+
+Grishman, Ralph, Computational Linguistics: An Introduction, Cam-
+bridge University Press, Cambridge, 1986.
+
+Groenendijk, Jeroen A.G. and Martin B.J. Stokhof, Studies on the
+semantics of questions and the pragmatics of answers,
+University of Amsterdam, Amsterdam, 1984.
+
+Grosz, Barbara J., 'The representation and use of focus in dialo-
+gue understanding,' PhD dissertation, University of Califor-
+nia at Berkeley, 1977.
+
+Grosz, Barbara J., Douglas E. Appelt, Paul A. Martin, and Fernan-
+do C.N. Pereira, 'TEAM: An experiment in the design of tran-
+sportable natural-language interfaces,' Artificial Intelli-
+gence, vol. 32, no. 2, pp. 173-243, 1987.
+
+Grosz, Barbara J. and Candace L. Sidner, 'Attentions, intentions,
+and the structure of discourse,' Computational Linguistics,
+vol. 12, no. 3, pp. 175-204, 1986.
+
+Grosz, Barbara J., Karen Sparck-Jones, and Bonnie Lynn Webber,
+eds., Readings in Natural Language Processing, Morgan Kauf-
+mann, Los Altos, 1986.
+
+Gunji, Takao, Japanese Phrase Structure Grammar, Reidel, Dor-
+drecht, 1987.
+
+Haas, Andrew, 'Parallel parsing for unification grammars,'
+IJCAI-87, vol. 2, pp. 615-618, 1987.
+
+Haddock, Nicholas J., 'Incremental interpretation and combinatory
+categorial grammar,' IJCAI-87, vol. 2, pp. 661-663, 1987.
+
+Haddock, Nicholas, Ewan Klein, and Glyn Morrill, eds, Categorial
+Grammar, Unification Grammar and Parsing, Centre for Cogni-
+tive Science, Edinburgh, 1987.
+
+Hankamer, Jorge, 'Finite state morphology and left to right pho-
+nology,' in Proceedings of the First West Coast Conference
+on Formal Linguistics, ed. Mary Dalrymple, Jeffrey Goldberg,
+Kristin Hanson, Michael Inman, Chris Pinon, and Stephen
+Wechsler, pp. 29-34, Stanford Linguistics Association, Stan-
+ford, 1986.
+
+Harel, David, 'Statecharts: a visual formalism for complex sys-
+tems,' Science of Computer Programming, vol. 8, pp. 231-274,
+1987.
+
+Hasida, Ko^iti, 'Conditioned unification for natural language pro-
+cessing,' COLING-86, pp. 85-87, 1986.
+
+Hasida, Ko^iti and Syun Isizaki, 'Dependency propagation: a uni-
+fied theory of sentence comprehension and generation,'
+IJCAI-87, vol. 2, pp. 664-670, 1987.
+
+Hawkins, John A., Definiteness and Indefiniteness, Croom
+Helm/Humanities Press, London/Atlantic Highlands, N.J.,
+1978.
+
+Heidorn, George E., 'Experience with an easily computed metric
+for ranking alternative parses,' ACL Proceedings, 20th Annu-
+al Meeting, pp. 82-84, 1982.
+
+Hellwig, Peter, 'Dependency unification grammar,' COLING-86, pp.
+195-198, 1986.
+
+Hendrix, Gary G., 'Expanding the utility of semantic networks
+through partitioning,' IJCAI-75, pp. 115-121, 1975.
+
+Heny, Frank, Ambiguities in Intensional Contexts, Reidel, Dor-
+drecht, 1981.
+
+Hess, Michael, 'Descriptional anaphora in discourse representa-
+tion theory,' ACL Proceedings, Third European Conference,
+pp. 148-155, 1987.
+
+Hinrichs, Erhard W., 'A compositional semantics for directional
+modifiers - locative case reopened,' COLING-86, pp. 347-349,
+1986.
+
+Hinrichs, Erhard W., 'A compositional semantics of temporal ex-
+pressions in English,' ACL Proceedings, 25th Annual Meeting,
+pp. 8-15, 1987.
+
+Hirakawa, H., 'Chart parsing in concurrent Prolog,' ICOT Techni-
+cal Report TR-008, Institute for New Generation Computer
+Technology (ICOT), Tokyo, 1983.
+
+Hirsh, Susan, 'P-PATR: A compiler for unification-based gram-
+mars,' in Natural Language Understanding and Logic Program-
+ming, ed. Veronica Dahl and Patrick Saint-Dizier, pp. 63-78,
+North-Holland, Amsterdam, 1988.
+
+Hirst, Graeme, 'A foundation for semantic interpretation,' ACL
+Proceedings, 21st Annual Meeting, pp. 64-73, 1983.
+
+Hirst, Graeme, Semantic Interpretation and the Resolution of Am-
+biguity, Cambridge University Press, Cambridge, 1986.
+
+Hobbs, Jerry R., 'An improper treatment of quantification in or-
+dinary English,' ACL Proceedings, 21st Annual Meeting, pp.
+57-63, 1983.
+
+Hobbs, Jerry and Stanley Rosenschein, 'Making computational sense
+of Montague's intensional logic,' Artificial Intelligence,
+vol. 9, pp. 287-306, 1978.
+
+Hobbs, Jerry R. and Stuart M. Shieber, 'An algorithm for generat-
+ing quantifier scopings,' Computational Linguistics, vol.
+13, no. 1-2, pp. 47-63, 1987.
+
+Hofstadter, Douglas R., Go'del, Escher, Bach: An Eternal Golden
+Braid, Basic Books, New York, 1979.
+
+Hopcroft, John and Jeffrey Ullman, Introduction to automata
+theory, languages, and computation, Addison-Wesley, Reading,
+Massachusetts, 1979.
+
+Horrocks, Geoffrey, Generative Grammar, Longman, London, 1987.
+
+Horton, Diane L. and Graeme Hirst, 'Presuppositions as beliefs,'
+COLING-88, pp. 255-260, 1988.
+
+Hurum, Sven O., 'Handling scope ambiguities in English,' ACL
+Proceedings, Second Conference on Applied Natural Language
+Processing, pp. 58-65, 1988.
+
+Hurum, Sven O. and Lenhart K. Schubert, 'Two types of quantifier
+scoping,' Proceedings of the 6th Canadian Conference on Ar-
+tificial Intelligence, pp. 39-43, 1986.
+
+Hutchins, W. John, Machine Translation: Past, Present, Future,
+Ellis Horwood/Wiley, Chichester/New York, 1986.
+
+Huybregts, Riny, 'The weak inadequacy of context-free phrase
+structure grammar,' in Van Periferie naar Kern, ed. Gier de
+Haan, Mieke Trommelen and Wim Zonneveld, pp. 81-99, Foris,
+Dordrecht, 1985.
+
+Isoda, Michio, Hideo Aiso, Noriyuki Kamibayashi, and Yoshifumi
+Matsunaga, 'Model for lexical knowledge base,' COLING-86,
+pp. 451-453, 1986.
+
+Israel, David J., 'A prolegomenon to situation semantics,' ACL
+Proceedings, 21st Annual Meeting, pp. 28-37, 1983.
+
+Jacobs, Paul and Uri Zernik, 'Acquiring lexical knowledge from
+text: a case study,' AAAI-88, pp. 00-00, 1988.
+
+Johnson, C. Douglas, Formal Aspects of Phonological Description,
+Mouton, The Hague, 1972.
+
+Johnson, Rod L., 'Parsing with transition networks,' in Parsing
+Natural Language, ed. Margaret King, pp. 59-72, Academic
+Press, London, 1983.
+
+Johnson, Tim, Natural Language Computing: the Commercial Implica-
+tions, Ovum, London, 1985.
+
+Johnson, Mark, A Logic of Attribute-Value Structures and the
+Theory of Grammar, CSLI/Chicago University Press        ,
+Stanford/Chicago, 1988.
+
+Johnson, Mark and Ewan Klein, 'Discourse, anaphora and parsing,'
+COLING-86, pp. 669-675, 1986.
+
+Johnson-Laird, Philip N., Mental Models, Cambridge University
+Press, Cambridge, 1983.
+
+Joshi, Aravind K., Bonnie Lynn Webber, and Ivan A. Sag, eds.,
+Elements of Discourse Understanding, Cambridge University
+Press, Cambridge, 1981.
+
+Joshi, Aravind K., 'Phrase structure grammar,' in Encyclopaedia
+of Artificial Intelligence, ed. Stuart C. Shapiro, pp. 344-
+351, Wiley, New York, 1987.
+
+Kamp, Hans, 'A theory of truth and semantic representation,' in
+Formal Methods in the Study of Language, ed. J.A.G. Groenen-
+dijk, T.M.V. Janssen and M.B.J. Stokhof, Mathematical Centre
+Tracts 135, p. 277 322, Amsterdam, 1981.
+
+Kaplan, Ronald M., 'Augmented transition networks as psychologi-
+cal models of sentence comprehension,' Artificial Intelli-
+gence, vol. 3, pp. 77-100, 1972.
+
+Kaplan, Ronald M., 'A general syntactic processor,' in Natural
+Language Processing, ed. Randall Rustin, pp. 193-241, Algo-
+rithmics Press, New York, 1973.
+
+Kaplan, Ronald M. and Joan Bresnan, 'Lexical functional grammar:
+A formal system for grammatical representation,' in The Men-
+tal Representation of Grammatical Relations, ed. Joan
+Bresnan, pp. 173-281, MIT Press, Cambridge MA, 1982.
+
+Karttunen, Lauri, 'KIMMO:  a general morphological processor,'
+Texas Linguistic Forum, vol. 22, pp. 165-186, 1983.
+
+Karttunen, Lauri, 'Features and values,' COLING-84, pp. 28-33,
+1984.
+
+Karttunen, Lauri, 'D-PATR: a development environment for
+unification-based grammars,' COLING-86, pp. 74-80, 1986.
+
+Karttunen, Lauri and Martin Kay, 'Structure sharing with binary
+trees,' ACL Proceedings, 23rd Annual Meeting, pp. 133-136,
+1985.
+
+Karttunen, Lauri and Kent Wittenburg, 'A two-level morphological
+analysis of English,' Texas Linguistic Forum, vol. 22, pp.
+217-228, 1983.
+
+Kasper, Robert, 'A unification method for disjunctive feature
+descriptions,' ACL Proceedings, 25th Annual Meeting, pp.
+235-242, 1987.
+
+Kasper, Robert and William Rounds, 'A logical semantics for
+feature structures,' ACL Proceedings, 24th Annual Meeting,
+pp. 257-266, 1986.
+
+Kataja, Laura and Kimmo Koskenniemi, 'Finite-state description of
+Semitic morphology: a case study of ancient Accadian,'
+COLING-88, pp. 313-315, 1988.
+
+Katz, Jerrold J. and Jerry A. Fodor, 'The structure of a semantic
+theory,' Language, vol. 39, pp. 170-210, 1963.
+
+Kay, Martin, 'The MIND system,' in Natural Language Processing,
+ed. Randall Rustin, pp. 155-188, Algorithmics Press, New
+York, 1973.
+
+Kay, Martin, 'Functional grammar,' in Proceedings of the Fifth
+Annual Meeting of the Berkeley Linguistics Society, ed.
+Christina Chiarello et al., pp. 142-158, 1979.
+
+Kay, Martin, 'When meta-rules are not meta-rules,' in Automatic
+Natural Language Parsing, ed. Karen Sparck-Jones and Yorick
+A. Wilks, pp. 94-116, Ellis Horwood/Wiley, Chichester/New
+York, 1983.
+
+Kay, Martin, 'Computational linguistics = generalized unification
++ applied graph theory,' Proceedings of the Fifth Biennial
+Conference of the Canadian Society for Computational Studies
+of Intelligence, pp. 1-5, 1984.
+
+Kay, Martin, 'Unification in grammar,' in Natural Language Under-
+standing and Logic Programming, ed. Veronica Dahl and Pa-
+trick Saint-Dizier, pp. 233-240, North-Holland, Amsterdam,
+1985.
+
+Kay, Martin, 'Parsing in functional unification grammar,' in Na-
+tural Language Parsing, ed. David R. Dowty, Lauri Karttunen
+and Arnold M. Zwicky, pp. 251-278, Cambridge University
+Press, Cambridge, 1985.
+
+Kay, Martin, 'Algorithm schemata and data structures in syntactic
+processing,' in Readings in Natural Language Processing, ed.
+Barbara J. Grosz, Karen Sparck-Jones and Bonnie Lynn Webber,
+pp. 35-70, Morgan Kaufmann, Los Altos, 1986 (1980).
+
+Kay, Martin, 'Nonconcatenative finite-state morphology,' ACL
+Proceedings, Third European Conference, pp. 2-10, 1987.
+
+Keller, William R., 'Nested Cooper storage: the proper treatment
+of quantification in ordinary noun phrases,' in Natural
+Language Parsing and Linguistic Theories, ed. U. Reyle and
+C. Rohrer, pp. 432-447, D. Reidel, Dordrecht, 1988.
+
+Khan, Robert, 'A two-level morphological analysis of Rumanian,'
+Texas Linguistic Forum, vol. 22, pp. 253-270, 1983.
+
+Khan, Robert, Jocelyn S. Liu, Tatsuo Ito, and Kelly Shuldberg,
+'KIMMO user's manual,' Texas Linguistic Forum, vol. 22, pp.
+203-215, 1983.
+
+Kilbury, James, 'Chart parsing and the Earley algorithm,' in Kon-
+textfreie Syntaxen und verwandte Systeme, ed. Ursula Klenk,
+Max Niemeyer, Tu'bingen, 1985.
+
+Kimball, John P., 'Seven principles of surface structure parsing
+in natural language,' Cognition, vol. 2, no. 1, pp. 15-47,
+1973.
+
+Klein, Ewan and Johan van Benthem, eds, Categories, Polymorphism
+and Unification, CCS/ILLI, Edinburgh/Amsterdam, 1987.
+
+Koskenniemi, Kimmo, Two-level Morphology: a general computational
+model for word-form recognition and production, University
+of Helsinki, Helsinki, 1983.
+
+Koskenniemi, Kimmo, 'Two-level model for morphological analysis,'
+IJCAI-83, pp. 683-685, 1983.
+
+Koskenniemi, Kimmo, 'A general computational model for word-form
+recognition and production,' COLING-84, pp. 178-181, 1984.
+
+Koskenniemi, Kimmo and Kenneth W. Church, 'Complexity, two-level
+morphology and Finnish,' COLING-88, pp. 335-340, 1988.
+
+Kowalski, Robert A. and Christopher J. Hogger, 'Logic program-
+ming,' in Encyclopaedia of Artificial Intelligence, ed.
+Stuart C. Shapiro, pp. 544-558, Wiley, New York, 1987.
+
+Langendoen, D. Terence, 'The generative capacity of word-
+formation components,' Linguistic Inquiry, vol. 12, pp.
+320-322, 1981.
+
+Langendoen, D. Terence and Yedidyah Langsam, 'The representation
+of constituent structures for finite-state parsing,'
+COLING-84, pp. 24-27, 1984.
+
+Leech, Geoffrey N., Principles of Pragmatics, Longmans, London
+and New York, 1983.
+
+Lespe'rance, Yves, 'Toward a computational interpretation of si-
+tuation semantics,' Computational Intelligence, vol. 2, no.
+1, pp. 9-27, 1986.
+
+Levinson, Stephen C., 'The essential inadequacies of speech act
+models of dialogue,' in Possibilities and limitations of
+pragmatics, ed. H. Parret, M. Sbisa, and J. Verschueren, pp.
+473-492, John Benjamins, Amsterdam, 1981.
+
+Levinson, Stephen C., Pragmatics, Cambridge University Press,
+Camridge, 1983.
+
+Lewis II, Philip M. and Richard E. Stearns, 'Syntax-directed
+transduction,' Journal of the ACM, vol. 15, no. 3, pp. 465-
+488, 1968.
+
+Li, D., A Prolog Database System, Research Studies Press, Letch-
+worth, 1984.
+
+Lindstedt, Jouko, 'A two-level description of Old Church Slavonic
+morphology,' Scando-Slavica, vol. 30, pp. 165-189, 1984.
+
+Lun, S., 'A two-level morphological analysis of French,' Texas
+Linguistic Forum, vol. 22, pp. 271-278, 1983.
+
+Lynch, William C. and H.L. Pierson, 'A finite state transducer
+model for compiler lexical scanners,' Proceedings of the
+IFIP Congress (Information Processing 68), pp. 448-455,
+Edinburgh, Scotland, August 1968.
+
+Lyons, John, Semantics 1 & 2, Cambridge University Press, London
+and New York, 1977.
+
+Maier, David, The Theory of Relational Databases, Computer Sci-
+ence Press, Rockville, MD, 1983.
+
+Maier, David and David S. Warren, Computing with Logic, Benjamin
+Cummings, Menlo Park, 1988.
+
+Main, Michael G. and David B. Benson, 'Denotational semantics for
+'natural' language question-answering programs,' American
+Journal of Computational Linguistics, vol. 9, no. 1, pp.
+11-21, 1983.
+
+Marcus, Mitchell P., A Theory of Syntactic Recognition for Natur-
+al Language, MIT Press, Cambridge, Ma., 1980.
+
+Martin, William A., Kenneth W. Church, and Ramesh S. Patil,
+'Preliminary analysis of a breadth-first parsing algorithm:
+theoretical and experimental results,' in Natural Language
+Parsing Systems, ed. Leonard Bolc, pp. 267-328, Springer,
+Berlin, 1987.
+
+Matsumoto, Yuji, Hozumi Tanaka, H. Hirakawa, Hideo Miyoshi, and
+Hideki Yasukawa, 'BUP: a bottom-up parser embedded in PRO-
+LOG,' New Generation Computing, vol. 1, pp. 145-158, 1983.
+
+Matsumoto, Yuji, Masaki Kiyono, and Hozumi Tanaka, 'Facilities of
+the BUP parsing system,' in Natural Language Understanding
+and Logic Programming, ed. Veronica Dahl and Patrick Saint-
+Dizier, pp. 97-106, North-Holland, Amsterdam, 1985.
+
+Matsumoto, Yuji, 'A parallel parsing system for natural language
+analysis,' in Proceedings of the Third International Confer-
+ence on Logic Programming, ed. Ehud Shapiro, pp. 396-409,
+Springer, Berlin, 1986.
+
+Matsumoto, Yuji, 'A parallel parsing system for natural language
+analysis,' New Generation Computing, vol. 5, no. 1, pp. 63-
+78, 1987.
+
+Matsumoto, Yuji and Ryoichi Sugimura, 'A parsing system based on
+logic programming,' IJCAI-87, vol. 2, pp. 671-674, 1987.
+
+McCawley, James D., 'The role of semantics in grammar,' in
+Universals in Linguistic Theory, ed. Emmon Bach and Robert
+Harms, pp. 125-169, Holt, Rinehart and Winston, New York,
+1968.
+
+McCawley, James D., 'Semantic representation,' in Cognition: A
+Multiple View, ed. Paul M. Garvin, pp. 227-247, Spartan
+Books, New York, 1970.
+
+McCord, Michael C., 'Slot grammars,' American Journal of Computa-
+tional Linguistics, vol. 6, no. 1, pp. 31-43, 1980.
+
+McCord, Michael J., 'Semantic interpretation for the EPISTLE sys-
+tem,' Proceedings of the Second International Conference on
+Logic Programming, pp. 65-76, Ord & Form, Uppsala, Sweden,
+July 1984.
+
+McCord, Michael C., 'Modular logic grammars,' ACL Proceedings,
+23rd Annual Meeting, pp. 104-117, 1985.
+
+McCord, Michael C., 'Focalizers, the scoping problem, and seman-
+tic interpretation rules in logic grammars,' in Logic Pro-
+gramming and its Applications (Volume 2), ed. Michel van
+Canegham and David H.D. Warren, pp. 00-00, Ablex, Norwood,
+New Jersey, 1986.
+
+McDermott, Drew, 'Tarskian semantics, or no notation without
+denotation,' in Readings in Natural Language Processing, ed.
+Barbara J. Grosz, Karen Sparck-Jones and Bonnie Lynn Webber,
+pp. 167-169, Morgan Kaufmann, Los Altos, 1986 (1978).
+
+McKeown, Kathleen R., Text Generation: Using Discourse Strategies
+and Focus Constraints to Generate Natural Language Text,
+Cambridge University Press, Cambridge, 1985.
+
+Mellish, Christopher S., 'Incremental semantic interpretation in
+a modular parsing system,' in Automatic Natural Language
+Parsing, ed. Karen Sparck-Jones and Yorick A. Wilks, pp.
+148-155, Ellis Horwood/Wiley, Chichester/New York, 1983.
+
+Mellish, Christopher S., Computer Interpretation of Natural
+Language Descriptions, Ellis Horwood/Wiley, Chichester/New
+York, 1985.
+
+Mellish, Christopher S., 'Implementing systemic classification by
+unification,' Computational Linguistics, vol. 14, no. 1, pp.
+40-51, 1988.
+
+Mercer, Robert E., 'Solving some persistent presupposition prob-
+lems,' COLING-88, pp. 420-425, 1988.
+
+Mercer, Robert E. and Raymond Reiter, 'The representations of
+presuppositions using defaults,' Proceedings of the Fourth
+Biennial Conference of the Canadian Society for Computation-
+al Studies of Intelligence, pp. 103-107, 1982.
+
+Mercer, Robert E. and Richard S. Rosenberg, 'Generating correc-
+tive answers by computing presuppositions of answers, not of
+questions, or mind yur P's, not Q's,' Proceedings of the
+
+Fifth Biennial Conference of the Canadian Society for Compu-
+tational Studies of Intelligence, pp. 16-19, 1984.
+
+Meya, Montserrat, 'Morphological analysis of Spanish for re-
+trieval,' Literary & Linguistic Computing, vol. 2, no. 3,
+pp. 166-170, 1987.
+
+Milne, Robert W., 'Predicting garden path sentences,' Cognitive
+Science, vol. 6, pp. 349-373, 1982.
+
+, Jack Minker                    , Deductive Databases and Logic
+Programming, Morgan Kaufmann, Los Altos, 1988.
+
+Minsky, Marvin, 'A framework for representing knowledge,' in Mind
+Design, ed. John Haugeland, pp. 95-128, MIT Press, Cam-
+bridge, Ma, 1981.
+
+Mitton, Roger, 'A partial dictionary of English in computer-
+usable form,' Literary & Linguistic Computing, vol. 1, no.
+4, pp. 214-215, 1986.
+
+Miyoshi, Hideo and Koichi Furukawa, 'Object-oriented parser in
+the logic programming language ESP,' in Natural Language
+Understanding and Logic Programming, ed. Veronica Dahl and
+Patrick Saint-Dizier, pp. 107-119, North-Holland, Amsterdam,
+1985.
+
+Montague, Richard, in Formal Philosophy, Yale University Press,
+New Haven, 1974.
+
+Moran, Douglas B., 'The representation of inconsistent informa-
+tion in a dynamic model-theoretic semantics,' ACL Proceed-
+ings, 20th Annual Meeting, pp. 16-18, 1982.
+
+Moran, Douglas B., 'Quantifier scoping in the SRI core language
+engine,' ACL Proceedings, 26th Annual Meeting, pp. 00-00,
+1988.
+
+Morishita, T. and H. Hirakawa, 'GDLO: a grammar description
+language based on DCG,' ICOT Technical Memorandum TM-0084,
+Institute for New Generation Computer Technology (ICOT),
+Tokyo, 1984.
+
+Moshier, M. Drew and William C. Rounds, 'A logic for partially
+specified data structures,' Conference Record of the Four-
+teenth ACM Symposium on Principles of Programming Languages,
+pp. 156-167, Munich, West Germany, 1987.
+
+Mukai, Kuniaki and Hideki Yasukawa, 'Complex indeterminates in
+PROLOG and its application to discourse models,' New Genera-
+tion Computing, vol. 3, pp. 441-466, 1985.
+
+Nakazawa, Tsuneko, Laura Neher, and Erhard W. Hinrichs, 'Unifica-
+tion with disjunctive and negative values for GPSG gram-
+mars,' ECAI-88, pp. 467-472, 1988.                     
+
+Neff, Mary S., Roy J. Byrd, and Omneya A. Rizk, 'Creating and
+querying hierarchical lexical data bases,' ACL Proceedings,
+Second Conference on Applied Natural Language Processing,
+pp. 84-92, 1988.
+
+Neuhaus, H. Joachim, 'Lexical database design: the Shakespeare
+dictionary model,' COLING-86, pp. 441-444, 1986.
+
+Nilsson, Nils J., Problem Solving Methods in Artificial Intelli-
+gence, Tioga, Palo Alto, 1980.
+
+Nozohoor-Farshi, R., 'Context-freeness of the language accepted
+by Marcus' Parser,' ACL Proceedings, 25th Annual Meeting,
+pp. 117-122, 1987.
+
+Nutter, Jane T., 'Default reasoning,' in Encyclopaedia of Artifi-
+cial Intelligence, ed. Stuart C. Shapiro, pp. 840-848, Wi-
+ley, New York, 1987.
+
+Okunishi, Toshiyuki, Ryoichi Sugimura, Yuji Matsumoto, Naoyoshi
+Tamamura, Tadashi Kamiwaki, and Hozumi Tanaka, 'Comparison
+of logic programming based natural language parsing sys-
+tems,' in Natural Language Understanding and Logic Program-
+ming, ed. Veronica Dahl and Patrick Saint-Dizier, pp. 1-14,
+North-Holland, Amsterdam, 1988.
+
+Pareschi, Remo and Mark J. Steedman, 'A lazy way to chart-parse
+with categorial grammars,' ACL Proceedings, 25th Annual
+Meeting, pp. 81-88, 1987.
+
+Partee, Barbara H., 'Opacity, coreference, and pronouns,' Syn-
+these, vol. 21, pp. 359-385, 1970.
+
+Partee, Barbara H., 'Compositionality,' in Varieties of Formal
+Syntax, Proceedings of the 4th Amsterdam Colloquium, Sep-
+tember 1982, ed. Fred Landman and Frank Veltman, pp. 281-
+311, Foris, Dordrecht, 1984.
+
+Pearl, Judea, Heuristics: Intelligent Search Strategies for Com-
+puter Problem Solving, Addison Wesley, Reading, Ma., 1984.
+
+Pelletier, Francis J. and Lenhart K. Schubert, 'Two theories for
+computing the logical form of mass expressions,' COLING-84,
+pp. 108-111, 1984.
+
+Pereira, Fernando C.N., Gerald Gazdar, Stephen C. Pulman, Aravind
+K. Joshi, and Martin Kay, 'Unification and the new gramma-
+tism (panel),' TINLAP-3 clbook, pp. 32-55, 1987.
+
+Pereira, Fernando C.N., 'Extraposition grammars,' in Proceedings
+of the First International Workshop on Logic Programming,
+ed. Sten-Ake Tarnlund, pp. 231-242, Holms Gards Tryckeri,
+Debrecen, Hungary, 1980.                     
+
+Pereira, Fernando C.N., 'A structure-sharing representation for
+unification-based grammar formalisms,' ACL Proceedings, 23rd
+Annual Meeting, pp. 137-144, 1985.
+
+Pereira, Fernando C.N. and Stuart M. Shieber, 'The semantics of
+grammar formalisms seen as computer languages,' COLING-84,
+pp. 123-129, 1984.
+
+Pereira, Fernando C.N. and Stuart M. Shieber, Prolog and
+Natural-Language Analysis, CSLI Lecture Notes, 10, Chicago
+University Press, Stanford, 1987.
+
+Pereira, Fernando C.N. and David H.D. Warren, 'Definite clause
+grammars for language analysis - a survey of the formalism
+and a comparison with augmented transition networks,' Artif-
+icial Intelligence, vol. 13, no. 3, pp. 231-278, 1980.
+Reprinted in Readings in Natural
+Language Processing, ed. Barbara J. Grosz, Karen Sparck-
+Jones and Bonnie Lynn Webber, pp. 101-124, Morgan Kaufmann,
+Los Altos, 1986 (1980).
+
+Perlis, Donald, 'Nonmonotonic reasoning,' in Encyclopaedia of Ar-
+tificial Intelligence, ed. Stuart C. Shapiro, pp. 849-853,
+Wiley, New York, 1987.
+
+Perrault, C. Raymond, 'On the mathematical properties of linguis-
+tic theories,' Computational Linguistics, vol. 10, no. 3-4,
+pp. 165-176, 1984.
+
+Perrott, D.V., Swahili, Hodder & Stoughton, Sevenoaks, 1951.
+
+Petrick, Stanley R., 'Parsing,' in Encyclopaedia of Artificial
+Intelligence, ed. Stuart C. Shapiro, pp. 687-696, Wiley, New
+York, 1987.
+
+Pinkal, Manfred, 'Definite noun phrases and the semantics of
+discourse,' COLING-86, pp. 368-373, 1986.
+
+Pinkal, Manfred, 'Definite noun phrases and the semantics of
+discourse,' COLING-86, pp. 368-373, 1986.
+
+Pollard, Carl and Ivan A. Sag, An Information-Based Approach to
+Syntax and Semantics: Volume 1 Fundamentals, CSLI Lecture
+Notes No. 13, Chicago University Press, Chicago, 1988.
+
+Porto, Antonio and Miguel Figueiras, 'Natural language semantics:
+a logic programming approach,' in Proceedings of the First
+IEEE Symposium on Logic Programming, pp. 228-232, IEEE Com-
+puter Society Press, Silver Spring, MD, 1984.
+
+Power, Richard, 'The organisation of purposeful dialogues,'                     
+Linguistics, vol. 17, no. 1/2, pp. 107-152, 1979.
+
+Power, Richard and H. Christopher Longuet-Higgins, 'Learning to
+count: a computational model of language acquisition,'
+Proceedings of the Royal Society, Series B, vol. 200, pp.
+391-417, 1978.
+
+Pullum, Geoffrey K., 'Context-freeness and the computer process-
+ing of human languages,' ACL Proceedings, 21st Annual Meet-
+ing, pp. 1-6, 1983.
+
+Pullum, Geoffrey K., 'On two recent attempts to show that English
+is not a CFL,' Computational Linguistics, vol. 10, no. 3-4,
+pp. 182-186, 1984.
+
+Pullum, Geoffrey K., 'Syntactic and semantic parsability,'
+COLING-84, pp. 112-122, 1984.
+
+Pullum, Geoffrey K., 'Natural language interfaces and strategic
+computing,' AI & Society, vol. 1, no. 1, pp. 47-58, 1987.
+
+Pullum, Geoffrey K. and Gerald Gazdar, 'Natural languages and
+context-free languages,' Linguistics & Philosophy, vol. 4,
+pp. 471-504, 1982.
+
+Pulman, Stephen G., 'Generalized phrase structure grammar,
+Earley's algorithm, and the minimisation of recursion,' in
+Automatic Natural Language Parsing, ed. Karen Sparck-Jones
+and Yorick A. Wilks, pp. 117-131, Ellis Horwood/Wiley,
+Chichester/New York, 1983.
+
+Pulman, Stephen G., 'Grammars, parsers, and memory limitations,'
+Language and Cognitive Processes, vol. 1, pp. 197-225, 1986.
+
+Ramsay, Allan, 'Effective parsing with generalized phrase struc-
+ture grammar,' ACL Proceedings, Second European Conference,
+pp. 57-61, 1985.
+
+Ramsay, Allan, Formal Methods in Artificial Intelligence, Cam-
+bridge University Press, Cambridge, 1988.
+
+Raphael, Bertram, The Thinking Computer: Mind Inside Matter, W.H.
+Freeman, San Francisco, 1976.
+
+Reape, Mike and Henry S. Thompson, 'Parallel intersection and
+serial composition of finite state transducers,' COLING-88,
+pp. 535-539, 1988.
+
+Reyle, Uwe, 'Grammatical functions, discourse, referents, and
+quantification,' IJCAI-85, vol. 2, pp. 829-831, 1985.
+
+Rich, Elaine, Artificial Intelligence, McGraw-Hill, New York, New
+York, 1983.
+
+Riesbeck, Christopher K., 'From conceptual analyzer to direct                     
+memory access parsing: An overview,' in Advances in Cogni-
+tive Science 1, ed. Noel E. Sharkey, pp. 236-258, Ellis
+Horwood/Wiley, Chichester/New York, 1986.
+
+Ritchie, Graeme D., 'Semantics in parsing,' in Parsing Natural
+Language, ed. Margaret King, pp. 199-217, Academic Press,
+London, 1983.
+
+Ritchie, Graeme D., 'The implementation of a PIDGIN interpreter,'
+in Automatic Natural Language Parsing, ed. Karen Sparck-
+Jones and Yorick A. Wilks, pp. 69-80, Ellis Horwood/Wiley,
+Chichester/New York, 1983.
+
+Ritchie, Graeme D., 'Simulating a Turing machine using functional
+unification grammar,' ECAI-84, pp. 127-136, 1984.
+
+Ritchie, Graeme D., 'Simulating a Turing machine using functional
+unification grammar,' in Advances in Artificial Intelli-
+gence, ed. Tim O'Shea, pp. 285-294, North-Holland, Amster-
+dam, 1985.
+
+Ritchie, Graeme D., 'The computational complexity of sentence
+derivation in functional unification grammar,' COLING-86,
+pp. 584-586, 1986.
+
+Ritchie, Graeme D., 'The lexicon,' in Linguistic Theory and Com-
+puter Applications, ed. Peter Whitelock, Mary McGee Wood,
+Harold L. Somers, Rod L. Johnson and Paul Bennett, pp. 225-
+256, Academic Press, London, 1987.
+
+Ritchie, Graeme D. and Henry S. Thompson, 'Natural language pro-
+cessing,' in Artificial Intelligence: Tools, Techniques, and
+Applications, ed. Tim O'Shea and Marc Eisenstadt, pp. 358-
+388, Harper & Row, New York, 1984.
+
+Robinson, J.A., 'A machine-oriented logic based on the resolution
+principle,' Journal of the ACM, vol. 12, no. 1, pp. 23-41,
+January 1965.
+
+Rosenschein, Stanley J. and Stuart M. Shieber, 'Translating En-
+glish into logical form,' ACL Proceedings, 20th Annual Meet-
+ing, pp. 1-8, 1982.
+
+Kasper, Robert and William Rounds, 'A logical semantics for
+feature structures,' ACL Proceedings, 24th Annual Meeting,
+pp. 257-266, 1986.
+
+Russell, Graham J., Stephen G. Pulman, Graeme D. Ritchie, and
+A.W. Black, 'A dictionary and morphological analyser for En-
+glish,' COLING-86, pp. 277-279, 1986.
+
+Sabatier, Paul, 'Puzzle grammars,' in Natural Language Under-
+standing and Logic Programming, ed. Veronica Dahl and Pa-
+trick Saint-Dizier, pp. 139-152, North-Holland, Amsterdam,                     
+1985.
+
+Hein, A. Sa8o9agvall, 'Parsing by means of Uppsala Chart Processor
+(UCP),' in Natural Language Parsing Systems, ed. Leonard
+Bolc, pp. 203-266, Springer, Berlin, 1987.
+
+Saint-Dizier, Patrick, 'Handling quantifier scoping ambiguities
+in a semantic representation of natural language sentences,'
+in Natural Language Understanding and Logic Programming, ed.
+Veronica Dahl and Patrick Saint-Dizier, pp. 49-63, North-
+Holland, Amsterdam, 1985.
+
+Saint-Dizier, Patrick, 'An approach to natural-language semantics
+in logic programming,' Journal of Logic Programming, vol. 3,
+no. 4, pp. 329-356, December 1986.
+
+Saint-Dizier, Patrick, 'Expression of syntactic and semantic
+features in logic-based grammars,' Computational Intelli-
+gence, vol. 2, no. 1, pp. 1-8, 1986.
+
+Sampson, Geoffrey, 'Context-free parsing and the adequacy of
+context-free grammars,' in Parsing Natural Language, ed.
+Margaret King, pp. 151-170, Academic Press, London, 1983.
+
+Sampson, Geoffrey, 'Deterministic parsing,' in Parsing Natural
+Language, ed. Margaret King, pp. 91-116, Academic Press,
+London, 1983.
+
+Sanamrad, Mohammad Ali, Koichi Wada, and Haruya Matsumoto, 'A
+hardware syntactic analysis processor,' IEEE Micro, vol. 7,
+no. 4, pp. 73-80, August 1987.
+
+Sandt, Rob A. van der, Context and Presupposition, Croom Helm,
+London, 1988.
+
+Scha, Remko J.H., Bertram C. Bruce, and Livia Polanyi, 'Discourse
+understanding,' in Encyclopaedia of Artificial Intelligence,
+ed. Stuart C. Shapiro, pp. 233-245, Wiley, New York, 1987.
+
+Schank, Roger, 'Conceptual dependency: a theory of natural
+language understanding,' Cognitive Psychology, vol. 3, pp.
+552-631, 1972.
+
+Schank, Roger and Robert Abelson, Scripts, Plans, Goals and
+Understanding, Lawrence Erlbaum and Associates, Hillsdale,
+New Jersey, 1977.
+
+Schank, Roger C. and Charles J. Rieger, III, 'Inference and the
+computer understanding of natural language,' Artificial In-
+telligence, vol. 5, pp. 373-412, 1974.
+
+Schank, Roger C. and Christopher K. Riesbeck, eds., Inside Com-
+puter Understanding: Five Programs plus Miniatures, Erlbaum,
+Hillsdale, 1981.                     
+
+Schubert, Lenhart K., 'Are there preference trade-offs in attach-
+ment decisions ?,' AAAI-86, vol. 1, pp. 601-605, 1986.
+
+Schubert, Lenhart K. and Francis J. Pelletier, 'From English to
+logic: context-free computation of 'conventional' logical
+translation,' American Journal of Computational Linguistics,
+vol. 8, no. 1, pp. 27-44, 1982.
+Reprinted in Readings in Natural Language Processing,
+ed. Barbara J. Grosz, Karen Sparck-Jones and Bonnie Lynn
+Webber, pp. 293-311, Morgan Kaufmann, Los Altos, 1986
+(1982).
+
+Schwartz, Steven C., Applied Natural Language Processing, Petro-
+celli, Princeton, N.J., 1987.
+
+Sedgewick, Robert, Algorithms, Addison Wesley, Reading, Ma, 1983.
+
+Sedogbo, Celestin, 'SYLOG: A DRT System in Prolog,' in Natural
+Language Understanding and Logic Programming, ed. Veronica
+Dahl and Patrick Saint-Dizier, pp. 185-201, North-Holland,
+Amsterdam, 1988.
+
+Sells, Peter, Lectures on Contemporary Syntactic Theories, CSLI
+Lecture Notes No. 3, Chicago University Press, Chicago,
+1985.
+
+Shapiro, Stuart C., Encyclopaedia of Artificial Intelligence, Wi-
+ley, New York, 1987.
+
+Sheil, Beau A., 'Observations on context free parsing,' Statisti-
+cal Methods in Linguistics, pp. 71-109, 1976.
+
+Shieber, Stuart M., 'Sentence disambiguation by a shift-reduce
+parsing technique,' IJCAI-83, pp. 699-703, 1983.
+
+Shieber, Stuart M., 'Evidence against the non-context-freeness of
+natural language,' Linguistics and Philosophy, vol. 8, no.
+3, pp. 333-343, 1985.
+
+Shieber, Stuart M., 'Criteria for designing computer facilities
+for linguistic analysis,' Linguistics, vol. 23, no. 2, pp.
+189-211, 1985.
+
+Shieber, Stuart M., 'Using restriction to extend parsing algo-
+rithms for complex-feature-based formalisms,' ACL Proceed-
+ings, 23rd Annual Meeting, pp. 145-152, 1985.
+
+Shieber, Stuart M., 'A simple reconstruction of GPSG,' COLING-86,
+pp. 211-215, 1986.
+
+Shieber, Stuart M., An Introduction to Unification-Based Ap-                     
+proaches to Grammar, University of Chicago Press, Chicago,
+1986.
+
+Shieber, Stuart M., 'Separating linguistic analyses from linguis-
+tic theories,' in Linguistic Theory & Computer Applications,
+ed. Peter Whitelock, Mary McGee Wood, Harold L. Somers, Rod
+L. Johnson and Paul Bennett, pp. 1-36, Academic Press, Lon-
+don, 1987.
+
+Shieber, Stuart M., 'A uniform architecture for parsing and gen-
+eration,' COLING-88, pp. 614-619, 1988.
+
+Slack, Jon M., 'Distributed memory: a basis for chart parsing,'
+COLING-86, pp. 476-481, 1986.
+
+Slocum, Jonathan, 'A survey of machine translation: its history,
+current status, and future prospects,' Computational
+Linguistics, vol. 11, no. 1, pp. 1-17, 1985.
+
+Smith, Brian C., 'Linguistic and computational semantics,' ACL
+Proceedings, 20th Annual Meeting, pp. 9-15, 1982.
+
+Sparck-Jones, Karen, 'So what about parsing compound nouns?,' in
+Automatic Natural Language Parsing, ed. Karen Sparck-Jones
+and Yorick A. Wilks, pp. 164-168, Ellis Horwood/Wiley,
+Chichester/New York, 1983.
+
+Sparck-Jones, Karen and Yorick A. Wilks, eds., Automatic Natural
+Language Parsing, Ellis Horwood/Wiley, Chichester/New York,
+1983.
+
+Stabler Jr., Edward P., 'Deterministic and bottom-up parsing in
+PROLOG,' AAAI-83, pp. 383-386, 1983.
+
+Steel, Sam and Anne N. De Roeck, 'Bidirectional chart parsing,'
+in Advances in Artificial Intelligence (Proceedings of
+AISB-87), ed. Christopher S. Mellish and John Hallam, pp.
+223-235, Wiley, Chichester, 1987.
+
+Sterling, Leon and Ehud Shapiro, The Art of Prolog, MIT Press,
+Cambridge, Ma, 1986.
+
+Sugimura, Ryoichi, 'Japanese honorifics and situation semantics,'
+COLING-86, pp. 507-510, 1986.
+
+Sugimura, Ryoichi, Hideo Miyoshi, and Kuniaki Mukai, 'Constraint
+analysis on Japanese modification,' in Natural Language
+Understanding and Logic Programming, ed. Veronica Dahl and
+Patrick Saint-Dizier, pp. 93-106, North-Holland, Amsterdam,
+1988.
+
+Tait, John I., 'Semantic parsing and syntactic constraints (mark
+IV),' in Automatic Natural Language Parsing, ed. Karen
+
+Sparck-Jones and Yorick A. Wilks, pp. 169-177, Ellis
+Horwood/Wiley, Chichester/New York, 1983.
+
+Tennant, Harry R., Natural Language Processing, Petrocelli, New
+York, 1981.
+
+Thomason, Richmond H., 'A semantic theory of sortal incorrect-
+ness,' Journal of Philosophical Logic, vol. 1, pp. 209-258,
+1972.
+
+Thompson, Henry S., 'Chart parsing and rule schemata in PSG,' ACL
+Proceedings, 19th Annual Meeting, pp. 167-172, 1981.
+
+Thompson, Henry S., 'MCHART: a flexible, modular chart parsing
+system,' AAAI-83, pp. 408-410, 1983.
+
+Thompson, Henry S., 'Speech transcription: an incremental, in-
+teractive approach,' in Advances in Artificial Intelligence,
+ed. Tim O'Shea, pp. 267-274, North-Holland, Amsterdam, 1985.
+
+Thompson, Henry S. and Graeme D. Ritchie, 'Implementing natural
+language parsers,' in Artificial Intelligence: Tools, Tech-
+niques, and Applications, ed. Tim O'Shea and Marc Eisen-
+stadt, pp. 245-300, Harper & Row, New York, 1984.
+
+Thorne, James, P. Bratley, and Hamish Dewar, 'The syntactic
+analysis of English by machine,' in Machine Intelligence 3,
+ed. Donald Michie, Elsevier, New York, 1968.
+
+Tomita, Masaru, 'LR parsers for natural languages,' COLING-84,
+pp. 354-357, 1984.
+
+Tomita, Masaru, Efficient Parsing for Natural Language: A Fast
+Algorithm for Practical Systems, Kluwer, Boston, 1986.
+
+Touretsky, David S., The Mathematics of Inheritance Systems,
+Pitman/Morgan Kaufmann, London/Los Altos, 1986.
+
+Touretsky, David S., 'Inheritance hierarchy,' in Encyclopaedia of
+Artificial Intelligence, ed. Stuart C. Shapiro, pp. 422-431,
+Wiley, New York, 1987.
+
+Trost, Harald and Ernst Buchberger, 'Towards the automatic ac-
+quisition of lexical data,' COLING-86, pp. 387-389, 1986.
+
+Uehara, Kuniaki, Ryo Ochitani, Osamu Kakusho, and Jun'ichi Toyo-
+da, 'A bottom-up parser based on predicate logic: a survey
+of the formalism and its implementation technique,' in 1984
+International Symposium on Logic Programming, IEEE Computer
+Society Press, Silver Spring, MD, 1984.
+
+Ullman, Jeffry D., Principles of Database Systems, Computer Sci-
+ence Press, Rockville, MD, 1982.
+
+Uszkoreit, Hans, 'Categorial unification grammar,' COLING-86, pp.
+187-194, 1986.
+
+Wada, Hajime and Nicholas Asher, 'BUILDRS: an implementation of
+DR theory and LFG,' COLING-86, pp. 540-545, 1986.
+
+Walker, Adrian, Michael C. McCord, John F. Sowa, and Walter G.
+Wilson, Knowledge Systems and Prolog, Addison-Wesley, Read-
+ing, Ma, 1987.
+
+Warren, David S., 'Using lambda-calculus to represent meanings in
+logic grammars,' , pp. 51-56, 1983.
+
+Warren, David S., 'Using Montague semantics in natural language
+understanding,' Theoretical Approaches to Natural Language
+Understanding, a Workshop at Halifax, Nova Scotia, pp. 61-
+68, 1985.
+
+Warren, David S. and Joyce Friedman, 'Using semantics in non-
+context-free parsing of Montague grammar,' American Journal
+of Computational Linguistics, vol. 8, no. 3-4, pp. 123-138,
+1982.
+
+Warren, David H.D. and Fernando C.N. Pereira, 'An efficient easi-
+ly adaptable system for interpreting natural language
+queries,' American Journal of Computational Linguistics,
+vol. 8, no. 3-4, pp. 110-122, 1982.
+
+Webber, Bonnie Lynn, 'Question answering,' in Encyclopaedia of
+Artificial Intelligence, ed. Stuart C. Shapiro, pp. 814-822,
+Wiley, New York, 1987.
+
+Wehrli, Eric, 'Design and implementation of a lexical data base,'
+ACL Proceedings, Second European Conference, pp. 146-153,
+1985.
+
+Weizenbaum, Joseph, 'ELIZA - a computer program for the study of
+natural language communication between man and machine,'
+Communications of the ACM, vol. 9, no. 1, pp. 36-45, 1966.
+
+Whorf, Benjamin L., 'Linguistics as an exact science,' Technology
+Review, vol. 43, pp. 61-63, 80-83, 1940.
+
+Wilensky, Robert, Planning and understanding, Addison Wesley, New
+York, 1983.
+
+Wilks, Yorick, 'A preferential, pattern-seeking, semantics for
+natural language inference,' Artificial Intelligence, vol.
+6, pp. 53-74, 1975.
+
+Wilks, Yorick, 'Good and bad arguments about semantic primi-
+tives,' Communication & Cognition, vol. 8, pp. 201-219,
+1977.
+
+Wilks, Yorick A., 'Right attachment and preference semantics,'
+ACL Proceedings, Second European Conference, pp. 89-92,
+1985.
+
+Wilks, Yorick, 'Primitives,' in Encyclopaedia of Artificial In-
+telligence, ed. Stuart C. Shapiro, pp. 759-761, Wiley, New
+York, 1987.
+
+Winograd, Terry, Understanding Natural Language, Academic Press,
+New York, 1972.
+
+Winograd, Terry, Language as a Cognitive Process: Syntax,
+Addison-Wesley., Reading, Ma., 1983.
+
+Winograd, Terry and Fernando Flores, Understanding Computers and
+Cognition, Ablex, Norwood, 1986.
+
+Winston, Patrick H., Artificial Intelligence (Second Edition),
+Addison Wesley, Reading, Ma, 1984.
+
+Wiren, Mats, 'A comparison of rule-invocation strategies in
+context-free chart parsing,' ACL Proceedings, Third European
+Conference, pp. 226-235, 1987.
+
+Wittenburg, Kent, 'A parser for portable NL interfaces using
+graph-unification-based grammars,' AAAI-86, vol. 2, pp.
+1053-1058, 1986.
+
+Wood, Derek, The Theory of Computation, Harper & Row, New York,
+1987                     .
+
+Woods, William A., 'Procedural semantics for a question-answering
+machine,' AFIPS Conference Proceedings, vol. 33, pp. 457-
+471, 1968.
+
+Woods, William A., 'Transition network grammars for natural
+language analysis,' Communications of the ACM, vol. 13, no.
+10, pp. 591-596, October 1970.
+Reprinted in Readings in Natural Language Process-
+ing, ed. Barbara J. Grosz, Karen Sparck-Jones and
+Bonnie Lynn Webber, pp. 71-87, Morgan Kaufmann, Los Altos,
+1986 (1970).
+
+Woods, William, 'Progress in natural language understanding: an
+application to lunar geology,' AFIPS Conference Proceedings,
+vol. 42, pp. 441-450, 1973.
+
+Woods, William A., 'Semantics and quantification in natural
+language question answering,' in Readings in Natural
+Language Processing, ed. Barbara J. Grosz, Karen Sparck-
+Jones and Bonnie Lynn Webber, pp. 205-248, Morgan Kaufmann,
+Los Altos, 1986 (1978).
+
+Woods, William A., 'Cascaded ATN grammars,' American Journal of
+Computational Linguistics, vol. 6, no. 1, pp. 1-12, 1980.
+
+Woods, William A., 'Procedural semantics as a theory of meaning,'
+in Elements of Discourse Understanding, ed. Aravind K.
+Joshi, Bonnie Lynn Webber and Ivan Sag, pp. 300-334, Cam-
+bridge University Press, Cambridge, 1981.
+
+Woods, William A., 'Augmented transition network grammar,' in En-
+cyclopaedia of Artificial Intelligence, ed. Stuart C.
+Shapiro, pp. 323-333, Wiley, New York, 1987.
+
+Wos, Larry, Ross A. Overbeek, Ewing L. Lusk, and James Boyle, Au-
+tomated Reasoning: Introduction and Applications, Prentice
+Hall, Englewood Cliffs, N.J., 1984.
+
+Wroblewski, David, 'Nondestructive graph unification,' AAAI-87,
+pp. 582-589, 1987.
+
+Yngve, Victor H., 'A programming language for mechanical transla-
+tion,' Mechanical Translation, vol. 5, pp. 25-41, 1958.
+
+Younger, David H., 'Recognition and parsing of context-free
+languages in time n3,' Information and Control, vol. 10, pp.
+189-208, 1967.
+
+Zeevat, Henk, 'Combining categorial grammar and unification,' in
+Natural Language Parsing and Linguistic Theories, ed. U.
+Reyle and C. Rohrer, pp. 202-229, D. Reidel, Dordrecht,
+1988.

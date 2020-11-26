@@ -1,0 +1,12 @@
+MMData("ImgPrlg.gif", "DocTest.txt", "PrologCGManual.htm").
+
+MMExample :-
+   show(wnd1, "cut.gif"),
+   read(x),
+   close(wnd1),
+   show(wnd2, "ImgPrlg.gif"),
+   show(wnd3, "DocTest.txt"),
+   read(y),
+   write("I will close the two windows ..."),
+   close(wnd2),
+   close(wnd3), /.

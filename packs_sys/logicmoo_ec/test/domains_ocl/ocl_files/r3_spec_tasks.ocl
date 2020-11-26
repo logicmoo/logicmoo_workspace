@@ -1,0 +1,690 @@
+% R3 -- Sort Engineered Domain Model (June 1999)
+% This is a ``flat'' version of the multi robot world
+%-----------------------------------------------
+
+% The following elements are expected in the sort engineered domain model
+% 
+%  sorts
+%  objects
+%  predictates
+%  ss class expressions
+%  invariants:
+%   atomic invariants
+%   -ve invariants
+%   +ve invariants
+%  operators
+
+
+% sorts
+% ------------
+sorts(primitive_sorts,[room, door, box, robot, arm, key, light, colour]) .
+
+
+% objects
+% -------------
+objects(robot,
+	[tom, dick, harry]) . 
+objects(room,
+	[room1, room2, room3, room4, room5, room6, room7]) . 
+objects(box,
+	[box1, box2, box3, box4, box5, box6]) . 
+objects(door,
+	[door12,door23,door24,door25,door35,door45,door56,door47,door57,door67]).
+objects(arm,
+	[toms_arm, dicks_arm, harrys_arm]) .
+objects(key,
+	[key1, key2, key3, key4, key5]) .
+objects(light,
+	[light1,light2,light3,light4,light5,light6,light7]) .
+objects(colour,
+	[red, blue]) .
+
+
+% ALL predicates
+% ---------------
+predicates([
+	box_near_door(box,door,room),
+	box_in(box,room),
+	box_next_key(box,key),
+	box_next_box(box,box),
+	locked(door),
+	key_next_key(key,key),
+	key_next_box(key,box),
+	key_being_held_near_door(key,robot,door,room),
+	key_on_floor(key,room),
+	key_being_held(key,robot,room),
+	arm_used(arm,key),
+	arm_empty(arm,robot),
+	open(door),
+	unlocked(door),
+	closed(door),
+	robot_near_door(robot,door,room),
+	robot_in(robot,room),
+	robot_next_key(robot,key),
+	robot_next_box(robot,box),
+	on(light,room),
+	off(light,room),
+        colour_door(door,colour),
+        colour_key(key,colour),
+        part_of(robot,arm),
+        position(light,room,door),
+        connect(room,room,door)
+        ]) .
+
+
+% atomic invariants
+
+atomic_invariants( [colour_door(door24,blue),
+                    colour_door(door25,blue),
+                    colour_door(door35,blue),
+                    colour_door(door67,red),
+                    colour_door(door57,red),
+                    colour_door(door56,blue),
+                    colour_door(door23,blue),
+                    colour_door(door12,red),
+                    colour_door(door47,blue),
+                    colour_door(door45,blue),
+                    part_of(tom,toms_arm),
+                    part_of(dick,dicks_arm),
+                    part_of(harry,harrys_arm),
+                    colour_key(key1,blue),
+                    colour_key(key2,blue),
+                    colour_key(key3,blue),
+                    colour_key(key4,red),
+                    colour_key(key5,red),
+                    position(light1,room1,door12),
+                    position(light2,room2,door23),
+                    position(light3,room3,door23),
+                    position(light4,room4,door45),
+                    position(light5,room5,door45),
+                    position(light6,room6,door56),
+                    position(light7,room7,door67),
+                    connect(room2,room3,door23),
+                    connect(room3,room2,door23),
+                    connect(room2,room4,door24),
+                    connect(room4,room2,door24),
+                    connect(room2,room5,door25),
+                    connect(room5,room2,door25),
+                    connect(room6,room5,door56),
+                    connect(room5,room6,door56),
+                    connect(room5,room3,door35),
+                    connect(room3,room5,door35),
+                    connect(room5,room4,door45),
+                    connect(room4,room5,door45),
+                    connect(room4,room7,door47),
+                    connect(room7,room4,door47),
+                    connect(room5,room7,door57),
+                    connect(room7,room5,door57),
+                    connect(room6,room7,door67),
+                    connect(room7,room6,door67), 
+                    connect(room2,room1,door12),
+                    connect(room1,room2,door12)] ).
+
+% substate class expressions (ss_class_exp)
+% -------------------------------
+
+
+% Variables are retricted by the predicate defn in the domain model,
+% and further retricted if they're in the first slot of 
+% a pred in a substate_groups (e.g. near(Key,Door,Room)
+% means near(Key,Door,Room) and is_of_sort(Key, key)
+
+substate_classes(box,Box,[
+	[box_in(Box,Room),box_near_door(Box,Door,Room),
+		connect(Room,Room1,Door)], 
+        [box_in(Box,Room),box_next_box(Box,Box1),ne(Box,Box1)], 
+        [box_in(Box,Room),box_next_key(Box,Key)], 
+        [box_in(Box,Room)]]) . 
+
+substate_classes(arm,Arm,[
+	[arm_empty(Arm,Robot),part_of(Robot,Arm)], 	
+	[arm_used(Arm,Key),part_of(Robot,Arm)]]). 	
+
+substate_classes(robot, Robot,[ 
+	[robot_in(Robot,Room),robot_near_door(Robot,Door,Room),
+		connect(Room,Room1,Door)], 
+        [robot_in(Robot,Room),robot_next_box(Robot,Box)], 
+        [robot_in(Robot,Room),robot_next_key(Robot,Key)], 
+        [robot_in(Robot,Room)] ]) . 
+
+substate_classes(door,D,[ 
+	[closed(D),locked(D)],
+	[closed(D),unlocked(D)],
+	[open(D),unlocked(D)]]) . 
+
+substate_classes(key, Key,[ 
+        [key_being_held(Key,Robot,Room)], 
+        [key_on_floor(Key,Room),key_next_box(Key,Box)], 
+        [key_on_floor(Key,Room),key_next_key(Key,Key1),ne(Key,Key1)], 
+        [key_being_held_near_door(Key,Robot,Door,Room),
+		connect(Room,Room1,Door)], 
+        [key_on_floor(Key,Room)]   ]) . 
+
+substate_classes(light, Light,[
+	[on(Light,Room),position(Light,Room,Door)],
+	[off(Light,Room),position(Light,Room,Door)]]) .
+
+
+
+% negative  invariants
+% --------------------------------
+
+inconsistent_constraint([robot_next_key(R,K1),robot_next_key(R,K),ne(K,K1)]).
+inconsistent_constraint([robot_next_box(R,B1),robot_next_box(R,B),ne(B,B1)]).
+inconsistent_constraint([box_next_key(B,K1),box_next_key(B,K2),ne(K1,K2)]).
+inconsistent_constraint([key_next_box(K,B1),key_next_box(K,B2),ne(B1,B2)]).
+inconsistent_constraint([key_next_box(K,B),box_next_key(B,K)]).
+inconsistent_constraint([robot_next_box(R,B1),robot_next_key(R,K)]).
+inconsistent_constraint([robot_next_box(R,B),robot_near_door(R,D1,R1)]).
+inconsistent_constraint([robot_next_key(R,K),robot_near_door(R,D1,R1)]).
+% box can't be next to itself: (non-reflex)
+inconsistent_constraint([box_next_box(B,B)]).
+% key can't be next to itself:
+inconsistent_constraint([key_next_key(K,K)]).
+% box_next and key_next relation aren't symetric either:
+inconsistent_constraint([box_next_box(B,B1),box_next_box(B1,B)]).
+inconsistent_constraint([key_next_key(K,K1),key_next_key(K1,K)]).
+% NEW 15/1/96 box (and key) can't be next to two diff boxes
+inconsistent_constraint([box_next_box(B,X),box_next_box(B,X1),ne(X,X1)]).
+inconsistent_constraint([key_next_key(B,X),key_next_key(B,X1),ne(X,X1)]).
+inconsistent_constraint([box_next_box(B,_),box_near_door(B,_,_)]).
+inconsistent_constraint([box_next_key(B,_),box_near_door(B,_,_)]).
+inconsistent_constraint([box_next_box(B2,_),box_next_key(B2,_)]).
+inconsistent_constraint([key_next_key(K1,K),key_next_box(K1,B)]).
+inconsistent_constraint([key_next_key(K,_),key_near_door(K,_,_)]).
+inconsistent_constraint([key_next_key(_,K),key_near_door(K,_,_)]).
+ 
+inconsistent_constraint([key_next_key(K1,K),key_being_held(K,_,_)]).
+inconsistent_constraint([key_next_key(K,K1),key_being_held(K1,_,_)]).
+inconsistent_constraint([key_next_box(K1,B),key_being_held(K1,_,_)]).
+inconsistent_constraint([key_next_box(K,_),key_being_held_near_door(K,R,D,Rm)]).
+inconsistent_constraint([box_next_key(B,K),key_being_held(K,_,_)]).
+inconsistent_constraint([key_being_held(K,_,_),key_on_floor(K,_)]) .
+ 
+inconsistent_constraint([arm_empty(A,_),arm_used(A,_)]) .
+inconsistent_constraint([arm_empty(_,R),key_being_held(_,R,_)]).
+inconsistent_constraint([arm_empty(_,R),key_being_held_near_door(K,R,D,Rm)]).
+ 
+inconsistent_constraint([arm_used(A,K),arm_used(A,K1),ne(K,K1)]).
+ 
+inconsistent_constraint([arm_used(A,K),key_on_floor(K,_)]).
+inconsistent_constraint([arm_used(A,K),key_next_key(K,_)]).
+inconsistent_constraint([arm_used(A,K),key_next_key(_,K)]).
+inconsistent_constraint([arm_used(A,K),key_next_box(K,_)]).
+inconsistent_constraint([arm_used(A,K),box_next_key(_,K)]).
+inconsistent_constraint([arm_used(A,K),part_of(R,A),robot_next_key(R,K)]).
+inconsistent_constraint([arm_used(A,K),part_of(R,A),key_being_held_near_door(K1,R,D,Rm),ne(K,K1)]).
+inconsistent_constraint([arm_used(A,K),part_of(R,A),key_being_held(K1,R,_),ne(K,K1)]).
+inconsistent_constraint([closed(D1),open(D1)]) .
+inconsistent_constraint([locked(D1),open(D1)]) .
+inconsistent_constraint([locked(D1),unlocked(D1)]) .
+inconsistent_constraint([robot_in(R,R2),robot_in(R,R1),ne(R1,R2)]) .
+inconsistent_constraint([key_being_held(_,K,R2),key_being_held(_,K,R1),ne(R1,R2)]) .
+inconsistent_constraint([key_being_held(R,K1,_),key_being_held(R,K,_),ne(K1,K)]) .
+inconsistent_constraint([key_being_held_near_door(K1,R,_,_),
+                  key_being_held_near_door(K,R,_,_),ne(K1,K)]) .
+ 
+inconsistent_constraint([key_being_held(K,_,_),key_being_held_near_door(K,_,_,_)]).
+inconsistent_constraint([key_being_held_near_door(K,_,R2,_),
+                key_being_held_near_door(K,_,R1,_),ne(R1,R2)]) .
+inconsistent_constraint([key_being_held_near_door(K,_,_,D1),
+                key_being_held_near_door(K,_,_,D2),ne(D1,D2)]) .
+ 
+inconsistent_constraint([key_being_held_near_door(K,Rb,D1,R),robot_next_box(Rb,B)]) .
+inconsistent_constraint([key_being_held_near_door(K,Rb,D1,R),robot_next_key(Rb,K1)]) .
+inconsistent_constraint([key_being_held(K,Rb,_),robot_next_key(Rb,K1)]) .
+ 
+inconsistent_constraint([key_on_floor(K,R2),key_on_floor(K,R1),ne(R1,R2)]) .
+inconsistent_constraint([key_on_floor(K,_),key_being_held_near_door(K,Rb,_,_)]) .
+inconsistent_constraint([robot_in(Rb,R2),robot_near_door(Rb,D1,R1),ne(R1,R2)]) .
+inconsistent_constraint([box_in(B1,R2),box_in(B1,R1),ne(R1,R2)]) .
+inconsistent_constraint([robot_near_door(Rb,_,R1),robot_near_door(Rb,_,R2),ne(R1,R2)]) .
+inconsistent_constraint([robot_near_door(Rb,D1,_),robot_near_door(Rb,D2,_),ne(D1,D2)]).
+ 
+inconsistent_constraint([robot_near_door(Rb,D1,R1),robot_near_door(Rb,D2,R2),ne(R1,R2)])
+.
+inconsistent_constraint([box_near_door(B1,D1,_),box_near_door(B1,D2,_),ne(D1,D2)]).
+inconsistent_constraint([box_near_door(B1,_,R1),box_near_door(B1,_,R2),ne(R1,R2)]) .
+inconsistent_constraint([robot_in(Rb,R),key_being_held(K,Rb,R1),ne(R,R1)]) .
+inconsistent_constraint([robot_in(Rb,R),key_being_held_near_door(K,Rb,D,R1),ne(R,R1)]) .
+inconsistent_constraint([box_in(B,R1),box_in(B,R2),ne(R1,R2)]).
+ 
+inconsistent_constraint([box_near_door(B1,D2,R1),box_in(B1,R2),ne(R1,R2)]).
+inconsistent_constraint([box_near_door(B1,D2,R1),box_near_door(B,D2,R1),ne(B,B1)]).
+inconsistent_constraint([robot_in(Rb,R2),key_being_held(K,Rb,R1),ne(R1,R2)]).
+inconsistent_constraint([robot_near_door(Rb,D,R),key_being_held(K,Rb,R1)]).
+inconsistent_constraint([robot_near_door(Rb,_,R),key_being_held_near_door(K,Rb,_,R1),ne(R,R1)]).
+inconsistent_constraint([box_next_key(B,K),key_being_held_near_door(K,_,_,_)]).
+inconsistent_constraint([box_next_key(B,K),box_in(B,R),key_on_floor(K,R1),ne(R,R1)]).
+inconsistent_constraint([key_next_box(K,B),box_in(B,R),key_on_floor(K,R1),ne(R,R1)]).
+ 
+inconsistent_constraint([robot_in(Rb,R),robot_next_box(Rb,B),box_in(B,R1),ne(R,R1)]) .
+inconsistent_constraint([box_in(B,R),box_next_key(B,K),key_on_floor(K,R1),ne(R,R1)]) .
+inconsistent_constraint([key_next_key(K1,K2),key_on_floor(K1,R1),key_on_floor(K2,R2),ne(R1,R2)]) .
+inconsistent_constraint([key_next_box(K,B),key_on_floor(K,R1),box_in(B,R2),ne(R1,R2)]).
+inconsistent_constraint([box_next_box(B1,B2),box_in(B1,R1),box_in(B2,R2),ne(R1,R2)]) .
+inconsistent_constraint([arm_used(A,K1),part_of(Rb,A),robot_next_key(R,K1)]).
+ 
+inconsistent_constraint([arm_used(A1,K),arm_used(A2,K),ne(A1,A2)]) .
+inconsistent_constraint([arm_used(Arm,K),part_of(A1,Arm),key_being_held(K,A2,_),ne(A1,A2)]) .
+inconsistent_constraint([arm_used(Arm,K),part_of(A1,Arm),key_being_held_near_door(K,A2,_,_),ne(A1,A2)]) .
+inconsistent_constraint([key_being_held(K,A1,_),key_being_held(K,A2,_),ne(A1,A2)]) .
+inconsistent_constraint([key_being_held_near_door(K,A1,_,_)
+        ,key_being_held_near_door(K,A2,_,_),ne(A1,A2)]) .
+inconsistent_constraint([key_being_held(K,A1,_)
+        ,key_being_held_near_door(K,A2,_,_),ne(A1,A2)]) .
+ 
+% one agent can't simultaneously hold 2 different keys
+inconsistent_constraint([key_being_held(K1,A,_),key_being_held_near_door(K2,A,_,_) ,ne(K1,K2)]).
+
+inconsistent_constraint([key_being_held_near_door(K2,_,_,_),
+         key_on_floor(K1,_) , key_next_key(K1,K2), ne(K1,K2)]) .
+
+inconsistent_constraint([robot_in(Tom,Room1),robot_next_key(Tom,Key1),
+                        key_on_floor(Key1,Room2)]).
+inconsistent_constraint([key_on_floor(Key1,Room1),key_next_box(Key1,Box1),
+         key_on_floor(Key2,Room2),key_next_box(Key2,Box1),ne(Key1,Key2)]).
+inconsistent_constraint([robot_in(Tom,Room2),robot_next_key(Tom,Key1),
+         box_in(Box1,Room1),box_next_key(Box1,Key1),ne(Room1,Rooms)]).
+inconsistent_constraint([robot_in(Tom,Room1),robot_next_key(Tom,Key1),
+         key_being_held(Key1,Dick,Room2)]).
+
+inconsistent_constraint([box_next_box(B1,B2), key_next_box(Key1,B1),
+                        box_in(B1,Room1),
+                        key_on_floor(Key1,Room2), ne(Room1,Room2)]).
+inconsistent_constraint([box_next_box(B1,B2),key_next_box(Key1,B2), 
+                        box_in(B1,Room1),
+                        key_on_floor(Key1,Room2), ne(Room1,Room2)]).
+inconsistent_constraint([box_next_box(B1,B2),key_next_box(Key1,B1),
+                        box_in(B1,Room1), 
+                        key_being_held(Key1,_,Room2), ne(Room1,Room2)]).
+inconsistent_constraint([box_next_box(B1,B2),key_next_box(Key1,B2),
+                        box_in(B1,Room1), 
+                        key_being_held(Key1,_,Room2), ne(Room1,Room2)]).
+inconsistent_constraint([box_next_box(B1,B2),robot_next_box(R,B1),
+                        box_in(B1,Room1),robot_in(R,Room2),
+                        ne(Room1,Room2)]).
+inconsistent_constraint([box_next_box(B1,B2),robot_next_box(R,B2),
+                        box_in(B1,Room1),robot_in(R,Room2),
+                        ne(Room1,Room2)]).
+
+% (8) positive  INTER invariants
+% --------------------------------
+% The predicate has 2 arguments, both are lists of predicates.
+% Each invariant states that if the first list of predicates is true of some
+% state then the second list of predicates must also be true.
+% All variables are assumed to be universally quantified and different
+% variables represent different objects
+
+
+% meaning: ss-cond implies ss-cond (both could include preds)
+
+% key ss affecting others ..
+implied_invariant([key_being_held(Key,Robot,Room)], 
+	[robot_in(Robot,Room)]) .
+implied_invariant([key_next_box(Key,Box),key_on_floor(Key,Room)], 
+	[box_in(Box,Room)]) . 
+implied_invariant([key_next_key(Key1,Key2),key_on_floor(Key1,Room)], 
+	[key_on_floor(Key2,Room)]) . 
+implied_invariant([key_being_held_near_door(_,Robot,Door,Room)], 
+	[robot_in(Robot,Room),robot_near_door(Robot,Door,Room)]) . 
+implied_invariant([key_being_held(Key,Robot,_)], 
+	[arm_used(Arm,Key),part_of(Robot,Arm)]) . 
+implied_invariant([key_being_held_near_door(Key,Robot,_,_)], 
+	[arm_used(Arm,Key),part_of(Robot,Arm)]) . 
+
+% box ss affecting others ..
+implied_invariant([box_next_key(Box,Key),box_in(Box,Room)],
+        [key_on_floor(Key,Room)]) .
+implied_invariant([box_next_box(Box1,Box2),box_in(Box2,Room)], 
+	[box_next_box(Box1,Box2)]) . 
+
+% robot ss affecting others ..
+implied_invariant([robot_next_key(Robot,Key),robot_in(Robot,Room)], 
+	[key_on_floor(Key,Room)]) . 
+implied_invariant([robot_next_box(Robot,Box),robot_in(Robot,Room)], 
+	[box_in(Box,Room)]) . 
+
+% combinations  of 2 or more ss..
+implied_invariant([box_next_box(Box1,Box2),box_in(Box1,Room)], 
+	[box_in(Box2,Room)]) . 
+implied_invariant([key_next_box(Key,Box),box_in(Box,Room)], 
+	[key_on_floor(Key,Room)]) . 
+implied_invariant([robot_next_box(Robot,Box),box_in(Box,Room)], 
+	[robot_in(Robot,Room)]) . 
+implied_invariant([robot_next_key(Robot,Key),key_on_floor(Key,Room)], 
+	[robot_in(Robot,Room)]) . 
+
+
+% (9) operators
+% -------------
+
+% The operator set consists of the following 21 operators:
+%	
+%	turnoff
+%	turnon
+%	close
+%	goto_box
+%	goto_key
+%	gotodoor
+%	open
+%	pickup_key
+%	putdown_key
+%	carry_todoor
+%	gothrudoor
+%	lock
+%	push_box_to_box
+%	push_box_to_key1
+%	push_box_to_key2
+%	pushtodoor
+%	putdown_key_next_box
+%	putdown_key_next_key
+%	unlock
+%	carry_key_thrudoor
+%	pushthrudoor
+
+operator(turnoff(Tom,Light),
+     % prevail
+     [se(robot,Tom,[robot_in(Tom,Room)])],
+     % necessary
+     [sc(light,Light,[on(Light,Room),position(Light,Room,Door)]=>
+                       [off(Light,Room),position(Light,Room,Door)])],
+     % conditional
+     []) .
+
+operator(turnon(Tom,Light), 
+     % prevail
+     [se(robot,Tom,[robot_in(Tom,Room)])],
+     % necessary
+     [sc(light,Light,[off(Light,Room),position(Light,Room,Door)]=>
+	              [on(Light,Room),position(Light,Room,Door)])],
+     % conditional
+     []) .
+
+operator(close(Tom,Door,Room), 
+     % prevail
+     [se(robot,Tom,[robot_in(Tom,Room),robot_near_door(Tom,Door,Room),
+                        connect(Room,R,Door)])],
+     % necessary
+     [sc(door,Door,[open(Door),unlocked(Door)]=>[closed(Door),unlocked(Door)])],
+     % conditional
+     []) .
+
+operator(goto_box(Tom,Box,Room), 
+     % prevail
+     [se(box,Box,[box_in(Box,Room)])],
+     % necessary
+     [sc(robot,Tom,[robot_in(Tom,Room)]=>
+                   [robot_in(Tom,Room),robot_next_box(Tom,Box)])],
+     % conditional
+     []) .
+
+operator(goto_key(Tom,Key,Room),
+     % prevail
+     [se(key,Key,[key_on_floor(Key,Room)]),
+      se(light,Light,[on(Light,Room),position(Light,Room,Door)])],
+     % necessary
+     [sc(robot,Tom,[robot_in(Tom,Room)]=>
+                   [robot_in(Tom,Room),robot_next_key(Tom,Key)])],
+     % conditional
+     []) .
+
+operator(gotodoor(Tom,Door,Room), 
+     % prevail
+     [se(arm,Toms_arm,[arm_empty(Toms_arm,Tom),part_of(Tom,Toms_arm)])],
+     % necessary
+     [sc(robot,Tom,[robot_in(Tom,Room)]=>
+		   [robot_in(Tom,Room),robot_near_door(Tom,Door,Room),
+			connect(Room,R,Door)])],
+     % conditional
+     []) .
+
+operator(open(Tom,Door,Room), 
+     % prevail
+     [se(robot,Tom,[robot_in(Tom,Room),robot_near_door(Tom,Door,Room),
+                        connect(Room,R,Door)])],
+     % necessary
+     [sc(door,Door,[closed(Door),unlocked(Door)]=>
+                   [open(Door),unlocked(Door)])],
+     % conditional
+     []) .
+
+operator(pickup_key(Tom,Key,Room), 
+     % prevail
+     [se(light,Light,[on(Light,Room),position(Light,Room,Door)])],
+     % necessary
+     [sc(key,Key,[key_on_floor(Key,Room)]=>
+		 [key_being_held(Key,Tom,Room)]),
+      sc(arm,Toms_arm,[arm_empty(Toms_arm,Tom),part_of(Tom,Toms_arm)]=>
+		      [arm_used(Toms_arm,Key),part_of(Tom,Toms_arm)]),
+      sc(robot,Tom,[robot_in(Tom,Room),robot_next_key(Tom,Key)]=>
+		   [robot_in(Tom,Room)])],
+     % conditional
+     [sc(robot,Dick,[robot_in(Dick,Room),robot_next_key(Dick,Key),ne(Dick,Tom)]
+		       => [robot_in(Dick,Room)]),
+      sc(key,K,[key_on_floor(K,Room),key_next_key(K,Key),ne(K,Key)]=>
+                 [key_on_floor(K,Room)]),
+      sc(box,B,[box_in(B,Room),box_next_key(B,Key)]=>
+		[box_in(B,Room)])]) .
+
+
+operator(putdown_key(Tom,Key,Room), 
+     % prevail
+     [],
+     % necessary
+     [sc(arm,Toms_arm,[arm_used(Toms_arm,Key),part_of(Tom,Toms_arm)]=>
+		      [arm_empty(Toms_arm,Tom),part_of(Tom,Toms_arm)]),
+      sc(key,Key,[key_being_held(Key,Tom,Room)]=>
+		 [key_on_floor(Key,Room)]),
+      sc(robot,Tom,[robot_in(Tom,Room)]=>
+		   [robot_in(Tom,Room),robot_next_key(Tom,Key)])],
+     % conditional
+     []) .
+
+
+
+operator(carry_todoor(Tom,Key,Door,Room), 
+     % prevail
+     [se(arm,Toms_arm,[arm_used(Toms_arm,Key),part_of(Tom,Toms_arm)])],
+     % necessary
+     [sc(key,Key,[key_being_held(Key,Tom,Room)]=>
+		 [key_being_held_near_door(Key,Tom,Door,Room),
+			connect(Room,R,Door)]),
+      sc(robot,Tom,[robot_in(Tom,Room)]=>
+		   [robot_in(Tom,Room),robot_near_door(Tom,Door,Room),
+			connect(Room,R,Door)])],
+     % conditional
+     []) .
+
+operator(gothrudoor(Tom,Door,Room,R), 
+     % prevail
+     [se(arm,Toms_arm,[arm_empty(Toms_arm,Tom),part_of(Tom,Toms_arm)]),
+      se(door,Door,[open(Door),unlocked(Door)])],
+     % necessary
+     [sc(robot,Tom,[robot_in(Tom,Room),robot_near_door(Tom,Door,Room),
+                        connect(Room,R,Door)]=>[robot_in(Tom,R)])],
+     % conditional
+     []) .
+
+operator(lock(Tom,Door,Key,Room), 
+     % prevail
+     [se(arm,Toms_arm,[arm_used(Toms_arm,Key),part_of(Tom,Toms_arm)]),
+      se(robot,Tom,[robot_in(Tom,Room),robot_near_door(Tom,Door,Room),
+                        connect(Room,R,Door)]),
+      se(key,Key,[key_being_held_near_door(Key,Tom,Door,Room),
+                        connect(Room,R,Door)])],
+     % necessary
+     [sc(door,Door,[closed(Door),unlocked(Door)]=>
+		   [closed(Door),locked(Door)])],
+     % conditional
+     []) .
+
+operator(push_box_to_box(Tom,Box,B,Room), 
+     % prevail
+     [se(box,Box,[box_in(Box,Room)]),
+      se(box,B,[box_in(B,Room)]),
+      se(robot,Tom,[robot_in(Tom,Room),robot_next_box(Tom,Box)])],
+     % necessary
+     [sc(box,Box,[box_in(Box,Room)]=>
+		 [box_in(Box,Room),box_next_box(Box,B),ne(Box,B)])],
+     % conditional
+     [sc(robot,Dick,[robot_in(Dick,Room),robot_next_box(Dick,Box),ne(Dick,Tom)]
+		     => [robot_in(Dick,Room)]),
+      sc(box,B1,[box_in(B1,Room),box_next_box(B1,Box),ne(B1,Box),ne(B1,B)]
+		     =>[box_in(B1,Room)]),
+      sc(key,K,[key_on_floor(K,Room),key_next_box(K,Box)]
+		     =>[key_on_floor(K,Room)])]) .
+
+
+operator(push_box_to_key(Tom,Box,Key,Room), 
+     % prevail
+     [se(light,Light,[on(Light,Room),position(Light,Room,Door)]),
+      se(robot,Tom,[robot_in(Tom,Room),robot_next_box(Tom,Box)]),
+      se(key,Key,[key_on_floor(Key,Room)])],
+     % necessary
+     [sc(box,Box,[box_in(Box,Room)]=>
+		[box_in(Box,Room),box_next_key(Box,Key)])],
+     % conditional
+     [sc(robot,Dick,[robot_in(Dick,Room),robot_next_box(Dick,Box),ne(Dick,Tom)]
+		       =>[robot_in(Dick,Room)]),
+      sc(box,B,[box_in(B,Room),box_next_box(B,Box)]
+		        =>[box_in(B,Room)]),
+      sc(key,K,[key_on_floor(K,Room),key_next_box(K,Box)]
+		        =>[key_on_floor(K,Room)])]) .
+ 
+operator(pushtodoor(Tom,Box,Door,Room), 
+     % prevail
+     [se(robot,Tom,[robot_in(Tom,Room),robot_next_box(Tom,Box)])],
+     % necessary
+     [sc(box,Box,[box_in(Box,Room)]=>
+		[box_in(Box,Room),box_near_door(Box,Door,Room),
+			connect(Room,R,Door)])],
+     % conditional
+     [sc(robot,Dick, [robot_in(Dick,Room),robot_next_box(Dick,Box),
+		      ne(Dick,Tom)]=>[robot_in(Dick,Room)]),
+      sc(box,B,[box_in(B,Room),box_next_box(B,Box)]
+		      =>[box_in(B,Room)]),
+      sc(key,K,[key_on_floor(K,Room),key_next_box(K,Box)]
+		      =>[key_on_floor(K,Room)])]) .
+ 
+operator(putdown_key_next_box(Tom,Key,Box,Room), 
+     % prevail
+     [se(box,Box,[box_in(Box,Room)]),
+      se(light,Light,[on(Light,Room),position(Light,Room,Door)])],
+     % necessary
+     [sc(key,Key,[key_being_held(Key,Tom,Room)]=>
+		[key_on_floor(Key,Room),key_next_box(Key,Box)]),
+      sc(arm,Toms_arm,[arm_used(Toms_arm,Key),part_of(Tom,Toms_arm)]=>
+		[arm_empty(Toms_arm,Tom),part_of(Tom,Toms_arm)]),
+      sc(robot,Tom,[robot_in(Tom,Room)]=>
+		[robot_in(Tom,Room),robot_next_key(Tom,Key)])],
+     % conditional
+     [ ]).
+
+operator(putdown_key_next_key(Tom,K1,K2,Room), 
+     % prevail
+     [se(key,K2,[key_on_floor(K2,Room)]),
+      se(light,Light,[on(Light,Room),position(Light,Room,Door)])],
+     % necessary
+     [sc(key,K1,[key_being_held(K1,Tom,Room)]=>
+		[key_on_floor(K1,Room),key_next_key(K1,K2),ne(K1,K2)]),
+      sc(arm,Toms_arm,[arm_used(Toms_arm,K1),part_of(Tom,Toms_arm)]=>
+		[arm_empty(Toms_arm,Tom),part_of(Tom,Toms_arm)]),
+      sc(robot,Tom,[robot_in(Tom,Room)]=>
+		[robot_in(Tom,Room),robot_next_key(Tom,K1)])],
+     % conditional
+     []).
+ 
+operator(unlock(Tom,Door,Key,Room), 
+     % prevail
+     [se(arm,Toms_arm,[arm_used(Toms_arm,Key),part_of(Tom,Toms_arm)]),
+      se(robot,Tom,[robot_in(Tom,Room),robot_near_door(Tom,Door,Room),
+                           connect(Room,R,Door)]),
+      se(key,Key,[key_being_held_near_door(Key,Tom,Door,Room),
+                           connect(Room,R,Door)])],
+     % necessary
+     [sc(door,Door,[closed(Door),locked(Door)]=>
+		[closed(Door),unlocked(Door)])],
+     % conditional
+     []) .
+
+operator(carry_key_thrudoor(Tom,Key,Door,Room,R), 
+     % prevail
+    [se(arm,Toms_arm,[arm_used(Toms_arm,Key),part_of(Tom,Toms_arm)]),
+     se(door,Door,[open(Door),unlocked(Door)])],
+     % necessary
+     [sc(key,Key,[key_being_held_near_door(Key,Tom,Door,Room),
+                     connect(Room,R,Door)]=>
+     		        [key_being_held(Key,Tom,R)]),
+      sc(robot,Tom,[robot_in(Tom,Room),robot_near_door(Tom,Door,Room),
+                     connect(Room,R,Door)]=>
+		          [robot_in(Tom,R)])],
+     % conditional
+     []) .
+
+operator(pushthrudoor(Tom,Box,Door,Room,R), 
+     % prevail
+     [se(arm,Toms_arm,[arm_empty(Toms_arm,Tom),part_of(Tom,Toms_arm)]),
+      se(door,Door,[open(Door),unlocked(Door)])],
+     % necessary
+     [sc(box,Box,[box_in(Box,Room),box_near_door(Box,Door,Room),
+                     connect(Room,R,Door)]=>
+		            [box_in(Box,R)]),
+      sc(robot,Tom,[robot_in(Tom,Room),robot_next_box(Tom,Box)]=>
+		    [robot_in(Tom,R),robot_next_box(Tom,Box)])],
+     % conditional
+     [sc(box,B,[box_in(B,Room),box_next_box(B,Box),ne(B,Box)]=>
+		[box_in(B,Room)]),
+      sc(robot,Dick,[robot_in(Dick,Room),robot_next_box(Dick,Box),ne(Dick,Tom)]
+		      =>[robot_in(Dick,Room)]),
+      sc(key,K,[key_on_floor(K,Room),key_next_box(K,Box)]=>
+		[key_on_floor(K,Room)])]) .
+
+
+
+
+planner_task(1,
+[se(box,box2,[box_in(box2,room1)]),
+se(door,door25,[unlocked(door25)]),
+se(door,door24,[locked(door24)]),
+se(key,key4,[key_next_key(key4,key2)]),
+se(key,key1,[key_being_held(key1,harry,room1)]),
+se(light,light1,[off(light1,room1)]),
+se(robot,tom,[robot_in(tom,room2)]),
+se(arm,harrys_arm,[arm_used(harrys_arm,key1)])],
+
+[ss(arm,toms_arm,[arm_empty(toms_arm,tom)]),
+ss(arm,dicks_arm,[arm_used(dicks_arm,key4)]),
+ss(arm,harrys_arm,[arm_empty(harrys_arm,harry)]),
+ss(robot,tom,[robot_in(tom,room2),robot_next_box(tom,box1)]),
+ss(robot,dick,[robot_in(dick,room7)]),
+ss(robot,harry,[robot_in(harry,room6),robot_next_box(harry,box2)]),
+ss(light,light1,[off(light1,room1)]),
+ss(light,light2,[off(light2,room2)]),
+ss(light,light3,[on(light3,room3)]),
+ss(light,light4,[off(light4,room4)]),
+ss(light,light5,[off(light5,room5)]),
+ss(light,light6,[off(light6,room6)]),
+ss(light,light7,[on(light7,room7)]),
+ss(key,key1,[key_on_floor(key1,room4)]),
+ss(key,key2,[key_on_floor(key2,room1),key_next_box(key2,box6)]),
+ss(key,key3,[key_on_floor(key3,room3)]),
+ss(key,key4,[key_being_held(key4,dick,room7)]),
+ss(key,key5,[key_on_floor(key5,room3),key_next_box(key5,box4)]),
+ss(door,door12,[closed(door12),locked(door12)]),
+ss(door,door23,[open(door23),unlocked(door23)]),
+ss(door,door24,[closed(door24),unlocked(door24)]),
+ss(door,door25,[open(door25),unlocked(door25)]),
+ss(door,door35,[open(door35),unlocked(door35)]),
+ss(door,door45,[closed(door45),locked(door45)]),
+ss(door,door56,[open(door56),unlocked(door56)]),
+ss(door,door47,[closed(door47),unlocked(door47)]),
+ss(door,door57,[closed(door57),locked(door57)]),
+ss(door,door67,[closed(door67),locked(door67)]),
+ss(box,box1,[box_in(box1,room2)]),
+ss(box,box2,[box_in(box2,room6)]),
+ss(box,box3,[box_in(box3,room2)]),
+ss(box,box4,[box_in(box4,room3)]),
+ss(box,box5,[box_in(box5,room3),box_next_key(box5,key5)]),
+ss(box,box6,[box_in(box6,room1)])]
+).

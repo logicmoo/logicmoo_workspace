@@ -1,0 +1,91 @@
+********** compound composition, two premises
+  IN: <swan --> swimmer>. %0.90;0.90% {0 : 1} 
+  IN: <swan --> bird>. %0.80;0.90% {0 : 2} 
+1
+ OUT: <bird --> swimmer>. %0.90;0.39% {1 : 2;1} 
+ OUT: <swimmer --> bird>. %0.80;0.42% {1 : 2;1} 
+ OUT: <bird <-> swimmer>. %0.73;0.44% {1 : 2;1} 
+ OUT: <swan --> (|,bird,swimmer)>. %0.98;0.81% {1 : 2;1} 
+ OUT: <swan --> (&,bird,swimmer)>. %0.72;0.81% {1 : 2;1} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %0.80;0.42% {1 : 2;1} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %0.90;0.39% {1 : 2;1} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %0.73;0.44% {1 : 2;1} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %0.72;0.81% {1 : 2;1} 
+********** compound composition, two premises
+  IN: <sport --> competition>. %0.90;0.90% {0 : 1} 
+  IN: <chess --> competition>. %0.80;0.90% {0 : 2} 
+1
+ OUT: <sport --> chess>. %0.90;0.39% {1 : 2;1} 
+ OUT: <chess --> sport>. %0.80;0.42% {1 : 2;1} 
+ OUT: <chess <-> sport>. %0.73;0.44% {1 : 2;1} 
+ OUT: <(&,chess,sport) --> competition>. %0.98;0.81% {1 : 2;1} 
+ OUT: <(|,chess,sport) --> competition>. %0.72;0.81% {1 : 2;1} 
+ OUT: <<sport --> $1> ==> <chess --> $1>>. %0.80;0.42% {1 : 2;1} 
+ OUT: <<chess --> $1> ==> <sport --> $1>>. %0.90;0.39% {1 : 2;1} 
+ OUT: <<chess --> $1> <=> <sport --> $1>>. %0.73;0.44% {1 : 2;1} 
+ OUT: (&&,<chess --> #1>,<sport --> #1>). %0.72;0.81% {1 : 2;1} 
+********** compound decomposition, two premises
+  IN: <robin --> (|,bird,swimmer)>. %1.00;0.90% {0 : 1} 
+  IN: <robin --> swimmer>. %0.00;0.90% {0 : 2} 
+1
+ OUT: <robin --> bird>. %1.00;0.81% {1 : 1;2} 
+********** compound decomposition, two premises
+  IN: <robin --> swimmer>. %0.00;0.90% {0 : 1} 
+  IN: <robin --> (-,mammal,swimmer)>. %0.00;0.90% {0 : 2} 
+1
+ OUT: <robin --> mammal>. %0.00;0.81% {1 : 2;1} 
+********** set operations
+  IN: <something --> {Mars,Pluto,Venus}>. %0.90;0.90% {0 : 1} 
+  IN: <something --> {Pluto,Saturn}>. %0.70;0.90% {0 : 2} 
+7
+ OUT: <{Mars,Pluto,Venus} --> {Pluto,Saturn}>. %0.70;0.42% {7 : 1;2} 
+ OUT: <{Pluto,Saturn} --> {Mars,Pluto,Venus}>. %0.90;0.36% {7 : 1;2} 
+ OUT: <{Mars,Pluto,Venus} <-> {Pluto,Saturn}>. %0.65;0.44% {7 : 1;2} 
+ OUT: <something --> {Mars,Pluto,Saturn,Venus}>. %0.97;0.81% {7 : 1;2} 
+ OUT: <something --> {Pluto}>. %0.63;0.81% {7 : 1;2} 
+ OUT: <<$1 --> {Pluto,Saturn}> ==> <$1 --> {Mars,Pluto,Venus}>>. %0.90;0.36% {7 : 1;2} 
+ OUT: <<$1 --> {Mars,Pluto,Venus}> ==> <$1 --> {Pluto,Saturn}>>. %0.70;0.42% {7 : 1;2} 
+ OUT: <<$1 --> {Mars,Pluto,Venus}> <=> <$1 --> {Pluto,Saturn}>>. %0.65;0.44% {7 : 1;2} 
+ OUT: (&&,<#1 --> {Mars,Pluto,Venus}>,<#1 --> {Pluto,Saturn}>). %0.63;0.81% {7 : 1;2} 
+********** composition on both sides of a statement
+  IN: <bird --> animal>. %0.90;0.90% {0 : 1} 
+  IN: <(&,bird,swimmer) --> (&,animal,swimmer)>?  {0 : 2} 
+1
+ OUT: <bird --> animal>?  {1 : 2} 
+********** composition on both sides of a statement
+  IN: <bird --> animal>. %0.90;0.90% {0 : 1} 
+  IN: <(-,swimmer,animal) --> (-,swimmer,bird)>?  {0 : 2} 
+1
+ OUT: <bird --> animal>?  {1 : 2} 
+********** compound composition, one premise
+  IN: <swan --> bird>. %0.80;0.90% {0 : 1} 
+  IN: <swan --> (|,bird,swimmer)>?  {0 : 2} 
+2
+ OUT: <swan --> (|,bird,swimmer)>. %0.80;0.72% {2 : 1} 
+ OUT: <(|,swan,swimmer) --> (|,bird,swimmer)>. %0.80;0.72% {2 : 1} 
+********** compound composition, one premise
+  IN: <swan --> bird>. %0.80;0.90% {0 : 1} 
+  IN: <(&,swan,swimmer) --> bird>?  {0 : 2} 
+1
+ OUT: <(&,swan,swimmer) --> bird>. %0.80;0.72% {1 : 1} 
+ OUT: <(&,swan,swimmer) --> (&,bird,swimmer)>. %0.80;0.72% {1 : 1} 
+********** compound composition, one premise
+  IN: <swan --> bird>. %0.80;0.90% {0 : 1} 
+  IN: <swan --> (-,swimmer,bird)>?  {0 : 2} 
+2
+ OUT: <swan --> (-,swimmer,bird)>. %0.20;0.72% {2 : 1} 
+ OUT: <(-,swimmer,bird) --> (-,swimmer,swan)>. %0.80;0.72% {2 : 1} 
+********** compound composition, one premise
+  IN: <swan --> bird>. %0.80;0.90% {0 : 1} 
+  IN: <swan --> (~,bird,swimmer)>?  {0 : 2} 
+2
+ OUT: <swan --> (~,bird,swimmer)>. %0.80;0.72% {2 : 1} 
+ OUT: <(~,swan,swimmer) --> (~,bird,swimmer)>. %0.80;0.72% {2 : 1} 
+********** compound decomposition, one premise
+  IN: <robin --> (&,bird,swimmer)>. %0.90;0.90% {0 : 1} 
+6
+ OUT: <robin --> bird>. %0.90;0.81% {6 : 1} 
+********** compound decomposition, one premise
+  IN: <robin --> (-,bird,swimmer)>. %0.90;0.90% {0 : 1} 
+6
+ OUT: <robin --> bird>. %0.90;0.81% {6 : 1} 

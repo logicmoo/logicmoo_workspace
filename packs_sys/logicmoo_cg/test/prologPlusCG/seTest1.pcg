@@ -1,0 +1,3 @@
+heureux(x) :- agriculteur(x), bonne(recolte).
+bonne(recolte) :- bonne(pluie), bon(prix).
+bonne(pluie) :- reguliere(pluie).

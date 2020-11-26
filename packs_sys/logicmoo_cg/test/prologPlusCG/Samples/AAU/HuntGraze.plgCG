@@ -1,0 +1,10 @@
+// Type hierarchy
+Entity > Animal, Act.
+Animal > Wolf, Lamb.
+
+// Catalog of instances
+Act = Hunt, Graze.
+
+// Graph facts
+gr([Wolf]<-AGNT-[Act: Hunt]).
+gr([Lamb]<-AGNT-[Act: Graze]).

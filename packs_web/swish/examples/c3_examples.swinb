@@ -1,0 +1,30 @@
+<div class="notebook">
+
+<div class="nb-cell program">
+:- use_rendering(c3).
+</div>
+
+<div class="nb-cell markdown">
+# A simple notebook
+
+This trivial notebook shows the possibilities for data analysis on RDF graphs, including the generation of charts using the [C3.js](http://www.c3.org) library.  First we just demonstrate querying for triples.
+</div>
+
+<div class="nb-cell query">
+rdf(S,P,O).
+</div>
+
+<div class="nb-cell markdown">
+Below we show how the C3 renderer can be used to create a diagram on the distribution of triples in the RDF store.
+</div>
+
+<div class="nb-cell query">
+findall(Graph-Count, 	
+        limit(10, 
+              order_by([desc(Count)],
+                       rdf_statistics(triples_by_graph(Graph,Count)))),
+        _Pairs),
+Chart = c3{data:_{columns:_Pairs, type:pie}}.
+</div>
+
+</div>

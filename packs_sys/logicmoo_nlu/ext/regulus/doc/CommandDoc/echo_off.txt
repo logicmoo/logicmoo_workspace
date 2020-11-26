@@ -1,0 +1,2 @@
+Switch off functionality to echo input text.
+ 

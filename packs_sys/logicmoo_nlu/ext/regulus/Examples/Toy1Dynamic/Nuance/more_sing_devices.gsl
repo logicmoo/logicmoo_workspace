@@ -1,0 +1,7 @@
+OTHER_NOUN_SWITCHABLE_SING [
+( radio )
+     {return( ( ( device radio ) ) )}
+( cooker )
+     {return( ( ( device cooker ) ) )}
+]
+

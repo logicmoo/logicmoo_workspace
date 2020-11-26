@@ -1,0 +1,16 @@
+
+[
+{ "file":"biopax-level3.owl",             "title":"Biopax OWL" },
+{ "file":"BRCA.owl",                      "title":"BRCA OWL" },
+{ "file":"DBPedia.owl",                   "title":"DBPedia OWL" },
+{ "file":"people+pets.owl",               "title":"people+pets OWL" },
+{ "file":"vicodi-ontology.owl",           "title":"Vicodi OWL" },
+
+{ "file":"BRCA.pl",		"title":"BRCA" },
+{ "file":"DBPedia.pl",		"title":"DBPedia" },
+{ "file":"biopaxLevel3.pl",	"title":"Biopax" },
+{ "file":"commander.pl",	"title":"Commander" },
+{ "file":"johnEmployee.pl",	"title":"Employee John" },
+{ "file":"peoplePets.pl",	"title":"people+pets" },
+{ "file":"vicodi.pl",		"title":"Vicodi" },
+]

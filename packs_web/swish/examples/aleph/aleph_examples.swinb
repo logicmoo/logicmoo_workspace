@@ -1,0 +1,33 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Welcome to aleph on SWISH
+
+This notebook gives an overview of example programs for inductive logic programming.
+
+  - Abduce ([abduce.pl](example/aleph/abduce.pl)) Induce how to formally define the grandparent relation. 
+  - Animals ([animals.pl](example/aleph/animals.pl)) Simple illustration of interactive construction of tree-based models within Aleph
+  - Constraints ([constraints.pl](example/aleph/constraints.pl)) Simple illustration of the extraction of integrity constraints
+  - Features ([features.pl](example/aleph/features.pl)) Simple illustration of the use of Aleph to construct features on Michalski's trains problem
+  - Gcws ([gcws.pl](example/aleph/gcws.pl)) Simple illustration of the technique of generalised closed-world specialisation within Aleph
+  - Good clauses ([good.pl](example/aleph/good.pl)) Simple illustration of the use of recording good clauses found during the search using the Michalski's trains problem.
+  - Interactive tree construction ([interactive_animals.pl](example/aleph/interactive_animals.pl)) Simple illustration of interactive construction of tree-based models
+  - Interactive theory construction ([interactive_mem.pl](example/aleph/interactive_mem.pl)) Simple illustration of using Aleph to do incremental learning
+  - Automatic extraction of modes ([modes.pl](example/aleph/modes.pl)) Simple illustration of the automatic extraction of modes in Aleph using Michalski's trains problem.
+  - Multiple-recall ([numbers_guess.pl](example/aleph/numbers_guess.pl)) Simple illustration of the use multiple-recall to guess 	constants
+  - Lazy evaluation ([numbers_ineq.pl](example/aleph/numbers_ineq.pl)) Simple illustration of the use of lazy evaluation. A FOIL-like inequality predicate is called during	the search to obtain a constant that does not appear in	the bottom clause.
+  - Lazy evaluation - linear ([numbers_line.pl](example/aleph/numbers_line.pl)) Simple illustration of the use of lazy evaluation. A predicate to construct a line is called during the search to obtain a linear equation.
+  - Lazy evaluation - multi instance ([numbers_miline.pl](example/aleph/numbers_miline.pl))  Simple illustration of the use of multi-instance lazy evaluation a predicate to construct a line is called during the search to obtain a linear equation.
+  - Portray ([portray_train.pl](example/aleph/portray_train.pl))  Simple illustration of pretty-printing clauses in Aleph using Michalski's trains problem.
+  - Positive-only learning ([posonly.pl](example/aleph/posonly.pl)) Simple illustration of positive-only learning within Aleph
+  - Recursive predicates ([recursion.pl](example/aleph/recursion.pl)) Simple illustration of the learning of recursive predicates in Aleph
+  - User-defined refinement operators ([refine.pl](example/aleph/refine.pl)) Simple illustration of the use of user-defined refinement operators in Aleph using Michalski's trains problem.
+  - Michalski's trains problem ([train.pl](example/aleph/train.pl)) Simple illustration of the use of Aleph on Michalski's trains problem
+  - Weather forecast ([weather.pl](example/aleph/weather.pl)) 
+  - Wedge ([wedge.pl](example/aleph/wedge.pl)) Simple illustration of constructing tree-based models within Aleph
+
+All examples are included in the standalone version of =aleph= at https://github.com/friguzzi/aleph 
+The standalone version of =aleph= can be installed as a SWI-Prolog pack http://www.swi-prolog.org/pack/list
+</div>
+
+</div>

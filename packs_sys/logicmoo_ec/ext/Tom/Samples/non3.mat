@@ -1,0 +1,6 @@
+%3.
+not ( diamond a : diamond a : '$Rp' implies diamond a : '$Rp').
+
+%%% Axioms of S4: reflexivity and transitivity
+# modal_axiom_schema(reflexive,a).
+# modal_axiom_schema(transitive,a).

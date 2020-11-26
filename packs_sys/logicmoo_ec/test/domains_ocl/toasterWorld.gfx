@@ -1,0 +1,375 @@
+<jgx-1.01>
+<model>
+	<a class="TwoWayMergeEdge" id="3" val="1" src="1" tgt="2" pts="293.5,117.5,321.0,267.5" attr="0"/>
+	<a class="TwoWayMergeEdge" id="6" val="2" src="4" tgt="5" pts="10.0,10.0,20.0,20.0" attr="0"/>
+	<a class="OneWayMergeEdge" id="9" val="3" src="7" tgt="8" pts="10.0,10.0,20.0,20.0" attr="1"/>
+	<a class="rect" id="10" val="4">
+		<a class="rect" id="11" val="5">
+			<a class="state" id="12" val="6" rect="690.0,246.0,33.0,37.0" attr="2">
+				<a class="port" id="13" val="7"/>
+			</a>
+			<a class="state" id="14" val="8" rect="690.0,114.0,27.0,37.0" attr="3">
+				<a class="port" id="15" val="7"/>
+			</a>
+			<a class="transState" id="16" val="9" rect="630.0,192.0,23.0,19.0" attr="4">
+				<a class="port" id="1" val="7"/>
+			</a>
+			<a class="transState" id="17" val="10" rect="756.0,192.0,33.0,19.0" attr="4">
+				<a class="port" id="18" val="7"/>
+			</a>
+			<a class="transitionEdge" id="19" val="7" src="13" tgt="1" pts="706.5,264.5,641.5,201.5" attr="5"/>
+			<a class="transitionEdge" id="20" val="7" src="1" tgt="15" pts="641.5,201.5,703.5,132.5" attr="5"/>
+			<a class="transitionEdge" id="21" val="7" src="15" tgt="18" pts="703.5,132.5,772.5,201.5" attr="5"/>
+			<a class="transitionEdge" id="22" val="7" src="18" tgt="13" pts="772.5,201.5,706.5,264.5" attr="5"/>
+		</a>
+		<a class="textNote" id="23" val="11" rect="672.0,84.0,72.0,16.0" attr="6"/>
+		<a class="textNote" id="24" val="12" rect="588.0,300.0,284.0,48.0" attr="6"/>
+	</a>
+	<a class="TwoWayMergeEdge" id="26" val="13" src="25" tgt="2" pts="821.5,159.0,669.0,267.5" attr="0"/>
+	<a class="rect" id="27" val="14">
+		<a class="textNote" id="28" val="15" rect="486.0,438.0,36.0,16.0" attr="6"/>
+		<a class="textNote" id="29" val="16" rect="384.0,678.0,265.0,64.0" attr="6"/>
+		<a class="rect" id="30" val="17">
+			<a class="state" id="31" val="18" rect="474.0,486.0,62.0,38.0" attr="7">
+				<a class="port" id="32" val="7"/>
+			</a>
+			<a class="state" id="33" val="19" rect="480.0,624.0,56.0,38.0" attr="8">
+				<a class="port" id="34" val="7"/>
+			</a>
+			<a class="transState" id="35" val="20" rect="402.0,558.0,34.0,18.0" attr="4">
+				<a class="port" id="4" val="7"/>
+			</a>
+			<a class="transState" id="36" val="21" rect="546.0,564.0,83.0,18.0" attr="4">
+				<a class="port" id="37" val="7"/>
+			</a>
+			<a class="transitionEdge" id="38" val="7" src="34" tgt="37" pts="508.0,643.0,587.5,573.0" attr="5"/>
+			<a class="transitionEdge" id="39" val="7" src="37" tgt="32" pts="587.5,573.0,505.0,505.0" attr="5"/>
+			<a class="transitionEdge" id="40" val="7" src="32" tgt="4" pts="505.0,505.0,419.0,567.0" attr="5"/>
+			<a class="transitionEdge" id="41" val="7" src="4" tgt="34" pts="419.0,567.0,508.0,643.0" attr="5"/>
+		</a>
+	</a>
+	<a class="rect" id="42" val="22">
+		<a class="textNote" id="43" val="23" rect="142.0,240.0,32.0,16.0" attr="6"/>
+		<a class="textNote" id="44" val="24" rect="10.0,576.0,362.0,48.0" attr="6"/>
+		<a class="rect" id="45" val="25">
+			<a class="transitionEdge" id="47" val="7" src="46" tgt="2" pts="159.0,414.5,307.0,369.5" attr="5"/>
+			<a class="transitionEdge" id="48" val="7" src="2" tgt="46" pts="307.0,369.5,159.0,414.5" attr="5"/>
+			<a class="transState" id="49" val="26" rect="286.0,360.0,42.0,19.0" attr="9">
+				<a class="port" id="2" val="7"/>
+			</a>
+			<a class="transValue" id="50" val="27" rect="94.0,354.0,33.0,19.0" attr="10">
+				<a class="port" id="51" val="7"/>
+			</a>
+			<a class="state" id="52" val="28" rect="142.0,294.0,37.0,37.0" attr="11">
+				<a class="port" id="53" val="7"/>
+			</a>
+			<a class="state" id="54" val="29" rect="130.0,396.0,58.0,37.0" attr="12">
+				<a class="port" id="46" val="7"/>
+			</a>
+			<a class="transState" id="55" val="30" rect="202.0,348.0,31.0,18.0" attr="9">
+				<a class="port" id="8" val="7"/>
+			</a>
+			<a class="transitionEdge" id="56" val="7" src="8" tgt="46" pts="217.5,357.0,159.0,414.5" attr="13"/>
+			<a class="state" id="57" val="31" rect="142.0,516.0,43.0,36.0" attr="14">
+				<a class="port" id="58" val="7"/>
+			</a>
+			<a class="transitionEdge" id="59" val="7" src="53" tgt="8" pts="160.5,312.5,217.5,357.0" attr="5"/>
+			<a class="transitionEdge" id="60" val="7" src="51" tgt="53" pts="110.5,363.5,160.5,312.5" attr="5"/>
+			<a class="transitionEdge" id="61" val="7" src="53" tgt="51" pts="160.5,312.5,110.5,363.5" attr="5"/>
+			<a class="transValue" id="62" val="32" rect="82.0,474.0,52.0,18.0" attr="15">
+				<a class="port" id="63" val="7"/>
+			</a>
+			<a class="transitionEdge" id="64" val="7" src="46" tgt="63" pts="159.0,414.5,108.0,483.0" attr="5"/>
+			<a class="transitionEdge" id="65" val="7" src="63" tgt="46" pts="108.0,483.0,159.0,414.5" attr="5"/>
+			<a class="transValue" id="66" val="33" rect="208.0,456.0,34.0,18.0" attr="15">
+				<a class="port" id="5" val="7"/>
+			</a>
+			<a class="transitionEdge" id="67" val="7" src="46" tgt="5" pts="159.0,414.5,225.0,465.0" attr="5"/>
+			<a class="transitionEdge" id="68" val="7" src="5" tgt="58" pts="225.0,465.0,163.5,534.0" attr="5"/>
+		</a>
+	</a>
+	<a class="rect" id="69" val="22">
+		<a class="rect" id="70" val="34">
+			<a class="state" id="71" val="35" rect="390.0,156.0,57.0,38.0" attr="16">
+				<a class="port" id="7" val="7"/>
+			</a>
+			<a class="state" id="72" val="36" rect="372.0,48.0,76.0,38.0" attr="17">
+				<a class="port" id="73" val="7"/>
+			</a>
+			<a class="transState" id="74" val="37" rect="486.0,114.0,36.0,18.0" attr="4">
+				<a class="port" id="75" val="7"/>
+			</a>
+			<a class="transState" id="76" val="38" rect="300.0,108.0,40.0,18.0" attr="4">
+				<a class="port" id="77" val="7"/>
+			</a>
+			<a class="transitionEdge" id="78" val="7" src="75" tgt="7" pts="504.0,123.0,418.5,175.0" attr="5"/>
+			<a class="transitionEdge" id="79" val="7" src="7" tgt="77" pts="418.5,175.0,320.0,117.0" attr="5"/>
+			<a class="transitionEdge" id="80" val="7" src="77" tgt="73" pts="320.0,117.0,410.0,67.0" attr="5"/>
+			<a class="transitionEdge" id="81" val="7" src="73" tgt="75" pts="410.0,67.0,504.0,123.0" attr="5"/>
+		</a>
+		<a class="textNote" id="82" val="39" rect="390.0,6.0,44.0,16.0" attr="6"/>
+		<a class="textNote" id="83" val="40" rect="300.0,198.0,259.0,32.0" attr="6"/>
+	</a>
+	<a class="rect" id="84" val="41">
+		<a class="textNote" id="85" val="42" rect="834.0,366.0,48.0,16.0" attr="6"/>
+		<a class="textNote" id="86" val="43" rect="750.0,648.0,280.0,64.0" attr="6"/>
+		<a class="rect" id="87" val="5">
+			<a class="state" id="88" val="44" rect="846.0,408.0,31.0,38.0" attr="18">
+				<a class="port" id="89" val="7"/>
+			</a>
+			<a class="state" id="90" val="45" rect="840.0,588.0,48.0,38.0" attr="19">
+				<a class="port" id="91" val="7"/>
+			</a>
+			<a class="transValue" id="92" val="46" rect="852.0,504.0,23.0,18.0" attr="15">
+				<a class="port" id="25" val="7"/>
+			</a>
+			<a class="transitionEdge" id="93" val="7" src="89" tgt="25" pts="861.5,427.0,863.5,513.0" attr="5"/>
+			<a class="transitionEdge" id="94" val="7" src="25" tgt="91" pts="863.5,513.0,864.0,607.0" attr="5"/>
+		</a>
+	</a>
+</model>
+<attrs>
+	<map id="0">
+		<a key="lineBegin" val="5"/>
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+		<a key="lineEnd" val="1"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="lineBegin" val=""/>
+	</map>
+	<map id="2">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoOrange.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="3" pid="2">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoOrange.png"/>
+	</map>
+	<map id="4" pid="2">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="5">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="6">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="autosize" val="true"/>
+		<a key="opaque" val="false"/>
+	</map>
+	<map id="7" pid="2">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoBath.png"/>
+	</map>
+	<map id="8" pid="2">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoBath.png"/>
+	</map>
+	<map id="9" pid="4">
+		<a key="foregroundColor" val="0,0,0"/>
+	</map>
+	<map id="10" pid="9">
+		<a key="gradientColor" val="0,255,255"/>
+	</map>
+	<map id="11" pid="2">
+		<a key="foregroundColor" val="0,0,0"/>
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoRed.png"/>
+	</map>
+	<map id="12" pid="11">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoRed.png"/>
+	</map>
+	<map id="13" pid="5">
+		<a key="linecolor" val="0,0,0"/>
+	</map>
+	<map id="14" pid="2">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoRed.png"/>
+	</map>
+	<map id="15" pid="4">
+		<a key="gradientColor" val="0,255,255"/>
+		<a key="bordercolor" val="0,0,255"/>
+	</map>
+	<map id="16" pid="2">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoGripper.png"/>
+	</map>
+	<map id="17" pid="2">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoGripper.png"/>
+	</map>
+	<map id="18" pid="2">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoBarrel.png"/>
+	</map>
+	<map id="19" pid="2">
+		<a key="icon" val="C:\Stuff\gipo-Win32\gipo\jplan\domains/icons/icoBarrel.png"/>
+	</map>
+</attrs>
+<user>
+	<a key="41" val="92"/>
+	<a key="28">
+		<a key="label" val="isCold"/>
+		<a key="icon" val="%2Fstud%2F2003%2Fc0353181%2Fgipo%2Fdomains%2Ficons%2FicoRed.png"/>
+		<a key="ObjectSort" val="item"/>
+		<a key="Property" val="location"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="30">
+		<a key="label" val="toast"/>
+		<a key="ObjectSort" val="item"/>
+		<a key="Gradient+Colour" val="0%2C255%2C0"/>
+	</a>
+	<a key="29">
+		<a key="label" val="isToasted"/>
+		<a key="icon" val="%2Fstud%2F2003%2Fc0353181%2Fgipo%2Fdomains%2Ficons%2FicoRed.png"/>
+		<a key="ObjectSort" val="item"/>
+		<a key="Property" val="location"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="46">
+		<a key="EdgeName" val="fullyConnected"/>
+		<a key="label" val="use"/>
+		<a key="ObjectSort" val="spreads"/>
+		<a key="ValueSort" val="item"/>
+	</a>
+	<a key="31">
+		<a key="label" val="isMade"/>
+		<a key="ObjectSort" val="item"/>
+		<a key="Property" val="location"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="14" val="88"/>
+	<a key="12" val="%3Chtml%3E%3Cbody%3EThis+section+models+the+cutlery+used+when%3Cbr%3Epreparing+the+toast.++Obviously%2C+dirty+cutlery+cannot%3Cbr%3Ebe+used+until+it+is+cleaned%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="17" val="87"/>
+	<a key="34" val="85"/>
+	<a key="3">
+		<a key="label" val=""/>
+	</a>
+	<a key="4" val="80"/>
+	<a key="44">
+		<a key="label" val="inJar"/>
+		<a key="ObjectSort" val="spreads"/>
+		<a key="Property" val="item"/>
+		<a key="Property+Type" val="item"/>
+	</a>
+	<a key="42" val="%3Chtml%3E%3Cbody%3ESpreads%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="20">
+		<a key="label" val="serve"/>
+		<a key="ObjectSort" val="plates"/>
+	</a>
+	<a key="6">
+		<a key="label" val="clean"/>
+		<a key="ObjectSort" val="kitchenware"/>
+	</a>
+	<a key="1">
+		<a key="label" val=""/>
+	</a>
+	<a key="43" val="%3Chtml%3E%3Cbody%3EThis+section+models+the+spreads+that+can+be+put%3Cbr%3Eon+the+toast.++There+is+only+enough+of+each+spread%3Cbr%3Eto+put+on+one+piece+of+toast+though%2C+so+once+it+has%3Cbr%3Ebeen+used%2C+it+cannot+be+used+again%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="5" val="76"/>
+	<a key="36">
+		<a key="label" val="notPluggedIn"/>
+		<a key="ObjectSort" val="toaster"/>
+	</a>
+	<a key="33">
+		<a key="EdgeName" val="location"/>
+		<a key="label" val="serve"/>
+		<a key="ObjectSort" val="item"/>
+		<a key="ValueSort" val="location"/>
+	</a>
+	<a key="15" val="%3Chtml%3E%3Cbody%3EPlates%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="35">
+		<a key="label" val="pluggedIn"/>
+		<a key="ObjectSort" val="toaster"/>
+	</a>
+	<a key="18">
+		<a key="label" val="cleanPlate"/>
+		<a key="ObjectSort" val="plates"/>
+	</a>
+	<a key="38">
+		<a key="label" val="unplug"/>
+		<a key="ObjectSort" val="toaster"/>
+	</a>
+	<a key="16" val="%3Chtml%3E%3Cbody%3EThis+section+models+the+plates+used+to+serve%3Cbr%3Ethe+toast.++Dirty+plates+cannot+be+used%2C+but+once%3Cbr%3Ethe+toast+has+been+served%2C+the+plate+can+be%3Cbr%3Ecleaned+and+reused%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="11" val="%3Chtml%3E%3Cbody%3EKitchenware%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="39" val="%3Chtml%3E%3Cbody%3EToaster%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="13">
+		<a key="label" val=""/>
+	</a>
+	<a key="45">
+		<a key="label" val="onToast"/>
+		<a key="ObjectSort" val="spreads"/>
+		<a key="Property" val="item"/>
+		<a key="Property+Type" val="item"/>
+	</a>
+	<a key="27">
+		<a key="EdgeName" val="fullyConnected"/>
+		<a key="label" val="move"/>
+		<a key="ObjectSort" val="item"/>
+		<a key="ValueSort" val="location"/>
+		<a key="Gradient+Colour" val="0%2C255%2C255"/>
+	</a>
+	<a key="40" val="%3Chtml%3E%3Cbody%3EThis+section+models+the+toaster+used+to+make%3Cbr%3Ethe+toast.++It+needs+to+be+plugged+in+to+work%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="23" val="%3Chtml%3E%3Cbody%3EItems%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="24" val="%3Chtml%3E%3Cbody%3EThis+section+models+the+items+that+can+be+toasted.++All+items+that%3Cbr%3Eare+not+toasted+are+cold%2C+and+need+to+be+toasted.++The%3Cbr%3Eitem+has+only+been+served+once+it+has+been+placed+on+a+plate%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="10">
+		<a key="label" val="wash"/>
+		<a key="ObjectSort" val="kitchenware"/>
+	</a>
+	<a key="2">
+		<a key="label" val=""/>
+	</a>
+	<a key="37">
+		<a key="label" val="plugIn"/>
+		<a key="ObjectSort" val="toaster"/>
+	</a>
+	<a key="22" val="92"/>
+	<a key="25" val="91"/>
+	<a key="32">
+		<a key="EdgeName" val="location"/>
+		<a key="label" val="moveHot"/>
+		<a key="ObjectSort" val="item"/>
+		<a key="ValueSort" val="location"/>
+	</a>
+	<a key="21">
+		<a key="label" val="cleanThePlate"/>
+		<a key="ObjectSort" val="plates"/>
+	</a>
+	<a key="8">
+		<a key="label" val="dirty"/>
+		<a key="ObjectSort" val="kitchenware"/>
+	</a>
+	<a key="9">
+		<a key="label" val="use"/>
+		<a key="ObjectSort" val="kitchenware"/>
+	</a>
+	<a key="26">
+		<a key="Disjunction" val="true"/>
+		<a key="label" val="use"/>
+		<a key="ObjectSort" val="item"/>
+		<a key="Gradient+Colour" val="0%2C255%2C0"/>
+	</a>
+	<a key="7" val=""/>
+	<a key="19">
+		<a key="label" val="dirtyPlate"/>
+		<a key="ObjectSort" val="plates"/>
+	</a>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

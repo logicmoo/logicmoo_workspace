@@ -1,0 +1,98 @@
+
+% Declarations
+
+feature_value_space(number_value, [[sing, plur]]).
+feature_value_space(gender_value, [[masc, fem]]).
+feature_value_space(vform_value, [[imperative, finite]]).
+feature_value_space(vtype_value, [[transitive, être]]).
+feature_value_space(sem_np_type_value, [[n, location, device]]).
+
+feature(number, number_value).
+feature(gender, gender_value).
+feature(vform, vform_value).
+feature(vtype, vtype_value).
+feature(sem_np_type, sem_np_type_value).
+feature(obj_sem_np_type, sem_np_type_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(utterance, [sem]).
+category(command, [sem]).
+category(yn_question, [sem]).
+category(np, [sem, number, gender, sem_np_type]).
+category(location_pp, [sem]).
+category(noun, [sem, number, gender, sem_np_type]).
+category(spec, [number, gender]).
+category(verb, [sem, number, gender, vform, vtype, obj_sem_np_type]).
+category(onoff, [sem, number, gender, sem_np_type]).
+
+%---------------------------------------------------------------
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=S] -->
+	(   command:[sem=S] ;
+	    yn_question:[sem=S]
+	).
+
+command:[sem=concat([[utterance_type, command]], concat(Verb, concat(Np, Loc)))] -->
+	verb:[sem=Verb, vform=imperative, vtype=transitive, obj_sem_np_type=ObjType],
+	np:[sem=Np, sem_np_type=ObjType],
+	?location_pp:[sem=Loc].
+
+yn_question:[sem=concat([[utterance_type, query]], concat(Verb, concat(Adj, concat(Np, Loc))))] -->
+	np:[sem=Np, number=N, gender=Gen, sem_np_type=SubjType],
+	verb:[sem=Verb, vform=finite, vtype=être, number=N, gender=Gen, obj_sem_np_type=n],
+	onoff:[sem=Adj, sem_np_type=SubjType, number=N, gender=Gen],
+	?location_pp:[sem=Loc].
+
+% Spec makes no semantic contribution in following rule:
+
+np:[sem=Noun, number=N, gender=Gen, sem_np_type=SemType] -->
+	spec:[number=N, gender=Gen],
+	noun:[sem=Noun, number=N, gender=Gen, sem_np_type=SemType].
+
+location_pp:[sem=Loc] -->
+	dans,
+	np:[sem=Loc, sem_np_type=location].
+
+%---------------------------------------------------------------
+
+% Lexicon
+
+verb:[sem=[[state, être]], vform=finite, vtype=être, number=sing, gender=masc,
+	obj_sem_np_type=n] --> 'est-il'.
+verb:[sem=[[state, être]], vform=finite, vtype=être, number=plur, gender=masc,
+	obj_sem_np_type=n] --> 'sont-ils'.
+verb:[sem=[[state, être]], vform=finite, vtype=être, number=sing, gender=fem,
+	obj_sem_np_type=n] --> 'est-elle'.
+verb:[sem=[[state, être]], vform=finite, vtype=être, number=plur, gender=fem,
+	obj_sem_np_type=n] --> 'sont-elles'.
+
+verb:[sem=[[action, allumer]], vform=imperative, vtype=transitive, number=plur, 
+	obj_sem_np_type=device] --> allumez.
+
+verb:[sem=[[action, baisser]], vform=imperative, vtype=transitive, number=plur, 
+	obj_sem_np_type=device] --> baissez.
+verb:[sem=[[action, éteindre]], vform=imperative, vtype=transitive, number=plur, 
+	obj_sem_np_type=device] --> éteignez.
+
+noun:[sem=[[device, lampe]], sem_np_type=device, number=sing, gender=fem] --> lampe.
+noun:[sem=[[device, ventilateur]], sem_np_type=device, number=sing, gender=masc] --> ventilateur.
+
+noun:[sem=[[location, cuisine]], sem_np_type=location, number=sing, gender=fem] --> cuisine.
+noun:[sem=[[location, salon]], sem_np_type=location, number=sing, gender=masc] --> salon.
+
+spec:[number=sing, gender=masc] --> le.
+spec:[number=sing, gender=fem] --> la.
+
+onoff:[sem=[[onoff, allumé]], number=sing, gender=masc] --> allumé.
+onoff:[sem=[[onoff, allumé]], number=sing, gender=fem] --> allumée.
+
+onoff:[sem=[[onoff, éteint]], number=sing, gender=masc] --> éteint.
+onoff:[sem=[[onoff, éteint]], number=sing, gender=fem] --> éteinte.
+

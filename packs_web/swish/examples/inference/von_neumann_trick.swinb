@@ -1,0 +1,116 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+# Fair coin from a biased coin
+
+If you have a biased coin, how to obtain a fair coin, i.e., from a coin that lands heads with probability \(p\) with \(p\neq 0.5\), how to generate samples from \(\{heads,tails\}\) with \(P(heads)=P(tails)=0.5\)?
+
+John von Neuamnn gave the following solution
+ 1. Toss the coin twice.
+ 2. If you get HT return H, if you get TH return T
+ 3. Otherwise, return to 1 and start over
+
+In fact, if \(p\) is the probability of the biased coin landing heads, then the outcomes HT and TH are equiprobable with probability
+\(p (1-p)\). However, with probability \(pp+(1-p)(1-p)\) these results are not obtained. In this case, we simply repeat the process.
+The probability that we never get HT or TH is 0 so this procedure ends with certainty.
+
+See 
+- https://en.wikipedia.org/wiki/Fair_coin#Fair_results_from_a_biased_coin 
+- von Neumann, John (1951). "Various techniques used in connection with random digits". National Bureau of Standards Applied Math Series. 12: 36.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p1">
+:- use_module(library(mcintyre)).
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- endif.
+:- mc.
+
+:- begin_lpad.
+biased_coin(T,C,heads):0.2 ; biased_coin(T,C,tails):0.8.
+
+coin(R):- coin_it(0,R).
+
+
+coin_it(T,heads):-
+    heads(T).
+
+coin_it(T,tails):-
+    tails(T).
+
+coin_it(T,R):-
+    \+ end(T),
+    T1 is T+1,
+    coin_it(T1,R).
+
+end(T):-
+    heads(T).
+
+end(T):-
+    tails(T).
+
+heads(T):-
+    biased_coin(T,1,heads),
+    biased_coin(T,2,tails).
+
+tails(T):-
+    biased_coin(T,1,tails),
+    biased_coin(T,2,heads).
+
+result:-
+    coin(_R).
+
+:- end_lpad.
+</div>
+
+<div class="nb-cell markdown" name="md2">
+What is the probability of getting heads?
+</div>
+
+<div class="nb-cell query" name="q1">
+mc_sample(coin(heads),10000,Prob).
+</div>
+
+<div class="nb-cell markdown" name="md3">
+What is the probability of getting tails?
+</div>
+
+<div class="nb-cell query" name="q2">
+mc_sample(coin(tails),10000,Prob).
+</div>
+
+<div class="nb-cell markdown" name="md4">
+Draw a histogram of the 10000 values sampled from the program
+</div>
+
+<div class="nb-cell query" name="q3">
+mc_sample_arg_first(coin(R),10000,R,V),argbar(V,G).
+</div>
+
+<div class="nb-cell markdown" name="md5">
+Are we sure to get a heads or tails?
+</div>
+
+<div class="nb-cell query" name="q4">
+mc_sample(result,10000,Prob).
+</div>
+
+<div class="nb-cell html" name="htm1">
+<hr>
+<p style="color:#aaa">This HTML cell loads Mathjax</p>
+
+<script>
+  (function() {
+    var nb = notebook;
+    require(["https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"+
+             "?config=TeX-MML-AM_CHTML"], function() {
+      nb.markdown_post_renderer(function() {
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub,this[0]]);
+      });
+    });
+  })();
+</script>
+</div>
+
+</div>
+

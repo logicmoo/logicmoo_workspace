@@ -1,0 +1,11 @@
+% Generation-specific stuff
+
+aggregate_question_body:[sem=Body] -->
+	question_body:[sem=Body, may_include_tense=yes].
+
+referent_from_context:[sem=[]] --> [].
+
+generalised_name:[sem=in_list([Sem])] -->
+	name:[sem=Sem].
+
+

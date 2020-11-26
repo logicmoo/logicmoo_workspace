@@ -1,0 +1,8 @@
+// Type hierarchy
+Entity > Number.
+
+// Catalog of instances
+Number = Pi. 
+
+// Graph fact
+gr([Number : Pi = 3.141592]).

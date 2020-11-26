@@ -1,0 +1,10 @@
+package.ID			NUANCE,v8.0.0,1117,40832705-207096442
+package.Name			English.America.1
+package.JustInTime		FALSE
+package.Verification		FALSE
+package.NLDefined		FALSE
+package.NumGrammars		1
+package.GrammarName0		.Asrg_vcr_english
+package..Asrg_vcr_english.DynagramNames		:
+package.NumFirstPassPackages		1
+package.NumSecondPassPackages		0

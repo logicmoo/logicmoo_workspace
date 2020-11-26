@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<!-- 
+    Changes by:    Riccardo Zese
+    E-mail:        riccardo.zese@unife.it
+    Copyright:	   2014-2016, University of Ferrara
+-->
+
+<html>
+  <head>
+  <title>Entering a TRILL query</title>
+  </head>
+  <body>
+
+<p>
+The <b>Run!</b> button sends the query from the query editor and the
+program from the program editor for evaluation to the Prolog server.
+</p>
+
+<p>
+You can either type a query or embed queries in a comment block in the
+program and select it from the <b>Examples</b> dropup menu. Queries are
+added to the <b>History</b> dropup menu for re-use.
+</p>
+
+<p>
+<b>NOTE:</b> if a complex string containing special characters (s.a. &#35;), surround it with escaped single quote (\'). See TRILL manual section in Help page for a list of possible queries.
+</p>
+
+<p>
+Example queries embedded in your program must be formatted like this:
+
+<pre class="prolog">
+/** &lt;examples&gt;
+
+?- instanceOf(\'http://my.ontology.org/ontologies/foo#myClass\',\'http://my.ontology.org/ontologies/foo#myIndividual\',ListExpl).
+?- axiom(X).
+?- run.
+?- known(X).
+*/
+</pre>
+</p>
+
+<p>
+TRILL can compute the probability of queries using the commands shown below:
+<dl>
+  <dt><b>prob_instanceOf(Class,Individual,Prob)</b></dt><dd>Concept membership queries.</dd>
+  <dt><b>prob_sub_class(Class1,Class2,Prob)</b></dt><dd>Subsumption queries.</dd>
+  <dt><b>prob_unsat(ClassExpression,Prob)</b></dt><dd>Unsatifiability of a concept.</dd>
+  <dt><b>prob_inconsistent_theory(Prob)</b><</dt>dd>Inconsistency of the knowledge base.</dd>
+</dl>
+
+TRILL can test entailment or find an explanation <code>Expl</code> using the queries below:
+<dl>
+  <dt><b>instanceOf(Class,Individual),instanceOf(Class,Individual,Expl)</b></dt><dd>Concept membership queries.</dd>
+  <dt><b>sub_class(Class1,Class2),sub_class(Class1,Class2,Expl)</b></dt><dd>Subsumption queries.</dd>
+  <dt><b>unsat(ClassExpression),unsat(ClassExpression,Expl)</b></dt><dd>Unsatifiability of a concept.</dd>
+  <dt><b>inconsistent_theory,inconsistent_theory(Expl)</b></dt><dd>Inconsistency of the knowledge base.</dd>
+</dl>
+</p>
+
+<p>
+For hints press <b>Ctrl-Space</b>.
+</p>
+
+<pre class="prolog">
+/** &lt;examples&gt;
+
+?- instanceOf(\'http://my.ontology.org/ontologies/foo#myClass\',\'http://my.ontology.org/ontologies/foo#myIndividual\',ListExpl).
+?- axiom(X).
+*/
+</pre>
+</p>
+
+<p>
+TRILL can compute the probability of queries using the commands shown below:
+<dl>
+  <dt><b>prob_instanceOf(Class,Individual,Prob)</b></dt><dd>Concept membership queries.</dd>
+  <dt><b>prob_sub_class(Class1,Class2,Prob)</b></dt><dd>Subsumption queries.</dd>
+  <dt><b>prob_unsat(ClassExpression,Prob)</b></dt><dd>Unsatifiability of a concept.</dd>
+  <dt><b>prob_inconsistent_theory(Prob)</b><</dt>dd>Inconsistency of the knowledge base.</dd>
+</dl>
+
+TRILL can test entailment or find an explanation <code>Expl</code> using the queries below:
+<dl>
+  <dt><b>instanceOf(Class,Individual),instanceOf(Class,Individual,Expl)</b></dt><dd>Concept membership queries.</dd>
+  <dt><b>sub_class(Class1,Class2),sub_class(Class1,Class2,Expl)</b></dt><dd>Subsumption queries.</dd>
+  <dt><b>unsat(ClassExpression),unsat(ClassExpression,Expl)</b></dt><dd>Unsatifiability of a concept.</dd>
+  <dt><b>inconsistent_theory,inconsistent_theory(Expl)</b></dt><dd>Inconsistency of the knowledge base.</dd>
+</dl>
+</p>
+
+<p>
+For hints press <b>Ctrl-Space</b>.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+User 1: Do you like to watch the Frozen movie?
+User 2: I love the Frozen movie! I love Anna and Elsa!
+User 1: We also love to watch the Disney short, when it was Anna's Birthday.
+User 2: I saw that! I thought it was very funny when Elsa had a cold!
+User 1: We also loved how Marshmellow had baby snowmen that came to help decorate for the party!
+User 2: Who is your favorite character in Frozen?
+User 1: I really like watching Olaf, he is so funny!
+User 2: I like Kristoph the most. I like how he was raised by the Trolls.
+User 1: I am really excited for the Frozen sequel, I know my daughter will want to see it.
+User 2: I am excited to see it as well. It has a really positive message.

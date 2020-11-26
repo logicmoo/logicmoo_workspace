@@ -1,0 +1,259 @@
+(note TQF239c)
+
+(interestsAgreeForAgentTypeBecause 
+  (Interest-ValueFn (InFn IncreaseEvent)) 
+  (Interest-ValueFn (InFn Influence)) 
+  (thereExists ?CRIMEORG 
+    (thereExists ?PROFITINCREASE 
+      (and 
+        (instance ?CRIMEORG TransnationalCriminalOrganization) 
+        (instance ?PROFITINCREASE IncreaseEvent) 
+        (increases-Generic ?PROFITINCREASE ?CRIMEORG totalValueOfAssets) 
+        (likelihood 
+          (thereExists ?REGION 
+            (and 
+              (instance ?REGION GeopoliticalEntity) 
+              (statusWithAgent-Gradient ?CRIMEORG ?REGION Influence High))) High)))) TerroristGroup)
+
+(instance Lebanon GeopoliticalEntity) 
+(instance LebaneseHizballah TerroristGroup) 
+
+(likelihood 
+  (thereExists ?EVENT 
+    (and 
+      (instance ?EVENT IdeologicalActivity) 
+      (maleficiary ?EVENT Lebanon) 
+      (agent ?EVENT LebaneseHizballah))) Low) 
+
+(implies 
+  (and 
+    (instance ?TERRORISTGROUP TerroristGroup) 
+    (instance ?REGION GeopoliticalEntity) 
+    (likelihood 
+      (thereExists ?EVENT 
+        (and 
+          (instance ?EVENT IdeologicalActivity) 
+          (maleficiary ?EVENT ?REGION) 
+          (agent ?EVENT ?TERRORISTGROUP))) Low))
+  (interestsCompeteForAgentTypeBecause 
+    (Interest-ValueFn (InFn PoliticalSC)) 
+    (Interest-ValueFn (InFn IdeologicalSC)) 
+    (thereExists ?TERRORISTGROUP 
+      (thereExists ?REGION 
+        (and 
+          (desires ?TERRORISTGROUP 
+            (powerInRegion-Geopolitical ?TERRORISTGROUP ?REGION High)) 
+          (likelihood 
+            (thereExists ?EVENT 
+              (and 
+                (instance ?EVENT IdeologicalActivity) 
+                (maleficiary ?EVENT ?REGION) 
+                (agent ?EVENT ?TERRORISTGROUP))) Low)))) TerroristGroup))
+
+(instance SaudiArabia GeopoliticalEntity) 
+(inRegion TigersOfTheGulf SaudiArabia) 
+(instance IslamicSocietyIdeology BeliefSystem) 
+(instance TigersOfTheGulf DissidentGroup) 
+(hasBeliefSystems TigersOfTheGulf IslamicSocietyIdeology) 
+
+(implies 
+  (and 
+    (instance ?DISSIDENTGROUP DissidentGroup) 
+    (hasBeliefSystems ?DISSIDENTGROUP ?BELIEFSYSTEM) 
+    (instance ?BELIEFSYSTEM BeliefSystem) 
+    (inRegion ?DISSIDENTGROUP ?REGION) 
+    (instance ?REGION GeopoliticalEntity)) 
+  (likelihood 
+    (thereExists ?GROUP 
+      (thereExists ?PERSON 
+        (and 
+          (instance ?PERSON Person) 
+          (instance ?GROUP Group) 
+          (hasBeliefSystems ?GROUP ?BELIEFSYSTEM) 
+          (residesInRegion ?PERSON ?REGION) 
+          (groupMembers ?PERSON ?GROUP) 
+          (not 
+            (groupMembers ?PERSON ?DISSIDENTGROUP))))) High))
+
+(implies 
+  (likelihood 
+    (thereExists ?GROUP 
+      (thereExists ?PERSON 
+        (and 
+          (instance ?GROUP Group) 
+          (instance ?PERSON Person) 
+          (hasBeliefSystems ?GROUP ?BELIEFSYSTEM) 
+          (residesInRegion ?PERSON ?REGION) 
+          (groupMembers ?PERSON ?GROUP) 
+          (not 
+            (groupMembers ?PERSON ?DISSIDENTGROUP))))) High)
+  (interestsAgreeForAgentTypeBecause 
+    (Interest-ValueFn (InFn IdeologicalSC)) 
+    (Interest-ValueFn (InFn (InfluenceFn RegionalSC)))
+    (thereExists ?BELIEFSYSTEM 
+      (thereExists ?REGION 
+        (thereExists ?DISSIDENTGROUP 
+          (likelihood 
+            (thereExists ?GROUP 
+              (thereExists ?PERSON 
+                (and 
+                  (instance ?GROUP Group) 
+                  (instance ?PERSON Person) 
+                  (hasBeliefSystems ?GROUP ?BELIEFSYSTEM) 
+                  (residesInRegion ?PERSON ?REGION) 
+                  (groupMembers ?PERSON ?GROUP) 
+                  (not 
+                    (groupMembers ?PERSON ?DISSIDENTGROUP))))) High)))) DissidentGroup))
+
+(implies 
+  (and 
+    (instance ?PROFITINCREASE IncreaseEvent) 
+    (instance ?CRIMEORG TransnationalCriminalOrganization) 
+    (increases-Generic ?PROFITINCREASE ?CRIMEORG totalValueOfAssets) 
+    (likelihood 
+      (thereExists ?REGION 
+        (and 
+          (instance ?REGION GeopoliticalEntity) 
+          (statusWithAgent-Gradient ?CRIMEORG ?REGION Influence High))) High)) 
+          (interestsAgreeForAgentTypeBecause 
+            (Interest-ValueFn (InFn IncreaseEvent)) 
+            (Interest-ValueFn (InFn Influence)) 
+            (thereExists ?CRIMEORG 
+              (thereExists ?PROFITINCREASE 
+                (and 
+                  (instance ?CRIMEORG TransnationalCriminalOrganization) 
+                  (instance ?PROFITINCREASE IncreaseEvent) 
+                  (increases-Generic ?PROFITINCREASE ?CRIMEORG totalValueOfAssets)
+                  (likelihood 
+                    (thereExists ?REGION 
+                      (and 
+                        (instance ?REGION GeopoliticalEntity) 
+                        (statusWithAgent-Gradient ?CRIMEORG ?REGION Influence High))) High)))) TerroristGroup))
+
+(instance DrugRunning-001 IncreaseEvent) 
+(instance CriminalOrganization-001 TransnationalCriminalOrganization) 
+(increases-Generic DrugRunning-001 CriminalOrganization-001 totalValueOfAssets) 
+
+(likelihood 
+  (thereExists ?REGION 
+    (and 
+      (instance ?REGION GeopoliticalEntity) 
+      (statusWithAgent-Gradient CriminalOrganization-001 ?REGION Influence High))) High)
+
+(implies 
+  (and 
+    (instance ?PROFITINCREASE IncreaseEvent) 
+    (instance ?CRIMEORG TransnationalCriminalOrganization) 
+    (increases-Generic ?PROFITINCREASE ?CRIMEORG totalValueOfAssets)) 
+  (likelihood 
+    (thereExists ?REGION 
+      (and 
+        (instance ?REGION GeopoliticalEntity) 
+        (statusWithAgent-Gradient ?CRIMEORG ?REGION Influence High))) High))
+
+(implies 
+  (and 
+    (instance ?TERRORISTGROUP TerroristGroup) 
+    (desires ?TERRORISTGROUP 
+      (powerInRegion-Geopolitical ?TERRORISTGROUP ?REGION High))
+    (instance ?REGION GeopoliticalEntity)) 
+  (likelihood 
+    (thereExists ?EVENT 
+      (and 
+        (instance ?EVENT IdeologicalActivity) 
+        (maleficiary ?EVENT ?REGION) 
+        (agent ?EVENT ?TERRORISTGROUP))) Low)) 
+
+(instance Lebanon GeopoliticalEntity) 
+(instance LebaneseHizballah TerroristGroup) 
+
+(desires LebaneseHizballah 
+ (powerInRegion-Geopolitical LebaneseHizballah Lebanon High)) 
+
+(residenceOfOrganization TigersOfTheGulf SaudiArabia) 
+
+(implies 
+  (and 
+    (instance ?DISSIDENTGROUP DissidentGroup) 
+    (hasBeliefSystems ?DISSIDENTGROUP ?BELIEFSYSTEM) 
+    (instance ?BELIEFSYSTEM BeliefSystem) 
+    (inRegion ?DISSIDENTGROUP ?REGION) 
+    (instance ?REGION GeopoliticalEntity)) 
+  (likelihood 
+    (thereExists ?GROUP 
+      (thereExists ?PERSON 
+        (and 
+          (instance ?PERSON Person) 
+          (instance ?GROUP Group) 
+          (hasBeliefSystems ?GROUP ?BELIEFSYSTEM) 
+          (residesInRegion ?PERSON ?REGION) 
+          (groupMembers ?PERSON ?GROUP) 
+          (not 
+            (groupMembers ?PERSON ?DISSIDENTGROUP))))) High)) 
+
+(instance TigersOfTheGulf DissidentGroup) 
+(hasBeliefSystems TigersOfTheGulf IslamicSocietyIdeology) 
+(instance IslamicSocietyIdeology BeliefSystem) 
+(inRegion TigersOfTheGulf SaudiArabia) 
+(instance SaudiArabia GeopoliticalEntity) 
+(residenceOfOrganization TigersOfTheGulf SaudiArabia) 
+
+(query (findall (?BECAUSE)
+  (or 
+    (interestsAgreeForAgentTypeBecause 
+      (Interest-ValueFn (InFn IdeologicalSC)) 
+      (Interest-ValueFn (InFn (InfluenceFn RegionalSC)))
+      ?BECAUSE DissidentGroup) 
+    (interestsCompeteForAgentTypeBecause 
+      (Interest-ValueFn (InFn PoliticalSC)) 
+      (Interest-ValueFn (InFn IdeologicalSC)) 
+      ?BECAUSE TerroristGroup) 
+    (interestsAgreeForAgentTypeBecause 
+      (Interest-ValueFn (InFn IncreaseEvent)) 
+      (Interest-ValueFn (InFn Influence)) 
+      ?BECAUSE TerroristGroup))))
+
+(answer (list 
+  (thereExists ?CRIMEORG 
+    (thereExists ?PROFITINCREASE 
+      (and 
+        (instance ?CRIMEORG TransnationalCriminalOrganization) 
+        (instance ?PROFITINCREASE IncreaseEvent) 
+        (increases-Generic ?PROFITINCREASE ?CRIMEORG totalValueOfAssets) 
+        (likelihood 
+          (thereExists ?REGION 
+            (and 
+              (instance ?REGION GeopoliticalEntity) 
+              (statusWithAgent-Gradient ?CRIMEORG ?REGION Influence High))) High))))))
+
+(answer (list 
+  (thereExists ?TERRORISTGROUP 
+    (thereExists ?REGION 
+      (and 
+        (desires ?TERRORISTGROUP 
+          (powerInRegion-Geopolitical ?TERRORISTGROUP ?REGION High)) 
+        (likelihood 
+          (thereExists ?EVENT 
+            (and 
+              (instance ?EVENT IdeologicalActivity) 
+              (maleficiary ?EVENT ?REGION) 
+              (agent ?EVENT ?TERRORISTGROUP))) Low))))))
+
+(answer (list 
+  (thereExists ?BELIEFSYSTEM 
+    (thereExists ?REGION 
+      (thereExists ?DISSIDENTGROUP 
+        (likelihood 
+          (thereExists ?GROUP 
+            (thereExists ?PERSON 
+              (and 
+                (instance ?GROUP Group) 
+                (instance ?PERSON Person) 
+                (hasBeliefSystems ?GROUP ?BELIEFSYSTEM) 
+                (residesInRegion ?PERSON ?REGION) 
+                (groupMembers ?PERSON ?GROUP) 
+                (not 
+                  (groupMembers ?PERSON ?DISSIDENTGROUP))))) High))))))
+
+(end_of_file)
+

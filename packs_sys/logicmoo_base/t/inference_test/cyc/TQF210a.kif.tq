@@ -1,0 +1,46 @@
+(note TQF210a)
+
+(instance Iran-IraqTankerWar ConflictEvent) 
+(subProcess Iran-IraqTankerWar USStrikesOnOilPlatforms) 
+(contains PersianGulfRegion StraitOfHormuz) 
+(eventOccursAt USStrikesOnOilPlatforms StraitOfHormuz) 
+(hasOwnershipIn Iran IranianOilPlatforms) 
+(damages USStrikesOnOilPlatforms IranianOilPlatforms) 
+(instance USStrikesOnOilPlatforms MilitaryAttack) 
+(directingAgent USStrikesOnOilPlatforms UnitedStatesOfAmerica) 
+
+(instance IranianOilPlatforms 
+ (GroupFn OffshoreOilPlatform)) 
+
+(implies 
+  (and 
+    (instance ?ATTACK MilitaryAttack) 
+    (subProcess ?CONFLICT ?ATTACK) 
+    (instance ?CONFLICT ConflictEvent)) 
+  (increases-Generic ?ATTACK ?CONFLICT conflictLevel)) 
+
+(implies 
+  (and 
+    (eventOccursAt ?ACT ?SUB) 
+    (contains ?REG ?SUB)) 
+  (eventOccursAt ?ACT ?REG)) 
+
+(queryyn  
+   (thereExists ?ATTACK 
+       (thereExists ?PLATFORM 
+           (thereExists ?CONFLICT 
+               (and 
+                   (instance ?ATTACK MilitaryAttack) 
+                   (directingAgent ?ATTACK UnitedStatesOfAmerica) 
+                   (damages ?ATTACK ?PLATFORM) 
+                   (instance ?PLATFORM 
+                       (GroupFn OffshoreOilPlatform)) 
+                   (hasOwnershipIn Iran ?PLATFORM) 
+                   (eventOccursAt ?ATTACK PersianGulfRegion) 
+                   (instance ?CONFLICT ConflictEvent) 
+                   (subProcess ?CONFLICT ?ATTACK) 
+                   (increases-Generic ?ATTACK ?CONFLICT conflictLevel))))))
+
+(answer Yes)
+(end_of_file)
+

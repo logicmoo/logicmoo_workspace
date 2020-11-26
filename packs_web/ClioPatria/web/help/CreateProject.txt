@@ -1,0 +1,60 @@
+---+ Creating a project in ClioPatria
+
+You can create a project inside the downloaded =ClioPatria= directory,
+but often it is to be preferred to create it in a new directory.
+Unfortunately, the story is different for Windows and Unix.
+
+---++ Creating a project in Unix (Linux, MacOSX, etc.)
+
+We assume that you created a directory next to ClioPatria. For example
+using the commands below, but you can of course also use the GUI of your
+OS.
+
+    ==
+    % ls
+    ClioPatria
+    % mkdir myproject
+    % cd myproject
+    ==
+
+Now configure this directory as a ClioPatria project by running
+
+    ==
+    % ../ClioPatria/configure
+    ==
+
+This script creates a directory =|config-enabled|= and a file =|run.pl|=
+in the current directory. By default the server is configured to run on
+port 3020. If you prefer another port, edit the file
+=|config-enabled/network.pl|=. Now you are ready to run ClioPatria using
+the command below.
+
+    ==
+    ./run.pl
+    ==
+
+Next direct your browser to =|http://localhost:3020|= (or whatever port
+you selected) and enter a name and password for the administrator user.
+
+
+---++ Creating a project in MS-Windows
+
+The procedure in Windows is a bit different  because it is not very easy
+to start Prolog from a  directory  while   loading  a  file from another
+directory. In a sense, it is simpler:
+
+*|Double click|* =|setup.pl|= as found in the =ClioPatria= folder. This
+opens a standard browse-for-directory dialog. Enter the desired
+directory and Prolog will initialise this directory with a ClioPatria
+project.
+
+[[alert.gif]] As of SWI-Prolog 5.11.14, the dialog allows for creating
+the target folder.  If your SWI-Prolog is older you must first create
+the target folder.
+
+After (optionally) editing =|config-enabled\network.pl|= in the target
+directory, *|double click|* =|run.pl|= in the target folder and direct
+your browser to =|http://localhost:3020|= (or whatever port you
+selected).  Enter a name and password for the administrator user.
+
+@see Download.txt

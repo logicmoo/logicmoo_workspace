@@ -1,0 +1,472 @@
+\documentstyle[12pt]{article}
+\title{ProNTo\_Morph: Morphological Analysis Tool for use with ProNTo (Prolog Natural Language Toolkit)}
+\author{Jason G.\ Schlachter\\
+        Artificial Intelligence Center\\
+        The University of Georgia \\
+        Athens, Georgia 30602-7415 U.S.A.\\
+        http://www.ai.uga.edu \\
+        }
+
+\date{May 8th 2003}
+\begin{document}
+\maketitle
+
+
+
+
+\section{Introduction}
+
+The paper describes ProNTo\_Morph, a morphological parsing tool
+for English, written in ISO Prolog and fully compatible with
+SWI-Prolog version 5.0.10 (see site for download
+http://www.swi-prolog.org).\newline
+
+The program was developed by extending and modifying the program,
+Part Of English Morphology, developed by Dr. Covington at the
+University of Georgia.  The source code for this program, poem.pl,
+is downloadable at his web site
+\emph{http://www.ai.uga.edu/mc}.\newline
+
+Morphological parsing is the process of breaking a word into its
+smallest meaningful components, or morphemes. Our program,
+ProNTo\_Morph, is concerned with breaking a word into its root and
+suffix.\newline
+
+For example, the word \emph{harder} is made up of two morphemes,
+\emph{hard} and \emph{-er}.  In the ideal situation, ProNTo\_Morph
+would be given the input string:
+    \begin{verbatim}
+    harder
+    \end{verbatim}
+and the program would output a listing of morphemes such as:
+    \begin{verbatim}
+    [hard,-er]
+    \end{verbatim}
+
+Unfortunately, morphological parsing is not always this simple.
+There are many spelling rules that may break a given word into
+different morphemes. Since a computer algorithm can not know which
+of these is the correct way, it must have the ability to explore
+alternative solutions.\newline
+
+The following example help to will illustrate this idea.  Let's
+assume that ProNTo\_Morph is configured to output one alternative
+at a time, and it is given the input string
+    \begin{verbatim}
+    harder\end{verbatim}
+
+then the output would be as follows:
+    \begin{verbatim}
+    [harder]\end{verbatim}
+
+This is not the correct morphological parsing. If the program is
+forced to backtrack to the next untried alternative, it will
+return the following solution:
+    \begin{verbatim}
+    [harde,-er]\end{verbatim}
+
+This is still incorrect.  If the program is forced to backtrack a
+second time, it returns the following list:
+    \begin{verbatim}
+    [hard,-er]\end{verbatim}
+
+This is the correct solution.  If the program was forced to
+backtrack again it would fail because there are no more untried
+alternative.\newline
+
+The above example illustrates how ProNTo\_Morph behaves in a
+non-deterministic way to return alternative solutions upon
+backtracking.  If you would prefer that it returns all possible
+morphological parsings at once, it can also be called in a
+deterministic manner.\newline
+
+ The next section of this paper will describe the design of
+the program and user configurable options.  The third section of
+this paper documents the callable predicates of ProNTo\_Morph and
+provides example input and output for clarity.
+
+
+\section{Program design}
+
+ProNTo\_Morph can be executed in a deterministic or
+nondeterministic manner.  If you ask the program for one parsing
+of a word, the program is nondeterministic and can backtrack to
+find untried alternatives.  The only exception to this is when the
+word being parsed is in the irregular word list.  In this case,
+the program will return the parsing specified by the irregular
+word list and will block backtracking.  After all, if a word is
+irregular, there is no point in applying general spelling
+rules.\newline
+
+The following subsections describe the input and output types that
+ProNTo\_Morph allows.
+
+\subsection{ProNTo\_Morph accepts input in three forms}
+
+\begin{enumerate}
+
+    \item It can accept a list of tokens from \emph{et.pl} (Efficient
+    Tokenizer).
+    \begin{verbatim}
+    [w([t,e,s,t,i,n,g]),w([t,h,e]),w([t,o,k,e,n]),w([l,i,s,t])]\end{verbatim}
+
+    It also accepts any single word structure from
+    that list.
+    \begin{verbatim}
+    w([t,e,s,t,i,n,g])\end{verbatim}
+
+
+    \item It can accept character lists:
+    \begin{verbatim}
+    [t,e,s,t,i,n,g]\end{verbatim}
+
+    and lists of character lists:
+    \begin{verbatim}
+    [[t,e,s,t,i,n,g],[m,o,r,e]]\end{verbatim}
+
+    \item It can accept atoms.
+    \begin{verbatim}
+    testing\end{verbatim}
+
+    and lists of atoms
+    \begin{verbatim}
+    [testing,more,words]\end{verbatim}
+
+\end{enumerate}
+
+\subsection{ProNTo\_Morph returns solutions in two forms}
+
+\begin{enumerate}
+    \item It can output a list of lists where each inner list
+    contains a morphological parsing of a word.
+
+    See examples below:
+    \begin{verbatim}
+    [[harder]]\end{verbatim} or
+    \begin{verbatim}
+    [[work],[hard,-er]]\end{verbatim}
+
+    \item It can output a list that contains every backtracking
+    alternative.
+
+    See examples below:
+    \begin{verbatim}
+    [[[harder]], [[harde, -er]], [[hard, -er]]]\end{verbatim} or
+    \begin{verbatim}
+    [[[[work]]], [[[harder]], [[harde, -er]], [[hard, -er]]]]\end{verbatim}
+
+\end{enumerate}
+
+\section{User modifiable files}
+
+\subsection{Spelling rules}
+
+There is a Prolog file, \emph{pronto\_morph\_spelling\_rules.pl}
+that contains all the spelling rules used by ProNTo\_Morph to
+parse words.  This can be modified.\newline
+
+You may want to comment out some of these rules to reduce the
+number of backtracking alternatives because some of them are only
+used by a small number of words in the English language.  You may
+also want to add spelling rules that are relevant to your
+lexicon.\newline
+
+The order of the spelling rules in the file is important. It
+determines the order in which ProNTo\_Morph uses them to create
+morphological parsings of the input words. You may wish to
+rearrange them, so that the rules most used by your lexicon are
+tried first.  This may help to reduce the amount of backtracking.
+
+\subsection{Irregular word list}
+
+What's an irregular word list?  It is a list of irregular words
+that can not be parsed by regular spelling rules. Each entry
+contains an irregular  word and the correct parsing for that word.
+When the program tries to parse a word, it first looks to the
+irregular word list, and if it finds the word in that list it
+returns the correct parsing and blocks backtracking (i.e. it
+becomes deterministic).\newline
+
+Many of the words in the irregular word list were taken from the
+irregular word list files of WordNet, a lexical database for the
+English Language.  This program is downloadable at
+\emph{http://www.cogsci.princeton.edu/~wn/}.\newline
+
+You can modify the irregular list for your purposes (i.e. animal
+or plant taxonomy) by modifying one of the four irregular word
+files. There is one for nouns, verbs, adjectives, and adverbs, and
+they are named as such.\newline
+
+For example, the following is an entry from
+\emph{pronto\_morph\_irreg\_noun.pl}:
+
+    \begin{verbatim}
+    irregular_form( children,X,[child,-pl| X ]).\end{verbatim}
+
+
+In this case,
+
+    \begin{verbatim}
+    children\end{verbatim}
+
+is the irregular word and
+
+    \begin{verbatim}
+    [child,-pl]\end{verbatim}
+
+is the list of morphemes.  You can add new entries in the same
+format or remove entries that are not part of your lexicon.
+
+
+\section{User-callable predicates}
+
+\subsection{morph\_tokens(+Tokens,-List)}
+
+Converts the output of \emph{et.pl} to a list of morphemes.
+\emph{Tokens} should be instantiated to a list of tokens from
+\emph{et.pl} (Efficient Tokenizer) or a single token from that
+list.  The predicate will unify \emph{List} with a list of lists
+where each inner list contains a morphological parsing of a word.
+\newline
+
+The predicate is non-deterministic and will backtrack to
+alternative morphological parsings upon failure.  If there are no
+alternatives the predicate will fail.\newline
+
+\textbf{Example One}\newline
+
+input:
+
+        \begin{verbatim}
+        w([h,a,r,d,e,r])\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[harder]]\end{verbatim}
+
+\textbf{Example Two}\newline
+
+input:
+
+        \begin{verbatim}
+        [w([w,o,r,k]),w([h,a,r,d,e,r])]\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[work],[hard,-er]]\end{verbatim}
+
+\subsection{morph\_chars(+Chars,-List)}
+
+Converts character lists to a list of morphemes. \emph{Chars}
+should be instantiated to a character list or to a list of
+character lists. The predicate will unify \emph{List} with a list
+of lists where each inner list contains a morphological parsing of
+a word.\newline
+
+The predicate is non-deterministic and will backtrack to
+alternative morphological parsings upon failure.  If there are no
+alternatives the predicate will fail.\newline
+
+\textbf{Example One}\newline
+
+ input:
+
+        \begin{verbatim}
+        [h,a,r,d,e,r]\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[harder]]\end{verbatim}
+
+\textbf{Example Two}\newline
+
+input:
+
+        \begin{verbatim}
+        [[w,o,r,k],[h,a,r,d,e,r]]\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[work],[hard,-er]]\end{verbatim} Although this required
+        backtracking to find the correct parsing.
+
+
+\subsection{morph\_atoms(+Atoms,-List)}
+
+Converts atoms to a list of morphemes. \emph{Atoms} should be
+instantiated to an atom or a list of atoms.  The predicate will
+unify \emph{List} with a list of lists where each inner list
+contains a morphological parsing of a word.\newline
+
+The predicate is non-deterministic and will backtrack to
+alternative morphological parsings upon failure.  If there are no
+alternatives the predicate will fail.\newline
+
+\textbf{Example One}\newline
+
+input:
+
+        \begin{verbatim}
+        harder\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[harder]]\end{verbatim}
+
+\textbf{Example Two}\newline
+
+input:
+
+        \begin{verbatim}
+        [work,harder]\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[work],[hard,-er]]\end{verbatim}
+
+\subsection{morph\_tokens\_bag(+Tokens,-List)}
+
+This predicate takes the same input as morph\_tokens/2, but it
+will unify \emph{List} with a list that contains every
+backtracking alternative.\newline
+
+The predicate is deterministic and can not backtrack.  If asked to
+backtrack the predicate will fail.\newline
+
+
+\textbf{Example One}\newline
+
+input:
+
+        \begin{verbatim}
+        w([h,a,r,d,e,r])\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[[harder]], [[harde, -er]], [[hard, -er]]]\end{verbatim}
+
+\textbf{Example Two}\newline
+
+input:
+
+        \begin{verbatim}
+        [w([w,o,r,k]),w([h,a,r,d,e,r])]\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[[[work]]], [[[harder]], [[harde, -er]], [[hard, -er]]]]\end{verbatim}
+
+\subsection{morph\_chars\_bag(+Chars,-List)}
+
+This predicate takes the same input as morph\_chars/2, but it will
+unify \emph{List} with a list that contains every backtracking
+alternative.\newline
+
+The predicate is deterministic and can not backtrack.  If asked to
+backtrack the predicate will fail.\newline
+
+\textbf{Example One}\newline
+
+input:
+
+        \begin{verbatim}
+        [h,a,r,d,e,r]\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[[harder]], [[harde, -er]], [[hard, -er]]]\end{verbatim}
+
+\textbf{Example Two}\newline
+
+input:
+
+        \begin{verbatim}
+        [[w,o,r,k],[h,a,r,d,e,r]]\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[[[work]]], [[[harder]], [[harde, -er]], [[hard, -er]]]]\end{verbatim}
+
+\subsection{morph\_atoms\_bag(+Atoms,-List)}
+
+This predicate takes the same input as morph\_atoms/2, but it will
+unify \emph{List} with a list that contains every backtracking
+alternative.\newline
+
+The predicate is deterministic and can not backtrack.  If asked to
+backtrack the predicate will fail.\newline
+
+Example One\newline
+
+input:
+
+        \begin{verbatim}
+        harder\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[[harder]], [[harde, -er]], [[hard, -er]]]\end{verbatim}
+
+Example Two\newline
+
+input:
+
+
+        \begin{verbatim}
+        [work,harder]\end{verbatim}
+
+output:
+
+        \begin{verbatim}
+        [[[[work]]], [[[harder]], [[harde, -er]], [[hard, -er]]]]\end{verbatim}
+
+
+\section{Using ProNTo\_Morph with other ProNTo modules}
+
+This program has been developed to work with the other modules of
+ProNTo.  It has been fully tested with ProNTo's WordNet program
+and the Efficient Tokenizer (ET) and there are no known
+bugs.\newline
+
+The full integration of all components of ProNTo will require some
+programming in Prolog, however this should be straight forward and
+require minimal effort. Of course if you are adding to the
+system's complexity then it may require a good bit of
+programming.\newline
+
+Please mention the author of this program and other ProNTo
+packages if you use them in your work.
+
+\newpage
+
+\begin{thebibliography}{}
+\raggedright
+\frenchspacing
+
+\item[Covington, Micheal (2003)]
+\emph{Part Of English Morphology}
+http://www.ai.uga.edu/mc
+
+\item[Fellbaum, Christiane; Langone, Helen; Miller, George A.;
+Tengi, Randee;] Wakefield, Pamela; and Wolff, Susanne (2003e).
+\emph{WordNet 1.7.1. - a lexical database for the English
+language.} http://www.cogsci.princeton.edu/\( \tilde{} \)wn.
+
+\item[Wielemaker, Jan (2003).] \emph{SWI 5.1 Reference Manual.}
+University of Amsterdam. Dept. of Social Science Informatics
+(SWI).
+
+\end{thebibliography}
+
+\end{document}

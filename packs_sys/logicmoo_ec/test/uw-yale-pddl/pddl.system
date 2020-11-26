@@ -1,0 +1,58 @@
+(in-package "CL-USER")
+
+; If used with Nisp, must load Nisp first, or packages will be screwed up
+
+(defpackage "PDDL"
+   #+(or :ansi-cl :cltl2) (:USE "COMMON-LISP" "CL-USER")
+   #-(or :ansi-cl :cltl2) (:USE "LISP" "CL-USER")
+   (:import-from "CL-USER" CL-USER::PDDL-READ-TABLE* CL-USER::GO-PDDL)
+   #+:NISP
+   (:import-from "NISP" "SERIES" "FORALL" "EXISTS"
+	                NISP::^^ NISP::\?
+                        NISP::OBJECT)
+   (:EXPORT "DEFINE" "PDDL-FILE-SYNCHECK" "^^" 
+            "REQUIREMENT" "DOMAIN" "ADDENDUM" "PROBLEM" "SITUATION"
+            "ACHIEVE" "CHANGE" "WHEN" "FORALL" "EXISTS" "IMPLY"
+            "OBJECT" "NUMBER" "EITHER"
+            "IN-CONTEXT" "CHOICE" "FORSOME" "FOREACH" "SERIES" "PARALLEL"
+            "TAG" "CONSTRAINED"
+            "TEST" "BOUNDED-INT" "EQUATION"))
+
+(DEFPARAMETER PDDL-READ-TABLE* (COPY-READTABLE NIL))
+
+(defun go-pddl ()
+   (in-package "PDDL")
+   (setq *readtable* pddl-read-table*))
+
+#+:cmu (setf (symbol-function 'make::default-directory)
+             (symbol-function 'extensions:default-directory))
+
+(mk:defsystem pddl-syntax-check
+    :SOURCE-PATHNAME "M:\\prog\\pddl\\pddl\\src"
+    :binary-pathname "M:\\prog\\pddl\\bin"
+    :PACKAGE "PDDL"
+    :COMPONENTS ((:FILE "setindex")
+		 (:FILE "types" :depends-on ("setindex"))
+		 (:FILE "basics" :depends-on ("types"))
+                 (:FILE "typecheck" :depends-on ("basics" "types")) 
+                 (:FILE "action" :depends-on ("typecheck" "basics" "types"))
+                 (:FILE "parsers" :depends-on ("action" "typecheck" "basics" "types"))
+                 (:FILE "definers" :depends-on ("parsers" "basics" "types"))
+                 (:FILE "checker" :depends-on ("definers" "basics" "types"))
+	         (:FILE "builtins" :depends-on ("checker" "basics" "types"))))
+
+(mk:defsystem pddl-solution-check
+  :source-pathname  "M:\\prog\\pddl\\pddl\\src"
+  :binary-pathname  "M:\\prog\\pddl\\bin"
+  :package "PDDL"
+  :depends-on (pddl-syntax-check)
+  :components ((:file "symboid")
+	       (:file "expdt"
+		      :depends-on ("symboid")
+		      :finally-do (use-package "EXPDT" "PDDL"))
+	       (:file "index" :depends-on ("expdt" "unify"))
+	       (:file "deduction" :depends-on ("index" "unify" "expdt"))
+	       (:file "unify")
+	       (:file "checkutils" :depends-on ("deduction" "copy"))
+	       (:file "checksearch" :depends-on ("index" "checkutils"))
+	       (:file "copy")))

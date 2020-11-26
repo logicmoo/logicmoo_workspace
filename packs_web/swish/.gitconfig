@@ -1,0 +1,24 @@
+[core]
+        repositoryformatversion = 0
+        filemode = true
+        bare = false
+        logallrefupdates = true
+[remote "upstream"]
+        url = https://github.com/SWI-Prolog/swish.git
+        fetch = +refs/heads/*:refs/remotes/upstream/*
+[remote "friguzzi"]
+        url = https://github.com/friguzzi/swish.git
+        fetch = +refs/heads/*:refs/remotes/friguzzi/*
+[remote "trill-on-swish"]
+        url = https://github.com/friguzzi/trill-on-swish.git
+        fetch = +refs/heads/*:refs/remotes/trill-on-swish/*
+[remote "teamspoon"]
+        url = https://github.com/TeamSPoon/swish.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+[submodule "pack/libssh"]
+        url = https://github.com/JanWielemaker/libssh.git
+        active = true
+

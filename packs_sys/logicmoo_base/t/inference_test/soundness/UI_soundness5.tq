@@ -1,0 +1,12 @@
+(note "UQ change of variable test")
+
+(forall ?X (F ?X))
+
+(queryyn 
+(forall ?Y (F ?Y))
+)
+
+(answer Yes)
+
+(end_of_file)
+

@@ -1,0 +1,27 @@
+set(auto).
+
+assign(max_seconds,30).
+
+clear(print_proofs).
+
+set(prolog_style_variables).
+
+formula_list(usable).
+
+-(-(((((all A (boxer(A) -> person(A))) & 
+     ((all B (person(B) -> animate(B))) & 
+          ((all C (person(C) -> human(C))) & 
+               ((all D (person(D) -> organism(D))) & 
+                    ((all E (organism(E) -> entity(E))) & 
+                         ((all F (organism(F) -> living(F))) & 
+                              ((all G (living(G) -> -(nonliving(G)))) & 
+                                   ((all H (entity(H) -> concrete(H))) & 
+                                        ((all I (entity(I) -> thing(I))) & 
+                                             ((all J (concrete(J) -> -(abstract(J)))) & 
+                                                  ((all K (human(K) -> -(nonhuman(K)))) & 
+                                                       (all L (animate(L) -> -(inanimate(L))))))))))))))) & 
+     (all M (boxer(M) -> love(M,mia)))) & 
+     -((exists N (boxer(N) & 
+          butch=N)))))).
+
+end_of_list.

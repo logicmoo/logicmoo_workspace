@@ -1,0 +1,23 @@
+(note TQC20)
+
+(exportAmountDuring Libya PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 1.30000)) 
+
+(implies 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME (MillionBarrelsPerDay ?X)) 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE ?TIME (BarrelsPerDay (TimesFn ?X 1000000))))
+
+(implies 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE (YearFn ?X) (BarrelsPerDay ?Y)) 
+  (exportAmountDuring ?REGION ?PRODUCT-TYPE (YearFn ?X) (Barrel-UnitOfVolume (TimesFn ?Y 365))))
+
+(query (findall  (?CHANGE ?TIME)
+  (thereExists ?NR 
+    (and 
+      (exportAmountDuring Libya PetroleumProduct ?TIME (Barrel-UnitOfVolume ?NR)) 
+      (evaluate ?CHANGE (QuantityConversionFn BillionDollars (TimesFn ?NR (Dollar-UnitedStates 5))))))))
+
+(answer 2.37250  1997)  
+
+(end_of_file)

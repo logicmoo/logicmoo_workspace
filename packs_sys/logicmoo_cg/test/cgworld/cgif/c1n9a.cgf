@@ -1,0 +1,12 @@
+[Proposition:''
+[Element*a:'Hydrogen']
+[Weight*b:'1.00794']
+[Symbol*c:'H']
+[Element*d:'Hydrogen']
+[Database*e:'DBElements.txt']
+<dbfind?e?c|?b>
+<dbfind?e?d|?c>
+<dbfind?e?b|?a>]
+
+
+

@@ -1,0 +1,46 @@
+(note TQE126)
+
+(temporallySubsumes (YearFn 1974) 
+  (thereExists ?TRANSFEROUT 
+    (and 
+      (instance ?TRANSFEROUT OrganizationalTransferOut) 
+      (transferredThing ?TRANSFEROUT AbuNidalOrganization) 
+      (from-Generic ?TRANSFEROUT PalestineLiberationOrganization))))
+
+(not 
+  (temporallySubsumes (IntervalStartedByFn (YearFn 1974)) 
+    (thereExists ?TRANSFERIN 
+      (and 
+        (instance ?TRANSFERIN OrganizationalTransferIn) 
+        (transferredThing ?TRANSFERIN AbuNidalOrganization) 
+        (to-Generic ?TRANSFERIN PalestineLiberationOrganization))))) 
+
+(not 
+  (subOrganizations PalestineLiberationOrganization AbuNidalOrganization)) 
+
+(implies 
+  (and 
+    (hasMembers ?ORG ?ORGOUT) 
+    (temporallySubsumes (YearFn ?NUM) 
+      (thereExists ?TRANSFEROUT 
+        (and 
+          (instance ?TRANSFEROUT OrganizationalTransferOut) 
+          (transferredThing ?TRANSFEROUT ?ORGOUT) 
+          (from-Generic ?TRANSFEROUT ?ORG))))) 
+  (temporallySubsumes (IntervalStartedByFn (YearFn ?NUM)) 
+    (thereExists ?TRANSFERIN 
+      (and 
+        (instance ?TRANSFERIN OrganizationalTransferIn) 
+        (transferredThing ?TRANSFERIN ?ORGOUT) 
+        (to-Generic ?TRANSFERIN ?ORG)))))
+
+(queryyn
+  (and 
+    (not 
+      (subOrganizations PalestineLiberationOrganization AbuNidalOrganization)) 
+    (not 
+      (hasMembers PalestineLiberationOrganization AbuNidalOrganization))))
+
+(answer no)
+
+(end_of_file)

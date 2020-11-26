@@ -1,0 +1,69 @@
+(note TQF234d)
+
+(subProcess Iranian-TalibanConflict-1998 IranClaimsRightToStrikeTaliban) 
+(instance KillingOfIranianDiplomats Process) 
+(inReactionTo IranClaimsRightToStrikeTaliban KillingOfIranianDiplomats) 
+(recipientOfInfo IranClaimsRightToStrikeTaliban Taliban) 
+
+(infoTransferred IranianMediaReports 
+  (thereExists ?MURDER 
+    (and 
+      (instance ?MURDER Murder) 
+      (directingAgent ?MURDER Taliban) 
+      (relationInstanceExistsCount bodilyActedOn ?MURDER Diplomat 5)))) 
+
+(senderOfInfo IranClaimsRightToStrikeTaliban Iran) 
+(instance IranClaimsRightToStrikeTaliban CommunicationAct-Single) 
+(inReactionTo IranClaimsRightToStrikeTaliban IranianMediaReports) 
+(relationInstanceExists agent IranianMediaReports MediaOrganization) 
+
+(implies 
+  (relationInstanceExists ?PRED ?INS1 ?COL2) 
+  (thereExists ?INS 
+    (and 
+      (instance ?INS ?COL2) 
+      (?PRED ?INS1 ?INS)))) 
+
+(implies 
+  (agent IranianMediaReports ?REPORTER) 
+  (groupMembers (NationalPressFn Iran) ?REPORTER)) 
+
+(implies 
+  (and 
+    (instance ?SIT Process) 
+    (inReactionTo ?ACT ?SIT)) 
+  (eventOutcomes ?SIT ?ACT)) 
+
+(instance IranianMediaReports Process) 
+(inReactionTo IranClaimsRightToStrikeTaliban IranianMediaReports) 
+
+(query (findall (?RELEVANT-EVENT)
+  (exists 
+    (?COMMUNICATION-ACT) 
+    (exists 
+      (?REPORTS) 
+      (exists 
+        (?IRAN-ORG) 
+        (and 
+          (instance ?COMMUNICATION-ACT CommunicationAct-Single) 
+          (inReactionTo ?COMMUNICATION-ACT ?REPORTS) 
+          (temporallySubsumes Iranian-TalibanConflict-1998 ?COMMUNICATION-ACT) 
+          (agent ?REPORTS ?IRAN-ORG) 
+          (groupMembers (NationalPressFn Iran) ?IRAN-ORG) 
+          (infoTransferred ?REPORTS 
+            (exists 
+              (?MURDER) 
+              (and 
+                (instance ?MURDER Murder) 
+                (directingAgent ?MURDER Taliban) 
+                (relationInstanceExistsCount bodilyActedOn ?MURDER Diplomat 5)))) 
+                (senderOfInfo ?COMMUNICATION-ACT Iran) 
+                (recipientOfInfo ?COMMUNICATION-ACT Taliban) 
+                (or 
+                  (eventOutcomes ?RELEVANT-EVENT ?COMMUNICATION-ACT) 
+                  (reasonForAction ?COMMUNICATION-ACT ?PROPOSITIONAL-ATTITUDE ?AGENT ?REASON))))))))
+
+(answer KillingOfIranianDiplomats)
+(answer IranianMediaReports)
+(end_of_file)
+

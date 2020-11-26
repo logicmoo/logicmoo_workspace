@@ -1,0 +1,130 @@
+Here is some minimal documentation on the current version of Pfc/db.
+More later.m
+
+here are some facts and rules which we will use as a running example:
+
+  <kinship domain + bibleworld
+
+
+
+MANIPULATING THE DATABASE
+
+PfcReset - intialize the Pfc database by retracting every assertion
+that has been entered with add and also removing all of the
+Pfc-internal assertions.
+
+
+add(P) - add fact or rule P to the database.  Note - the operator
+syntax of rules will require them to be wrapped with parentheses, as in:
+
+	add((spouse(X,Y) <=> spouse(Y,X))).
+
+
+add([P1,P2,...Pn]) - adds a list of facts and/or rules to the database.
+
+
+rem(P) - remove user support for fact or rule P.  P will remain in the
+database if there is independant support for it.
+
+rem([P1,P2,...]) - remove user support for each of the Pi.
+
+remove(P) - retracts P from the database evewn if there are independant
+justifications for it.
+
+
+
+
+EXAMINING THE DATABASE
+
+pfcPrintfacts - print all of the facts that have been added to the
+database.  It will display them in two subsets - those added by the
+"user" and those deduced by Pfc.
+
+pfcprintFacts(Pattern) - like pfcPrintfacts/0, but only shows those
+facts matching Pattern.
+
+pfcprintFacts(Pattern,Condition) - like pfcPrintfacts/0, but only
+shows those facts mattching Pattern and for which Condition is
+satisfiable.  For example:
+
+	pfcprintFacts(loves(X,Y),female(Y)).
+
+
+
+
+printRules - temporary function to peint out all of the rules in the
+pfc database.
+
+printTriggers - temporary function to print out all of the internal
+triggers in the pfc database.
+
+printSupports - temporary function to print out all of the internal
+support relationships in the pfc database.
+
+
+
+
+
+These next three functions are useful for grabbing a list of the facts
+in the pfc database.
+
+pfcFacts(List)
+pfcFacts(Pattern,List)
+pfcFacts(Pattern,Condition,List)
+
+List is a list of all of the Pfc facts and rules which match Pattern
+and for which Condition is true.  The Pattern argument defaults to "_"
+and the Condition argument defaults to "true".
+
+
+
+
+EXPLORING JUSTIFICATIONS
+
+justification(P,L) - L is a justification for fact P.  A justification
+is a list containing a Pfc rule and one or more facts which together
+allow Pfc to deduce P.  For example:
+ ...
+
+If P was a user-added fact, then one of its justifications will be
+[user].  You can bactrack into this predicate to get additional
+justifications.
+
+
+justifications(P,L) - L is a list of all of the current justifications
+for P.
+
+
+base(P,L) - L is the base of a justification for P.  A base is a set
+of axioms (i.e. user-added facts) which allow Pfc to deduce P.
+
+pfcChild(+P1,-P2) - True if P1 is an immediate justifier for P2, i.e.
+P1 is a member of some justification for P2.
+
+
+pfcChildren(+P1,L) - True if L is the list of all of the facts for
+which P1 is an immediate  justifier.
+
+pfcDescendant(+P1,-P2) - True if P2 "follows from" P1.  That is, if
+some proof for P2 contains P1.
+
+pfcDescendants(+P1,-L) - True if L is the list of all facts which
+"follows from" P1.
+
+pfcWhy(P) - A partially implemented procedure to interactively explore the
+justification network for fact P.  Currenly it can be used to print
+all of the justifications.
+
+
+
+DEBUGGING AIDS
+
+pfcTrace(P) - Print a message whenever an assertion matching P is ever
+added or removed.  You can mave multiple patterns traced, as in:
+
+	:- pfcTrace(loves(_,)),  pfcTrace(hates(_,)).
+
+You can trace all assertions by evaluating pfcTrace(_).
+
+
+

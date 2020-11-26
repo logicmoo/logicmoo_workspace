@@ -1,0 +1,8 @@
+/* 
+
+The numeric reading of "a" is often not needed, but can add a lot of analyses
+
+*/
+
+% Rule
+ignore_item(numeric_a).

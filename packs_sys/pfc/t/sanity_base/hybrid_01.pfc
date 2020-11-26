@@ -1,0 +1,20 @@
+% -*-Prolog-*-
+
+% Tests soemthing not specified
+%
+
+:- include(test_header).
+
+:- if((pfc_test_feature(localMt,X=1),X==1)).
+
+nondet.
+
+:- endif.
+
+
+:- if((pfc_test_feature(mt,X=1),X==1)).
+
+
+:- endif.
+
+

@@ -1,0 +1,91 @@
+%==============================================================================
+%----Procedures for writing out clauses in prefix TSTP format
+%----
+%----Written by Geoff Sutcliffe, September 2004
+%==============================================================================
+%----Generic output
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Output variables 
+prefix_output_variable(_Langauge,Variable):-
+    tptp_output_variable(Variable).
+%------------------------------------------------------------------------------
+prefix_output_atom_list(Langauge,[One]):-
+    !,
+    prefix_output_atom(Langauge,One).
+
+prefix_output_atom_list(Langauge,[One,Two|Rest]):-
+    prefix_output_atom(Langauge,One),
+    write(','),
+    prefix_output_atom_list(Langauge,[Two|Rest]).
+%------------------------------------------------------------------------------
+prefix_output_atom(Language,Variable):-
+    looks_like_a_variable(Variable),
+    !,
+    prefix_output_variable(Language,Variable).
+
+prefix_output_atom(_Language,Atom):-
+    atomic(Atom),
+    !,
+    write(Atom).
+
+prefix_output_atom(Language,Term):-
+    Term =.. [Functor|Arguments],
+    write(Functor),
+    write('('),
+    prefix_output_atom_list(Language,Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+%==============================================================================
+%----FOF format
+%==============================================================================
+%------------------------------------------------------------------------------
+prefix_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula).
+
+prefix_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS):-
+    tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS).
+
+prefix_unary_formula(UnaryFormula,UnaryConnective,Formula):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula).
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in TSTP format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+prefix_quantified_format(FormulaPrefix,VariablesPrefix,VariablesSeparator,
+VariablesSuffix,FormulaSuffix):-
+    tptp_quantified_format(FormulaPrefix,VariablesPrefix,VariablesSeparator,
+VariablesSuffix,FormulaSuffix).
+
+%----FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,FormulaSuffix
+prefix_binary_format(FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,
+FormulaSuffix):-
+    tptp_binary_format(FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,
+FormulaSuffix).
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+prefix_unary_format(FormulaPrefix,ConnectiveSuffix,FormulaSuffix):-
+    tptp_unary_format(FormulaPrefix,ConnectiveSuffix,FormulaSuffix).
+%------------------------------------------------------------------------------
+%----This writes out TSTP format clauses
+prefix(prefix:Length,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    convert_clauses_to_tptp(Clauses,TSTPFormulae),
+%----If propositional then literals may be output on one line.
+    (   tptp_propositional(TSTPFormulae) ->
+        output_tptp_clauses(prefix,TSTPFormulae,Length,yes);
+        output_tptp_formulae(prefix,Length,TSTPFormulae) ).
+
+prefix(prefix:Length,Formulae,_):-
+%----CHANGE TO prefix_formulae WHEN I HAVE CHANGED INTERNAL DS
+    tptp_formulae(Formulae),
+    convert_formulae_to_tptp(Formulae,TSTPFormulae),
+    output_tptp_formulae(prefix,Length,TSTPFormulae).
+%------------------------------------------------------------------------------
+%----Provide information about the TSTP format
+prefix_format_information('%','.prefix').
+%------------------------------------------------------------------------------
+%----Provide information about the TSTP file
+prefix_file_information(format,prefix:short,'Variant is short or long').
+%------------------------------------------------------------------------------

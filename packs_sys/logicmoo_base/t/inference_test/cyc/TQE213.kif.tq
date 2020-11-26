@@ -1,0 +1,41 @@
+(note TQE213)
+(implies 
+  (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+  (desires ?AGT ?FORM)) 
+
+(goalCategoryForAgent SaudiArabia 
+ (powerInRegion-Geopolitical Iraq PersianGulfRegion Low) NationalDefenseGoal) 
+
+(contains PersianGulfRegion Iraq) 
+(contains PersianGulfRegion Kuwait) 
+
+(desires SaudiArabia 
+ (powerInRegion-Geopolitical Iraq PersianGulfRegion Low)) 
+
+(agent IraqInvadingKuwait Iraq) 
+(instance Kuwait IndependentCountry) 
+(objectActedOn IraqInvadingKuwait Kuwait) 
+(instance IraqInvadingKuwait MilitaryInvasion) 
+
+(implies 
+  (and 
+    (instance ?INVASION MilitaryInvasion) 
+    (objectActedOn ?INVASION ?INVADED) 
+    (instance ?INVADED IndependentCountry) 
+    (agent ?INVASION ?INVADER) 
+    (contains ?REGION ?INVADED) 
+    (contains ?REGION ?INVADER)) 
+  (interferesWithGoal ?INVASION 
+    (powerInRegion-Geopolitical ?INVADER ?REGION Low))) 
+
+(query (findall ?GOAL
+(and 
+  (desires SaudiArabia ?GOAL) 
+  (interferesWithGoal IraqInvadingKuwait ?GOAL))))
+ 
+(answer (list (powerInRegion-Geopolitical Iraq PersianGulfRegion Low)))
+
+(end_of_file)
+
+
+

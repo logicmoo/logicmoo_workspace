@@ -1,0 +1,168 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 3.0
+ *
+ *  Author: Filipe Governa
+ *  Institution: University of Huddersfield
+ *  Date created: Fri Nov 17 00:26:54 GMT 2006
+ *  Date last modified: 2006/12/07 at 06:17:37 AM GMT
+ *  Description:
+ *    
+ * Object Life History : coursework12.gfx
+ */
+
+domain_name(coursework).
+
+% Sorts
+sorts(primitive_sorts,[plane,loc,person,thing]).
+
+% Objects
+objects(plane,[airBerlin,ryanAir]).
+objects(loc,[porto,lisbon,liverpool,stansted,linz,salzburg,palmaDeMaiorca]).
+objects(person,[fil,elli]).
+objects(thing,[clothes,toothbrush,laptop,dvds,camera]).
+
+% Predicates
+predicates([
+    atPlace(plane),
+    planelocation(plane,loc),
+    personOutAt(person),
+    personlocation(person,loc),
+    personInPlane(person,plane),
+    thingInPlane(thing,plane),
+    thinglocation(thing,loc),
+    thingOutAt(thing),
+    loc(loc,loc)]).
+
+% Object Class Definitions
+substate_classes(plane,Plane,[
+    [atPlace(Plane),planelocation(Plane,Loc)]]).
+substate_classes(person,Person,[
+    [personOutAt(Person),personlocation(Person,Loc)],
+    [personInPlane(Person,Plane),personlocation(Person,Loc)]]).
+substate_classes(thing,Thing,[
+    [thingInPlane(Thing,Plane),thinglocation(Thing,Loc)],
+    [thingOutAt(Thing),thinglocation(Thing,Loc)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    loc(porto,lisbon),
+    loc(porto,liverpool),
+    loc(porto,palmaDeMaiorca),
+    loc(lisbon,porto),
+    loc(lisbon,palmaDeMaiorca),
+    loc(lisbon,stansted),
+    loc(liverpool,porto),
+    loc(liverpool,stansted),
+    loc(stansted,liverpool),
+    loc(stansted,lisbon),
+    loc(stansted,linz),
+    loc(linz,salzburg),
+    loc(linz,stansted),
+    loc(salzburg,linz),
+    loc(salzburg,palmaDeMaiorca),
+    loc(palmaDeMaiorca,porto),
+    loc(palmaDeMaiorca,lisbon),
+    loc(palmaDeMaiorca,salzburg)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(putIn(Person,Loc,Plane,Thing),
+    % prevail
+    [     se(person,Person,[personOutAt(Person),personlocation(Person,Loc)]),
+     se(plane,Plane,[atPlace(Plane),planelocation(Plane,Loc)])],
+    % necessary
+    [     sc(thing,Thing,[thingOutAt(Thing),thinglocation(Thing,Loc)]=>[thingInPlane(Thing,Plane),thinglocation(Thing,Loc)])],
+    % conditional
+    []).
+operator(takeOut(Person,Loc,Plane,Thing),
+    % prevail
+    [     se(person,Person,[personOutAt(Person),personlocation(Person,Loc)]),
+     se(plane,Plane,[atPlace(Plane),planelocation(Plane,Loc)])],
+    % necessary
+    [     sc(thing,Thing,[thingInPlane(Thing,Plane),thinglocation(Thing,Loc)]=>[thingOutAt(Thing),thinglocation(Thing,Loc)])],
+    % conditional
+    []).
+operator(getOut(Plane,Loc,Person),
+    % prevail
+    [     se(plane,Plane,[atPlace(Plane),planelocation(Plane,Loc)])],
+    % necessary
+    [     sc(person,Person,[personInPlane(Person,Plane),personlocation(Person,Loc)]=>[personOutAt(Person),personlocation(Person,Loc)])],
+    % conditional
+    []).
+operator(getIn(Plane,Loc,Person),
+    % prevail
+    [     se(plane,Plane,[atPlace(Plane),planelocation(Plane,Loc)])],
+    % necessary
+    [     sc(person,Person,[personOutAt(Person),personlocation(Person,Loc)]=>[personInPlane(Person,Plane),personlocation(Person,Loc)])],
+    % conditional
+    []).
+operator(move(Plane,LocA,LocB),
+    % prevail
+    [],
+    % necessary
+    [     sc(plane,Plane,[atPlace(Plane),planelocation(Plane,LocA),loc(LocA,LocB)]=>[atPlace(Plane),planelocation(Plane,LocB)])],
+    % conditional
+    [     sc(thing,Thing,[thingInPlane(Thing,Plane),thinglocation(Thing,LocA),loc(LocA,LocB)]=>[thingInPlane(Thing,Plane),thinglocation(Thing,LocB)]),
+     sc(person,Person,[personInPlane(Person,Plane),personlocation(Person,LocA),loc(LocA,LocB)]=>[personInPlane(Person,Plane),personlocation(Person,LocB)])]).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(person,fil,[personOutAt(fil),personlocation(fil,salzburg)]),
+     se(thing,dvds,[thingOutAt(dvds),thinglocation(dvds,salzburg)]),
+     se(thing,laptop,[thingOutAt(laptop),thinglocation(laptop,salzburg)])],
+    % INIT States
+    [
+     ss(plane,airBerlin,[atPlace(airBerlin),planelocation(airBerlin,salzburg)]),
+     ss(plane,ryanAir,[atPlace(ryanAir),planelocation(ryanAir,stansted)]),
+     ss(person,fil,[personOutAt(fil),personlocation(fil,liverpool)]),
+     ss(person,elli,[personOutAt(elli),personlocation(elli,salzburg)]),
+     ss(thing,clothes,[thingOutAt(clothes),thinglocation(clothes,liverpool)]),
+     ss(thing,toothbrush,[thingOutAt(toothbrush),thinglocation(toothbrush,liverpool)]),
+     ss(thing,laptop,[thingOutAt(laptop),thinglocation(laptop,liverpool)]),
+     ss(thing,dvds,[thingOutAt(dvds),thinglocation(dvds,porto)]),
+     ss(thing,camera,[thingOutAt(camera),thinglocation(camera,salzburg)])]).
+planner_task(2,
+    % Goals
+    [
+     se(person,elli,[personOutAt(elli),personlocation(elli,porto)]),
+     se(thing,camera,[thingOutAt(camera),thinglocation(camera,porto)])],
+    % INIT States
+    [
+     ss(plane,airBerlin,[atPlace(airBerlin),planelocation(airBerlin,salzburg)]),
+     ss(plane,ryanAir,[atPlace(ryanAir),planelocation(ryanAir,stansted)]),
+     ss(person,fil,[personOutAt(fil),personlocation(fil,porto)]),
+     ss(person,elli,[personOutAt(elli),personlocation(elli,salzburg)]),
+     ss(thing,clothes,[thingOutAt(clothes),thinglocation(clothes,porto)]),
+     ss(thing,toothbrush,[thingOutAt(toothbrush),thinglocation(toothbrush,porto)]),
+     ss(thing,laptop,[thingOutAt(laptop),thinglocation(laptop,porto)]),
+     ss(thing,dvds,[thingOutAt(dvds),thinglocation(dvds,porto)]),
+     ss(thing,camera,[thingOutAt(camera),thinglocation(camera,salzburg)])]).
+planner_task(3,
+    % Goals
+    [
+     se(person,fil,[personOutAt(fil),personlocation(fil,linz)]),
+     se(person,elli,[personOutAt(elli),personlocation(elli,linz)])],
+    % INIT States
+    [
+     ss(plane,airBerlin,[atPlace(airBerlin),planelocation(airBerlin,salzburg)]),
+     ss(plane,ryanAir,[atPlace(ryanAir),planelocation(ryanAir,stansted)]),
+     ss(person,fil,[personOutAt(fil),personlocation(fil,porto)]),
+     ss(person,elli,[personOutAt(elli),personlocation(elli,salzburg)]),
+     ss(thing,clothes,[thingOutAt(clothes),thinglocation(clothes,porto)]),
+     ss(thing,toothbrush,[thingOutAt(toothbrush),thinglocation(toothbrush,porto)]),
+     ss(thing,laptop,[thingOutAt(laptop),thinglocation(laptop,porto)]),
+     ss(thing,dvds,[thingOutAt(dvds),thinglocation(dvds,porto)]),
+     ss(thing,camera,[thingOutAt(camera),thinglocation(camera,salzburg)])]).

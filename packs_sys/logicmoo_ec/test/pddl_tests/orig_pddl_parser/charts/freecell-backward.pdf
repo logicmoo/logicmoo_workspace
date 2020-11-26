@@ -1,0 +1,61 @@
+%PDF-1.4
+%�쏢
+4 0 obj
+<</Type/Page/MediaBox [0 0 360 504]
+/Parent 3 0 R
+/Resources<</ProcSet[/PDF]
+>>
+>>
+endobj
+3 0 obj
+<< /Type /Pages /Kids [
+4 0 R
+] /Count 1
+>>
+endobj
+1 0 obj
+<</Type /Catalog /Pages 3 0 R
+/Metadata 5 0 R
+>>
+endobj
+5 0 obj
+<</Type/Metadata
+/Subtype/XML/Length 1441>>stream
+<?xpacket begin='﻿' id='W5M0MpCehiHzreSzNTczkc9d'?>
+<?adobe-xap-filters esc="CRLF"?>
+<x:xmpmeta xmlns:x='adobe:ns:meta/' x:xmptk='XMP toolkit 2.9.1-13, framework 1.6'>
+<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:iX='http://ns.adobe.com/iX/1.0/'>
+<rdf:Description rdf:about='e0570d2c-202e-11ea-0000-747e7ae7ae6d' xmlns:pdf='http://ns.adobe.com/pdf/1.3/' pdf:Producer='GPL Ghostscript 8.62'/>
+<rdf:Description rdf:about='e0570d2c-202e-11ea-0000-747e7ae7ae6d' xmlns:xap='http://ns.adobe.com/xap/1.0/' xap:ModifyDate='Sun -De-c T13: 1:9:07::7 ' xap:CreateDate='Sun -De-c T13: 1:9:07::7 '><xap:CreatorTool>gnuplot 4.2 patchlevel 2 </xap:CreatorTool></rdf:Description>
+<rdf:Description rdf:about='e0570d2c-202e-11ea-0000-747e7ae7ae6d' xmlns:xapMM='http://ns.adobe.com/xap/1.0/mm/' xapMM:DocumentID='e0570d2c-202e-11ea-0000-747e7ae7ae6d'/>
+<rdf:Description rdf:about='e0570d2c-202e-11ea-0000-747e7ae7ae6d' xmlns:dc='http://purl.org/dc/elements/1.1/' dc:format='application/pdf'><dc:title><rdf:Alt><rdf:li xml:lang='x-default'>| tee charts/freecell-backward.eps | ps2pdf -dEPSCrop - charts/freecell-backward.pdf</rdf:li></rdf:Alt></dc:title><dc:creator><rdf:Seq><rdf:li>wovecka,,,</rdf:li></rdf:Seq></dc:creator></rdf:Description>
+</rdf:RDF>
+</x:xmpmeta>
+                                                                        
+                                                                        
+<?xpacket end='w'?>
+endstream
+endobj
+2 0 obj
+<</Producer(GPL Ghostscript 8.62)
+/CreationDate(Sun Dec 13 19:07:07 2009)
+/ModDate(D:20091213190708+01'00')
+/Title(| tee charts/freecell-backward.eps | ps2pdf -dEPSCrop - charts/freecell-backward.pdf)
+/Subject(gnuplot plot)
+/Creator(gnuplot 4.2 patchlevel 2 )
+/Author(wovecka,,,)>>endobj
+xref
+0 6
+0000000000 65535 f 
+0000000172 00000 n 
+0000001753 00000 n 
+0000000113 00000 n 
+0000000015 00000 n 
+0000000236 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R /Info 2 0 R
+/ID [<4923E187B6C2B56B797A0A3838D46969><4923E187B6C2B56B797A0A3838D46969>]
+>>
+startxref
+2049
+%%EOF

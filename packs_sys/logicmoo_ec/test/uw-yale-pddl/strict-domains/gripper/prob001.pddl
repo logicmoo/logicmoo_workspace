@@ -1,0 +1,11 @@
+(DEFINE (PROBLEM GRIPPER2)
+   (:DOMAIN GRIPPER-TYPED)
+   (:OBJECTS ROOMA ROOMB - ROOM
+             BALL1 BALL2 - BALL)
+   (:INIT (AT-ROBBY ROOMA)
+          (FREE LEFT)
+          (FREE RIGHT)
+          (AT BALL1 ROOMA)
+          (AT BALL2 ROOMA))
+   (:GOAL (AND (AT BALL1 ROOMB)
+               (AT BALL2 ROOMB))))

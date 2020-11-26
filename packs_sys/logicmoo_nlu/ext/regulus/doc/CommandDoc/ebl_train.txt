@@ -1,0 +1,5 @@
+Takes the file built using the {\tt EBL\_\-TREEBANK} command and
+performs EBL generalisation using operationality criteria defined
+by {\tt ebl\_\-operationality}. The output needs to be processed further 
+by the {\tt EBL\_\-POSTPROCESS} command.
+

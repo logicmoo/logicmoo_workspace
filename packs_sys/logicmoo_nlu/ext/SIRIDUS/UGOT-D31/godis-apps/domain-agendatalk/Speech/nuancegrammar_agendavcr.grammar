@@ -1,0 +1,364 @@
+; nuance grammar for IBiS vcr domain/lexicon
+
+
+
+LexiconVcrEnglish  [ 	( ?(+VcrICM) -pau- ?ShortAns ?RequestSeq ) 
+
+			( ?(+VcrICM) -pau- ?VcrQuestion )  
+
+ 			hello
+
+			 bye 
+
+			quit
+
+			yes
+
+			(no ?RequestSeq) ]
+
+
+
+
+
+VcrICM [ pardon okay (dont know) ]
+
+
+
+
+
+;QUESTIONS
+
+VcrQuestion [ ( is the [ video vcr ] PlayStatus)
+
+ 	   ( what is the [video vcr ] doing )		
+
+	   ( [ what which ] channel is on ) ]
+
+
+
+PlayStatus [ playing paused stopped rewinding forwarding recording ]
+
+
+
+;short answers
+
+
+
+ShortAns [ Number_0_to_109 Time Date ]
+
+
+
+;requests 
+
+
+
+RequestSeq [ VcrTop DirectCommand ]
+
+
+
+VcrTop (  ?top  ;request(vcr_top) 
+
+	
+
+	 ?[ VcrChangePlayStatus
+
+            VcrNewChannel
+
+	    VcrTimerRecording
+
+            VcrSettings ] 
+
+	)
+
+
+
+VcrChangePlayStatus ( ?(?change play status)
+
+
+
+                      ?[ VcrPlay 
+
+			 VcrStop
+
+			 VcrFf 
+
+			 VcrRew
+
+  			 VcrPauseStill
+
+			;VcrStillAdv 
+
+                         VcrRec ]
+
+		     )
+
+
+
+VcrPlay       play 
+
+VcrStop       stop
+
+VcrFf         (?fast forward)
+
+VcrRew        rewind
+
+VcrPauseStill pause
+
+VcrStillAdv   advance
+
+VcrRec	      record
+
+
+
+VcrNewChannel [ ( change channel ?( ?not to Channel) )
+
+		( switch channel ?(?not Channel) )
+
+		( switch to Channel )
+
+		( specific channel (?not Channel) )
+
+		Channel ]
+
+
+
+VcrTimerRecording  (? ( ?(timer recording) 
+
+                       ?[ VcrAddProgram
+
+			  VcrDeleteProgram ] ) )
+
+
+
+VcrAddProgram  ( ?(add ?a program) ?VcrAddProgramParams )
+
+
+
+VcrDeleteProgram ( ?(delete ?a program ?Number_0_to_99 ) ) ;
+
+
+
+VcrSettings ( ?settings ?VcrSetClock )
+
+
+
+VcrSetClock [ ( ?(set the) clock )  
+
+		( set the clock to Time ) 
+
+		( ?not Time) ]
+
+
+
+
+
+;direct commands (not present in menu structure)
+
+DirectCommand  [ ( [ increase decrease next previous] channel )
+
+		 ( ?(change language ?to) [ english swedish svenska ] )
+
+		 (change language) 
+
+		 ( ?(change domain ?to) [ telephone vcr ] )
+
+		 (change domain) 
+
+		(go up)
+
+		(turn  [ off on ] the t v  )
+
+		siridus ]
+
+
+
+;subgrammars
+
+
+
+Channel (channel Number_0_to_109 )
+
+Time [ ( Hour ?Min ) (Hour oclock) ]
+
+Date today
+
+
+
+Hour [ Digit Teen twenty (twenty one) (twenty two) (twenty three) ]
+
+Min  [ Digit Teen (Twenty2Fifty ?Digit) ]
+
+Twenty2Fifty [ twenty thirty forty fifty ] 
+
+
+
+Number_0_to_99 (?not [ Digit Teen Tens ])
+
+Number_0_to_109 (?not [ Digit Teen Tens (one hundred and Digit ) ])
+
+
+
+
+
+Digit [zero one two three four five six seven eight nine ]
+
+Teen [ ten eleven twelve thirteen fourteen fifteen sixteen seventeen eightteen 
+
+       nineteen ]
+
+Tens [ Ten ?Digit ]
+
+Ten  [ twenty thirty forty fifty sixty seventy eighty ninety ]
+
+
+
+
+
+VcrFrom (?not from Time) 
+
+VcrUntil (?not [until to] Time) 
+
+VcrDate (?not Date )
+
+VcrChannel (?not Channel )
+
+
+
+VcrAddProgramParams [ ( VcrFrom ) 
+
+			( VcrUntil )	
+
+			VcrDate
+
+			(VcrChannel)
+
+
+
+			( VcrFrom VcrUntil)
+
+			( VcrFrom VcrDate)
+
+			( VcrFrom VcrChannel)	
+
+			( VcrUntil VcrFrom )	
+
+			( VcrUntil VcrDate ) 		
+
+			( VcrUntil VcrChannel )	
+
+			( VcrDate VcrFrom )
+
+			( VcrDate VcrUntil )
+
+			( VcrDate VcrChannel )
+
+			(VcrChannel VcrFrom )
+
+			(VcrChannel VcrUntil )
+
+			(VcrChannel VcrDate )
+
+
+
+			( VcrFrom VcrUntil VcrDate )
+
+			( VcrFrom VcrUntil VcrChannel )
+
+			( VcrFrom VcrDate VcrUntil )
+
+			( VcrFrom VcrDate VcrChannel )
+
+			( VcrFrom VcrChannel VcrUntil )   
+
+			( VcrFrom VcrChannel VcrDate )
+
+			( VcrUntil VcrFrom VcrDate )
+
+			( VcrUntil VcrFrom VcrChannel )
+
+			( VcrUntil VcrDate VcrFrom ) 		
+
+			( VcrUntil VcrDate VcrChannel )  		
+
+			( VcrUntil VcrChannel VcrFrom ) 		
+
+			( VcrUntil VcrChannel VcrDate )	
+
+			( VcrDate VcrFrom VcrUntil )
+
+			( VcrDate VcrFrom VcrChannel )
+
+			( VcrDate VcrUntil VcrFrom )
+
+			( VcrDate VcrUntil VcrChannel )
+
+			( VcrDate VcrChannel VcrFrom )
+
+			( VcrDate VcrChannel VcrUntil )
+
+			(VcrChannel VcrFrom VcrUntil )
+
+			(VcrChannel VcrFrom VcrDate )
+
+			(VcrChannel VcrUntil VcrFrom )
+
+			(VcrChannel VcrUntil VcrDate )
+
+			(VcrChannel VcrDate VcrFrom )
+
+			(VcrChannel VcrDate VcrUntil )
+
+
+
+	
+
+			( VcrFrom VcrUntil VcrDate VcrChannel )
+
+			( VcrFrom VcrUntil VcrChannel VcrDate )
+
+			( VcrFrom VcrDate VcrUntil VcrChannel )
+
+			( VcrFrom VcrDate VcrChannel VcrUntil )
+
+			( VcrFrom VcrChannel VcrUntil VcrDate )   
+
+			( VcrFrom VcrChannel VcrDate VcrUntil )
+
+			( VcrUntil VcrFrom VcrDate VcrChannel )
+
+			( VcrUntil VcrFrom VcrChannel VcrDate )
+
+			( VcrUntil VcrDate VcrFrom VcrChannel ) 
+
+			( VcrUntil VcrDate VcrChannel VcrFrom )
+
+			( VcrUntil VcrChannel VcrFrom VcrDate  ) 	
+
+			( VcrUntil VcrChannel VcrDate VcrFrom )	
+
+			( VcrDate VcrFrom VcrUntil VcrChannel )
+
+			( VcrDate VcrFrom VcrChannel VcrUntil )
+
+			( VcrDate VcrUntil VcrFrom VcrChannel )
+
+			( VcrDate VcrUntil VcrChannel VcrFrom )
+
+			( VcrDate VcrChannel VcrFrom VcrUntil )
+
+			( VcrDate VcrChannel VcrUntil VcrFrom )
+
+			(VcrChannel VcrFrom VcrUntil VcrDate )
+
+			(VcrChannel VcrFrom VcrDate VcrUntil )
+
+			(VcrChannel VcrUntil VcrFrom VcrDate )
+
+			(VcrChannel VcrUntil VcrDate VcrFrom )
+
+			(VcrChannel VcrDate VcrFrom VcrUntil )
+
+			(VcrChannel VcrDate VcrUntil VcrFrom ) ]
+
+
+

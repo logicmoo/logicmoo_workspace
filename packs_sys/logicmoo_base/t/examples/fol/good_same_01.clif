@@ -1,0 +1,37 @@
+:- include(test_header).
+
+(instance superset BinaryPredicate)
+(domain superset 1 DependantSet)
+(domain superset 2 DependantSet)
+;; Deduction:
+;;  (instance superset DependantSetDenotingPredicate)
+(strictlyFunctionalInArg superset 2)
+(superset SubFoo Foo)  
+(superset SubFoo2 Foo)
+(superset OnlySubtype SupersetOfOnlySubtype)
+(superset ?c (SupersetFn ?c))
+;; Canonicalization:
+;;  (iif (holds superset ?c ?var0) (sameIndividuals (SupersetFn ?c) ?var0))  
+
+(superset (SubtypeFn ?m) ?m)
+;; Canonicalization:
+;;  (iif (holds  superset ?var0 ?m) (sameIndividuals (SubtypeFn ?m) ?var0))
+
+(ask (iif (superset ?c ?m) (sameIndividuals   (SupersetFn ?c) ?m)))
+;; Monotonically True .
+
+(ask (sameIndividuals  (SupersetFn SubFoo)   (SupersetFn SubFoo2) ) )
+;; Monotonically True .
+
+(ask (sameIndividuals  (SubtypeFn Foo) (SubtypeFn Foo)))
+;; Defaultly False, Possible .
+
+(ask (sameIndividuals  (SubtypeFn SupersetOfOnlySubtype) (SubtypeFn SupersetOfOnlySubtype)))
+;; Defaultly False, Possible .
+
+(completeExtentAsserted superset)  ;; enables closed world assumption (the default is open world)
+
+(ask (sameIndividuals  (SubtypeFn SupersetOfOnlySubtype) (SubtypeFn SupersetOfOnlySubtype)))
+;; Monotonically True.
+
+

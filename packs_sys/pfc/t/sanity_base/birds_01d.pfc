@@ -1,0 +1,141 @@
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% props(Obj,[height(ObjHt)]) == t(height,Obj,ObjHt) == rdf(Obj,height,ObjHt) == t(height(Obj,ObjHt)).
+% padd(Obj,[height(ObjHt)]) == prop_set(height,Obj,ObjHt,...) == ain(height(Obj,ObjHt))
+% [pdel/pclr](Obj,[height(ObjHt)]) == [del/clr](height,Obj,ObjHt) == [del/clr]svo(Obj,height,ObjHt) == [del/clr](height(Obj,ObjHt))
+% keraseall(AnyTerm).
+%
+%                      ANTECEEDANT                                   CONSEQUENT
+%
+%        P =         test nesc true                         assert(P),retract(~P) , enable(P).
+%       ~P =         test nesc false                        assert(~P),retract(P), disable(P).
+%
+%   ~ ~(P) =        rewrite_to \+ ~(P)                      rewrite_to \+ ~(P) 
+%  ~ \+(P) =        rewrite_to     (P)                      rewrite_to     (P) 
+%  \+ ~(P) =        test impossiblity is unknown            retract(~P).
+%    \+(P) =        test P is unknown                       retract(P)
+%
+% Dec 13, 2035
+% Douglas Miles
+
+%  was_module(sanity_birdt,[]).
+
+%# Tests Finin original defeasabilty system is working over 2nd order
+
+:- include(test_header).
+
+:- file_begin(pfc).
+
+(tType(COL)==>{kb_local(COL/1)},
+ functorDeclares(COL),
+ (t(COL,X)<==>instanceOf(X,COL))).
+
+==> tType(tType).
+==> tType(tFly).
+==> tType(tCanary).
+==> tType(tPenguin).
+==> tType(tBird).
+
+
+:- mpred_test(predicate_property(tBird(_),dynamic)).
+
+subClassOf(C1,C2)==> (instanceOf(X,C1)==>instanceOf(X,C2)).
+
+
+:- dmsg("A cannary is a type of bird.").
+==> subClassOf(tCanary,tBird).
+:- dmsg("A penguin is a type of bird.").
+==> subClassOf(tPenguin,tBird).
+
+
+
+:- dmsg("Chilly is a penguin.").
+==> tPenguin(iChilly).
+
+:- dmsg("Make sure Chilly is a bird now.").
+:- mpred_test((tBird(iChilly))).
+
+
+:- dmsg("Tweety is a canary.").
+tCanary(iTweety).
+
+:- mpred_test((tBird(iTweety))).
+
+:- dmsg("birds fly by default.").
+mdefault(( tBird(X) ==> tFly(X) )).
+
+:- mpred_test((tBird(iTweety))).
+:- mpred_test((tFly(iTweety))).
+
+:- dmsg("make sure Chilly can fly").
+:- mpred_test((instanceOf(I,tFly),I=iChilly)).
+
+:- mpred_test((tBird(iTweety))).
+
+:- listing([tFly/1,tBird/1,instanceOf/2]).
+
+
+:- dmsg("make sure Tweety can fly (and again Chilly)").
+:- mpred_test((tFly(iTweety))).
+:- mpred_test((tFly(iChilly))).
+
+
+==> never_retract_u(tBird(iChilly)).
+
+
+:- dmsg("penguins do not tFly.").
+tPenguin(X) ==>  ~tFly(X). 
+
+:- dmsg("confirm Chilly now cant fly").
+:- mpred_test((\+ tFly(iChilly))).
+:- mpred_test(( ~ tFly(iChilly))).
+
+%= repropigate that Chilly was a bird again (actualy this asserts)
+
+==> tBird(iChilly).
+
+:- listing(tBird/1).
+
+%= the dmsg explains the difference between \+ and ~
+:- dmsg("confirm Chilly still does not fly").
+:- mpred_test(( \+ tFly(iChilly))).
+:- dmsg("confirm Chilly still cant fly").
+:- mpred_test(( ~  tFly(iChilly))).
+
+
+
+:- dmsg("Chilly is no longer a penguin (hopefly the assertion above about him being a bird wont be removed)").
+
+
+:- debug_logicmoo(_).
+:- mpred_trace_exec.
+:- debug_logicmoo(logicmoo(_)).
+
+:- mpred_test(tBird(iChilly)).
+
+==> never_retract_u(tBird(iChilly)).
+
+
+==> ~ tPenguin(iChilly).                              
+
+
+:- mpred_test((tBird(iChilly))).
+
+:- mpred_test(( \+ tPenguin(iChilly))).
+
+:- dmsg("Chilly is still a bird").
+:- mpred_test((tBird(iChilly))).
+
+:- dmsg("confirm Chilly is flying bird").
+:- mpred_test(( tFly(iChilly))).
+
+:- repropagate(tBird(iChilly)).   
+
+:- dmsg("confirm Chilly is flying bird").
+:- mpred_test(( tFly(iChilly))).
+:- mpred_test(( \+ tPenguin(iChilly))).
+:- mpred_test(( \+ ~tFly(iChilly))).
+
+
+

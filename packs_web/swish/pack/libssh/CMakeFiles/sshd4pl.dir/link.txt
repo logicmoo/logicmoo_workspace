@@ -1,0 +1,1 @@
+/bin/gcc -fPIC -fPIC -pthread -I"/opt/logicmoo_workspace/lib/swipl/include"  -shared  -o sshd4pl.so CMakeFiles/sshd4pl.dir/c/sshd4pl.c.o -Wl,-rpath,/opt/logicmoo_workspace/lib/swipl/lib/x86_64-linux: /usr/lib/x86_64-linux-gnu/libssh.so /opt/logicmoo_workspace/lib/swipl/lib/x86_64-linux/libswipl.so /usr/lib/x86_64-linux-gnu/libutil.so 

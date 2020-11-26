@@ -1,0 +1,63 @@
+% -*-Prolog-*-
+
+skCheck(eq(_,_),[]) :- !.
+
+skCheck(P,Rules) :-
+  sk(P,L),
+  bagof(Rule,
+        S^(member(S,L),
+           skNoticer(P,S,Rule)),
+        Rules).
+         
+% L is a list of the skolem constants found in the term P.
+sk(P,L) :- sk1(P,[],L).
+
+sk1(P,L,[P|L]) :- 
+  skolemConstant(P),
+  !,
+  \+member(P,L),
+  !.
+
+sk1(P,L,L) :- 
+  skolemConstant(P),
+  !.
+
+sk1(P,L,L) :- atomic(P),!.
+
+sk1([Head|Tail], Lin, Lout) :-
+  !,
+  sk1(Head,Lin,Ltemp),
+  sk1(Tail,Ltemp,Lout).
+
+sk1(P,Lin,Lout) :-
+  P =.. Plist,
+  sk1(Plist,Lin,Lout).
+
+% a skolem constant is any term sk/1.
+skolemConstant(sk(_)).
+
+
+% make a Pfc rule to add new facts based on equality info about skolem terms.
+skNoticer(P,Sk,(eq(Sk,X)=>P2)) :- termSubst(Sk,X,P,P2).
+  
+
+% list Lisp's subst, but for terms.
+
+termSubst(Old,New,Old,New) :- !.
+
+termSubst(_,_,Term,Term) :- atomic(Term),!.
+
+termSubst(Old,New,[Head|Tail],[Head2|Tail2]) :- 
+  !,
+  termSubst(Old,New,Head,Head2),
+  termSubst(Old,New,Tail,Tail2).
+
+termSubst(Old,New,Term,Term2) :-
+  Term =.. TermList,
+  termSubst(Old,New,TermList,TermList2),
+  Term2 =.. TermList2.
+
+%:- add((P/(\+P=eq(_,_)) => {skCheck(P,Rules)}, Rules)).
+:- add((P => {skCheck(P,Rules)}, Rules)).
+
+:- add((eq(X,Y) <=> eq(Y,X))).

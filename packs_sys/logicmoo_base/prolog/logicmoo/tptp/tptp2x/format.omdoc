@@ -1,0 +1,475 @@
+%============================================================================
+%----This outputs TPTP FOF in OmDoc format
+%----
+%----Written by Geoff Sutcliffe, August 2003
+%============================================================================
+%----------------------------------------------------------------------------
+translate_ID_character(Character,Translation):-
+    tptp2X_member(Character-Translation,
+[36-"_dollar_",43-"_plus_",94-"_lambda_",58-"_colon_"]).
+%----------------------------------------------------------------------------
+translate_ID_characters([],[]).
+
+translate_ID_characters([First|Rest],Translated):-
+    translate_ID_character(First,FirstTranslated),
+    !,
+    translate_ID_characters(Rest,RestTranslated),
+    tptp2X_append(FirstTranslated,RestTranslated,Translated).
+
+translate_ID_characters([First|Rest],[First|RestTranslated]):-
+    translate_ID_characters(Rest,RestTranslated).
+%----------------------------------------------------------------------------
+%----Encode to avoid illegal characters
+%----If the first is illegal, start with s
+translate_to_ID_encoded(ID,IDEncoded):-
+    name(ID,[FirstIDASCII|RestIDASCII]),
+    translate_ID_character(FirstIDASCII,FirstTranslatedASCII),
+    !,
+    translate_ID_characters(RestIDASCII,RestTranslatedASCII),
+    tptp2X_append("s",FirstTranslatedASCII,MidTranslatedASCII),
+    tptp2X_append(MidTranslatedASCII,RestTranslatedASCII,AllTranslatedASCII),
+    name(IDEncoded,AllTranslatedASCII).
+
+%----Otherwise do all
+translate_to_ID_encoded(ID,IDEncoded):-
+    name(ID,IDASCII),
+    translate_ID_characters(IDASCII,TranslatedASCII),
+    name(IDEncoded,TranslatedASCII).
+%----------------------------------------------------------------------------
+write_ID_encoded(ID):-
+    translate_to_ID_encoded(ID,IDEncoded),
+    write(IDEncoded).
+%----------------------------------------------------------------------------
+translate_to_omdoc_symbol(Symbol,OmDocSymbol):-
+%----Need the ()s to allow translation of ! and ? - weird Prolog bug
+    tptp2X_member((Symbol)-OmDocSymbol,
+[('~')-not,('|')-or, ('&')-and,('=>')-implies,('<=')-implied,('<=>')-equivalent,
+('<~>')-xor,('~&')-nand,('~|')-nor,('[]')-tuple,
+('!')-forall,('?')-exists,('^')-lambda,('!!')-'forall-op',('??')-'exists-op',
+(':=')-letrec,
+('$tptp_equal')-eq,('$tptp_not_equal')-neq,
+('$true')-true,('$false')-false,
+('$i')-ind,('$o')-bool,('$tType')-type,
+('>')-funtype,('*')-tupletype,('+')-cotupletype]),
+    !.
+
+translate_to_omdoc_symbol(Symbol,Symbol).
+%----------------------------------------------------------------------------
+get_CD_for_symbol(_,IndividualSymbol,_,ind):-
+    tptp2X_member(IndividualSymbol,[ind]),
+    !.
+
+get_CD_for_symbol(_,TruthValueSymbol,_,truthval):-
+    tptp2X_member(TruthValueSymbol,[true,false,bool]),
+    !.
+
+get_CD_for_symbol(_,PL0Symbol,_,pl0):-
+    tptp2X_member(PL0Symbol,[not,and,or,xor,implies,implied,equivalent]),
+    !.
+
+get_CD_for_symbol(fof,PL1Symbol,_,pl1):-
+    tptp2X_member(PL1Symbol,[forall,exists]),
+    !.
+
+get_CD_for_symbol(thf,PL1Symbol,_,sthol):-
+    tptp2X_member(PL1Symbol,[forall,exists]),
+    !.
+
+get_CD_for_symbol(thf,IndEqSymbol,_,sthol):-
+    tptp2X_member(IndEqSymbol,[neq,eq]),
+    !.
+
+get_CD_for_symbol(_,IndEqSymbol,_,indeq):-
+    tptp2X_member(IndEqSymbol,[neq,eq]),
+    !.
+
+get_CD_for_symbol(_,STSymbol,_,simpletypes):-
+    tptp2X_member(STSymbol,[type,funtype,tupletype,cotupletype]),
+    !.
+
+get_CD_for_symbol(_,STLCSymbol,_,stlc):-
+    tptp2X_member(STLCSymbol,[lambda]),
+    !.
+
+get_CD_for_symbol(_,RCSymbol,_,'record-calc'):-
+    tptp2X_member(RCSymbol,[tuple]),
+    !.
+
+get_CD_for_symbol(_,STHOLSymbol,_,sthol):-
+    tptp2X_member(STHOLSymbol,['forall-op','exists-op']),
+    !.
+
+get_CD_for_symbol(_,UCDSymbol,_,unknown_cd):-
+    tptp2X_member(UCDSymbol,[type]),
+    !.
+
+get_CD_for_symbol(_,LetSymbol,_,let):-
+    tptp2X_member(LetSymbol,[letrec,definedas]),
+    !.
+
+get_CD_for_symbol(_,_PL1Symbol,LocalCD,LocalCD).
+%----------------------------------------------------------------------------
+%----Variables with types or as definitions
+output_omdoc_omv(Language,TypeOrDefnForm,LocalCD,Indent):-
+    TypeOrDefnForm =.. [Separator,Variable,TypeOrDefn],
+    tptp2X_member(Separator,[':',':=']),
+    !,
+    (   Separator == ':'
+    ->  Name = type
+    ;   Name = definedas
+    ),
+    output_indent(Indent,0),
+    write('<OMATTR>'),
+    nl,
+    Indent2 is Indent + 2,
+    output_indent(Indent2,0),
+    write('<OMATP>'),
+    nl,
+    Indent4 is Indent + 4,
+    output_omdoc_oms(Language,Name,LocalCD,Indent4),
+    output_a_omdoc_formula(Language,TypeOrDefn,LocalCD,Indent4),
+    output_indent(Indent2,0),
+    write('</OMATP>'),
+    nl,
+    output_omdoc_omv(Language,Variable,LocalCD,Indent2),
+    output_indent(Indent,0),
+    write('</OMATTR>'),
+    nl.
+
+output_omdoc_omv(_Language,Variable,_,Indent):-
+    output_indent(Indent,0),
+    write('<OMV name="'),
+    write(Variable),
+    write('"/>'),
+    nl.
+%----------------------------------------------------------------------------
+output_omdoc_omvs(_Language,[],_,_).
+
+output_omdoc_omvs(Language,[First|Rest],LocalCD,Indent):-
+    output_omdoc_omv(Language,First,LocalCD,Indent),
+    output_omdoc_omvs(Language,Rest,LocalCD,Indent).
+%----------------------------------------------------------------------------
+output_omdoc_oms(Language,Symbol,LocalCD,Indent):-
+    translate_to_omdoc_symbol(Symbol,OmDocSymbol),
+    output_indent(Indent,0),
+    write('<OMS cd="'),
+    get_CD_for_symbol(Language,OmDocSymbol,LocalCD,CD),
+    write(CD),
+    write('" name="'),
+    write(OmDocSymbol),
+    write('"/>'),
+    nl.
+%----------------------------------------------------------------------------
+output_omdoc_oma(Language,Connective,Formulae,LocalCD,Indent):-
+    output_indent(Indent,0),
+    write('<OMA>'),
+    nl,
+    Indent2 is Indent + 2,
+%----No need to output apply connective
+    (   Connective = '@'
+    ->  true
+    ;   output_omdoc_oms(Language,Connective,LocalCD,Indent2)
+    ),
+    output_omdoc_formula_list(Language,Formulae,LocalCD,Indent2),
+    output_indent(Indent,0),
+    write('</OMA>'),
+    nl.
+%----------------------------------------------------------------------------
+output_omdoc_formula_list(_Language,[],_,_).
+
+output_omdoc_formula_list(Language,[Formula|RestOfFormulae],LocalCD,Indent):-
+    output_a_omdoc_formula(Language,Formula,LocalCD,Indent),
+    output_omdoc_formula_list(Language,RestOfFormulae,LocalCD,Indent).
+%----------------------------------------------------------------------------
+%----Variables done first to avoid being instantiated
+output_a_omdoc_formula(Language,Variable,LocalCD,Indent):-
+    looks_like_a_variable(Variable),
+    !,
+    output_omdoc_omv(Language,Variable,LocalCD,Indent).
+
+%----Quantified
+output_a_omdoc_formula(Language,QuantifiedFormula,LocalCD,Indent):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula),
+    !,
+    output_indent(Indent,0),
+    write('<OMBIND>'),
+    nl,
+    Indent2 is Indent + 2,
+    output_omdoc_oms(Language,Quantifier,LocalCD,Indent2),
+    output_indent(Indent2,0),
+    write('<OMBVAR>'),
+    nl,
+    Indent4 is Indent2 + 2,
+    output_omdoc_omvs(Language,Variables,LocalCD,Indent4),
+    output_indent(Indent2,0),
+    write('</OMBVAR>'),
+    nl,
+    output_a_omdoc_formula(Language,Formula,LocalCD,Indent2),
+    output_indent(Indent,0),
+    write('</OMBIND>'),
+    nl.
+
+%----Binary Formula
+output_a_omdoc_formula(Language,BinaryFormula,LocalCD,Indent):-
+    tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS),
+    !,
+    output_omdoc_oma(Language,BinaryConnective,[LHS,RHS],LocalCD,Indent).
+
+%----Unary Formula
+output_a_omdoc_formula(Language,UnaryFormula,LocalCD,Indent):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula),
+    !,
+    output_omdoc_oma(Language,UnaryConnective,[Formula],LocalCD,Indent).
+
+%----Tuple
+output_a_omdoc_formula(Language,[First|Rest],LocalCD,Indent):-
+    !,
+    output_omdoc_oma(Language,'[]',[First|Rest],LocalCD,Indent).
+
+%----Atomic formulae
+output_a_omdoc_formula(Language,Atom,LocalCD,Indent):-
+    atom(Atom),
+    !,
+    output_omdoc_oms(Language,Atom,LocalCD,Indent).
+
+output_a_omdoc_formula(Language,Atom,LocalCD,Indent):-
+    Atom =.. [Principle|Arguments],
+    output_omdoc_oma(Language,Principle,Arguments,LocalCD,Indent).
+%----------------------------------------------------------------------------
+output_omdoc_obj(Language,Formula,LocalCD,Indent):-
+    output_indent(Indent,0),
+    write('<OMOBJ xmlns="http://www.openmath.org/OpenMath">'),
+    nl,
+    Indent2 is Indent + 2,
+    output_a_omdoc_formula(Language,Formula,LocalCD,Indent2),
+    output_indent(Indent,0),
+    write('</OMOBJ>'),
+    nl.
+%----------------------------------------------------------------------------
+output_omdoc_fmp(Language,Formula,LocalCD,Indent):-
+    output_indent(Indent,0),
+    write('<FMP>'),
+    nl,
+    Indent2 is Indent + 2,
+    output_omdoc_obj(Language,Formula,LocalCD,Indent2),
+    output_indent(Indent,0),
+    write('</FMP>'),
+    nl.
+%----------------------------------------------------------------------------
+output_omdoc_formulae([],_).
+
+%----Skip types because they are done in symbol introduction
+output_omdoc_formulae([TypeFormula|RestOfFormulae],LocalCD):-
+    TypeFormula =.. [_,_Name,type,Symbol:_|_],
+    atomic(Symbol),
+    !,
+    output_omdoc_formulae(RestOfFormulae,LocalCD).
+
+%----Type assertions - for complex case where a non-atomic is typed.
+output_omdoc_formulae([TypeFormula|RestOfFormulae],LocalCD):-
+    TypeFormula =.. [Language,Name,_,Formula:Type|_],
+    !,
+    write('<type xml:id="'),
+    write(Name),
+    write('" system="#simple-types">'),
+    nl,
+    output_omdoc_obj(Language,Formula,LocalCD,2),
+    output_omdoc_obj(Language,Type,LocalCD,2),
+    write('</type>'),
+    nl,
+    nl,
+    output_omdoc_formulae(RestOfFormulae,LocalCD).
+
+%----Top level definitions
+output_omdoc_formulae([DefnFormula|RestOfFormulae],LocalCD):-
+    DefnFormula =.. [Language,_,definition,Name:=Definition|_],
+    !,
+    write('<definition for="'),
+    write(Name),
+    write('" type="simple">'),
+    nl,
+    output_omdoc_obj(Language,Definition,LocalCD,2),
+    write('</definition>'),
+    nl,
+    nl,
+    output_omdoc_formulae(RestOfFormulae,LocalCD).
+
+output_omdoc_formulae([Conjecture|RestOfFormulae],LocalCD):-
+    Conjecture =.. [Language,Name,conjecture,Formula|_],
+    !,
+    write('<assertion type="conjecture" xml:id="'),
+    write(Name),
+    write('">'),
+    nl,
+    output_omdoc_fmp(Language,Formula,LocalCD,0),
+    write('</assertion>'),
+    nl,
+    nl,
+    output_omdoc_formulae(RestOfFormulae,LocalCD).
+
+%----Regular formulae
+output_omdoc_formulae([NonConjecture|RestOfFormulae],LocalCD):-
+    NonConjecture =.. [Language,Name,Role,Formula|_],
+    write('<'),
+    write(Role),
+    write(' xml:id="'),
+    write(Name),
+    write('">'),
+    nl,
+    output_omdoc_fmp(Language,Formula,LocalCD,0),
+    write('</'),
+    write(Role),
+    write('>'),
+    nl,
+    nl,
+    output_omdoc_formulae(RestOfFormulae,LocalCD).
+%----------------------------------------------------------------------------
+output_omdoc_symbols([],_,_).
+
+output_omdoc_symbols([Symbol|RestOfSymbols],AnnotatedFormulae,LocalCD):-
+    translate_to_omdoc_symbol(Symbol,Translated),
+    Symbol \== Translated,
+    !,
+    output_omdoc_symbols(RestOfSymbols,AnnotatedFormulae,LocalCD).
+
+output_omdoc_symbols([Symbol|RestOfSymbols],AnnotatedFormulae,LocalCD):-
+    tptp2X_member(TypeFormulaForSymbol,AnnotatedFormulae),
+    TypeFormulaForSymbol =.. [Language,_,type,Symbol:Type|_],
+%----It must be atomic, but constrast with non-atomic in output_omdoc_formulae
+    atomic(Symbol),
+    !,
+    write('<symbol name="'),
+    write_ID_encoded(Symbol),
+    write('">'),
+    nl,
+    write('  <type system="simpletypes">'),
+    nl,
+    output_omdoc_obj(Language,Type,LocalCD,4),
+    write('  </type>'),
+    nl,
+    write('</symbol>'),
+    nl,
+    output_omdoc_symbols(RestOfSymbols,AnnotatedFormulae,LocalCD).
+
+output_omdoc_symbols([Symbol|RestOfSymbols],AnnotatedFormulae,LocalCD):-
+    write('<symbol name="'),
+    write_ID_encoded(Symbol),
+    write('"/>'),
+    nl,
+    output_omdoc_symbols(RestOfSymbols,AnnotatedFormulae,LocalCD).
+%----------------------------------------------------------------------------
+output_omdoc_types([]).
+
+output_omdoc_types([Type|RestOfTypes]):-
+    translate_to_omdoc_symbol(Type,Translated),
+    Type \== Translated,
+    !,
+    output_omdoc_types(RestOfTypes).
+
+output_omdoc_types([Type|RestOfTypes]):-
+    write('<symbol name="'),
+    write_ID_encoded(Type),
+    write(' role="type"/>'),
+    nl,
+    output_omdoc_types(RestOfTypes).
+%----------------------------------------------------------------------------
+%----Extract header info from TPTP header
+extract_omdoc_header_information(FileHeader,ProblemName):-
+    tptp2X_member('File'-[FileLine],FileHeader),
+    !,
+    name(FileLine,FileLineASCII),
+    tptp2X_append(" File     : ",RestLine,FileLineASCII),
+    tptp2X_append(" : TPTP",_,TailASCII),
+    tptp2X_append(ProblemNameASCII,TailASCII,RestLine),
+    name(ProblemName,ProblemNameASCII).
+
+%----If any member failed, return default nothings
+extract_omdoc_header_information(_,unknown).
+%----------------------------------------------------------------------------
+output_omdoc(FileHeader,Symbols,AnnotatedFormulae):-
+    extract_omdoc_header_information(FileHeader,ProblemName),
+    translate_to_ID_encoded(ProblemName,LocalCD),
+%----Output OmDoc header
+    write('<?xml version="1.0"?>'),
+    nl,
+    write('<!DOCTYPE omdoc PUBLIC "-//OMDoc//DTD OMDoc V1.1//EN" "http://www.mathweb.org/~jzimmer/omdoc1.1.dtd" []>'),
+    nl,
+    write('<omdoc xmlns="http://www.mathweb.org/omdoc" xml:id="'),
+    write(LocalCD),
+    write('.omdoc">'),
+    nl,
+    write('<theory xml:id="'),
+    write(LocalCD),
+    write('">'),
+    nl,
+    write('<imports from="http://cds.omdoc.org/logics/sthol.omdoc#sthol"/>'),
+    nl,
+    nl,
+%    examine_formulae_for_types(AnnotatedFormulae,_,AtomicTypes),
+%    write('<!-- Types -->'),
+%    nl,
+%    output_omdoc_types(AtomicTypes),
+%    nl,
+    examine_formulae_for_definitions(AnnotatedFormulae,DefinedSymbols),
+%DEBUG write('Defined '),write(DefinedSymbols),nl,
+    write('<!-- Defined symbols -->'),
+    nl,
+    output_omdoc_symbols(DefinedSymbols,AnnotatedFormulae,LocalCD),
+%DEBUG write('Symbols '),write(Symbols),nl,
+    write('<!-- Non-defined symbols -->'),
+    nl,
+    output_omdoc_symbols(Symbols,AnnotatedFormulae,LocalCD),
+    nl,
+    translate_to_ID_encoded(ProblemName,LocalCD),
+    output_omdoc_formulae(AnnotatedFormulae,LocalCD),
+    write('</theory>'),
+    nl,
+    write('</omdoc>'),
+    nl.
+%----------------------------------------------------------------------------
+%----Check for duplicate arities
+omdoc_consistent(SymbolArityPairs):-
+    tptp2X_select(Symbol/Arity,SymbolArityPairs,OtherPairs),
+    tptp2X_member(Symbol/OtherArity,OtherPairs),
+    \+ (Arity = OtherArity),
+    !,
+    write('ERROR: '),
+    write(Symbol),
+    write(' has two different arities.'),
+    nl,
+    fail.
+
+omdoc_consistent(_).
+%----------------------------------------------------------------------------
+%----Output clause-omdoc-syntax
+omdoc(omdoc,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    write('ERROR: No CNF format available in OmDoc'),
+    nl.
+
+%----Output FOF-omdoc-syntax
+omdoc(omdoc,Formulae,FileHeader):-
+    tptp_formulae(Formulae),
+    !,
+%----Extract predicates and functors
+    examine_formulae_for_symbols(Formulae,SymbolStructures,Symbols),
+%----Check for duplicate arities
+    omdoc_consistent(SymbolStructures),
+%----Do translation
+    output_omdoc(FileHeader,Symbols,Formulae).
+
+%----unknown format (to be prepared for the future)
+omdoc(omdoc,_,_):-
+    !,
+    write('ERROR: Unknown tptp input format'),
+    nl.
+%----------------------------------------------------------------------------
+%----Provide information about the OmDoc format
+%----Have to suppress comments because the <?xml must come first
+% omdoc_format_information('<!-- '-' -->','.omdoc').
+omdoc_format_information('','.omdoc').
+%----------------------------------------------------------------------------
+%----Provide information about the OmDoc file
+omdoc_file_information(format,omdoc,'OmDoc format').
+%----------------------------------------------------------------------------

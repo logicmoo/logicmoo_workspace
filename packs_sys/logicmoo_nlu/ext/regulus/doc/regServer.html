@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>REGULUS - The regserver Utility</TITLE>
+<META NAME="Generator" CONTENT="emacs -nw">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#FF0000" VLINK="#800000" ALINK="#FF00FF">
+
+<h2>What is the regserver?</h2>
+<p>
+The <code>regserver</code> (Regulus Server) utility is a runtime component that connects to a <em>Nuance<FONT SIZE="-1"><SUP>TM</SUP></FONT> recognition server</em>, and performs recognition and playback.
+</p>
+<p>
+The utility listens on a socket for incoming requests, and forwards the requested operation to the nuance platform.
+</p>
+
+<h2>How to run the regserver</h2>
+<p>
+The regserver takes as input a mandatory argument which points to a compiled recognition package (-package),
+and optionally
+<ul>
+	<li>the port where it will listen to for a connection (-p &lt;port&gt;)</li>
+	<li>an optional log file (-f &lt;log file&gt;)</li>
+	<li>a switch that controls how verbose the output will be (-v)</li>
+</ul>
+</p>
+
+Here's how the console output looks like when the utility is invoked without any arguments:
+<pre>
+Usage: ${REGULUS}/RegulusSpeechServer/runtime/regserver.exe \
+        -package <package dir> \
+        [nuance parameters] \
+        [-port <tcp port the server listens for connection>] \
+        [-v] \
+        [-f <log file>]
+</pre>
+
+A convenient way to run a regserver process is to use the <FONT SIZE="+1">R</FONT><FONT SIZE="-1">EGULUS</FONT> <A HREF="regClient/index.html">Java API</A>.
+<br>
+Here's an example on how to use it:
+<br>
+<pre>
+	// run the regserver process and open a connection to it
+	RegClient regClient = new RegClient("localhost", "2555", "audio.OutputVolume=200", "path/to/regserver.exe -v -f /path/to/logfile.txt", 2000);
+
+	// start a recognition action, and wait for it's completion
+	RegResult result = regClient.recognize(".MAIN");
+
+	// print the result
+	if( result.isActionSuccesfull() ){
+		System.out.println("Recognition result: '" + result.getRecognition() + "'");
+	}
+
+	// shutdown connection to regserver, and exit regserver process
+	regClient.shutdown();
+</pre>
+
+
+<h2>Do I need to use the regserver utility?</h2>
+<p>
+No, you can interface to the recognition engine yourself:
+<br>
+<FONT SIZE="+1">R</FONT><FONT SIZE="-1">EGULUS</FONT> is a utility that compiles unification grammars. Once you've compiled your grammar you don't need any additionl <FONT SIZE="+1">R</FONT><FONT SIZE="-1">EGULUS</FONT> runtime component.
+<br>
+Regserver and the Java API are provided to help develop applications faster.
+</p>
+
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,7 @@
+// ontology required (to load first): aminePlatform/samples/ontology/OccamSBLSample.xml
+[Act = [Act]-to->[Object = _obj]
+       ]-after->[State = [State #0] -
+                                 -Object->[Object = _obj],
+                                 -State_Value->[State_Value :_StValue]
+                        ]
+

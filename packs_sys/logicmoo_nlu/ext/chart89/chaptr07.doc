@@ -1,0 +1,671 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Features and the lexicon
+
+For implementation purposes, we will represent a feature structure dag                     
+as a list of feature:value pairs whose tail is left open as a
+variable.  As we will see below, this variable represents the
+remainder of the DAG.  When we wish to extend a DAG to include values
+for more features, we will do it by further instantiating this
+variable.  Thus:
+
+    [person : 3, number : sing|_]
+
+represents something with PERSON and NUMBER features.  The values for
+these are respectively 3 and SING.  Note that ":" is a operator, whose
+syntactic properties may be defined as follows:
+
+    ?-op(500,xfy, : ).
+
+We use it simply as a way of bundling a feature and a value into a
+single structure that can appear as an element of a list.  Where a
+value is itself a complex collection of features, an embedded list of
+the same type can be used in the appropriate element.  For instance,
+in the following:
+
+    [cat : v, arg0 : [cat : np, case : nom, number : sing|_]|_]
+
+the value of the ARG0 feature is a complex object.  This has values
+for at least the features CAT, CASE and NUMBER.  Both of these two
+example descriptions are tree-shaped, and in order to represent
+general dags we need to have a way of representing sharing between
+different parts of a category.  A Prolog variable can be used to
+indicate that two features must be given the same value, i.e. that the
+features share.  Thus
+
+    [cat : vp, head : X, verb : [head : X|_]_]
+
+represents a dag in which the HEAD and the HEAD of the VERB share a
+value, whereas:
+
+    [cat : vp, head : X, verb : [head : Y|_]|_]
+
+represents a dag in which they do not.  Using multiple occurrences of
+a Prolog variable to indicate sharing means that Prolog will correctly
+handle the shared value for us.  So, for instance, if we start off
+with the first data structure above and choose to add the information
+that the HEAD has some specific value, by instantiating X, then it
+will automatically turn out that the HEAD of the VERB will have the
+same value.  The same effect will not, of course, be achieved if we
+instantiate X in the second data structure.  In fact, since X and Y
+only appear once each in the second data structure, unless X and Y are
+given some other significance the information conveyed by this
+structure is essentially the same as that conveyed by:
+
+    [cat : vp|_]
+
+Frequently we need to denote a dag where two subdags share a value,
+but where some information is already known about that value.  In such
+a case we want to show all the known information about the value in
+both places but in addition want to indicate that the remainder of the
+description of the value is also shared.  For instance:
+
+    [cat : vp, head : [number : sing|X],
+       verb : [head : [number : sing|X]|_]|_]
+
+denotes a structure where the HEAD shares with the HEAD of the VERB,
+but where in addition we know that the NUMBER of the HEAD is SING.  As
+a description, a dag is always sideways open, which means that it can
+always be consistently extended by adding information about new
+features that are not mentioned in it.  This can be done in Prolog by
+instantiating the remainder variable to a new structure containing the
+new featural information and which itself ends with a remainder
+variable, e.g.
+
+    ?- D1 = [cat:vp | R1],
+            R1 = [head:[number:sing|X] | R2],
+            R2 = [number:sing| R3].
+    D1 = [cat : vp, head : [number : sing | _1], number : sing | _2]
+
+If we want to encode the fact that two complex dags share then we must
+ensure that if we later extend the first dag then the second one is
+also extended in the same way.  This can be done by making the
+remainder variables, as well as all the feature values already
+present, share.
+
+Notice that it is quite possible to construct superficially similar
+Prolog lists that do not correspond to any legal dag.  Here is an
+example of such an "illegal" structure:
+
+    [cat : vp, head : [number : sing|X],                     
+       verb : [head : [number : plur|X]|_]|_]
+
+This involves two subdags which share their "remainders" but which do
+not share their NUMBER features.  This cannot happen in a dag (try
+drawing a picture of it).  On the other hand, some possibly unexpected
+structures do indeed correspond to legal dags, for instance the
+following:
+
+    [cat : vp, head : [person : 3, number : sing|X],
+       verb : [head : [number : sing, person : 3|X]|_]|_]
+
+This last example illustrates an important point: the order of the
+feature:value pairs in the dag representation is of no significance.
+This is one of two crucial differences (sideways openness being the
+other) between the feature structures discussed in this chapter, and
+those employed in the DCG feature grammars used in Chapter 4.
+
+Prolog is built on unification, of course, but the unification on
+which it depends is term unification, not dag unification (we return
+to the distinction below).  This means that implementing dag
+unification in Prolog is not entirely trivial, although it is
+significantly simpler than in Lisp, say.
+
+As we are making use of Prolog variables to represent the unknown
+parts of dags, it is natural to implement unification in a destructive
+way, and our dag unification will be destructive in exactly the same
+way that Prolog unification is.  That is, a successful unification
+will result in the two dags involved being instantiated so that all
+information is shared between them.  What we need to do is go through
+the explicit feature:value pairs mentioned in the first dag, for each
+one extending the second dag as necessary for it to contain the same
+pair.  Finally, we instantiate the remainder variable at the end of
+the first dag to whatever information there is in the second dag and
+which we have not already encountered.  For instance with the
+unification:
+
+    ?- unify([cat:vp|X], [number:sing|Y]).
+
+we start by extending the second to contain the information explicitly
+encoded in the first:
+
+    (Y = [cat:vp|Z])
+
+    [cat:vp|X]    [number:sing, cat:vp |Z]
+
+We now instantiate X to the parts of the second dag that we have not
+already copied across:
+
+    (X = [number:sing|Z])
+
+    [cat:vp, number:sing|Z]    [number:sing, cat:vp |Z]
+
+and we now have obtained two dags which share information in all
+respects, obtained simply by instantiating the original dags.
+
+Our definition of unification will be expressed recursively.
+Basically we recurse down the list provided by the first dag,
+extending the second dag to include the relevant information.  Then we
+instantiate the variable at the end of the list to some part of the
+second dag.  We will actually arrange that by the time we reach the
+variable at the end of the first dag the second argument of 'unify'
+will be exactly the part of the original second dag that we need.  The
+first clause of our unification definition covers this base case.  The
+remainder variable in the first argument is made to be the same as the
+dag provided in the second argument:
+
+    unify(Dag,Dag) :- !.
+
+This clause will also cover other useful situations, such as when we
+attempt to unify two atomic dags.  The rest of the definition of the
+'unify' predicate, though brief, merits some attention:
+
+    unify([Path:Value|Dags1],Dag) :-
+      pathval(Dag,Path,Value,Dags2),
+      unify(Dags1,Dags2).
+
+This splits the first dag into the initial pair Path:Value and a
+remainder (Dags1), then uses the predicate 'pathval' to make sure that
+Path has the value Value in the second dag (Dag).  In addition to
+this, 'pathval' also returns in its third argument a new dag Dags2,
+everything in Dag apart from the feature:value pair for Value.
+Finally, 'unify' attempts to unify the two remainders Dags1 and Dags2.
+The fact that we use this 'pathval' result, rather than the original
+Dag, in the recursive call means that by the time we have recursed
+down to the base case the second argument of 'unify' will contain only
+the information about features that were originally in the second dag
+but not in the first.  It will therefore be the appropriate value to
+instantiate the first remainder variable to.
+
+Plainly, most of the interesting work here is getting done by pathval,
+to which we now turn.  If the desired feature is to be found in the
+first item in the dag, then its value (Value1) is extracted and
+checked for unification with the value argument (Value2):
+
+    pathval([Feature:Value1|Dags],Feature,Value2,Dags) :-
+      !, unify(Value1,Value2).
+
+Otherwise, we recurse down the list, looking for an entry for the
+feature further on:
+
+    pathval([Dag|Dags1],Feature,Value,[Dag|Dags2]) :-
+      pathval(Dags1,Feature,Value,Dags2).
+
+Notice that the cut in the first clause means that once we have found
+an entry for the desired Feature in the dag, even if the value
+recorded, Value1, does not unify with the desired value, Value2, we do
+not ever consider looking further down the list for other entries for
+this feature.
+
+The predicate 'pathval' shares with well-known examples like 'member'
+and 'append' a certain reversibility.  That is, we can call it with a
+dag that already contains an entry for the desired feature:
+
+    ?- pathval([cat:vp,number:sing|X],number,Value,Remainder).
+    X = _1
+    Value = sing
+    Remainder = [cat : vp | _1]
+
+or we can call it with a dag that does not explicitly mention that
+feature.  In this case, it will instantiate the remainder variable so
+that the dag does have a value for that feature afterwards:
+
+    ?- pathval([cat:vp,number:sing|X],tense,pres,Remainder).
+    X = [tense : pres | _1]
+    Remainder = [cat : vp, number : sing | _1]
+
+Or even:
+
+    ?- pathval(Dag,number,plur,Remainder).
+    Dag = [number : plur | _1]
+    Remainder = _1
+
+Finally, if we call 'pathval' with a value for a feature that
+conflicts with the value already recorded, the goal (and hence the
+whole unification) fails:
+
+    ?- pathval([cat:vp,number:sing|X],number,plur,Remainder).
+    no
+
+This versatility is just what we need to cover all the possible cases
+that might arise in unification.
+
+In what follows we will see how we can embed a formal language that
+looks very like PATR within Prolog.  Given some sleight of hand with
+Prolog operator definitions, this turns out to be an almost trivial
+task.  However, the embedded PATR-like language that we get will allow
+us to perform grammatical experiments with the dag unification
+definition provided previously.
+
+To start with, let us consider how a PATR rule might look in a more
+Prolog-like notation.  Here is the rule that began our grammar of
+French in Section 7.1, above.
+
+    Rule s  ->  np  vp:
+                 <np per> = <vp per>
+                 <np num> = <vp num>.
+
+As we have seen, this rule says that a LHS category (dag) can be
+realised by a sequence of two RHS categories (dags) in French,
+provided that certain conditions are met by the categories.  The
+relationship between the LHS category and the sequence of RHS
+categories can be expressed by a predicate 'rule' which takes two
+arguments.  First of all, the dags must have the correct values for
+their CAT feature.  Secondly, the last two must share their PER and
+NUM values.  These constraints can be simply stated using our
+'pathval' predicate:
+
+    rule(S,[NP,VP]) :-
+       pathval(S,cat,s,_),
+       pathval(NP,cat,np,_),
+       pathval(VP,cat,vp,_),
+       pathval(NP,per,X,_),
+       pathval(VP,per,X,_),
+       pathval(NP,num,Y,_),
+       pathval(VP,num,Y,_).
+
+In fact, because of the reversibility of 'pathval', our Prolog
+definition is actually rather more versatile than this.  If the 'rule'
+predicate is provided with completely instantiated dags for S, NP and
+VP, it will indeed succeed exactly when the dags satisfy the
+conditions of the PATR rule.  But if it is provided with dags which do
+not specify values for all the relevant features, it will actually
+attempt to instantiate the dags so that the conditions are satisfied.
+This means that 'rule' will (destructively) compute for us the minimal
+extensions of the categories we give it to make them satisfy the rule.
+
+This basic strategy is all that we need to encode the content of PATR
+in Prolog clauses, but it leaves something to be desired as regards
+the elegance of the notation.  In what follows, we will take the
+necessary steps to allow for a more perspicuous notation closer to the
+original PATR, without changing the actual content in any significant
+way.  All that we need to do, on the syntactic side, is define four
+infix operators in addition to the ":" that we are already using in
+our dag list data structure:
+
+    ?- op(500,xfy, : ).
+    ?- op(500,xfx,--->).
+    ?- op(600,xfx,===).
+    ?- op(400,xfx,ule).
+    ?- op(600,xfx,ord).
+
+The first two operators will play the role that their appearance might
+lead one to expect, and the second two will enable us to exploit the
+kind of pun that makes people say "ouch".  Their role will emerge when
+we look at the examples that follow.  First of all, we rename 'rule'
+to the infix operator '--->' and introduce a predicate '===' that is
+very similar to 'pathval'. '===', when provided with a dag and feature
+name (bound together by the operator ':') as its first argument uses
+'pathval' to find the relevant feature value from the dag and unify it
+with its second argument.  So our rule now looks as follows:
+
+    S ---> [NP, VP] :-
+       S  : cat === s,
+       NP : cat === np,
+       VP : cat === vp,
+       NP : per === X,
+       VP : per === X,
+       NP : num === Y,
+       VP : num === Y.
+
+There are a number of extra steps that we can take to make this
+notation even closer to the original PATR.  The definition of '==='
+can be generalized to allow a dag:feature pair to occur as the second
+argument as well as the first; it can also be generalized to allow a
+sequence of feature names (separated by ':'s) as well as a single
+feature name.  Thus constructions like the following can be permitted:
+
+    NP : num === VP : num
+    NP : agr : per === 1
+
+Finally, we can use some extra (functionless) syntax, using the
+operator 'ule' to make the representation even closer to the original
+PATR.  Here is the final translation of the French rule into Prolog
+augmented with these operators:
+
+    R ule S ---> [NP, VP]  :-
+           S  : cat === s,
+           NP : cat === np,
+           VP : cat === vp,
+           NP : per === VP : per,                     
+           NP : num === VP : num.
+
+Note that the "R ule" component here is pure syntactic sugar and that
+the space between the "R" and the "ule" is absolutely vital.  The
+Prolog variable R is not mentioned in the subsequent clause and its
+function is merely decorative.  We could, alternatively, have defined
+'Rule' as a unary operator (and been stuck with using the quotes round
+it), or deviated from PATR syntax further, and simply dispensed with
+any rule prefix.  When we use the '--->' predicate now, we need to
+remember that the first argument will always be a structure of the
+form:
+
+    Variable ule LHS
+
+where LHS is the true LHS of the rule.  As long as we remember to
+strip off this extra structure whenever a rule is accessed, it does no
+harm and yet brings the advantage of a close correspondence with the
+original PATR syntax.
+
+Lexical entries succumb to similar treatment.  Here is the first entry
+from our grammar of French:
+
+    Word je: <cat> = np
+             <per> = 1
+             <num> = sing.
+
+A lexical entry expresses a relationship between the word defined
+("je") and the dag (W) that is assigned to that word.  In Prolog, we
+could write this rule as:
+
+    word(W,je) :-
+       pathval(W,cat,np,_),
+       pathval(W,per,1,_),
+       pathval(W,num,sing,_).
+
+We can rename 'word' to the infix operator 'ord' and make use of the
+'===' predicate as before  to give the rule a new appearance in our
+operator augmented Prolog:
+
+    W ord je :-
+            W : cat === np,
+            W : per === 1,
+            W : num === sing.
+
+Notice that the W variable does do some work here -- it stands for the
+dag associated with the word, and conditions on it are expressed in
+the body of the clause.  As far as Prolog is concerned, we could get
+exactly the same effect from writing the rule as:
+
+    X ord je :-
+            X : cat === np,
+            X : per === 1,
+            X : num === sing.
+
+but, of course, the whole thing reads much better if we use the
+variable W for the dag.
+
+Suppose we change the analysis slightly, so as to simplify the S
+expansion rule:
+
+    Rule s  ->  np  vp:
+                 <np agr> = <vp agr>.
+
+Unsurprisingly, this translates as follows:
+
+    R ule S ---> [NP, VP]  :-
+          S  : cat === s,
+          NP : cat === np,
+          VP : cat === vp,
+          NP : agr === VP : agr.
+
+We need to bring our lexical entries into line with our revision:
+
+    Word je: <cat> = np
+             <agr per> = 1
+             <agr num> = sing.
+
+And this, in turn, will translate as follows:
+
+    W ord je :-
+          W : cat === np,
+          W : agr : per === 1,
+          W : agr : num === sing.
+
+Apart from minor punctuation details, the two main differences between
+real PATR and our PATR-like extension to Prolog are (i) the necessity
+for explicit variables in the latter, and (ii) the syntactic
+appearance of paths.
+
+Our operator definitions have the effect of making our PATR-like
+syntax for rules acceptable to the Prolog interpreter, but they do
+not, of course, tell us what any of it means, nor do they suffice to
+allow us to do anything interesting with the rules.  For this we have
+to provide some definitions.  Consider, for example, the "==="
+operator.  We want the semantics of this to be such that "X === Y" is
+true if and only if both X andöööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööö  Thus we need to preface our pathval definition
+with a third clause.  If the second argument is itself a pair, we
+apply pathval to the first element (Item1) to recover the value (Dag2)
+in Dag1, and apply pathval to the second element (Item2) with respect
+to Dag2:
+
+    pathval(Dag1,Feature:Path,Value,Dags) :-
+      !, pathval(Dag1,Feature,Dag2,Dags),
+      pathval(Dag2,Path,Value,_).
+
+Since ":" and "===" are the only operators that appear in the bodies
+of our rules, providing an interpretation for them is sufficient to
+provide an interpretation for "ord" and "--->", since these only
+appear in the heads of rules.
+
+In order to show how grammars written this way can be put to some
+practical use, we will now provide the code for a very basic "left-
+corner" bottom-up recognizer that presupposes the existence of a set
+of rules written in our PATR-like notation.  We  will represent
+strings as difference lists, and begin by defining a predicate that
+can associate words in the string with their categories (categories
+being feature structure dags, of course) and that can handle empty
+productions:
+
+    leaf(W,[Word|X],X) :-
+        W ord Word.
+    leaf(C,X,X) :-
+        R ule C ---> [].
+
+But the use of difference lists suggests a more compact and more
+elegant way of defining this predicate, using instead the DCG notation
+to suppress the explicit difference list variables:
+
+    leaf(Dag) --> [Word], {Dag ord Word}.
+    leaf(Dag) --> {_ ule Dag ---> []}.
+
+Note that we have also chosen to change the variable names to indicate
+the type of object involved, and to eliminate the decorative "R"
+variable.  The use of DCG notation turns out to be appropriate for the
+rest of the recognizer, as well.  To recognize a string as an instance
+of Dag1, we need to consider an initial leaf Dag0 and prove that Dag0
+constitutes a left corner of Dag1 (i.e. a category that would appear
+at the bottom left of a parse tree for it):
+
+    recognize(Dag1) -->
+      leaf(Dag0),
+      left_corner(Dag0,Dag1).
+
+If the end of the string has been reached, then Dag1 is a left corner
+of Dag2 if the two dags unify:
+
+    left_corner(Dag1,Dag2) --> [], {unify(Dag1,Dag2)}.
+
+Otherwise, Dag1 is a left corner of Dag2 if (i) there is a rule with
+mother category Dag0, leftmost category Dag1, and remaining categories
+Dags, (ii) the rest of the string can be recognized as Dags, and (iii)
+Dag0 is a left corner of Dag2:
+
+    left_corner(Dag1, Dag2) -->
+      {_ ule Dag0 ---> [Dag1|Dags]},
+      recognize_rest(Dags),
+      left_corner(Dag0,Dag2).
+
+Here, recognize_rest has the recursive definition one would expect:
+
+    recognize_rest([]) --> [].
+    recognize_rest([Dag|Dags]) -->
+      recognize(Dag),
+      recognize_rest(Dags).
+
+That completes this simple left corner recognizer.  In the next
+section we will examine some of the issues that arise when one
+combines unification-based grammars with more sophisticated
+recognizers, in particular those that exploit a chart.
+
+The French example that we have used to illustrate our Prolog PATR
+notation is fairly trivial, but the notation itself is really quite
+expressive.  Here, for example, is a variant of Grammar4 from Chapter
+4, written in Prolog PATR:
+
+    R ule S ---> [NP, VP] :-           %  S --> NP VP
+          S  : cat   === s,
+          S  : slash === VP : slash,
+          NP : cat   === np,
+          VP : cat   === vp.
+
+    R ule VP ---> [V, XP] :-           %  VP --> V XP
+          VP : cat   === vp,
+          VP : slash === XP : slash,
+          V  : cat   === v,
+          XP : cat   === V  : arg1.
+
+    R ule VP ---> [V] :-               %  VP/XP --> V
+          VP : cat   === vp,
+          VP : slash === V  : arg1,
+          V  : cat   === v.
+
+    R ule PP ---> [P, NP] :-           %  PP --> P NP
+          PP : cat   === pp,
+          PP : slash === NP : slash,
+          P  : cat   === p,
+          NP : cat   === P  : arg1.
+
+    R ule X0 ---> [X1, C, X2] :-       %  X --> X {and,or} X
+          X0 : cat   === X1 : cat,
+      öööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööö  W : cat   === p,
+           W : arg1  === np.
+    W ord of :-
+           W : slash === np,
+           W : cat   === pp.
+
+The file "pro_patr.pl" in the appendix contains all the necessary code
+to consult Prolog PATR definitions in the form shown and to recognize
+sentences using the left-corner recognizer.  To run the recognizer,
+you just need to invoke the predicate 'test'.  The 'test' predicate
+takes a list of words, and prints out the 'extensional' part of the
+dag that it recognizes (that is, it will show the actual values of
+features, but will not indicate sharing relationships).
+
+Implementing a lexicon in Prolog
+
+Implementing macros and lexeme definitions in the context of the
+existing Prolog PATR system could hardly be more straightforward.
+Here are a couple of example macro definitions for syntactic
+information.  The predicate 'macro' relates the name of a macro to the
+dag that it stands for:
+
+    macro(syn_iV,L) :-
+      L : syn : cat  === v,
+      L : syn : arg0 : cat  === np,
+      L : syn : arg0 : case === nom.
+
+    macro(syn_tV,L) :-
+      macro(syn_iV,L),
+      L : syn : arg1 : cat  === np,
+      L : syn : arg1 : case === acc.
+
+If we invoke the goal:
+
+    ?- macro(syn_iV,L).
+
+with L some existing dag, the goals introduced by the 'macro' rule
+will serve to extend (instantiate) the existing dag with any
+feature:value pairs that it needs to satisfy the definition.
+
+To define a macro for regular verbs, we could proceed as before,
+giving each form of the lexeme explicit STEM and SUFFIX features.
+
+    L : mor : root === R,
+    L : mor : form3 : stem === R,
+    L : mor : form3 : suffix === s,
+
+For the case of morphological information in a suffixing language like
+English, we can simplify things slightly by using the '+' operator to
+pair up stems and suffixes.  Although this does not solve the problem
+of determining that "fly+s" is the same as "flies", for instance, it
+does make it easier for us to present words that have already been
+morphologically analysed to the predicates we are defining.  The
+special use of '+' in in turn requires that we add a clause to our
+definition of the 'denotes' predicate:
+
+    denotes(R + S, R + S) :- !.
+
+Thus equipped, we can now define a macro for the morphology of regular
+verbs:
+
+    macro(mor_regV,L) :-
+      L : mor : root === R,
+      L : mor : form1 === R + '',
+      L : mor : form2 === R + '',
+      L : mor : form3 === R + s,
+      L : mor : form4 === R + ed,
+      L : mor : form5 === R + ed,
+      L : mor : form6 === R + ed,
+      L : mor : form7 === R + ing.
+
+These macros can now be invoked in lexeme definitions, and for these
+we shall employ an operator 'exeme', by analogy with our existing
+'ule' and 'ord' operators:
+
+    L exeme love :-
+      L : mor : root === love,
+      macro(syn_tV,L),
+      macro(mor_regV,L),
+      L : sem === love2a.
+
+As with the 'ord' entries, the initial variable is doing some work
+here - it stands for the dag that is associated with the given lexeme.
+Thus if we now query Prolog as follows:                     
+
+    ?- L exeme Name.
+
+the answer that we get is this:
+
+    L = [mor : [root  : love,
+                form1 : love + ,
+                form2 : love + ,
+                form3 : love + s,
+                form4 : love + ed,
+                form5 : love + ed,
+                form6 : love + ed,
+                form7 : love + ing  | _1],
+         syn : [cat   : v,
+                arg0  : [cat  : np,
+                         case : nom | _2],
+                arg1  : [cat  : np,
+                         case : acc | _3] | _4],
+         sem : love2a | _5]
+
+    Name = love
+
+A word form clause can be regarded simply as a way of deriving extra
+words from lexemes in a regular way.  It is thus natural to implement
+WFCs as extra clauses for the 'ord' predicate:
+
+    W ord Form :-
+      L : mor : form3 === Form,
+      L exeme _,
+      W : sem === L : sem,
+      W : mor === Form,
+      W : syn === L : syn,
+      W : syn : arg0 : per === 3,
+      W : syn : arg0 : num === sing,
+      W : syn : tense === pres.
+
+We can now pose the following query:
+
+    ?- W ord Form.
+
+and this is what we get:
+
+    W = [sem : love2a,
+         mor : love + s,
+         syn : [cat   : v,
+                arg0  : [cat  : np,
+                         case : nom,
+                         per  : 3,
+                         num  : sing | _1],
+                arg1  : [cat  : np,
+                         case : acc  | _2],
+                tense : pres  | _3]  | _4]
+    Form = love + s

@@ -1,0 +1,143 @@
+(note TQF223b)
+
+(implies 
+  (goalCategoryForAgent ?COUNTRY ?GOAL-PROP NationalEconomyGoal) 
+  (goalCategoryForAgent ?COUNTRY ?GOAL-PROP StrategicNationalInterest)) 
+
+(goalCategoryForAgent Kuwait 
+  (not 
+    (thereExists ?ATTACK 
+      (thereExists ?TANKER 
+        (and 
+          (instance ?ATTACK MilitaryAttack) 
+          (instance ?TANKER OilTanker) 
+          (directingAgent ?ATTACK Iran) 
+          (hasOwnershipIn ?TANKER Kuwait) 
+          (damages ?ATTACK ?TANKER))))) NationalEconomyGoal) 
+
+(implies 
+  (instance ?COUNTRY Country) 
+  (goalCategoryForAgent ?COUNTRY 
+    (thereExists ?ACTION 
+      (decreasesCausally ?ACTION 
+        (thereExists ?EVENT 
+          (eventPosesThreat ?EVENT ?COUNTRY)) likelihood)) VitalNationalInterest))
+
+(instance Kuwait Country) 
+
+(implies 
+  (and 
+    (subAttribute ?SPEC ?GEN) 
+    (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+  (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Kuwait 
+  (thereExists ?ACTION 
+    (decreasesCausally ?ACTION 
+      (thereExists ?EVENT 
+        (eventPosesThreat ?EVENT Kuwait)) likelihood)) VitalNationalInterest)
+
+(implies 
+  (and 
+    (instance ?COUNTRY IndependentCountry) 
+    (contains ?SUPER-REGION ?COUNTRY) 
+    (instance ?SUPER-REGION GeographicalAgent)) 
+  (goalCategoryForAgent ?COUNTRY 
+    (politicalStability ?SUPER-REGION MediumToVeryHigh) VitalNationalInterest))
+
+(instance Kuwait IndependentCountry) 
+(contains Kuwait Kuwait) 
+(instance Kuwait GeographicalAgent) 
+
+(goalCategoryForAgent Kuwait 
+ (politicalStability Kuwait MediumToVeryHigh) VitalNationalInterest) 
+
+(implies 
+  (and 
+    (internationalOrg-MemberCountry ?ORG ?COUNTRY) 
+    (instance ?ORG Coalition-International)) 
+  (thereExists ?GOAL 
+    (and 
+      (goalCategoryForAgent ?COUNTRY ?GOAL StrategicNationalInterest) 
+      (desires ?ORG ?GOAL)))) 
+
+(instance DesertShieldCoalition Coalition-International) 
+(internationalOrg-MemberCountry DesertShieldCoalition Kuwait) 
+
+(thereExists ?X
+  (goalCategoryForAgent Kuwait 
+    (?X DesertShieldCoalition Kuwait) StrategicNationalInterest)) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY IndependentCountry) 
+    (contains ?SUPER-REGION ?COUNTRY) 
+    (instance ?SUPER-REGION GeographicalAgent)) 
+  (goalCategoryForAgent ?COUNTRY 
+    (politicalStability ?SUPER-REGION MediumToVeryHigh) VitalNationalInterest))
+
+(contains PersianGulfRegion Kuwait) 
+(instance PersianGulfRegion GeographicalAgent) 
+
+(goalCategoryForAgent Kuwait 
+ (politicalStability PersianGulfRegion MediumToVeryHigh) VitalNationalInterest) 
+
+(contains MiddleEast-Region Kuwait) 
+(instance MiddleEast-Region GeographicalAgent) 
+
+(goalCategoryForAgent Kuwait 
+ (politicalStability MiddleEast-Region MediumToVeryHigh) VitalNationalInterest) 
+
+(implies 
+  (importsThrough ?COUNTRY ?PROD ?PATH) 
+  (goalCategoryForAgent ?COUNTRY 
+    (not 
+      (thereExists ?BLOCK 
+        (and 
+          (instance ?BLOCK BlockingTraffic) 
+          (objectActedOn ?BLOCK ?PATH)))) StrategicNationalInterest))
+
+(importsThrough Kuwait TextileProduct StraitOfHormuz) 
+
+(goalCategoryForAgent Kuwait 
+  (not 
+    (thereExists ?BLOCK 
+      (and 
+        (instance ?BLOCK BlockingTraffic) 
+        (objectActedOn ?BLOCK StraitOfHormuz)))) StrategicNationalInterest)
+
+(query (findall (?MOTIVATION)
+  (goalCategoryForAgent Kuwait ?MOTIVATION StrategicNationalInterest)))
+
+(answer (list  
+  (not 
+    (thereExists ?ATTACK 
+      (thereExists ?TANKER 
+        (and 
+          (instance ?ATTACK MilitaryAttack) 
+          (instance ?TANKER OilTanker) 
+          (directingAgent ?ATTACK Iran) 
+          (hasOwnershipIn ?TANKER Kuwait) 
+          (damages ?ATTACK ?TANKER)))))))
+
+(answer (list
+  (thereExists ?ACTION 
+    (decreasesCausally ?ACTION 
+      (thereExists ?EVENT 
+        (eventPosesThreat ?EVENT Kuwait)) likelihood))))
+
+(answer (list  (politicalStability MiddleEast-Region MediumToVeryHigh)))
+
+(answer (list  
+  (not 
+    (thereExists ?BLOCK 
+      (and 
+        (instance ?BLOCK BlockingTraffic) 
+        (objectActedOn ?BLOCK StraitOfHormuz))))))
+ 
+(answer (list  (politicalStability MiddleEast-Region MediumToVeryHigh)))
+
+(answer (list  (thereExists ?X (?X DesertShieldCoalition Kuwait))))
+
+(end_of_file)
+

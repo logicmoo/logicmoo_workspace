@@ -1,0 +1,132 @@
+;;Date: Thu, 28 May 92 08:47:23 -0500
+;;From: esch%email.sp.unisys.com@metro.ucc.su.OZ.AU (John Esch)
+;;To: cg@cs.umn.edu
+;;Subject: CG TEST7, query example
+
+;;The following is used for regression testing and demonstrations
+;;of CONSTRUCT.
+
+;;This file contains an example of background data and a query which
+;;can be answered by firing actors and watching them highlight and
+;;change referents as they go.
+
+;;CANON WAY-POINT-QUERY .
+
+TYPE ACT(a) IS [UNIV:*a].
+
+TYPE ANIMATE(a) IS [UNIV:*a].
+
+TYPE ENTITIES(e) IS [UNIV:*e].
+
+TYPE EVENT(e) IS [UNIV:*e].
+
+TYPE EVENT-DELTA(e) IS
+[EVENT:*e]->(PTIM)->[TIME-DELTA].
+;;. XY-POSITIONS ((0 0)(132 1)(247 0)).
+
+TYPE EVENT-POINT(e) IS
+[EVENT:*e]->(PTIM)->[TIME-POINT].
+;;. XY-POSITIONS ((0 0)(111 1)(244 0)).
+
+TYPE EXPECTED-TIME(e) IS [UNIV:*e].
+
+SCHEMA EXPECTED-TIME(e) IS
+[EXPECTED-TIME:*e]-
+  <-(CHAR)<-[EVENT]->(PTIM)->[TIME-DELTA:*v4832]
+  <-(SUPP)<-[EVENT:start!#81523]->(PTIM)->[TIME-POINT:*v4833]
+  3<-<ADD>-
+       1<-[TIME-DELTA:*v4832]
+       2<-[TIME-POINT:*v4833],,.
+;;. XY-POSITIONS ((0 0)(-88 -26)(-201 -58)(-6 -153)(117 -154)(-37 80)(-220 167)(-50 167)(41 167)(214 0)).
+
+TYPE GOAL(g) IS [UNIV:*g].
+
+TYPE MISSION(A2810) IS
+[ACT:*A2810]-
+  ->(AGNT)->[ANIMATE]-
+              ->(SEEK)->[GOAL]
+              ->(FOLLOW)->[PLAN]
+              ->(USE)->[ENTITIES],
+  ->(MANR)->[PLAN-HISTORY],.
+;;. XY-POSITIONS ((0 0)(-178 -77)(-178 -181)(-75 -254)(2 -255)(-74 -180)(0 -181)(-77 -107)(-1 -108)(-175 73)(-175 195)).
+
+TYPE PLAN(p) IS [UNIV:*p].
+
+SCHEMA PLAN(P0516) IS
+[PLAN:*P0516]->(PART)->[EVENT: RESP{*}]-
+                         ->(PTIM)->[TIME-DELTA:*t RESP{*}]
+                         -><LOOKUP-DELTA>->[TIME-DELTA:*t RESP{*}],.
+;;. XY-POSITIONS ((0 0)(113 54)(232 113)(452 -12)(625 -50)(400 -85)).
+
+TYPE PLAN-HISTORY(p) IS [UNIV:*p].
+
+SCHEMA PLAN-HISTORY(P0517) IS
+[PLAN-HISTORY:*P0517]->(PART)->[EVENT: RESP{*}]-
+                                 ->(PTIM)->[TIME-POINT:*t RESP{*}]
+                                 -><LOOKUP-TIME>->[TIME-POINT:*t RESP{*}],.
+;;. XY-POSITIONS ((0 0)(235 0)(547 43)(687 43)(810 43)(680 128)).
+
+TYPE PROPOSITION(p) IS [UNIV:*p].
+
+TYPE TIME-DELTA(t) IS [UNIV:*t].
+
+TYPE TIME-POINT(t) IS [UNIV:*t].
+
+INDIVIDUAL EVENT-DELTA(#4667) IS
+[EVENT:orders#4667]->(PTIM)->[TIME-DELTA:0].
+;;. XY-POSITIONS ((0 0)(222 0)(344 0)).
+
+INDIVIDUAL EVENT-DELTA(#4673) IS
+[EVENT:take-off#4673]->(PTIM)->[TIME-DELTA:10].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4683) IS
+[EVENT:to-refuel#4683]->(PTIM)->[TIME-DELTA:11].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4691) IS
+[EVENT:refuel#4691]->(PTIM)->[TIME-DELTA:71].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4717) IS
+[EVENT:to-station#4717]->(PTIM)->[TIME-DELTA:80].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4725) IS
+[EVENT:orbit#4725]->(PTIM)->[TIME-DELTA:140].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4733) IS
+[EVENT:jam#4733]->(PTIM)->[TIME-DELTA:145].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4741) IS
+[EVENT:end-jam#4741]->(PTIM)->[TIME-DELTA:160].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4749) IS
+[EVENT:to-refuel#4749]->(PTIM)->[TIME-DELTA:160].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4757) IS
+[EVENT:refuel#4757]->(PTIM)->[TIME-DELTA:220].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4783) IS
+[EVENT:to-base#4783]->(PTIM)->[TIME-DELTA:229].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4791) IS
+[EVENT:land#4791]->(PTIM)->[TIME-DELTA:289].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-DELTA(#4799) IS
+[EVENT:end#4799]->(PTIM)->[TIME-DELTA:300].
+;;. XY-POSITIONS ((0 0)(71 27)(146 26)).
+
+INDIVIDUAL EVENT-POINT(#81523) IS
+[EVENT:start#81523]->(PTIM)->[TIME-POINT:0800].
+;;. XY-POSITIONS ((0 0)(222 0)(344 0)).
+
+[MISSION]->(CHAR)->[EVENT:orbit!#4725]->(CHAR)->[EXPECTED-TIME:?].
+;;. XY-POSITIONS ((0 0)(157 0)(295 0)(508 0)(595 0)).

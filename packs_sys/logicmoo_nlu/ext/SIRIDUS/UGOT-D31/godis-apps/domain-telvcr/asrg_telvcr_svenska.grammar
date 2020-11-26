@@ -1,0 +1,170 @@
+; nuance grammar for tvGoDiS telvcrlogin domain/lexicon
+
+
+.Asrg_telvcr_svenska TelVcrTop
+TelVcrTop [ TelVcrAtom
+	    ( ?(TelVcrAtom -pau-) TelVcrQuestion )
+	    ( ?(TelVcrAtom -pau-) RequestSeq )
+	    ( ?(TelVcrAtom -pau-) ShortAns ?RequestSeq )
+	     hej 
+            (hej då) 
+             sluta 
+	  ]
+
+TelVcrAtom [ förlåt okej (vet inte) ja nej ]
+ 
+;QUESTIONS
+TelVcrQuestion [  
+		;ask(usage)
+		hjälp 
+
+		 ;ask(X^channels)
+		(vilka kanaler finns det)
+		(vilka kanaler) 
+		(vad finns det för kanaler)
+
+		;ask(X^rec_jobs(X)) ;bara inspelningar är obligatoriskt
+		( ?[(vilka ?är) visa säg lista ] 
+			?mina ?planerade inspelningar ?(har jag))
+		
+                 ]
+;short_answers 
+ShortAns [ Channel Number_0_to_109 Time Day ]
+;requests 
+ 
+RequestSeq [ [toppnivå (börja om) ] 
+	     ( ?[ toppnivå (börja om) ] 
+		[ TelVcrAddRecJob
+	     TelVcrDeleteRecJob ] )
+	     ] 
+    
+TelVcrAddRecJob  (?[ ( [ lägga lägg] till ?[(?en inspelning)(?ett program) ] )
+		      	( spela in )]  
+			?TelVcrAddRecJobParams )
+ 
+TelVcrDeleteRecJob ( ?([(ta bort) radera] ?[(?ett program) (?en inspelning)] )
+			?Number_0_to_109 ) ;
+ 
+;subgrammars
+ 
+Channel[ (s v t ett) (t v ett) (kanal ett) (ettan)		
+	 (s v t två) (t v två) (kanal två) (tvåan)
+	 (t v tre) (trean)
+	 (t v fyra) (fyran)
+	 (kanal fem) (femman)
+	 (t v e )
+	 (rai uno)
+	 (sat ains) 
+	 (c n n) (si n n)	
+	 (b b c world)
+	 (t v polonia) (polonia)
+	 (d r ett) 
+	 (d r två)
+	 (n r k ett)
+	 (n r k två) ]
+
+
+Time [
+       ( ?klockan Hour) 
+       ( ?klockan Hour ?och Minutes ) 
+       ( ?klockan [fem tio kvart tjugo] [i över] One2twelve ) 
+       ( ?klockan [(fem i halv) halv (fem över halv) ] One2twelve ) 
+     ]
+
+Day [ idag imorgon ( på [måndag tisdag onsdag torsdag fredag lördag söndag]) ]
+Hour [ noll (noll noll) (noll One2nine) 
+       Tens tjugo (tjugo ett) (tjugo två) (tjugo tre) ]
+Minutes  [  (noll One2nine) Tens Twenties Thirties Fourties Fifties ] 
+ 
+Number_0_to_109 (?inte [ Digit Tens Twenties Thirties Fourties 
+                        Fifties Sixties Seventies Eighties Nineties
+                        Hundreds ])
+ 
+Digit [noll One2nine]
+One2nine [ett två tre fyra fem sex sju åtta nio ]
+One2twelve [One2nine tio elva tolv]
+Tens [ tio elva tolv tretton fjorton femton sexton sjutton arton nitton ]
+Twenties (tjugo ?One2nine)
+
+Thirties (trettio ?One2nine )
+Fourties (fyrtio ?One2nine )
+Fifties (femtio ?One2nine )
+Sixties (sextio  ?One2nine )
+Seventies (sjuttio  ?One2nine )
+Eighties (åttio ?One2nine )
+Nineties (nittio ?One2nine )
+Hundreds ( ?ett hundra ?One2nine )
+ 
+TelVcrFrom (?inte från Time) 
+TelVcrUntil (?inte till Time) 
+TelVcrDay (?inte Day )
+TelVcrChannel (?inte ?på Channel )
+ 
+TelVcrAddRecJobParams [ ( TelVcrFrom ) 
+                        ( TelVcrUntil )    
+                        TelVcrDay
+                        TelVcrChannel
+ 
+                        ( TelVcrFrom TelVcrUntil)
+                        ( TelVcrFrom TelVcrDay)
+                        ( TelVcrFrom TelVcrChannel)   
+                        ( TelVcrUntil TelVcrFrom )    
+                        ( TelVcrUntil TelVcrDay )            
+                        ( TelVcrUntil TelVcrChannel ) 
+                        ( TelVcrDay TelVcrFrom ) 
+                        ( TelVcrDay TelVcrUntil )
+                        ( TelVcrDay TelVcrChannel )
+                        (TelVcrChannel TelVcrFrom )
+                        (TelVcrChannel TelVcrUntil )
+                        (TelVcrChannel TelVcrDay )
+ 
+                        ( TelVcrFrom TelVcrUntil TelVcrDay )
+                        ( TelVcrFrom TelVcrUntil TelVcrChannel )
+                        ( TelVcrFrom TelVcrDay TelVcrUntil )
+                        ( TelVcrFrom TelVcrDay TelVcrChannel )
+                        ( TelVcrFrom TelVcrChannel TelVcrUntil )   
+                        ( TelVcrFrom TelVcrChannel TelVcrDay )
+                        ( TelVcrUntil TelVcrFrom TelVcrDay )
+                        ( TelVcrUntil TelVcrFrom TelVcrChannel )
+                        ( TelVcrUntil TelVcrDay TelVcrFrom )            
+                        ( TelVcrUntil TelVcrDay TelVcrChannel )                 
+                        ( TelVcrUntil TelVcrChannel TelVcrFrom )                 
+                        ( TelVcrUntil TelVcrChannel TelVcrDay ) 
+                        ( TelVcrDay TelVcrFrom TelVcrUntil )
+                        ( TelVcrDay TelVcrFrom TelVcrChannel )
+                        ( TelVcrDay TelVcrUntil TelVcrFrom )
+                        ( TelVcrDay TelVcrUntil TelVcrChannel )
+                        ( TelVcrDay TelVcrChannel TelVcrFrom )
+                        ( TelVcrDay TelVcrChannel TelVcrUntil )
+                        (TelVcrChannel TelVcrFrom TelVcrUntil )
+                        (TelVcrChannel TelVcrFrom TelVcrDay )
+                        (TelVcrChannel TelVcrUntil TelVcrFrom )
+                        (TelVcrChannel TelVcrUntil TelVcrDay )
+                        (TelVcrChannel TelVcrDay TelVcrFrom )
+                        (TelVcrChannel TelVcrDay TelVcrUntil )
+ 
+        
+                        ( TelVcrFrom TelVcrUntil TelVcrDay TelVcrChannel )
+                        ( TelVcrFrom TelVcrUntil TelVcrChannel TelVcrDay )
+                        ( TelVcrFrom TelVcrDay TelVcrUntil TelVcrChannel )
+                        ( TelVcrFrom TelVcrDay TelVcrChannel TelVcrUntil )
+                        ( TelVcrFrom TelVcrChannel TelVcrUntil TelVcrDay )   
+                        ( TelVcrFrom TelVcrChannel TelVcrDay TelVcrUntil )
+                        ( TelVcrUntil TelVcrFrom TelVcrDay TelVcrChannel )
+                        ( TelVcrUntil TelVcrFrom TelVcrChannel TelVcrDay )
+                        ( TelVcrUntil TelVcrDay TelVcrFrom TelVcrChannel ) 
+                        ( TelVcrUntil TelVcrDay TelVcrChannel TelVcrFrom )
+                        ( TelVcrUntil TelVcrChannel TelVcrFrom TelVcrDay  )        
+                        ( TelVcrUntil TelVcrChannel TelVcrDay TelVcrFrom ) 
+                        ( TelVcrDay TelVcrFrom TelVcrUntil TelVcrChannel )
+                        ( TelVcrDay TelVcrFrom TelVcrChannel TelVcrUntil )
+                        ( TelVcrDay TelVcrUntil TelVcrFrom TelVcrChannel )
+                        ( TelVcrDay TelVcrUntil TelVcrChannel TelVcrFrom )
+                        ( TelVcrDay TelVcrChannel TelVcrFrom TelVcrUntil )
+                        ( TelVcrDay TelVcrChannel TelVcrUntil TelVcrFrom )
+                        (TelVcrChannel TelVcrFrom TelVcrUntil TelVcrDay )
+                        (TelVcrChannel TelVcrFrom TelVcrDay TelVcrUntil )
+                        (TelVcrChannel TelVcrUntil TelVcrFrom TelVcrDay )
+                        (TelVcrChannel TelVcrUntil TelVcrDay TelVcrFrom )
+                        (TelVcrChannel TelVcrDay TelVcrFrom TelVcrUntil )
+                        (TelVcrChannel TelVcrDay TelVcrUntil TelVcrFrom ) ]

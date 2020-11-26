@@ -1,0 +1,24 @@
+(note TQF124d)
+(abort)
+
+(represents GregRich AIOC) 
+(instance GregRich Professional) 
+
+(descriptionFormulas GregRich 
+ (affiliatedWith GregRich AIOC)) 
+
+(descriptionFormulas GregRich 
+ (instance GregRich Professional)) 
+
+(implies 
+ (assertedTermFormulas ?TERM ?FORMULA) 
+ (descriptionFormulas ?TERM ?FORMULA)) 
+
+(query (findall ?DESCRIPTIVE-FORMULA (descriptionFormulas GregRich ?DESCRIPTIVE-FORMULA)))
+
+(answer (list (represents GregRich AIOC)  ))
+(answer (list (instance GregRich Professional)  ))
+(answer (list  (affiliatedWith GregRich AIOC) ))
+
+(end_of_file)
+

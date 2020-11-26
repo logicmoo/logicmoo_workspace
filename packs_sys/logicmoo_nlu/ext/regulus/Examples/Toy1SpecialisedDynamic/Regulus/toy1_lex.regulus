@@ -1,0 +1,107 @@
+
+% Toy1-dependent declarations
+
+feature_value_space(n_type,[[switchable, dimmable]]).
+
+%--------------------------------------------------------------------------------------
+
+% Macros and dynamic lex declarations
+
+macro(dev_noun(Surface, Sem, Type),
+      @noun(Surface,
+	    [device, Sem], [Type], 
+	    [takes_det_type=def, n_pre_mod_type=loc, takes_loc_pp=y])).
+
+macro(switchable_dev_noun(Surface, Sem),
+      @dev_noun(Surface, Sem, switchable)).
+
+macro(dimmable_and_switchable_dev_noun(Surface, Sem),
+      @dev_noun(Surface, Sem, switchable\/dimmable)).
+
+macro(loc_noun(Surface, Sem),
+      @noun(Surface,
+	    [location, Sem], [loc], [takes_det_type=def])).
+
+macro(person_name(Surface, Sem),
+      @name(Surface,
+	    [Sem], [agent], sing, [])).
+
+% This would be a bad dynamic lexicon declaration,
+% because Type won't refer only to surface lexicon items
+% and semantic constants.
+%dynamic_lexicon( @dev_noun(Surface, Sem, Type) ).
+
+dynamic_lexicon( @switchable_dev_noun(Surface, Sem) ).
+
+dynamic_lexicon( @dimmable_and_switchable_dev_noun(Surface, Sem) ).
+
+dynamic_lexicon( @loc_noun(Surface, Sem) ).
+
+dynamic_lexicon( @person_name(Surface, Sem) ).
+
+%--------------------------------------------------------------------------------------
+
+% Verbs
+
+% Transitive particle verb, e.g. "switch on the light/switch the light on"
+% v_object_particle(SurfaceForms,
+%                   [SemType, SemConstant], [SubjSortalType, ObjSortalType, ParticleType], OtherFeats)
+
+@v_object_particle([switch, switches, switched, switched, switching], 
+		   [action, switch], [agent, switchable, onoff], [takes_loc_pp=y]).
+@v_object_particle([turn, turns, turned, turned, turning], 
+		   [action, switch], [agent, switchable, onoff], [takes_loc_pp=y]).
+
+% Transitive verb, e.g. "dim the light"
+% v_transitive(SurfaceForms,
+%              [SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats)
+
+@v_transitive([dim, dims, dimmed, dimmed, dimming],
+	      [action, dim], [agent, dimmable], [takes_loc_pp=y]).
+
+% "Be" subcategorizing for adjective, e.g. "is the light switched on"
+% be_adj([SemType, SemConstant], [SubjSortalType], OtherFeats)
+
+@be_adj([verb, be], [switchable\/dimmable], [takes_loc_pp=y]).
+
+%--------------------------------------------------------------------------------------
+
+% Nouns
+
+@loc_noun([(living, room), (living, rooms)], [location, living_room]).
+@loc_noun([kitchen, kitchens], [location, kitchen]).
+@loc_noun([bathroom, bathrooms], [location, bathroom]).
+@loc_noun([bedroom, bedrooms], [location, bedroom]).
+
+@dimmable_and_switchable_dev_noun([light, lights], [device, light]).
+
+@switchable_dev_noun([fan, fans], [device, fan]).
+
+%--------------------------------------------------------------------------------------
+
+% Prepositions
+% preposition(SurfaceForm, SemConstant, [SemPPType, NPSortalType], OtherFeats)
+
+% Locative preposition
+@preposition(in, in_loc, [loc, loc], []).
+
+% Particles
+@preposition(on, on, [none, none], [sem_p_type=onoff]).
+@preposition(off, off, [none, none], [sem_p_type=onoff]).
+
+%--------------------------------------------------------------------------------------
+
+% Adjectives
+% adjective(SurfaceForm, [SemType, SemConstant], [SortalType], OtherFeats)
+
+@adjective(on, [adj, on], [switchable\/dimmable], [adjpos=pred]).
+@adjective(off, [adj, off], [switchable\/dimmable], [adjpos=pred]).
+
+@adjective((switched, on), [adj, on], [switchable\/dimmable], [adjpos=pred]).
+@adjective((switched, off), [adj, off], [switchable\/dimmable], [adjpos=pred]).
+
+%--------------------------------------------------------------------------------------
+
+% Person name
+
+@person_name((magnificent, one), magnificent_one).

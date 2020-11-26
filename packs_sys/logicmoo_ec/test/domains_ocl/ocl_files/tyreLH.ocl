@@ -1,0 +1,233 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: ron
+ *  Institution: University of Huddersfield
+ *  Date created: Wed Oct 27 23:04:45 BST 2004
+ *  Date last modified: 2005/06/22 at 01:27:36 PM BST
+ *  Description:
+ *    Attempt at Flat Tyre World
+ *    NOTE: Correct working relies on ony one instance of some of the
+ *    objects being present. Objects like the jack should be associated
+ *    with the hub when in use.
+ *    PS should check this at validation stage. Presence of ongoing states
+ *    would allow us to infer it!
+ * Object Life History : tyre.gfx
+ */
+
+domain_name(tyreLH).
+
+% Sorts
+sorts(primitive_sorts,[jack,nuts,wheel,boot,wrench,hub]).
+
+% Objects
+objects(jack,[jack1]).
+objects(nuts,[nuts1]).
+objects(wheel,[wheel1,wheel2]).
+objects(boot,[boot1]).
+objects(wrench,[wrench1]).
+objects(hub,[hub1]).
+
+% Predicates
+predicates([
+    inBoot(jack),
+    haveJack(jack),
+    inUse(jack,hub),
+    tight(nuts,hub),
+    free(nuts,hub),
+    off(nuts),
+    haveWheel(wheel),
+    wheelInBoot(wheel),
+    onWheel(wheel,hub),
+    open(boot),
+    closed(boot),
+    haveWrench(wrench),
+    inBootWrench(wrench),
+    onGroundTight(hub),
+    onGroundLoose(hub),
+    upFree(hub),
+    upLoose(hub),
+    upBare(hub)]).
+
+% Object Class Definitions
+substate_classes(jack,Jack,[
+    [inBoot(Jack)],
+    [haveJack(Jack)],
+    [inUse(Jack,Hub)]]).
+substate_classes(nuts,Nuts,[
+    [tight(Nuts,Hub)],
+    [free(Nuts,Hub)],
+    [off(Nuts)]]).
+substate_classes(wheel,Wheel,[
+    [haveWheel(Wheel)],
+    [wheelInBoot(Wheel)],
+    [onWheel(Wheel,Hub)]]).
+substate_classes(boot,Boot,[
+    [open(Boot)],
+    [closed(Boot)]]).
+substate_classes(wrench,Wrench,[
+    [haveWrench(Wrench)],
+    [inBootWrench(Wrench)]]).
+substate_classes(hub,Hub,[
+    [onGroundTight(Hub)],
+    [onGroundLoose(Hub)],
+    [upFree(Hub)],
+    [upLoose(Hub)],
+    [upBare(Hub)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(loosen(Wrench,Hub,Nuts),
+    % prevail
+    [     se(wrench,Wrench,[haveWrench(Wrench)])],
+    % necessary
+    [     sc(hub,Hub,[onGroundTight(Hub)]=>[onGroundLoose(Hub)]),
+     sc(nuts,Nuts,[tight(Nuts,Hub)]=>[free(Nuts,Hub)])],
+    % conditional
+    []).
+operator(tighten(Wrench,Hub,Nuts),
+    % prevail
+    [     se(wrench,Wrench,[haveWrench(Wrench)])],
+    % necessary
+    [     sc(hub,Hub,[onGroundLoose(Hub)]=>[onGroundTight(Hub)]),
+     sc(nuts,Nuts,[free(Nuts,Hub)]=>[tight(Nuts,Hub)])],
+    % conditional
+    []).
+operator(fetchWheel(Boot,Wheel),
+    % prevail
+    [     se(boot,Boot,[open(Boot)])],
+    % necessary
+    [     sc(wheel,Wheel,[wheelInBoot(Wheel)]=>[haveWheel(Wheel)])],
+    % conditional
+    []).
+operator(putAwayWheel(Boot,Wheel),
+    % prevail
+    [     se(boot,Boot,[open(Boot)])],
+    % necessary
+    [     sc(wheel,Wheel,[haveWheel(Wheel)]=>[wheelInBoot(Wheel)])],
+    % conditional
+    []).
+operator(takeOffWheel(Wheel,Hub),
+    % prevail
+    [],
+    % necessary
+    [     sc(wheel,Wheel,[onWheel(Wheel,Hub)]=>[haveWheel(Wheel)]),
+     sc(hub,Hub,[upFree(Hub)]=>[upBare(Hub)])],
+    % conditional
+    []).
+operator(putOnWheel(Wheel,Hub),
+    % prevail
+    [],
+    % necessary
+    [     sc(wheel,Wheel,[haveWheel(Wheel)]=>[onWheel(Wheel,Hub)]),
+     sc(hub,Hub,[upBare(Hub)]=>[upFree(Hub)])],
+    % conditional
+    []).
+operator(putOn(Nuts,Hub),
+    % prevail
+    [],
+    % necessary
+    [     sc(nuts,Nuts,[off(Nuts)]=>[free(Nuts,Hub)]),
+     sc(hub,Hub,[upFree(Hub)]=>[upLoose(Hub)])],
+    % conditional
+    []).
+operator(remove(Nuts,Hub),
+    % prevail
+    [],
+    % necessary
+    [     sc(nuts,Nuts,[free(Nuts,Hub)]=>[off(Nuts)]),
+     sc(hub,Hub,[upLoose(Hub)]=>[upFree(Hub)])],
+    % conditional
+    []).
+operator(putAwayJack(Boot,Jack),
+    % prevail
+    [     se(boot,Boot,[open(Boot)])],
+    % necessary
+    [     sc(jack,Jack,[haveJack(Jack)]=>[inBoot(Jack)])],
+    % conditional
+    []).
+operator(fetchWrench(Boot,Wrench),
+    % prevail
+    [     se(boot,Boot,[open(Boot)])],
+    % necessary
+    [     sc(wrench,Wrench,[inBootWrench(Wrench)]=>[haveWrench(Wrench)])],
+    % conditional
+    []).
+operator(putAwayWrench(Boot,Wrench),
+    % prevail
+    [     se(boot,Boot,[open(Boot)])],
+    % necessary
+    [     sc(wrench,Wrench,[haveWrench(Wrench)]=>[inBootWrench(Wrench)])],
+    % conditional
+    []).
+operator(jackUp(Jack,Hub),
+    % prevail
+    [],
+    % necessary
+    [     sc(jack,Jack,[haveJack(Jack)]=>[inUse(Jack,Hub)]),
+     sc(hub,Hub,[onGroundLoose(Hub)]=>[upLoose(Hub)])],
+    % conditional
+    []).
+operator(jackDown(Jack,Hub),
+    % prevail
+    [],
+    % necessary
+    [     sc(jack,Jack,[inUse(Jack,Hub)]=>[haveJack(Jack)]),
+     sc(hub,Hub,[upLoose(Hub)]=>[onGroundLoose(Hub)])],
+    % conditional
+    []).
+operator(fetchJack(Boot,Jack),
+    % prevail
+    [     se(boot,Boot,[open(Boot)])],
+    % necessary
+    [     sc(jack,Jack,[inBoot(Jack)]=>[haveJack(Jack)])],
+    % conditional
+    []).
+operator(close(Boot),
+    % prevail
+    [],
+    % necessary
+    [     sc(boot,Boot,[open(Boot)]=>[closed(Boot)])],
+    % conditional
+    []).
+operator(open(Boot),
+    % prevail
+    [],
+    % necessary
+    [     sc(boot,Boot,[closed(Boot)]=>[open(Boot)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(jack,jack1,[inBoot(jack1)]),
+     se(wheel,wheel1,[wheelInBoot(wheel1)]),
+     se(boot,boot1,[closed(boot1)]),
+     se(wrench,wrench1,[inBootWrench(wrench1)]),
+     se(hub,hub1,[onGroundTight(hub1)]),
+     se(nuts,nuts1,[tight(nuts1,hub1)]),
+     se(wheel,wheel2,[onWheel(wheel2,hub1)])],
+    % INIT States
+    [
+     ss(jack,jack1,[inBoot(jack1)]),
+     ss(wheel,wheel2,[wheelInBoot(wheel2)]),
+     ss(boot,boot1,[closed(boot1)]),
+     ss(wrench,wrench1,[inBootWrench(wrench1)]),
+     ss(hub,hub1,[onGroundTight(hub1)]),
+     ss(nuts,nuts1,[tight(nuts1,hub1)]),
+     ss(wheel,wheel1,[onWheel(wheel1,hub1)])]).

@@ -1,0 +1,5 @@
+(note TQG17)
+
+(query (=> (greaterThan ?NUMBER 2) (greaterThan ?NUMBER 1)))
+
+(answer Yes)

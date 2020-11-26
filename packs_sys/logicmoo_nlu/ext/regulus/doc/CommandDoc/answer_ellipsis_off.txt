@@ -1,0 +1,2 @@
+The converse of {\tt ANSWER\_ELLIPSIS\_ON}. Relevant to bidirectional translation applications.
+

@@ -1,0 +1,43 @@
+(note TQD26)
+
+(implies 
+ (and 
+ (instance ?ACT DestructionEvent) 
+ (inputsDestroyed ?ACT ?PIPE) 
+ (instance ?PIPE Pipeline) 
+ (exportsThrough ?COUNT ?PRODUCT ?PIPE)) 
+ (maleficiary ?ACT ?COUNT)) 
+
+(instance HYP-DestructionEvent-12584080 DestructionEvent) 
+
+(exportsThrough SaudiArabia Petroleum-CrudeOil SuMedPipeline) 
+
+(instance SuMedPipeline Pipeline) 
+
+(inputsDestroyed HYP-DestructionEvent-12584080 SuMedPipeline) 
+
+(implies 
+ (and 
+ (instance ?ACT DestructionEvent) 
+ (inputsDestroyed ?ACT ?PIPE) 
+ (instance ?PIPE Pipeline) 
+ (hasOwnershipIn ?COUNT ?PIPE)) 
+ (maleficiary ?ACT ?COUNT)) 
+
+(hasOwnershipIn SaudiArabia SuMedPipeline) 
+
+(maleficiary HYP-DestructionEvent-12584080 SaudiArabia) 
+
+
+
+(queryyn (implies 
+   (and 
+       (instance ?ACT DestructionEvent) 
+       (inputsDestroyed ?ACT SuMedPipeline)) 
+   (maleficiary ?ACT SaudiArabia))
+)
+
+(answer Yes
+)
+
+(end_of_file)

@@ -1,0 +1,37 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter2/Inconsistency4.e
+loading foundations/Root.e
+loading foundations/EC.e
+9 variables and 18 clauses
+relsat solver
+walksat solver
+1 model
+---
+near miss:
+0
+Happens(E(O1), 0).
+1
+P
+!ReleasedAt(F1(O1), 0).
+!ReleasedAt(F1(O1), 1).
+!ReleasedAt(F2(O1), 0).
+!ReleasedAt(F2(O1), 1).
+1 unsatisfied clauses:
+2 -1 0: (HoldsAt(F1(O1), 1) | !Happens(E(O1), 0)).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Inconsistency4: 0 predicates, 0 functions, 2 fluents, 1 events, 4 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

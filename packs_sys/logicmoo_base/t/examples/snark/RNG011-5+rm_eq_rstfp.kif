@@ -1,0 +1,97 @@
+;--------------------------------------------------------------------------
+; File     : RNG011-5 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Ring Theory
+; Problem  : In a right alternative ring (((X,X,Y)*X)*(X,X,Y)) = Add Id
+; Version  : [Ove90] (equality) axioms :
+;            Incomplete > Augmented > Incomplete.
+; English  : 
+
+; Refs     : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+;          : [Zha93] Zhang (1993), Automated Proofs of Equality Problems in
+; Source   : [Ove90]
+; Names    : CADE-11 Competition Eq-10 [Ove90]
+;          : THEOREM EQ-10 [LM93]
+;          : PROBLEM 10 [Zha93]
+
+; Status   : unsatisfiable
+; Rating   : 0.00 v2.0.0
+; Syntax   : Number of clauses    :   22 (   0 non-Horn;  22 unit;   2 RR)
+;            Number of literals   :   22 (  22 equality)
+;            Maximal clause size  :    1 (   1 average)
+;            Number of predicates :    1 (   0 propositional; 2-2 arity)
+;            Number of functors   :    8 (   3 constant; 0-3 arity)
+;            Number of variables  :   37 (   2 singleton)
+;            Maximal term depth   :    5 (   2 average)
+
+; Comments : 
+;          : tptp2X -f kif -t rm_equality:rstfp RNG011-5.p 
+;--------------------------------------------------------------------------
+; commutative_addition, axiom.
+(or (= (add ?A ?B) (add ?B ?A)))
+
+; associative_addition, axiom.
+(or (= (add (add ?A ?B) ?C) (add ?A (add ?B ?C))))
+
+; right_identity, axiom.
+(or (= (add ?A additive_identity) ?A))
+
+; left_identity, axiom.
+(or (= (add additive_identity ?A) ?A))
+
+; right_additive_inverse, axiom.
+(or (= (add ?A (additive_inverse ?A)) additive_identity))
+
+; left_additive_inverse, axiom.
+(or (= (add (additive_inverse ?A) ?A) additive_identity))
+
+; additive_inverse_identity, axiom.
+(or (= (additive_inverse additive_identity) additive_identity))
+
+; property_of_inverse_and_add, axiom.
+(or (= (add ?A (add (additive_inverse ?A) ?B)) ?B))
+
+; distribute_additive_inverse, axiom.
+(or (= (additive_inverse (add ?A ?B)) (add (additive_inverse ?A) (additive_inverse ?B))))
+
+; additive_inverse_additive_inverse, axiom.
+(or (= (additive_inverse (additive_inverse ?A)) ?A))
+
+; multiply_additive_id1, axiom.
+(or (= (multiply ?A additive_identity) additive_identity))
+
+; multiply_additive_id2, axiom.
+(or (= (multiply additive_identity ?A) additive_identity))
+
+; product_of_inverse, axiom.
+(or (= (multiply (additive_inverse ?A) (additive_inverse ?B)) (multiply ?A ?B)))
+
+; multiply_additive_inverse1, axiom.
+(or (= (multiply ?A (additive_inverse ?B)) (additive_inverse (multiply ?A ?B))))
+
+; multiply_additive_inverse2, axiom.
+(or (= (multiply (additive_inverse ?A) ?B) (additive_inverse (multiply ?A ?B))))
+
+; distribute1, axiom.
+(or (= (multiply ?A (add ?B ?C)) (add (multiply ?A ?B) (multiply ?A ?C))))
+
+; distribute2, axiom.
+(or (= (multiply (add ?A ?B) ?C) (add (multiply ?A ?C) (multiply ?B ?C))))
+
+; right_alternative, axiom.
+(or (= (multiply (multiply ?A ?B) ?B) (multiply ?A (multiply ?B ?B))))
+
+; associator, axiom.
+(or (= (associator ?A ?B ?C) (add (multiply (multiply ?A ?B) ?C) (additive_inverse (multiply ?A (multiply ?B ?C))))))
+
+; commutator, axiom.
+(or (= (commutator ?A ?B) (add (multiply ?B ?A) (additive_inverse (multiply ?A ?B)))))
+
+; middle_associator, axiom.
+(or (= (multiply (multiply (associator ?A ?A ?B) ?A) (associator ?A ?A ?B)) additive_identity))
+
+; prove_equality, conjecture.
+(or (/= (multiply (multiply (associator a a b) a) (associator a a b)) additive_identity))
+
+;--------------------------------------------------------------------------

@@ -1,0 +1,50 @@
+(note TQA106)
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict) Stage4-AttackOnKuwaitiTanker36) 
+
+(existant Stage4-AttackOnKuwaitiTanker36 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(instance Stage4-KuwaitiTanker36 Object) 
+
+(damages Stage4-AttackOnKuwaitiTanker36 Stage4-KuwaitiTanker36) 
+
+(subProcess HPKBScenarioConflict Stage4-AttackOnKuwaitiTanker36) 
+
+
+(subclass AttackOnTangible Process) 
+
+(instance HPKBScenarioConflict Process) 
+
+(instance Stage4-AttackOnKuwaitiTanker36 AttackOnTangible) 
+
+(instrument-Generic Stage4-AttackOnKuwaitiTanker36 Stage4-SilkwormMissile36) 
+
+(implies 
+ (deviceUsed ?EV ?DEV) 
+ (instrument-Generic ?EV ?DEV)) 
+
+(deviceUsed Stage4-AttackOnKuwaitiTanker36 Stage4-SilkwormMissile36) 
+
+(instance Stage4-SilkwormMissile36 CruiseMissile) 
+
+(query (findall ?THING (thereExists ?ACT 
+   (and 
+       (subProcess HPKBScenarioConflict ?ACT) 
+       (instance ?ACT AttackOnTangible) 
+       (instance ?THING Object) 
+       (temporallySubsumes 
+           (DateInSituationFn CalendarDay 36 HPKBScenarioConflict) ?ACT) 
+       (damages ?ACT ?THING) 
+       (thereExists ?FORCE 
+           (and 
+               (instance ?FORCE CruiseMissile) 
+               (instrument-Generic ?ACT ?FORCE)))))
+))
+
+(answer Stage4-KuwaitiTanker36 )
+
+(end_of_file)

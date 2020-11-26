@@ -1,0 +1,261 @@
+(note TQD41)
+(abort)
+
+(located NatihOilField Oman) 
+
+(subrelation located inRegion) 
+
+(implies 
+ (industryFacilities 
+ (IndustryOfRegionFn OilIndustry ?REGION) ?FACILITY) 
+ (industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector ?REGION) ?FACILITY)) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry Oman) NatihOilField) 
+
+(not 
+ (quotedCollection GasField)) 
+
+(completeExtentKnown quotedCollection) 
+
+(inRegion NatihOilField Oman) 
+
+(instance NatihOilField GasField) 
+
+
+
+(industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector Oman) NatihOilField) 
+
+(not 
+ (quotedCollection GasField)) 
+
+(implies 
+ (and 
+ (inRegion ?OBJ ?SUB) 
+ (contains ?REGION ?SUB)) 
+ (inRegion ?OBJ ?REGION)) 
+
+(contains Oman Oman) 
+
+(located MinaAl-FahalRefinery Oman) 
+
+(subrelation located inRegion) 
+
+(implies 
+ (industryFacilities 
+ (IndustryOfRegionFn OilIndustry ?REGION) ?FACILITY) 
+ (industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector ?REGION) ?FACILITY)) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry Oman) MinaAl-FahalRefinery) 
+
+(not 
+ (quotedCollection OilRefinery)) 
+
+(completeExtentKnown quotedCollection) 
+
+(inRegion MinaAl-FahalRefinery Oman) 
+
+(instance MinaAl-FahalRefinery OilRefinery) 
+
+
+
+(industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector Oman) MinaAl-FahalRefinery) 
+
+(not 
+ (quotedCollection OilRefinery)) 
+
+(located NatihOilField Oman) 
+
+(subrelation located inRegion) 
+
+(implies 
+ (industryFacilities 
+ (IndustryOfRegionFn OilIndustry ?REGION) ?FACILITY) 
+ (industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector ?REGION) ?FACILITY)) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry Oman) NatihOilField) 
+
+(not 
+ (quotedCollection OilField)) 
+
+(completeExtentKnown quotedCollection) 
+
+(inRegion NatihOilField Oman) 
+
+(instance NatihOilField OilField) 
+
+
+(industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector Oman) NatihOilField) 
+
+(not 
+ (quotedCollection OilField)) 
+
+(thereExists ?X (and
+
+(located 
+ ?X Oman) 
+
+(inRegion 
+ ?X Oman) 
+
+(instance 
+ ?X OilPipeline) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry Oman) 
+ ?X) 
+
+(industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector Oman) 
+ ?X) 
+
+))
+
+
+
+(subrelation located inRegion) 
+
+(subIndustries 
+ (IndustryOfRegionFn EnergyEconomicSector ?REG) 
+ (IndustryOfRegionFn OilIndustry ?REG)) 
+
+(implies 
+ (and 
+ (subIndustries ?INDUSTRY ?SUB) 
+ (industryFacilities ?SUB ?FAC)) 
+ (industryFacilities ?INDUSTRY ?FAC)) 
+
+(subIndustries 
+ (IndustryOfRegionFn EnergyEconomicSector Oman) 
+ (IndustryOfRegionFn OilIndustry Oman)) 
+
+
+
+(not 
+ (quotedCollection OilPipeline)) 
+
+(completeExtentKnown quotedCollection) 
+
+
+(not 
+ (quotedCollection OilPipeline)) 
+
+(located SeaportOfMinaAlFahlOman CityOfMinaAlFahlOman) 
+
+(subrelation located inRegion) 
+
+(implies 
+ (and 
+ (inRegion ?OBJ ?SUB) 
+ (contains ?REGION ?SUB)) 
+ (inRegion ?OBJ ?REGION)) 
+
+(inRegion SeaportOfMinaAlFahlOman CityOfMinaAlFahlOman) 
+
+(contains Oman CityOfMinaAlFahlOman) 
+
+(implies 
+ (industryFacilities 
+ (IndustryOfRegionFn OilIndustry ?REGION) ?FACILITY) 
+ (industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector ?REGION) ?FACILITY)) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry Oman) SeaportOfMinaAlFahlOman) 
+
+(not 
+ (quotedCollection OilTerminal)) 
+
+(completeExtentKnown quotedCollection) 
+
+(inRegion SeaportOfMinaAlFahlOman Oman) 
+
+(instance SeaportOfMinaAlFahlOman OilTerminal) 
+
+
+(industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector Oman) SeaportOfMinaAlFahlOman) 
+
+(not 
+ (quotedCollection OilTerminal)) 
+
+(located SeaportOfMinaAlFahlOman CityOfMinaAlFahlOman) 
+
+(subrelation located inRegion) 
+
+(implies 
+ (and 
+ (inRegion ?OBJ ?SUB) 
+ (contains ?REGION ?SUB)) 
+ (inRegion ?OBJ ?REGION)) 
+
+(inRegion SeaportOfMinaAlFahlOman CityOfMinaAlFahlOman) 
+
+(contains Oman CityOfMinaAlFahlOman) 
+
+(implies 
+ (industryFacilities 
+ (IndustryOfRegionFn OilIndustry ?REGION) ?FACILITY) 
+ (industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector ?REGION) ?FACILITY)) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry Oman) SeaportOfMinaAlFahlOman) 
+
+(not 
+ (quotedCollection Seaport)) 
+
+(completeExtentKnown quotedCollection) 
+
+(inRegion SeaportOfMinaAlFahlOman Oman) 
+
+(instance SeaportOfMinaAlFahlOman Seaport) 
+
+
+(industryFacilities 
+ (IndustryOfRegionFn EnergyEconomicSector Oman) SeaportOfMinaAlFahlOman) 
+
+(not 
+ (quotedCollection Seaport)) 
+
+(query (findall ?TARGET-TYPE
+(implies 
+   (and 
+       (instance ?ACT MilitaryInvasion) 
+       (agent ?ACT Iran)) 
+   (thereExists ?TARGET 
+       (and 
+           (assertedFormula 
+               (instance ?TARGET ?TARGET-TYPE)) 
+           (not 
+               (quotedCollection ?TARGET-TYPE)) 
+           (industryFacilities 
+               (IndustryOfRegionFn EnergyEconomicSector Oman) ?TARGET) 
+           (inRegion ?TARGET Oman) 
+           (consistent 
+               (objectActedOn ?ACT ?TARGET)))))
+))
+
+(answer GasField
+)
+(answer OilRefinery
+)
+(answer Seaport
+)
+(answer OilTerminal
+)
+(answer OilField
+)
+(answer OilPipeline
+)
+
+(end_of_file)
+

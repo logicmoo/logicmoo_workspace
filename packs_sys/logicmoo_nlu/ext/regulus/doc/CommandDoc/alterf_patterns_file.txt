@@ -1,0 +1,3 @@
+Relevant if you are doing Alterf processing with LF patterns. Points
+to a file containing Alterf LF patterns, that can be tested using the
+CHECK\_\-ALTERF\_\-PATTERNS command.

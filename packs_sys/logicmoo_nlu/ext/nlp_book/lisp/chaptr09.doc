@@ -1,0 +1,752 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%      Extracts from the book "Natural Language Processing in LISP"     %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Question answering
+
+    Old notation                New notation
+
+    <predicate> = p                   (p a0 a1)
+    <arg0> = a0
+    <arg1> = a1
+
+    <connective> = c                  (c p1 p2)
+    <prop1> = p1
+    <prop2> = p2
+
+    <quantifier> = q                  (q v r b)
+    <variable> = v
+    <restriction> = r
+    <body> = b
+
+For example:
+
+    Old notation                New notation
+
+    <quantifier> = all                (all _x (airline _x) (employer _x))
+    <restriction predicate> = airline
+    <restriction arg0> = <variable>
+    <body predicate> = employer
+    <body arg0> = <variable>
+
+    <connective> = and                (and (airline Delta) (hotel_chain Hilton))
+    <prop1 predicate> = airline
+    <prop1 arg0> = Delta
+    <prop2 predicate> = hotel_chain
+    <prop2 arg0> = Hilton
+
+In translating from the old notation to the new, we replace all values
+for the variable feature by variable symbols in such a way that two
+such symbols are the same, exactly when the two values share in the
+dag.  As before, we indicate variable symbols by using atoms beginning
+with '_'. Where a database predicate is involved, the number of
+objects in the list will, of course, depend on the predicate
+concerned.  For instance:
+
+    (airline _x)
+
+might represent the proposition that _x is an airline and:
+
+    (took_over _x _y)
+
+might represent the proposition that _x took over _y.  Here are some
+examples of queries in the LISP notation, together with natural
+language questions that they might correspond to.
+
+    (all _x
+        (airline _x)
+        (us_based _x))
+    'every airline is US based'
+
+    (all _x
+        (airline _x)
+        (printout _x))
+    'what airlines are there?'
+
+    (all _x
+       (and (airline _x)
+            (exists _y (hotel_chain _y)
+                       (took_over _x _y)))
+       (printout _x))
+    'what airlines took over a hotel chain?'
+
+    (all _x
+        (and (hotel_chain _x)
+             (exists _y (owns _x _y)))
+        (printout _x))
+    'which hotel chains have subsidiaries?'
+
+Evaluating DBQ formulae
+
+Our algorithm for evaluating DBQ formulae will not actually provide
+truth values directly for a formula, but will produce a set of
+substitutions reflecting possible values for variables appearing in
+the formula that yield true propositions.  It is simplest to see this
+for formulae of the first type (involving simple predicates).  Imagine
+that we have a database about car parts which includes information
+about which firms supply which parts.  We will assume that a relation
+supplies is represented in the database by a long list of entries
+specifying exhaustively who supplies what, as follows:
+
+    Who            What
+
+    smith_corp     radiators
+    jones_inc      spark_plugs
+    morgan_bros    radiators
+    jones_inc      batteries
+    smith_corp     tyres
+    morgan_bros    pumps
+
+Questions about this relation can be phrased in DBQ by using the
+predicate supplies.  We will use the first (arg0) argument position
+associated with supplies to indicate the supplying firm and the second
+(arg1) position to indicate the type of part.  Then, the following are
+possible DBQ formulae involving this relation:
+
+    (supplies _x radiators)
+    (supplies _x _y)
+
+The result of evaluating the first of these formulae will be the set
+of possible values for _x which would result in the formula matching
+something in the database.  So what we get is:
+
+    (((_x smith_corp))
+     ((_x morgan_bros)))
+
+The result of evaluating the second of the formulae will be the set of
+pairs of values for _x and _y that result in the formula matching
+something in the database.  In this case, the result corresponds to
+the whole relation represented by:
+
+    (((_x smith_corp) (_y radiators))
+     ((_x morgan_bros) (_y spark_plugs))
+      ... )
+
+In general, a DBQ formula involving a predicate and associated
+arguments will be assumed to correspond to a primitive relation, each
+true case of which is explicitly listed in the database.  The
+evaluation of such formulae is dealt with by the database and returns
+the set of possible variable bindings that allow the formula to match
+a true fact recorded there.
+
+Let us now consider the more complex kinds of DBQ formulae.  In
+general, there needs to be a special way of evaluating each kind of
+conjunction and each kind of quantifier.  Consider the and
+conjunction.  We want the truth value of an and proposition to be true
+if and only if each of the two component propositions is true.  A
+value of a variable will satisfy such a complex proposition only if it
+satisfies both of the subpropositions.  So, here is a way of
+generating the possible substitutions for a conjunction:
+
+    To evaluate (and P1 P2):
+       Let the set of answers computed so far be empty
+       Evaluate P1, to give the set of substitutions S1
+       For each element s1 of S1:
+          Apply s1 to the proposition P2, yielding P2'
+          Evaluate P2', giving the set of substitutions S2
+          For each element s2 of S2:
+             Combine s1 with s2, and add the result to the
+             Set of answers computed so far
+       Return the set of answers computed so far
+
+We have made use here of the operations of applying and combining
+substitutions.  We have already come across these operations via the
+LISP functions apply_subst and compose_subst.  Consider the evaluation
+of the following DBQ formula:
+
+    (and (supplies _x radiators) (supplies _x _y))
+
+Evaluating the first part ((supplies _x radiators)) of the and
+proposition against our database results in the first of the set of
+substitutions given above:
+
+    S1:
+    (((_x smith_corp))
+     ((_x morgan_bros)))
+
+Each of these two substitutions is dealt with separately.  First of
+all, the substitution '((_x smith_corp))' is considered.  The second
+part of the and proposition is rewritten so that all occurrences of _x
+are replaced by smith_corp - this is applying the substitution to the
+formula.  As a result, we now have the following formula:
+
+    (supplies smith_corp _y)
+
+Evaluating this gives rise to the second set of substitutions:
+
+    S2:
+    (((_y radiators))
+     ((_y tyres))))
+
+To get possible answers, we combine the elements of S2 one by one with
+the element chosen from S1.  This just means getting the pairs of
+substitutions to pool their information.  So, we get the following two
+answers:
+
+    (((_x smith_corp) (_y radiators))
+     ((_x smith_corp) (_y tyres)))
+
+To complete the set of answers, we need to consider the second
+substitution in S1.  Applying this to the second part of the and
+proposition gives:
+
+    (supplies morgan_bros _y)
+
+and evaluating this gives:
+
+    S2:
+    (((_y radiators))
+     ((_y pumps)))
+
+Once more we combine these substitutions with the one selected from
+S1, this time generating the two answers:
+
+    (((_x morgan_bros) (_y radiators))
+     ((_x morgan_bros) (_y pumps)))
+
+Now that we have dealt with all the elements of S1, we can enumerate
+the set of substitutions that result from evaluating the whole
+formula:
+
+    (((_x smith_corp) (_y radiators))
+     ((_x smith_corp) (_y tyres))
+     ((_x morgan_bros) (_y radiators))
+     ((_x morgan_bros) (_y pumps)))
+
+Notice that the algorithm for evaluating an and proposition invokes
+the evaluation algorithm recursively on the parts of the formula.  The
+algorithm will act similarly for other conjunctions and quantifiers.
+The recursion will bottom out every time because each recursive call
+is operating on a smaller piece of formula than the one that invoked
+it.  So, eventually, the recursive calls will cause the evaluation of
+simple predicate formulae, which can be done by the database without
+any further recursive calls.
+
+In evaluating a DBQ formula, we will only be interested in
+substitutions for variables that appear outside the formula.  For
+instance, in the and example it was important to remember the possible
+values of X satisfying the first subformula, in order to use them in
+evaluating the second.  Now, the assumption will be made here that a
+quantified formula will never contain variables that are used outside
+(that is, free variables).  So, this means that when a quantified
+formula is evaluated we need only ever produce one of two possible
+answers:
+
+    ()
+    (list empty_subst)
+
+The first of these answers says that there are no substitutions that
+will make this formula true, whereas the second says that there is a
+substitution that will make the formula true, but it is empty because
+the formula has no free variables.  Here is the part of the evaluation
+algorithm dealing with the all and exists quantifiers:
+
+    To evaluate (all V R B):
+       Evaluate R, to give the set of substitutions S1
+       If there are none, simply return (list empty_subst)
+       Otherwise, for each element s1 of S1:
+          apply s1 to the proposition B, yielding B'
+          if B' evaluates to give at least one substitution,
+             continue going through the elements of S1
+          otherwise immediately return ()
+       If you get successfully through all the elements of S1,
+          return (list empty_subst)
+
+    To evaluate (exists V R B):
+       Evaluate R, to give the set of substitutions S1
+       If there are none, simply return ()
+       Otherwise, for each element s1 of S1:
+          apply s1 to the proposition B, yielding B'
+          if B' evaluates to give at least one substitution,
+             immediately return (list empty_subst)
+          otherwise continue going through the elements of S1
+       If you get through all the elements of S1 without any success,
+          return ()
+
+Intuitively, the all algorithm goes through all the values of the
+variable satisfying the restriction and checks that they satisfy the
+body.  Only if they all satisfy can it return (list empty_subst) -
+that is, true.  On the other hand, the exists algorithm is content to
+return (list empty-subst) if there exists any value of the variable
+that makes both the restriction and the body true.  Consider, for
+example, the evaluation of:
+
+    (all _x (supplies _x radiators) (supplies _x tyres))
+
+given our example database.  The evaluation of the restriction part
+provides the following set of substitutions:
+
+    S1:
+    (((_x smith_corp))
+     ((_x morgan_bros)))
+
+Taking the first of these and applying it to the body, we get:
+
+    (supplies smith_corp tyres)
+
+which evaluates to (list empty-subst).  So, we continue with the
+second substitution in S1.  This time, the second formula to be
+evaluated is:
+
+    (supplies morgan_bros tyres)
+
+which yields ().  Because of this, the evaluation of the whole formula
+returns ().  The evaluation has indicated that 'everyone who supplies
+radiators supplies tyres' is false, because Morgan Bros supplies
+radiators but not tyres.
+
+Notice that the above strategy of evaluating the restriction R in
+order to substitute values into the body B will only work if the
+evaluation of the restriction actually produces substitutions for the
+variable.  Not every DBQ formula will, however, produce substitutions
+for all the variables in it when it is evaluated.  For instance,
+evaluating an all formula, whether or not it is successful, never
+yields any interesting substitutions.  So, in order for query
+evaluation as we have sketched it to work, we must require that a
+restriction formula be one of the following:
+
+(1)  a simple proposition mentioning the variable (e.g. (owns _x _y)
+     mentions _x and _y) or
+
+(2)  a conjunction with such a proposition as its first conjunct.
+
+If a DBQ formula is derived from the analysis of an English sentence,
+this restriction is rarely a problem, because most NPs provide, via
+the noun, a simple proposition about the referent which will appear in
+the restriction part of the relevant DBQ formula.  For instance,
+'every airline' gives rise to a DBQ formula where the restriction is
+the simple proposition (airline _x), where _x is the variable
+quantified over in the formula.
+
+We have now sketched out the main components of an evaluation
+algorithm for DBQ formulae.  Put together, these form a recursive
+algorithm for evaluating a formula by recursively evaluating its
+components in particular ways.  The algorithm returns a set of
+substitutions, rather than a truth value, but for a formula with no
+free variables the possible results, (list empty_subst) and (), do
+indicate true and false, respectively.  The algorithm as sketched can
+also be extended to handle other conjunctions, logical operators and
+quantifiers, such as or, not, most.
+
+When a DBQ formula is treated as a database query, it is assumed that
+the person posing the query is interested in whether the proposition
+expressed is true or not.  In general, they may be interested in
+knowing for what objects a given proposition is true, as well as
+knowing whether there are such objects.  So, DBQ allows the
+specification of certain extra actions that are to be carried out
+during query evaluation.  Such actions are treated as propositions
+that are always true, but which cause side effects to occur when their
+truth is verified.  The only action we will actually use is that of
+printing out the value of a variable (that makes some proposition
+true).  This will give rise to a DBQ form like
+
+    (printout _x)
+
+We really need to introduce a clause into the algorithm for such
+things, as follows:
+
+    To evaluate (printout X):
+                Print out X
+                Return (list empty_subst)
+
+Of course, to introduce such actions sensibly into our DBQ formulae,
+we need to know when they will be encountered in the evaluation
+process.  Thus, for instance, we want a printout action only to be
+encountered after a particular value has been put in the place of the
+relevant variable.
+
+The algorithm for query evaluation is easily translated into LISP, and
+lib dbq provides a function query which takes a query (represented as
+a LISP list structure) and returns the list of substitutions which
+make it true.  We have already represented substitutions in LISP, and
+lib dbq uses lib subst to manipulate these.  The operations of
+applying and combining substitutions are thus provided by the
+functions apply_subst (or lookup_subst if the argument is a variable)
+and compose_substs respectively.  Sets of substitutions are
+represented by lists, with nil representing the empty set, which
+stands for false in this context. As we have seen, the empty list and
+the list consisting just of the empty substitution have a particular
+significance for DBQ, and so we will give them special names:
+
+    (defparameter NO nil)
+    (defparameter YES (list empty_subst))
+
+The definition of query takes the form of a long sequence of ifs which
+seeks to establish what kind of DBQ formula is involved.  Once the
+type is established, query calls a special-purpose function for that
+kind of formula:
+
+    (defun query (formula)
+      (if (listp formula)
+        (case (car formula)
+          (all
+            (process_all
+              (cadr formula)          ; x
+              (caddr formula)         ; p1
+              (caddr (cdr formula)))) ; p2
+          (exists
+            (process_exists
+              (cadr formula)          ; x
+              (caddr formula)         ; p1
+              (caddr (cdr formula)))) ; p2
+     ...
+          (otherwise (retrieve_all formula)))
+        (retrieve_all formula)))
+
+Notice that the various functions (process_all, process_exists, etc.)
+are called with the remaining top level elements of the DBQ formula as
+their arguments.  process_all is the function that deals with all-
+constructions:
+
+    (defun process_all (x p1 p2)
+      (dolist (subst (query p1) YES)
+        (if (equal (lookup_subst x subst) x)
+          (error "ALL condition doesnt bind variable ~S" (list x p1)))
+        (if (null
+            (query
+              (apply_subst
+                (add_subst x (lookup_subst x subst) empty_subst)
+                p2)))
+          (return NO))))
+
+Notice how the code checks that the all condition always finds a value
+for the variable.  This should always happen with formulae arising
+from natural language queries.  Here is how the and case looks in
+LISP:
+
+    (defun process_and (p1 p2)
+      (let ((results ()))
+        (dolist (subst1 (query p1))
+          (dolist (subst2 (query (apply_subst subst1 p2)))
+            (setq results
+              (cons
+                (compose_substs subst1 subst2)
+                results))))
+        results))
+
+When the recursion reaches a simple proposition, the function
+retrieve_all is called.  retrieve_all takes a simple proposition and
+returns a list of substitutions, corresponding to all ways the
+proposition can be found in the database.  For the current purposes,
+it suffices to have the database represented as a list of facts kept
+in a global variable database:
+
+    (setq database
+     '((supplies smith_corp radiators)
+       (supplies jones_inc spark_plugs)
+       (supplies morgan_bros radiators)
+       (supplies jones_inc batteries)
+       (supplies smith_corp tyres)
+       (supplies morgan_bros pumps)))
+
+although this would obviously be very inefficient if the database was
+large.  retrieve_all works its way through the elements of database,
+comparing each one with the query and returning a substitution.  The
+function performing this comparison is called termunify, and this of
+course implements term unification, as discussed in Chapter 7.
+
+Implementing backwards and forwards inference
+
+lib bckinfer is a program for doing backwards inference using a LISP
+adaptation of our rule notation.  We will assume that a rule is
+represented by a list whose first element is the conclusion and whose
+remaining elements are the conditions.  Each such element will be a
+simple proposition represented in the same way as in the database
+query language.  Thus, for instance, here is the LISP version of one
+of the rules about credit cards:
+
+    ((accepts _x _y) (credit_card _x) (registered _x _y))
+
+A rule that has no conditions will then simply be a list with one
+element, for instance:
+
+    ((credit_card visa))
+
+We will assume that the global variable infrules will hold the list of
+inference rules that are going to be used.  An example of such a list
+is given in lib airdb2.
+
+The function back_infer is responsible for backwards inference.  It is
+provided with a single inference goal (a proposition that may contain
+variables) and it returns the list of substitutions that correspond to
+the inferrable instances of the goal.  For instance:
+
+    (setq infrules
+     '(((employs velsoft (c smith)))
+       ((employs mobtek (j martin)))
+       ((employs velsoft (s redding)))
+       ((employs singco (p butcher)))))
+    (back_infer '(employs velsoft _x))
+
+    (((_X (S REDDING)) ()) ((_X (C SMITH)) ()))
+
+The core of back_infer is the following loop, which deals with each
+inference rule rule in turn, collecting together the substitutions for
+successful proofs of the goal using that rule.  The variable substs is
+here used as the repository for that collection.
+
+    (defun back_infer (goal)
+     ...
+            (let ((substs ()))
+              (dolist (rule infrules substs)
+                (setq substs
+                  (append
+                    (solutions_using_rule goal rule)
+                    substs))))))))
+
+solutions_using_rule is responsible for trying to prove the goal using
+the rule it is provided with.  The rule can only be any use if its
+conclusion is about the same predicate as the predicate of the goal.
+It can also only be useful if the goal unifies with the conclusion,
+yielding a substitution headsubst:
+
+    (defun solutions_using_rule (goal rule)
+      (let ((substs ()))
+        (if (and
+            (equal (caar rule) (car goal)) ; check same predicate
+            (equal (length (car rule)) (length goal))) ; check same no of args
+          (let*
+            ((newrule (rename rule))
+             (headsubst (termunify goal (car newrule))))
+            (if headsubst ; check that conclusion of rule matches goal
+              (dolist
+                (bodysubst
+                  (back_infer_all
+                    (apply_subst headsubst (cdr newrule))))
+                (setq substs
+                  (cons
+                    (compose_substs headsubst bodysubst)
+                    substs))))))
+        substs))
+
+If the unification succeeds, headsubst is applied to the body of the
+rule (the list of conditions).  This modified rule body is then sent
+to back_infer_all, which returns the set of additional substitutions
+that have to be applied to make true instances of the conditions.  The
+substitutions that result from composing these with headsubst then
+contribute to the results of solutions_using_rule.  For instance, in
+the following the binding for _x (velsoft) comes from the first
+unification, and the binding for _y comes from the satisfaction of the
+subgoals ((good_worker _x)):
+
+    (setq infrules
+     '(((employs velsoft _x) (good_worker _x))
+       ((good_worker (c smith)))
+       ((good_worker (s redding)))))
+    (trace back_infer back_infer_all)
+    (back_infer '(employs _x _y))
+
+    >BACK_INFER (EMPLOYS _X _Y)
+    !>BACK_INFER_ALL ((GOOD_WORKER _Y))
+     ...                     
+    !<BACK_INFER_ALL (((_Y (S REDDING)) ()) ((_Y (C SMITH)) ()))
+    <BACK_INFER (((#:_0 _Y) (_X VELSOFT) () (_Y (C SMITH)) ())
+                 ((#:_0 _Y) (_X VELSOFT) () (_Y (S REDDING)) ()))
+    (((#:_0 _Y) (_X VELSOFT) () (_Y (C SMITH)) ())
+     ((#:_0 _Y) (_X VELSOFT) () (_Y (S REDDING)) ()))
+
+Note that the variable that prints out as '#:_0' is the _x in the use
+of the first inference rule (which is unified with _y in the goal).
+The inference rule has to be renamed so that the _x in the use of the
+rule can be distinguished from the _x in the original goal.
+
+back_infer_all simply takes a list of goals and calls back_infer on
+them.  For each solution of the first goal, it applies that
+substitution to the rest and then works on the rest.  The results from
+back_infer_all come from composing the substitutions that are obtained
+from the individual goals.
+
+    (defun back_infer_all (goals)
+      (if (null goals)
+        (list empty_subst)
+        (let ((substs ()))
+          (dolist (subst1 (back_infer (car goals)))
+            (dolist (subst2 (back_infer_all (apply_subst subst1 (cdr goals))))
+              (setq substs
+                (cons
+                  (compose_substs subst1 subst2)
+                  substs))))
+          substs)))
+
+Lib forinfer implements a simple forwards inference system, with the
+main function for_infer.  for_infer takes a simple proposition, which
+is assumed to contain no variables, and adds it to the database of
+inference rules.  If the presence of this new fact makes any inference
+rules apply in new ways, then the conclusions of those rules are also
+added to the database.  This may cause more rules to run, and so on.
+The function keeps track of the assertions it still has to add in a
+list to_add (this is much like the agenda in a chart parser):
+
+    (defun for_infer (assertion)
+      (let ((to_add nil))
+        (if (null (fifind assertion))
+          (setq to_add (list assertion))
+          (setq to_add nil))
+        (do
+          ((assert (car to_add) (car to_add)))
+          ((null to_add))
+          (setq to_add (cdr to_add))
+          (princ "Adding ") (princ assert) (terpri)
+          (setq infrules (cons (list assert) infrules))
+          (dolist (new (consequences assert))
+            (if (and                     
+                (null (fifind new))
+                (not (member new to_add :test #'equal))
+                (not (equal new assert)))
+              (setq to_add (cons new to_add)))))))
+
+The core of for_infer is the function consequences, which returns all
+the immediate logical consequences of a new fact assert.  Each new
+assertion in the list returned by consequences will in general be
+placed on the to_add list, but this only happens if the assertion is
+not already in the database and if it is not already a member of
+to_add or (by some chance) the original assertion.  The first of these
+is checked by the function find, which is just like back_infer, except
+that it only looks at facts (not rules) in the database.  The second
+is done simply using member, with the relevant test being the function
+equal, rather than the default eql, because eql will not succeed if it
+is given two different lists with the same elements.  Here is the
+definition of consequences:
+
+    (defun consequences (assert)
+      (let ((results ()))
+        (dolist (infrule infrules)
+          (dolist (pattern (cdr infrule))
+            (if (and
+                (equal (car pattern) (car assert))
+                (equal (length pattern) (length assert)))
+              (let ((subst1 (termunify assert pattern)))
+                (if subst1
+                  (dolist
+                    (subst2
+                      (find_all (apply_subst subst1
+                          (remove pattern (cdr infrule)))))
+                    (setq results
+                      (cons
+                        (apply_subst (compose_substs subst1 subst2) (car infrule))
+                        results))))))))
+        results))
+
+The function looks through all the inference rules and, for each one,
+tries to unify the new fact with each condition (pattern) in turn.  If
+it manages to do this, it tries to find instances of all the other
+conditions in the database.  The function find_all is just like
+back_infer_all, except that it only looks for facts -- it does not use
+any inference rules that themselves have conditions.  For each way
+that these other conditions can be satisfied, there is an appropriate
+substitution and this (subst2), together with the substitution
+obtained by unifying with the original condition (subst1), determines
+the instance of the rule conclusion that has now been inferred to be
+true.
+
+A simple semantic network in LISP
+
+Implementing a simple semantic network in LISP is straightforward.
+Entities can be represented by symbols and attributes by properties on
+their property lists.  Two functions, attr and isa will prove useful
+for setting up networks:
+
+    (defun attr (entity attribute value)
+      (setf (get entity attribute) value))
+
+    (defun isa (entity1 entity2)
+      (setf (get entity1 'isa)
+        (cons entity2 (get entity1 'isa))))
+
+The function attr allows us to stipulate what value particular
+attributes have for particular entities (we will make no distinction
+between individuals and classes in our system -- they both count as
+entities).  Where an attribute is a property that an entity may or may
+not have, we just use the values yes and no accordingly.  Procedure
+isa allows us to specify that one entity (entity1) comes directly
+below another (entity2) in the isa hierarchy.  We use the property isa
+to store for an entity the list of entities that come directly above
+it in the hierarchy, which is why the isa function adds the second
+entity provided to the list of entities already recorded under the
+property.  Here is a sequence of function calls resulting in the
+establishment of an example semantic network representing information
+about the membership of an organisation:
+
+    (attr 'club_member 'sex 'male)
+    (attr 'club_member 'over_50 'yes)
+    (attr 'club_member 'citizenship 'US)
+
+    (isa 'associate 'club_member)
+    (attr 'associate 'associate_member 'yes)
+    (attr 'associate 'citizenship 'non_US)
+
+    (isa 'life_member 'club_member)
+    (attr 'life_member 'life_member 'yes)
+    (attr 'life_member 'over_50 'no)
+
+    (isa 'kim 'associate)
+    (attr 'kim 'over_50 'no)
+
+    (isa 'jean 'associate)
+    (attr 'jean 'sex 'female)
+    (attr 'jean 'citizenship 'US)
+
+    (isa 'mayumi 'life_member)
+    (attr 'mayumi 'sex 'female)
+    (attr 'mayumi 'over_50 'yes)
+    (attr 'mayumi 'citizenship 'non_US)
+
+    (isa 'beryl 'life_member)
+    (attr 'beryl 'sex 'female)
+
+We can now define a function get_attr to retrieve the correct value of
+a given attribute for a given entity, using inherited information if
+necessary.  This function, together with the example network code,
+appears in lib inherits.
+
+    (defun get_attr (entity attribute)
+      (catch 'got_one
+        (if (get entity attribute)
+          (throw 'got_one (get entity attribute))
+          (dolist (e1 (get entity 'isa))
+            (let ((x (get_attr e1 attribute)))
+              (if x
+                (throw 'got_one x)))))
+        nil))
+
+Notice that because of the order of the if clauses in this function,
+an attribute value specified locally for an entity will always be
+chosen over values obtained through inheritance.  So inherited
+information is interpreted as default information that can be
+explicitly overridden locally.  get_attr returns nil if there is no
+value specified for the attribute, and this fact is used to determine
+for each entity e1 immediately above the original entity entity in the
+hierarchy whether a value can be obtained by inheritance from that
+entity.  Here is an exhaustive listing of the conclusions (about Kim,
+Jean, Mayumi and Beryl) that can be drawn from this new example
+network, under the intended default inheritance interpretation:
+
+    Kim is an associate member.
+    The sex of Kim is male.
+    Kim is not over 50.
+    The citizenship of Kim is non-US.
+
+    Jean is over 50.
+    Jean is an associate member.
+    The sex of Jean is female.                     
+    The citizenship of Jean is US.
+
+    Mayumi is over 50.
+    Mayumi is a life member.
+    The citizenship of mayumi is non-US.
+    The sex of Mayumi is female.
+
+    Beryl is a life member.
+    The citizenship of Beryl is US.
+    The sex of Beryl is female.
+    Beryl is not over 50.
+
+Notice that for the results of the program to make sense, the semantic
+network must be set up so that at most one value can be found for each
+entity and attribute.  For this we require that if an entity has an
+attribute specified by more than one ancestor then one of those
+ancestors is itself an ancestor of the other.  Moreover, we require
+that no entity is associated locally with more than one value for a
+given attribute.

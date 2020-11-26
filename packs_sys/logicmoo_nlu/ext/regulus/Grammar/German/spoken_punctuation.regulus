@@ -1,0 +1,4 @@
+
+question_mark:[] --> [].
+
+include('$REGULUS/Grammar/German/null_utterance_desc').

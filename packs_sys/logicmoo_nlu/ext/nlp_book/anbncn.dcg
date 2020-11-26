@@ -1,0 +1,17 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% anbncn.dcg [Chapter  4] A DCG for the language a^n b^n c^n
+%
+s	-->	[a],	s(i).
+s(I)	-->	[a],	s(i(I)).
+s(I)	-->	bn(I),	cn(I).
+%
+bn(i(I))	-->	[b],	bn(I).
+bn(i)	-->	[b].
+%
+cn(i(I))	-->	[c],	cn(I).
+cn(i)	-->	[c].

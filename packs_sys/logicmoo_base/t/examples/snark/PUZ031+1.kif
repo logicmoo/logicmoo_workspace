@@ -1,0 +1,155 @@
+;--------------------------------------------------------------------------
+; File     : PUZ031+1 : TPTP v2.2.0. Released v2.0.0.
+; Domain   : Puzzles
+; Problem  : Schubert's Steamroller
+; Version  : Especial.
+; English  : Wolves, foxes, birds, caterpillars, and snails are animals, and
+;            there are some of each of them. Also there are some grains, and
+;            grains are plants. Every animal either likes to eat all plants
+;            or all animals much smaller than itself that like to eat some
+;            plants. Caterpillars and snails are much smaller than birds,
+;            which are much smaller than foxes, which in turn are much
+;            smaller than wolves. Wolves do not like to eat foxes or grains,
+;            while birds like to eat caterpillars but not snails.
+;            Caterpillars and snails like to eat some plants. Therefore
+;            there is an animal that likes to eat a grain eating animal.
+
+; Refs     : [Pel86] Pelletier (1986), Seventy-five Problems for Testing Au
+;          : [Hah94] Haehnle (1994), Email to G. Sutcliffe
+; Source   : [Hah94]
+; Names    : Pelletier 47 [Pel86]
+
+; Status   : theorem
+; Rating   : 0.00 v2.1.0
+; Syntax   : Number of formulae    :   21 (   6 unit)
+;            Number of atoms       :   55 (   0 equality)
+;            Maximal formula depth :    9 (   3 average)
+;            Number of connectives :   36 (   2 ~  ;   4  |;  14  &)
+;                                         (   0 <=>;  16 =>;   0 <=)
+;                                         (   0 <~>;   0 ~|;   0 ~&)
+;            Number of predicates  :   10 (   0 propositional; 1-2 arity)
+;            Number of functors    :    0 (   0 constant; --- arity)
+;            Number of variables   :   33 (   0 singleton;  22 !;  11 ?)
+;            Maximal term depth    :    1 (   1 average)
+
+; Comments : This problem is named after Len Schubert.
+;          : tptp2X -f kif PUZ031+1.p 
+;--------------------------------------------------------------------------
+; pel47_1_1, axiom.
+    (forall (?A)
+      (=> (wolf ?A)
+          (animal ?A) ) )
+
+; pel47_1_2, axiom.
+    (exists (?A)(wolf ?A) )
+
+; pel47_2_1, axiom.
+    (forall (?A)
+      (=> (fox ?A)
+          (animal ?A) ) )
+
+; pel47_2_2, axiom.
+    (exists (?A)(fox ?A) )
+
+; pel47_3_1, axiom.
+    (forall (?A)
+      (=> (bird ?A)
+          (animal ?A) ) )
+
+; pel47_3_2, axiom.
+    (exists (?A)(bird ?A) )
+
+; pel47_4_1, axiom.
+    (forall (?A)
+      (=> (caterpillar ?A)
+          (animal ?A) ) )
+
+; pel47_4_2, axiom.
+    (exists (?A)(caterpillar ?A) )
+
+; pel47_5_1, axiom.
+    (forall (?A)
+      (=> (snail ?A)
+          (animal ?A) ) )
+
+; pel47_5_2, axiom.
+    (exists (?A)(snail ?A) )
+
+; pel47_6_1, axiom.
+    (exists (?A)(grain ?A) )
+
+; pel47_6_2, axiom.
+    (forall (?A)
+      (=> (grain ?A)
+          (plant ?A) ) )
+
+; pel47_7, axiom.
+    (forall (?A)
+      (=> (animal ?A)
+          (or (forall (?B)
+                (=> (plant ?B)
+                    (eats ?A ?B) ) )
+              (forall (?C)
+                (=> (and (and (animal ?C)
+                            (much_smaller ?C ?A) )
+                        (exists (?D)
+                          (and (plant ?D)
+                              (eats ?C ?D) ) ) )
+                    (eats ?A ?C) ) ) ) ) )
+
+; pel47_8, axiom.
+    (forall (?A ?B)
+      (=> (and (bird ?B)
+              (or (snail ?A)
+                  (caterpillar ?A) ) )
+          (much_smaller ?A ?B) ) )
+
+; pel47_9, axiom.
+    (forall (?A ?B)
+      (=> (and (bird ?A)
+              (fox ?B) )
+          (much_smaller ?A ?B) ) )
+
+; pel47_10, axiom.
+    (forall (?A ?B)
+      (=> (and (fox ?A)
+              (wolf ?B) )
+          (much_smaller ?A ?B) ) )
+
+; pel47_11, axiom.
+    (forall (?A ?B)
+      (=> (and (wolf ?A)
+              (or (fox ?B)
+                  (grain ?B) ) )
+          (not (eats ?A ?B) ) ) )
+
+; pel47_12, axiom.
+    (forall (?A ?B)
+      (=> (and (bird ?A)
+              (caterpillar ?B) )
+          (eats ?A ?B) ) )
+
+; pel47_13, axiom.
+    (forall (?A ?B)
+      (=> (and (bird ?A)
+              (snail ?B) )
+          (not (eats ?A ?B) ) ) )
+
+; pel47_14, axiom.
+    (forall (?A)
+      (=> (or (caterpillar ?A)
+              (snail ?A) )
+          (exists (?B)
+            (and (plant ?B)
+                (eats ?A ?B) ) ) ) )
+
+; pel47, conjecture.
+    (not (exists (?A ?B)
+          (and (and (animal ?A)
+                  (animal ?B) )
+              (exists (?C)
+                (and (and (grain ?C)
+                        (eats ?B ?C) )
+                    (eats ?A ?B) ) ) ) ) )
+
+;--------------------------------------------------------------------------

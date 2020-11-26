@@ -1,0 +1,5 @@
+
+include('$REGULUS/Examples/Calendar/Regulus/paraphrase_main.regulus').
+
+
+

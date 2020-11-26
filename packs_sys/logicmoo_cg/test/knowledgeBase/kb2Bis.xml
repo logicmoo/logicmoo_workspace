@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeBase>
+  <Name>D:\aminePlatform7\aminePlatform\classes\aminePlatform\samples\knowledgeBase\kb2Bis.xml</Name>
+  <KBOntology>C:\Users\user\Desktop\samples\ontology\Sowa_CG_Generalization_Hierarchy.xml</KBOntology>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <IndexedType>
+      <Key>Universal</Key>
+      <Content>
+        <IndexedType>Universal</IndexedType>
+      </Content>
+      <Children>
+        <Child>
+          <Key>Act</Key>
+        </Child>
+        <Child>
+          <Key>Wash</Key>
+        </Child>
+        <Child>
+          <Key>Chase</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </IndexedType>
+    <IndexedType>
+      <Key>Chase</Key>
+      <Content>
+        <IndexedType>Chase</IndexedType>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@f2164f</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </IndexedType>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@f2164f</Key>
+      <Content>
+        <Description>[Chase] -
+     -Thme-&gt;[Entity],
+     -Agnt-&gt;[Animal]</Description>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@196bac4</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1352367</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1a76eff</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.CSRule@180b4f9</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@15d8d75</Key>
+        </Father>
+        <Father>
+          <Key>Chase</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <CSRule>
+      <Key>aminePlatform.kernel.ontology.CSRule@180b4f9</Key>
+      <Content>
+        <Antecedent>[Chase] -
+     -Thme-&gt;[Entity :e ],
+     -Agnt-&gt;[Animal :a ]</Antecedent>
+        <Consequence>[Chase] -
+     -Thme-&gt;[Entity :e ],
+     -Agnt-&gt;[Animal :a ],
+     -Manr-&gt;[Vigorous]</Consequence>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.CSRule@11f1f12</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@f2164f</Key>
+        </Father>
+      </Fathers>
+    </CSRule>
+    <CSRule>
+      <Key>aminePlatform.kernel.ontology.CSRule@11f1f12</Key>
+      <Content>
+        <Antecedent>[Chase] -
+     -Thme-&gt;[Entity :e ],
+     -Agnt-&gt;[Animal :a ],
+     -Manr-&gt;[Vigorous]</Antecedent>
+        <Consequence>[Chase] -
+     -Thme-&gt;[Entity :e ],
+     -Agnt-&gt;[Animal :a ],
+     -Manr-&gt;[Vigorous],
+     -Attr-&gt;[Brown]</Consequence>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.CSRule@180b4f9</Key>
+        </Father>
+      </Fathers>
+    </CSRule>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1a76eff</Key>
+      <Content>
+        <Description>[Chase] -
+     -Thme-&gt;[Mouse],
+     -Agnt-&gt;[Cat]</Description>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1684e26</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@e2d0b2</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@f2164f</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@e2d0b2</Key>
+      <Content>
+        <Description>[Chase] -
+     -Thme-&gt;[Mouse]-Attr-&gt;[Gray],
+     -Agnt-&gt;[Cat :Tigerlily ]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@1a76eff</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1684e26</Key>
+      <Content>
+        <Description>[Chase] -
+     -Manr-&gt;[Vigorous],
+     -Thme-&gt;[Mouse]-Attr-&gt;[Brown],
+     -Agnt-&gt;[Cat :Yojo ]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@1a76eff</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1352367</Key>
+      <Content>
+        <Description>[Chase] -
+     -Thme-&gt;[Chevrolet],
+     -Agnt-&gt;[Dog :Macula ]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@f2164f</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@196bac4</Key>
+      <Content>
+        <Description>[Chase] -
+     -Thme-&gt;[Human],
+     -Agnt-&gt;[Human]</Description>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@bfd10a</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@f2164f</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@bfd10a</Key>
+      <Content>
+        <Description>[Chase] -
+     -Thme-&gt;[Intern],
+     -Arnd-&gt;[Desk],
+     -Agnt-&gt;[President]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@196bac4</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <IndexedType>
+      <Key>Wash</Key>
+      <Content>
+        <IndexedType>Wash</IndexedType>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@f20434</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </IndexedType>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@f20434</Key>
+      <Content>
+        <Description>[Wash] -
+    -Thme-&gt;[Truck],
+    -Agnt-&gt;[Robot]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@15d8d75</Key>
+        </Father>
+        <Father>
+          <Key>Wash</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <IndexedType>
+      <Key>Act</Key>
+      <Content>
+        <IndexedType>Act</IndexedType>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@15d8d75</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </IndexedType>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@15d8d75</Key>
+      <Content>
+        <Description>[Act] -
+   -Thme-&gt;[Entity],
+   -Agnt-&gt;[Animate]</Description>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@f20434</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@f2164f</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Act</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+  </CSs>
+</KnowledgeBase>
+

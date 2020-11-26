@@ -1,0 +1,53 @@
+// frere, grandmere, soeur, a_deux_enfants, petit_enfant, ancetre, grand_parent.
+
+pere( ahmed, ali ).
+pere( ahmed, aicha ).
+pere( ahmed, khadija ).
+pere( ahmed, omar ).
+pere( ali, othmane ).
+pere( ali, khalid ).
+pere( ali, asmae ).
+pere( hamza, driss ).
+pere( hamza, ibrahim ).
+pere( ismael, mounir ).
+pere( omar, youssef ).
+pere( said, hicham ).
+
+mere( meryem , ali ).
+mere( meryem , aicha ).
+mere( meryem , khadija ).
+mere( meryem , omar ).
+mere( laila, othmane ).
+mere( laila, khalid ).
+mere( laila, asmae ).
+mere( aicha , driss ).
+mere( aicha , ibrahim ).
+mere( asmae , hicham ).
+mere( khadija , mounir).
+mere( hind, youssef ).
+
+grandpere(X,Y) :-
+	pere(X,Z),
+	pere(Z,Y).
+
+grandpere(X,Y) :-
+	pere(X,Z),
+	mere(Z,Y).
+
+
+enfant(X,Y) :- pere(Y,X).
+
+enfant(X,Y) :- mere(Y,X).
+
+ascendant(X,Y) :- pere(X,Y).
+ascendant(X,Y) :- mere(X,Y).
+
+ascendant(X,Y) :- 
+	pere(X,Z),
+	ascendant(Z,Y).
+
+ascendant(X,Y) :- 
+	mere(X,Z),
+	ascendant(Z,Y).
+
+

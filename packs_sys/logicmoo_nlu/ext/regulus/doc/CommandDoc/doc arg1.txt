@@ -1,0 +1,5 @@
+The {\tt DOC} command prints out detailed documentation for a command
+or config file entry, when this is available. For example
+\begin{verbatim}
+DOC DIALOGUE_TIME
+\end{verbatim}

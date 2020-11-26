@@ -1,0 +1,44 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter2/Sleep1.e
+loading foundations/Root.e
+loading foundations/EC.e
+16 variables and 34 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+1
+Happens(WakeUp(Nathan), 1).
+2
++Awake(Nathan).
+3
+P
+!Happens(FallAsleep(Nathan), 0).
+!Happens(FallAsleep(Nathan), 1).
+!Happens(FallAsleep(Nathan), 2).
+!Happens(FallAsleep(Nathan), 3).
+!Happens(WakeUp(Nathan), 0).
+!Happens(WakeUp(Nathan), 2).
+!Happens(WakeUp(Nathan), 3).
+!ReleasedAt(Awake(Nathan), 0).
+!ReleasedAt(Awake(Nathan), 1).
+!ReleasedAt(Awake(Nathan), 2).
+!ReleasedAt(Awake(Nathan), 3).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Sleep1: 0 predicates, 0 functions, 1 fluents, 2 events, 4 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

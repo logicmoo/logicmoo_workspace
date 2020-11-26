@@ -1,0 +1,540 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%      Extracts from the book "Natural Language Processing in LISP"     %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+RTNs in LISP
+
+We can represent recursive transition networks as list structures in
+the same way as finite state networks.  In general, we now need to
+present more than one network simultaneously, however.  We also need
+to allow networks to be named and arcs to have network names as
+labels, as well as symbols, abbreviations and '#'s.  The way that we
+will achieve this is to have a global variable NETWORKS which will be
+an association list associating network names with networks.  So here
+are the English2 networks in LISP form:
+
+    (setq networks
+     '((S
+           ((Initial  (0))
+            (Final    (2))
+            (From 0 to 1 by NP)
+            (From 1 to 2 by VP)))
+       (NP
+           ((Initial  (0))
+            (Final    (2))
+            (From 0 to 1 by DET)
+            (From 1 to 2 by N)
+            (From 2 to 3 by WH)
+            (From 3 to 2 by VP)))                     
+       (VP
+           ((Initial  (0))
+            (Final  (1 2))
+            (From 0 to 1 by V)
+            (From 1 to 2 by NP)
+            (From 1 to 3 by that)
+            (From 3 to 2 by S)))))
+
+Here, of course, NP is the name of a network, whereas V is an
+abbreviation.  Our network traverser can tell what the possibilities
+are, because the network names are the atoms that appear as keys in
+networks.  When our network traversers come across a label that is not
+#, we will assume that if the label is not a key in networks then it
+must be either an abbreviation or a simple symbol.
+
+To make our network traversal programs of Chapter 2 work with RTNs, we
+need to revise our concept of state and incorporate this revision into
+the arguments for the relevant next functions.  A state now has an
+extra component - a stack of locations to return to.  Our previous
+next functions, for various recognition and generation tasks, took
+arguments as follows:
+
+    (defun next (node tape network)
+      ...
+
+where node was the name of the node in the network and tape was the
+list of symbols remaining to be processed.  For RTNs we will revise
+this to be:
+
+    (defun next (networkname node tape stack)
+      ...
+
+where networkname and node together say where the kangaroo is (in
+which network and at what node of that network), tape gives the list
+of symbols and stack represents the line of waiting kangaroos.
+
+We need to have ways to manipulate the stack of locations, and in
+particular to push an item onto the top of a stack, yielding a new
+stack, and to pop the top item off a stack, to discover what this item
+is and what is left of the stack; finally, it is useful to be able to
+test whether a stack is empty.  In fact, it is very straightforward to
+implement stacks as lists, where the car of the list is the top
+element of the stack and the cdr of the list is the remaining stack.
+If we use this representation, pushing an item onto a stack amounts to
+using cons to create a new list with that item on the front, popping
+an item from a stack amounts to using car and cdr to access the first
+element and remaining elements of the list; finally, the empty stack
+is represented by the empty list, NIL.
+
+We now need some ways of manipulating locations themselves.
+Previously, when we were restricted to a single network, a location
+could be simply the name of a node.  Now we will represent a location
+by a pair of values:                     
+
+       (<networkname> <node>)
+
+- where <networkname> is the name of a network and <node> is the name
+of a node in that network.  Having the network name explicitly
+available inside the location data structure means that we can quickly
+tell which network we are in and can switch networks quickly.  It is
+also essential if we might have the same node names used in different
+networks.
+
+The top level function for RTN recognition is very similar to the
+finite state case.  However, note that we pass in the name of the
+network (i.e. an atom) through the first argument networkname, rather
+than the network itself (i.e. a complex list structure).  In RTN
+traversal we are constantly passing around references to different
+networks; it will make things like TRACE output much more
+comprehensible if we pass around the names rather than the list
+structures.
+
+    (defun rtn_recognize (networkname tape)
+      (catch
+        'rtn
+        (dolist (initialnode (initial_nodes (get_network networkname)))
+          (rtn_recognize_next networkname initialnode tape ()))
+        nil))
+
+Notice that each initial state considered has an empty stack (the last
+argument to rtn_recognize_next).  We will frequently need to get the
+network list structure from the name of a network, and the function
+get_network will do this job for us:
+
+    (defun get_network (name)
+      (cadr (assoc name networks)))
+
+Here now is the next function (called rtn_recognize_next) for
+recognition with RTNs.  As in the finite state case, it exits as soon
+as it has made a successful traversal.
+
+    (defun rtn_recognize_next (networkname node tape stack)
+      (if (member node (final_nodes (get_network networkname)))
+        (rtn_recognize_pop tape stack))
+      (dolist (transition (transitions (get_network networkname)))
+        (if (equal (trans_node transition) node)
+          (let ((label (trans_label transition))
+             (newnode (trans_newnode transition)))
+            (if (get_network label)
+              ;; interpret label as network name
+              (rtn_recognize_push label networkname newnode tape stack))
+            ;; interpret label as symbol/abbreviation
+            (rtn_recognize_traverse label networkname newnode tape stack)))))
+
+For this definition, the main work is parcelled up in three
+subfunctions.  The function rtn_recognize_traverse contains a kernel                     
+(dealing with the SYM', ABB' and JMP' rules), like the non-recursive
+recognize_next.  Its job is to deal with the consequences of
+traversing a single arc:
+
+    (defun rtn_recognize_traverse (label networkname newnode tape stack)
+      (dolist (newtape (rtn_recognize_move label tape))
+        (rtn_recognize_next networkname newnode newtape stack)))
+
+This subfunction calls rtn_recognize_move to move the tape in all
+possible ways, parcelling up each new tape into a new state which will
+be examined by another rtn_recognize_next.  As well as
+rtn_recognize_traverse, rtn_recognize_next also calls the subfunctions
+rtn_recognize_push and rtn_recognize_pop, corresponding to the PUSH
+and POP rules.  The POP rule can be tried if node is a final node in
+its network.  If the stack is empty and the tape is also exhausted,
+then we have successfully finished the original traversal.  If on the
+other hand the stack is not empty, we call rtn_recognize_next with the
+stored elements on the top of the stack:
+
+    (defun rtn_recognize_pop (tape stack)
+      (if (and (null stack) (null tape))
+        (throw 'rtn t)
+        (if (not (null stack))    ; not finished
+          (rtn_recognize_next
+            (caar stack) ; stacked networkname
+            (cadar stack) ; stacked node name
+            tape
+            (cdr stack)))))
+
+With the PUSH rule (which applies if an arc label is an element of
+networks), we construct a new state for each initial node of the
+subnetwork.  This state has the same tape as the original state and a
+stack which has the destination of the arc pushed onto it.  So when we
+emerge from that network, we will continue from wherever this arc
+leads:
+
+    (defun rtn_recognize_push (label networkname newnode tape stack)
+      (dolist (initialnode (initial_nodes (get_network label)))
+        (rtn_recognize_next label initialnode tape
+          (cons
+            (list networkname newnode)
+            stack))))
+
+Note that even if the PUSH rule does apply for a given arc, in
+rtn_recognize_next we still check for the label being an abbreviation,
+a symbol, etc. in the usual way (using rtn_recognize_traverse).
+
+We still have not defined rtn_recognize_move, which finds all legal
+ways of moving the tape during the traversal of an arc.  This function
+is exactly the same as the one used in the finite state network
+recognizer:
+
+    (defun rtn_recognize_move (label tape)
+      (recognize_move label tape))
+
+Implementation of ATNs      
+
+ATNs are just RTNS annotated with extra tests and actions, and so we
+can represent them as list structures simply by embellishing our
+existing notation.  We will require that each network declare the
+registers that are to be used within it (as many programming languages
+require a function to declare its local variables).  In addition, a
+network will specify tests and actions to be performed:
+
+    initially (i.e. when the network is entered)
+    finally (i.e. when the network is exited)
+    on all transitions (i.e. as each transition is made)
+
+Here is our example ATN expressed in list notation (it also appears as
+lib atnarcs1).  We use LISP lists to represent the sequences of
+symbols built by the program.
+
+    (setq networks
+     '((S
+         ((Registers (pps auxs mood mainverb arg0 arg1))
+          (Initial (0)        t ((setq pps ()) (setq auxs ())))
+          (Final (3)          t ((list mood
+                                        (append
+                                          (list mainverb
+                                                (list (quote arg0) arg0)
+                                                (list (quote arg1) arg1)
+                                          )
+                                          pps))))
+          (From 0 to 1 by NP  t ((setq arg0 star) (setq mood (quote add))))
+          (From 1 to 2 by V   t ((setq mainverb star)))
+          (From 2 to 2 by V   t ((setq auxs (cons mainverb auxs))
+                                    (setq mainverb star)))
+          (From 2 to 3 by NP  t ((setq arg1 star)))
+          (From 2 to 3 by |#| t ((setq arg1 ())))
+          (From 3 to 3 by PP  t ((setq pps (cons star pps))))))
+     (NP
+         ((Registers (res))
+          (Initial (0)        t ())
+          (Final (1)          t (res))
+          (From 0 to 1 by PN  t ((setq res star)))))
+     (PP
+        ((Registers (p arg))
+         (Initial (0)         t ())
+         (Final (2)           t ((list p arg)))
+         (From 0 to 1 by P t ((setq p star)))
+         (From 1 to 2 by NP t ((setq arg star)))))))
+    (setq abbreviations                     
+     '((PN abbreviates john mary susan peter)
+       (P abbreviates with behind)
+       (V abbreviates will see)))
+
+Each network now has an additional Registers statement, which
+specifies the (local) registers that are going to be used within that
+network.  At the end of each Initial or Final statement, as well as at
+the end of each transition statement, there are two extra list
+components, specifying the tests and actions to be performed.  Tests
+and actions are represented by lists containing normal LISP code,
+which may treat the local registers of the network and the global
+registers star (which represents *) and hold like normal LISP
+variables.  The instructions in these lists will then be executed at
+appropriate times.  Many ATN systems use a restricted language for
+actions and tests, which are then evaluated by an interpreter.  We
+will not present such a language: firstly, because the common actions
+of assignment and building lists are so naturally expressed in a
+normal programming language and, secondly, because there seems to be
+no principled way of restricting the actions and tests that might be
+needed.  We therefore allow actions and tests to be arbitrary LISP
+code, whose results may or may not be noticed, as appropriate.  Tests
+are obviously expected to produce results, as are the actions
+associated with the Final parts of networks (whose results will be
+used as the value of the *-register in the network above).  On the
+other hand, any results returned by other action code will simply be
+ignored.
+
+Lib atnrecog implements a simple ATN traverser that works with ATNs
+represented as we have just discussed.  Although the details of the
+implementation are unimportant and much of the following description
+can be skipped, it is important to have some conception of how the
+implementation of an ATN differs from that of an RTN.  First of all,
+since the ATN list structures have more components that RTNs, we need
+to redefine our basic network accessing functions accordingly.  Apart
+from redefining functions like initial_nodes to take account of the
+extra components, we need to introduce new functions to extract the
+tests and actions from various places in the networks:
+
+    (defun initial_tests (net)
+       (nth 2 (assoc 'Initial net)))
+
+    (defun initial_actions (net)
+       (nth 3 (assoc 'Initial net)))
+
+    (defun final_tests (net)
+       (nth 2 (assoc 'Final net)))
+
+    (defun final_actions (net)
+       (nth 3 (assoc 'Final net)))
+
+(remember that nth numbers the elements of a list starting with 0).
+
+Here are two important functions to do with accessing registers:
+
+    (defun regs_used (net)
+       (nth 1 (assoc 'Registers net)))
+
+    (defun initial_regs (net)
+      (list
+        (regs_used net)
+        (mapcar #'not (regs_used net))))
+
+regs_used just enables one to find out the local registers declared
+for a given network.  initial_regs returns a list with two elements,
+the first being the list of register names, and the second being a
+list with the same length, each element of which is nil:
+
+    (regs_used (get_network 's))
+
+    (PPS AUXS MOOD MAINVERB SUBJ OBJ)
+
+    (initial_regs (get_network 's))
+
+    ((PPS AUXS MOOD MAINVERB SUBJ OBJ)
+     (()  ()   ()   ()       ()   ()))
+
+When we store the values of the registers of a network, we will use
+precisely this representation, a list of the register names followed
+by a list of the register values, where each value is associated with
+the corresponding element of the register name list.  Here we use nil
+as the initial value of a register (as LISP does for local variables)
+and so the initial_regs of a network represent the registers together
+with their initial values.
+
+We can derive an ATN traverser from our RTN traverser in much the same
+way that we derived our RTN traverser from a FSTN traverser.  That is,
+we can create an ATN traverser by appropriately enriching the notion
+of a state to include the values of the registers in all the networks
+being traversed.  The appropriate next function header now looks like
+the following:
+
+    (defun atn_recognize_next (networkname node tape stack regs hold)
+
+where regs is the set of registers and their values for the current
+network, and hold is the current value of the hold register.  Where
+are the values of the registers in other active networks kept?  They
+are kept in the stack, a stack element now being of the form:
+
+    (<networkname> <node> <regs> <tests> <actions>)
+
+where <networkname> and <node> are as before - these specify in which
+network and to which node the system is to return. <regs>, <tests> and
+<actions> specify the current registers of that network and any tests
+and actions that have to be performed before the system can
+successfully return to that network.  We will define the functions
+stacked_networkname, stacked_node, stacked_regs, stacked_tests and                     
+stacked_actions to retrieve these parts from the top element of a
+given stack.  Notice that, although the hold register is global, its
+value is part of the search state, that is, it may have different
+values on different traversals of the network.  This is why we do not
+actually implement it as a global variable in LISP.  Here is the
+definition of atn_recognize_next.  As with the RTN recognizer, the
+main work is dealt with by specialized functions to push, pop and
+traverse an arc:
+
+    (defun atn_recognize_next (networkname node tape stack regs hold)
+      (if (member node (final_nodes (get_network networkname)))
+        (atn_recognize_pop networkname tape stack regs hold))
+      (dolist (transition (transitions (get_network networkname)))
+        (if (equal (trans_node transition) node)
+          (let ((label (trans_label transition))
+             (newnode (trans_newnode transition)))
+            (if (get_network label)
+              ;; interpret label as network name
+              (atn_recognize_push label networkname transition tape stack regs hold))
+            ;; interpret label as symbol/abbreviation
+            (atn_recognize_traverse label networkname transition tape stack regs hold)))))
+
+As in the RTN case, the first thing for atn_recognize_next to do is to
+try to pop from the current network.  If node is a final node in the
+current network, then atn_recognize_pop is called:
+
+    (defun atn_recognize_pop (networkname tape stack regs hold)
+      (if (dotests regs (final_tests (get_network networkname)) hold nil)
+        (let (
+           (star_newhold
+             (dopopactions regs (final_actions (get_network networkname)) hold nil)))
+          (if (and (null stack) (null tape))
+            ;; end of top-level network
+            (throw 'atn (car star_newhold))
+            (if (and stack
+                ;; end of subsidiary network
+                ;; do tests at end of original PUSH
+                (dotests
+                  (stacked_regs stack)
+                  (stacked_tests stack)
+                  (cadr star_newhold)        ; hold
+                  (car star_newhold)))       ; star (result of POP)
+              ;; execute actions at end of original PUSH
+              (let ( (newregs_newhold
+                   (doactions
+                     (stacked_regs stack)
+                     (stacked_actions stack)
+                     (cadr star_newhold)            ; hold
+                     (car star_newhold))))          ; star
+                ;; proceed in original network, using stacked values
+                (atn_recognize_next
+                  (stacked_networkname stack)
+                  (stacked_node stack)                     
+                  tape
+                  (cdr stack)
+                  (car newregs_newhold)
+                  (cadr newregs_newhold))))))))
+
+Before initiating a pop, this function checks that the final tests
+associated with the network are satisfied (calling function dotests).
+The final actions, executed by the function dopopactions, then produce
+two results, one of which becomes the new value of the star register,
+and the second of which will be the new value of the hold register.
+Star is returned as the result of the whole analysis if both the stack
+and the tape are empty.  If the stack is not empty, it is necessary to
+resume in a higher network, restoring the values that are saved in the
+stack.  In this case, it is also necessary to apply the tests saved
+from the push arc before continuing.
+
+After attempting to pop, the only other possibility is to find a
+network arc from node that can be traversed.  Thus atn_recognize_next
+iterates through the arcs that leave this node.  If the label is the
+name of a network, it calls atn_recognize_push to attempt to enter
+that subnetwork.  If the initial tests in that network succeed, we
+push to the new network, producing a new stack which has the
+networkname, destination newnode of the arc, registers regs and the
+arc tests and actions pushed on the front:
+
+    (defun atn_recognize_push (label networkname transition tape stack regs hold)
+      (let ((newnet (get_network label)))
+        ;; try tests at start of proposed network
+        (if (dotests (initial_regs newnet) (initial_tests newnet) hold nil)
+          ;; execute actions at start of new network
+          (let ((newregs_newhold
+               (doactions
+                 (initial_regs newnet)
+                 (initial_actions newnet)
+                 hold
+                 nil)))
+            ;; explore from all initial nodes
+            (dolist (initialnode (initial_nodes newnet))
+              (atn_recognize_next
+                label
+                initialnode
+                tape
+                (cons           ; new value of stack
+                  (list
+                    networkname                     ; network
+                    (trans_newnode transition)      ; destination node
+                    regs                            ; registers
+                    (trans_tests transition)        ; post tests
+                    (trans_actions transition)      ; post actions
+                    )
+                  stack)
+                (car newregs_newhold)
+                (cadr newregs_newhold)))))))                     
+
+Notice that the tests and actions associated with the push arc are
+saved up to be tried when the subnetwork is finally popped from.  If
+the label is not the name of a network, we move the tape in the
+standard way according to what the label is, and we also check that
+the arc tests succeed and compute the new registers and new value of
+hold that result from executing the arc actions.  This is done by
+atn_recognize_traverse:
+
+    (defun atn_recognize_traverse (label networkname transition tape stack regs hold)
+      ;; try moving the tape
+      (dolist (newtape (recognize_move label tape))
+        ;; set the star register
+        (let ((star (diff_tape newtape tape)))
+          ;; try the arc tests
+          (if (dotests regs (trans_tests transition) hold star)
+            (let (
+               (newregs_newhold
+                 ;; execute the arc actions
+                 (doactions
+                   regs
+                   (trans_actions transition)
+                   hold
+                   star)))
+              ;; continue from the destination node
+              (atn_recognize_next
+                networkname
+                (trans_newnode transition)
+                newtape
+                stack
+                (car newregs_newhold)
+                (cadr newregs_newhold)))))))
+
+This completes the definition of atn_recognize_next and its main
+subfunctions.
+
+There are a few other main functions that remain to be defined.
+diff_tape is used to set the * register; it simply looks to see how
+much of the tape has been consumed by a transition.  dotests is used
+to execute a set of tests, whereas doactions and dopopactions are used
+to execute a set of actions.  dopopactions is for actions performed as
+a network is exited (which must return a value for '*'), whereas
+doactions is for other sets of actions (which do not produce results).
+doactions expects arguments as follows:
+
+    (defun doactions (regs actions hold star)
+
+where regs is the current local registers and their values, actions is
+the list of actions to be performed and hold and star are the current
+values of the appropriate global registers The result will be a list
+of two values - the new local registers and the new value of the hold
+register after the actions have been performed.  For instance, the
+call:                     
+
+    (doactions '((pps auxa mood mainverb arg0 arg1)
+                 (()  ()   ()   ()       ()   ()))
+               '((setq arg0 star)(setq mood (quote add)))
+               '()
+               'np)
+
+executes the actions:
+
+    (setq arg0 star) (setq mood (quote add))
+
+in a network with registers pps, auxs, mood, mainverb, arg0 and arg1,
+all with values nil, in a context where hold is nil and star (the *
+register) is np.  This call will produce a list of two items - first
+of all the new values of the registers and secondly the new value of
+the hold register, here simply nil:
+
+    (((pps auxa mood mainverb arg0 arg1)
+      (()  ()   add  ()       np   ())) ())
+
+Notice how the register values returned reflect the changes to arg0
+and mood.  doactions works by creating a list of items representing a
+LISP function which contains the appropriate actions.  In this
+example, the function that results would be essentially what would
+arise from the following definition:
+
+    (defun xxx (star hold pps auxa mood mainverb arg0 arg1)
+      (setq arg0 star)
+      (setq mood 'add)
+      (list (list '(pps auxa mood mainverb arg0 arg1)
+       (list pps auxa mood mainverb arg0 arg1))
+     hold))
+
+Finally, this function is called, by apply, with the appropriate
+arguments supplied, and the results are manipulated into the results
+of doactions.  dotests and dopopactions are defined using very similar
+techniques.

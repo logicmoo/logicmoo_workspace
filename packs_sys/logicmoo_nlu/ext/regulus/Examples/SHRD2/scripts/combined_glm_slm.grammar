@@ -1,0 +1,7 @@
+#include "../Generated/pcfg_trained/recogniser.grammar"
+
+DummyInterpretationGrammar
+	        [ dummy ]
+
+UNK [ @reject@ ]
+

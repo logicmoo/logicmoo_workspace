@@ -1,0 +1,225 @@
+; nuance grammar for GoDiS agendatalk domain/lexicon
+
+.Asrg_agenda_svenska LexiconAgendaSvenska
+
+LexiconAgendaSvenska  [ ( ?[okej No] Answer ) 
+			( ?[okej No] ShortAns ) 
+			Question
+			Contradiction
+			ICM
+ 			Greet
+			Quit
+			Yes
+			No
+		        ja
+			AMPM			
+			]
+
+Greet [	hallå			
+	tjenare
+	hej ]
+Quit [	hejdå
+	avsluta
+        (?nej ?Want avsluta ?samtalet)
+	adjö
+        sluta
+]
+
+Yes [ ja~0.6
+        (-pau- ja)~0.05
+        jajamen~0.05
+	javisst~0.05	
+	okej~0.05
+	(ja precis)~0.05
+	japp~0.05
+	korrekt~0.05
+	(det stämmer)~0.05
+ ]
+
+No [ 	(nej det stämmer inte)
+	(nej det är fel)
+	nej
+        (-pau- nej)
+	(nej nej)
+	nä 
+]
+
+
+Contradiction [	(?nej inte Date ?Date) (?nej inte Event ?Event) (?nej inte Time ?Time) (?nej inte AMPM ?AMPM) (?nej inte Action ?Action) (?nej Date inte Date) (?nej Event inte Event) (?nej Time inte Time) (?nej AMPM inte AMPM) (?nej Action inte Action) (?nej inte tisdag torsdag) (?nej inte torsdag tisdag) (torsdag inte tisdag)]		
+
+;user answers***************
+
+Answer [ 
+( ?Want [([lägga lägg] [till in]) anteckna (boka ?[in upp]) (föra in) (skriv ner) (skriv upp) ] ?[Event EventKnown] ?DateTime) 
+(?[(lägg till att) (anteckna att) (skriv [upp ner] att) (ta bort att) ] vi ska ?[på till ha] [Event EventKnown] ?DateTime) 
+(vi har Event DateTime) 
+(lägg till information) 
+(Want hjälp) 
+(?Want kolla tiden ?för ?[Event EventKnown]) 
+(?Want [(ta bort) (tabort) radera avboka] [EventKnown (en bokning)] ?Date) 
+(?Want flytta ?[dagens morgondagens måndagens tisdagens onsdagens fredagens torsdagens lördagens söndagens] Event ?till ?DateTime ) 
+(?Want flytta ?[måndags tisdags onsdags fredags torsdags lördags söndags] EventKnown ?till ?DateTime ) 
+(?Want flytta [EventKnown Event] till ?DateTime) 
+(?Want ändra [datum tid tiden datumet] för [EventKnown Event] ?DateTime ?(till DateTime)) 
+(?Want ändra [EventKnown Event] ?till ?DateTime) 
+(?Want [byta byt] [datum tid dag tiden] ?([på för] en bokning)) 
+(?Want göra en ändring)
+]
+
+Want [ (jag vill) (jag skulle vilja) (kan du hjälpa mig ?med att) (kan du) (jag måste) (jag behöver) ]
+
+ShortAns [ DateTime (ett möte) AMPM  hjälp StartOver (?Want Action) (WeekDay [kväll natt morgon]) (Event ?DateTime) (EventKnown ?DateTime) ]
+
+Action [ 
+(hjälp ?mig) 
+(kolla min kalender) 
+(kolla kalendern) 
+(fråga kalendern) 
+(?fråga ?om vilken tid) 
+(kolla tiden ?(för en bokning)) 
+(kolla om jag är bokad) 
+anteckning 
+anteckna 
+(göra en anteckning) 
+(anteckna i kalendern) 
+(boka [?in upp]) 
+(skriva ner en anteckning) 
+([för föra] in) 
+(ändra [datum tid datumet tiden informationen]) 
+(ta bort ?allt) 
+(tabort) 
+(radera ?allt) 
+(glöm allt) 
+([lägg lägga] [till in] ?(en bokning) ) 
+(ändra) 
+(flytta ?Event) 
+([flytta ändra] en bokning) 
+(boka om) 
+([byta byt] [datum tid] )
+]
+
+StartOver [ (börja om) toppnivå början (radera ?allt) (glöm allt) (börja om från början) (starta om) (gå upp) (gå tillbaka) (tillbaka) (gå tillbaks) (?gå tillbaka till toppnivå) ]
+
+;user questions**********
+
+Question [ 
+(vad kan man göra)
+(jag vill [kolla fråga] [(vilken tid) när] EventKnown ?DateTime är) 
+([(vilken tid) när] [var är börjar startar ] EventKnown ?Date) 
+([(vilken tid) när] [var är börjar startar (har jag)] nästa Event ?Date) 
+([(vilken tid) när] ska vi ?[till på ha] ?nästa Event ?Date) 
+([(vilken tid) när] [var är] det vi ska ha ?nästa [Event EventKnown] ?Date)
+(kolla tiden) 
+(vilken tid) 
+(är vi [lediga uppbokade bokade inbokade upptagna] DateTime) 
+(vad gör vi DateTime) 
+(vad ska vi göra DateTime) 
+(vad står i kalendern ?DateTime) 
+(vad finns [antecknat bokat planerat] ?DateTime)
+(vad har vi ?bokat DateTime)
+(vad har vi ?bokat på WeekDay)
+(hur ser dagens schema ut) 
+(hur ser schemat ut ?DateTime)
+(har [jag vi] något [bokat planerat] DateTime) 
+(vad händer DateTime)
+(har [jag vi] någon Event ?DateTime)
+(har vi något ?DateTime)
+(är det någon Event ?DateTime)
+(vilken [dag datum] är Event)
+(vilken dag är det idag)
+(vilket datum är det idag)
+(vad är det för dag idag)
+(vad är det för datum idag)
+(vad är dagens datum)
+(jag skulle vilja [veta (ha reda på)] [(vilken dag) (vilket datum)] det är idag)
+(jag skulle vilja [veta (ha reda på)] [när (vilken tid)] EventKnown [startar börjar är] ?(på WeekDay) )
+] 
+
+
+
+; ICM**************
+
+ICM [ förlåt
+      okej
+      (?jag vet inte) 
+     (vad sa du) 
+	(jag förstår inte)
+	(jag hörde inte)
+]
+
+;EVENTS**************
+
+EventKnown [ föreläsningen lektionen tentan labben laborationen skrivningen inlämningen introduktionsmötet ]
+Event [  (?en föreläsning) (?en lektion) (?en laboration) (?en labb) (?en tenta) (?en tentamen) (?en skrivning) (?en inlämning) (? ett introduktionsmöte) ]
+
+
+
+DateTime [ Date Time (Date Time) (Time Date) (Date [(nästa vecka) (denna vecka) (den här veckan) (hela dagen)])]
+
+;TIMES*************
+
+Time [ 
+(?klockan halv AnalogHours) 
+(?klockan kvart [över i] AnalogHours) ([klockan vid] Hour) 
+(?klockan Hour ?och Min ) 
+(?klockan [fem tio femton tjugo tjugofem] [över i] AnalogHours) 
+(prick Hour) 
+(?klockan Hour noll noll) 
+(?klockan Hour AMPM) 
+(vid midnatt) 
+(vid lunchtid)
+]
+
+AMPM [(på morgonen) (på eftermiddagen) (på förmiddagen) (efter lunch) (före lunch) (på kvällen) (på natten) (i eftermiddag) (ikväll)
+]
+
+Hour [ Digit Teen tjugo (tjugoett) (tjugotvå) (tjugotre)
+]
+
+Min  [ Digit Teen (Twenty2Fifty ?Digit)
+]
+
+Twenty2Fifty [ tjugo trettio fyrtio femtio
+] 
+
+Digit [ noll ett två tre fyra fem sex sju åtta nio ]
+
+Teen [ tio elva tolv tretton fjorton femton sexton sjutton arton 
+       nitton ]
+
+AnalogHours [ ett två tre fyra fem sex sju åtta nio tio elva tolv ]
+
+;DATES************
+
+Date [ idag igår imorrn imorgon iövermorgon ikväll (på WeekDay) WeekDay (nästa WeekDay) (?WeekDay den Day ?Month) (Day Month) ]
+
+
+WeekDay [ 
+	måndag
+	tisdag
+	onsdag
+	torsdag
+	fredag
+	lördag
+	söndag 
+]
+
+Month [ januari
+	februari
+	mars
+	april
+	maj
+	juni
+	juli
+	augusti
+	september	
+	oktober
+	november
+	december ]
+
+Day [ första andra tredje fjärde femte sjätte sjunde åttonde nionde tionde elfte tolfte trettonde fjortonde femtonde sextonde sjuttonde artonde nittonde tjugonde tjugoförsta tjugoandra tjugotredje tjugofjärde tjugofemte tjugosjätte tjugosjunde tjugoåttonde tjugonionde trettionde trettiförsta
+	]
+
+
+
+

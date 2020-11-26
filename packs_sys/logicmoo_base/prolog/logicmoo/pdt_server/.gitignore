@@ -1,0 +1,16 @@
+
+all-wcprops
+entries
+format
+.svn
+*.svn-base
+*.class
+bin
+build
+.gradle
+.cvsignore
+/.metadata/
+pdt.runtime.ui/pdt.server.log
+target/
+y.jar
+Thumbs.db

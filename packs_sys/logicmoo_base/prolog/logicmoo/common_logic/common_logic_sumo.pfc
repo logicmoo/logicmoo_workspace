@@ -1,0 +1,47 @@
+/* <module>
+% =============================================
+% File 'system_base.pfc'
+% Purpose: Agent Reactivity for SWI-Prolog
+% Maintainer: Douglas Miles
+% Contact: $Author: dmiles $@users.sourceforge.net ;
+% Version: 'interface' 1.0.0
+% Revision: $Revision: 1.9 $
+% Revised At: $Date: 2002/06/27 14:13:20 $
+% =============================================
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+%
+% props(Obj,[height(ObjHt)]) == t(height,Obj,ObjHt) == rdf(Obj,height,ObjHt) == t(height(Obj,ObjHt)).
+% pain(Obj,[height(ObjHt)]) == prop_set(height,Obj,ObjHt,...) == ain(height(Obj,ObjHt))
+% [pdel/pclr](Obj,[height(ObjHt)]) == [del/clr](height,Obj,ObjHt) == [del/clr]svo(Obj,height,ObjHt) == [del/clr](height(Obj,ObjHt))
+% keraseall(AnyTerm).
+%
+%                      ANTECEEDANT                                   CONSEQUENT
+%
+%         P =         test nesc true                         assert(P),retract(~P) , enable(P).
+%       ~ P =         test nesc false                        assert(~P),retract(P), disable(P)
+%
+%   ~ ~(P) =         test possible (via not impossible)      retract( ~(P)), enable(P).
+%  \+ ~(P) =         test impossiblity is unknown            retract( ~(P))
+%   ~ \+(P) =        same as P                               same as P
+%     \+(P) =        test naf(P)                             retract(P)
+%
+% Dec 13, 2035
+% Douglas Miles
+*/
+:- set_how_virtualize_file(bodies).
+/*
+(formatSumo('vEnglishLanguage',Term,String):- "%2 is %n a &%melting point of %1")
+formatSumo(Word,String)==>{format_string_to_dcg(String,DCG} 
+
+secretesToxin(iMonster7,tSumoRicinToxin)
+
+
+ricin toxin is a &%secretes toxin of the monster
+
+"%2 is %n a &%melting point of %1"
+
+   Arg2,"is",argN,"point of",Arg1
+
+*/

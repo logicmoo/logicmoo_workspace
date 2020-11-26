@@ -1,0 +1,33 @@
+; =================================================
+; Test #2
+; feature tested - subrelation
+; test KB:
+
+(note "test0002 subrelation test")
+
+(instance parent BinaryRelation)
+(arg1Isa parent Animal)
+(arg2Isa parent Animal)
+(subrelation mother parent)
+(mother Bill Jane)
+(siblings Bill Bob)
+
+(implies
+   (and
+     (mother ?CH1 ?M)
+     (siblings ?CH1 ?CH2))
+   (mother ?CH2 ?M))
+
+(implies
+     (siblings ?CH2 ?CH1)
+     (siblings ?CH1 ?CH2))
+
+(query (parent ?X Jane))
+
+(answer Bob)
+(answer Bill)
+
+(end_of_file)
+
+
+

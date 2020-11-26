@@ -1,0 +1,285 @@
+
+
+
+% Staffans macros
+
+% oplist: list of TrindiKit operations
+
+\newcommand{\op}[1]{#1}
+\newcommand{\opD}[2]{\op{#1} : \textit{#2}}
+
+\newcommand{\oplist}[1]{$\left\{\vlist{\op{#1}}\right.$}
+% \newcommand{\opname}[1]{\textbf{#1}}
+% \newcommand{\op}[2]{\begin{tabular}{l p{50ex}}\opname{#1}:&#2\end{tabular}}
+
+%\newcommand{\rel}[2]{#1(#2)}
+%\newcommand{\rel}[1]{\op{#1} : \textit{#2}}
+
+
+% type
+%\newcommand{\type}[1]{\textsc{#1}}
+\newcommand{\type}[1]{#1}
+
+% objects
+%\newcommand{\object}[1]{\textbf{#1}}
+%\newcommand{\objects}[1]{\textbf{\oplist{#1}}}
+\newcommand{\object}[1]{\textsf{#1}}
+\newcommand{\objects}[1]{\textsf{\oplist{#1}}}
+
+% actions are objects
+\newcommand{\action}[1]{\object{#1}}
+
+% type definition
+\newcommand{\typedef}[3]{
+  \textsc{type:} \type{#1} \\
+ % \textsc{desc:} \textit{#2}\\
+  \textsc{rel:}
+    \oplist{#2}\\
+  \textsc{opr:}
+  \oplist{#3}
+}
+
+\newcommand{\typedefD}[4]{
+  \textsc{type:} \type{#1} \\
+  \textsc{desc:} \textit{#2}\\
+  \textsc{rel:}
+    \oplist{#3}\\
+  \textsc{opr:}
+  \oplist{#4}
+}
+
+% only relations
+\newcommand{\typedefrel}[2]{
+  \textsc{type:} \type{#1} \\
+  \textsc{rel:}
+  \oplist{#2}
+}
+
+
+\newcommand{\fulltypedef}[5]{
+  \textsc{type:} \type{#1} \\
+                                %  \textsc{desc:} \textit{#1}\\
+  \textsc{rel:}
+  \oplist{#2}\\
+  \textsc{fun:}
+  \oplist{#3}\\
+  \textsc{sel:}
+  \oplist{#4}\\
+  \textsc{opr:}
+  \oplist{#5}
+}
+
+% type definition for atomic type (no conds and ops, just objects)
+
+\newcommand{\atypedef}[2]{
+  \textsc{type:} \type{#1} \\
+  \textsc{objects:} \objects{#2}\\
+}
+
+% dependent type definition
+\newcommand{\dtypedef}[2]{
+  \ttinferone{$x$:#2}{$x$:#1}\\
+  }
+
+% (rule) class
+\newcommand{\class}[1]{\object{#1}}
+
+% content
+%\newcommand{\content}[1]{#1}
+\newcommand{\cont}[1]{\textnormal{\textbf{#1}}}
+\newcommand{\content}[1]{\cont{#1}}
+
+% content type (question, proposition etc)
+%\newcommand{\conttype}[1]{${{#1}}$}
+\newcommand{\conttype}[1]{\type{#1}}
+
+
+% path
+\newcommand{\path}[1]{\textsc{#1}}
+\newcommand{\sel}[1]{\textsc{#1}}
+
+% path separator (outside implementation)
+\newcommand{\s}[1]{/}
+% \newcommand{\s}[1]{.}
+
+
+% TIS variable
+\newcommand{\tisvar}[1]{\path{#1}}
+
+% type declaration (variable is of type)
+\newcommand{\oftype}[0]{\textbf{:}\/}
+\newcommand{\typedecl}[2]{#1 \oftype\/ \type{#2}
+}
+
+% rule name
+\newcommand{\rulename}[1]{\textbf{#1}}
+
+
+%  update rule
+\newcommand{\urule}[4]{
+%  {\footnotesize
+    {\sc rule:} \rulename{#1}\\
+    \textsc{class:} \class{#2}\\
+    {\sc pre:}  \oplist{
+      \op{#3}
+      }\\
+    {\sc eff:} \oplist{
+      \op{#4}
+      }
+%    }
+  }
+
+%\newcommand{\urule}[4]{
+%  {\footnotesize
+%    \begin{tabular}{l}
+%      #3 \\
+%      \hline
+%      \rulename{#1}  : \class{#2}\\
+%      \hline 
+%      #4
+%    \end{tabular}}
+%}
+
+
+\newcommand{\flag}[1]{\texttt{#1}}
+% flag value
+\newcommand{\flagval}[1]{\texttt{#1}}
+
+% flag definition
+\newcommand{\flagdef}[2]{\flag{#1}; values: \flagval{#2}}
+
+% \urule{test}{type}{pre1\\pre2}{eff1\\eff2\\eff3}
+
+% trindikit module
+\newcommand{\module}[1]{\textbf{#1}}
+% module definition: Name, predicates, TIS requirements, TIS read access, TIS write access
+\newcommand{\moduledef}[5]{\textsc{Name:}\module{#1}\\\textsc{Predicates:}#2\\\textsc{TIS requirements:}#3\\\textsc{Reads:}#4\\\textsc{Writes:}#5}
+
+
+% dialogue move
+\newcommand{\move}[1]{\object{#1}}
+% \newcommand{\move}[2]{\class{#1}(\content{#2})}
+
+%Records
+
+\newcommand{\record}[1]{$\left[\mbox{\begin{tabular}{lcl}#1\end{tabular}}\right]$} 
+\newcommand{\field}[2]{\path{#1}&=&#2}
+\newcommand{\tfield}[2]{\path{#1} & : & \type{#2}}
+
+\newcommand{\vlist}[1]{\begin{tabular}{l}#1\end{tabular}}
+ 
+% set
+
+\newcommand{\set}[1]{$\left\{\vlist{#1}\right\}$}
+
+% stack
+
+\newcommand{\stack}[1]{$\langle\vlist{#1}\rangle$}
+
+% big []
+
+\newcommand{\sqbrack}[1]{$\left[\vlist{#1}\right]$}
+
+% big ()
+
+\newcommand{\roundbrack}[1]{$\left(\vlist{#1}\right)$}
+
+
+
+% TrindiKit ``logo''
+\newcommand{\trindikit}[0]{\textsc{TrindiKit}}
+
+% IBiS ``logo''
+\newcommand{\ibis}[0]{\textsc{IB{\textnormal i}S}}
+
+
+% syntax rule
+\newcommand{\syntax}[2]{#1\\ #2}
+\newcommand{\syntaxE}[3]{#1\\ #2\\ \textbf{Example:} #3}
+
+\newcommand{\sym}[1]{\texttt{#1}}
+
+% path connector
+\newcommand{\pc}[0]{.}
+
+% GoDiS Plan
+
+%\newcommand{\plan}[2]{\textsc{issue : }#1\\\textsc{plan}:#2}
+%\newcommand{\qplan}[2]{\textsc{issue : }#1\\\textsc{plan}:#2}
+%\newcommand{\aplan}[3]{\textsc{action : }#1\\\textsc{plan}:#2\\\textsc{post : }#3}
+\newcommand{\plan}[2]{\textsc{issue : }#1\\\textsc{plan}:#2}
+\newcommand{\qplan}[2]{\textsc{issue : }#1\\\textsc{plan}:#2}
+\newcommand{\aplan}[3]{\textsc{action : }#1\\\textsc{plan}:#2\\\textsc{post : }#3}
+\newcommand{\sequence}[1]{$\langle$\\\vlist{#1}\\$\rangle$}
+\newcommand{\shortsequence}[1]{$\langle$#1$\rangle$}
+
+\newcommand{\algorithm}[1]{#1}
+
+\newcommand{\sort}[1]{\textsc{#1}}
+\newcommand{\sortsubcat}[2]{\sort{#1}$\left\{\vlist{#2}\right.$}
+
+% utterance in example dialogue
+\newcommand{\utt}[2]{#1$>$ \texttt{#2}}
+% with translation
+\newcommand{\uttt}[3]{\utt{#1}{#2}\\ \textit{#3}}
+\newcommand{\uttmoveshort}[3]{\utt{#1}{#2}\\\textit{#3}}
+\newcommand{\uttmove}[3]{\utt{#1}{#2}\\#3}
+
+% human-human dialogue
+\newcommand{\hutt}[2]{#1 : #2}
+% with translation
+\newcommand{\huttt}[3]{\hutt{#1}{#2}\\ \textit{#3}}
+\newcommand{\huttmoveshort}[3]{\hutt{#1}{#2}\\\textit{#3}}
+\newcommand{\huttmove}[3]{\hutt{#1}{#2}\\\textit{#3}}
+
+\newcommand{\pause}[0]{(.)}
+
+%\newcommand{\comment}[1]{\textsf{#1}}
+\newcommand{\comment}[1]{}
+
+\newcommand{\hmm}[1]{}
+\newcommand{\old}[1]{\textbf{OLD:} \textit{#1}}
+
+\newcommand{\optional}[1]{\footnotesize{#1}}
+
+\newcommand{\concept}[1]{\textsf{#1}}
+
+
+%\newcommand{\dialogex}[1]{{\vspace{2ex}\hline\\\footnotesize \input{#1} }\\ \hline\\ \vspace{2ex}}
+
+%\newcommand{\dialogex}[1]{{\footnotesize \input{#1} }}
+\newcommand{\dialogex}[1]{{\beg ------------------------------------------------------------------------ \eeg \footnotesize \input{#1} } --------------------------------------------------------------------------------------------------- }
+
+%\newcommand{\diabeg}[0]{\beg ------------------------------------------------------------------------ \eeg}
+%\newcommand{\diaeeg}[0]{---------------------------------------------------------------------------------------------------}
+
+%\newcommand{\diabeg}[0]{\beg \textsc{\textbf{dialogue example}} \eeg}
+%\newcommand{\diaeeg}[0]{}
+
+%\newcommand{\diainput}[1]{\footnotesize \input{#1}} }
+\newcommand{\diainput}[1]{\input{#1} }
+%\newcommand{\dianexteg}[0]{\nexteg}
+%\newcommand{\diapreveg}[0]{\preveg}
+%\newcommand{\diaegnum}[1]{\egnum{#1}}
+
+
+\newcommand{\tab}[0]{\hspace{3ex}}
+
+\newcommand{\agent}[1]{\texttt{#1}}
+
+\newcommand{\oqueue}[1]{$\left\langle\left\langle\mbox{\vlist{#1}}\right\rangle\right\rangle$}
+
+\newcommand{\flatset}[1]{\object{\{#1\}}}
+
+%\newcommand{\new}[1]{\textbf{#1}}
+%\newcommand{\neww}[1]{\textbf{#1}}
+%\newcommand{\new}[1]{{\underline{#1}}}
+\newcommand{\new}[1]{#1}
+\newcommand{\neww}[1]{#1}
+
+\newcommand{\eliza}[1]{\textbf{\textit{#1}}}
+
+\newcommand{\newterm}[1]{\textit{#1}}
+
+% short dialogue utterance ending
+\newcommand{\sue}{\\}

@@ -1,0 +1,65 @@
+.pivotTable {
+	& > table {
+		background-color: white;
+	}
+	margin-top: 5px;
+	td.pvtAxisContainer, td.pvtVals {
+		/**where vars are dragged to/from**/
+		border: 1px solid $nav-tabs-border-color;
+		background-color: transparent;
+	}
+	li span.pvtAttr {
+		background-color: #337ab7;
+		color: #fff;
+		padding: 4px 7px;
+		
+		svg {
+			fill: #fff;
+		}
+		div {
+			/**svg container**/
+			margin-left: 6px;
+			vertical-align:middle;
+		}
+	}
+	.pvtCols {
+		vertical-align: top;
+	}
+	table.pvtTable tr th {
+		background-color: #f2f2f2;
+		&.pvtAxisLabel {
+			background-color: #337ab7;
+			color: #fff;
+		}
+	}
+	.containerHeader {
+		margin-left: 8px;
+		margin-bottom: 8px;
+		font-style: italic;
+		font-size: 110%;
+		color: #999;
+		text-align:left;
+	}
+	.pvtAttr {
+		.svgImg {
+			width: 14px;
+			height:14px;
+		}
+	}
+	.node {
+         border: solid 1px white;
+         font: 10px sans-serif;
+         line-height: 12px;
+         overflow: hidden;
+         position: absolute;
+         text-indent: 2px;
+       }
+	
+}
+.openPivotGchart{
+	float:right;
+	position:relative;
+	display:none;
+	top:-38px;
+	margin-bottom:-38px;
+}

@@ -1,0 +1,38 @@
+; =================================================
+; Test #1
+; feature tested - basic Horn clause inference
+; test KB:
+;
+
+(note "basic Horn clause inference"")
+
+(instance Jane Human)
+(instance Bill Human)
+(instance Bob Human)
+
+(mother Jane Bill )
+
+(instance siblings BinaryRelation)
+
+(domain siblings 1 Organism) 
+(domain siblings 2 Organism) 
+
+; (instance siblings ReflexiveRelation)
+(=> (siblings ?X ?Y) (siblings ?Y ?X) )
+
+(siblings Bob Bill )
+
+(=>
+   (and
+     (mother ?M ?CH )
+     (siblings ?CH ?CH2)
+    )
+   (mother ?M ?CH2 )
+)
+
+(query  (mother Jane ?Who) )
+
+(answer Bill)
+(answer Bob)
+ 
+

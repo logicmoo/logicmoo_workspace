@@ -1,0 +1,60 @@
+(note TQF240a)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?COOPERATION 
+      (and 
+        (instance ?COOPERATION MilitaryEvent) 
+        (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION)))) GeopoliticalStatusGoal)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?COOPERATION 
+      (and 
+        (instance ?COOPERATION PoliticalEvent) 
+        (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION)))) GeopoliticalStatusGoal)
+
+(desires SaudiArabia 
+ (powerInRegion-Geopolitical Iran PersianGulfRegion LowToVeryLow)) 
+
+(desires SaudiArabia 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion High)) 
+
+(desires SaudiArabia 
+ (powerInRegion-Geopolitical Iran PersianGulfRegion Low)) 
+
+(implies 
+  (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+  (desires ?AGT ?FORM)) 
+
+(goalCategoryForAgent SaudiArabia 
+ (powerInRegion-Geopolitical Iran PersianGulfRegion Low) NationalDefenseGoal) 
+
+(goalCategoryForAgent SaudiArabia 
+ (powerInRegion-Geopolitical Iran PersianGulfRegion LowToVeryLow) NationalDefenseGoal) 
+
+(goalCategoryForAgent SaudiArabia 
+ (powerInRegion-Geopolitical Iran PersianGulfRegion LowToVeryLow) StrategicNationalInterest) 
+
+(query (findall (?USPERSIANGULFPOWER? ?IRANPERSIANGULFPOWER ?COUNTRY ?EVENT)
+  (or 
+    (goalCategoryForAgent Iran 
+      (not 
+        (exists 
+          (?COOPERATION) 
+          (and 
+            (instance ?COOPERATION ?EVENT) 
+            (partnersInCooperation SaudiArabia ?COUNTRY ?COOPERATION))))
+      GeopoliticalStatusGoal) 
+    (desires SaudiArabia 
+      (powerInRegion-Geopolitical Iran PersianGulfRegion ?IRANPERSIANGULFPOWER)) 
+    (desires SaudiArabia 
+      (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion ?USPERSIANGULFPOWER?)))))
+
+(answer ?? ?? UnitedStatesOfAmerica MilitaryEvent))
+(answer ?? ?? UnitedStatesOfAmerica PoliticalEvent))
+(answer ?? LowToVeryLow ?? ??))
+(answer High ?? ?? ??)
+(answer ?? Low ?? ??)
+(end_of_file)
+

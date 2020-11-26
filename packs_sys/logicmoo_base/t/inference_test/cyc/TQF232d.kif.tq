@@ -1,0 +1,33 @@
+(note TQF232d)
+
+(subclass TerroristAct Situation) 
+(subclass HYP-Collection-8596426 Situation) 
+(instance HYP-TerroristGroup-10444309 TerroristGroup) 
+
+(implies 
+  (instance ?GROUP TerroristGroup) 
+  (behaviorCapable ?GROUP TerroristAct agent)) 
+
+(implies 
+  (and 
+    (subclass ?SPEC ?GEN) 
+    (behaviorCapable ?OBJ ?SPEC ?ROLE)) 
+  (behaviorCapable ?OBJ ?GEN ?ROLE)) 
+
+(implies 
+  (and 
+    (subclass ?SPEC ?GEN) 
+    (behaviorCapable ?OBJ ?GEN ?ROLE)) 
+  (behaviorCapable ?OBJ ?SPEC ?ROLE)) 
+
+(queryyn 
+  (implies 
+    (and 
+      (instance ?GROUP TerroristGroup) 
+      (subclass ?EVENTTYPE 
+        (DevelopingAFn BiologicalWeapon))) 
+  (behaviorCapable ?GROUP ?EVENTTYPE agent)))
+
+(answer Yes)
+
+(end_of_file)

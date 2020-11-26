@@ -1,0 +1,81 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% eng_lex.ptr [Chapter  7] A Prolog PATR lexicon for an English fragment
+
+W ord of :-
+       W : slash === 0,
+       W : cat   === p,
+       W : arg1  === np.
+W ord of :-
+       W : slash === np,
+       W : cat   === pp.
+
+% example macros for lexical entries
+
+macro(np,W) :-
+       W : slash === 0,
+       W : cat   === np.
+macro(iv,W) :-
+       W : slash === 0,
+       W : cat   === vp.
+macro(tv,W) :-
+       W : slash === 0,
+       W : cat   === v,
+       W : arg1  === np.
+macro(pv,W) :-
+       W : slash === 0,
+       W : cat   === v,
+       W : arg1  === pp.
+macro(av,W) :-
+       W : slash === 0,
+       W : cat   === v,
+       W : arg1  === ap.
+macro(sv,W) :-
+       W : slash === 0,
+       W : cat   === v,
+       W : arg1  === s.
+macro(vv,W) :-
+       W : slash === 0,
+       W : cat   === v,
+       W : arg1  === vp.
+macro(ap,W) :-
+       W : slash === 0,
+       W : cat   === ap.
+macro(cn,W) :-
+       W : slash === 0,
+       W : cat   === c.
+
+W ord 'Dr. Chan'     :- macro(np,W).
+W ord nurses         :- macro(np,W).
+W ord 'MediCenter'   :- macro(np,W).
+W ord patients       :- macro(np,W).
+
+W ord died           :- macro(iv,W).
+W ord recovered      :- macro(iv,W).
+W ord slept          :- macro(iv,W).
+
+W ord employed       :- macro(tv,W).
+W ord paid           :- macro(tv,W).
+W ord nursed         :- macro(tv,W).
+
+W ord and            :- macro(cn,W).
+W ord or             :- macro(cn,W).
+
+W ord approved       :- macro(pv,W).
+W ord disapproved    :- macro(pv,W).
+
+W ord appeared       :- macro(av,W).
+W ord seemed         :- macro(av,W).
+
+W ord had            :- macro(vv,W).
+
+W ord believed       :- macro(sv,W).
+W ord thought        :- macro(sv,W).
+
+W ord fit            :- macro(ap,W).
+W ord competent      :- macro(ap,W).
+W ord well_qualified :- macro(ap,W).

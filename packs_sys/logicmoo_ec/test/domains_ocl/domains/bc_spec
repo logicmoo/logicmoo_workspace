@@ -1,0 +1,65 @@
+% briefcase world (June,1999)
+% --------------------------------------------------
+
+sorts(primitive_sorts,[bag, thing, place]).
+
+objects(bag, [briefcase, suitcase]).
+objects(thing, [cheque, suit, dictionary]).
+objects(place, [home,office]).
+
+implied_invariant([],[]).
+
+predicates([
+ at_bag(bag,place), 
+ at_thing(thing,place),
+ inside(thing,bag),
+ outside(thing),
+ fits_in(thing,bag)] ).
+
+atomic_invariants( [ fits_in(cheque,briefcase),
+                     fits_in(dictionary,briefcase),
+                     fits_in(cheque,suitcase),
+                     fits_in(dictionary,suitcase),
+                     fits_in(suit,suitcase)   ]).
+
+substate_classes(bag,Bag,[
+	         [at_bag(Bag,Place)] ]). 	
+
+substate_classes(thing, Thing,[
+      [at_thing(Thing,Place), inside(Thing,Bag), fits_in(Thing,Bag)],
+      [at_thing(Thing,Place),outside(Thing)] ]).
+
+inconsistent_constraint([at_bag(X,P),at_bag(X,R),ne(P,R)]).
+inconsistent_constraint([at_thing(X,P),at_thing(X,R),ne(P,R)]).
+inconsistent_constraint([inside(Thing,B),inside(Thing,B1),ne(B,B1)]).
+inconsistent_constraint([inside(Thing,B),outside(Thing)]).
+inconsistent_constraint([inside(T,B),at_bag(B,P),at_thing(T,P1),ne(P1,P)]).
+
+operator(move(X,A,B), 
+     % prevail
+     [],
+     % necessary
+     [sc(bag,X,[at_bag(X,A),ne(A,B)]=>[at_bag(X,B)]) ],
+     % conditional
+     [sc(thing,T,[at_thing(T,A), inside(T,X), fits_in(T,X)]=>
+         [at_thing(T,B), inside(T,X)]) ]  
+      ).
+
+operator(put_in(T,X), 
+     % prevail
+     [se(bag,X, [at_bag(X,A)])],
+     % necessary
+     [sc(thing,T,[at_thing(T,A),outside(T)]=>
+         [at_thing(T,A), inside(T,X), fits_in(T,X)]) ],
+     % conditional
+     []) .
+
+operator(take_out(T,X), 
+     % prevail
+     [se(bag,X,[at_bag(X,A)])],
+     % necessary
+     [sc(thing,T,[at_thing(T,A),inside(T,X) ]=>
+         [at_thing(T,A),outside(T)])],
+     % conditional
+     []) .
+

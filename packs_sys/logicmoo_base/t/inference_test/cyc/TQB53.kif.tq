@@ -1,0 +1,89 @@
+(note "TQB53 Propositions")
+
+(increasesCausally HYP-AttackOnTangible-64274242 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION Iran))) likelihood) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT2) 
+ (instance ?AGT2 Agent) 
+ (agent ?ATTACK ?AGT1)) 
+ (increasesCausally ?ATTACK 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION ?AGT1))) likelihood)) 
+
+(instance HYP-AttackOnTangible-64274242 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-64274242 Iran) 
+
+(instance SaudiArabia Agent) 
+
+(maleficiary HYP-AttackOnTangible-64274242 SaudiArabia) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?COUNTRY2) 
+ (instance ?COUNTRY2 Country) 
+ (objectActedOn ?ATTACK ?OBJ) 
+ (different ?COUNTRY1 ?COUNTRY2) 
+ (inRegion ?OBJ ?COUNTRY1) 
+ (instance ?COUNTRY1 Country)) 
+ (maleficiary ?ATTACK ?COUNTRY1)) 
+	 
+(instance SaudiArabia Country) 
+
+(different SaudiArabia Iran) 
+
+(located PetrolinePipeline SaudiArabia) 
+
+(damages HYP-AttackOnTangible-64274242 PetrolinePipeline) 
+
+(instance Iran Country) 
+
+(instance Iran Agent) 
+
+(implies 
+ (instance ?AGT Agent) 
+ (desires ?AGT 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT)))))) 
+
+
+
+(query
+	 
+(findall ?PROP 
+
+ (implies 
+ (and 
+ (agent ?ACT Iran) 
+ (instance ?ACT AttackOnTangible) 
+ (damages ?ACT PetrolinePipeline)) 
+ (or 
+ (and 
+ (desires Iran ?PROP) 
+ (decreasesCausally ?ACT ?PROP likelihood)) 
+ (and 
+ (desires Iran 
+ (not ?PROP)) 
+ (increasesCausally ?ACT ?PROP likelihood))))  ))
+
+(answer (list (thereExists ?RETALIATION 
+       (and 
+           (instance ?RETALIATION AttackOnTangible) 
+           (maleficiary ?RETALIATION Iran))))) 
+	   
+
+
+(end_of_file)
+

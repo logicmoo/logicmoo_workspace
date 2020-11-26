@@ -1,0 +1,327 @@
+:- add_pddl(domain(chameleonworld,
+		   [strips, equality, typing],
+		   [door, flexarium, chameleon, box, substrate],
+		   A,
+		   
+		   [ dooropen(door([?(door1)])),
+		     doorclosed(door([?(door1)])),
+		     dirty(flexarium([?(flexarium1)])),
+		     clean(flexarium([?(flexarium1)])),
+		     inbox(chameleon([?(chameleon1)]), box([?(box1)])),
+		     inhands(chameleon([?(chameleon1)])),
+		     inflexarium(chameleon([?(chameleon1)])),
+		     boxopen(box([?(box1)])),
+		     boxclosed(box([?(box1)])),
+		     insideflexarium(substrate([?(substrate1)])),
+		     outsideflexarium(substrate([?(substrate1)]))
+		   ],
+		   _,
+		   A,
+		   
+		   [ action(takeoutflex,
+			    [door([?(door)]), chameleon([?(chameleon)])],
+			    [dooropen(?(door)), inflexarium(?(chameleon))],
+			    [inhands(?(chameleon))],
+			    [inflexarium(?(chameleon))],
+			    []),
+		     action(putinbox,
+			    [box([?(box)]), chameleon([?(chameleon)])],
+			    [boxopen(?(box)), inhands(?(chameleon))],
+			    [inbox(?(chameleon), ?(box))],
+			    [inhands(?(chameleon))],
+			    []),
+		     action(takeoutbox,
+			    [box([?(box)]), chameleon([?(chameleon)])],
+			    [boxopen(?(box)), inbox(?(chameleon), ?(box))],
+			    [inhands(?(chameleon))],
+			    [inbox(?(chameleon), ?(box))],
+			    []),
+		     action(putinflex,
+			    
+			    [ door([?(door)]),
+			      substrate([?(substrate)]),
+			      flexarium([?(flexarium)]),
+			      chameleon([?(chameleon)])
+			    ],
+			    
+			    [ dooropen(?(door)),
+			      insideflexarium(?(substrate)),
+			      clean(?(flexarium)),
+			      inhands(?(chameleon))
+			    ],
+			    [inflexarium(?(chameleon))],
+			    [inhands(?(chameleon))],
+			    []),
+		     action(opendoor,
+			    [door([?(door)])],
+			    [doorclosed(?(door))],
+			    [dooropen(?(door))],
+			    [doorclosed(?(door))],
+			    []),
+		     action(closedoor,
+			    [door([?(door)])],
+			    [dooropen(?(door))],
+			    [doorclosed(?(door))],
+			    [dooropen(?(door))],
+			    []),
+		     action(time,
+			    [flexarium([?(flexarium)])],
+			    [clean(?(flexarium))],
+			    [dirty(?(flexarium))],
+			    [clean(?(flexarium))],
+			    []),
+		     action(wash,
+			    
+			    [ chameleon([?(chameleon)]),
+			      box([?(box)]),
+			      door([?(door)]),
+			      substrate([?(substrate)]),
+			      flexarium([?(flexarium)])
+			    ],
+			    
+			    [ inbox(?(chameleon), ?(box)),
+			      dooropen(?(door)),
+			      outsideflexarium(?(substrate)),
+			      dirty(?(flexarium))
+			    ],
+			    [clean(?(flexarium))],
+			    [dirty(?(flexarium))],
+			    []),
+		     action(addcleannewspaper,
+			    
+			    [ flexarium([?(flexarium)]),
+			      door([?(door)]),
+			      chameleon([?(chameleon)]),
+			      box([?(box)]),
+			      substrate([?(substrate)])
+			    ],
+			    
+			    [ clean(?(flexarium)),
+			      dooropen(?(door)),
+			      inbox(?(chameleon), ?(box)),
+			      outsideflexarium(?(substrate))
+			    ],
+			    [insideflexarium(?(substrate))],
+			    [outsideflexarium(?(substrate))],
+			    []),
+		     action(removedirtynewspaper,
+			    
+			    [ flexarium([?(flexarium)]),
+			      door([?(door)]),
+			      chameleon([?(chameleon)]),
+			      box([?(box)]),
+			      substrate([?(substrate)])
+			    ],
+			    
+			    [ dirty(?(flexarium)),
+			      dooropen(?(door)),
+			      inbox(?(chameleon), ?(box)),
+			      insideflexarium(?(substrate))
+			    ],
+			    [outsideflexarium(?(substrate))],
+			    [insideflexarium(?(substrate))],
+			    []),
+		     action(openbox,
+			    [box([?(box)])],
+			    [boxclosed(?(box))],
+			    [boxopen(?(box))],
+			    [boxclosed(?(box))],
+			    []),
+		     action(closebox,
+			    [box([?(box)])],
+			    [boxopen(?(box))],
+			    [boxclosed(?(box))],
+			    [boxopen(?(box))],
+			    [])
+		   ])).
+:- add_pddl(problem(task1,
+		    chameleonworld,
+		    _,
+		    
+		    [ door([door1]),
+		      flexarium([flexarium1]),
+		      chameleon([veiledchameleon]),
+		      box([box1, box2]),
+		      substrate([newspaper1, newspaper2])
+		    ],
+		    
+		    [ doorclosed(door1),
+		      dirty(flexarium1),
+		      inflexarium(veiledchameleon),
+		      boxclosed(box1),
+		      insideflexarium(newspaper1),
+		      outsideflexarium(newspaper2)
+		    ],
+		    
+		    [ doorclosed(door1),
+		      clean(flexarium1),
+		      inflexarium(veiledchameleon),
+		      boxclosed(box1),
+		      outsideflexarium(newspaper1),
+		      insideflexarium(newspaper2)
+		    ],
+		    _,
+		    _,
+		    _)).
+:- add_pddl(problem(task2,
+		    chameleonworld,
+		    _,
+		    
+		    [ door([door1]),
+		      flexarium([flexarium1]),
+		      chameleon([veiledchameleon]),
+		      box([box1, box2]),
+		      substrate([newspaper1, newspaper2])
+		    ],
+		    
+		    [ doorclosed(door1),
+		      inflexarium(veiledchameleon),
+		      boxclosed(box1)
+		    ],
+		    
+		    [ dooropen(door1),
+		      inbox(veiledchameleon, box1),
+		      boxclosed(box1)
+		    ],
+		    _,
+		    _,
+		    _)).
+:- add_pddl(problem(task3,
+		    chameleonworld,
+		    _,
+		    
+		    [ door([door1]),
+		      flexarium([flexarium1]),
+		      chameleon([veiledchameleon]),
+		      box([box1, box2]),
+		      substrate([newspaper1, newspaper2])
+		    ],
+		    
+		    [ doorclosed(door1),
+		      clean(flexarium1),
+		      inbox(veiledchameleon, box1),
+		      boxclosed(box1),
+		      boxclosed(box2),
+		      insideflexarium(newspaper1),
+		      outsideflexarium(newspaper2)
+		    ],
+		    
+		    [ doorclosed(door1),
+		      clean(flexarium1),
+		      inflexarium(veiledchameleon),
+		      boxclosed(box1),
+		      boxclosed(box2),
+		      insideflexarium(newspaper1),
+		      outsideflexarium(newspaper2)
+		    ],
+		    _,
+		    _,
+		    _)).
+:- add_pddl(problem(task4,
+		    chameleonworld,
+		    _,
+		    
+		    [ door([door1]),
+		      flexarium([flexarium1]),
+		      chameleon([veiledchameleon]),
+		      box([box1, box2]),
+		      substrate([newspaper1, newspaper2])
+		    ],
+		    
+		    [ doorclosed(door1),
+		      dirty(flexarium1),
+		      inbox(veiledchameleon, box1),
+		      boxclosed(box1),
+		      boxclosed(box2),
+		      insideflexarium(newspaper1),
+		      outsideflexarium(newspaper2)
+		    ],
+		    
+		    [ doorclosed(door1),
+		      dirty(flexarium1),
+		      inbox(veiledchameleon, box2),
+		      boxclosed(box1),
+		      boxclosed(box2),
+		      insideflexarium(newspaper1),
+		      outsideflexarium(newspaper2)
+		    ],
+		    _,
+		    _,
+		    _)).
+:- add_pddl(problem(task5,
+		    chameleonworld,
+		    _,
+		    
+		    [ door([door1]),
+		      flexarium([flexarium1]),
+		      chameleon([veiledchameleon]),
+		      box([box1, box2]),
+		      substrate([newspaper1, newspaper2])
+		    ],
+		    [dooropen(door1), boxopen(box1), boxopen(box2)],
+		    [doorclosed(door1), boxclosed(box1), boxclosed(box2)],
+		    _,
+		    _,
+		    _)).
+:- add_pddl(problem(task6,
+		    chameleonworld,
+		    _,
+		    
+		    [ door([door1]),
+		      flexarium([flexarium1]),
+		      chameleon([veiledchameleon]),
+		      box([box1, box2]),
+		      substrate([newspaper1, newspaper2])
+		    ],
+		    
+		    [ doorclosed(door1),
+		      dirty(flexarium1),
+		      inbox(veiledchameleon, box2),
+		      boxclosed(box1),
+		      boxclosed(box2),
+		      outsideflexarium(newspaper1),
+		      insideflexarium(newspaper2)
+		    ],
+		    
+		    [ doorclosed(door1),
+		      clean(flexarium1),
+		      inflexarium(veiledchameleon),
+		      boxclosed(box1),
+		      boxclosed(box2),
+		      insideflexarium(newspaper1),
+		      outsideflexarium(newspaper2)
+		    ],
+		    _,
+		    _,
+		    _)).
+:- add_pddl(problem(task7,
+		    chameleonworld,
+		    _,
+		    
+		    [ door([door1]),
+		      flexarium([flexarium1]),
+		      chameleon([veiledchameleon]),
+		      box([box1, box2]),
+		      substrate([newspaper1, newspaper2])
+		    ],
+		    
+		    [ doorclosed(door1),
+		      dirty(flexarium1),
+		      inflexarium(veiledchameleon),
+		      boxopen(box1),
+		      boxopen(box2),
+		      insideflexarium(newspaper1),
+		      outsideflexarium(newspaper2)
+		    ],
+		    
+		    [ doorclosed(door1),
+		      clean(flexarium1),
+		      inhands(veiledchameleon),
+		      boxclosed(box1),
+		      boxclosed(box2),
+		      outsideflexarium(newspaper1),
+		      insideflexarium(newspaper2)
+		    ],
+		    _,
+		    _,
+		    _)).

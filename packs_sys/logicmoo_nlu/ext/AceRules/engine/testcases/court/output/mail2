@@ -1,0 +1,18 @@
+ERROR: Invalid ACE text:
+The word "belongs-to" is unknown.
+The word "family" is unknown.
+The word "notification" is unknown.
+The word "emergency" is unknown.
+The word "illness" is unknown.
+The word "belongs-to" is unknown.
+The word "family" is unknown.
+The word "illness" is unknown.
+The word "emergency" is unknown.
+The word "belongs-to" is unknown.
+The word "family" is unknown.
+The word "belongs-to" is unknown.
+The word "family" is unknown.
+The word "notification" is unknown.
+The word "illness" is unknown.
+"If a message is from someone who belongs-to <> the family of Fred then the message is important.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+

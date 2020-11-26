@@ -1,0 +1,68 @@
+(note TQF240b)
+(abort)
+(instance HYP-OilPipeline-61779547 OilPipeline) 
+
+(implies 
+ (instance ?OILPIPELINE OilPipeline) 
+ (conflictingInterestsWRT ?OILPIPELINE Iran Azerbaijan 
+ (and 
+ (desires Iran 
+ (thereExists ?AGREE 
+ (and 
+ (instance ?AGREE Agreement) 
+ (agreeingAgents ?AGREE Iran) 
+ (agreeingAgents ?AGREE Azerbaijan) 
+ (ist-Agreement ?AGREE 
+ (thereExists ?PIPELINE 
+ (and 
+ (instance ?PIPELINE OilPipeline) 
+ (pathTerminus ?PIPELINE Iran))))))) 
+ (desires Azerbaijan 
+ (thereExists ?AGREE 
+ (and 
+ (instance ?AGREE Agreement) 
+ (agreeingAgents ?AGREE UnitedStatesOfAmerica) 
+ (agreeingAgents ?AGREE Azerbaijan) 
+ (ist-Agreement ?AGREE 
+ (thereExists ?PIPELINE 
+ (and 
+ (instance ?PIPELINE OilPipeline) 
+ (pathTerminus ?PIPELINE CityOfCeyhanTurkey)))))) ))) ) 
+
+(query (findall (?CONFLICT)
+
+(=> 
+(instance ?CONFLICTOBJECT OilPipeline) 
+(conflictingInterestsWRT ?CONFLICTOBJECT Iran Azerbaijan ?CONFLICT))
+
+))
+
+(answer (list   (conflictingInterestsWRT ?OILPIPELINE Iran Azerbaijan 
+ (and 
+ (desires Iran 
+ (thereExists ?AGREE 
+ (and 
+ (instance ?AGREE Agreement) 
+ (agreeingAgents ?AGREE Iran) 
+ (agreeingAgents ?AGREE Azerbaijan) 
+ (ist-Agreement ?AGREE 
+ (thereExists ?PIPELINE 
+ (and 
+ (instance ?PIPELINE OilPipeline) 
+ (pathTerminus ?PIPELINE Iran))))))) 
+ (desires Azerbaijan 
+ (thereExists ?AGREE 
+ (and 
+ (instance ?AGREE Agreement) 
+ (agreeingAgents ?AGREE UnitedStatesOfAmerica) 
+ (agreeingAgents ?AGREE Azerbaijan) 
+ (ist-Agreement ?AGREE 
+ (thereExists ?PIPELINE 
+ (and 
+ (instance ?PIPELINE OilPipeline) 
+ (pathTerminus ?PIPELINE CityOfCeyhanTurkey)))))) )))
+)
+)
+
+(end_of_file)
+

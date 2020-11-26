@@ -1,0 +1,49 @@
+(note TQF233c)
+
+(subclass HYP-Collection-33180801 Situation) 
+(subclass AttackOnTangible Situation) 
+(instance HYP-MarineExpeditionaryUnit-20106598 ModernMilitaryUnit-Deployable) 
+
+(implies 
+  (instance ?UNIT ModernMilitaryUnit-Deployable) 
+  (behaviorCapable ?UNIT AttackOnTangible agent)) 
+
+(implies 
+  (and 
+    (subclass ?SPEC ?GEN) 
+    (behaviorCapable ?OBJ ?SPEC ?ROLE)) 
+  (behaviorCapable ?OBJ ?GEN ?ROLE)) 
+
+(implies 
+  (and 
+    (subclass ?SPEC ?GEN) 
+    (behaviorCapable ?OBJ ?GEN ?ROLE)) 
+  (behaviorCapable ?OBJ ?SPEC ?ROLE)) 
+
+(query (findall (?ROLE)
+  (implies 
+    (and 
+      (instance ?MEU MarineExpeditionaryUnit) 
+      (sovereignAllegianceOfOrg ?MEU UnitedStatesOfAmerica) 
+      (instance ?EVENT HelpingAnAgent) 
+      (beneficiary ?EVENT SaudiArabia) 
+      (causes-SitProp ?EVENT 
+        (and 
+          (givesSupportToAgent UnitedStatesOfAmerica SaudiArabia ?AMOUNT) 
+          (instance ?AMOUNT MilitarySupport)))
+      (subclass ?SUBEVENTTYPE 
+        (CollectionSubsetFn MilitaryOperation 
+          (TheSetOf ?OBJ 
+            (exists 
+              (?ACTION) 
+              (and 
+                (subProcess ?ACTION ?OBJ) 
+                (instance ?ACTION InformationTransferEvent) 
+                (agent ?ACTION UnitedStatesOfAmerica) 
+                (infoTransferred ?ACTION 
+                  (agent ?EVENT UnitedStatesOfAmerica)))))))) 
+  (behaviorCapable ?MEU ?SUBEVENTTYPE ?ROLE))))
+
+(answer agent)
+
+(end_of_file)

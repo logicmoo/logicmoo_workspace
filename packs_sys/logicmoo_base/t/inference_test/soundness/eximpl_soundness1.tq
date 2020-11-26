@@ -1,0 +1,11 @@
+(note "existential implication soundness check1" )
+
+(equiv (exists ?X (F ?X)) (G a))
+
+(queryyn 
+(forall ?X (equiv (F ?X)) (G a))
+)
+
+(answer Unproven)
+
+(end_of_file)

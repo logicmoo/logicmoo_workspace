@@ -1,0 +1,48 @@
+
+INPUT TEXT:
+A code is valid for a card.
+If a code is valid for a card then John waits.
+"abc" is a valid name for Bill.
+If something is a valid name for something then Mary is a clerk.
+
+RULES:
+group([pred_mod(wait,named('John'),[])]) <- [be_adj(A,valid,pos,[modifier_pp(for,B)]), object(A,code,countable,na,eq,1), object(B,card,countable,na,eq,1)].
+group([object(named('Mary'),clerk,countable,na,eq,1)]) <- [pred_mod(be,A,B,[modifier_pp(for,C)]), object(C,D,E,F,G,H), object(A,I,J,K,L,M), object(B,name,countable,na,eq,1), property(B,valid,pos)].
+property(v(2),valid,pos).
+be_adj(v(0),valid,pos,[modifier_pp(for,v(1))]).
+pred_mod(be,string(abc),v(2),[modifier_pp(for,named('Bill'))]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+object(v(0),code,countable,na,eq,1).
+object(v(1),card,countable,na,eq,1).
+object(v(2),name,countable,na,eq,1).
+
+SIMPLE RULES:
+wait(named('John'),[]) <- [valid(A,[for(B)]), code(A), card(B)].
+clerk(named('Mary')) <- [be(A,B,[for(C)]), something(C), something(A), name(B), valid(B)].
+valid(v(2)).
+valid(v(0),[for(v(1))]).
+be(string(abc),v(2),[for(named('Bill'))]).
+code(v(0)).
+card(v(1)).
+name(v(2)).
+
+ANSWERSET #1:
+group([pred_mod(wait,named('John'),[])]).
+property(v(2),valid,pos).
+be_adj(v(0),valid,pos,[modifier_pp(for,v(1))]).
+pred_mod(be,string(abc),v(2),[modifier_pp(for,named('Bill'))]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+object(v(0),code,countable,na,eq,1).
+object(v(1),card,countable,na,eq,1).
+object(v(2),name,countable,na,eq,1).
+
+ANSWERTEXT #1:
+There is a code X1.
+"abc" is a valid name for Bill.
+John waits.
+The code X1 is valid for a card.
+

@@ -1,0 +1,48 @@
+.errorResult {
+	.errorHeader {
+		overflow:hidden;
+		.yasr_tryQuery {
+			float:right;
+			padding-top: 3px;
+			padding-bottom:3px;
+		}
+		span.exception {
+			display: inline;
+			padding: .2em .6em .3em;
+			font-size: 75%;
+			font-weight: 700;
+			line-height: 1;
+			color: #fff;
+			text-align: center;
+			white-space: nowrap;
+			vertical-align: baseline;
+			border-radius: .25em;
+			background-color: #d9534f;
+			
+		}
+	}
+	
+	padding: 10px;
+	
+	pre {
+		display: block;
+		padding: 10px;
+		margin: 10px 0 10px;
+		font-size: 13px;
+		line-height: 1.42857;
+		word-break: break-all;
+		word-wrap: break-word;
+		color: #333;
+		background-color: #f5f5f5;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+	.corsMessage {
+		color: #a94442;
+		background-color: #f2dede;
+		margin-top: 10px;
+		padding: 5px;
+		border: 1px solid #ebccd1;
+		border-radius: 4px;
+	}
+}

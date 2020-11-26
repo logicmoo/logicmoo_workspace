@@ -1,0 +1,240 @@
+
+%% Robin's macros
+%
+%
+
+\newcommand{\ignore}[1]{}
+
+%
+% Reference the next example in the text:
+%
+\newcommand{\nexteg}[1]{\addtocounter{examplectr}{1}(\arabic{chapter}.\arabic{examplectr}{#1})\addtocounter{examplectr}{-1}}
+%
+% Reference the previous example in the text:
+%
+\newcommand{\preveg}[1]{(\arabic{chapter}.\arabic{examplectr}{#1})}
+%
+% Reference examples by relative offsets:
+%
+\newcommand{\egnum}[2]{\addtocounter{examplectr}{#1}(\arabic{chapter}.\arabic{examplectr}{#2})\addtocounter{examplectr}{-#1}}
+
+% ENVIRONMENTS
+%
+% Examples Environments
+%
+\newcounter{examplectr}
+\newcounter{subexamplectr}[examplectr]
+\renewcommand{\thesubexamplectr}{\alph{subexamplectr}}
+%
+% Sub-example Macro:
+%
+\newenvironment{subex}%
+   {\begin{list}
+       {\alph{subexamplectr}.}%
+       {\setlength{\topsep}{0in}
+\setlength{\labelwidth}{1.0in}
+        \setlength{\leftmargin}{0.25in}
+        \setlength{\labelsep}{0.15in}
+ \usecounter{subexamplectr}}
+       }%
+   {\end{list}}
+
+%
+% Single Example Macro
+%
+\newenvironment{singex}
+{ \refstepcounter{examplectr}
+  \bigskip % vertical
+  \begin{list}
+    {
+      (\arabic{chapter}.\arabic{examplectr})\\
+    }%
+    {\setlength{\topsep}{0in}
+\setlength{\labelwidth}{0.5in}
+      \setlength{\leftmargin}{0.90in}
+      \setlength{\labelsep}{0.10in}% distance counter - minipage
+    }
+    \begin{minipage}[t]{4.5in} \item
+    }%
+    {\end{minipage}
+  \end{list}
+}
+
+% End of example macro
+
+
+\newcommand{\subegref}[2]{(\ref{#1}\ref{#2})}
+
+\newcommand{\beg}{\begin{singex}}
+\newcommand{\eeg}{\end{singex}}
+\newcommand{\bseg}{\begin{subex}}
+\newcommand{\eseg}{\end{subex}}
+
+
+\newcommand{\egstack}[1]{\begin{tabular}[t]{@{}l@{}} #1 \\ \\ \end{tabular}}
+
+
+%Inference rules
+
+\newcommand{\ttinferone}[2]{    %inference with one premise
+\begin{tabular}{c}
+#1 \\
+\hline
+#2
+\end{tabular}}
+
+% \def\keywords#1{\begin{quote}{\bf Keywords: }#1\end{quote}}
+ 
+%\renewcommand{\chapter}[1]{\chapter{#1}\setcounter{examplectr}{1}}
+
+
+
+
+
+
+
+
+
+
+% UPDATE RULES
+
+
+%
+% Reference the next example in the text:
+%
+\newcommand{\rulehead}[0]{\textsc{rule}}
+
+\newcommand{\nextrule}[1]{\addtocounter{rulectr}{1}(\rulehead\/ \arabic{chapter}.\arabic{rulectr}{#1})\addtocounter{rulectr}{-1}}
+%
+% Reference the previous example in the text:
+%
+\newcommand{\prevrule}[1]{(\rulehead\/ \arabic{chapter}.\arabic{rulectr}{#1})}
+%
+% Reference examples by relative offsets:
+%
+\newcommand{\rulenum}[2]{\addtocounter{rulectr}{#1}(\rulehead\/ \arabic{chapter}.\arabic{rulectr}{#2})\addtocounter{rulectr}{-#1}}
+
+% ENVIRONMENTS
+%
+% Examples Environments
+%
+\newcounter{rulectr}
+
+%
+% trindikit Rule Macro
+%
+\newenvironment{tkrule}
+{ \refstepcounter{rulectr}
+  \bigskip % vertical
+  \begin{list}
+    {
+      (\rulehead\/ \arabic{chapter}.\arabic{rulectr})\\
+    }%
+    {\setlength{\topsep}{0in}
+%\setlength{\itemindent}{-0.50in}
+\setlength{\labelwidth}{1.0in}
+      \setlength{\leftmargin}{1.05in}
+      \setlength{\labelsep}{0.10in}% distance counter - minipage
+    }
+    \begin{minipage}[t]{4.5in} \item
+}%
+    {\end{minipage}
+  \end{list}
+}
+
+% End of example macro
+
+
+\newcommand{\brule}{\begin{tkrule}}
+\newcommand{\erule}{\end{tkrule}}
+
+% \ruleref{Chapter}{Isisversion}{Rulename}
+\newcommand{\ruleref}[3]{\textsc{(rule {#1}.\ref{rule:isis#2-#3})} (p. \pageref{rule:isis#2-#3})}
+
+\newcommand{\shortruleref}[3]{\textsc{(rule {#1}.\ref{rule:isis#2-#3})}}
+
+
+
+
+% DIALOGUE EXAMPLES
+
+
+%
+% Reference the next example in the text:
+%
+\newcommand{\diahead}[0]{\textsc{dialogue}}
+
+\newcommand{\nextdia}[1]{\addtocounter{diactr}{1}(\diahead\/ \arabic{chapter}.\arabic{diactr}{#1})\addtocounter{diactr}{-1}}
+%
+% Reference the previous example in the text:
+%
+\newcommand{\prevdia}[1]{(\diahead\/ \arabic{chapter}.\arabic{diactr}{#1})}
+%
+% Reference examples by relative offsets:
+%
+\newcommand{\dianum}[2]{\addtocounter{diactr}{#1}(\diahead\/ \arabic{chapter}.\arabic{diactr}{#2})\addtocounter{diactr}{-#1}}
+
+% ENVIRONMENTS
+%
+% Examples Environments
+%
+\newcounter{diactr}
+
+%
+% trindikit Dia Macro
+%
+\newenvironment{dia}
+{ %begdef
+  \refstepcounter{diactr}
+  \bigskip % vertical
+  (\diahead\/ \arabic{chapter}.\arabic{diactr})
+%\hspace{30ex}\dotfill
+
+}
+{
+%(\textsc{end of dialouge}) % enddef
+}
+
+% End of example macro
+
+
+\newcommand{\diabeg}{\begin{dia}}
+\newcommand{\diaeeg}{\end{dia}}
+
+% short dialogue utterance ending
+%\newcommand{\sue}{\\}
+
+% long dialogue utterance ending - with rules etc
+
+\newcommand{\newchap}[0]{\setcounter{examplectr}{0}\setcounter{diactr}{0} \setcounter{rulectr}{0}}
+
+
+
+
+
+
+\newcommand{\appex}[1]{
+  \renewenvironment{singex}
+  { \refstepcounter{examplectr}
+    \bigskip % vertical
+    \begin{list}
+    {
+      (#1.\arabic{examplectr})\\
+    }%
+    {\setlength{\topsep}{0in}
+\setlength{\labelwidth}{0.5in}
+      \setlength{\leftmargin}{0.90in}
+      \setlength{\labelsep}{0.10in}% distance counter - minipage
+    }
+    \begin{minipage}[t]{4.5in} \item
+    }%
+    {\end{minipage}
+  \end{list}
+}
+
+}
+
+
+% dialogue reference
+% \diaref{Chapter}{Label}
+\newcommand{\diaref}[2]{\textsc{(dialogue {#1}.\ref{dia:#2})}}

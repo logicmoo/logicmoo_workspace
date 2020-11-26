@@ -1,0 +1,60 @@
+
+ $ a :- write(1), b, !, write(2).
+ $ b.
+ $ b :- c.
+ $ c.
+
+ $ a1 :- write(1), b1, !, write(2).
+ $ a1 :- write(3).
+ $ b1.
+ $ b1 :- c.
+ $ c1.
+
+ $ a2 :- b2, write(1), c2, fail.
+ $ b2 :- !.
+ $ b2 :- write(oh).
+ $ c2.
+
+ $ a3 :- repeat, write(1), c3, fail.
+ $ c3 :- !.
+ $ c3 :- write(oh).
+
+ $ a4 :- repeat, write(1), c4, fail.
+ $ c4.
+ $ c4 :- write(oh).
+
+ $ a5 :- repeat, write(1), c5, !, fail.
+ $ c5 :- write(ah).
+ $ c5 :- write(oh).
+
+ $ a6 :- repeat, b6, write(1), c6, fail.
+ $ b6 :- !.
+ $ b6 :- write(oh).
+ $ c6.
+
+ $ alph :- repeat, bet, write(o), fail .
+ $ bet :- !.
+
+ $ ato1 :- repeat, abo1, fail .
+ $ abo1 :- a1conc(X,Y,[a,b,c]),a1conc(X,Y,[a,b,c]),
+           a1conc(X,Y,[a,b,c]),!, _read(U).
+ $ a1conc(X,Y,Z) :-  conc(X,Y,Z), write(X).
+
+ $ a7 :- b7, eq(X,c7), call(X), !.
+ $ b7.
+ $ c7 :- write(1).
+ $ c7 :- write(2).
+
+ $ a8 :- b8, eq(X,c8), call(X).
+ $ b8.
+ $ c8 :- write(1), !.
+ $ c8 :- write(2).
+
+ $ a10 :- b10, eq(X,c10), call(X).
+ $ b10.
+ $ c10 :- write(1).
+ $ c10 :- write(2).
+
+ $ a11 :- repeat, eq(X,c11), call(X), fail.
+ $ c11 :- write(1), !.
+ $ c11 :- write(2).

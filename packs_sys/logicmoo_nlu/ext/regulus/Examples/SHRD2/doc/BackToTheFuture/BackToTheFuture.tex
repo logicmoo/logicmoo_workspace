@@ -1,0 +1,393 @@
+%
+% File acl08.tex
+%
+% Contact: nasmith@cs.cmu.edu
+
+\documentclass[11pt]{article}
+\usepackage{acl08}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{psbox}	
+\usepackage[latin1]{inputenc}
+\setlength\titlebox{8.0cm}    % Expanding the titlebox
+
+\title{Back to the Future: \\Why Spoken Dialogue Systems Need to Rediscover their Roots}
+
+\author{Manny Rayner\\ 
+Ecole de Traduction et d'Interprétation\\
+Département de Traitement Informatique Multilingue\\
+40, bd. du Pont d'Arve\\
+CH-1211 Genève\\
+\\
+Emmanuel.Rayner@unige.ch}
+
+%\author{~}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\label{Section:Introduction}
+
+\begin{quote}
+{\em Reculer pour mieux sauter}\\
+Go back to jump better\\
+\\
+--- French proverb
+\end{quote}
+
+When I was an undergraduate, back in the the late 1970s, I came across
+a copy of Terry Winograd's {\em Understanding Natural Language}
+\cite{Winograd1972} lying on the floor in a friend's room.  I picked it
+up and started leafing through it. I was simply amazed. Apparently,
+machines could read complex English sentences, understand them at a
+deep level, and respond intelligently. I had had no idea that it was
+possible at all. I was immediately hooked, and I think that was the
+moment when I decided that I didn't want to be a mathematician after
+all, but get into AI instead. Wingrad's book, and the SHRDLU system
+described in it, inspired me to change my whole career path.
+
+I described this experience recently on a book reviewing site I
+sometimes hang out on, and got responses from several people. Someone
+asked me what the corresponding thing would be today. What AI system
+is going to inspire today's undergraduates the way that SHRDLU
+inspired me? I was disturbed to find that I couldn't come up with an
+answer. I asked a few friends for suggestions, to see if I was just
+blanking. They couldn't come up with anything either.
+
+Back in 1977, I would have predicted that, by now, we would have
+speech-enabled systems infinitely more sophisticated than
+SHRDLU. Please correct me if you disagree, but I just don't think
+that's true. In fact, I don't even think that people are {\em trying}
+to build systems like that any more. There was a Call for Papers a few
+years ago for a workshop on spoken dialogue systems. In this CFP,
+Srinivas Bangalore asked what had happened to work in the area. Did
+people decide that the problem had been solved? Did they decide it was
+too hard, or that it wasn't actually interesting? It was a good
+question.
+
+I've asked people who were around at the time of SHRDLU what they
+think happened. Ron Kaplan's explanation seemed plausible to me. The
+NLP and spoken dialogue communities became heavily influenced by the
+speech recognition community, who made wonderful progress by defining
+shared tasks, and steadily chipping away at well-defined objective
+functions, in particular Word Error Rate. Unfortunately, I think
+history has shown that there was no correspondingly useful objective
+function for spoken dialogue systems. DARPA funded two large
+initiatives during the 90s and early 00s, with ATIS and COMMUNICATOR;
+participants competed on the task of understanding and responding to
+questions about airline flight reservations and related topics. There
+was, however, no dramatic progress. At the moment, there is no large,
+popular speech understanding task.
+
+I worked at NASA for a while, and there's an analogy that has occurred
+to me a few times. Back in the 60s, NASA had a clear plan. It was going to
+put a man on the Moon, and get him back again alive. It was breathtakingly
+audacious, and, despite technology that was very primitive by today's standards,
+they succeeded several times. But there was no follow-on plan, and people 
+got bored. Funding declined, and manned space-flight started focussing
+on the rather less challenging task of maintaining a space station in low Earth orbit.
+Unfortunately, no one has ever really understood what the International 
+Space Station is for, and there is no genuine enthusiasm for it.
+After the Columbia disaster in 2003, the Accident Investigation Board
+made all these points, and strongly recommended that NASA needed some
+dramatic, motivating goals. The result was the Moon, Mars and Beyond
+initiative. First, we would go back to the Moon. Then we would set our
+sights on a trip to Mars, and after that to locations further out in the
+Solar System.
+
+To me, SHDLU is a bit like Apollo. It was a dramatic demonstration,
+and a near-miracle given the currently available technology. It caught
+people's imaginations. But now we have become so focussed on simpler,
+more readily achievable goals that it's not even obvious any more that
+we can do the blocks world very well. Just as with NASA, I'm
+suggesting that we should try and get back to the initial ideas. The
+first step would be to build a new version of SHRDLU, suitably adapted
+to 2009; in particular, it should be speech-enabled, and preferably
+also use a real robot rather than a simulated one. Above all, it
+should be reasonably robust (the original system was anything
+but). Once we've satisfied ourselves that we can do SHRDLU properly, I
+suggest defining a new speech understanding task, which is as
+ambitious as the SHRDLU task was in 1970. My specific suggestion here
+is to aim for a system that can play Bridge, and discuss it. Bridge is
+a difficult game, which involves talking about knowledge, uncertainty,
+communication, deception and planning. There are strong Bridge engines
+available, which are close to the point where they would be able to
+handle the underlying reasoning required to support the dialogue; lack
+of domain knowledge is usually the biggest problem when building an
+ambitious dialogue application. Being able to converse robustly about
+Bridge would be a major step forward in spoken dialogue systems.
+
+The rest of this note is organised as follows.
+In Section~\ref{Section:SHRD2}, I describe a short-term plan for
+reimplementing SHRDLU, which is already in the process of being
+implemented. Section~\ref{Section:Bridge} outlines longer-range ideas for building
+a system that can play Bridge and talk about it intelligently.
+Section~\ref{Section:Conclusions} concludes.
+
+\section{SHRD2}
+\label{Section:SHRD2}
+
+We have recently begun work on ``SHRD2'', a speech-enabled
+reimplementation of SHDLU. This is being constructed using Regulus
+\cite{RegulusBook} a Open Source platform for building speech-enabled
+applications. The Regulus strategy is a combination of the rule-based
+and data-driven paradigms, and allows grammar-based speech recognisers
+to be derived from general resource grammars using semi-automatic
+corpus-driven methods. Recognisers can thus quickly be implemented by
+linguist developers, using largely reusable resources.  
+%A mature
+%Regulus resource grammar for English has been available for some time;
+%grammars for several other languages have been developed at Geneva
+%University under FNRS funding
+%\cite{BouillonEA2007TAL,RaynerEAHLT2005}. 
+The platform is primarily
+designed for tasks which require precise understanding based on deep
+analysis, as opposed to the robust surface processing that can be
+delivered by machine-learning methods, or the system-initiative,
+slot-filling strategies supported by platforms like
+VoiceXML\footnote{\url{http://www.voicexml.org/}}. It is thus
+particularly suitable for safety-critical domains, and for ``expert''
+users who will repeatedly come into contact with the system, and
+expect a high level of performance. Regulus has already been used
+to build several large applications of this kind. Prominent examples
+are NASA's Clarissa procedure
+navigator\footnote{\url{http://ic.arc.nasa.gov/projects/clarissa/}}
+(tested on the International Space Station in 2005), Geneva
+University's MedSLT medical speech translator
+\cite{BouillonEA2008AMTA}, and Ford Research's
+SDS in-car information system, which was voted first at the 2007 Ford
+Internal Technology Fair.
+
+\begin{figure*}
+Person: PICK UP A BIG RED BLOCK.\\
+Computer: OK. (does it) \\
+Person: GRASP THE PYRAMID. \\
+Computer: I DON'T UNDERSTAND WHICH PYRAMID YOU MEAN. \\
+Person: FIND A BLOCK WHICH IS TALLER THAN THE ONE YOU ARE HOLDING AND PUT IT INTO THE BOX. \\
+Computer: BY "IT", I ASSUME YOU MEAN THE BLOCK WHICH IS TALLER THAN THE ONE I AM HOLDING. \\
+Computer: OK. (does it) \\
+Person: WHAT DOES THE BOX CONTAIN? \\
+Computer: THE BLUE PYRAMID AND THE BLUE BLOCK. \\
+Person: WHAT IS THE PYRAMID SUPPORTED BY? \\
+Computer: THE BOX. \\
+Person: HOW MANY BLOCKS ARE NOT IN THE BOX? \\
+Computer: FOUR OF THEM. \\
+Person: IS AT LEAST ONE OF THEM NARROWER THAN THE ONE WHICH I TOLD YOU TO PICK UP? \\
+Computer: YES, THE RED CUBE. \\
+Person: IS IT SUPPORTED? \\
+Computer: YES, BY THE TABLE. 
+\caption{Beginning of the classic SHDLU dialogue.}
+\label{Figure:SHDLUDialogue}
+\end{figure*}
+
+When the original SHDLU system was written, there was no established
+concept of systematic testing using a corpus, with clean separation of
+training and test data. The closest thing to a corpus is the famous
+SHRDL demo dialogue, posted for example at \url{http://hci.stanford.edu/~winograd/shrdlu/}.
+The beginning of the dialogue is shown in Figure~\ref{Figure:SHDLUDialogue}.
+Using the demo dialogue as a starting point, we are in the process of collecting
+a proper corpus, which right now contains about 200 utterances.
+Using this corpus, we have implemented initial versions of lexicon,
+semantics and other modules. After a couple of weeks of work, about
+80\% of the corpus parses, and about 50\% produces a scoped
+logical form. Figure~\ref{Figure:SHRD2Example} shows different
+processing stages for a simple example. The grammar can be compiled
+into a Nuance recognizer. Anecdotally, recognition is reasonable.
+The main problems, as we expected, are in confusion of function words;
+in particular, ``in'' is often confused with ``on'', and ``a'' with ``the''. 
+So, for example, ``Put the cube in the box'' might easily be misrecognized
+as ``Put {\bf a} cube {\bf on} a box''.
+
+\begin{figure*}
+
+{\bf Surface form:}\\  
+``pick up a big red block''
+~\\
+~\\  
+{\bf Representation produced by parser/recogniser:} \\
+\begin{verbatim}
+[[imp, 
+  form(imperative, 
+       [[pick_up,
+         term(pro,you,[]),
+         term(a,block,[[size,big],[color,red]]),
+         up]])]]
+\end{verbatim}
+~\\
+{\bf Scoped semantic representation:}\\
+\begin{verbatim}
+[imp, 
+ quant(def_sing, A, 
+       [[you,A]], 
+       quant(exist, B, 
+             [[block,B], [size,B,big],
+              [color,B,red]],  
+             imperative(quant(exist,C,[[pick_up,C,A,B]],
+                        true))))]] 
+\end{verbatim}
+
+\caption{SHRD2 processing example, showing different processing stages.}
+\label{Figure:SHRD2Example}
+\end{figure*}
+
+Our short-term plan is to address these and other problems, make coverage more
+robust, and attach a back-end system which will actually respond to questions
+and commends. Initially, the back-end will consist of a simulated version of the
+blocks-world, as in the original SHRDLU. We will probably also start experimenting
+with the idea of attaching a real robot arm. This work may be carried out by
+students at Santa Clara University.
+%, or by researchers at the new robotics
+%group at PARC, Palo Alto.
+
+\subsection{Using SHRD2 as a shared resource}
+
+Looking further ahead, one possible medium-term plan for SHRD2 that
+has been suggested to us is to develop it into a shared resource that
+can be used by other groups interested in doing research on spoken dialogue
+understanding.  The approach we have in mind is to place a version of
+the system on the web, and include hooks and APIs which make it possible
+to replace components with third-party versions. Thus, for example,
+someone who wanted to use a different natural language processing
+engine could upload an executable which received an N-best list in XML
+format, and produced a semantic representation.  Alternately, they
+could do the same thing offline: run the current set of speech
+examples to produce a file of N-best lists, download that file,
+process it locally to produce a file of semantic representations,
+upload that file back to the server, and then run another offline
+script to process the semantic representations through response
+generation.
+
+The technically challenging aspect of this exercise is the question of
+how to represent discourse and task context, since processing will generally
+be context-dependent. For example, pronouns like ``it'' or ``them'' will
+often refer back to the previous discourse, while definite descriptions like
+``the blue cube'' or ``the largest block'' will refer to objects in the 
+environment. Processing modules will in general need to input and/or
+output a context object, which encodes this information. The question is
+whether the context can be represented in a sufficiently theory-neutral 
+way that a reasonable cross-section of groups would be able to use
+together with their own frameworks. We will start by trying to make the
+context objects as uncontroversial as we can, and then discuss issues with
+other potentially interested groups.
+
+\section{Bridge}
+\label{Section:Bridge}
+
+SHDRLU was extremely ambitious for 1969, and at the time it was
+inspirational to see even a partial success on such a challenging
+task. We hope that SHRD2 will show that real progress has happened in
+the intervening 40 years, and that we can now build a fairly robust
+speech-enabled system for the block-world domain. We then want to move
+to a new domain, which will be as ambitious for 2009 as SHDLU was for
+1969. We suggest that Bridge would be a suitable candidate.
+
+Bridge is a complex card game played between two teams, in which
+players in general need to cooperate with their partner and attempt to
+confuse their opponents. It constantly involves reasoning about
+knowledge, belief, probabilities and plans.  For example, during the
+bidding phase it is often important to think about what one's partner
+will know as a result of a bid, and to what extent this will help them
+make useful decisions. During the following play of the cards, it is
+common to reason about what the opponents are likely to have inferred
+from the bidding and the play to date.
+
+In contrast to games of perfect information, like chess, it is by no
+means obvious even that a very strong player will choose the
+alternative that is objectively correct. To give a example, suppose
+that one opponent (East) has the Ace of Spades, their partner (West)
+has information leading them to believe that East has one Ace, and
+West's leading a Spade would be enough to defeat the
+contract. However, if there is no reason for West to think that East's
+Ace is more likely to be in Spades than in Hearts, it is rational to
+expect them to make the correct decision at most 50\% of the time.  It
+is common to look ahead to future situations like this, and
+reason about how useful information will be to the opponents or to
+one's partner.
+
+The language required to talk about issues like these implies a
+qualitative leap beyond that used in domains like the
+blocks-world. One would be required to give semantics to words and
+constructions like ``believe X'', ``be able to guess whether X'',
+``prefer X to do Y'', ``trick X into believing Y'', and so on.
+Linguistics and philosophers working in formal semantics have been
+extremely interested in modal and intension constructions of this kind
+since at least the time of Frege, and during the 70s and 80s this work
+used to be referenced with some frequency in the AI literature as
+well.  The impoverished nature of the domains currently used in
+practical spoken dialogue system implementation has meant, however,
+that what contact there was between the two research areas has almost
+disappeared.
+
+The reason why dialogue system builders have stopped looking at these
+difficult constructions is, of course, that it is in most domains very
+hard to reason about them quantitatively. Reasoning of this kind is
+not trivial in Bridge either, but there are at least well-understood
+approaches which give good purchase on the key concepts. ``Knowledge''
+and ``belief'' can be modelled by performing random generation of card
+distributions which match constraints derived from previous bidding
+and play, an idea which has been explored in the GIB system
+\cite{Ginsberg99}. As pointed out in that paper, the approach
+implemented in GIB was still fairly simplistic, and (at least at the
+time of writing) was not capable of ``information gathering'' plays.
+It should be possible to address these shortcomings, though it may be
+computationally expensive to do so. 
+
+The basic reason for feeling optimistic is that ability to generate
+distributions essentially supplies a possible-worlds semantics; this
+means that we have access to the large literature on possible-worlds
+semantics for modal operators, and can use it to formalize concepts
+relating to actions and uncertain beliefs. We are not expecting this
+to be straightforward, but there are clear ways to make progress. The
+point, as with SHRDLU, is that attempting to solve these problems
+would tie together a considerable body of currently unrelated
+research, within the framework of a single intuitively meaningful
+domain. If we can get to the point of having a working, implemented,
+generally accessible framework and a substantial corpus of examples,
+then history suggests that progress will happen more or less of
+itself, as different groups compete on the task of improving their
+scores on the corpus. 
+
+\section{Summary}
+\label{Section:Conclusions}
+
+To summarize: when one compares the original goals of dialogue system
+research, as exemplified in SHRDLU, with currently implemented
+systems, it seems clear that the early sense of excitement and focus
+has been lost.  It is less clear why this is. What I have suggested
+here is a two-part plan. First, we should reimplement a robust,
+speech-enabled version of SHRDLU.  This would demonstrate to
+everyone's satisfaction that there has been genuine progress since
+1970, and that the goals set then were merely ambitious, rather than
+fraudulent or unrealistic. When this has been achieved, I then suggest
+attempting a new domain, which should be as ambitious now as SHDLU was
+in its own timeframe. Leveraging the major advances that have been
+made in games systems, I suggest that Bridge could be a suitable
+domain. 
+
+The reason why AI has always been interested in games is that a game
+defines a closed microworld. In some games, like Chess, machines now
+play at world championship level, and human experts take their advice
+very seriously. A machine that could both play a game well and discuss
+it credibly would fulfill all the criteria necessary to be accepted on
+equal terms as a member of the society of people who played that
+game. If we could create such a system, I at least would feel that AI
+had passed an important milestone, and I would find it very motivating
+to work towards that goal. 
+
+\section*{Acknowledgements}
+
+I've discussed the ideas outlined here with many people in the AI,
+computational linguistics, spoken dialogue systems and Bridge
+communities. I'd particularly like to thank Srinivas Bangalore, Cathy
+Chua, Dick Crouch, Beth Ann Hockey, Ed Hovy, Ron Kaplan, Leon
+Stirling, Andrew Webb and Annie Zaenen. I'd be delighted to get further
+comments and criticism, and will send out new drafts as appropriate.
+
+\bibliographystyle{acl}
+\bibliography{ACL2009}
+
+\end{document}

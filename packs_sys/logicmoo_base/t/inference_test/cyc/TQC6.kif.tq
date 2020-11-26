@@ -1,0 +1,42 @@
+(note TQC6)
+
+
+(productionAmountDuring Libya PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 1.43000)) 
+
+(instance 
+ (MillionBarrelsPerDay 29.9000) FlowRate) 
+
+(productionAmountDuring OPEC PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 29.9000)) 
+
+
+
+
+(instance 
+ (MillionBarrelsPerDay 27.5700) ScalarInterval) 
+
+
+
+(productionAmountDuring OPEC PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 27.5700)) 
+
+
+
+
+(query (findall (?FRACTION ?TIME) 
+
+ (thereExists ?A1 
+ (thereExists ?A2 
+ (and 
+ (productionAmountDuring OPEC PetroleumProduct ?TIME ?A1) 
+ (instance ?A1 FlowRate) 
+ (productionAmountDuring Libya PetroleumProduct ?TIME ?A2) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?A2 ?A1))))))))
+
+(answer 4.78261 1997)  

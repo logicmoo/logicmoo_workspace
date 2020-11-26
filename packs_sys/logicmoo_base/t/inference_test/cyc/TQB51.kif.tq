@@ -1,0 +1,32 @@
+(note TQB51)
+
+(query (findall ?ACTION
+  (implies 
+    (and 
+      (instance ?ACTION PayingCasualUseFee) 
+      (objectPaidFor ?ACTION PetrolinePipeline)) 
+    (consistent 
+      (seller ?ACTION SaudiArabia)))))
+
+(answer (list 
+  (consistent 
+    (seller ?? SaudiArabia))))
+
+(end_of_file)
+
+;; When a query is posed in Cyc using #$consistent, this is a signal 
+;; for Cyc to attempt to check whether the formula within the scope of 
+;; #$consistent conflicts with the accessible portions of Cyc"s knowledge 
+;; base. The formula is asserted within a specialized context created for 
+;; the purpose, in which Cyc then tries to derive a contradiction. If Cyc 
+;; finds a contradiction, it returns "No"; if it finds no contradiction, 
+;; it returns "Yes". Since it is not possible in cases like this to prove 
+;; beyond a doubt that no contradiction exists, "yes" really means the 
+;; formula does not conflict with Cyc"s knowledge to the extent that Cyc 
+;; has been able to check in the time allotted, while "no" means that a 
+;; conflict has definitely been found.
+
+
+
+
+

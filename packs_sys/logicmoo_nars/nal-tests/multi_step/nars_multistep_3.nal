@@ -1,0 +1,20 @@
+*** Fuzzy concepts
+<{John} --> (/,taller_than,{Tom},_)>.
+<{John} --> boy>.
+5
+<{Tom} --> (/,taller_than,_,boy)>? 
+''outputMustContain('<boy --> (/,taller_than,{Tom},_)>. %1.00;0.45%')
+6
+<{David} --> boy>. 
+(--,<{David} --> (/,taller_than,{Tom},_)>).
+
+1000
+
+//''outputMustContain('<boy --> (/,taller_than,{Tom},_)>. %0.00;0.40%')
+
+//''outputMustContain('<{Tom} --> (/,taller_than,_,boy)>. %1.00;0.45%')
+1
+<{Karl} --> (/,taller_than,{Tom},_)>.
+<{Karl} --> boy>. 
+500000
+''outputMustContain('<boy --> (/,taller_than,{Tom},_)>. %0.67;0.71%')

@@ -1,0 +1,53 @@
+(note TQF240c)
+
+(conflictingInterestsWRT CaspianRegion UnitedStatesOfAmerica Russia 
+  (and 
+    (desires Russia 
+      (performsInsAtLocation Russia 
+        (DevelopingAFn PetroleumBasedProduct) CaspianRegion)) 
+    (desires UnitedStatesOfAmerica 
+      (not 
+        (performsInsAtLocation Russia 
+          (DevelopingAFn PetroleumBasedProduct) CaspianRegion))))) 
+
+(implies 
+  (conflictingInterestsWRT CaspianRegion ?AGT ?AGT1 ?FORM) 
+  (conflictingInterestsWRT PersianGulfRegion ?AGT ?AGT1 ?FORM)) 
+
+(conflictingInterestsWRT Caucasus-Region UnitedStatesOfAmerica Russia 
+  (and 
+    (desires Russia 
+      (performsInsAtLocation Russia 
+        (DevelopingAFn PetroleumBasedProduct) Caucasus-Region)) 
+    (desires UnitedStatesOfAmerica 
+      (not 
+        (performsInsAtLocation Russia 
+          (DevelopingAFn PetroleumBasedProduct) Caucasus-Region))))) 
+
+(query (findall (?CONFLICT)
+  (implies 
+    (inRegion ?REGION Azerbaijan) 
+    (conflictingInterestsWRT PersianGulfRegion UnitedStatesOfAmerica Russia ?CONFLICT))))
+
+(answer  
+  (and 
+    (desires Russia 
+      (performsInsAtLocation Russia 
+        (DevelopingAFn PetroleumBasedProduct) Caucasus-Region)) 
+    (desires UnitedStatesOfAmerica 
+      (not 
+        (performsInsAtLocation Russia 
+          (DevelopingAFn PetroleumBasedProduct) Caucasus-Region)))))
+          
+(answer 
+  (and 
+    (desires Russia 
+      (performsInsAtLocation Russia 
+        (DevelopingAFn PetroleumBasedProduct) CaspianRegion)) 
+    (desires UnitedStatesOfAmerica 
+      (not 
+        (performsInsAtLocation Russia 
+          (DevelopingAFn PetroleumBasedProduct) CaspianRegion)))))
+          
+(end_of_file)
+

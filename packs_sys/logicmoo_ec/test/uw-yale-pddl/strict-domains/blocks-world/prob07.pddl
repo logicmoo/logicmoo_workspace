@@ -1,0 +1,7 @@
+(define (problem mcd-tower)
+    (:domain mcd-blocksworld-axiom)
+  (:objects A B C)
+  (:init (block A) (block B) (block C) (block Table)
+	 (clear a) (on a b) (on b c) (on c table)
+		(clear table))
+  (:goal (and (on b c) (on c a))))

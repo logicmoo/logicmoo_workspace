@@ -1,0 +1,31 @@
+// If-Then template example
+//
+// Available in the AAU directory as If-Then-template.plgCG
+//
+// Ulrik Petersen
+// Created: mid-September, 2003
+// Last update: September 18, 2003
+//
+
+
+// Type hierarchy
+Entity > Physical, Abstract.
+Abstract > Proposition, Act.
+Proposition > If, Then.
+Physical > Object.
+Object > Ball, Person.
+
+// Catalog of instances
+Act = Drop, Fall.
+Person = You.
+
+// Graph fact: If you drop a ball, it falls
+graph(IfThen1, [If =  
+                   [Proposition = 
+                        [Act: Drop]-
+                            -AGNT->[Person: You],
+                            -THME->[Ball : X]
+                   ]-AND->[Then =
+                             [Act: Fall]-AGNT->[Ball : X]
+                          ]
+               ]).

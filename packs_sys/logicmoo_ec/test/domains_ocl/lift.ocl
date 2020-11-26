@@ -1,0 +1,135 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: c0359572
+ *  Institution: University of Huddersfield
+ *  Date created: Tue Nov 28 13:45:31 GMT 2006
+ *  Date last modified: 2006/12/13 at 04:18:45 PM GMT
+ *  Description:
+ *    
+ * Object Life History : lift.gfx
+ */
+
+domain_name(lift).
+
+% Sorts
+sorts(primitive_sorts,[lift,loc,people]).
+
+% Objects
+objects(lift,[lift1]).
+objects(people,[hoda,mark,ali,claire]).
+objects(doors,[doors_lift_1]).
+objects(loc,[floor1,floor2,floor3,floor4,floor5,floor6,floor7,floor8,floor9,floor10]).
+
+% Predicates
+predicates([
+    liftClosed(lift),
+    liftLocation(lift,loc),
+    liftOpen(lift),
+    inside(people,lift),
+    peopleLocation(people,loc),
+    outside(people),
+    nextFloor(loc,loc)]).
+
+% Object Class Definitions
+substate_classes(lift,Lift,[
+    [liftClosed(Lift),liftLocation(Lift,Loc)],
+    [liftOpen(Lift),liftLocation(Lift,Loc)]]).
+substate_classes(people,People,[
+    [inside(People,Lift),peopleLocation(People,Loc)],
+    [outside(People),peopleLocation(People,Loc)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    nextFloor(floor1,floor2),
+    nextFloor(floor2,floor3),
+    nextFloor(floor3,floor4),
+    nextFloor(floor4,floor5),
+    nextFloor(floor5,floor6),
+    nextFloor(floor6,floor7),
+    nextFloor(floor7,floor8),
+    nextFloor(floor8,floor9),
+    nextFloor(floor9,floor10),
+    nextFloor(floor10,floor9),
+    nextFloor(floor9,floor8),
+    nextFloor(floor8,floor7),
+    nextFloor(floor7,floor6),
+    nextFloor(floor6,floor5),
+    nextFloor(floor5,floor4),
+    nextFloor(floor4,floor3),
+    nextFloor(floor3,floor2),
+    nextFloor(floor2,floor1)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(getIn(Lift,Loc,People),
+    % prevail
+    [     se(lift,Lift,[liftOpen(Lift),liftLocation(Lift,Loc)])],
+    % necessary
+    [     sc(people,People,[outside(People),peopleLocation(People,Loc)]=>[inside(People,Lift),peopleLocation(People,Loc)])],
+    % conditional
+    []).
+operator(getOut(Lift,Loc,People),
+    % prevail
+    [     se(lift,Lift,[liftOpen(Lift),liftLocation(Lift,Loc)])],
+    % necessary
+    [     sc(people,People,[inside(People,Lift),peopleLocation(People,Loc)]=>[outside(People),peopleLocation(People,Loc)])],
+    % conditional
+    []).
+operator(openDoors(Lift,Loc),
+    % prevail
+    [],
+    % necessary
+    [     sc(lift,Lift,[liftClosed(Lift),liftLocation(Lift,Loc)]=>[liftOpen(Lift),liftLocation(Lift,Loc)])],
+    % conditional
+    []).
+operator(closeDoors(Lift,Loc),
+    % prevail
+    [],
+    % necessary
+    [     sc(lift,Lift,[liftOpen(Lift),liftLocation(Lift,Loc)]=>[liftClosed(Lift),liftLocation(Lift,Loc)])],
+    % conditional
+    []).
+operator(move(Lift,LocA,LocB),
+    % prevail
+    [],
+    % necessary
+    [     sc(lift,Lift,[liftClosed(Lift),liftLocation(Lift,LocA),nextFloor(LocA,LocB)]=>[liftClosed(Lift),liftLocation(Lift,LocB)])],
+    % conditional
+    [     sc(people,People,[inside(People,Lift),peopleLocation(People,LocA)]=>[inside(People,Lift),peopleLocation(People,LocB)])]).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(people,hoda,[outside(hoda),peopleLocation(hoda,floor8)]),
+     se(lift,lift1,[liftClosed(lift1),liftLocation(lift1,floor1)])],
+    % INIT States
+    [
+     ss(people,hoda,[outside(hoda),peopleLocation(hoda,floor3)]),
+     ss(lift,lift1,[liftClosed(lift1),liftLocation(lift1,floor1)])]).
+planner_task(2,
+    % Goals
+    [
+     se(people,hoda,[outside(hoda),peopleLocation(hoda,floor4)]),
+     se(people,mark,[outside(mark),peopleLocation(mark,floor5)]),
+     se(people,ali,[outside(ali),peopleLocation(ali,floor9)]),
+     se(people,claire,[outside(claire),peopleLocation(claire,floor2)])],
+    % INIT States
+    [
+     ss(lift,lift1,[liftClosed(lift1),liftLocation(lift1,floor1)]),
+     ss(people,mark,[outside(mark),peopleLocation(mark,floor2)]),
+     ss(people,ali,[outside(ali),peopleLocation(ali,floor5)]),
+     ss(people,claire,[outside(claire),peopleLocation(claire,floor6)]),
+     ss(people,hoda,[outside(hoda),peopleLocation(hoda,floor9)])]).

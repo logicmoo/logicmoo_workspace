@@ -1,0 +1,7 @@
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/CMakeFiles/install/strip.dir
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/CMakeFiles/edit_cache.dir
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/CMakeFiles/sshd4pl.dir
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/CMakeFiles/list_install_components.dir
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/CMakeFiles/install/local.dir
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/CMakeFiles/rebuild_cache.dir
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/CMakeFiles/install.dir

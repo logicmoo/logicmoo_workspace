@@ -1,0 +1,25 @@
+(note "TQF128e - needs work")
+(abort)
+
+(considersAsEnemy PalestineIslamicJihad Israel) 
+
+(presentInRegion PalestineIslamicJihad Israel) 
+
+(performsInsAtLocation PalestineIslamicJihad TerroristAttack Israel) 
+
+
+(query (findall ?ACTS-OF-TYPE ?PIJ-DOES-IN-ISRAEL ?PIJ-RELATED-TO-ISRAEL)
+(or 
+   (?PIJ-RELATED-TO-ISRAEL PalestineIslamicJihad Israel) 
+   (?ISRAEL-RELATED-TO-PIJ Israel PalestineIslamicJihad) 
+   (?PIJ-RELATED-TO-ISRAEL PalestineIslamicJihad Israel ?OTHER) 
+   (?ISRAEL-RELATED-TO-PIJ Israel PalestineIslamicJihad ?OTHER) 
+   (?PIJ-DOES-IN-ISRAEL PalestineIslamicJihad ?ACTS-OF-TYPE Israel) 
+   (?ISRAEL-RELATED-TO-PIJ Israel ?OTHER PalestineIslamicJihad) 
+   (?PIJ-RELATED-TO-ISRAEL ?OTHER PalestineIslamicJihad Israel) 
+   (?ISRAEL-RELATED-TO-PIJ ?OTHER Israel PalestineIslamicJihad))
+))
+
+(answer )
+
+(end_of_file)

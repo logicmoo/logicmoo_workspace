@@ -1,0 +1,22 @@
+:-multifile(cg/4).
+:-multifile(cgc/5).
+:-multifile(isa/2).
+:-multifile(ind/3).
+:-multifile(kb/6).
+:-dynamic kb/6.
+%%%%%%%%%LEVEL THREE%%%%%%%%%%%%%
+%isa (subtype,suptype).
+%dobavka
+isa(entity,univ).
+isa(block,entity).
+isa(hand,entity).
+isa(location,entity).
+isa(pickup,act).
+isa(putdown,act).
+isa(move,act).
+
+isa_rel(at,relation).
+isa_rel(above,realtion).
+isa_rel(ontable,relation).
+isa_rel(top,relation).
+isa_rel(emptyhand,relation).

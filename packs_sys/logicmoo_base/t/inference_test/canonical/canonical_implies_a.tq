@@ -1,0 +1,5 @@
+(note  "Canonical Test:  All x [  A(x) => B(x) ]")
+
+(canonicalize (all ?X (implies (Pred1 ?X) (Pred2 ?X))))
+
+

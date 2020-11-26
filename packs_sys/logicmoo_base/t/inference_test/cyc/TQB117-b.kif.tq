@@ -1,0 +1,14 @@
+(note TQB117-b)
+
+(queryyn
+  (implies 
+    (and 
+      (instance ?EVT BlockingAnInternationalWaterway) 
+      (instance ?FORCE MineWarfareShip)) 
+    (consistent 
+      (instrument-Generic ?EVT ?FORCE))))
+
+(answer Yes)
+
+(end_of_file)
+

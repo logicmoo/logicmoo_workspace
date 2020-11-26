@@ -1,0 +1,33 @@
+rule(R).
+  asserts either a rule of the form H :- B or an atom.
+H <- B. 
+   is the same as rule((H :- B)). 
+   Rules with empty bodies (facts) must be written as H <- true. or as rule(H).
+random([h1:p1,...,hn:pn]).
+   declares the hi to be pairwise disjoint hypotheses, with P(hi)=pi. 
+random(X,h,[x1:p1,...,xn:pn]).
+   declares h[X/xi] to be pairwise disjoint hypotheses with P(h[X/xi])=pi.
+controllable([h1,...,hn]).
+   declares the hi to be pairwise disjoint controllable variables.
+explain(G,C). 
+   finds explanations of G given list of controlling values C.
+how(G,C,N).
+   is used to explain the Nth explanation of G given C.
+diff(G,C,N,M) 
+   prints difference in the proof tree for the Nth and Mth explanation of G 
+   given C.
+check(G,C).
+   checks for disjoint rules in the explanations of G given C.
+recap(G). 
+   recaps the explanations of G, with posterior probabilities (given G).
+recap. 
+   gives the prior probabilities of everything explained.
+thcons(filename). 
+   loads a file called filename. 
+tracing(F). 
+    sets tracing to have status F which is one of {yes,no}.
+help.
+    print this message.
+
+You must exit the program and restart to reload a program.
+Reconsulting a program will NOT remove the old clauses and declarations.

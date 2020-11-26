@@ -1,0 +1,16 @@
+;;DEVICES:public [radio {<value radio1>} cooker {<value cooker>}]
+
+
+SINGULAR_NOUN:public
+[ 
+  dog {return( canis_domesticus )}  
+  cat {return( felis_domesticus )}
+  ;;chicken {return( gallus_domesticus )}
+]
+
+PLURAL_NOUN:public
+[ 
+  dogs {return( canis_domesticus )}
+  cats {return( felis_domesticus )}
+  ;;chickens {return( gallus_domesticus )}
+]

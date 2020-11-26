@@ -1,0 +1,41 @@
+#!/usr/bin/env swipl
+
+% Quick fwd test
+:- include(test_header).
+
+:- use_module(library(statistics)).
+
+%:- mpred_notrace_exec.
+% reset runtime counter
+:- statistics(runtime,_Secs).
+
+%~path(X,X).
+
+subRelation(E,P) ==>
+  (t(E,X,Y) ==> t(P,X,Y)).
+
+subRelationD(E,P) ==>
+  ((t(E,X,Y)/(dif(X,Y))) ==> t(P,X,Y)).
+
+symmetric(P) ==>
+  (t(P,X,Y) ==> t(P,Y,X)).
+
+
+subRelation(edge,hop).
+symmetric(hop).
+
+% things that cannot be true are removed
+% unneeded when loaded from main system: ~t(P,X,X) ==> \+ t(P,X,X).
+
+:- mpred_why(edge(X,Y)==>hop(X,Y)).
+
+:- with_vars_locked([X,Y],mpred_why(edge(X,Y)==>hop(X,Y))).
+
+% bug .. giving the wrong proof!
+:- with_vars_locked([X,Y],mpred_why(edge(X,Y)==>hop(Y,X))).
+
+
+% bug .. not giving any proof!
+:- dif(X,Y), mpred_why(edge(X,Y)==>hop(Y,X)).
+
+

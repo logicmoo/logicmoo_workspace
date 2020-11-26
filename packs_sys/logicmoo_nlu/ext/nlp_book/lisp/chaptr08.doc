@@ -1,0 +1,57 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%      Extracts from the book "Natural Language Processing in LISP"     %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Transitive verbs and quantification
+
+Here, by way of example, is, in LISP form, the DBQ dag that we get
+from the sentence 'an airline took over every hotel chain':
+
+    ((sem ((quantifier exists)
+           (variable _x)
+           (restriction ((arg0 _x) (predicate airline) (& #:_211)))
+           (body ((quantifier all)
+                  (variable _y)
+                  (restriction
+                   ((arg0 _y) (predicate hotel_chain) (& #:_237)))
+                  (body ((arg0 _x)
+                         (arg1 _y)
+                         (predicate took_over)
+                         (& #:_262)))
+                  (& #:_242)))
+           (& #:_215)))
+     (& #:_192))
+
+And here is what we get for 'every hotel chain took over an airline':
+
+    ((sem ((quantifier all)
+           (variable _x)
+           (restriction ((arg0 _x) (predicate hotel_chain) (& #:_137)))
+           (body ((quantifier exists)
+                  (variable _y)
+                  (restriction
+                   ((arg0 _y) (predicate airline) (& #:_163)))
+                  (body ((arg0 _x)
+                         (arg1 _y)
+                         (predicate took_over)
+                         (& #:_188)))
+                  (& #:_168)))
+           (& #:_141)))
+     (& #:_118))
+
+Building semantic checking into the grammar
+
+Now, if we use this grammar to parse 'get a screwdiver with a narrow
+blade', we get the following parse tree:
+
+    ((VP (TV get)
+         (NP (NP (Det a) (NB (N screwdriver)))
+             (PP (P with) (NP (Det a) (NB (Adj narrow) (NB (N blade))))))))
+
+whereas, if we use it to parse 'get a screwdriver with your left
+hand', we get a quite different structure:
+
+    ((VP (VP (TV get) (NP (Det a) (NB (N screwdriver))))
+         (PP (P with) (NP (Det your) (NB (Adj left) (NB (N hand)))))))

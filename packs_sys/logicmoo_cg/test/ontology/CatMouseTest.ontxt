@@ -1,0 +1,16 @@
+languages>english.
+main language>english.
+root type>universal.
+relation root type>relation.
+universal>relation,Action,Mammal.
+relation>agnt,obj.
+Action>Eat,Hunt.
+Eat#S#[Mammal]<-agnt-[Eat].
+Mammal>Cat,Mouse.
+Mammal#S#[Mammal]<-agnt-[Eat].
+Cat#D#[Eat : *p1 ] -
+          -obj->[Mouse],
+          -agnt->[Mammal :super ].
+Cat#S#[Cat]<-agnt-[Eat].
+Mouse>DisneyMouse.
+Mouse#S#[Mouse]<-agnt-[Eat].

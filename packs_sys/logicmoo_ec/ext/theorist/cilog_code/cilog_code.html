@@ -1,0 +1,343 @@
+<TITLE>Computational Intelligence - CILog Code</TITLE>
+ 
+<center><H1><A HREF="http://www.cs.ubc.ca/spider/poole/ci.html">Computational Intelligence: A Logical Approach </A><br>
+CILog Code</H1></center>
+<P>
+This file contains code from Poole, Mackworth and Goebel,
+<A HREF="http://www.cs.ubc.ca/spider/poole/ci.html"><cite>Computational Intelligence: A Logical Approach</cite></A>. All code is
+copyright by Poole, Mackworth and Goebel, and Oxford University Press,
+1998. All Rights reserved. This code comes with no warranty.
+<P>
+This code runs in <A
+HREF="../cilog_man/cilog_man.html">CILog</A>, a
+representation and reasoning system for definite clauses, with
+declarative debugging tools.
+<P>
+<ul>
+<li>Create a directory, and place in it 
+<a href="cilog_swi.pl">cilog_swi.pl</a> and 
+a program below, say <a href="ch2/west.pl">west.pl</a>. 
+<li>Start SWI Prolog. Your input is shown in
+bold below.
+<li><tt>?- <b>cd('</b></tt><i>your directory</i><b><tt>').</b></tt> For the directory name, use forward slashes and include the single quotes.  Alternately start SWI Prolog in the directory.
+<li><tt>?- <b>consult(cilog_swi).</b></tt>
+<li><tt>?- <b>start.</b></tt>
+<li><tt>cilog <b>load 'west.pl'.</b></tt>
+<li><tt>cilog <b>listing.</b></tt>
+<li><tt>cilog <b>ask next_door(X, r103).</b></tt>
+<li><tt>cilog <b>whynot next_door(r109, r103).</b></tt>
+</ul>
+
+
+<h2>Chapter 2</h2>
+<ul>
+<li> <A HREF="ch2/west.pl" 
+title="Computational Intelligence Code: west.pl"
+method="text/plain">west.pl</A> axiomatization of office layout from
+Figure 2.3 and Example 2.13 (page 43).
+<li> <A HREF="ch2/times.pl" 
+title="Computational Intelligence Code: times.pl"
+method="text/plain">times.pl</A> axiomatization of orderings of the
+times of the day from Example 2.28 (page 59).
+</ul>
+<h2> Chapter 3</h2>
+<ul>
+<li> <A HREF="ch3/elect.pl">elect.pl</A> electrical wiring example
+from Section 3.2 
+<li> <A HREF="ch3/course.pl">course.pl</A> course example from Section 3.3
+<li> <A HREF="ch3/lists.pl">lists.pl</A> list procedures from Section 3.4
+<li> <A HREF="ch3/univ.pl">univ.pl</A> university requirements example
+of Section 3.5 
+<li> <A HREF="ch3/univ2.pl">univ2.pl</A> university requirements
+example, different axiomatization
+
+<!---
+<li> <A HREF="ch3/nl_cfg.pl">nl_cfg.pl</A> natural language parser using context free grammar from Fig 3.5
+<li> <A HREF="ch3/trans.pl">trans.pl</A> grammar for outputting canned English from Figure 3.7
+<li> <A HREF="ch3/trans2.pl">trans2.pl</A> DCG version of trans.pl
+<li> <A HREF="ch3/nl_numbera.pl">nl_numbera.pl</A> natural language parser with number agreement of Figure 3.8
+<li> <A HREF="ch3/nl_interface.pl">nl_interface.pl</A> natural language interface of Figure 3.9
+</ul>
+The following code is not described in the text, but are exercises:
+<ul>
+<li> <A HREF="ch3/bin_arith.pl">bin_arith.pl</A> binary arithmetic from Exercise 3-9
+<li> <A HREF="ch3/exp_parser.pl">exp_parser.pl</A> left associative parser for arithmetic expressions
+<li> <A HREF="ch3/sorting.pl">sorting.pl</A> sorting algorithms
+(mergesort and quicksort) 
+--->
+</ul>
+<h2> Chapter 4</h2>
+<ul>
+<LI>The following are based on the generic graph searcher:
+<UL>
+<li> <A HREF="ch4/search.pl">search.pl</A> The generic graph
+searcher from Section 4.3. 
+<li> <A HREF="ch4/hsearch.pl">hsearch.pl</A> a graph searcher for
+heuristic search. This maintains more information per node than the
+generic graph searchers.
+<LI> <A HREF="ch4/idsearch.pl">idsearch.pl</A>
+iterative deepening search, based on the generic search algorithm.
+<!-- <LI> <A HREF="ch4/idsearch2.pl">idsearch2.pl</A>
+iterative deepening search, based on Prolog doing the searching. -->
+<LI> <A HREF="ch4/idastar.pl">idastar.pl</A>
+iterative deepening A* search, based on the generic search algorithm.
+<!-- <LI> <A HREF="ch4/idastar2.pl">idastar2.pl</A>
+iterative deepening A* search, based on Prolog doing the searching. -->
+</UL>
+The following domains can be used:
+<UL>
+<li> <A HREF="ch4/graph.pl">graph.pl</A> The delivery domain
+graph from Figure 4.2 of the book.
+<li> <A HREF="ch4/graph2.pl">graph2.pl</A> The graph of Figure 4.5
+(i.e., like graph.pl, but with cycles.
+</UL>
+
+
+<!-- REMOVED COS IT AINT IN CILOG FORMAT 
+<LI>
+The following are constraint satisfaction engines:
+<UL>
+<li> <A HREF="ch4/csp.pl">csp.pl</A> constraint satisfaction
+using arc consistency.
+<li> <A HREF="ch4/csp_gt.pl">csp_gt.pl</A> constraint
+satisfaction using systematic generate and test.
+<li> <A HREF="ch4/rand_csp.pl">rand_csp.pl</A> constraint
+satisfaction by generating random instances and testing them.
+<LI> <A HREF="ch4/gsat.pl">gsat.pl</A>
+an implementation of GSAT. This also assumes you load
+<A HREF="ch4/standard.pl">standard.pl</A> and
+<A HREF="ch4/random.pl">random.pl</A>.
+</UL>
+These can be used on the following test examples:
+<UL>
+<li> <A HREF="ch4/csp_t1.pl">csp_t1.pl</A> simple test code for
+any of the constraint satisfaction code.
+<li> <A HREF="ch4/csp_t2.pl">csp_t2.pl</A> scheduling example for
+any of the constraint satisfaction code.
+<li> <A HREF="ch4/csp_t3.pl">csp_t3.pl</A> crossword example for
+any of the constraint satisfaction code.
+</UL>
+<LI>
+The following use useful pieces of code:
+<UL>
+<li> <A HREF="ch4/random.pl">random.pl</A> code for generating
+random numbers and random lists.
+<li> <A HREF="ch4/standard.pl">standard.pl</A> standard
+definitions from appendix B.
+<li> <A HREF="ch4/pq.pl">pq.pl</A> efficient implementation of
+priority queues.
+</UL>
+
+-->
+</ul>
+
+<!-- REMOVED COS IT AINT IN CILOG FORMAT 
+<h2> Chapter 5</h2>
+<ul>
+<li> <A HREF="ch5/semnet.pl">semnet.pl</A> Semantic network implementation from example 5.20.
+</ul>
+-->
+<h2> Chapter 6</h2>
+<ul>
+<li> <A HREF="ch6/bprove.pl">prove.pl</A> vanilla
+meta-interpreter. 
+<li> <A HREF="ch6/bprove.pl">bprove.pl</A> depth-bounded
+meta-interpreter. 
+<li> <A HREF="ch6/dprove.pl">dprove.pl</A> delaying
+meta-interpreter. <br>
+Test code: <A HREF="ch6/elect_delay_base.pl">electrical domain
+with assumables</a>.
+<!-- REMOVED COS IT AINT IN CILOG FORMAT 
+<li> <A HREF="ch6/ask.pl">ask.pl</A> Ask-the-user
+meta-interpreter.<br>
+Test code: <A HREF="ch6/elect_a.pl">electrical domain
+with askables</a>.
+<li> <A HREF="ch6/ask_why.pl">ask_why.pl</A> Ask-the-user
+meta-interpreter that allows for <b>why</b> questions.
+<li> <A HREF="ch6/trace.pl">trace.pl</A> a meta-interpreter that
+lets you traverse a proof tree, and use <b>how</b> questions. <br>
+Test code: <A
+HREF="ch6/elect_t.pl">electrical domain</a>. <br>
+Test code: <A
+HREF="ch6/elect_a.pl">electrical domain
+with bugs</a>; you can use the <b>how</b> questions to debug it. <br>
+Test code: <A
+HREF="ch6/bsorting.pl">sorting algorithms</a>. <br>
+Test code: <A
+HREF="ch6/bsorting.pl">buggy sorting algorithms</a>; you can use
+the <b>how</b> questions to debug it.
+<li> <A HREF="ch6/trace2.pl">trace2.pl</A> like trace.pl, but is
+more sophisticated (more difficult to follow how it works, but more
+user friendly to use). If you want to actually use one of these, use trace2.pl.
+If you want to understand what is going on, try to understand trace.pl first.
+-->
+</ul>
+<!-- REMOVED COS IT AINT IN CILOG FORMAT 
+<h2> Chapter 7</h2>
+<ul>
+
+<li> <A HREF="ch7/ineq.pl">ineq.pl</A> meta-interpreter to correctly handle inequality.<br>
+Test code: <A HREF="ch7/ineq_t.pl">small example</A>.<br>
+
+<li> <A HREF="ch7/confl.pl">confl.pl</A> 
+meta-interpreter to find conflicts.<br>
+<A HREF="ch7/confl_id.pl">confl_id.pl</A> 
+iterative-deepening meta-interpreter to find conflicts.<br>
+Test code: <A HREF="ch7/confl_t1.pl">small example</A>.<br>
+Test code: <A HREF="ch7/confl_t2.pl">electical domain</A>.<br>
+<li> <A HREF="ch7/thpr.pl">thpr.pl</A> Simple model-elimination
+theorem prover.<br>
+Test code: <A HREF="ch7/thpr_t1.pl">small example</A>.
+<br>
+Test code: <A HREF="ch7/thpr_t2.pl">slightly larger example</A>.
+</ul>
+-->
+<h2> Chapter 8</h2>
+<ul> 
+<LI> The following use the situation calculus:
+<ul>
+<li><A HREF="ch8/delrob_sitc.pl">delrob_sitc.pl</A> is the
+delivery robot world in the Situation Calculus.
+</ul>
+<LI> The following use the STRIPS representation:
+<ul>
+<li><A HREF="ch8/strips_strips.pl">strips_strips.pl</A> a
+STRIPS planner that uses the STRIPS representation.
+<li><A HREF="ch8/regr_strips_sim.pl">regr_strips_sim.pl</A> a
+simple regression planner that uses the STRIPS representation.
+<li><A HREF="ch8/regr_strips.pl">regr_strips.pl</A> a
+regression planner that uses the STRIPS representation. Like
+<code>regr_strips_sim.pl</code>, with loop detection and uses
+heuristic information about the satisfiability of conjunctions of goals.
+</ul>
+<A HREF="ch8/delrob_strips.pl">delrob_strips.pl</A> the delivery
+robot world in the STRIPS representation.
+</ul>
+<!--
+<h2> Chapter 9</h2>
+Code:
+<ul>
+<li> <A HREF="ch9/iass.pl">iass.pl</A> An iterative-deepening abduction interpreter that finds minimal explanations.
+</ul>
+Examples:
+<ul>
+<li> <A HREF="ch9/iass_t1.pl">iass_t1.pl</A> Simple meaningless example.
+<li> <A HREF="ch9/iass_t2.pl">iass_t2.pl</A> Example 9.4.
+<li> <A HREF="ch9/iass_t3.pl">iass_t3.pl</A> Example 9.5.
+<li> <A HREF="ch9/iass_t4.pl">iass_t4.pl</A> Example 9.6.
+<li> <A HREF="ch9/iass_t5.pl">iass_t5.pl</A> Example 9.9.
+</ul>
+<h2> Chapter 10</h2>
+Code:
+<ul>
+<li> <A HREF="apc/bnet.pl">bnet.pl</A> A belief network
+interpreter. (from Appendix C).
+<li><A HREF="ch10/relevant.pl">relevant.pl</A> code to prune
+irrelevant variables. This can make the above belief network interpreter
+much more efficient. Note that this redefines the
+<code>relevant</code> predicate. 
+</ul>
+Example Networks:
+<ul>
+<li><A HREF="apc/bnet_t1.pl">Leaving network</A>
+<li><A HREF="apc/bnet_t2.pl">Aching limbs network</A>
+<li><A HREF="apc/bnet_t3.pl">Leaving influence diagram</A> (for a
+single strategy).
+</ul>
+<h2> Chapter 11</h2>
+<ul>
+<li> The following implement decision tree learning:
+<ul>
+<li> <A HREF="ch11/dtlearn1.pl">dtlearn1.pl</A> binary
+attributes, myopic max information split, no noise. 
+<li> <A HREF="ch11/dtlearn2.pl">dtlearn2.pl</A> binary
+attributes, myopic max info split, noise allowed.
+<li> <A HREF="ch11/dtlearn3.pl">dtlearn3.pl</A> binary
+attributes, full seach for smallest tree, no noise.
+<li> <A HREF="ch11/dtlearn4.pl">dtlearn4.pl</A> binary
+attributes, GINI index, no noise.
+</ul>
+These run on the following data:
+<ul>
+<li> <A HREF="ch11/dtlearn_t1.pl">dtlearn_t1.pl</A>
+classification data from Figure 11.2.
+<li> <A HREF="ch11/dtlearn_t2.pl">dtlearn_t2.pl</A>
+classification data from Figure 11.2, with Boolean attributes.
+<li> <A HREF="ch11/dtlearn_t3.pl">dtlearn_t3.pl</A> small Boolean example
+</ul>
+<li> The following implement neural-network learning:
+<ul>
+<li> <A HREF="ch11/nnlearn.pl">nnlearn.pl</A> backpropagation learner.
+<li> <A HREF="ch11/nnlearn2.pl">nnlearn2.pl</A> same as nnlearn.pl, but it prints out a detailed trace.
+</ul>
+These run on the following data:
+<ul>
+<li> <A HREF="ch11/nnl_t1.pl">nnl_t1.pl</A> classification data from Figure 11.2 (two hidden units)
+<li> <A HREF="ch11/nnl_t2.pl">nnl_t2.pl</A> classification data from Figure 11.2 (no hidden units)
+<li> <A HREF="ch11/nnl_t3.pl">nnl_t3.pl</A> small Boolean example (same data as dtlearn_t3.pl)
+</ul>
+<li> <A HREF="ch11/ebl.pl">ebl.pl</a> Explanation-Based Learning
+Meta-Interpreter.<br>
+Test Code: <A HREF="ch11/ebl_course.pl">Course database from book</A>.
+<br>
+Test Code: <A HREF="ch11/ebl_mitchell.pl">Example from Mitchell's
+book</A>.
+<br> <A HREF="ch11/ebl2.pl">ebl2.pl</a> Explanation-Based Learning
+Meta-Interpreter. This version collects a conjunction as the body of
+the learned list.
+</ul>
+<h2> Appendix B</h2>
+<ul>
+<li> <A HREF="apb/code.pl">code.pl</A> Code from Appendix B.
+</ul>
+<h2>Appendix C</h2>
+The following code sometimes assumes we use the <A
+HREF="apc/standard.pl">standard built-in</A> for this book. There
+are all described in Appendix B.
+<ul>
+<li> <A HREF="apc/fwd.pl">fwd.pl</A> A forward chaining definite
+clause interpreter, with <A HREF="apc/fwd_t.pl">test program</A>.
+<li> <A HREF="apc/fwdnf.pl">fwdnf.pl</A> A forward chaining definite
+clause intepreter wuth negation as failure. Also <A HREF="apc/fwdnf_t.pl">test program</A>.
+<li> <A HREF="apc/fwdab.pl">fwdab.pl</A> A forward chaining
+abductive Horn
+clause intepreter, with <A HREF="apc/fwdab_t.pl">test program</A>.
+<li> <A HREF="apc/how.pl">how.pl</A> A meta interpreter to
+traverse proof trees. It allows you to ask how a goal is proved.
+Also <A HREF="apc/how_t.pl">base-level program of the electical
+domain</A>.
+<li> <A HREF="apc/iprove.pl">iprove.pl</A> Iterative deepening
+definite clause interpreter. 
+Also <A HREF="apc/iprove_t.pl">test program</A>.
+<li> <A HREF="apc/ask.pl">ask.pl</A> Ask-the-user interpreter.
+Also <A HREF="apc/ask_t.pl">test program</A>.
+<li> <A HREF="apc/prall.pl">prall.pl</A> A meta-interpreter that allows control over search strategy.
+Also <A HREF="apc/prall_t.pl">test program</A>.
+
+<li> <A HREF="apc/csp.pl">csp.pl</A> A constraint satisfaction program using arc consistency and domain splitting. Also problem domains:
+<A HREF="apc/csp_t1.pl">Simple Example</A>,
+<A HREF="apc/csp_t2.pl">Scheduling Problem</A>,
+<A HREF="apc/csp_t3.pl">Crossword Problem</A>.
+
+<li> <A HREF="apc/nnlearn.pl">nnlearn.pl</A>  Neural-network
+style learning for parameterized logic programs. Also <A HREF="apc/nnl_t.pl">test data</A>.
+<li> <A HREF="apc/pop.pl">pop.pl</A> A partial order planner
+using STRIPS representation.  Also <A
+HREF="apc/pop_t.pl">axiomatization of robot domain</A>. 
+<li> <A HREF="apc/bnet.pl">bnet.pl</A> A Bayesian network
+interpreter. Also <A HREF="apc/bnet_t1.pl">Leaving network</A>, 
+<A HREF="apc/bnet_t2.pl">Aching limbs network</A>,
+<A HREF="apc/bnet_t3.pl">Leaving influence diagram</A> (for a
+single strategy). [This is the same code referred to in Chapter 10 above].
+<li> <A HREF="apc/sim.pl">sim.pl</A> Robot simulator.
+Also <A HREF="apc/sim_t.pl">axiomatization of a car-like robot
+with one whisker,
+and its environment</A>.
+
+</ul>
+
+-->
+<HR>
+<Address>
+Last updated 13 Jan 2000, <A HREF="mailto:bspencer@unb.ca">Bruce Spencer</A>
+</Address>

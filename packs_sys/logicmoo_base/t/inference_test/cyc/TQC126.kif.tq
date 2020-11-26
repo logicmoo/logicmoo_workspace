@@ -1,0 +1,11 @@
+(note TQC126)
+(not 
+ (subclass BiologicalWeapon ConventionalWeapon)) 
+
+(queryyn
+
+ (subclass BiologicalWeapon ConventionalWeapon))
+
+(answer No)  
+
+(end_of_file)

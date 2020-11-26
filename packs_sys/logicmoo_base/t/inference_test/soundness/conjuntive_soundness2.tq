@@ -1,0 +1,8 @@
+(note "Conjuntive Inference/Soundness 2  Exists x [ p(x) ^ q(x) ] ")
+
+(thereExists ?X (and (doesBreath ?X) (behavourCapableOf ?X Breathing)))
+
+(query (doesBreath ?X) )
+
+(answer Yes)
+

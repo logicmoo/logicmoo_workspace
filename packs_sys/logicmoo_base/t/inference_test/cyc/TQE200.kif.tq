@@ -1,0 +1,18 @@
+(note TQE200)
+(opponentsInConflict Iran UnitedArabEmirates AbuMusaConflict-1992) 
+
+(territoryDisputed AbuMusaConflict-1992 AbuMusaIsland) 
+
+(opponentsInConflict UnitedArabEmirates Iran AbuMusaConflict-1992) 
+
+(territoryDisputed AbuMusaConflict-1992 AbuMusaIsland) 
+
+(query (findall ( ?AGENT ?COMPETING-AGENT)
+(and 
+      (opponentsInConflict ?AGENT ?COMPETING-AGENT AbuMusaConflict-1992) 
+      (territoryDisputed AbuMusaConflict-1992 AbuMusaIsland))))
+
+(answer Iran UnitedArabEmirates)
+(answer UnitedArabEmirates Iran)
+
+(end_of_file)

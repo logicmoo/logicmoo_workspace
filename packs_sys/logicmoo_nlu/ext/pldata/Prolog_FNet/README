@@ -1,0 +1,55 @@
+﻿This folder contains an SWI-Prolog version of the Berkeley FrameNet database v. 1.4, which was distributed in the SemEval 10 shared task on "Linking events and their participants"
+
+- The file "valence_patterns" lists for every lexical unit in a frame the valence patterns ecoded in the FrameNet database, including the coreness status and the GF/PT label for each frame element as well as the pattern occurrencies in the database.
+
+Every entry has the following structure:
+
+fsr('Lexical_unit'-Lu_pos,Lowercased_frame,[List_of_valence_patterns]).
+
+The list of valence patterns includes in turn every valence pattern for the given LU represented as a list of FEs plus the number of occurrences of that pattern in the FN database.
+Every FE label is followed by -c(ore), -p(eripheral) or -e(xtra thematic) and comes also with the phrase type and the grammatical function assigned by FN annotators. 
+If a FE is annotated as a target (ex. the "Artist" Frame Element in "Behind_the_scenes" frame), it is represented in the pattern as bearing the "target" PT and GF, for example: [artist-c,target,target].
+If a FE has been annotated as null instantiated, it bears the cni/ini/dni label as PT and the "null" label as GF, for example: [ground-c,dni,null].
+All other GF and PT labels are those reported in the FN database.
+
+If the valence pattern list is empty, it means that no example sentences were available in the FN database.
+
+- The file "semtypes" contains the list of semantic types associated to every frame element as Prolog "semtype" predicates.
+The format is:
+semtype(Frame_name, Frame_element, Semantic_type).
+
+(For more information about FN semantic types, please refer to the project documentation).
+
+- The file "frame_to_frame" contains the list of all frame-to-frame relations represented as "frel" Prolog predicates.
+The format is:
+frel(Relation_type, Frame1, Frame2).
+
+- The file "fe_to_fe" contains the list of all frame element pairs that are put into relation through a frame-to-frame relation. This information is represented as "frels" Prolog predicates.
+The format is:
+frels(Relation_type, Frame1, Frame2, FE_frame1, FE_frame2).
+
+Note that all data have been extracted from the version of FrameNet 1.4 distributed during the SemEval task, which is officially under development. 
+Some information have been added w.r.t the last Berkeley FN release (v. 1.3).
+
+All data have been automatically extracted from the FN database without any manual control. If you note any inconsistencies, please report them to satonelli@fbk.eu or delmont@unive.it.
+
+
+If you use this resource, please cite:
+@InProceedings{tonelli-delmonte:2010:SemEval,
+  author    = {Tonelli, Sara  and  Delmonte, Rodolfo},
+  title     = {VENSES++: Adapting a deep semantic processing system to the identification of null instantiations},
+  booktitle = {Proceedings of the 5th International Workshop on Semantic Evaluation},
+  month     = {July},
+  year      = {2010},
+  address   = {Uppsala, Sweden},
+  publisher = {Association for Computational Linguistics},
+  pages     = {296--299},
+  url       = {http://www.aclweb.org/anthology/S10-1065}
+}
+
+... and let us know about your results!
+
+
+Sara Tonelli, Researcher, HLT groupt at Fondazione Bruno Kessler, Trento, Italy. 
+Rodolfo Delmonte, Associate Professor, Dept. of Language Sciences, University of Venice, Italy.
+

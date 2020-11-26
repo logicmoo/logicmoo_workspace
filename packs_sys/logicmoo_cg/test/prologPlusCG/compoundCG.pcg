@@ -1,0 +1,56 @@
+cg([Human :Karen *k_karen = [Human: Karen]-
+				-Age->[Age:Kid],
+				-Hair->[Hair]-Color->[Color:Blond],
+				-Eyes->[Eyes]-Color->[Color:Blue]   
+    ]<-actor-[Goal = [Goal]-
+	     		-actor->[Human :Karen ?k_karen],
+	     		-goal->[Poss_By ?s_state],
+	     		-plan->[Plan ?p_plan],
+	     		-outcome->[Success_Goal_Outcome]
+   		   ]-
+		-outcome->[Poss_By *s_state = [Poss_By]-
+				    	-actor->[Human: Karen ?k_karen],
+				    	-object->[Pizza: pizza001],
+				    	-State_Value->[State_Value:Yes_State_Value]
+		    	  ],
+		-achievedBy->[ATrans *a_atrans = [ATrans]-
+						-actor->[Human:Mike ?m_mike],
+						-object->[Pizza:Pizza001],
+						-to->[Human:Karen ?k_karen]
+			     ],
+		-intendedBy->[Plan *p_plan = [Plan]-
+				   		-actor->[Human: Karen ?k_karen],
+				   		-RealizedBy->[MTrans ?m_trans]   
+				]-realizedBy->[MTrans *m_trans = [MTrans]-
+							-actor->[Human: Karen ?k_karen],
+							-to->[Human : Mike ?m_mike]<-Father-[Human: Karen ?k_karen],
+							-object->[ATrans ?a_atrans]
+				     		]-motivates->
+	     						[Goal = [Goal]-
+	     							-actor->[Human :Mike ?m_mike],
+	     							-goal->[ATrans ?a_atrans],
+	     							-plan->[Plan ?p2_plan],
+	     							-outcome->[Success_Goal_Outcome]
+   	     						     ]-
+							   -actor->[Human : Mike *m_mike = [Human:Mike]-
+										-Age->[Age: Grown_Up],
+										-Hair->[Hair]-Color->[Color:Brown],
+										-Eyes->[Eyes]-Color->[Color:Green]
+								   ],
+							   -achievedBy->[ATrans ?a_atrans],
+						  	   -intendedBy->[Plan *p2_plan = [Plan]-
+				   						-actor->[Human: Mike ?m_mike],
+				   						-RealizedBy->[ATrans ?a_atrans]
+									    ]-realizedBy->[ATrans ?a_atrans],
+							   -outcome->[Poss_By ?s_state]
+).
+
+// ?- exple2(c, [Goal:x]).
+exple2(c, p) :-
+  cg(g), 
+  concOfCG(c, p, g).
+
+// exple3(b, [c1]-motivates->[c2]).
+exple3(b, p) :-
+  cg(g), 
+  branchOfCG(b, p, g).

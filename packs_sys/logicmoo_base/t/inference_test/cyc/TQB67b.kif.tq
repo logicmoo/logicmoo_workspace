@@ -1,0 +1,100 @@
+(note TQB67b)
+
+(temporallySubsumes HPKBScenarioConflict 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 5 HPKBScenarioConflict))) 
+
+(implies 
+ (and 
+ (instance ?SIT Situation-Temporal) 
+ (instance ?N PositiveInteger) 
+ (greaterThanOrEqualTo ?N ?M) 
+ (instance ?M PositiveInteger) 
+ (instance ?TYPE CalendarCoveringType) 
+ (subclass ?TYPE Date) 
+ (endingDate ?SIT 
+ (DateInSituationFn ?TYPE ?END ?SIT)) 
+ (greaterThanOrEqualTo ?END ?N)) 
+ (temporallySubsumes ?SIT 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn ?TYPE ?M ?SIT) 
+ (DateInSituationFn ?TYPE ?N ?SIT)))) 
+
+(endingDate HPKBScenarioConflict 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+;; (greaterThanOrEqualTo 36 5) 
+
+(termOfUnit 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+;; (greaterThanOrEqualTo 5 1) 
+
+;;(instance 5 PositiveInteger) 
+
+(termOfUnit 
+ (DateInSituationFn CalendarDay 5 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 5 HPKBScenarioConflict)) 
+
+(instance CalendarDay CalendarCoveringType) 
+
+(instance HPKBScenarioConflict Situation-Temporal) 
+
+(subclass CalendarDay Date) 
+
+;;(instance 1 PositiveInteger) 
+
+(termOfUnit 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict)) 
+
+(termOfUnit 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 5 HPKBScenarioConflict)) 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 5 HPKBScenarioConflict))) 
+
+(temporallySubsumes HPKBScenarioConflict 
+ (opponents SaudiArabia Iran)) 
+
+(implies 
+ (opponentsInConflict ?AGT-1 ?AGT-2 ?CONFLICT) 
+ (temporallySubsumes ?CONFLICT 
+ (opponents ?AGT-1 ?AGT-2))) 
+
+(opponentsInConflict Iran SaudiArabia HPKBScenarioConflict) 
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+(opponentsInConflict SaudiArabia Iran HPKBScenarioConflict) 
+
+(instance SaudiArabia PersianGulfCountry) 
+
+;;(equals Iran Iran) 
+
+(implies 
+ (and 
+ (temporallySubsumes ?BIG-T ?SMALL-T) 
+ (temporallySubsumes ?BIG-T ?PROP)) 
+ (temporallySubsumes ?SMALL-T ?PROP)) 
+
+(query (findall ?OTHER
+
+ (thereExists ?AGENT1 
+ (and 
+ (equals Iran ?AGENT1) 
+ (instance ?OTHER PersianGulfCountry) 
+ (temporallySubsumes (TimeIntervalInclusiveFn (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) (DateInSituationFn CalendarDay 5 HPKBScenarioConflict)) 
+ (opponents ?OTHER ?AGENT1))))  ))
+
+(answer SaudiArabia)
+
+(end_of_file)
+
+

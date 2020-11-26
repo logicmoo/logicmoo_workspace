@@ -1,0 +1,8 @@
+In dialogue mode, initialises the dialogue state, passing it the
+specified argument. For this to make sense, you need to have 
+previously invoked the {\tt LOAD\_\-DIALOGUE} command, and 
+the predicate {\tt initial\_\-dialogue\_\-state/2} needs to be
+defined. This predicate will be called to obtain the new dialogue
+state and perform any relevant initialisation. The argument
+to {\tt INIT\_\-DIALOGUE} is passed as the first argument, and
+the state is returned as the second argument.

@@ -1,0 +1,8 @@
+% (trade[primary_market][security*x1])(attr?x1[newly_issued])
+cgc(215,simple,'primary_market',[fs(num,sing)],[]).
+cgc(216,simple,'security',[fs(num,sing)],[]).
+cgc(218,simple,'newly_issued',[fs(num,sing)],[]).
+cg(217,[cgr(trade, [215, 216], _),
+        cgr(attr, [216, 218], _)], 
+        [],
+        [fs(kind,normal)]).

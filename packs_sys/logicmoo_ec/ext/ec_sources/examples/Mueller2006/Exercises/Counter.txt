@@ -1,0 +1,215 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Exercises/Counter.e
+loading foundations/Root.e
+loading foundations/EC.e
+307 variables and 2162 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Count(Counter1, 0).
+1
++InputLine(Counter1).
+Happens(FalseToTrue(Counter1), 1).
+2
+-Count(Counter1, 0).
++Count(Counter1, 1).
++True(Counter1).
+3
+4
+-InputLine(Counter1).
+Happens(TrueToFalse(Counter1), 4).
+5
+-True(Counter1).
+6
+7
++InputLine(Counter1).
+Happens(FalseToTrue(Counter1), 7).
+8
+-Count(Counter1, 1).
++Count(Counter1, 2).
++True(Counter1).
+9
+10
+-InputLine(Counter1).
+P
+ReleasedAt(InputLine(Counter1), 0).
+ReleasedAt(InputLine(Counter1), 1).
+ReleasedAt(InputLine(Counter1), 10).
+ReleasedAt(InputLine(Counter1), 2).
+ReleasedAt(InputLine(Counter1), 3).
+ReleasedAt(InputLine(Counter1), 4).
+ReleasedAt(InputLine(Counter1), 5).
+ReleasedAt(InputLine(Counter1), 6).
+ReleasedAt(InputLine(Counter1), 7).
+ReleasedAt(InputLine(Counter1), 8).
+ReleasedAt(InputLine(Counter1), 9).
+!Happens(FalseToTrue(Counter1), 0).
+!Happens(FalseToTrue(Counter1), 10).
+!Happens(FalseToTrue(Counter1), 2).
+!Happens(FalseToTrue(Counter1), 3).
+!Happens(FalseToTrue(Counter1), 4).
+!Happens(FalseToTrue(Counter1), 5).
+!Happens(FalseToTrue(Counter1), 6).
+!Happens(FalseToTrue(Counter1), 8).
+!Happens(FalseToTrue(Counter1), 9).
+!Happens(TrueToFalse(Counter1), 0).
+!Happens(TrueToFalse(Counter1), 1).
+!Happens(TrueToFalse(Counter1), 10).
+!Happens(TrueToFalse(Counter1), 2).
+!Happens(TrueToFalse(Counter1), 3).
+!Happens(TrueToFalse(Counter1), 5).
+!Happens(TrueToFalse(Counter1), 6).
+!Happens(TrueToFalse(Counter1), 7).
+!Happens(TrueToFalse(Counter1), 8).
+!Happens(TrueToFalse(Counter1), 9).
+!ReleasedAt(Count(Counter1, 0), 0).
+!ReleasedAt(Count(Counter1, 0), 1).
+!ReleasedAt(Count(Counter1, 0), 10).
+!ReleasedAt(Count(Counter1, 0), 2).
+!ReleasedAt(Count(Counter1, 0), 3).
+!ReleasedAt(Count(Counter1, 0), 4).
+!ReleasedAt(Count(Counter1, 0), 5).
+!ReleasedAt(Count(Counter1, 0), 6).
+!ReleasedAt(Count(Counter1, 0), 7).
+!ReleasedAt(Count(Counter1, 0), 8).
+!ReleasedAt(Count(Counter1, 0), 9).
+!ReleasedAt(Count(Counter1, 1), 0).
+!ReleasedAt(Count(Counter1, 1), 1).
+!ReleasedAt(Count(Counter1, 1), 10).
+!ReleasedAt(Count(Counter1, 1), 2).
+!ReleasedAt(Count(Counter1, 1), 3).
+!ReleasedAt(Count(Counter1, 1), 4).
+!ReleasedAt(Count(Counter1, 1), 5).
+!ReleasedAt(Count(Counter1, 1), 6).
+!ReleasedAt(Count(Counter1, 1), 7).
+!ReleasedAt(Count(Counter1, 1), 8).
+!ReleasedAt(Count(Counter1, 1), 9).
+!ReleasedAt(Count(Counter1, 10), 0).
+!ReleasedAt(Count(Counter1, 10), 1).
+!ReleasedAt(Count(Counter1, 10), 10).
+!ReleasedAt(Count(Counter1, 10), 2).
+!ReleasedAt(Count(Counter1, 10), 3).
+!ReleasedAt(Count(Counter1, 10), 4).
+!ReleasedAt(Count(Counter1, 10), 5).
+!ReleasedAt(Count(Counter1, 10), 6).
+!ReleasedAt(Count(Counter1, 10), 7).
+!ReleasedAt(Count(Counter1, 10), 8).
+!ReleasedAt(Count(Counter1, 10), 9).
+!ReleasedAt(Count(Counter1, 2), 0).
+!ReleasedAt(Count(Counter1, 2), 1).
+!ReleasedAt(Count(Counter1, 2), 10).
+!ReleasedAt(Count(Counter1, 2), 2).
+!ReleasedAt(Count(Counter1, 2), 3).
+!ReleasedAt(Count(Counter1, 2), 4).
+!ReleasedAt(Count(Counter1, 2), 5).
+!ReleasedAt(Count(Counter1, 2), 6).
+!ReleasedAt(Count(Counter1, 2), 7).
+!ReleasedAt(Count(Counter1, 2), 8).
+!ReleasedAt(Count(Counter1, 2), 9).
+!ReleasedAt(Count(Counter1, 3), 0).
+!ReleasedAt(Count(Counter1, 3), 1).
+!ReleasedAt(Count(Counter1, 3), 10).
+!ReleasedAt(Count(Counter1, 3), 2).
+!ReleasedAt(Count(Counter1, 3), 3).
+!ReleasedAt(Count(Counter1, 3), 4).
+!ReleasedAt(Count(Counter1, 3), 5).
+!ReleasedAt(Count(Counter1, 3), 6).
+!ReleasedAt(Count(Counter1, 3), 7).
+!ReleasedAt(Count(Counter1, 3), 8).
+!ReleasedAt(Count(Counter1, 3), 9).
+!ReleasedAt(Count(Counter1, 4), 0).
+!ReleasedAt(Count(Counter1, 4), 1).
+!ReleasedAt(Count(Counter1, 4), 10).
+!ReleasedAt(Count(Counter1, 4), 2).
+!ReleasedAt(Count(Counter1, 4), 3).
+!ReleasedAt(Count(Counter1, 4), 4).
+!ReleasedAt(Count(Counter1, 4), 5).
+!ReleasedAt(Count(Counter1, 4), 6).
+!ReleasedAt(Count(Counter1, 4), 7).
+!ReleasedAt(Count(Counter1, 4), 8).
+!ReleasedAt(Count(Counter1, 4), 9).
+!ReleasedAt(Count(Counter1, 5), 0).
+!ReleasedAt(Count(Counter1, 5), 1).
+!ReleasedAt(Count(Counter1, 5), 10).
+!ReleasedAt(Count(Counter1, 5), 2).
+!ReleasedAt(Count(Counter1, 5), 3).
+!ReleasedAt(Count(Counter1, 5), 4).
+!ReleasedAt(Count(Counter1, 5), 5).
+!ReleasedAt(Count(Counter1, 5), 6).
+!ReleasedAt(Count(Counter1, 5), 7).
+!ReleasedAt(Count(Counter1, 5), 8).
+!ReleasedAt(Count(Counter1, 5), 9).
+!ReleasedAt(Count(Counter1, 6), 0).
+!ReleasedAt(Count(Counter1, 6), 1).
+!ReleasedAt(Count(Counter1, 6), 10).
+!ReleasedAt(Count(Counter1, 6), 2).
+!ReleasedAt(Count(Counter1, 6), 3).
+!ReleasedAt(Count(Counter1, 6), 4).
+!ReleasedAt(Count(Counter1, 6), 5).
+!ReleasedAt(Count(Counter1, 6), 6).
+!ReleasedAt(Count(Counter1, 6), 7).
+!ReleasedAt(Count(Counter1, 6), 8).
+!ReleasedAt(Count(Counter1, 6), 9).
+!ReleasedAt(Count(Counter1, 7), 0).
+!ReleasedAt(Count(Counter1, 7), 1).
+!ReleasedAt(Count(Counter1, 7), 10).
+!ReleasedAt(Count(Counter1, 7), 2).
+!ReleasedAt(Count(Counter1, 7), 3).
+!ReleasedAt(Count(Counter1, 7), 4).
+!ReleasedAt(Count(Counter1, 7), 5).
+!ReleasedAt(Count(Counter1, 7), 6).
+!ReleasedAt(Count(Counter1, 7), 7).
+!ReleasedAt(Count(Counter1, 7), 8).
+!ReleasedAt(Count(Counter1, 7), 9).
+!ReleasedAt(Count(Counter1, 8), 0).
+!ReleasedAt(Count(Counter1, 8), 1).
+!ReleasedAt(Count(Counter1, 8), 10).
+!ReleasedAt(Count(Counter1, 8), 2).
+!ReleasedAt(Count(Counter1, 8), 3).
+!ReleasedAt(Count(Counter1, 8), 4).
+!ReleasedAt(Count(Counter1, 8), 5).
+!ReleasedAt(Count(Counter1, 8), 6).
+!ReleasedAt(Count(Counter1, 8), 7).
+!ReleasedAt(Count(Counter1, 8), 8).
+!ReleasedAt(Count(Counter1, 8), 9).
+!ReleasedAt(Count(Counter1, 9), 0).
+!ReleasedAt(Count(Counter1, 9), 1).
+!ReleasedAt(Count(Counter1, 9), 10).
+!ReleasedAt(Count(Counter1, 9), 2).
+!ReleasedAt(Count(Counter1, 9), 3).
+!ReleasedAt(Count(Counter1, 9), 4).
+!ReleasedAt(Count(Counter1, 9), 5).
+!ReleasedAt(Count(Counter1, 9), 6).
+!ReleasedAt(Count(Counter1, 9), 7).
+!ReleasedAt(Count(Counter1, 9), 8).
+!ReleasedAt(Count(Counter1, 9), 9).
+!ReleasedAt(True(Counter1), 0).
+!ReleasedAt(True(Counter1), 1).
+!ReleasedAt(True(Counter1), 10).
+!ReleasedAt(True(Counter1), 2).
+!ReleasedAt(True(Counter1), 3).
+!ReleasedAt(True(Counter1), 4).
+!ReleasedAt(True(Counter1), 5).
+!ReleasedAt(True(Counter1), 6).
+!ReleasedAt(True(Counter1), 7).
+!ReleasedAt(True(Counter1), 8).
+!ReleasedAt(True(Counter1), 9).
+Counter: 0 predicates, 0 functions, 3 fluents, 2 events, 19 axioms
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 2.7s
+solution 0.1s
+total 3.1s
+Discrete Event Calculus Reasoner 1.0

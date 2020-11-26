@@ -1,0 +1,12 @@
+(note TQD89)
+
+(groupCardinality 
+ (ArmyFn Iran) 180000) 
+
+(query 
+  (findall ?N
+    ((groupCardinality (ArmyFn Iran) ?N))))
+
+(answer 180000)
+
+(end_of_file)

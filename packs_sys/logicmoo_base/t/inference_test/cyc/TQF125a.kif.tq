@@ -1,0 +1,136 @@
+(note "TQF125a - needs work")
+(abort)
+
+(unknownFormula 
+ (hasMembers AIOC Russia)) 
+
+(hasMembers CaspianPipelineConsortium Russia) 
+
+(unknownFormula 
+ (operatesInRegion AIOC Kazakhstan)) 
+
+(operatesInRegion CaspianPipelineConsortium Kazakhstan) 
+
+(unknownFormula 
+ (owns CaspianPipelineConsortium AIOCsCaspianOilFields)) 
+
+(owns AIOC AIOCsCaspianOilFields) 
+
+(unknownFormula 
+ (hasMembers AIOC Kazakhstan)) 
+
+(hasMembers CaspianPipelineConsortium Kazakhstan) 
+
+(unknownFormula 
+ (hasMembers AIOC Oman)) 
+
+(hasMembers CaspianPipelineConsortium Oman) 
+
+(unknownFormula 
+ (desires AIOC 
+ (thereExists ?PIPELINE 
+ (thereExists ?PORT 
+ (and 
+ (instance ?PIPELINE OilPipeline) 
+ (instance ?PORT Seaport) 
+ (meetsSpatially BlackSea ?PORT) 
+ (pathTerminus ?PIPELINE Kazakhstan) 
+ (pathTerminus ?PIPELINE ?PORT)))))) 
+
+(desires CaspianPipelineConsortium 
+ (thereExists ?PIPELINE 
+ (thereExists ?PORT 
+ (and 
+ (instance ?PIPELINE OilPipeline) 
+ (instance ?PORT Seaport) 
+ (meetsSpatially BlackSea ?PORT) 
+ (pathTerminus ?PIPELINE Kazakhstan) 
+ (pathTerminus ?PIPELINE ?PORT))))) 
+
+(unknownFormula 
+ (desires AIOC 
+ (thereExists ?INVEST 
+ (thereExists ?OIL-COMPANY 
+ (and 
+ (instance ?INVEST #$Investing) 
+ (instance ?OIL-COMPANY OilCompany) 
+ (toPossessor ?INVEST CaspianPipelineConsortium) 
+ (agent ?INVEST ?OIL-COMPANY)))))) 
+
+(desires CaspianPipelineConsortium 
+ (thereExists ?INVEST 
+ (thereExists ?OIL-COMPANY 
+ (and 
+ (instance ?INVEST #$Investing) 
+ (instance ?OIL-COMPANY OilCompany) 
+ (toPossessor ?INVEST CaspianPipelineConsortium) 
+ (agent ?INVEST ?OIL-COMPANY))))) 
+
+
+(query (findall (?ONLY-AIOC-TYPE ?RELATION-ARG1 ?VALUE-AIOC ?VALUE-CPC) (or 
+   (and 
+       (assertedFormula 
+           (instance AIOC ?ONLY-AIOC-TYPE)) 
+       (not 
+           (instance CaspianPipelineConsortium ?ONLY-AIOC-TYPE))) 
+   (and 
+       (assertedFormula 
+           (instance CaspianPipelineConsortium ?ONLY-CPC-TYPE)) 
+       (not 
+           (instance AIOC ?ONLY-CPC-TYPE))) 
+   (and 
+       (?RELATION-ARG1 AIOC ?VALUE-AIOC) 
+       (unknownFormula 
+           (?RELATION-ARG1 CaspianPipelineConsortium ?VALUE-AIOC)) 
+       (not 
+           (instance ?RELATION-ARG1 DocumentationConstant)) 
+       (different ?RELATION-ARG1 instance)) 
+   (and 
+       (?RELATION-ARG1 CaspianPipelineConsortium ?VALUE-CPC) 
+       (unknownFormula 
+           (?RELATION-ARG1 AIOC ?VALUE-CPC)) 
+       (not 
+           (instance ?RELATION-ARG1 DocumentationConstant)) 
+       (different ?RELATION-ARG1 instance)) 
+   (and 
+       (?RELATION-ARG2 ?VALUE-AIOC AIOC) 
+       (unknownFormula 
+           (?RELATION-ARG2 ?VALUE-AIOC CaspianPipelineConsortium)) 
+       (not 
+           (instance ?RELATION-ARG2 Role)) 
+       (not 
+           (instance ?RELATION-ARG2 InterActorSlot))) 
+   (and 
+       (?RELATION-ARG2 ?VALUE-CPC CaspianPipelineConsortium) 
+       (unknownFormula 
+           (?RELATION-ARG2 ?VALUE-CPC AIOC)) 
+       (not 
+           (instance ?RELATION-ARG2 Role)) 
+       (not 
+           (instance ?RELATION-ARG2 InterActorSlot))))
+))
+
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+
+(end_of_file)
+

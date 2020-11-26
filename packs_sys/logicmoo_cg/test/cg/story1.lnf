@@ -1,0 +1,62 @@
+// ontology required (to load first): aminePlatform/samples/ontology/ManOntology2.xml
+[Goal #8 = [Action = [Eat #9] -
+                           -agnt->[Man :John],
+                           -obj->[Food]
+                     ]
+           ] -
+         -reason->[State #0 = [Hungry]-pat->[Man :John]
+                              ] -
+                            -After->[Action #1 = [Drive #10] -
+                                                          -agnt->[Man :John],
+                                                          -dest->[Shop]
+                                                 ] -
+                                               -After->[Action #2 = [See #11] -
+                                                                           -agnt->[Woman :Mary],
+                                                                           -loc->[Shop],
+                                                                           -obj->[Man :John]
+                                                                    ] -
+                                                                  -After->[Action #3 = [WaveAt #12] -
+                                                                                                 -agnt->[Woman :Mary],
+                                                                                                 -dest->[Man :John]
+                                                                                       ] -
+                                                                                     -After->[Action #4 = [Buy #13] -
+                                                                                                                 -obj->[OatMeal],
+                                                                                                                 -agnt->[Man :John]
+                                                                                                          ] -
+                                                                                                        -After->[Event #5 = [Drop #14] -
+                                                                                                                                    -obj->[OatMeal],
+                                                                                                                                    -loc->[Outside],
+                                                                                                                                    -agnt->[Man :John]
+                                                                                                                            ] -
+                                                                                                                          -After->[Event #6 = [Spill #15] -
+                                                                                                                                                       -pat->[OatMeal],
+                                                                                                                                                       -dest->[Trunk]
+                                                                                                                                              ] -
+                                                                                                                                            -After->[Action = [Put #16] -
+                                                                                                                                                                     -agnt->[Man :John],
+                                                                                                                                                                     -In->[Container],
+                                                                                                                                                                     -obj->[OatMeal]
+                                                                                                                                                              ]-After->[Action #7 = [Cook #17] -
+                                                                                                                                                                                           -agnt->[Man :John],
+                                                                                                                                                                                           -obj->[OatMeal]
+                                                                                                                                                                                   ] -
+                                                                                                                                                                                 -After->[Action = [Eat #18] -
+                                                                                                                                                                                                          -agnt->[Man :John],
+                                                                                                                                                                                                          -obj->[OatMeal]
+                                                                                                                                                                                                   ]-reason->[Goal #8],
+                                                                                                                                                                                 -reason->[Goal #8];
+                                                                                                                                            -cause->[Event #5];
+                                                                                                                          -cause->[State = [ParkingLot]<-pat-[Slick]
+                                                                                                                                           ];
+                                                                                                        -reason->[Goal #8];
+                                                                                     -reason->[Goal = [Action = [Greet #19] -
+                                                                                                                         -agnt->[Woman :Mary],
+                                                                                                                         -dest->[Man :John]
+                                                                                                                ]
+                                                                                                      ]-motivationOf->[Action #2];
+;
+                                               -reason->[Goal #8];
+                            <-After-[Action = [WakeUp #20] -
+                                                        -pat->[Man :John],
+                                                        -Time->[Time :Early]
+                                              ]

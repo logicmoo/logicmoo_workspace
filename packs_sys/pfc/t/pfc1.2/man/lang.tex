@@ -1,0 +1,360 @@
+\section{An Informal Introduction to the  \pfc\ language}
+
+This section describes \pfc\ .  We will start by introducing the
+language informally through a series of examples drawn from the domain
+of kinship relations.  This will be followed by an example and a
+description of some of the details of its current implementation.
+
+\subsection*{Overview}
+
+The \pfc\ package allows one to define forward chaining rules and to
+add ordinary Prolog assertions into the database in such a way as to
+trigger any of the \pfc\ rules that are satisfied.  An example of a
+simple \pfc\ rule is:
+\example
+gender(P,male) => male(P)
+\end{verbatim}\end{quote}
+This rule states that whenever the fact unifying with $gender(P,male)$
+is added to the database, then the fact $male(P)$ is true.  If this
+fact is not already in the database, it will be added.  In any case, a
+record will be made that the validity of the fact $male(P)$ depends,
+in part, on the validity of this forward chaining rule and the fact
+which triggered it.  To make the example concrete, if we add
+$gender(john,male)$, then the fact $male(john)$ will be added to the
+database unless it was already there.
+
+In order to make this work, it is necessary to use the predicate {\em
+add/1} rather than {\em assert/1} in order to assert \pfc\ rules and
+any facts which might appear in the lhs of a \pfc\ rule.  
+
+\subsection*{Compound Rules}
+
+A slightly more complex rule is one in which the rule's left hand side
+is a conjunction or disjunction of conditions:
+\example
+parent(X,Y),female(X) => mother(X,Y) 
+mother(X,Y);father(X,Y) => parent(X,Y)
+\end{verbatim}\end{quote}
+The first rule has the effect of adding the assertion $mother(X,Y)$ to
+the database whenever $parent(X,Y)$ and $female(X)$ are simultaneously
+true for some $X$ and $Y$.  Again, a record will be kept that
+indicates that any fact $mother(X,Y)$ added by the application of this
+rule is justified by the rule and the two triggering facts.  If any
+one of these three clauses is removed from the database, then all
+facts solely dependent on them will also be removed.  Similarly, the
+second example rule derives the parent relationship whenever either
+the mother relationship or the father relationship is known.
+
+In fact, the lhs of a \pfc\ rule can be an arbitrary conjunction or
+disjunction of facts.  For example, we might have a rule like:
+\example
+P, (Q;R), S => T
+\end{verbatim}\end{quote}
+\pfc\ handles such a rule by putting it into conjunctive normal form.
+Thus the rule above is the equivalent to the two rules:
+\example
+P,Q,S => T
+P,R,S => T
+\end{verbatim}\end{quote}
+
+\subsection*{Bi-conditionals}
+
+\pfc\ has a limited ability to express bi-conditional rules, such as:
+\example
+mother(P1,P2) <=> parent(P1,P2), female(P1).
+\end{verbatim}\end{quote}
+In particular, adding a rule of the form {\tt P<=>Q} is the equivalent
+to adding the two rules {\tt P=>Q} and {\tt Q=>P}.  The limitations on
+the use of bi-conditional rules stem from the restrictions that the
+two derived rules be valid horn clauses.  This is discussed in a later
+section.
+
+\subsection*{Backward-Chaining \pfc\ Rules}
+
+\pfc\ includes a special kind of backward chaining rule which is used
+to generate all possible solutions to a goal that is sought in the
+process of forward chaining.  Suppose we wished to define the {\em
+ancestor} relationship as a \pfc\ rule.  This could be done as:
+\example
+parent(P1,P2) => ancestor(P1,P2).
+parent(P1,P2), ancestor(P2,P3) => ancestor(P1,P3).
+\end{verbatim}\end{quote}
+However, adding these rules will generate a large number of
+assertions, most of which will never be needed.  An alternative is to
+define the {\em ancestor} relationship by way of backward chaining
+rules which are invoked whenever a particular ancestor relationship is
+needed.  In \pfc\, this need arises whenever facts matching the
+relationship are sought while trying a forward chaining rule.
+\example
+ancestor(P1,P2) <= {\+var(P1)}, parent(P1,X), ancestor(X,P2).
+ancestor(P1,P2) <= {var(P1),\+var(P2)}, parent(X,P2), ancestor(P2,X).
+\end{verbatim}\end{quote}
+
+\subsection*{Conditioned Rules}
+
+It is sometimes necessary to add some further condition on a rule.
+Consider a definition of sibling which states:
+\begin{quote}
+Two people are siblings if they have the same mother and the same
+father.  No one can be his own sibling.
+\end{quote}
+This definition could be realized by the following \pfc\ rule
+\example
+mother(Ma,P1), mother(Ma,P2), {P1\==P2},
+  father(Pa,P1), father(Pa,P2)
+   =>  sibling(P1,P2).
+\end{verbatim}\end{quote}
+Here we must add a condition to the lhs of the rule which states the
+the variables $P1$ and $P2$ must not unify.  This is effected by
+enclosing an arbitrary Prolog goal in braces.  When the goals to the
+left of such a bracketed condition have been fulfilled, then it will
+be executed.  If it can be satisfied, then the rule will remain
+active, otherwise it will be terminated.
+
+\subsection*{Negation}
+
+We sometimes want to draw an inference from the absence of some
+knowledge.  For example, we might wish to encode the default rule that
+a person is assumed to be male unless we have evidence to the
+contrary:
+\example
+person(P), ~female(P) => male(P).
+\end{verbatim}\end{quote}
+A lhs term preceded by a $\sim$ is satisfied only if {\em no} fact in
+the database unifies with it.  Again, the \pfc\ system records a
+justification for the conclusion which, in this case, states that it
+depends on the absence of the contradictory evidence.  The behavior of
+this rule is demonstrated in the following dialogue:
+\example
+?- add(person(P), ~female(P) => male(P)).
+yes
+?- add(person(alex)).
+yes
+?- male(alex).
+yes
+?- add(female(alex)).
+yes
+?- male(alex)
+no
+\end{verbatim}\end{quote}
+
+As a slightly more complicated example, consider a rule which states
+that we should assume that the parents of a person are married unless
+we know otherwise.  Knowing otherwise might consist of either knowing
+that one of them is married to a yet another person or knowing that
+they are divorced.  We might try to encode this as follows:
+\example
+parent(P1,X), 
+parent(P2,X),
+{P1\==P2},
+~divorced(P1,P2),
+~spouse(P1,P3),
+{P3\==P2},
+~spouse(P2,P4),
+{P4\==P1}
+  =>
+spouse(P1,P2).
+\end{verbatim}\end{quote}
+Unfortunately, this won't work.  The problem is that the conjoined
+condition
+\example
+~spouse(P1,P3),{P3\==P2}
+\end{verbatim}\end{quote}
+does not mean what we want it to mean - that there is no $P3$ distinct
+from $P2$ that is the spouse of $P1$.  Instead, it means that $P1$ is
+not married to any $P3$.  We need a way to move the qualification 
+\verb+{P3\==P2}+ inside the scope of the negation.  To achieve this, we
+introduce the notion of a qualified goal.  A lhs term $P/C$, where P
+is a positive atomic condition, is true only if there is a database
+fact unifying with $P$ and condition $C$ is satisfiable.  Similarly, a
+lhs term $\sim P/C$, where P is a positive atomic condition, is true
+only if there is no database fact unifying with $P$ for which
+condition $C$ is satisfiable.  Our rule can now be expressed as
+follows:
+\example
+parent(P1,X), 
+  parent(P2,X)/(P1\==P2),
+  ~divorced(P1,P2),
+  ~spouse(P1,P3)/(P3\==P2),
+  ~spouse(P2,P4)/(P4\==P1)
+  =>
+  spouse(P1,P2).
+\end{verbatim}\end{quote}
+
+\subsection*{Procedural Interpretation}
+
+Note that the procedural interpretation of a \pfc\ rule is that the
+conditions in the lhs are checked {\em from left to right}.  One
+advantage to this is that the programmer can chose an order to the
+conditions in a rule to minimize the number of partial instantiations.
+% include an example here
+Another advantage is that it allows us to write rules like the
+following:
+\example
+at(Obj,Loc1),at(Obj,Loc2)/{Loc1\==Loc2} 
+   => {remove(at(Obj,Loc1))}.
+\end{verbatim}\end{quote}
+Although the declarative reading of this rule can be questioned, its
+procedural interpretation is clear and useful:
+\begin{quotation}
+If an object is known to be at location $Loc1$ and an assertion is
+added that it is at some location $Loc2$, distinct from $Loc1$, then
+the assertion that it is at $Loc1$ should be removed.
+\end{quotation}
+
+\subsection*{The Right Hand Side}
+
+The examples seen so far have shown a rules rhs as a single
+proposition to be ``added'' to the database.  The rhs of a \pfc\ rule
+has some richness as well.  The rhs of a rule is a conjunction of
+facts to be ``added'' to the database and terms enclosed in brackets
+which represent conditions/actions which are executed.  As a simple
+example, consider the conclusions we might draw upon learning that one
+person is the mother of another:
+\example
+mother(X,Y) =>
+  female(X),
+  parent(X,Y),
+  adult(X).
+\end{verbatim}\end{quote}
+
+As another example, consider a rule which detects bigamists and sends
+an appropriate warning to the proper authorities:
+\example
+spouse(X,Y), spouse(X,Z), {Y\==Z} => 
+   bigamist(X), 
+   {format("~N~w is a bigamist, married
+      to both ~w and ~w~n",[X,Y,Z])}.
+\end{verbatim}\end{quote}
+Each element in the rhs of a rule is processed from left to right ---
+assertions being added to the database with appropriate support and
+conditions being satisfied.  If a condition can not be satisfied, the
+rest of the rhs is not processed.
+
+We would like to allow rules to be expressed as bi-conditional in so
+far a possible.  Thus, an element in the lhs of a rule should have an
+appropriate meaning on the rhs as well.  What meaning should be
+assigned to the conditional fact construction (e.g. $P/Q$) which can
+occur in a rules lhs?  Such a term in the rhs of a rule is
+interpreted as a {\em conditioned assertion}. Thus the assertion $P/Q$
+will match a condition $P\prime$ in the lhs of a rule only if $P$ and
+$P\prime$ unify and the condition $Q$ is satisfiable.  For example,
+consider the rules that says that an object being located at one place
+is reason to believe that it is not at any other place:
+\example
+at(X,L1) => not(at(X,L2))/L2\==L1
+\end{verbatim}\end{quote}
+Note that a {\em conditioned assertion} is essentially a Horn clause.
+We would express this fact in Prolog as the backward chaining rule:
+\example
+not(at(X,L2)) :- at(X,L1),L1\==L2.
+\end{verbatim}\end{quote}
+The difference is, of course, that the addition of such a conditioned
+assertion will trigger forward chaining whereas the assertion of a new
+backward chaining rule will not.
+
+\subsection*{The Truth Maintenance System}
+
+As discussed in the previous section, a forward reasoning system has
+special needs for some kind of {\em truth maintenance system}.  The
+\pfc\ system has a rather straightforward TMS system which records
+justifications for each fact deduced by a \pfc\ rule.  Whenever a fact
+is removed from the database, any justifications in which it plays a
+part are also removed.  The facts that are justified by a removed
+justification are checked to see if they are still supported by some
+other justifications.  If they are not, then those facts are also
+removed.
+
+Such a TMS system can be relatively expensive to use and is not needed
+for many applications.  Consequently, its use and nature are optional
+in \pfc\ and are controlled by the predicate $pfcTmsMode/1$.  The
+possible cases are three:
+\begin{itemize}
+
+\item $pfcTmsMode(full)$ - The fact is removed unless it has {\em well
+found\-ed support} (WFS).  A fact has WFS if it is supported by the
+$user$ or by $God$ or by a justification all of whose justificees have
+WFS\footnote{Determining if a fact has WFS requires detecting local
+cycles - see \cite{mcdermott85} for an introduction}.
+
+\item $pfcTmsMode(local)$ - The fact is removed if it has no
+supporting justifications.
+
+\item $pfcTmsMode(none)$ -  The fact is never removed. 
+\end{itemize}
+
+A fact is considered to be supported by $God$ if it is found in the
+database with no visible means of support.  That is, if \pfc\
+discovers an assertion in the database that can take part in a forward
+reasoning step, and that assertion is not supported by either the user
+or a forward deduction, then a note is added that the assertion is
+supported by $God$.  This adds additional flexibility in interfacing
+systems employing \pfc\ to other Prolog applications.
+
+For some applications, it is useful to be able to justify actions
+performed in the rhs of a rule.  To allow this, \pfc\ supports the
+idea of declaring certain actions to be {\em undoable} and provides
+the user with a way of specifying methods to undo those actions.
+Whenever an action is executed in the rhs of a rule and that action is
+undoable, then a record is made of the justification for that action.
+If that justification is later invalidated (e.g. through the
+retraction of one of its justificees) then the support is checked for
+the action in the same way as it would be for an assertion.  If the
+action does not have support, then \pfc\ trys each of the methods it
+knows to undo the action until one of them succeeds.
+
+In fact, in \pfc\ , one declares an action as undoable just by
+defining a method to accomplish the undoing.  This is done via the
+predicate $pfcUndo/2$.  The predicate $pfcUndo(A1,A2)$ is
+true if executing $A2$ is a possible way to undo the execution of
+$A1$.  For example, we might want to couple an assertional
+representation of a set of graph nodes with a graphical display of
+them through the use of \pfc\ rules:
+\example
+at(N,XY) => {displayNode(N,XY)}.
+arc(N1,N2) => {displayArc(N1,N2}.
+
+pfcUndo(displayNode(N,XY),eraseNode(N,XY)).
+pfcUndo(displayArc(N1,N2),eraseArc(N1,N2)).
+\end{verbatim}\end{quote}
+
+\subsection*{Limitations}
+
+The \pfc\ system has several limitations, most of which it inherits
+from its Prolog roots.  One of the more obvious of these is that \pfc\
+rules must be expressible as a set of horn clauses.  The practical
+effect is that the rhs of a rule must be a conjunction of terms which
+are either assertions to be added to the database or actions to be
+executed.  Negated assertions and disjunctions are not permitted,
+making rules like
+\example
+parent(X,Y) <=> mother(X,Y);father(X,Y)
+male(X) <=> ~female(X)
+\end{verbatim}\end{quote}
+ill-formed. 
+
+Another restrictions is that all variables in a \pfc\ rule have
+implicit universal quantification.  As a result, any variables in the
+rhs of a rule which remain uninstantiated when the lhs has been fully
+satisfied retain their universal quantification.  This prevents us
+from using a rule like
+\example
+father(X,Y), parent(Y,Z) 
+    <=> grandfather(X,Z).
+\end{verbatim}\end{quote}
+with the desired results.  If we do add this rule and assert {\em
+grandfather(john,mary)}, then \pfc\ will add the two independent
+assertions {\em father(john,\_)} (i.e. ``John is the father of
+everyone'') and {\em parent(\_,mary)} (i.e. ``Everyone is Mary's
+parent'').
+
+Another problem associated with the use of the Prolog database is that
+assertions containing variables actually contain ``copies'' of the
+variables.  Thus, when the conjunction
+\example
+add(father(adam,X)), X=able
+\end{verbatim}\end{quote}
+is evaluated, the assertion \verb#father(adam,_G032)# is added to the
+da\-ta\-base, where \_G032 is a new variable which is distinct from X.  As
+a consequence, it is never unified with {\em able}.
+

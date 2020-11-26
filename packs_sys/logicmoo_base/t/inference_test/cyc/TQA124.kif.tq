@@ -1,0 +1,37 @@
+(note TQA124)
+
+(subclass OilRefinery Workplace) 
+
+(subclass OilRefinery Workplace) 
+
+(not 
+ (quotedCollection Workplace)) 
+
+(completeExtentKnown quotedCollection) 
+
+
+
+
+(subclass OilRefinery ConstructionArtifact) 
+
+(subclass OilRefinery ConstructionArtifact) 
+
+(not 
+ (quotedCollection ConstructionArtifact)) 
+
+(completeExtentKnown quotedCollection) 
+
+
+(query (findall ?CLASS (and 
+   (subclass OilRefinery ?CLASS) 
+   (not 
+       (quotedCollection ?CLASS)) 
+   (assertedFormula 
+       (subclass OilRefinery ?CLASS))) ) )
+
+(answer  Workplace )
+(answer ConstructionArtifact )
+
+(end_of_file)
+
+

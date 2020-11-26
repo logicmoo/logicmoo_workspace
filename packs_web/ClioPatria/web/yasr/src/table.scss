@@ -1,0 +1,49 @@
+.dataTables_wrapper {
+	margin-top: 10px;
+	.dataTables_length {
+		float:right;
+		margin-left: 10px;
+		label, select {
+			vertical-align: middle;
+		}
+	}
+}
+table.dataTable thead th {
+	&:first-child, &:last-child {
+		border-right: 0;
+	} 
+	//hide icons (we use svg)
+	background:none !important;
+	border-right: 1px dotted gray;
+	padding: 7px 0px;
+	span {
+		margin-left: 5px;
+	}
+}
+table.dataTable td div {
+	-ms-word-break: break-all;
+     word-break: break-all;
+
+     /* Non standard for webkit */
+     word-break: break-word;
+
+-webkit-hyphens: auto;
+   -moz-hyphens: auto;
+    -ms-hyphens: auto;
+        hyphens: auto;
+   	padding: 0px 5px;
+}
+
+
+.sortIcons {
+	float:right;
+	width: 8px;
+	height: 13px;
+	margin-right: 10px;
+}
+.dtTopHeader {
+	.dataTables_info {
+		padding-top: 0px;
+		margin: 0px 10px;
+	}
+}

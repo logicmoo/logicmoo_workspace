@@ -1,0 +1,36 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Semantics
+
+Here, by way of example, is, in Prolog form, the DBQ dag that we get
+from the sentence "an airline took over every hotel chain":
+
+    sem : quantifier : exists
+          variable : X
+          restriction : arg0 : X
+                        predicate : airline
+          body : quantifier : all
+                 variable : Y
+                 restriction : arg0 : Y
+                               predicate : hotel_chain
+                 body : arg0 : X
+                        arg1 : Y
+                        predicate : took_over
+
+And here is what we get for "every hotel chain took over an airline":
+
+    sem : quantifier : all
+          variable : X
+          restriction : arg0 : X
+                        predicate : hotel_chain
+          body : quantifier : exists
+                 variable : Y
+                 restriction : arg0 : Y
+                               predicate : airline
+                 body : arg0 : X
+                        arg1 : Y
+                        predicate : took_over

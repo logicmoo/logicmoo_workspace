@@ -1,0 +1,4 @@
+Relevant to translation applications. Defines a value that can be
+accessed by conditional-dependent transfer rules, if transfer rules
+are to be shared across several applications defined by multiple
+config files.

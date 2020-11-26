@@ -1,0 +1,5 @@
+Relevant to translation applications. Points to the file containing
+the result of running the TRANSLATE\_\-CORPUS command. You can then edit
+this file to update judgements, and incorporate them into the
+translation\_\-corpus\_\-judgements file by using the command
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS.

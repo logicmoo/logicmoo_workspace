@@ -1,0 +1,2610 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/AkmanEtAl2004/ZooTest3.e
+loading foundations/Root.e
+loading foundations/DEC.e
+loading examples/AkmanEtAl2004/ZooWorld.e
+1989 variables and 12370 clauses
+relsat solver
+4 models
+---
+model 1:
+0
+DoneBy(Open(Homer, GateAO), Homer).
+Pos(Homer, 7).
+Pos(Snoopy, 4).
+PosDeterminingFluent(Homer, 1).
+Happens(Open(Homer, GateAO), 0).
+1
+-DoneBy(Open(Homer, GateAO), Homer).
++DoneBy(Move(Homer, 4), Homer).
++DoneBy(Move(Snoopy, 7), Snoopy).
++Moves(Homer).
++Moves(Snoopy).
++Opened(GateAO).
+Happens(Move(Homer, 4), 1).
+Happens(Move(Snoopy, 7), 1).
+2
+-DoneBy(Move(Homer, 4), Homer).
+-DoneBy(Move(Snoopy, 7), Snoopy).
+-Moves(Homer).
+-Moves(Snoopy).
+-Pos(Homer, 7).
+-Pos(Snoopy, 4).
++Pos(Homer, 4).
++Pos(Snoopy, 7).
+P
+Accessible(1, 2, 0).
+Accessible(1, 2, 1).
+Accessible(1, 2, 2).
+Accessible(1, 3, 0).
+Accessible(1, 3, 1).
+Accessible(1, 3, 2).
+Accessible(1, 4, 0).
+Accessible(1, 4, 1).
+Accessible(1, 4, 2).
+Accessible(2, 1, 0).
+Accessible(2, 1, 1).
+Accessible(2, 1, 2).
+Accessible(2, 3, 0).
+Accessible(2, 3, 1).
+Accessible(2, 3, 2).
+Accessible(2, 4, 0).
+Accessible(2, 4, 1).
+Accessible(2, 4, 2).
+Accessible(3, 1, 0).
+Accessible(3, 1, 1).
+Accessible(3, 1, 2).
+Accessible(3, 2, 0).
+Accessible(3, 2, 1).
+Accessible(3, 2, 2).
+Accessible(3, 4, 0).
+Accessible(3, 4, 1).
+Accessible(3, 4, 2).
+Accessible(4, 1, 0).
+Accessible(4, 1, 1).
+Accessible(4, 1, 2).
+Accessible(4, 2, 0).
+Accessible(4, 2, 1).
+Accessible(4, 2, 2).
+Accessible(4, 3, 0).
+Accessible(4, 3, 1).
+Accessible(4, 3, 2).
+Accessible(4, 7, 1).
+Accessible(4, 7, 2).
+Accessible(5, 6, 0).
+Accessible(5, 6, 1).
+Accessible(5, 6, 2).
+Accessible(5, 7, 0).
+Accessible(5, 7, 1).
+Accessible(5, 7, 2).
+Accessible(5, 8, 0).
+Accessible(5, 8, 1).
+Accessible(5, 8, 2).
+Accessible(6, 5, 0).
+Accessible(6, 5, 1).
+Accessible(6, 5, 2).
+Accessible(6, 7, 0).
+Accessible(6, 7, 1).
+Accessible(6, 7, 2).
+Accessible(6, 8, 0).
+Accessible(6, 8, 1).
+Accessible(6, 8, 2).
+Accessible(7, 4, 1).
+Accessible(7, 4, 2).
+Accessible(7, 5, 0).
+Accessible(7, 5, 1).
+Accessible(7, 5, 2).
+Accessible(7, 6, 0).
+Accessible(7, 6, 1).
+Accessible(7, 6, 2).
+Accessible(7, 8, 0).
+Accessible(7, 8, 1).
+Accessible(7, 8, 2).
+Accessible(8, 5, 0).
+Accessible(8, 5, 1).
+Accessible(8, 5, 2).
+Accessible(8, 6, 0).
+Accessible(8, 6, 1).
+Accessible(8, 6, 2).
+Accessible(8, 7, 0).
+Accessible(8, 7, 1).
+Accessible(8, 7, 2).
+Adult(Homer).
+Adult(Snoopy).
+Large(Homer).
+LargeSpecies(ElephantSpecies).
+LargeSpecies(HorseSpecies).
+LargeSpecies(HumanSpecies).
+Neighbor(1, 2).
+Neighbor(1, 3).
+Neighbor(1, 4).
+Neighbor(2, 1).
+Neighbor(2, 3).
+Neighbor(2, 4).
+Neighbor(3, 1).
+Neighbor(3, 2).
+Neighbor(3, 4).
+Neighbor(4, 1).
+Neighbor(4, 2).
+Neighbor(4, 3).
+Neighbor(4, 7).
+Neighbor(5, 6).
+Neighbor(5, 7).
+Neighbor(5, 8).
+Neighbor(6, 5).
+Neighbor(6, 7).
+Neighbor(6, 8).
+Neighbor(7, 4).
+Neighbor(7, 5).
+Neighbor(7, 6).
+Neighbor(7, 8).
+Neighbor(8, 5).
+Neighbor(8, 6).
+Neighbor(8, 7).
+ReleasedAt(AbnormalEncroachment(Homer), 0).
+ReleasedAt(AbnormalEncroachment(Homer), 1).
+ReleasedAt(AbnormalEncroachment(Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 0).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 1).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 2).
+ReleasedAt(MountFails(Homer), 0).
+ReleasedAt(MountFails(Homer), 1).
+ReleasedAt(MountFails(Homer), 2).
+ReleasedAt(Moves(Homer), 0).
+ReleasedAt(Moves(Homer), 1).
+ReleasedAt(Moves(Homer), 2).
+ReleasedAt(Moves(Snoopy), 0).
+ReleasedAt(Moves(Snoopy), 1).
+ReleasedAt(Moves(Snoopy), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 2).
+ReleasedAt(ThrowOffFails(Homer, Homer), 0).
+ReleasedAt(ThrowOffFails(Homer, Homer), 1).
+ReleasedAt(ThrowOffFails(Homer, Homer), 2).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 0).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 1).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 2).
+Sides(4, 7, GateAO).
+Sides(7, 4, GateAO).
+!Accessible(1, 1, 0).
+!Accessible(1, 1, 1).
+!Accessible(1, 1, 2).
+!Accessible(1, 5, 0).
+!Accessible(1, 5, 1).
+!Accessible(1, 5, 2).
+!Accessible(1, 6, 0).
+!Accessible(1, 6, 1).
+!Accessible(1, 6, 2).
+!Accessible(1, 7, 0).
+!Accessible(1, 7, 1).
+!Accessible(1, 7, 2).
+!Accessible(1, 8, 0).
+!Accessible(1, 8, 1).
+!Accessible(1, 8, 2).
+!Accessible(2, 2, 0).
+!Accessible(2, 2, 1).
+!Accessible(2, 2, 2).
+!Accessible(2, 5, 0).
+!Accessible(2, 5, 1).
+!Accessible(2, 5, 2).
+!Accessible(2, 6, 0).
+!Accessible(2, 6, 1).
+!Accessible(2, 6, 2).
+!Accessible(2, 7, 0).
+!Accessible(2, 7, 1).
+!Accessible(2, 7, 2).
+!Accessible(2, 8, 0).
+!Accessible(2, 8, 1).
+!Accessible(2, 8, 2).
+!Accessible(3, 3, 0).
+!Accessible(3, 3, 1).
+!Accessible(3, 3, 2).
+!Accessible(3, 5, 0).
+!Accessible(3, 5, 1).
+!Accessible(3, 5, 2).
+!Accessible(3, 6, 0).
+!Accessible(3, 6, 1).
+!Accessible(3, 6, 2).
+!Accessible(3, 7, 0).
+!Accessible(3, 7, 1).
+!Accessible(3, 7, 2).
+!Accessible(3, 8, 0).
+!Accessible(3, 8, 1).
+!Accessible(3, 8, 2).
+!Accessible(4, 4, 0).
+!Accessible(4, 4, 1).
+!Accessible(4, 4, 2).
+!Accessible(4, 5, 0).
+!Accessible(4, 5, 1).
+!Accessible(4, 5, 2).
+!Accessible(4, 6, 0).
+!Accessible(4, 6, 1).
+!Accessible(4, 6, 2).
+!Accessible(4, 7, 0).
+!Accessible(4, 8, 0).
+!Accessible(4, 8, 1).
+!Accessible(4, 8, 2).
+!Accessible(5, 1, 0).
+!Accessible(5, 1, 1).
+!Accessible(5, 1, 2).
+!Accessible(5, 2, 0).
+!Accessible(5, 2, 1).
+!Accessible(5, 2, 2).
+!Accessible(5, 3, 0).
+!Accessible(5, 3, 1).
+!Accessible(5, 3, 2).
+!Accessible(5, 4, 0).
+!Accessible(5, 4, 1).
+!Accessible(5, 4, 2).
+!Accessible(5, 5, 0).
+!Accessible(5, 5, 1).
+!Accessible(5, 5, 2).
+!Accessible(6, 1, 0).
+!Accessible(6, 1, 1).
+!Accessible(6, 1, 2).
+!Accessible(6, 2, 0).
+!Accessible(6, 2, 1).
+!Accessible(6, 2, 2).
+!Accessible(6, 3, 0).
+!Accessible(6, 3, 1).
+!Accessible(6, 3, 2).
+!Accessible(6, 4, 0).
+!Accessible(6, 4, 1).
+!Accessible(6, 4, 2).
+!Accessible(6, 6, 0).
+!Accessible(6, 6, 1).
+!Accessible(6, 6, 2).
+!Accessible(7, 1, 0).
+!Accessible(7, 1, 1).
+!Accessible(7, 1, 2).
+!Accessible(7, 2, 0).
+!Accessible(7, 2, 1).
+!Accessible(7, 2, 2).
+!Accessible(7, 3, 0).
+!Accessible(7, 3, 1).
+!Accessible(7, 3, 2).
+!Accessible(7, 4, 0).
+!Accessible(7, 7, 0).
+!Accessible(7, 7, 1).
+!Accessible(7, 7, 2).
+!Accessible(8, 1, 0).
+!Accessible(8, 1, 1).
+!Accessible(8, 1, 2).
+!Accessible(8, 2, 0).
+!Accessible(8, 2, 1).
+!Accessible(8, 2, 2).
+!Accessible(8, 3, 0).
+!Accessible(8, 3, 1).
+!Accessible(8, 3, 2).
+!Accessible(8, 4, 0).
+!Accessible(8, 4, 1).
+!Accessible(8, 4, 2).
+!Accessible(8, 8, 0).
+!Accessible(8, 8, 1).
+!Accessible(8, 8, 2).
+!Happens(Close(Homer, GateAO), 0).
+!Happens(Close(Homer, GateAO), 1).
+!Happens(GetOff(Homer, Homer), 0).
+!Happens(GetOff(Homer, Homer), 1).
+!Happens(GetOff(Homer, Snoopy), 0).
+!Happens(GetOff(Homer, Snoopy), 1).
+!Happens(Mount(Homer, Homer), 0).
+!Happens(Mount(Homer, Homer), 1).
+!Happens(Mount(Homer, Snoopy), 0).
+!Happens(Mount(Homer, Snoopy), 1).
+!Happens(Move(Homer, 1), 0).
+!Happens(Move(Homer, 1), 1).
+!Happens(Move(Homer, 2), 0).
+!Happens(Move(Homer, 2), 1).
+!Happens(Move(Homer, 3), 0).
+!Happens(Move(Homer, 3), 1).
+!Happens(Move(Homer, 4), 0).
+!Happens(Move(Homer, 5), 0).
+!Happens(Move(Homer, 5), 1).
+!Happens(Move(Homer, 6), 0).
+!Happens(Move(Homer, 6), 1).
+!Happens(Move(Homer, 7), 0).
+!Happens(Move(Homer, 7), 1).
+!Happens(Move(Homer, 8), 0).
+!Happens(Move(Homer, 8), 1).
+!Happens(Move(Snoopy, 1), 0).
+!Happens(Move(Snoopy, 1), 1).
+!Happens(Move(Snoopy, 2), 0).
+!Happens(Move(Snoopy, 2), 1).
+!Happens(Move(Snoopy, 3), 0).
+!Happens(Move(Snoopy, 3), 1).
+!Happens(Move(Snoopy, 4), 0).
+!Happens(Move(Snoopy, 4), 1).
+!Happens(Move(Snoopy, 5), 0).
+!Happens(Move(Snoopy, 5), 1).
+!Happens(Move(Snoopy, 6), 0).
+!Happens(Move(Snoopy, 6), 1).
+!Happens(Move(Snoopy, 7), 0).
+!Happens(Move(Snoopy, 8), 0).
+!Happens(Move(Snoopy, 8), 1).
+!Happens(Open(Homer, GateAO), 1).
+!Happens(ThrowOff(Homer, Homer), 0).
+!Happens(ThrowOff(Homer, Homer), 1).
+!Happens(ThrowOff(Snoopy, Homer), 0).
+!Happens(ThrowOff(Snoopy, Homer), 1).
+!Large(Snoopy).
+!LargeSpecies(DogSpecies).
+!Neighbor(1, 1).
+!Neighbor(1, 5).
+!Neighbor(1, 6).
+!Neighbor(1, 7).
+!Neighbor(1, 8).
+!Neighbor(2, 2).
+!Neighbor(2, 5).
+!Neighbor(2, 6).
+!Neighbor(2, 7).
+!Neighbor(2, 8).
+!Neighbor(3, 3).
+!Neighbor(3, 5).
+!Neighbor(3, 6).
+!Neighbor(3, 7).
+!Neighbor(3, 8).
+!Neighbor(4, 4).
+!Neighbor(4, 5).
+!Neighbor(4, 6).
+!Neighbor(4, 8).
+!Neighbor(5, 1).
+!Neighbor(5, 2).
+!Neighbor(5, 3).
+!Neighbor(5, 4).
+!Neighbor(5, 5).
+!Neighbor(6, 1).
+!Neighbor(6, 2).
+!Neighbor(6, 3).
+!Neighbor(6, 4).
+!Neighbor(6, 6).
+!Neighbor(7, 1).
+!Neighbor(7, 2).
+!Neighbor(7, 3).
+!Neighbor(7, 7).
+!Neighbor(8, 1).
+!Neighbor(8, 2).
+!Neighbor(8, 3).
+!Neighbor(8, 4).
+!Neighbor(8, 8).
+!ReleasedAt(Mounted(Homer, Homer), 0).
+!ReleasedAt(Mounted(Homer, Homer), 1).
+!ReleasedAt(Mounted(Homer, Homer), 2).
+!ReleasedAt(Mounted(Homer, Snoopy), 0).
+!ReleasedAt(Mounted(Homer, Snoopy), 1).
+!ReleasedAt(Mounted(Homer, Snoopy), 2).
+!ReleasedAt(Opened(GateAO), 0).
+!ReleasedAt(Opened(GateAO), 1).
+!ReleasedAt(Opened(GateAO), 2).
+!ReleasedAt(Pos(Homer, 1), 0).
+!ReleasedAt(Pos(Homer, 1), 1).
+!ReleasedAt(Pos(Homer, 1), 2).
+!ReleasedAt(Pos(Homer, 2), 0).
+!ReleasedAt(Pos(Homer, 2), 1).
+!ReleasedAt(Pos(Homer, 2), 2).
+!ReleasedAt(Pos(Homer, 3), 0).
+!ReleasedAt(Pos(Homer, 3), 1).
+!ReleasedAt(Pos(Homer, 3), 2).
+!ReleasedAt(Pos(Homer, 4), 0).
+!ReleasedAt(Pos(Homer, 4), 1).
+!ReleasedAt(Pos(Homer, 4), 2).
+!ReleasedAt(Pos(Homer, 5), 0).
+!ReleasedAt(Pos(Homer, 5), 1).
+!ReleasedAt(Pos(Homer, 5), 2).
+!ReleasedAt(Pos(Homer, 6), 0).
+!ReleasedAt(Pos(Homer, 6), 1).
+!ReleasedAt(Pos(Homer, 6), 2).
+!ReleasedAt(Pos(Homer, 7), 0).
+!ReleasedAt(Pos(Homer, 7), 1).
+!ReleasedAt(Pos(Homer, 7), 2).
+!ReleasedAt(Pos(Homer, 8), 0).
+!ReleasedAt(Pos(Homer, 8), 1).
+!ReleasedAt(Pos(Homer, 8), 2).
+!ReleasedAt(Pos(Snoopy, 1), 0).
+!ReleasedAt(Pos(Snoopy, 1), 1).
+!ReleasedAt(Pos(Snoopy, 1), 2).
+!ReleasedAt(Pos(Snoopy, 2), 0).
+!ReleasedAt(Pos(Snoopy, 2), 1).
+!ReleasedAt(Pos(Snoopy, 2), 2).
+!ReleasedAt(Pos(Snoopy, 3), 0).
+!ReleasedAt(Pos(Snoopy, 3), 1).
+!ReleasedAt(Pos(Snoopy, 3), 2).
+!ReleasedAt(Pos(Snoopy, 4), 0).
+!ReleasedAt(Pos(Snoopy, 4), 1).
+!ReleasedAt(Pos(Snoopy, 4), 2).
+!ReleasedAt(Pos(Snoopy, 5), 0).
+!ReleasedAt(Pos(Snoopy, 5), 1).
+!ReleasedAt(Pos(Snoopy, 5), 2).
+!ReleasedAt(Pos(Snoopy, 6), 0).
+!ReleasedAt(Pos(Snoopy, 6), 1).
+!ReleasedAt(Pos(Snoopy, 6), 2).
+!ReleasedAt(Pos(Snoopy, 7), 0).
+!ReleasedAt(Pos(Snoopy, 7), 1).
+!ReleasedAt(Pos(Snoopy, 7), 2).
+!ReleasedAt(Pos(Snoopy, 8), 0).
+!ReleasedAt(Pos(Snoopy, 8), 1).
+!ReleasedAt(Pos(Snoopy, 8), 2).
+!Sides(1, 1, GateAO).
+!Sides(1, 2, GateAO).
+!Sides(1, 3, GateAO).
+!Sides(1, 4, GateAO).
+!Sides(1, 5, GateAO).
+!Sides(1, 6, GateAO).
+!Sides(1, 7, GateAO).
+!Sides(1, 8, GateAO).
+!Sides(2, 1, GateAO).
+!Sides(2, 2, GateAO).
+!Sides(2, 3, GateAO).
+!Sides(2, 4, GateAO).
+!Sides(2, 5, GateAO).
+!Sides(2, 6, GateAO).
+!Sides(2, 7, GateAO).
+!Sides(2, 8, GateAO).
+!Sides(3, 1, GateAO).
+!Sides(3, 2, GateAO).
+!Sides(3, 3, GateAO).
+!Sides(3, 4, GateAO).
+!Sides(3, 5, GateAO).
+!Sides(3, 6, GateAO).
+!Sides(3, 7, GateAO).
+!Sides(3, 8, GateAO).
+!Sides(4, 1, GateAO).
+!Sides(4, 2, GateAO).
+!Sides(4, 3, GateAO).
+!Sides(4, 4, GateAO).
+!Sides(4, 5, GateAO).
+!Sides(4, 6, GateAO).
+!Sides(4, 8, GateAO).
+!Sides(5, 1, GateAO).
+!Sides(5, 2, GateAO).
+!Sides(5, 3, GateAO).
+!Sides(5, 4, GateAO).
+!Sides(5, 5, GateAO).
+!Sides(5, 6, GateAO).
+!Sides(5, 7, GateAO).
+!Sides(5, 8, GateAO).
+!Sides(6, 1, GateAO).
+!Sides(6, 2, GateAO).
+!Sides(6, 3, GateAO).
+!Sides(6, 4, GateAO).
+!Sides(6, 5, GateAO).
+!Sides(6, 6, GateAO).
+!Sides(6, 7, GateAO).
+!Sides(6, 8, GateAO).
+!Sides(7, 1, GateAO).
+!Sides(7, 2, GateAO).
+!Sides(7, 3, GateAO).
+!Sides(7, 5, GateAO).
+!Sides(7, 6, GateAO).
+!Sides(7, 7, GateAO).
+!Sides(7, 8, GateAO).
+!Sides(8, 1, GateAO).
+!Sides(8, 2, GateAO).
+!Sides(8, 3, GateAO).
+!Sides(8, 4, GateAO).
+!Sides(8, 5, GateAO).
+!Sides(8, 6, GateAO).
+!Sides(8, 7, GateAO).
+!Sides(8, 8, GateAO).
+---
+model 2:
+0
+DoneBy(Move(Snoopy, 4), Snoopy).
+DoneBy(Open(Homer, GateAO), Homer).
+Moves(Snoopy).
+Pos(Homer, 7).
+Pos(Snoopy, 2).
+PosDeterminingFluent(Homer, 1).
+Happens(Move(Snoopy, 4), 0).
+Happens(Open(Homer, GateAO), 0).
+1
+-DoneBy(Move(Snoopy, 4), Snoopy).
+-DoneBy(Open(Homer, GateAO), Homer).
+-Pos(Snoopy, 2).
++DoneBy(Move(Homer, 4), Homer).
++DoneBy(Move(Snoopy, 7), Snoopy).
++Moves(Homer).
++Opened(GateAO).
++Pos(Snoopy, 4).
+Happens(Move(Homer, 4), 1).
+Happens(Move(Snoopy, 7), 1).
+2
+-DoneBy(Move(Homer, 4), Homer).
+-DoneBy(Move(Snoopy, 7), Snoopy).
+-Moves(Homer).
+-Moves(Snoopy).
+-Pos(Homer, 7).
+-Pos(Snoopy, 4).
++Pos(Homer, 4).
++Pos(Snoopy, 7).
+P
+Accessible(1, 2, 0).
+Accessible(1, 2, 1).
+Accessible(1, 2, 2).
+Accessible(1, 3, 0).
+Accessible(1, 3, 1).
+Accessible(1, 3, 2).
+Accessible(1, 4, 0).
+Accessible(1, 4, 1).
+Accessible(1, 4, 2).
+Accessible(2, 1, 0).
+Accessible(2, 1, 1).
+Accessible(2, 1, 2).
+Accessible(2, 3, 0).
+Accessible(2, 3, 1).
+Accessible(2, 3, 2).
+Accessible(2, 4, 0).
+Accessible(2, 4, 1).
+Accessible(2, 4, 2).
+Accessible(3, 1, 0).
+Accessible(3, 1, 1).
+Accessible(3, 1, 2).
+Accessible(3, 2, 0).
+Accessible(3, 2, 1).
+Accessible(3, 2, 2).
+Accessible(3, 4, 0).
+Accessible(3, 4, 1).
+Accessible(3, 4, 2).
+Accessible(4, 1, 0).
+Accessible(4, 1, 1).
+Accessible(4, 1, 2).
+Accessible(4, 2, 0).
+Accessible(4, 2, 1).
+Accessible(4, 2, 2).
+Accessible(4, 3, 0).
+Accessible(4, 3, 1).
+Accessible(4, 3, 2).
+Accessible(4, 7, 1).
+Accessible(4, 7, 2).
+Accessible(5, 6, 0).
+Accessible(5, 6, 1).
+Accessible(5, 6, 2).
+Accessible(5, 7, 0).
+Accessible(5, 7, 1).
+Accessible(5, 7, 2).
+Accessible(5, 8, 0).
+Accessible(5, 8, 1).
+Accessible(5, 8, 2).
+Accessible(6, 5, 0).
+Accessible(6, 5, 1).
+Accessible(6, 5, 2).
+Accessible(6, 7, 0).
+Accessible(6, 7, 1).
+Accessible(6, 7, 2).
+Accessible(6, 8, 0).
+Accessible(6, 8, 1).
+Accessible(6, 8, 2).
+Accessible(7, 4, 1).
+Accessible(7, 4, 2).
+Accessible(7, 5, 0).
+Accessible(7, 5, 1).
+Accessible(7, 5, 2).
+Accessible(7, 6, 0).
+Accessible(7, 6, 1).
+Accessible(7, 6, 2).
+Accessible(7, 8, 0).
+Accessible(7, 8, 1).
+Accessible(7, 8, 2).
+Accessible(8, 5, 0).
+Accessible(8, 5, 1).
+Accessible(8, 5, 2).
+Accessible(8, 6, 0).
+Accessible(8, 6, 1).
+Accessible(8, 6, 2).
+Accessible(8, 7, 0).
+Accessible(8, 7, 1).
+Accessible(8, 7, 2).
+Adult(Homer).
+Adult(Snoopy).
+Large(Homer).
+LargeSpecies(ElephantSpecies).
+LargeSpecies(HorseSpecies).
+LargeSpecies(HumanSpecies).
+Neighbor(1, 2).
+Neighbor(1, 3).
+Neighbor(1, 4).
+Neighbor(2, 1).
+Neighbor(2, 3).
+Neighbor(2, 4).
+Neighbor(3, 1).
+Neighbor(3, 2).
+Neighbor(3, 4).
+Neighbor(4, 1).
+Neighbor(4, 2).
+Neighbor(4, 3).
+Neighbor(4, 7).
+Neighbor(5, 6).
+Neighbor(5, 7).
+Neighbor(5, 8).
+Neighbor(6, 5).
+Neighbor(6, 7).
+Neighbor(6, 8).
+Neighbor(7, 4).
+Neighbor(7, 5).
+Neighbor(7, 6).
+Neighbor(7, 8).
+Neighbor(8, 5).
+Neighbor(8, 6).
+Neighbor(8, 7).
+ReleasedAt(AbnormalEncroachment(Homer), 0).
+ReleasedAt(AbnormalEncroachment(Homer), 1).
+ReleasedAt(AbnormalEncroachment(Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 0).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 1).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 2).
+ReleasedAt(MountFails(Homer), 0).
+ReleasedAt(MountFails(Homer), 1).
+ReleasedAt(MountFails(Homer), 2).
+ReleasedAt(Moves(Homer), 0).
+ReleasedAt(Moves(Homer), 1).
+ReleasedAt(Moves(Homer), 2).
+ReleasedAt(Moves(Snoopy), 0).
+ReleasedAt(Moves(Snoopy), 1).
+ReleasedAt(Moves(Snoopy), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 2).
+ReleasedAt(ThrowOffFails(Homer, Homer), 0).
+ReleasedAt(ThrowOffFails(Homer, Homer), 1).
+ReleasedAt(ThrowOffFails(Homer, Homer), 2).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 0).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 1).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 2).
+Sides(4, 7, GateAO).
+Sides(7, 4, GateAO).
+!Accessible(1, 1, 0).
+!Accessible(1, 1, 1).
+!Accessible(1, 1, 2).
+!Accessible(1, 5, 0).
+!Accessible(1, 5, 1).
+!Accessible(1, 5, 2).
+!Accessible(1, 6, 0).
+!Accessible(1, 6, 1).
+!Accessible(1, 6, 2).
+!Accessible(1, 7, 0).
+!Accessible(1, 7, 1).
+!Accessible(1, 7, 2).
+!Accessible(1, 8, 0).
+!Accessible(1, 8, 1).
+!Accessible(1, 8, 2).
+!Accessible(2, 2, 0).
+!Accessible(2, 2, 1).
+!Accessible(2, 2, 2).
+!Accessible(2, 5, 0).
+!Accessible(2, 5, 1).
+!Accessible(2, 5, 2).
+!Accessible(2, 6, 0).
+!Accessible(2, 6, 1).
+!Accessible(2, 6, 2).
+!Accessible(2, 7, 0).
+!Accessible(2, 7, 1).
+!Accessible(2, 7, 2).
+!Accessible(2, 8, 0).
+!Accessible(2, 8, 1).
+!Accessible(2, 8, 2).
+!Accessible(3, 3, 0).
+!Accessible(3, 3, 1).
+!Accessible(3, 3, 2).
+!Accessible(3, 5, 0).
+!Accessible(3, 5, 1).
+!Accessible(3, 5, 2).
+!Accessible(3, 6, 0).
+!Accessible(3, 6, 1).
+!Accessible(3, 6, 2).
+!Accessible(3, 7, 0).
+!Accessible(3, 7, 1).
+!Accessible(3, 7, 2).
+!Accessible(3, 8, 0).
+!Accessible(3, 8, 1).
+!Accessible(3, 8, 2).
+!Accessible(4, 4, 0).
+!Accessible(4, 4, 1).
+!Accessible(4, 4, 2).
+!Accessible(4, 5, 0).
+!Accessible(4, 5, 1).
+!Accessible(4, 5, 2).
+!Accessible(4, 6, 0).
+!Accessible(4, 6, 1).
+!Accessible(4, 6, 2).
+!Accessible(4, 7, 0).
+!Accessible(4, 8, 0).
+!Accessible(4, 8, 1).
+!Accessible(4, 8, 2).
+!Accessible(5, 1, 0).
+!Accessible(5, 1, 1).
+!Accessible(5, 1, 2).
+!Accessible(5, 2, 0).
+!Accessible(5, 2, 1).
+!Accessible(5, 2, 2).
+!Accessible(5, 3, 0).
+!Accessible(5, 3, 1).
+!Accessible(5, 3, 2).
+!Accessible(5, 4, 0).
+!Accessible(5, 4, 1).
+!Accessible(5, 4, 2).
+!Accessible(5, 5, 0).
+!Accessible(5, 5, 1).
+!Accessible(5, 5, 2).
+!Accessible(6, 1, 0).
+!Accessible(6, 1, 1).
+!Accessible(6, 1, 2).
+!Accessible(6, 2, 0).
+!Accessible(6, 2, 1).
+!Accessible(6, 2, 2).
+!Accessible(6, 3, 0).
+!Accessible(6, 3, 1).
+!Accessible(6, 3, 2).
+!Accessible(6, 4, 0).
+!Accessible(6, 4, 1).
+!Accessible(6, 4, 2).
+!Accessible(6, 6, 0).
+!Accessible(6, 6, 1).
+!Accessible(6, 6, 2).
+!Accessible(7, 1, 0).
+!Accessible(7, 1, 1).
+!Accessible(7, 1, 2).
+!Accessible(7, 2, 0).
+!Accessible(7, 2, 1).
+!Accessible(7, 2, 2).
+!Accessible(7, 3, 0).
+!Accessible(7, 3, 1).
+!Accessible(7, 3, 2).
+!Accessible(7, 4, 0).
+!Accessible(7, 7, 0).
+!Accessible(7, 7, 1).
+!Accessible(7, 7, 2).
+!Accessible(8, 1, 0).
+!Accessible(8, 1, 1).
+!Accessible(8, 1, 2).
+!Accessible(8, 2, 0).
+!Accessible(8, 2, 1).
+!Accessible(8, 2, 2).
+!Accessible(8, 3, 0).
+!Accessible(8, 3, 1).
+!Accessible(8, 3, 2).
+!Accessible(8, 4, 0).
+!Accessible(8, 4, 1).
+!Accessible(8, 4, 2).
+!Accessible(8, 8, 0).
+!Accessible(8, 8, 1).
+!Accessible(8, 8, 2).
+!Happens(Close(Homer, GateAO), 0).
+!Happens(Close(Homer, GateAO), 1).
+!Happens(GetOff(Homer, Homer), 0).
+!Happens(GetOff(Homer, Homer), 1).
+!Happens(GetOff(Homer, Snoopy), 0).
+!Happens(GetOff(Homer, Snoopy), 1).
+!Happens(Mount(Homer, Homer), 0).
+!Happens(Mount(Homer, Homer), 1).
+!Happens(Mount(Homer, Snoopy), 0).
+!Happens(Mount(Homer, Snoopy), 1).
+!Happens(Move(Homer, 1), 0).
+!Happens(Move(Homer, 1), 1).
+!Happens(Move(Homer, 2), 0).
+!Happens(Move(Homer, 2), 1).
+!Happens(Move(Homer, 3), 0).
+!Happens(Move(Homer, 3), 1).
+!Happens(Move(Homer, 4), 0).
+!Happens(Move(Homer, 5), 0).
+!Happens(Move(Homer, 5), 1).
+!Happens(Move(Homer, 6), 0).
+!Happens(Move(Homer, 6), 1).
+!Happens(Move(Homer, 7), 0).
+!Happens(Move(Homer, 7), 1).
+!Happens(Move(Homer, 8), 0).
+!Happens(Move(Homer, 8), 1).
+!Happens(Move(Snoopy, 1), 0).
+!Happens(Move(Snoopy, 1), 1).
+!Happens(Move(Snoopy, 2), 0).
+!Happens(Move(Snoopy, 2), 1).
+!Happens(Move(Snoopy, 3), 0).
+!Happens(Move(Snoopy, 3), 1).
+!Happens(Move(Snoopy, 4), 1).
+!Happens(Move(Snoopy, 5), 0).
+!Happens(Move(Snoopy, 5), 1).
+!Happens(Move(Snoopy, 6), 0).
+!Happens(Move(Snoopy, 6), 1).
+!Happens(Move(Snoopy, 7), 0).
+!Happens(Move(Snoopy, 8), 0).
+!Happens(Move(Snoopy, 8), 1).
+!Happens(Open(Homer, GateAO), 1).
+!Happens(ThrowOff(Homer, Homer), 0).
+!Happens(ThrowOff(Homer, Homer), 1).
+!Happens(ThrowOff(Snoopy, Homer), 0).
+!Happens(ThrowOff(Snoopy, Homer), 1).
+!Large(Snoopy).
+!LargeSpecies(DogSpecies).
+!Neighbor(1, 1).
+!Neighbor(1, 5).
+!Neighbor(1, 6).
+!Neighbor(1, 7).
+!Neighbor(1, 8).
+!Neighbor(2, 2).
+!Neighbor(2, 5).
+!Neighbor(2, 6).
+!Neighbor(2, 7).
+!Neighbor(2, 8).
+!Neighbor(3, 3).
+!Neighbor(3, 5).
+!Neighbor(3, 6).
+!Neighbor(3, 7).
+!Neighbor(3, 8).
+!Neighbor(4, 4).
+!Neighbor(4, 5).
+!Neighbor(4, 6).
+!Neighbor(4, 8).
+!Neighbor(5, 1).
+!Neighbor(5, 2).
+!Neighbor(5, 3).
+!Neighbor(5, 4).
+!Neighbor(5, 5).
+!Neighbor(6, 1).
+!Neighbor(6, 2).
+!Neighbor(6, 3).
+!Neighbor(6, 4).
+!Neighbor(6, 6).
+!Neighbor(7, 1).
+!Neighbor(7, 2).
+!Neighbor(7, 3).
+!Neighbor(7, 7).
+!Neighbor(8, 1).
+!Neighbor(8, 2).
+!Neighbor(8, 3).
+!Neighbor(8, 4).
+!Neighbor(8, 8).
+!ReleasedAt(Mounted(Homer, Homer), 0).
+!ReleasedAt(Mounted(Homer, Homer), 1).
+!ReleasedAt(Mounted(Homer, Homer), 2).
+!ReleasedAt(Mounted(Homer, Snoopy), 0).
+!ReleasedAt(Mounted(Homer, Snoopy), 1).
+!ReleasedAt(Mounted(Homer, Snoopy), 2).
+!ReleasedAt(Opened(GateAO), 0).
+!ReleasedAt(Opened(GateAO), 1).
+!ReleasedAt(Opened(GateAO), 2).
+!ReleasedAt(Pos(Homer, 1), 0).
+!ReleasedAt(Pos(Homer, 1), 1).
+!ReleasedAt(Pos(Homer, 1), 2).
+!ReleasedAt(Pos(Homer, 2), 0).
+!ReleasedAt(Pos(Homer, 2), 1).
+!ReleasedAt(Pos(Homer, 2), 2).
+!ReleasedAt(Pos(Homer, 3), 0).
+!ReleasedAt(Pos(Homer, 3), 1).
+!ReleasedAt(Pos(Homer, 3), 2).
+!ReleasedAt(Pos(Homer, 4), 0).
+!ReleasedAt(Pos(Homer, 4), 1).
+!ReleasedAt(Pos(Homer, 4), 2).
+!ReleasedAt(Pos(Homer, 5), 0).
+!ReleasedAt(Pos(Homer, 5), 1).
+!ReleasedAt(Pos(Homer, 5), 2).
+!ReleasedAt(Pos(Homer, 6), 0).
+!ReleasedAt(Pos(Homer, 6), 1).
+!ReleasedAt(Pos(Homer, 6), 2).
+!ReleasedAt(Pos(Homer, 7), 0).
+!ReleasedAt(Pos(Homer, 7), 1).
+!ReleasedAt(Pos(Homer, 7), 2).
+!ReleasedAt(Pos(Homer, 8), 0).
+!ReleasedAt(Pos(Homer, 8), 1).
+!ReleasedAt(Pos(Homer, 8), 2).
+!ReleasedAt(Pos(Snoopy, 1), 0).
+!ReleasedAt(Pos(Snoopy, 1), 1).
+!ReleasedAt(Pos(Snoopy, 1), 2).
+!ReleasedAt(Pos(Snoopy, 2), 0).
+!ReleasedAt(Pos(Snoopy, 2), 1).
+!ReleasedAt(Pos(Snoopy, 2), 2).
+!ReleasedAt(Pos(Snoopy, 3), 0).
+!ReleasedAt(Pos(Snoopy, 3), 1).
+!ReleasedAt(Pos(Snoopy, 3), 2).
+!ReleasedAt(Pos(Snoopy, 4), 0).
+!ReleasedAt(Pos(Snoopy, 4), 1).
+!ReleasedAt(Pos(Snoopy, 4), 2).
+!ReleasedAt(Pos(Snoopy, 5), 0).
+!ReleasedAt(Pos(Snoopy, 5), 1).
+!ReleasedAt(Pos(Snoopy, 5), 2).
+!ReleasedAt(Pos(Snoopy, 6), 0).
+!ReleasedAt(Pos(Snoopy, 6), 1).
+!ReleasedAt(Pos(Snoopy, 6), 2).
+!ReleasedAt(Pos(Snoopy, 7), 0).
+!ReleasedAt(Pos(Snoopy, 7), 1).
+!ReleasedAt(Pos(Snoopy, 7), 2).
+!ReleasedAt(Pos(Snoopy, 8), 0).
+!ReleasedAt(Pos(Snoopy, 8), 1).
+!ReleasedAt(Pos(Snoopy, 8), 2).
+!Sides(1, 1, GateAO).
+!Sides(1, 2, GateAO).
+!Sides(1, 3, GateAO).
+!Sides(1, 4, GateAO).
+!Sides(1, 5, GateAO).
+!Sides(1, 6, GateAO).
+!Sides(1, 7, GateAO).
+!Sides(1, 8, GateAO).
+!Sides(2, 1, GateAO).
+!Sides(2, 2, GateAO).
+!Sides(2, 3, GateAO).
+!Sides(2, 4, GateAO).
+!Sides(2, 5, GateAO).
+!Sides(2, 6, GateAO).
+!Sides(2, 7, GateAO).
+!Sides(2, 8, GateAO).
+!Sides(3, 1, GateAO).
+!Sides(3, 2, GateAO).
+!Sides(3, 3, GateAO).
+!Sides(3, 4, GateAO).
+!Sides(3, 5, GateAO).
+!Sides(3, 6, GateAO).
+!Sides(3, 7, GateAO).
+!Sides(3, 8, GateAO).
+!Sides(4, 1, GateAO).
+!Sides(4, 2, GateAO).
+!Sides(4, 3, GateAO).
+!Sides(4, 4, GateAO).
+!Sides(4, 5, GateAO).
+!Sides(4, 6, GateAO).
+!Sides(4, 8, GateAO).
+!Sides(5, 1, GateAO).
+!Sides(5, 2, GateAO).
+!Sides(5, 3, GateAO).
+!Sides(5, 4, GateAO).
+!Sides(5, 5, GateAO).
+!Sides(5, 6, GateAO).
+!Sides(5, 7, GateAO).
+!Sides(5, 8, GateAO).
+!Sides(6, 1, GateAO).
+!Sides(6, 2, GateAO).
+!Sides(6, 3, GateAO).
+!Sides(6, 4, GateAO).
+!Sides(6, 5, GateAO).
+!Sides(6, 6, GateAO).
+!Sides(6, 7, GateAO).
+!Sides(6, 8, GateAO).
+!Sides(7, 1, GateAO).
+!Sides(7, 2, GateAO).
+!Sides(7, 3, GateAO).
+!Sides(7, 5, GateAO).
+!Sides(7, 6, GateAO).
+!Sides(7, 7, GateAO).
+!Sides(7, 8, GateAO).
+!Sides(8, 1, GateAO).
+!Sides(8, 2, GateAO).
+!Sides(8, 3, GateAO).
+!Sides(8, 4, GateAO).
+!Sides(8, 5, GateAO).
+!Sides(8, 6, GateAO).
+!Sides(8, 7, GateAO).
+!Sides(8, 8, GateAO).
+---
+model 3:
+0
+DoneBy(Move(Snoopy, 4), Snoopy).
+DoneBy(Open(Homer, GateAO), Homer).
+Moves(Snoopy).
+Pos(Homer, 7).
+Pos(Snoopy, 3).
+PosDeterminingFluent(Homer, 1).
+Happens(Move(Snoopy, 4), 0).
+Happens(Open(Homer, GateAO), 0).
+1
+-DoneBy(Move(Snoopy, 4), Snoopy).
+-DoneBy(Open(Homer, GateAO), Homer).
+-Pos(Snoopy, 3).
++DoneBy(Move(Homer, 4), Homer).
++DoneBy(Move(Snoopy, 7), Snoopy).
++Moves(Homer).
++Opened(GateAO).
++Pos(Snoopy, 4).
+Happens(Move(Homer, 4), 1).
+Happens(Move(Snoopy, 7), 1).
+2
+-DoneBy(Move(Homer, 4), Homer).
+-DoneBy(Move(Snoopy, 7), Snoopy).
+-Moves(Homer).
+-Moves(Snoopy).
+-Pos(Homer, 7).
+-Pos(Snoopy, 4).
++Pos(Homer, 4).
++Pos(Snoopy, 7).
+P
+Accessible(1, 2, 0).
+Accessible(1, 2, 1).
+Accessible(1, 2, 2).
+Accessible(1, 3, 0).
+Accessible(1, 3, 1).
+Accessible(1, 3, 2).
+Accessible(1, 4, 0).
+Accessible(1, 4, 1).
+Accessible(1, 4, 2).
+Accessible(2, 1, 0).
+Accessible(2, 1, 1).
+Accessible(2, 1, 2).
+Accessible(2, 3, 0).
+Accessible(2, 3, 1).
+Accessible(2, 3, 2).
+Accessible(2, 4, 0).
+Accessible(2, 4, 1).
+Accessible(2, 4, 2).
+Accessible(3, 1, 0).
+Accessible(3, 1, 1).
+Accessible(3, 1, 2).
+Accessible(3, 2, 0).
+Accessible(3, 2, 1).
+Accessible(3, 2, 2).
+Accessible(3, 4, 0).
+Accessible(3, 4, 1).
+Accessible(3, 4, 2).
+Accessible(4, 1, 0).
+Accessible(4, 1, 1).
+Accessible(4, 1, 2).
+Accessible(4, 2, 0).
+Accessible(4, 2, 1).
+Accessible(4, 2, 2).
+Accessible(4, 3, 0).
+Accessible(4, 3, 1).
+Accessible(4, 3, 2).
+Accessible(4, 7, 1).
+Accessible(4, 7, 2).
+Accessible(5, 6, 0).
+Accessible(5, 6, 1).
+Accessible(5, 6, 2).
+Accessible(5, 7, 0).
+Accessible(5, 7, 1).
+Accessible(5, 7, 2).
+Accessible(5, 8, 0).
+Accessible(5, 8, 1).
+Accessible(5, 8, 2).
+Accessible(6, 5, 0).
+Accessible(6, 5, 1).
+Accessible(6, 5, 2).
+Accessible(6, 7, 0).
+Accessible(6, 7, 1).
+Accessible(6, 7, 2).
+Accessible(6, 8, 0).
+Accessible(6, 8, 1).
+Accessible(6, 8, 2).
+Accessible(7, 4, 1).
+Accessible(7, 4, 2).
+Accessible(7, 5, 0).
+Accessible(7, 5, 1).
+Accessible(7, 5, 2).
+Accessible(7, 6, 0).
+Accessible(7, 6, 1).
+Accessible(7, 6, 2).
+Accessible(7, 8, 0).
+Accessible(7, 8, 1).
+Accessible(7, 8, 2).
+Accessible(8, 5, 0).
+Accessible(8, 5, 1).
+Accessible(8, 5, 2).
+Accessible(8, 6, 0).
+Accessible(8, 6, 1).
+Accessible(8, 6, 2).
+Accessible(8, 7, 0).
+Accessible(8, 7, 1).
+Accessible(8, 7, 2).
+Adult(Homer).
+Adult(Snoopy).
+Large(Homer).
+LargeSpecies(ElephantSpecies).
+LargeSpecies(HorseSpecies).
+LargeSpecies(HumanSpecies).
+Neighbor(1, 2).
+Neighbor(1, 3).
+Neighbor(1, 4).
+Neighbor(2, 1).
+Neighbor(2, 3).
+Neighbor(2, 4).
+Neighbor(3, 1).
+Neighbor(3, 2).
+Neighbor(3, 4).
+Neighbor(4, 1).
+Neighbor(4, 2).
+Neighbor(4, 3).
+Neighbor(4, 7).
+Neighbor(5, 6).
+Neighbor(5, 7).
+Neighbor(5, 8).
+Neighbor(6, 5).
+Neighbor(6, 7).
+Neighbor(6, 8).
+Neighbor(7, 4).
+Neighbor(7, 5).
+Neighbor(7, 6).
+Neighbor(7, 8).
+Neighbor(8, 5).
+Neighbor(8, 6).
+Neighbor(8, 7).
+ReleasedAt(AbnormalEncroachment(Homer), 0).
+ReleasedAt(AbnormalEncroachment(Homer), 1).
+ReleasedAt(AbnormalEncroachment(Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 0).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 1).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 2).
+ReleasedAt(MountFails(Homer), 0).
+ReleasedAt(MountFails(Homer), 1).
+ReleasedAt(MountFails(Homer), 2).
+ReleasedAt(Moves(Homer), 0).
+ReleasedAt(Moves(Homer), 1).
+ReleasedAt(Moves(Homer), 2).
+ReleasedAt(Moves(Snoopy), 0).
+ReleasedAt(Moves(Snoopy), 1).
+ReleasedAt(Moves(Snoopy), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 2).
+ReleasedAt(ThrowOffFails(Homer, Homer), 0).
+ReleasedAt(ThrowOffFails(Homer, Homer), 1).
+ReleasedAt(ThrowOffFails(Homer, Homer), 2).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 0).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 1).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 2).
+Sides(4, 7, GateAO).
+Sides(7, 4, GateAO).
+!Accessible(1, 1, 0).
+!Accessible(1, 1, 1).
+!Accessible(1, 1, 2).
+!Accessible(1, 5, 0).
+!Accessible(1, 5, 1).
+!Accessible(1, 5, 2).
+!Accessible(1, 6, 0).
+!Accessible(1, 6, 1).
+!Accessible(1, 6, 2).
+!Accessible(1, 7, 0).
+!Accessible(1, 7, 1).
+!Accessible(1, 7, 2).
+!Accessible(1, 8, 0).
+!Accessible(1, 8, 1).
+!Accessible(1, 8, 2).
+!Accessible(2, 2, 0).
+!Accessible(2, 2, 1).
+!Accessible(2, 2, 2).
+!Accessible(2, 5, 0).
+!Accessible(2, 5, 1).
+!Accessible(2, 5, 2).
+!Accessible(2, 6, 0).
+!Accessible(2, 6, 1).
+!Accessible(2, 6, 2).
+!Accessible(2, 7, 0).
+!Accessible(2, 7, 1).
+!Accessible(2, 7, 2).
+!Accessible(2, 8, 0).
+!Accessible(2, 8, 1).
+!Accessible(2, 8, 2).
+!Accessible(3, 3, 0).
+!Accessible(3, 3, 1).
+!Accessible(3, 3, 2).
+!Accessible(3, 5, 0).
+!Accessible(3, 5, 1).
+!Accessible(3, 5, 2).
+!Accessible(3, 6, 0).
+!Accessible(3, 6, 1).
+!Accessible(3, 6, 2).
+!Accessible(3, 7, 0).
+!Accessible(3, 7, 1).
+!Accessible(3, 7, 2).
+!Accessible(3, 8, 0).
+!Accessible(3, 8, 1).
+!Accessible(3, 8, 2).
+!Accessible(4, 4, 0).
+!Accessible(4, 4, 1).
+!Accessible(4, 4, 2).
+!Accessible(4, 5, 0).
+!Accessible(4, 5, 1).
+!Accessible(4, 5, 2).
+!Accessible(4, 6, 0).
+!Accessible(4, 6, 1).
+!Accessible(4, 6, 2).
+!Accessible(4, 7, 0).
+!Accessible(4, 8, 0).
+!Accessible(4, 8, 1).
+!Accessible(4, 8, 2).
+!Accessible(5, 1, 0).
+!Accessible(5, 1, 1).
+!Accessible(5, 1, 2).
+!Accessible(5, 2, 0).
+!Accessible(5, 2, 1).
+!Accessible(5, 2, 2).
+!Accessible(5, 3, 0).
+!Accessible(5, 3, 1).
+!Accessible(5, 3, 2).
+!Accessible(5, 4, 0).
+!Accessible(5, 4, 1).
+!Accessible(5, 4, 2).
+!Accessible(5, 5, 0).
+!Accessible(5, 5, 1).
+!Accessible(5, 5, 2).
+!Accessible(6, 1, 0).
+!Accessible(6, 1, 1).
+!Accessible(6, 1, 2).
+!Accessible(6, 2, 0).
+!Accessible(6, 2, 1).
+!Accessible(6, 2, 2).
+!Accessible(6, 3, 0).
+!Accessible(6, 3, 1).
+!Accessible(6, 3, 2).
+!Accessible(6, 4, 0).
+!Accessible(6, 4, 1).
+!Accessible(6, 4, 2).
+!Accessible(6, 6, 0).
+!Accessible(6, 6, 1).
+!Accessible(6, 6, 2).
+!Accessible(7, 1, 0).
+!Accessible(7, 1, 1).
+!Accessible(7, 1, 2).
+!Accessible(7, 2, 0).
+!Accessible(7, 2, 1).
+!Accessible(7, 2, 2).
+!Accessible(7, 3, 0).
+!Accessible(7, 3, 1).
+!Accessible(7, 3, 2).
+!Accessible(7, 4, 0).
+!Accessible(7, 7, 0).
+!Accessible(7, 7, 1).
+!Accessible(7, 7, 2).
+!Accessible(8, 1, 0).
+!Accessible(8, 1, 1).
+!Accessible(8, 1, 2).
+!Accessible(8, 2, 0).
+!Accessible(8, 2, 1).
+!Accessible(8, 2, 2).
+!Accessible(8, 3, 0).
+!Accessible(8, 3, 1).
+!Accessible(8, 3, 2).
+!Accessible(8, 4, 0).
+!Accessible(8, 4, 1).
+!Accessible(8, 4, 2).
+!Accessible(8, 8, 0).
+!Accessible(8, 8, 1).
+!Accessible(8, 8, 2).
+!Happens(Close(Homer, GateAO), 0).
+!Happens(Close(Homer, GateAO), 1).
+!Happens(GetOff(Homer, Homer), 0).
+!Happens(GetOff(Homer, Homer), 1).
+!Happens(GetOff(Homer, Snoopy), 0).
+!Happens(GetOff(Homer, Snoopy), 1).
+!Happens(Mount(Homer, Homer), 0).
+!Happens(Mount(Homer, Homer), 1).
+!Happens(Mount(Homer, Snoopy), 0).
+!Happens(Mount(Homer, Snoopy), 1).
+!Happens(Move(Homer, 1), 0).
+!Happens(Move(Homer, 1), 1).
+!Happens(Move(Homer, 2), 0).
+!Happens(Move(Homer, 2), 1).
+!Happens(Move(Homer, 3), 0).
+!Happens(Move(Homer, 3), 1).
+!Happens(Move(Homer, 4), 0).
+!Happens(Move(Homer, 5), 0).
+!Happens(Move(Homer, 5), 1).
+!Happens(Move(Homer, 6), 0).
+!Happens(Move(Homer, 6), 1).
+!Happens(Move(Homer, 7), 0).
+!Happens(Move(Homer, 7), 1).
+!Happens(Move(Homer, 8), 0).
+!Happens(Move(Homer, 8), 1).
+!Happens(Move(Snoopy, 1), 0).
+!Happens(Move(Snoopy, 1), 1).
+!Happens(Move(Snoopy, 2), 0).
+!Happens(Move(Snoopy, 2), 1).
+!Happens(Move(Snoopy, 3), 0).
+!Happens(Move(Snoopy, 3), 1).
+!Happens(Move(Snoopy, 4), 1).
+!Happens(Move(Snoopy, 5), 0).
+!Happens(Move(Snoopy, 5), 1).
+!Happens(Move(Snoopy, 6), 0).
+!Happens(Move(Snoopy, 6), 1).
+!Happens(Move(Snoopy, 7), 0).
+!Happens(Move(Snoopy, 8), 0).
+!Happens(Move(Snoopy, 8), 1).
+!Happens(Open(Homer, GateAO), 1).
+!Happens(ThrowOff(Homer, Homer), 0).
+!Happens(ThrowOff(Homer, Homer), 1).
+!Happens(ThrowOff(Snoopy, Homer), 0).
+!Happens(ThrowOff(Snoopy, Homer), 1).
+!Large(Snoopy).
+!LargeSpecies(DogSpecies).
+!Neighbor(1, 1).
+!Neighbor(1, 5).
+!Neighbor(1, 6).
+!Neighbor(1, 7).
+!Neighbor(1, 8).
+!Neighbor(2, 2).
+!Neighbor(2, 5).
+!Neighbor(2, 6).
+!Neighbor(2, 7).
+!Neighbor(2, 8).
+!Neighbor(3, 3).
+!Neighbor(3, 5).
+!Neighbor(3, 6).
+!Neighbor(3, 7).
+!Neighbor(3, 8).
+!Neighbor(4, 4).
+!Neighbor(4, 5).
+!Neighbor(4, 6).
+!Neighbor(4, 8).
+!Neighbor(5, 1).
+!Neighbor(5, 2).
+!Neighbor(5, 3).
+!Neighbor(5, 4).
+!Neighbor(5, 5).
+!Neighbor(6, 1).
+!Neighbor(6, 2).
+!Neighbor(6, 3).
+!Neighbor(6, 4).
+!Neighbor(6, 6).
+!Neighbor(7, 1).
+!Neighbor(7, 2).
+!Neighbor(7, 3).
+!Neighbor(7, 7).
+!Neighbor(8, 1).
+!Neighbor(8, 2).
+!Neighbor(8, 3).
+!Neighbor(8, 4).
+!Neighbor(8, 8).
+!ReleasedAt(Mounted(Homer, Homer), 0).
+!ReleasedAt(Mounted(Homer, Homer), 1).
+!ReleasedAt(Mounted(Homer, Homer), 2).
+!ReleasedAt(Mounted(Homer, Snoopy), 0).
+!ReleasedAt(Mounted(Homer, Snoopy), 1).
+!ReleasedAt(Mounted(Homer, Snoopy), 2).
+!ReleasedAt(Opened(GateAO), 0).
+!ReleasedAt(Opened(GateAO), 1).
+!ReleasedAt(Opened(GateAO), 2).
+!ReleasedAt(Pos(Homer, 1), 0).
+!ReleasedAt(Pos(Homer, 1), 1).
+!ReleasedAt(Pos(Homer, 1), 2).
+!ReleasedAt(Pos(Homer, 2), 0).
+!ReleasedAt(Pos(Homer, 2), 1).
+!ReleasedAt(Pos(Homer, 2), 2).
+!ReleasedAt(Pos(Homer, 3), 0).
+!ReleasedAt(Pos(Homer, 3), 1).
+!ReleasedAt(Pos(Homer, 3), 2).
+!ReleasedAt(Pos(Homer, 4), 0).
+!ReleasedAt(Pos(Homer, 4), 1).
+!ReleasedAt(Pos(Homer, 4), 2).
+!ReleasedAt(Pos(Homer, 5), 0).
+!ReleasedAt(Pos(Homer, 5), 1).
+!ReleasedAt(Pos(Homer, 5), 2).
+!ReleasedAt(Pos(Homer, 6), 0).
+!ReleasedAt(Pos(Homer, 6), 1).
+!ReleasedAt(Pos(Homer, 6), 2).
+!ReleasedAt(Pos(Homer, 7), 0).
+!ReleasedAt(Pos(Homer, 7), 1).
+!ReleasedAt(Pos(Homer, 7), 2).
+!ReleasedAt(Pos(Homer, 8), 0).
+!ReleasedAt(Pos(Homer, 8), 1).
+!ReleasedAt(Pos(Homer, 8), 2).
+!ReleasedAt(Pos(Snoopy, 1), 0).
+!ReleasedAt(Pos(Snoopy, 1), 1).
+!ReleasedAt(Pos(Snoopy, 1), 2).
+!ReleasedAt(Pos(Snoopy, 2), 0).
+!ReleasedAt(Pos(Snoopy, 2), 1).
+!ReleasedAt(Pos(Snoopy, 2), 2).
+!ReleasedAt(Pos(Snoopy, 3), 0).
+!ReleasedAt(Pos(Snoopy, 3), 1).
+!ReleasedAt(Pos(Snoopy, 3), 2).
+!ReleasedAt(Pos(Snoopy, 4), 0).
+!ReleasedAt(Pos(Snoopy, 4), 1).
+!ReleasedAt(Pos(Snoopy, 4), 2).
+!ReleasedAt(Pos(Snoopy, 5), 0).
+!ReleasedAt(Pos(Snoopy, 5), 1).
+!ReleasedAt(Pos(Snoopy, 5), 2).
+!ReleasedAt(Pos(Snoopy, 6), 0).
+!ReleasedAt(Pos(Snoopy, 6), 1).
+!ReleasedAt(Pos(Snoopy, 6), 2).
+!ReleasedAt(Pos(Snoopy, 7), 0).
+!ReleasedAt(Pos(Snoopy, 7), 1).
+!ReleasedAt(Pos(Snoopy, 7), 2).
+!ReleasedAt(Pos(Snoopy, 8), 0).
+!ReleasedAt(Pos(Snoopy, 8), 1).
+!ReleasedAt(Pos(Snoopy, 8), 2).
+!Sides(1, 1, GateAO).
+!Sides(1, 2, GateAO).
+!Sides(1, 3, GateAO).
+!Sides(1, 4, GateAO).
+!Sides(1, 5, GateAO).
+!Sides(1, 6, GateAO).
+!Sides(1, 7, GateAO).
+!Sides(1, 8, GateAO).
+!Sides(2, 1, GateAO).
+!Sides(2, 2, GateAO).
+!Sides(2, 3, GateAO).
+!Sides(2, 4, GateAO).
+!Sides(2, 5, GateAO).
+!Sides(2, 6, GateAO).
+!Sides(2, 7, GateAO).
+!Sides(2, 8, GateAO).
+!Sides(3, 1, GateAO).
+!Sides(3, 2, GateAO).
+!Sides(3, 3, GateAO).
+!Sides(3, 4, GateAO).
+!Sides(3, 5, GateAO).
+!Sides(3, 6, GateAO).
+!Sides(3, 7, GateAO).
+!Sides(3, 8, GateAO).
+!Sides(4, 1, GateAO).
+!Sides(4, 2, GateAO).
+!Sides(4, 3, GateAO).
+!Sides(4, 4, GateAO).
+!Sides(4, 5, GateAO).
+!Sides(4, 6, GateAO).
+!Sides(4, 8, GateAO).
+!Sides(5, 1, GateAO).
+!Sides(5, 2, GateAO).
+!Sides(5, 3, GateAO).
+!Sides(5, 4, GateAO).
+!Sides(5, 5, GateAO).
+!Sides(5, 6, GateAO).
+!Sides(5, 7, GateAO).
+!Sides(5, 8, GateAO).
+!Sides(6, 1, GateAO).
+!Sides(6, 2, GateAO).
+!Sides(6, 3, GateAO).
+!Sides(6, 4, GateAO).
+!Sides(6, 5, GateAO).
+!Sides(6, 6, GateAO).
+!Sides(6, 7, GateAO).
+!Sides(6, 8, GateAO).
+!Sides(7, 1, GateAO).
+!Sides(7, 2, GateAO).
+!Sides(7, 3, GateAO).
+!Sides(7, 5, GateAO).
+!Sides(7, 6, GateAO).
+!Sides(7, 7, GateAO).
+!Sides(7, 8, GateAO).
+!Sides(8, 1, GateAO).
+!Sides(8, 2, GateAO).
+!Sides(8, 3, GateAO).
+!Sides(8, 4, GateAO).
+!Sides(8, 5, GateAO).
+!Sides(8, 6, GateAO).
+!Sides(8, 7, GateAO).
+!Sides(8, 8, GateAO).
+---
+model 4:
+0
+DoneBy(Move(Snoopy, 4), Snoopy).
+DoneBy(Open(Homer, GateAO), Homer).
+Moves(Snoopy).
+Pos(Homer, 7).
+Pos(Snoopy, 1).
+PosDeterminingFluent(Homer, 1).
+Happens(Move(Snoopy, 4), 0).
+Happens(Open(Homer, GateAO), 0).
+1
+-DoneBy(Move(Snoopy, 4), Snoopy).
+-DoneBy(Open(Homer, GateAO), Homer).
+-Pos(Snoopy, 1).
++DoneBy(Move(Homer, 4), Homer).
++DoneBy(Move(Snoopy, 7), Snoopy).
++Moves(Homer).
++Opened(GateAO).
++Pos(Snoopy, 4).
+Happens(Move(Homer, 4), 1).
+Happens(Move(Snoopy, 7), 1).
+2
+-DoneBy(Move(Homer, 4), Homer).
+-DoneBy(Move(Snoopy, 7), Snoopy).
+-Moves(Homer).
+-Moves(Snoopy).
+-Pos(Homer, 7).
+-Pos(Snoopy, 4).
++Pos(Homer, 4).
++Pos(Snoopy, 7).
+P
+Accessible(1, 2, 0).
+Accessible(1, 2, 1).
+Accessible(1, 2, 2).
+Accessible(1, 3, 0).
+Accessible(1, 3, 1).
+Accessible(1, 3, 2).
+Accessible(1, 4, 0).
+Accessible(1, 4, 1).
+Accessible(1, 4, 2).
+Accessible(2, 1, 0).
+Accessible(2, 1, 1).
+Accessible(2, 1, 2).
+Accessible(2, 3, 0).
+Accessible(2, 3, 1).
+Accessible(2, 3, 2).
+Accessible(2, 4, 0).
+Accessible(2, 4, 1).
+Accessible(2, 4, 2).
+Accessible(3, 1, 0).
+Accessible(3, 1, 1).
+Accessible(3, 1, 2).
+Accessible(3, 2, 0).
+Accessible(3, 2, 1).
+Accessible(3, 2, 2).
+Accessible(3, 4, 0).
+Accessible(3, 4, 1).
+Accessible(3, 4, 2).
+Accessible(4, 1, 0).
+Accessible(4, 1, 1).
+Accessible(4, 1, 2).
+Accessible(4, 2, 0).
+Accessible(4, 2, 1).
+Accessible(4, 2, 2).
+Accessible(4, 3, 0).
+Accessible(4, 3, 1).
+Accessible(4, 3, 2).
+Accessible(4, 7, 1).
+Accessible(4, 7, 2).
+Accessible(5, 6, 0).
+Accessible(5, 6, 1).
+Accessible(5, 6, 2).
+Accessible(5, 7, 0).
+Accessible(5, 7, 1).
+Accessible(5, 7, 2).
+Accessible(5, 8, 0).
+Accessible(5, 8, 1).
+Accessible(5, 8, 2).
+Accessible(6, 5, 0).
+Accessible(6, 5, 1).
+Accessible(6, 5, 2).
+Accessible(6, 7, 0).
+Accessible(6, 7, 1).
+Accessible(6, 7, 2).
+Accessible(6, 8, 0).
+Accessible(6, 8, 1).
+Accessible(6, 8, 2).
+Accessible(7, 4, 1).
+Accessible(7, 4, 2).
+Accessible(7, 5, 0).
+Accessible(7, 5, 1).
+Accessible(7, 5, 2).
+Accessible(7, 6, 0).
+Accessible(7, 6, 1).
+Accessible(7, 6, 2).
+Accessible(7, 8, 0).
+Accessible(7, 8, 1).
+Accessible(7, 8, 2).
+Accessible(8, 5, 0).
+Accessible(8, 5, 1).
+Accessible(8, 5, 2).
+Accessible(8, 6, 0).
+Accessible(8, 6, 1).
+Accessible(8, 6, 2).
+Accessible(8, 7, 0).
+Accessible(8, 7, 1).
+Accessible(8, 7, 2).
+Adult(Homer).
+Adult(Snoopy).
+Large(Homer).
+LargeSpecies(ElephantSpecies).
+LargeSpecies(HorseSpecies).
+LargeSpecies(HumanSpecies).
+Neighbor(1, 2).
+Neighbor(1, 3).
+Neighbor(1, 4).
+Neighbor(2, 1).
+Neighbor(2, 3).
+Neighbor(2, 4).
+Neighbor(3, 1).
+Neighbor(3, 2).
+Neighbor(3, 4).
+Neighbor(4, 1).
+Neighbor(4, 2).
+Neighbor(4, 3).
+Neighbor(4, 7).
+Neighbor(5, 6).
+Neighbor(5, 7).
+Neighbor(5, 8).
+Neighbor(6, 5).
+Neighbor(6, 7).
+Neighbor(6, 8).
+Neighbor(7, 4).
+Neighbor(7, 5).
+Neighbor(7, 6).
+Neighbor(7, 8).
+Neighbor(8, 5).
+Neighbor(8, 6).
+Neighbor(8, 7).
+ReleasedAt(AbnormalEncroachment(Homer), 0).
+ReleasedAt(AbnormalEncroachment(Homer), 1).
+ReleasedAt(AbnormalEncroachment(Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 0).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 1).
+ReleasedAt(DoneBy(Close(Homer, GateAO), Snoopy), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Homer), 2).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 0).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 1).
+ReleasedAt(DoneBy(GetOff(Homer, Snoopy), Snoopy), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(Mount(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 0).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 1).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Homer), 2).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 0).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 1).
+ReleasedAt(DoneBy(Mount(Homer, Snoopy), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 1), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 2), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 3), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 4), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 5), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 6), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 7), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Homer, 8), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 1), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 2), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 3), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 4), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 5), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 6), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 7), Snoopy), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Homer), 2).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 0).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 1).
+ReleasedAt(DoneBy(Move(Snoopy, 8), Snoopy), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Homer), 2).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 0).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 1).
+ReleasedAt(DoneBy(Open(Homer, GateAO), Snoopy), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(ThrowOff(Homer, Homer), Snoopy), 2).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 0).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 1).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Homer), 2).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 0).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 1).
+ReleasedAt(DoneBy(ThrowOff(Snoopy, Homer), Snoopy), 2).
+ReleasedAt(MountFails(Homer), 0).
+ReleasedAt(MountFails(Homer), 1).
+ReleasedAt(MountFails(Homer), 2).
+ReleasedAt(Moves(Homer), 0).
+ReleasedAt(Moves(Homer), 1).
+ReleasedAt(Moves(Homer), 2).
+ReleasedAt(Moves(Snoopy), 0).
+ReleasedAt(Moves(Snoopy), 1).
+ReleasedAt(Moves(Snoopy), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 1), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 2), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 3), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 4), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 5), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 6), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 7), 2).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 0).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 1).
+ReleasedAt(PosDeterminingFluent(Homer, 8), 2).
+ReleasedAt(ThrowOffFails(Homer, Homer), 0).
+ReleasedAt(ThrowOffFails(Homer, Homer), 1).
+ReleasedAt(ThrowOffFails(Homer, Homer), 2).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 0).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 1).
+ReleasedAt(ThrowOffFails(Snoopy, Homer), 2).
+Sides(4, 7, GateAO).
+Sides(7, 4, GateAO).
+!Accessible(1, 1, 0).
+!Accessible(1, 1, 1).
+!Accessible(1, 1, 2).
+!Accessible(1, 5, 0).
+!Accessible(1, 5, 1).
+!Accessible(1, 5, 2).
+!Accessible(1, 6, 0).
+!Accessible(1, 6, 1).
+!Accessible(1, 6, 2).
+!Accessible(1, 7, 0).
+!Accessible(1, 7, 1).
+!Accessible(1, 7, 2).
+!Accessible(1, 8, 0).
+!Accessible(1, 8, 1).
+!Accessible(1, 8, 2).
+!Accessible(2, 2, 0).
+!Accessible(2, 2, 1).
+!Accessible(2, 2, 2).
+!Accessible(2, 5, 0).
+!Accessible(2, 5, 1).
+!Accessible(2, 5, 2).
+!Accessible(2, 6, 0).
+!Accessible(2, 6, 1).
+!Accessible(2, 6, 2).
+!Accessible(2, 7, 0).
+!Accessible(2, 7, 1).
+!Accessible(2, 7, 2).
+!Accessible(2, 8, 0).
+!Accessible(2, 8, 1).
+!Accessible(2, 8, 2).
+!Accessible(3, 3, 0).
+!Accessible(3, 3, 1).
+!Accessible(3, 3, 2).
+!Accessible(3, 5, 0).
+!Accessible(3, 5, 1).
+!Accessible(3, 5, 2).
+!Accessible(3, 6, 0).
+!Accessible(3, 6, 1).
+!Accessible(3, 6, 2).
+!Accessible(3, 7, 0).
+!Accessible(3, 7, 1).
+!Accessible(3, 7, 2).
+!Accessible(3, 8, 0).
+!Accessible(3, 8, 1).
+!Accessible(3, 8, 2).
+!Accessible(4, 4, 0).
+!Accessible(4, 4, 1).
+!Accessible(4, 4, 2).
+!Accessible(4, 5, 0).
+!Accessible(4, 5, 1).
+!Accessible(4, 5, 2).
+!Accessible(4, 6, 0).
+!Accessible(4, 6, 1).
+!Accessible(4, 6, 2).
+!Accessible(4, 7, 0).
+!Accessible(4, 8, 0).
+!Accessible(4, 8, 1).
+!Accessible(4, 8, 2).
+!Accessible(5, 1, 0).
+!Accessible(5, 1, 1).
+!Accessible(5, 1, 2).
+!Accessible(5, 2, 0).
+!Accessible(5, 2, 1).
+!Accessible(5, 2, 2).
+!Accessible(5, 3, 0).
+!Accessible(5, 3, 1).
+!Accessible(5, 3, 2).
+!Accessible(5, 4, 0).
+!Accessible(5, 4, 1).
+!Accessible(5, 4, 2).
+!Accessible(5, 5, 0).
+!Accessible(5, 5, 1).
+!Accessible(5, 5, 2).
+!Accessible(6, 1, 0).
+!Accessible(6, 1, 1).
+!Accessible(6, 1, 2).
+!Accessible(6, 2, 0).
+!Accessible(6, 2, 1).
+!Accessible(6, 2, 2).
+!Accessible(6, 3, 0).
+!Accessible(6, 3, 1).
+!Accessible(6, 3, 2).
+!Accessible(6, 4, 0).
+!Accessible(6, 4, 1).
+!Accessible(6, 4, 2).
+!Accessible(6, 6, 0).
+!Accessible(6, 6, 1).
+!Accessible(6, 6, 2).
+!Accessible(7, 1, 0).
+!Accessible(7, 1, 1).
+!Accessible(7, 1, 2).
+!Accessible(7, 2, 0).
+!Accessible(7, 2, 1).
+!Accessible(7, 2, 2).
+!Accessible(7, 3, 0).
+!Accessible(7, 3, 1).
+!Accessible(7, 3, 2).
+!Accessible(7, 4, 0).
+!Accessible(7, 7, 0).
+!Accessible(7, 7, 1).
+!Accessible(7, 7, 2).
+!Accessible(8, 1, 0).
+!Accessible(8, 1, 1).
+!Accessible(8, 1, 2).
+!Accessible(8, 2, 0).
+!Accessible(8, 2, 1).
+!Accessible(8, 2, 2).
+!Accessible(8, 3, 0).
+!Accessible(8, 3, 1).
+!Accessible(8, 3, 2).
+!Accessible(8, 4, 0).
+!Accessible(8, 4, 1).
+!Accessible(8, 4, 2).
+!Accessible(8, 8, 0).
+!Accessible(8, 8, 1).
+!Accessible(8, 8, 2).
+!Happens(Close(Homer, GateAO), 0).
+!Happens(Close(Homer, GateAO), 1).
+!Happens(GetOff(Homer, Homer), 0).
+!Happens(GetOff(Homer, Homer), 1).
+!Happens(GetOff(Homer, Snoopy), 0).
+!Happens(GetOff(Homer, Snoopy), 1).
+!Happens(Mount(Homer, Homer), 0).
+!Happens(Mount(Homer, Homer), 1).
+!Happens(Mount(Homer, Snoopy), 0).
+!Happens(Mount(Homer, Snoopy), 1).
+!Happens(Move(Homer, 1), 0).
+!Happens(Move(Homer, 1), 1).
+!Happens(Move(Homer, 2), 0).
+!Happens(Move(Homer, 2), 1).
+!Happens(Move(Homer, 3), 0).
+!Happens(Move(Homer, 3), 1).
+!Happens(Move(Homer, 4), 0).
+!Happens(Move(Homer, 5), 0).
+!Happens(Move(Homer, 5), 1).
+!Happens(Move(Homer, 6), 0).
+!Happens(Move(Homer, 6), 1).
+!Happens(Move(Homer, 7), 0).
+!Happens(Move(Homer, 7), 1).
+!Happens(Move(Homer, 8), 0).
+!Happens(Move(Homer, 8), 1).
+!Happens(Move(Snoopy, 1), 0).
+!Happens(Move(Snoopy, 1), 1).
+!Happens(Move(Snoopy, 2), 0).
+!Happens(Move(Snoopy, 2), 1).
+!Happens(Move(Snoopy, 3), 0).
+!Happens(Move(Snoopy, 3), 1).
+!Happens(Move(Snoopy, 4), 1).
+!Happens(Move(Snoopy, 5), 0).
+!Happens(Move(Snoopy, 5), 1).
+!Happens(Move(Snoopy, 6), 0).
+!Happens(Move(Snoopy, 6), 1).
+!Happens(Move(Snoopy, 7), 0).
+!Happens(Move(Snoopy, 8), 0).
+!Happens(Move(Snoopy, 8), 1).
+!Happens(Open(Homer, GateAO), 1).
+!Happens(ThrowOff(Homer, Homer), 0).
+!Happens(ThrowOff(Homer, Homer), 1).
+!Happens(ThrowOff(Snoopy, Homer), 0).
+!Happens(ThrowOff(Snoopy, Homer), 1).
+!Large(Snoopy).
+!LargeSpecies(DogSpecies).
+!Neighbor(1, 1).
+!Neighbor(1, 5).
+!Neighbor(1, 6).
+!Neighbor(1, 7).
+!Neighbor(1, 8).
+!Neighbor(2, 2).
+!Neighbor(2, 5).
+!Neighbor(2, 6).
+!Neighbor(2, 7).
+!Neighbor(2, 8).
+!Neighbor(3, 3).
+!Neighbor(3, 5).
+!Neighbor(3, 6).
+!Neighbor(3, 7).
+!Neighbor(3, 8).
+!Neighbor(4, 4).
+!Neighbor(4, 5).
+!Neighbor(4, 6).
+!Neighbor(4, 8).
+!Neighbor(5, 1).
+!Neighbor(5, 2).
+!Neighbor(5, 3).
+!Neighbor(5, 4).
+!Neighbor(5, 5).
+!Neighbor(6, 1).
+!Neighbor(6, 2).
+!Neighbor(6, 3).
+!Neighbor(6, 4).
+!Neighbor(6, 6).
+!Neighbor(7, 1).
+!Neighbor(7, 2).
+!Neighbor(7, 3).
+!Neighbor(7, 7).
+!Neighbor(8, 1).
+!Neighbor(8, 2).
+!Neighbor(8, 3).
+!Neighbor(8, 4).
+!Neighbor(8, 8).
+!ReleasedAt(Mounted(Homer, Homer), 0).
+!ReleasedAt(Mounted(Homer, Homer), 1).
+!ReleasedAt(Mounted(Homer, Homer), 2).
+!ReleasedAt(Mounted(Homer, Snoopy), 0).
+!ReleasedAt(Mounted(Homer, Snoopy), 1).
+!ReleasedAt(Mounted(Homer, Snoopy), 2).
+!ReleasedAt(Opened(GateAO), 0).
+!ReleasedAt(Opened(GateAO), 1).
+!ReleasedAt(Opened(GateAO), 2).
+!ReleasedAt(Pos(Homer, 1), 0).
+!ReleasedAt(Pos(Homer, 1), 1).
+!ReleasedAt(Pos(Homer, 1), 2).
+!ReleasedAt(Pos(Homer, 2), 0).
+!ReleasedAt(Pos(Homer, 2), 1).
+!ReleasedAt(Pos(Homer, 2), 2).
+!ReleasedAt(Pos(Homer, 3), 0).
+!ReleasedAt(Pos(Homer, 3), 1).
+!ReleasedAt(Pos(Homer, 3), 2).
+!ReleasedAt(Pos(Homer, 4), 0).
+!ReleasedAt(Pos(Homer, 4), 1).
+!ReleasedAt(Pos(Homer, 4), 2).
+!ReleasedAt(Pos(Homer, 5), 0).
+!ReleasedAt(Pos(Homer, 5), 1).
+!ReleasedAt(Pos(Homer, 5), 2).
+!ReleasedAt(Pos(Homer, 6), 0).
+!ReleasedAt(Pos(Homer, 6), 1).
+!ReleasedAt(Pos(Homer, 6), 2).
+!ReleasedAt(Pos(Homer, 7), 0).
+!ReleasedAt(Pos(Homer, 7), 1).
+!ReleasedAt(Pos(Homer, 7), 2).
+!ReleasedAt(Pos(Homer, 8), 0).
+!ReleasedAt(Pos(Homer, 8), 1).
+!ReleasedAt(Pos(Homer, 8), 2).
+!ReleasedAt(Pos(Snoopy, 1), 0).
+!ReleasedAt(Pos(Snoopy, 1), 1).
+!ReleasedAt(Pos(Snoopy, 1), 2).
+!ReleasedAt(Pos(Snoopy, 2), 0).
+!ReleasedAt(Pos(Snoopy, 2), 1).
+!ReleasedAt(Pos(Snoopy, 2), 2).
+!ReleasedAt(Pos(Snoopy, 3), 0).
+!ReleasedAt(Pos(Snoopy, 3), 1).
+!ReleasedAt(Pos(Snoopy, 3), 2).
+!ReleasedAt(Pos(Snoopy, 4), 0).
+!ReleasedAt(Pos(Snoopy, 4), 1).
+!ReleasedAt(Pos(Snoopy, 4), 2).
+!ReleasedAt(Pos(Snoopy, 5), 0).
+!ReleasedAt(Pos(Snoopy, 5), 1).
+!ReleasedAt(Pos(Snoopy, 5), 2).
+!ReleasedAt(Pos(Snoopy, 6), 0).
+!ReleasedAt(Pos(Snoopy, 6), 1).
+!ReleasedAt(Pos(Snoopy, 6), 2).
+!ReleasedAt(Pos(Snoopy, 7), 0).
+!ReleasedAt(Pos(Snoopy, 7), 1).
+!ReleasedAt(Pos(Snoopy, 7), 2).
+!ReleasedAt(Pos(Snoopy, 8), 0).
+!ReleasedAt(Pos(Snoopy, 8), 1).
+!ReleasedAt(Pos(Snoopy, 8), 2).
+!Sides(1, 1, GateAO).
+!Sides(1, 2, GateAO).
+!Sides(1, 3, GateAO).
+!Sides(1, 4, GateAO).
+!Sides(1, 5, GateAO).
+!Sides(1, 6, GateAO).
+!Sides(1, 7, GateAO).
+!Sides(1, 8, GateAO).
+!Sides(2, 1, GateAO).
+!Sides(2, 2, GateAO).
+!Sides(2, 3, GateAO).
+!Sides(2, 4, GateAO).
+!Sides(2, 5, GateAO).
+!Sides(2, 6, GateAO).
+!Sides(2, 7, GateAO).
+!Sides(2, 8, GateAO).
+!Sides(3, 1, GateAO).
+!Sides(3, 2, GateAO).
+!Sides(3, 3, GateAO).
+!Sides(3, 4, GateAO).
+!Sides(3, 5, GateAO).
+!Sides(3, 6, GateAO).
+!Sides(3, 7, GateAO).
+!Sides(3, 8, GateAO).
+!Sides(4, 1, GateAO).
+!Sides(4, 2, GateAO).
+!Sides(4, 3, GateAO).
+!Sides(4, 4, GateAO).
+!Sides(4, 5, GateAO).
+!Sides(4, 6, GateAO).
+!Sides(4, 8, GateAO).
+!Sides(5, 1, GateAO).
+!Sides(5, 2, GateAO).
+!Sides(5, 3, GateAO).
+!Sides(5, 4, GateAO).
+!Sides(5, 5, GateAO).
+!Sides(5, 6, GateAO).
+!Sides(5, 7, GateAO).
+!Sides(5, 8, GateAO).
+!Sides(6, 1, GateAO).
+!Sides(6, 2, GateAO).
+!Sides(6, 3, GateAO).
+!Sides(6, 4, GateAO).
+!Sides(6, 5, GateAO).
+!Sides(6, 6, GateAO).
+!Sides(6, 7, GateAO).
+!Sides(6, 8, GateAO).
+!Sides(7, 1, GateAO).
+!Sides(7, 2, GateAO).
+!Sides(7, 3, GateAO).
+!Sides(7, 5, GateAO).
+!Sides(7, 6, GateAO).
+!Sides(7, 7, GateAO).
+!Sides(7, 8, GateAO).
+!Sides(8, 1, GateAO).
+!Sides(8, 2, GateAO).
+!Sides(8, 3, GateAO).
+!Sides(8, 4, GateAO).
+!Sides(8, 5, GateAO).
+!Sides(8, 6, GateAO).
+!Sides(8, 7, GateAO).
+!Sides(8, 8, GateAO).
+DEC: 6 predicates, 0 functions, 0 fluents, 0 events, 7 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+ZooTest3: 0 predicates, 0 functions, 0 fluents, 0 events, 11 axioms
+ZooWorld: 6 predicates, 4 functions, 9 fluents, 6 events, 78 axioms
+encoding 11.4s
+solution 0.5s
+total 15.3s
+Discrete Event Calculus Reasoner 1.0

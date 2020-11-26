@@ -1,0 +1,3 @@
+Like {\tt RANDOM\_\-GENERATE Arg1 Arg2}, but use the second argument
+to limit the maximum depth of the generated tree.
+

@@ -1,0 +1,26 @@
+(note TQB124) 
+(abort)
+
+(subclass BallisticMissile Missile) 
+(not (quotedCollection Missile)) 
+(completeExtentKnown quotedCollection) 
+(subclass BallisticMissile IndirectFireWeapon) 
+(subclass BallisticMissile IndirectFireWeapon) 
+(not (quotedCollection IndirectFireWeapon)) 
+(subclass BallisticMissile RocketPropelledVehicle) 
+(subclass BallisticMissile RocketPropelledVehicle) 
+(not (quotedCollection RocketPropelledVehicle)) 
+
+(query (findall ?CLASS
+  (and 
+    (subclass BallisticMissile ?CLASS) 
+    (not (quotedCollection ?CLASS)) 
+    (assertedFormula (subclass BallisticMissile ?CLASS)))))
+
+(answer Missile)
+(answer IndirectFireWeapon)
+(answer RocketPropelledVehicle)
+
+
+(end_of_file)
+

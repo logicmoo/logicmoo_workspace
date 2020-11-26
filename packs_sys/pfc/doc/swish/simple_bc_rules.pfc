@@ -1,0 +1,20 @@
+:- include(library(pfc_header_3_0)).
+
+
+
+==> fib(0,1). 
+==> fib(1,1).
+==> fib(2,2).
+fib(N,M) <- 
+  {N>2,N1 is N-1,N2 is N-2},
+  fib(N1,M1),
+  fib(N2,M2),
+  {M is M1+M2}.
+
+
+%pfc_time(Goal):- pfcSetSearch(thread),  prolog_statistics:time(user:pfc_call(Goal)),!.
+
+
+
+%:- listing(pfctmp:knows_will_table_as).
+

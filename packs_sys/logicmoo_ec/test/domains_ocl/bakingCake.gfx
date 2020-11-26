@@ -1,0 +1,306 @@
+<jgx-1.01>
+<model>
+	<a class="state" id="1" val="1" rect="460.0,57.0,33.0,31.0" attr="0">
+		<a class="port" id="2" val="2"/>
+	</a>
+	<a class="state" id="3" val="3" rect="448.0,231.0,44.0,37.0" attr="1">
+		<a class="port" id="4" val="2"/>
+	</a>
+	<a class="state" id="5" val="4" rect="430.0,453.0,60.0,37.0" attr="2">
+		<a class="port" id="6" val="2"/>
+	</a>
+	<a class="state" id="7" val="5" rect="94.0,81.0,30.0,39.0" attr="3">
+		<a class="port" id="8" val="2"/>
+	</a>
+	<a class="state" id="9" val="6" rect="94.0,273.0,40.0,39.0" attr="4">
+		<a class="port" id="10" val="2"/>
+	</a>
+	<a class="state" id="11" val="7" rect="244.0,267.0,51.0,46.0" attr="5">
+		<a class="port" id="12" val="2"/>
+	</a>
+	<a class="state" id="13" val="8" rect="250.0,87.0,37.0,39.0" attr="6">
+		<a class="port" id="14" val="2"/>
+	</a>
+	<a class="state" id="15" val="9" rect="634.0,213.0,63.0,39.0" attr="7">
+		<a class="port" id="16" val="2"/>
+	</a>
+	<a class="state" id="17" val="10" rect="646.0,69.0,52.0,39.0" attr="8">
+		<a class="port" id="18" val="2"/>
+	</a>
+	<a class="textNote" id="19" val="11" rect="196.0,51.0,29.0,17.0" attr="9"/>
+	<a class="textNote" id="20" val="12" rect="454.0,9.0,29.0,17.0" attr="9"/>
+	<a class="textNote" id="21" val="13" rect="652.0,21.0,57.0,17.0" attr="9"/>
+	<a class="transState" id="22" val="14" rect="538.0,135.0,103.0,19.0" attr="10">
+		<a class="port" id="23" val="2"/>
+	</a>
+	<a class="transState" id="24" val="15" rect="738.0,141.0,53.0,19.0" attr="10">
+		<a class="port" id="25" val="2"/>
+	</a>
+	<a class="transitionEdge" id="27" val="2" src="26" tgt="12" pts="329.5,189.5,259.5,292.5" attr="11"/>
+	<a class="transitionEdge" id="28" val="2" src="14" tgt="26" pts="268.5,106.5,329.5,189.5" attr="11"/>
+	<a class="transitionEdge" id="30" val="2" src="10" tgt="29" pts="114.0,292.5,137.5,159.5" attr="11"/>
+	<a class="transitionEdge" id="31" val="2" src="29" tgt="8" pts="137.5,159.5,109.0,100.5" attr="11"/>
+	<a class="transitionEdge" id="33" val="2" src="32" tgt="10" pts="79.0,183.5,114.0,292.5" attr="11"/>
+	<a class="transitionEdge" id="35" val="2" src="34" tgt="14" pts="221.5,183.5,268.5,106.5" attr="11"/>
+	<a class="transitionEdge" id="36" val="2" src="12" tgt="34" pts="259.5,292.5,215.5,177.5" attr="11"/>
+	<a class="transitionEdge" id="37" val="2" src="23" tgt="16" pts="589.5,144.5,654.0,232.5" attr="11"/>
+	<a class="transitionEdge" id="38" val="2" src="18" tgt="23" pts="672.5,88.5,589.5,144.5" attr="11"/>
+	<a class="transitionEdge" id="39" val="2" src="16" tgt="25" pts="654.0,232.5,761.5,150.5" attr="11"/>
+	<a class="transitionEdge" id="40" val="2" src="25" tgt="18" pts="761.5,150.5,672.5,88.5" attr="11"/>
+	<a class="OneWayMergeEdge" id="41" val="16" src="8" tgt="26" pts="109.0,100.5,329.5,189.5" attr="12"/>
+	<a class="state" id="42" val="17" rect="454.0,117.0,41.0,37.0" attr="13">
+		<a class="port" id="43" val="2"/>
+	</a>
+	<a class="transState" id="44" val="18" rect="346.0,123.0,59.0,19.0" attr="10">
+		<a class="port" id="45" val="2"/>
+	</a>
+	<a class="TwoWayMergeEdge" id="46" val="19" src="45" tgt="26" pts="375.5,132.5,329.5,189.5" attr="14"/>
+	<a class="transitionEdge" id="47" val="2" src="2" tgt="45" pts="472.5,72.5,375.5,132.5" attr="11"/>
+	<a class="transitionEdge" id="48" val="2" src="45" tgt="43" pts="375.5,132.5,468.5,189.5" attr="11"/>
+	<a class="transState" id="49" val="20" rect="352.0,255.0,47.0,19.0" attr="10">
+		<a class="port" id="50" val="2"/>
+	</a>
+	<a class="TwoWayMergeEdge" id="51" val="21" src="34" tgt="50" pts="215.5,183.5,375.5,264.5" attr="14"/>
+	<a class="transitionEdge" id="53" val="2" src="50" tgt="52" pts="369.5,234.5,469.5,324.5" attr="11"/>
+	<a class="state" id="54" val="22" rect="418.0,357.0,83.0,37.0" attr="15">
+		<a class="port" id="55" val="2"/>
+	</a>
+	<a class="transState" id="56" val="23" rect="538.0,291.0,101.0,19.0" attr="10">
+		<a class="port" id="57" val="2"/>
+	</a>
+	<a class="transitionEdge" id="58" val="2" src="4" tgt="50" pts="470.0,249.5,375.5,264.5" attr="11"/>
+	<a class="transitionEdge" id="59" val="2" src="57" tgt="55" pts="588.5,300.5,465.5,375.5" attr="11"/>
+	<a class="TwoWayMergeEdge" id="60" val="24" src="57" tgt="23" pts="588.5,300.5,589.5,144.5" attr="14"/>
+	<a class="transState" id="61" val="25" rect="622.0,411.0,53.0,19.0" attr="10">
+		<a class="port" id="62" val="2"/>
+	</a>
+	<a class="transitionEdge" id="63" val="2" src="55" tgt="62" pts="465.5,375.5,562.0,420.5" attr="11"/>
+	<a class="transitionEdge" id="64" val="2" src="62" tgt="6" pts="562.0,420.5,472.0,471.5" attr="11"/>
+	<a class="TwoWayMergeEdge" id="65" val="26" src="25" tgt="62" pts="761.5,150.5,562.0,420.5" attr="14"/>
+	<a class="OneWayMergeEdge" id="66" val="27" src="8" tgt="34" pts="109.0,100.5,221.5,183.5" attr="12"/>
+	<a class="state" id="67" val="28" rect="420.0,288.0,75.0,37.0" attr="16">
+		<a class="port" id="52" val="2"/>
+	</a>
+	<a class="transState" id="68" val="29" rect="456.0,186.0,30.0,19.0" attr="10">
+		<a class="port" id="69" val="2"/>
+	</a>
+	<a class="transitionEdge" id="70" val="2" src="43" tgt="69" pts="10.0,10.0,20.0,20.0" attr="11"/>
+	<a class="transitionEdge" id="71" val="2" src="52" tgt="57" pts="10.0,10.0,20.0,20.0" attr="11"/>
+	<a class="transState" id="72" val="30" rect="48.0,174.0,62.0,19.0" attr="10">
+		<a class="port" id="32" val="2"/>
+	</a>
+	<a class="transState" id="73" val="31" rect="120.0,174.0,59.0,19.0" attr="10">
+		<a class="port" id="29" val="2"/>
+	</a>
+	<a class="transState" id="74" val="32" rect="192.0,174.0,47.0,19.0" attr="10">
+		<a class="port" id="34" val="2"/>
+	</a>
+	<a class="transState" id="75" val="33" rect="300.0,180.0,59.0,19.0" attr="10">
+		<a class="port" id="26" val="2"/>
+	</a>
+	<a class="transitionEdge" id="76" val="2" src="8" tgt="32" pts="10.0,10.0,20.0,20.0" attr="11"/>
+	<a class="transitionEdge" id="77" val="2" src="69" tgt="4" pts="10.0,10.0,20.0,20.0" attr="11"/>
+	<a class="OneWayMergeEdge" id="78" val="34" src="10" tgt="69" pts="10.0,10.0,20.0,20.0" attr="12"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoRed.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoRed.png"/>
+	</map>
+	<map id="2" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoRed.png"/>
+	</map>
+	<map id="3" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoBarrel.png"/>
+	</map>
+	<map id="4" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoBarrel.png"/>
+	</map>
+	<map id="5" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoBarrel.png"/>
+	</map>
+	<map id="6" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoBarrel.png"/>
+	</map>
+	<map id="7" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoPerson.png"/>
+	</map>
+	<map id="8" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoPerson.png"/>
+	</map>
+	<map id="9">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="autosize" val="true"/>
+		<a key="opaque" val="false"/>
+	</map>
+	<map id="10" pid="0">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="11">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="12" pid="11">
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+		<a key="lineEnd" val="1"/>
+	</map>
+	<map id="13" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoRed.png"/>
+	</map>
+	<map id="14" pid="12">
+		<a key="lineBegin" val="5"/>
+	</map>
+	<map id="15" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoRed.png"/>
+	</map>
+	<map id="16" pid="0">
+		<a key="icon" val="/stud/2003/c0360946/gipo/domains/icons/icoRed.png"/>
+	</map>
+</attrs>
+<user>
+	<a key="34">
+		<a key="label" val=""/>
+	</a>
+	<a key="5">
+		<a key="label" val="open"/>
+		<a key="ObjectSort" val="oven"/>
+	</a>
+	<a key="17">
+		<a key="label" val="inOven"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="12" val="%3Chtml%3E%3Cbody%3ECake%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="13" val="%3Chtml%3E%3Cbody%3EDecorator%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="16">
+		<a key="label" val=""/>
+	</a>
+	<a key="8">
+		<a key="label" val="empty"/>
+		<a key="ObjectSort" val="oven"/>
+	</a>
+	<a key="23">
+		<a key="label" val="passToDecorater"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="21">
+		<a key="label" val=""/>
+	</a>
+	<a key="25">
+		<a key="label" val="decorate"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="24">
+		<a key="label" val=""/>
+	</a>
+	<a key="31">
+		<a key="label" val="openOven"/>
+		<a key="ObjectSort" val="oven"/>
+	</a>
+	<a key="28">
+		<a key="label" val="unDecorated"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="10">
+		<a key="label" val="available"/>
+		<a key="ObjectSort" val="decorator"/>
+	</a>
+	<a key="33">
+		<a key="label" val="putInOven"/>
+		<a key="ObjectSort" val="oven"/>
+	</a>
+	<a key="18">
+		<a key="label" val="putInOven"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="1">
+		<a key="label" val="raw"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="15">
+		<a key="label" val="decorate"/>
+		<a key="ObjectSort" val="decorator"/>
+	</a>
+	<a key="4">
+		<a key="label" val="decorated"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="14">
+		<a key="label" val="passToDecorater"/>
+		<a key="ObjectSort" val="decorator"/>
+	</a>
+	<a key="7">
+		<a key="label" val="full"/>
+		<a key="ObjectSort" val="oven"/>
+	</a>
+	<a key="9">
+		<a key="label" val="decorating"/>
+		<a key="ObjectSort" val="decorator"/>
+	</a>
+	<a key="19">
+		<a key="label" val=""/>
+	</a>
+	<a key="32">
+		<a key="label" val="takeOut"/>
+		<a key="ObjectSort" val="oven"/>
+	</a>
+	<a key="29">
+		<a key="label" val="cook"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="22">
+		<a key="label" val="withDecorator"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="30">
+		<a key="label" val="closeOven"/>
+		<a key="ObjectSort" val="oven"/>
+	</a>
+	<a key="20">
+		<a key="label" val="takeOut"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="3">
+		<a key="label" val="cooked"/>
+		<a key="ObjectSort" val="cake"/>
+	</a>
+	<a key="11" val="%3Chtml%3E%3Cbody%3EOven%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="26">
+		<a key="label" val=""/>
+	</a>
+	<a key="27">
+		<a key="label" val=""/>
+	</a>
+	<a key="2" val=""/>
+	<a key="6">
+		<a key="label" val="closed"/>
+		<a key="ObjectSort" val="oven"/>
+	</a>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

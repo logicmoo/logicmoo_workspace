@@ -1,0 +1,41 @@
+
+
+Shrdlu :-
+  writeln("**** Welcome to the SHRDLU_PCG Program *******"),
+  //new(aShrdlu_Canvas3D, "PrologPlusCG.Shrdlu_Canvas3D", ()),
+  readSentence(_sentence),
+  ShrdluDialog(_sentence), !.
+
+ShrdluDialog(["end", "."]) :- !.
+ShrdluDialog(_sentence) :-
+  imperative_sentence(_sentence, _CG),
+  writeln(_CG),	
+  _CG,
+  readSentence(_s),
+  ShrdluDialog(_s), !.
+
+// **** Interpretation of the semantic: it can be action or goals to perform, like the following :
+[Create]-obj->[T_Obj : _IdObj]-colorOf->[Color = C] :-
+   asserta(object([T_Obj : _IdObj]-colorOf->[Color = C]), []),
+   writeln([T_Obj, _IdObj, C]),
+   //execMethod(void, "PrologPlusCG.Shrdlu_Canvas3D", T_Obj, (_IdObj, C)),
+   !.
+
+[Push] -
+       -agnt->[A : R],
+       -obj->[_Object],
+       -on->[_On] :-  
+     writeln(""),
+     write("Goal of "), write(A), write(" "),  write(R), write(" is to push "), 
+     write(_Object), write(" on "), write(_On), writeln(".") .
+
+[_Type = G]-modalityOf->[Modality = imperative] :- 
+    [Push] -
+       -agnt->[A : R],
+       -obj->[_Object],
+       -on->[_On] = G,
+    [Push] -
+       -agnt->[A : R],
+       -obj->[_Object],
+       -on->[_On].
+

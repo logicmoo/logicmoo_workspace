@@ -1,0 +1,7 @@
+swipl-devel/
+#packs_xtra/logicmoo_packages/prolog/*/
+/html
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/.dbus/
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/nohup.out
+./packs_web/butterfly/results.txt
+~~*~~

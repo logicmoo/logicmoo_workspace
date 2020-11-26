@@ -1,0 +1,82 @@
+(note TQD99-a2)
+
+(instance 
+ (MillionBarrelsPerDay 3.75800) FlowRate) 
+
+
+(productionAmountDuring Iran PetroleumProduct 
+ (YearFn 1996) 
+ (MillionBarrelsPerDay 3.75800)) 
+
+(instance 
+ (MillionBarrelsPerDay 8.93000) FlowRate) 
+
+(productionAmountDuring SaudiArabia PetroleumProduct 
+ (YearFn 1996) 
+ (MillionBarrelsPerDay 8.93000)) 
+
+
+
+(instance 
+ (MillionBarrelsPerDay 3.71500) FlowRate) 
+
+
+
+(productionAmountDuring Iran PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 3.71500)) 
+
+(instance 
+ (MillionBarrelsPerDay 8.94800) FlowRate) 
+
+(productionAmountDuring SaudiArabia PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 8.94800)) 
+
+
+
+(instance 
+ (MillionBarrelsPerDay 3.66000) FlowRate) 
+
+
+
+(productionAmountDuring Iran PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 3.66000)) 
+
+(instance 
+ (MillionBarrelsPerDay 9.00000) FlowRate) 
+
+(productionAmountDuring SaudiArabia PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 9.00000)) 
+
+
+
+(query (findall (?TIME ?GREATER)
+(thereExists ?LESSER 
+   (thereExists ?LESSER-AMT 
+       (thereExists ?GREATER-AMT 
+           (and 
+               (productionAmountDuring ?GREATER PetroleumProduct ?TIME ?GREATER-AMT) 
+               (instance ?GREATER-AMT FlowRate) 
+               (productionAmountDuring ?LESSER PetroleumProduct ?TIME ?LESSER-AMT) 
+               (instance ?LESSER-AMT FlowRate) 
+               (greaterThan ?GREATER-AMT ?LESSER-AMT) 
+               (or 
+                   (and 
+                       (equals SaudiArabia ?GREATER) 
+                       (equals Iran ?LESSER)) 
+                   (and 
+                       (equals Iran ?GREATER) 
+                       (equals SaudiArabia ?LESSER)))))))
+))
+
+(answer SaudiArabia 1995
+)
+(answer SaudiArabia 1996
+)
+(answer SaudiArabia 1997
+)
+(end_of_file)
+

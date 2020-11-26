@@ -1,0 +1,33 @@
+1 CONSTANT POWER
+
+: bp 5 16388 SOUND_PLAY ;
+
+( forward: start motor 1 forward, motor 2 in reverse )
+: forward POWER 1 0 MOTOR_SET POWER 2 2 MOTOR_SET ;
+
+( forward: start motor 2 forward, motor 1 in reverse )
+: reverse POWER 2 0 MOTOR_SET POWER 1 2 MOTOR_SET ;
+
+( turn_left: start motors 1 and 2 forward ) 
+: turn_left  POWER 2 0 MOTOR_SET POWER 2 2 MOTOR_SET ;
+
+( turn_right: start motors 1 and 2 reverse ) 
+: turn_right  POWER 1 0 MOTOR_SET POWER 1 2 MOTOR_SET ;
+
+: stop POWER 3 0 MOTOR_SET POWER 3 2 MOTOR_SET ;
+
+( N count: counts 0 to N-1 )
+: count 0 DO I . LOOP ;
+
+( STEPS fd )
+: fd bp forward count stop ;
+
+( STEPS bk )
+: bk bp reverse count stop ;
+
+( DEGREES rt )
+: rt bp turn_right count stop ;
+
+( DEGREES lt )
+: lt bp turn_left count stop ;
+

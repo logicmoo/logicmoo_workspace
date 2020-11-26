@@ -1,0 +1,8 @@
+// Type hierarchy
+Entity > Physical, Abstract.
+Physical > Animate, Inanimate.
+Animate > Animal, Human.
+Human > Man, Woman.
+Abstract > Point, Line, Circle.
+
+

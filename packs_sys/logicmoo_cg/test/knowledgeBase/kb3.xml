@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeBase>
+  <Name>D:\aminePlatform7\aminePlatform\classes\aminePlatform\samples\knowledgeBase\kb3.xml</Name>
+  <KBOntology>D:\aminePlatform7\aminePlatform\classes\aminePlatform\samples\ontology\Sowa_CG_Generalization_Hierarchy.xml</KBOntology>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <IndexedType>
+      <Key>Universal</Key>
+      <Content>
+        <IndexedType>Universal</IndexedType>
+      </Content>
+      <Children>
+        <Child>
+          <Key>Act</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </IndexedType>
+    <IndexedType>
+      <Key>Act</Key>
+      <Content>
+        <IndexedType>Act</IndexedType>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1f95cce</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </IndexedType>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1f95cce</Key>
+      <Content>
+        <Description>[Act #0] -
+      -Thme-&gt;[Entity],
+      -Agnt-&gt;[Animate]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Act</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+  </CSs>
+</KnowledgeBase>
+

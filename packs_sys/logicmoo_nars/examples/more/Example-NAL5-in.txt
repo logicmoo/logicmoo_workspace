@@ -1,0 +1,158 @@
+********** revision
+  IN: <<robin --> flyer> ==> <robin --> bird>>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> flyer> ==> <robin --> bird>>. %0.00;0.60% {0 : 2} 
+1
+ OUT: <<robin --> flyer> ==> <robin --> bird>>. %0.86;0.91% {1 : 1;2} 
+********** deduction
+  IN: <<robin --> bird> ==> <robin --> animal>>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> flyer> ==> <robin --> bird>>. %1.00;0.90% {0 : 2} 
+5
+ OUT: <<robin --> flyer> ==> <robin --> animal>>. %1.00;0.81% {5 : 2;1} 
+********** exemplification
+  IN: <<robin --> flyer> ==> <robin --> bird>>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> bird> ==> <robin --> animal>>. %1.00;0.90% {0 : 2} 
+5
+ OUT: <<robin --> animal> ==> <robin --> flyer>>. %1.00;0.45% {5 : 2;1} 
+********** induction
+  IN: <<robin --> bird> ==> <robin --> animal>>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> bird> ==> <robin --> flyer>>. %0.80;0.90% {0 : 2} 
+5
+ OUT: <<robin --> flyer> ==> <robin --> animal>>. %1.00;0.39% {5 : 2;1} 
+ OUT: <<robin --> animal> ==> <robin --> flyer>>. %0.80;0.45% {5 : 2;1} 
+********** abduction
+  IN: <<robin --> bird> ==> <robin --> animal>>. %0.70;0.90% {0 : 1} 
+  IN: <<robin --> flyer> ==> <robin --> animal>>. %1.00;0.90% {0 : 2} 
+5
+ OUT: <<robin --> bird> ==> <robin --> flyer>>. %0.70;0.45% {5 : 2;1} 
+ OUT: <<robin --> flyer> ==> <robin --> bird>>. %1.00;0.36% {5 : 2;1}  
+********** detachment
+  IN: <<robin --> bird> ==> <robin --> animal>>. %1.00;0.90% {0 : 1} 
+  IN: <robin --> bird>. %1.00;0.90% {0 : 2} 
+2
+ OUT: <robin --> animal>. %1.00;0.81% {2 : 1;2} 
+********** detachment
+  IN: <<robin --> bird> ==> <robin --> animal>>. %0.70;0.90% {0 : 1} 
+  IN: <robin --> animal>. %1.00;0.90% {0 : 2} 
+2
+ OUT: <robin --> bird>. %1.00;0.36% {2 : 1;2} 
+
+********** comparison
+  IN: <<robin --> bird> ==> <robin --> animal>>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> bird> ==> <robin --> flyer>>. %0.80;0.90% {0 : 2} 
+5
+ OUT: <<robin --> animal> <=> <robin --> flyer>>. %0.80;0.45% {5 : 2;1} 
+********** comparison
+  IN: <<robin --> bird> ==> <robin --> animal>>. %0.70;0.90% {0 : 1} 
+  IN: <<robin --> flyer> ==> <robin --> animal>>. %1.00;0.90% {0 : 2} 
+5
+ OUT: <<robin --> bird> <=> <robin --> flyer>>. %0.70;0.45% {5 : 2;1} 
+
+********** analogy
+  IN: <<robin --> bird> ==> <robin --> animal>>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> bird> <=> <robin --> flyer>>. %0.80;0.90% {0 : 2} 
+5
+ OUT: <<robin --> flyer> ==> <robin --> animal>>. %0.80;0.65% {5 : 2;1} 
+********** analogy
+  IN: <robin --> bird>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> bird> <=> <robin --> flyer>>. %0.80;0.90% {0 : 2} 
+2
+ OUT: <robin --> flyer>. %0.80;0.65% {2 : 2;1} 
+
+********** resemblance
+  IN: <<robin --> animal> <=> <robin --> bird>>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> bird> <=> <robin --> flyer>>. %0.80;0.90% {0 : 2} 
+5
+ OUT: <<robin --> animal> <=> <robin --> flyer>>. %0.80;0.81% {5 : 2;1} 
+********** conversions between Implication and Equivalence
+  IN: <<robin --> flyer> ==> <robin --> bird>>. %0.90;0.90% {0 : 1} 
+  IN: <<robin --> bird> ==> <robin --> flyer>>. %0.90;0.90% {0 : 2} 
+1
+ OUT: <<robin --> bird> <=> <robin --> flyer>>. %0.81;0.81% {1 : 2;1} 
+
+********** compound composition, two premises
+  IN: <<robin --> bird> ==> <robin --> animal>>. %1.00;0.90% {0 : 1} 
+  IN: <<robin --> bird> ==> <robin --> flyer>>. %0.80;0.90% {0 : 2} 
+5
+ OUT: <<robin --> bird> ==> (||,<robin --> animal>,<robin --> flyer>)>. %1.00;0.81% {5 : 2;1} 
+ OUT: <<robin --> bird> ==> (&&,<robin --> animal>,<robin --> flyer>)>. %0.80;0.81% {5 : 2;1} 
+********** compound decomposition, two premises
+  IN: <<robin --> bird> ==> (&&,<robin --> animal>,<robin --> flyer>)>. %0.00;0.90% {0 : 1} 
+  IN: <<robin --> bird> ==> <robin --> flyer>>. %1.00;0.90% {0 : 2} 
+4
+ OUT: <<robin --> bird> ==> <robin --> animal>>. %0.00;0.81% {4 : 2;1} 
+********** compound decomposition, two premises
+  IN: (&&,<robin --> flyer>,<robin --> swimmer>). %0.00;0.90% {0 : 1} 
+  IN: <robin --> flyer>. %1.00;0.90% {0 : 2} 
+3
+ OUT: <robin --> swimmer>. %0.00;0.81% {3 : 1;2} 
+********** compound decomposition, two premises
+  IN: (||,<robin --> flyer>,<robin --> swimmer>). %1.00;0.90% {0 : 1} 
+  IN: <robin --> swimmer>. %0.00;0.90% {0 : 2} 
+3
+ OUT: <robin --> flyer>. %1.00;0.81% {3 : 1;2} 
+
+********** compound composition, one premise
+  IN: <robin --> flyer>. %0.90;0.90% {0 : 1} 
+  IN: (||,<robin --> flyer>,<robin --> swimmer>)?  {0 : 2} 
+4
+ OUT: (||,<robin --> flyer>,<robin --> swimmer>). %0.90;0.81% {0 : 1} 
+********** compound decomposition, one premise
+  IN: (&&,<robin --> flyer>,<swan --> swimmer>). %0.90;0.90% {0 : 1} 
+9
+ OUT: <robin --> flyer>. %0.90;0.81% {0 : 1} 
+5
+ OUT: <swan --> swimmer>. %0.90;0.81% {0 : 1} 
+
+********** negation
+  IN: (--,<robin --> flyer>). %0.10;0.90% {0 : 1} 
+1
+ OUT: <robin --> flyer>. %0.90;0.90% {0 : 1} 
+********** negation
+  IN: <robin --> flyer>. %0.90;0.90% {0 : 1} 
+  IN: (--,<robin --> flyer>)?  {0 : 2} 
+1
+ OUT: (--,<robin --> flyer>). %0.10;0.90% {0 : 1} 
+
+********** contraposition
+  IN: <(--,<robin --> bird>) ==> <robin --> flyer>>. %0.10;0.90% {0 : 1} 
+  IN: <(--,<robin --> flyer>) ==> <robin --> bird>>?  {0 : 2} 
+13
+ OUT: <(--,<robin --> flyer>) ==> <robin --> bird>>. %0.00;0.45% {0 : 1} 
+
+********** conditional deduction
+  IN: <(&&,a,b) ==> c>. %1.00;0.90% {0 : 1} 
+  IN: a. %1.00;0.90% {0 : 2} 
+1
+ OUT: <b ==> c>. %1.00;0.81% {1 : 1;2} 
+********** conditional deduction
+  IN: <(&&,a,b,c) ==> d>. %1.00;0.90% {0 : 1} 
+  IN: a. %1.00;0.90% {0 : 2} 
+4
+ OUT: <(&&,b,c) ==> d>. %1.00;0.81% {4 : 1;2} 
+********** conditional deduction
+  IN: <(&&,a,b) ==> c>. %1.00;0.90% {0 : 1} 
+  IN: <d ==> a>. %1.00;0.90% {0 : 2} 
+1
+ OUT: <(&&,b,d) ==> c>. %1.00;0.81% {1 : 1;2} 
+********** conditional abduction
+  IN: <b ==> c>. %1.00;0.90% {0 : 1} 
+  IN: <(&&,a,b) ==> c>. %0.40;0.90% {0 : 2} 
+2
+ OUT: a. %1.00;0.24% {2 : 2;1} 
+********** conditional abduction
+  IN: <(&&,b,c) ==> d>. %1.00;0.90% {0 : 1} 
+  IN: <(&&,a,b,c) ==> d>. %1.00;0.90% {0 : 2} 
+7
+ OUT: a. %1.00;0.45% {7 : 2;1} 
+********** conditional abduction
+  IN: <(&&,b,d) ==> c>. %0.40;0.90% {0 : 1} 
+  IN: <(&&,a,b) ==> c>. %1.00;0.90% {0 : 2} 
+4
+ OUT: <a ==> d>. %1.00;0.24% {4 : 2;1} 
+ OUT: <d ==> a>. %0.40;0.45% {4 : 2;1} 
+********** conditional induction
+  IN: <(&&,a,b) ==> c>. %1.00;0.90% {0 : 1} 
+  IN: <a ==> d>. %0.70;0.90% {0 : 2} 
+1
+ OUT: <(&&,b,d) ==> c>. %1.00;0.36% {1 : 1;2} 
+ 

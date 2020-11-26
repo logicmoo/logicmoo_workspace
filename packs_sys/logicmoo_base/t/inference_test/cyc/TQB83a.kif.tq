@@ -1,0 +1,27 @@
+(note TQB83a)
+(abort)
+
+(inRegion 
+ (WesternRegionFn ContinentOfEurope) 
+ (WesternRegionFn ContinentOfEurope)) 
+
+(instance IranianF-4E-Instance Warplane) 
+
+(queryyn
+  (thereExists ?FORCE 
+    (thereExists ?TARGET 
+      (and 
+        (instance ?FORCE Warplane) 
+        (inRegion ?TARGET (WesternRegionFn ContinentOfEurope))
+        (consistent 
+          (thereExists ?ACT 
+            (and 
+              (instance ?ACT AttackOnTangible) 
+              (agent ?ACT Iran) 
+              (deviceUsed ?ACT ?FORCE) 
+              (damages ?ACT ?TARGET))))))))
+
+(answer Yes)
+ 
+(end_of_file)
+

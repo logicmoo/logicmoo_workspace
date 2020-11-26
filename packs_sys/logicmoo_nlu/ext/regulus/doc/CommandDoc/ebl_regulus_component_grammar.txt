@@ -1,0 +1,3 @@
+Relevant to applications using grammar specialisation that define
+multiple top-level specialised grammars. Identifies which specialised
+Regulus grammar will be loaded by the EBL\_\-LOAD command.

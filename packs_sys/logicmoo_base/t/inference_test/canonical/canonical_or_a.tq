@@ -1,0 +1,5 @@
+(note  "Canonical Test: All x [ A(x) v B(x) ]")
+
+(canonicalize (all ?X (or (Pred1 ?X) (Pred2 ?X))))
+
+

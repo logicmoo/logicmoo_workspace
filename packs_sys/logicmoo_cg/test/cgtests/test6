@@ -1,0 +1,113 @@
+;;Date: Thu, 28 May 92 08:46:36 -0500
+;;From: esch%email.sp.unisys.com@metro.ucc.su.OZ.AU (John Esch)
+;;To: cg@cs.umn.edu
+;;Subject: CG TEST6, contexts
+
+;;The following is used for regression testing CONSTRUCT.
+
+;;This file contains examples from Conceptual Structures, 
+;;page by page, of graphs with contexts.
+;;This includes lots of cases of negative contexts.
+;;A Few other examples are thrown in just to be sure most cases are covered.
+
+[PROPOSITION:[P] [Q] [R]].
+
+~[PROPOSITION:[P] [Q] [R]].
+
+[PROPOSITION:(PAST)->[EVENT]].
+
+~[PROPOSITION:~[PROPOSITION:[P] [Q] [R]]].
+
+~[PROPOSITION:(PAST)->~[PROPOSITION:[EVENT]]].
+
+~[PROPOSITION:~[PROPOSITION:[P]] ~[PROPOSITION:[Q]] ~[PROPOSITION:[R]]].
+
+~[PROPOSITION:[P] ~[PROPOSITION:[Q]] ~[PROPOSITION:[R]]].
+
+~[PROPOSITION:[P] [Q] ~[PROPOSITION:[R] [S]]].
+
+~[PROPOSITION:[OSTRICH]<-(AGNT)<-[FLY]].
+
+~[PROPOSITION:[PERSON] ~[PROPOSITION:[PERSON]<-(CHLD)<-[MOTHER]]].
+
+~[PROPOSITION:[STUDENT]-
+  <-(AGNT)<-[READ]->(OBJ)->[BOOK:*B1]
+  <-(POSS)->[BOOK:*B1],].
+
+[PROPOSITION:[TEACHER:#]<-(AGNT)<-[WRITE]->(RSLT)->[BOOK:*B1] ~[PROPOSITION:[STUDENT]<-(AGNT)<-[READ]->(OBJ)->[BOOK:*B1]]].
+
+[PROPOSITION:[PERSON:Rosalie] ~[PROPOSITION:[PERSON:Rosann]]].
+
+[PROPOSITION:[PERSON:Rosalie] ~[PROPOSITION:[PERSON:Rosann=Roaslie]]].
+
+~[PROPOSITION:[PERSON:*x] ~[PROPOSITION:[PERSON:*y=*y]<-(CHLD)<-[MOTHER:*z]]].
+
+~[PROPOSITION:[MAN:*x] ~[PROPOSITION:[MAN:*x]<-(EXPR)<-[LOVE]->(OBJ)->[WOMAN]]].
+
+[PROPOSITION:[WOMAN:*y] ~[PROPOSITION:[MAN:*x] ~[PROPOSITION:[MAN:*x]<-(EXPR)<-[LOVE]->(OBJ)->[WOMAN:*y]]]].
+
+[PROPOSITION:[PROPOSITION:*x] [PROPOSITION:*y] ~[PROPOSITION:~[PROPOSITION:[PROPOSITION:*x]] ~[PROPOSITION:[PROPOSITION:*y]]]].
+
+[PROPOSITION:[PROPOSITION:*x] [PROPOSITION:*y] ~[PROPOSITION:[PROPOSITION:*x] ~[PROPOSITION:[PROPOSITION:*y]]]].
+
+[PROPOSITION:[PERSON:*x] [PERSON:*y] ~[PROPOSITION:[PERSON:*x=*y]]].
+
+TYPE T(t) IS [UNIV:*t].
+
+TYPE ~T(x) IS [:*x]
+~[PROPOSITION:[T:*x]].
+
+[PROPOSITION:[PROPOSITION:*x] [PROPOSITION:*y] ~[PROPOSITION:[PROPOSITION:*x=*y]]].
+
+RELATION ~PART(x,y) IS [ENTITY:*x] [ENTITY:*y]
+~[PROPOSITION:[ENTITY:*x]->(PART)->[ENTITY:*y]].
+
+~[PROPOSITION:[BOAT:Cybele]->(PART)->[MOTOR]].
+
+[~BOAT:Cybele]->(PART)->[MOTOR].
+
+[PROPOSITION:[ENTITY:Cybele]->(PART)->[MOTOR] ~[PROPOSITION:[BOAT:Cybele]]].
+
+[BOAT:Cybele]->(~PART)->[MOTOR].
+
+[PROPOSITION:[BOAT:Cybele] [MOTOR:*x] ~[PROPOSITION:[ENTITY:Cybele]->(PART)->[ENTITY:*x]]].
+
+[BOAT:Cybele]->(PART)->[~MOTOR].
+
+[PROPOSITION:[BOAT:Cybele]->(PART)->[ENTITY:*x] ~[PROPOSITION:[MOTOR:*x]]].
+
+[SITUATION].
+
+[SITUATION:[]].
+
+[SITUATION:initial-state[]].
+
+[SITUATION:*s0[]].
+
+[SITUATION:early-state*s1[]].
+
+[[UNIV]].
+
+[UNIV:middle-state[]].
+
+[UNIV:*s3[]].
+
+[UNIV:late-state*s4[]].
+
+[HISTORY:name1[EVENT]].
+
+[HISTORY:*v1[EVENT]->(WHEN)->[YEAR:1520]].
+
+[HISTORY:(OLD)->[EVENT]].
+
+[HISTORY:name3[[EVENT:e1] [EVENT:e2]]].
+
+[HISTORY:*v3[[EVENT:e3] [EVENT:e4]]].
+
+[HISTORY:name4*v4[[EVENT:e5] [EVENT:e6]]].
+
+[HISTORY:name5~[[EVENT:e7] [EVENT:e8]]].
+
+[HISTORY:*v5~[[EVENT:e9] [EVENT:e10]]].
+
+[HISTORY:name6*v6~[[EVENT:e11] [EVENT:e12]]].

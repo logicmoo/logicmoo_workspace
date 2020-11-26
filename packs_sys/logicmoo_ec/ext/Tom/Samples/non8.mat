@@ -1,0 +1,6 @@
+%8.
+not (box a : (( box a : ( '$Rp' implies '$Rq') and box a : ( '$Rq' implies '$Rp' )) implies '$Rs') implies box a : (( box a : ( '$Rp' implies '$Rq') and box a : ('$Rq' implies '$Rp')) implies box a : '$Rs')).
+
+%%% Axioms of S4: reflexivity and transitivity
+%# modal_axiom_schema(reflexive,a).
+%# modal_axiom_schema(transitive,a).

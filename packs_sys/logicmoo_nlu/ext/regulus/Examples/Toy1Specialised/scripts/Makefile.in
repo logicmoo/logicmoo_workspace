@@ -1,0 +1,14 @@
+
+JAVA_HOME=c:/Program\ Files/Java/jdk1.5.0_07
+
+JAVAC=$(JAVA_HOME)/bin/javac
+JAVA=$(JAVA_HOME)/bin/java
+
+ifeq (${MACHINE_TYPE}, win32)
+	CLASSPATH="${REGULUS}/RegulusSpeechServer/runtime/regclient.jar;${REGULUS}/Examples/Toy1Specialised/java"
+else
+	CLASSPATH=${REGULUS}/RegulusSpeechServer/runtime/regclient.jar:${REGULUS}/Examples/Toy1Specialised/java
+endif
+
+SICSTUS=sicstus
+

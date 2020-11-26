@@ -1,0 +1,152 @@
+lexicon("arrive", verb_intransf, [Arrive]-agnt->[Human]
+		).
+lexicon("work", verb_intransf, [work]-agnt->[Human]
+		).
+
+lexicon("enters", verb_transf, [Enters]-
+		-agnt->[Human],
+		-obj->[Object]
+		).
+
+lexicon("rejects", verb_transf, [Rejects]-
+                         -srce->[Object],
+                         -obj->[Object]).
+
+lexicon("sends", verb_2cpl, [Sends]-
+		-agnt->[Human],
+		-obj->[Object],
+		-dest->[Object]
+		).
+
+lexicon("gives", verb_2cpl, [Gives]-
+		-agnt->[Human],
+		-obj->[Object],
+		-dest->[Object]
+		).
+
+
+lexicon("card", nom_commun,x).
+lexicon("code", nom_commun,x).
+lexicon("customer", nom_commun,x).
+lexicon("john", nom_propre,x).
+
+lexicon ("valid",adj,x).
+
+lexicon("to", prep,on).
+lexicon("into", prep,under).
+lexicon("of", prep,of).
+lexicon("with", prep,with).
+
+lexicon("the",art,x).
+lexicon("a",art,x).
+
+lexicon("does", aux, x).
+lexicon("is", aux, x).
+
+lexicon("?",pi,T).
+lexicon("what",nom_wh,T).
+lexicon("with",nom_wh,T).
+lexicon("who",nom_wh,T).
+lexicon("when",nom_wh,T).
+lexicon("since",nom_wh,T).
+lexicon("until",nom_wh,T).
+lexicon("how",nom_wh,T).
+lexicon("where",nom_wh,T).
+lexicon("from",nom_wh,T).
+
+lexicon("what",nom_whd,T).
+lexicon("whom",nom_whd,T).
+lexicon("when",nom_whd,T).
+lexicon("long",nom_whd,T).
+lexicon("often",nom_whd,T).
+lexicon("from",nom_whd,T).
+lexicon("with",nom_whd,T).
+lexicon("where",nom_whd,T).
+
+
+
+Art([v|P], P, T) :- lexicon(v, art, T), !.
+Adj([v|P], P, T) :- lexicon(v, adj, T), !.
+Prep([v|P], P, T) :- lexicon(v, prep, T).
+Nom_commun([v|P], P, T) :- lexicon(v, nom_commun, T).
+Nom_propre([v|P], P, T) :- lexicon(v, nom_propre, T).
+Verb_intransf([v|P], P, T) :- lexicon(v, verb_intransf, T).
+Verb_transf([v|P], P, T) :- lexicon(v, verb_transf, T).
+Verb_2cpl([v|P], P, T) :- lexicon(v, verb_2cpl, T).
+Pi(v) :- lexicon(v, pi, _).
+Aux([v|P], P, T) :- lexicon(v, aux, T).
+Ponct([v|P], P, T) :- lexicon(v, ponct, T).
+And_or([v|P], P, T) :- lexicon(v, and_or, T).
+nom_wh11([v|P], P, T) :- lexicon(v, nom_wh, T).
+nom_wh22([v|P], P, T) :- lexicon(v, nom_whd, T).
+
+nom_wh1(L,L1):-nom_wh11([v|P], P, T).
+nom_wh2(L,L1):-nom_wh22([v|P], P, T).
+nom_wh2(L,L).
+nom_commun1(L2,Suite):- Nom_commun([v|P], P, T).
+nom_propre1(L2,Suite):- Nom_propre([v|P], P, T).
+verb_intransf1(L,L1):- Verb_intransf([v|P], P, T) .
+verb_transf1(L,L1):- Verb_transf([v|P], P, T) .
+verb_2cpl1(L,L1):- Verb_2cpl([v|P], P, T) .
+and_or1(L1,L2):-And_or([v|P], P, T).
+prep1(L,L2):-Prep([v|P], P, T).
+adject(L,L1):- Adj([v|P], P, T).
+adject(L,L).
+pi1([v],[]):- Pi(v).
+art(L,L1):-Art([v|P], P, T).
+
+//==============================  Programme 
+
+// _________________________________  Phrase
+Shrdlu :-
+  writeln("**** Welcome to the SHRDLU_PCG Program *******"),
+  //new(aShrdlu_Canvas3D, "PrologPlusCG.Shrdlu_Canvas3D", ()),
+  readSentence(_sentence),
+  ShrdluDialog(_sentence), !.
+
+ShrdluDialog(["end", "."]) :- !.
+ShrdluDialog(_sentence) :-
+  phrase(_sentence),
+  readSentence(_s),
+  ShrdluDialog(_s), !.
+
+phrase(_sentence):- 
+	phrase_simple(_sentence,L1),
+	pi1(L1,[]).
+
+//__________________________ phrase simple 
+
+phrase_simple(L,S):- nom_wh1(L,L1),nom_wh2(L1,L2),Aux(L2,L3,R),sujet1(L3,L4), verbe_c1(L4,L5), nom_wh2(L5,S).
+
+
+sujet1(L,Suite) :- nom_propre1(L,Suite).
+sujet1(L,Suite) :- art(L,L1), adject(L1,L2),nom_commun1(L2,Suite).
+sujet1(L,Suite) :- art(L,L1), adject(L1,L2), nom_propre1(L2,Suite).
+//sujet(L,L1):- theire1(L,L1).
+
+	//________________verbe_c1
+verbe_c1(L,L1):- verb_intransf1(L,L1).
+verbe_c1(L,L1):- verbe_transf1(L,L1).
+verbe_c1(L,S):- verbe_transf1(L,L1),complement(L1,S).
+verbe_c1(L,S):- verbe_2cpl(L,L1), complement(L1,L2), prep1(L2,S).
+verbe_c1(L,S):- verbe_2cpl(L,L1), prep1(L1,S).
+
+	//______________ complement
+complement(L,Suite) :- the_nom(L,Suite).
+complement(L,Suite) :- the_nom(L,L1),complement(L1,Suite),!.
+complement(L,Suite) :- prep1(L,L1), the_nom(L1,Suite).
+	//______________ the_nom
+the_nom(L,Suite) :- nom_propre1(L,Suite).
+the_nom(L,Suite) :- art(L,L1), nom_commun1(L1,Suite).
+the_nom(L,Suite) :- art(L,L1), adject(L1,L2),sujet1(L2,Suite).
+
+
+
+
+
+
+
+
+
+
+

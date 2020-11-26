@@ -1,0 +1,13 @@
+Parameterised version of {\tt EBL\_\-LOAD\_\-GENERATION}: compile and
+load the specialised generation grammar for the subdomain tag
+{\tt $\langle$SubdomainTag$\rangle$}. This will be the file
+{\tt $\langle$prefix$\rangle$\_\-specialised\_\-no\_\-binarise\_\-$\langle$SubdomainTag$\rangle$.regulus},
+where {\tt $\langle$prefix$\rangle$} is the value of the config file entry
+{\tt working\_\-file\_\-prefix}. The resulting compiled generation grammar
+is placed in the file defined by the
+{\tt generation\_\-grammar($\langle$SubdomainTag$\rangle$)} config file
+entry. 
+
+Note that {\tt EBL\_\-LOAD\_\-GENERATION $\langle$SubdomainTag$\rangle$}
+places the compiled generation grammar in the same place as
+{\tt LOAD\_\-GENERATION $\langle$SubdomainTag$\rangle$}.

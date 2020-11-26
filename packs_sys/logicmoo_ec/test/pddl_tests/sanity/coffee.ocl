@@ -1,0 +1,124 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: ron
+ *  Institution: University of Huddersfield
+ *  Date created: Tue Nov 09 12:00:21 GMT 2004
+ *  Date last modified: 2005/06/28 at 12:29:08 PM BST
+ *  Description:
+ *    This is a version of the cappucino brewer.
+ *    Origonal in Backstrom Nebel et all
+ * Object Life History : coffee.gfx
+ */
+
+domain_name(coffee).
+
+% Sorts
+sorts(primitive_sorts,[cup,steamer,milk,hopper]).
+
+% Objects
+objects(cup,[cup1]).
+objects(steamer,[st1]).
+objects(milk,[milk1]).
+objects(hopper,[hop1]).
+
+% Predicates
+predicates([
+    clean(cup),
+    espresso(cup),
+    cappuccino(cup),
+    low(steamer),
+    high(steamer),
+    cold(milk),
+    frothed(milk),
+    used(hopper),
+    empty(hopper),
+    fresh(hopper)]).
+
+% Object Class Definitions
+substate_classes(cup,Cup,[
+    [clean(Cup)],
+    [espresso(Cup)],
+    [cappuccino(Cup)]]).
+substate_classes(steamer,Steamer,[
+    [low(Steamer)],
+    [high(Steamer)]]).
+substate_classes(milk,Milk,[
+    [cold(Milk)],
+    [frothed(Milk)]]).
+substate_classes(hopper,Hopper,[
+    [used(Hopper)],
+    [empty(Hopper)],
+    [fresh(Hopper)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(froth(Steamer,Milk),
+    % prevail
+    [     se(steamer,Steamer,[high(Steamer)])],
+    % necessary
+    [     sc(milk,Milk,[cold(Milk)]=>[frothed(Milk)])],
+    % conditional
+    []).
+operator(heat(Steamer),
+    % prevail
+    [],
+    % necessary
+    [     sc(steamer,Steamer,[low(Steamer)]=>[high(Steamer)])],
+    % conditional
+    []).
+operator(addFroth(Milk,Cup),
+    % prevail
+    [     se(milk,Milk,[frothed(Milk)])],
+    % necessary
+    [     sc(cup,Cup,[espresso(Cup)]=>[cappuccino(Cup)])],
+    % conditional
+    []).
+operator(fill(Hopper),
+    % prevail
+    [],
+    % necessary
+    [     sc(hopper,Hopper,[empty(Hopper)]=>[fresh(Hopper)])],
+    % conditional
+    []).
+operator(empty(Hopper),
+    % prevail
+    [],
+    % necessary
+    [     sc(hopper,Hopper,[used(Hopper)]=>[empty(Hopper)])],
+    % conditional
+    []).
+operator(brew(Steamer,Hopper,Cup),
+    % prevail
+    [     se(steamer,Steamer,[high(Steamer)])],
+    % necessary
+    [     sc(hopper,Hopper,[fresh(Hopper)]=>[used(Hopper)]),
+     sc(cup,Cup,[clean(Cup)]=>[espresso(Cup)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(hopper,hop1,[empty(hop1)]),
+     se(cup,cup1,[cappuccino(cup1)])],
+    % INIT States
+    [
+     ss(cup,cup1,[clean(cup1)]),
+     ss(steamer,st1,[low(st1)]),
+     ss(milk,milk1,[cold(milk1)]),
+     ss(hopper,hop1,[empty(hop1)])]).

@@ -1,0 +1,7 @@
+box a : diamond a : box a : ( q implies p).
+
+box a : diamond a : q.
+
+diamond a : box a : not p.
+
+# modal_axiom_schema(transitive,a).

@@ -1,0 +1,37 @@
+(note TQA24)
+
+(nthLargestElement SaudiArabia 1 PersianGulfCountry 
+ (FunctionToArg 2 
+ (Kappa 
+ (?EXPORTER ?AMOUNT) 
+ (and 
+ (instance ?AMOUNT FlowRate) 
+ (exportAmountDuring ?EXPORTER PetroleumProduct 
+ (YearFn 1995) ?AMOUNT))))) 
+
+(startsDuring 
+ (YearFn 1995) 
+ (TimeIntervalInclusiveFn 
+ (YearFn 1980) 
+ (YearFn 1998))) 
+
+(query (findall ?COUNTRY (thereExists ?TIME 
+   (and 
+       (startsDuring ?TIME 
+           (TimeIntervalInclusiveFn 
+               (YearFn 1980) 
+               (YearFn 1998))) 
+       (nthLargestElement ?COUNTRY 1 PersianGulfCountry 
+           (FunctionToArg 2 
+               (Kappa 
+                   (?EXPORTER ?AMOUNT) 
+                   (and 
+                       (instance ?AMOUNT FlowRate) 
+                       (exportAmountDuring ?EXPORTER PetroleumProduct ?TIME ?AMOUNT))))))) ))
+
+(answer Iraq )
+
+(end_of_file)
+
+
+

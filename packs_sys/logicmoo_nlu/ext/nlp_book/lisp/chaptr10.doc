@@ -1,0 +1,362 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%      Extracts from the book "Natural Language Processing in LISP"     %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Understanding by prediction
+
+A very simple LISP prediction program is provided by lib predict.  The
+function predict is given a list of assertions that might be derived
+from an English sentence and adds them to its world model if they are
+unambiguous and not already predicted.  Assertions may contain
+variables, corresponding to references that need to be resolved, in
+which case the function uses backwards inference to try and infer
+instances of the assertions that are already predicted.  Facts and
+plausible inference rules are expected to be put into the global
+variable infrules, as required by lib bckinfer.  The most important
+part of the function is as follows:
+
+    (defun predict (assertions)
+      (let
+        ((substs (back_infer_all assertions)))
+     ...
+          (if (equal (length substs) 1)
+            (progn
+              (print '(assertions uniquely predicted))
+              (print (apply_subst (car substs) assertions)))
+
+That is, if backwards inference yields a unique substitution such that
+the assertions are predicted, then the corresponding instance of the
+assertions is displayed.  As well as catering for this case, the
+function handles other possibilities - a ground set of assertions (one
+containing no variables) that cannot be predicted (these are just
+added to infrules) and a non-ground set of assertions that either have
+no predictions or have several predictions (it just warns you about
+these).  The library file comes with a tiny set of example inference
+rules:
+
+    (setq infrules
+     '(((church (church_of _x)) (town _x))
+       ((see people _x) (famous _x) (object _x))
+       ((object _x) (spire _x))
+       ((spire (spire_of _x)) (church _x))))
+
+The program can be used by a person simulating the output of a natural
+language front end, providing lists of assertions in the order they
+might be generated from a text:
+
+    (loop (predict (read)) (terpri))
+    ((town morton_underwell))
+
+    (ASSERTIONS NOT PREDICTED BUT UNAMBIGUOUS)
+
+    ((spire _x))
+
+    (ASSERTIONS UNIQUELY PREDICTED)
+    ((SPIRE (SPIRE_OF (CHURCH_OF MORTON_UNDERWELL))))
+
+    ((famous (spire_of (church_of morton_underwell))))
+
+    (ASSERTIONS NOT PREDICTED BUT UNAMBIGUOUS)
+
+    ((see people _x))
+
+    (ASSERTIONS UNIQUELY PREDICTED)
+    ((SEE PEOPLE (SPIRE_OF (CHURCH_OF MORTON_UNDERWELL))))
+
+In this example, the prediction program is able to predict the
+existence of the spire on the church in Morton Underwell, and is able
+to predict that it is this, rather than the church or the town, that
+people probably come to see.
+
+More controlled versions of prediction
+
+We can easily represent a basic script as a list of propositions in
+LISP, with the first element being the header of the script and the
+subsequent elements being the expected actions, in order.  Here are a
+couple of scripts represented this way -- the automobile-buying script
+shown above, and a hat-buying script:
+
+        ((auto_buy _Customer _Auto1 _Auto2 _Driver _Garage)
+         (goes _Customer _Garage)
+         (test_drives _Customer _Auto1)
+         (orders _Customer _Auto2 _Driver)
+         (delivers _Driver _Auto2 _Customer)
+         (drives _Customer _Auto2))
+
+        ((hat_buy _Customer _Hat _Assistant _Store)
+         (goes _Customer _Store)
+         (tries_on _Customer _Hat)
+         (buys _Customer _Hat _Assistant)
+         (delivers _Assistant _Hat _Customer)
+         (wears _Customer _Hat))
+
+Lib scripts implements a simple script applier in LISP.  It differs
+from actual script appliers, in that it expects to be given the set of
+propositions from a whole text, rather than having to work out
+plausible scripts at the end of each sentence.  Moreover, it
+incorporates no special mechanism for script cueing, since each script
+is assumed to be potentially applicable.
+
+script_match expects to be given a list of propositions, expressing a
+sequence of actions described in a particular order.  As with lib
+predict, these may contain variables.  The program goes through all
+the scripts in the global list scripts and sees which of them predicts
+the sequence of described actions.  As soon as it finds one, it
+assumes that it is the only such script and prints out the header and
+complete set of predicted actions for the script, making use of
+whatever information about the objects involved it can obtain from the
+propositions provided.  Here is an example of the function in use:
+
+    (script_match '((goes Jan Smiths)
+                    (tries_on _x hat45)
+                    (wears _y _z)))
+
+    (SCRIPT (HAT_BUY JAN HAT45 _ASSISTANT SMITHS))
+    (GOES JAN SMITHS)                     
+    (TRIES_ON JAN HAT45)
+    (BUYS JAN HAT45 _ASSISTANT)
+    (DELIVERS _ASSISTANT HAT45 JAN)
+    (WEARS JAN HAT45)
+
+In this example, the program is given a list of propositions that
+might arise from a text like the following:
+
+    Jan went to Smiths.  He tried on a bowler hat.  He wore it to his
+    brother's wedding.
+
+The program has decided that a hat_buy script is applicable to this
+sequence of actions.  In doing so, it has obtained the referents of
+three pronouns.  Although the example text only mentions three
+actions, the script indicates that in fact five actions took place,
+including Jan buying the hat and it being delivered to him.  Some of
+these actions involve the unmentioned salesperson _Assistant, about
+whom nothing else is known.
+
+Script_match goes through each script script in turn, determining all
+ways that that script might match the sequence of events in the story.
+Each possible way is represented by a substitution, which assigns
+values to the variable symbols in the script.  Script_match takes the
+first such substitution that it can find, and returns the result of
+applying it to the relevant script:
+
+    (defun script_match (story)
+      (dolist (script scripts nil)
+        (let ((predictions (cdr script)))
+          (let (
+             (substs (predict_all_ways predictions story empty_subst)))
+            (if substs
+              (return (apply_subst (car substs) script)))))))
+
+predict_all_ways tries all ways of matching the predictions of a
+script with a story.  It returns a list containing the relevant
+substitutions for all these successes.  It works by recursing down the
+list of events in the story, at each point passing down the remaining
+predictions of the script and the substitution obtained so far:
+
+    (defun predict_all_ways (predictions story current_subst)
+      (if (null story)
+        (list current_subst)
+        (let ((event (car story)) (successes ()))
+          (do (
+             (restpredictions (cdr predictions) (cdr restpredictions))
+             (predict (car predictions) (car restpredictions)))
+            ((null predict) successes)
+            (let ((subst (termunify event predict)))
+              (if subst
+                (setq successes
+                  (append
+                    (predict_all_ways
+                      (apply_subst subst restpredictions)
+                      (apply_subst subst (cdr story))
+                      (compose_substs subst current_subst))
+                    successes))))))))
+
+If predict_all_ways ever gets to the point when the story is exhausted
+(the if case), it can simply indicate success by returning the current
+substitution.  Otherwise it looks through the predictions provided,
+looking for one which matches (by termunify) the first event in the
+story.  For each way that this can be done, it recursively calls
+predict_all_ways, with the rest of the story, the predictions that
+follow the found prediction and a modified current substitution.  Each
+of these arguments is suitably modified to take into account the
+substitution subst that results from unifying the event with the
+prediction.  The result returned will then be the result of
+concatenating the lists of substitutions returned by these recursive
+calls--this final list is kept in the variable successes.
+
+Language generation as a goal-oriented process
+
+lib plan implements a simple planner that can develop plans such as
+these two examples.  Operators are represented in LISP as lists with
+four elements, the name of the operator, the can_do preconditions, the
+want preconditions and the effects.  All of these but the first are
+lists of propositions, so that we can express multiple preconditions
+and effects.  Here is our request operator in this notation:
+
+      ((request _speaker _addressee _act)
+       ((can_do _addressee _act) (channel _speaker _addressee))
+       ((want _speaker (request _speaker _addressee _act)))
+       ((believe _addressee (want _speaker _act))))
+
+The program assumes that the global variable operators holds the list
+of all the operators that it can use in forming plans, and it assumes
+that the initial state of the world is represented in infrules, as
+required for lib bckinfer.  Although the planner plays the part of a
+particular agent in building the plan and therefore reasons within the
+beliefs of that agent, for convenience we will express the world model
+in an impartial way, with all belief contexts explicitly spelled out.
+Moreover, in presenting goals to the planner, we will omit the
+'(believe agent ...)' that should surround each one.  Of course, if
+the goals involve predicates about which there is universal knowledge,
+then there is no distinction anyway.  So here is an example of lib
+plan being used.  The function plan returns a list of action names,                     
+representing the sequence of actions that should be performed (in the
+order given) to achieve the goal.
+
+    (setq infrules
+     '(((channel sue alan))
+       ((at alan inside))
+       ((at sue inside))
+       ((believe sue (wants alan (move sue inside outside))))))
+    (plan 'sue '((at alan outside)))
+
+    (TRYING DEPTH 0)
+    (TRYING DEPTH 1)
+    (TRYING DEPTH 2)
+    (TRYING DEPTH 3)
+    (TRYING DEPTH 4)
+    ((INFORM SUE ALAN (WANT SUE (MOVE ALAN INSIDE OUTSIDE)))
+     (CONVINCE SUE ALAN (WANT SUE (MOVE ALAN INSIDE OUTSIDE)))
+     (CAUSE_TO_WANT SUE ALAN (MOVE ALAN INSIDE OUTSIDE))
+     (MOVE ALAN INSIDE OUTSIDE))
+
+Planning involves search, and the program uses the same technique as
+the simple recognizers of Chapter 5 to implement a depth-first search.
+That is, the top function plan calls another function, called
+plan_next, which, through its arguments, is given a complete
+description of a state in the planning process.  Corresponding to each
+way of extending this state to a state that may be closer to a
+complete plan, plan_next calls itself recursively with the arguments
+expressing the new state.  Thus, as with the recognizers, the search
+tree is echoed precisely in the calling tree of the program.  A state
+of the planning process is represented by five different values:
+
+    (i) agent - the agent who is doing the planning.
+    (ii) goals - the list of goals that still need to be made true
+    (expressed without an explicit (believe agent...)).
+    (iii) actions - the list of actions that are planned to be
+    executed, once the current goals have been made true.
+    (iv) currentsubst - a substitution that expresses extra
+    information about actions and goals, which has been obtained since
+    they were originally formulated.
+    (v) depth, which we will discuss below.
+
+If plan_next is ever called with goals as an empty list, then the
+planning is terminated and the list of actions accumulated at this
+point is returned as the plan.  Otherwise, plan_next takes the first
+element of goals, goal, to work on.  The first main possibility to
+investigate is whether goal is already true.  Try_already_true is
+responsible for attempting to infer that the goal is already true and
+continuing planning from there if so.  The other main possibility is
+that some action is necessary to make goal true.  Try_to_make_true is
+responsible for finding an action that would make the goal true and
+then planning for the preconditions of that action to be true:
+
+    (defun plan_next (agent goals actions currentsubst depth maxdepth)
+      (if (null goals)
+        (throw 'plan (apply_subst currentsubst actions))
+        (if (> depth maxdepth)
+          nil
+          (let ((goal (apply_subst currentsubst (car goals))) (othergoals (cdr goals)))
+     ...
+                (progn
+                  (try_planners_own agent goal othergoals actions
+                    currentsubst depth maxdepth)
+                  (try_already_true agent goal othergoals actions
+                    currentsubst depth maxdepth)
+                  (try_to_make_true agent goal othergoals actions
+                    currentsubst depth maxdepth))))))))
+
+Since we are planning from the point of view of a particular agent, to
+see whether a goal is already true we actually need to test whether
+the agent believes that it is true, unless the goal involves a
+predicate that is universally known.  For each possible way that a
+true instance of the goal can be found, plan_next is called
+recursively with the rest of the goals and with a substitution that
+reflects any extra information obtained through finding the goal in
+the world model:
+
+    (defun try_already_true (agent goal goals actions currentsubst depth maxdepth)
+      (let ((dbgoal
+           (if (member (car goal) universal_knowledge)
+             goal
+             (list 'believe agent goal))))
+        (dolist (subst (back_infer dbgoal))
+          (plan_next agent goals actions
+            (compose_substs subst currentsubst) depth maxdepth))))
+
+Finally, try_to_make_true looks for an operator that could achieve the
+goal by one of its effects effect.  For each such operator, it tries
+planning to achieve the preconditions (can_dos and wants), again
+giving the recursive call to plan_next an augmented substitution which
+reflects the information obtained by matching goal with effect.
+
+    (defun try_to_make_true (agent goal goals actions currentsubst depth maxdepth)
+      (dolist (operator operators)
+        (let ((o (rename operator)))
+          (dolist (e (cadddr o)) ; the effects of the operator
+            (let ((subst (termunify goal e)))
+              (if subst
+                (plan_next agent (append (cadr o) (caddr o))
+                  (cons (car o) actions)
+                  (compose_substs subst currentsubst)
+                  (1+ depth) maxdepth)))))))
+
+Depth-first search is actually a bad search strategy for planning,
+because there are usually infinitely many ways of achieving a given
+goal and arbitrarily long plans to investigate.  For instance, if Sue
+wants Alan to move out of the room, she could simply make a request,                     
+go out of the room and make the request, go out of the room, come back
+into the room and make the request, and so on.  Depth-first search is
+unlikely to find the best plan, which is probably the shortest plan,
+and is liable to get into infinite loops trying to generate longer and
+longer plans.  Because of this problem, the plan program uses a
+modified depth-first strategy as follows.  Each time plan_next is
+called, a depth argument records how many actions are already in the
+actions list.  Another argument maxdepth imposes a limit on how many
+actions are allowed in a plan, and any call to plan_next which has a
+depth value already greater than this automatically returns without
+any solutions.  The top level function plan first of all calls
+plan_next with maxdepth equal to 0, then with maxdepth equal to 1,
+then with maxdepth equal to 2, and so on, until a solution is found.
+Although this approach, known as iterative deepening, involves a lot
+of duplicated work, it does ensure that the program finds a shortest
+plan and does not get into infinite loops.
+
+Although we have now covered the main part of the program, the program
+also deals with various special cases.  For instance, in order to
+achieve (can_do <agent> <action>), it looks up the can_do
+preconditions for <action> and tries to achieve these.  The planner
+also knows explicitly about the predicates about which there is
+universal knowledge.
+
+The program implemented in lib plan is a restricted planner in the
+following way.  It chains backwards from the desired goal to an action
+that will achieve that goal; then it looks for an unsatisfied
+precondition of that action and finds an action that will make that
+precondition true; then it looks for an unsatisfied precondition of
+that action; and so on, until an action is reached, all of whose
+preconditions are initially true.  It then stops.  At this point, the
+list of actions it has chained through gives a rough idea of a
+sequence of actions to be performed, but there is no guarantee that
+any but the first of these can actually be performed.  It is quite
+possible, for instance, that a remaining unsatisfied precondition of
+one of the actions cannot be made true in any way.  Or that for some
+reason one of the effects of carrying out one of the actions is to
+make one of the other actions impossible.  The key feature of a
+planning system that this program lacks is the ability to reason
+properly about changes in the world that result from performing an
+action and how these interact with the preconditions and effects of
+other planned actions.

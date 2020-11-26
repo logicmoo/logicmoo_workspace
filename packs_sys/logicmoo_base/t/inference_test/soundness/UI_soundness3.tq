@@ -1,0 +1,10 @@
+(note universal implication soundness check3)
+
+(implies (forall ?X (Fnew ?X)) (forAll ?Y (G ?Y)))
+
+
+(queryyn 
+(forall ?X (forall ?Y (implies (F ?X) (G ?Y))))
+)
+
+(answer Unproven)

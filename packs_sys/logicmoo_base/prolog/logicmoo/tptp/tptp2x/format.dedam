@@ -1,0 +1,54 @@
+%====================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the purely equational Dedam provers.
+%----
+%----Written by Robert Nieuwenhuis, June 1999.
+%====================================================================
+
+dedam_format_information('%','.dedam').
+dedam_file_information(format,dedam,'Dedam format').
+dedam(dedam,Clauses,_):-
+    replace_vars_with_prolog_vars(Clauses,Clauses1),
+    output_dedam_clauses(Clauses1).
+
+%---------------------------------------------------------------------
+replace_vars_with_prolog_vars(C1,C2):-
+    tptp2X_syntax_extract_variables(C1,_,Varlist),
+    make_subst(Varlist,Subst),
+    apply_subst(C1,Subst,C2),!.
+replace_vars_with_prolog_vars(C,_):-
+    write('replacement of variables failed for '), nwrite(C),!.    
+
+make_subst([],[]).
+make_subst([X|R],[[X,_]|R1]):-make_subst(R,R1).
+
+apply_subst(X,Subst,V):- tptp2X_member([X1,V],Subst), X==X1,!.
+apply_subst(X,_,X):- var(X),!.
+apply_subst(X,_,X):- atomic(X),!.
+apply_subst([X|R],S,[X1|R1]):- apply_subst(X,S,X1), apply_subst(R,S,R1), !.
+apply_subst(T,S,T1):- T=..[F1|L], apply_subst(L,S,L1), 
+                      apply_subst(F1,S,F2), atom(F2), !, T1=..[F2|L1],!.
+%---------------------------------------------------------------------
+:-dynamic dedam_save/1.
+output_dedam_clauses([input_clause(_Name,_Type,[Lit])|Rest]):- !,
+    keep(Lit), 
+    output_dedam_clauses(Rest).
+output_dedam_clauses([]):-
+    write_eqs.
+output_dedam_clauses([C|Rest]):-
+    write(' ignoring strange (non-unit?) clause : '), nl,nwrite(C),nl,nl,
+    output_dedam_clauses(Rest).
+
+keep('++'('$tptp_equal'(S,T))):- assertz( dedam_save('$tptp_equal'(S,T)) ),!.
+keep('--'('$tptp_equal'(S,T))):- assertz( dedam_save(theorem(S,T)) ),!.
+keep(X):- write(' ignoring strange literal in problem: '), 
+          nl,write(X),nl,nl,!.
+
+write_eqs:- retract(dedam_save('$tptp_equal'(S,T))), nwrite(S=T), write('.'), nl, fail.
+write_eqs:- retract(dedam_save(theorem(S,T))), write('--'),nwrite(S=T),write('.'),nl, fail.
+write_eqs.
+
+nwrite(T):- numbervars(T,0,_), write(T), fail.
+nwrite(_).
+%---------------------------------------------------------------------
+

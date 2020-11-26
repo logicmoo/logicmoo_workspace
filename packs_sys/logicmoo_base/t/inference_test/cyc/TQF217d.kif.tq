@@ -1,0 +1,35 @@
+(note TQF217c)
+(abort)
+
+
+(internationalOrg-MemberCountry SixPlusTwo-InternationalOrganization Pakistan) 
+
+(query (findall (?RELATION-1 ?RELATION-2 ?RELATION-3 ?WHAT-1 ?RELATION-5 ?WHAT-3 ?RELATION-6 ?WHAT-4 ?RELATION-7 ?WHAT-5 ?RELATION-8 ?WHAT-6 ?RELATION-9 ?WHAT-7 ?RELATION-10 ?WHAT-8)
+(or 
+(trueFormula 
+(?RELATION-1 OrganizationOfTheIslamicConference Azerbaijan)) 
+(trueFormula 
+(?RELATION-2 Azerbaijan OrganizationOfTheIslamicConference)) 
+(and 
+(trueFormula 
+(?RELATION-3 ?WHAT-1 Azerbaijan)) 
+(trueFormula 
+(?RELATION-3 ?WHAT-1 OrganizationOfTheIslamicConference))) 
+(trueFormula 
+(?RELATION-5 Azerbaijan OrganizationOfTheIslamicConference ?WHAT-3)) 
+(trueFormula 
+(?RELATION-6 OrganizationOfTheIslamicConference Azerbaijan ?WHAT-4)) 
+(trueFormula 
+(?RELATION-7 OrganizationOfTheIslamicConference ?WHAT-5 Azerbaijan)) 
+(trueFormula 
+(?RELATION-8 Azerbaijan ?WHAT-6 OrganizationOfTheIslamicConference)) 
+(trueFormula 
+(?RELATION-9 ?WHAT-7 OrganizationOfTheIslamicConference Azerbaijan)) 
+(trueFormula 
+(?RELATION-10 ?WHAT-8 Azerbaijan OrganizationOfTheIslamicConference)))
+))
+
+(answer internationalOrg-MemberCountry ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??))
+
+(end_of_file)
+

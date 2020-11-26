@@ -1,0 +1,35 @@
+(note TQD16)
+
+
+(instance 
+ (BarrelsPerDay 936000) FlowRate) 
+
+(productionAmountDuring Egypt PetroleumProduct 
+ (YearFn 1997) 
+ (BarrelsPerDay 936000)) 
+
+
+
+
+
+
+
+
+( query  (findall (?FRACTION ?TIME) (thereExists ?CAPACITY 
+ (thereExists ?AMOUNT 
+ (and 
+ (productionCapacityDuring Egypt PetroleumProduct ?TIME ?CAPACITY) 
+ (productionAmountDuring Egypt PetroleumProduct ?TIME ?AMOUNT) 
+ (instance ?AMOUNT FlowRate) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?AMOUNT ?CAPACITY))))))  
+))
+
+(answer 100 1997)
+
+(end_of_file)
+
+
+
+

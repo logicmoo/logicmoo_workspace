@@ -1,0 +1,14 @@
+*background: burlywood
+*XmText*background: wheat
+*XmText*topShadowColor: LemonChiffon
+*XmPushButton*background: tan
+*XmScrolledWindow*XmRowColumn*background: wheat
+*FilterText*:"*.[pl]"
+*xmNfontList: -schumacher-*-medium-r-*-*-15-*-*-*-*-*-*-*
+*xmNbuttonFontlist*: -schumacher-*-medium-r-*-*-15-*-*-*-*-*-*-*
+*xmNlabelFontlist*: -schumacher-*-medium-r-*-*-15-*-*-*-*-*-*-*
+*xmNtextFontlist*: -schumacher-*-medium-r-*-*-15-*-*-*-*-*-*-*
+
+
+
+

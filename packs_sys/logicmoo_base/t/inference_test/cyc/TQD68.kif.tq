@@ -1,0 +1,50 @@
+(note TQD68)
+
+(implies 
+  (and 
+    (laterThan ?X ?Y) 
+    (endingDate ?TMP ?Y)) 
+    (startsAfterEndingOf ?X ?TMP)) 
+
+(laterThan 
+  (YearFn 1996) 
+  (DayFn 1 
+    (MonthFn April 
+      (YearFn 1979)))) 
+
+(endingDate IranRevolution-1978-1979 
+  (DayFn 1 
+    (MonthFn April 
+      (YearFn 1979)))) 
+
+(temporallySubsumes (YearFn 1996) 
+  (givesSupportToAgent Iran HAMAS 
+    (MediumAmountFn EconomicSupport))) 
+
+(temporallySubsumes (YearFn 1996) 
+  (opponents Israel HAMAS)) 
+
+(startsAfterEndingOf 
+  (YearFn 1996) IranRevolution-1978-1979) 
+
+(instance Iran Country) 
+
+(instance 
+  (MediumAmountFn EconomicSupport) EconomicSupport) 
+
+(query (findall ?COUNTRY
+ (thereExists ?SUPPORT 
+   (thereExists ?TIME 
+       (and 
+           (temporallySubsumes ?TIME 
+               (givesSupportToAgent ?COUNTRY HAMAS ?SUPPORT)) 
+           (instance ?SUPPORT EconomicSupport) 
+           (instance ?COUNTRY Country) 
+           (startsAfterEndingOf ?TIME IranRevolution-1978-1979) 
+           (temporallySubsumes ?TIME 
+               (opponents HAMAS Israel)))))))
+
+(answer Iran)
+
+(end_of_file)
+

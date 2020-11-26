@@ -1,0 +1,367 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%      Extracts from the book "Natural Language Processing in LISP"     %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Words, rules and structures
+
+Tree diagrams are not, given the limitations of present computers, a
+convenient data structure to use for NLP.  The simplest way to handle
+trees is to manipulate them as lists where the first element is the
+root category and subsequent elements are the daughter subtrees in
+order of occurrence.  Thus the tree above in LISP would be:
+
+    (S (NP MediCenter)(VP (V employed)(NP nurses)))
+
+The general principle is that a tree is represented by a list whose
+first element is the top label and whose subsequent elements are the
+immediate subtrees in order.  These elements are then themselves
+lists, representing the subtrees according to the same convention.  In
+this scheme, a leaf node of a tree (here, an English word), is simply
+represented by itself.  This kind of list might appear in a 'pretty-
+printed' format as follows:
+
+    (S
+        (NP MediCenter)
+        (VP
+            (V  employed)
+            (NP nurses)))
+
+Grammars in LISP and random generation
+
+In LISP programs, we will represent a grammar by a list of structures,
+one for each rule, and store the current grammar in a global variable
+called rules.  Each rule is represented by a list of items.  The first
+represents the left hand side of the rule, and the rest represent the
+items on the right hand side in sequence.  In rules, English words are
+represented by the corresponding LISP atoms and grammatical categories
+are put inside lists to distinguish them from words.  In grammars like
+Grammar1, where the only relevant feature for categories is cat, we
+need not explicitly mention the feature names in rules, and so, in
+writing rules for this kind of grammar, we will specify the category
+that has cat S simply by (S), for instance.  Note that, although we                     
+will adopt this convention for rules, we will still build parse trees
+as described above, i.e. with bare cat values like S, rather than
+lists like (S), as labels.  Here is our representation of Grammar1 in
+LISP (also in lib cfpsgram):
+
+    (setq rules
+     '(((S) (NP) (VP))
+       ((VP) (V))
+       ((VP) (V) (NP))
+       ((V) died)
+       ((V) employed)
+       ((NP) nurses)
+       ((NP) patients)
+       ((NP) Medicenter)
+       ((NP) Dr Chan)))
+
+Notice that we have included the lexicon in the set of rules without
+making any explicit distinction.  Thus, for instance, we have
+interpreted the lexical entry:
+
+    Word employed:
+        <cat> = V.
+
+simply as another way to specify the rule
+
+    V -> employed
+
+One advantage of this approach is that it allows us to deal with 'Dr
+Chan' as a sequence of two words in a natural way.  There are a number
+of reasons why, for efficiency, it might make sense to treat lexical
+entries differently from other rules, however.  We will not make these
+optimisations here as they make the algorithms harder to follow.
+
+One important way in which computers can be of use to formal linguists
+is by allowing them to experiment with different grammars and show
+them implications of the various choices they make which might be hard
+to work out by hand.  A useful tool in this context is a program that
+can randomly generate sentences that are judged legal by a grammar.
+Notice that it would not be so useful to have a random generator built
+to work only with a specific grammar (in the way that the ATN program
+developed in Chapter 3 was specific to a particular analysis of
+English).  For linguists would then have to get involved with
+programming whenever they wanted to change a rule in the grammar.
+Instead we want to have a program that can accept any grammar (in some
+formalism), written in a way not dissimilar to how a linguist would
+write one, and randomly produce legal sentences.  In our LISP program
+(lib randgen), we will deal with context-free phrase structure
+grammars, represented by list structures as above.
+
+Here is the top level function of our random generator.  The function
+generate takes a description of the kind of phrase to be generated
+(e.g. (S)) and produces as its result a list of atoms (e.g. (Dr Chan
+died)).                     
+
+    (defun generate (description)
+      (if (atom description)
+        (list description)
+        (let ((rs (matching_rules description)))
+          (if (null rs)
+            (error "Cannot generate description")
+            (generate_all (cdr (oneof rs)))))))
+
+generate will be called recursively with descriptions of smaller and
+smaller phrases until it is called with a single atom as the
+description.  In this case the atom itself (packaged in a list) is
+returned as the result.  If the description is not a single atom, it
+must be a list representing a syntactic category; so, to generate from
+it the program must look for rules about what a phrase of this kind
+can consist of.  matching_rules returns the list of all such rules,
+and one is then chosen at random using the function oneof.  oneof
+simply takes a list and returns a random element, using the LISP
+function random to generate a number indicating the position of the
+element to be chosen:
+
+    (defun oneof (list)
+      ;;  randomly returns one of the given list
+      (nth (random (length list)) list))
+
+The RHS of the rule chosen is extracted (the LHS, which is the same as
+the original description, being ignored) and passed to generate_all.
+Since the RHS of a rule is just a list of the kind of items that
+generate can work from, generate_all simply calls generate on each
+element, concatenating the results together:
+
+    (defun generate_all (body)
+      (if (null body)
+        '()
+        (append
+          (generate (car body))
+          (generate_all (cdr body)))))
+
+matching_rules has to work through the grammar rules, collecting
+together in a list all the ones that start with the right category.
+It uses a function unify to compare the description it is generating
+from with the LHS of the rule.  In a more general situation, where the
+description and LHS may specify values of several features, unify will
+have to be more complicated, as we will see.  For our current
+purposes, however, it suffices for unify to test whether the two lists
+are equal.
+
+    (defun matching_rules (description)
+      (let ((results ()))
+        (dolist (rule rules results)
+          (if (unify description (car rule))
+            (setq results (cons rule results))))))
+
+    (defun unify (x y)
+      (equal x y))
+
+This simple program works well with small grammars but would have to
+be improved to work efficiently if we had hundreds of rules.  One
+source of inefficiency is the search through the whole list of rules
+carried out by matching_rules every time a category has to be
+generated from.  If we grouped rules with the same category on the
+'left hand side' together, perhaps as follows:
+
+    (setq rules
+     '(((S)
+           ((NP) (VP)))
+       ((VP)
+           ((V))
+           ((V) (NP)))
+       ((NP)
+           (Dr Chan)
+           (Medicenter)
+           (nurses)
+           (patients))
+       ((V)
+           (died)
+           (employed))))
+
+then matching_rules would only have to work through a list of groups,
+rather than a list of individual rules.  Alternatively, rules could be
+stored in a LISP hash table or on the property lists of the LHS
+categories, for rapid retrieval, given the left hand category.
+
+If you have just written a large phrase structure grammar, this
+generation program might be useful to help you detect places where the
+grammar is not strict enough in its characterisation of legality.
+Getting an example of an illegal sentence that can be generated is,
+however, not necessarily very useful.  What one more often wants to
+know is how the grammar managed to generate such an object.  For this
+reason, it is interesting to see whether we can generate the parse
+trees of random sentences allowed by the grammar.  In fact, our
+program can be altered straightforwardly to do this, and the result is
+called lib randtree.  In this modified program, generate returns a
+single parse tree (represented as a list in the way we showed above),
+and generate_all returns a list of parse trees.  Here are the new
+definitions (the other definitions do not need to be changed):
+
+    (defun generate (description)
+      (if (atom description)
+        description
+        (let ((rs (matching_rules description)))
+          (if (null rs)
+            (error "Cannot generate from description ~S" description)
+            (cons
+              (category description)
+              (generate_all (cdr (oneof rs))))))))
+
+    (defun generate_all (body)
+      (if (null body)
+        '()
+        (cons
+          (generate (car body))
+          (generate_all (cdr body)))))
+
+    (defun category (description)
+      (car description))
+
+Notice how, now that generate returns a single item (parse tree),
+rather than a sequence of items (atoms), the call to append in
+generate_all is replaced by a call to cons.
+
+Encoding feature specifications in LISP      
+
+Collections of feature names and associated values are easily
+represented in LISP.  We will represent them using association lists,
+with feature names acting as keys.  For instance, the following list:
+
+    ((person 3) (number sing))
+
+represents something with person and number features.  The values for
+these are respectively 3 and sing.  As before, we can represent a
+grammar rule by a list consisting of the LHS category followed by the
+RHS categories, these categories now being more complex than the
+single-element lists used previously.  The main complication is that a
+PATR rule can state that two features must have the same value,
+without specifying in advance what that value is to be.  In our
+representation, where two features are required to share a value (by a
+PATR '=' statement), the two values will be denoted by occurrences of
+the same variable symbol.  Variable symbols need to be distinguished
+from normal atomic values in some way, but apart from this only one
+aspect of their form is of importance.  Where the same variable symbol
+occurs several times, the appropriate values have to be the same;
+where two different variable tokens appear, the values do not have to
+be the same.  We have chosen to represent a variable symbol by an atom
+beginning with a '_', because this is easy to type, yet easily
+distinguished from the feature names and values that we are likely to
+use.  A PATR rule can then be translated into the LISP notation by
+collecting up all the information provided about each given category
+into a single list, using multiple occurrences of the same variable to
+indicate where a value must be shared.  For instance, the Grammar4
+rule:
+
+    Rule {single complement verbs}
+        VP -> V X:
+            <V arg1> = <X cat>
+            <VP slash> = <X slash>.
+
+could be translated into the following in LISP:
+
+    (((cat VP) (slash _y))
+     ((cat V) (arg1 _x))
+     ((cat _x) (slash _y)))
+
+where the variable symbol _y is used to indicate that the slash of the
+VP must be the same as the slash of the second subphrase and the
+symbol _x is used to indicate that the cat of the second subphrase
+must be the same as the arg1 of the verb.
+
+The LISP notation makes it relatively easy to see how a single rule
+using features corresponds to a number of context-free phrase
+structure rules.  With the above rule, a possible CF-PSG rule can be
+derived first of all by filling out the representation to mention
+explicitly all possible features for all phrases.  Thus if cat, slash
+and arg1 are the only possible features then the above rule is 'filled
+out' to:
+
+    (((cat VP) (slash _y) (arg1 _v1))
+     ((cat V) (arg1 _x) (slash _v2))
+     ((cat _x) (slash _y) (arg1 _v3)))
+
+where the extra variables _v1, _v2 and '_v3' appear once each.  It is
+now possible to consider a completely specified instance of this rule
+by choosing a possible concrete value for each variable, for instance:
+
+    _y  - NP
+    _x  - NP
+    _v1 - 0
+    _v2 - 0
+    _v3 - 0
+
+This assignment of values to variables gives the following rule:
+
+    (((cat VP) (slash NP) (arg1 0))
+     ((cat V) (arg1 NP) (slash 0))
+     ((cat NP) (slash NP) (arg1 0)))
+
+All we need now is a convention for translating each completely
+specified feature bundle into an atomic symbol.  For instance, we
+could take the CAT, slash, and arg1 feature values in order, separated
+by '_'s.  We would then have the following context-free rule:
+
+    ((VP_NP_0)
+     (V_0_NP)
+     (NP_NP_0))
+
+Corresponding to different variable assignments, we will, of course,
+get different context-free phrase structure rules out at the end.  But
+as long as we are consistent about our conventions (for instance in
+translating at the end from feature bundles to symbols) the resulting
+grammar will be exactly equivalent to the original one.
+
+The top level of a LISP program to do this translation might look like
+the following function, which prints out all the CF-PSG rules that
+correspond to a give rule:
+
+    (defun expand_rule (rule)
+      (let ((newrule (fillout_rule rule)))
+        (subst_values varlist newrule)))
+
+fillout_rule produces a new rule where each category consists of a
+list of bare values for each feature in turn, obtained by adding new
+variables (like _v1 in the above) for unmentioned features.  It also
+creates in the global variable varlist a list with an entry for each
+variable symbol and the list of possible values it can have, for
+instance:
+
+    ((_x NP S PP 0)
+     (_v1 NP 0 N V PP))
+
+How is it to know what possible features there are and what possible
+values they can have?  The possible features, together with their
+possible values, will have to be declared in a global variable:
+
+    (defvar features
+     '((cat S NP VP PP AP P N V 0)
+       (slash S NP VP PP AP P N V 0)
+       (subcat S NP VP PP AP P N V 0)
+       (empty yes no)))
+
+subst_values is in charge of enumerating every possible concrete
+instance of the rule obtainable by substituting one of the possible
+values for each of the variables in the varlist.
+
+    (defun subst_values (varlist rule)
+      (if (null varlist)
+        (print rule)
+        (dolist (val (cdar varlist))
+          (subst_values (cdr varlist)
+            (subst_value (caar varlist) val rule)))))
+
+The function uses recursion to carry out the enumeration of all the
+possibilities. Each call of subst_values is in charge of trying out
+all possible values for the variable that occurs first in the list.
+For each such value (the caar of varlist), it calls subst_value to
+actually substitute that value for the variable and then subst_values
+again to deal with the rest of the variables.  When the recursion
+bottoms out, the actual value of the rule (with values for all the
+variables) is printed out.  subst_value is easily defined:
+
+    (defun subst_value (name val thing)
+      (if (equal name thing)
+        val
+        (if (consp thing)
+          (cons
+            (subst_value name val (car thing))
+            (subst_value name val (cdr thing)))
+          thing)))
+
+In Chapter 7 we will look in more detail at the semantics of feature
+structures and develop LISP programs for more interesting
+applications.

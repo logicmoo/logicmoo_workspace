@@ -1,0 +1,24 @@
+[submodule "pack/profile"]
+	path = pack/profile
+	url = https://github.com/JanWielemaker/profile.git
+[submodule "pack/smtp"]
+	path = pack/smtp
+	url = https://github.com/JanWielemaker/smtp.git
+[submodule "pack/rserve_client"]
+	path = pack/rserve_client
+	url = https://github.com/JanWielemaker/rserve_client
+[submodule "pack/hdt"]
+	path = pack/hdt
+	url = https://github.com/JanWielemaker/hdt4swipl.git
+[submodule "pack/wordnet"]
+	path = pack/wordnet
+	url = https://github.com/JanWielemaker/wordnet.git
+[submodule "pack/pcache"]
+	path = pack/pcache
+	url = https://github.com/JanWielemaker/pcache.git
+[submodule "pack/chat80"]
+	path = pack/chat80
+	url = https://github.com/JanWielemaker/chat80.git
+[submodule "pack/libssh"]
+	path = pack/libssh
+	url = https://github.com/JanWielemaker/libssh.git

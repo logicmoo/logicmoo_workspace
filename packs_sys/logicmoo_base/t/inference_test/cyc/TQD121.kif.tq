@@ -1,0 +1,45 @@
+(note TQD121)
+
+(implies 
+ (and 
+ (instance ?CONFLICT InternationalConflict) 
+ (instance ?COUNTRY-A Country) 
+ (instance ?COUNTRY-B Country) 
+ (opponentsInConflict ?COUNTRY-A ?COUNTRY-B ?CONFLICT)) 
+ (capableOfDoing UnitedNationsOrganization ?CONFLICT mediators)) 
+
+(instance HYP-TerritorialDispute-11841239 TerritorialDispute) 
+
+(subclass TerritorialDispute InternationalConflict) 
+
+(instance UnitedArabEmirates Country) 
+
+(instance SaudiArabia Country) 
+
+(opponentsInConflict SaudiArabia UnitedArabEmirates HYP-TerritorialDispute-11841239) 
+
+(opponentsInConflict UnitedArabEmirates SaudiArabia HYP-TerritorialDispute-11841239) 
+
+(instance SaudiArabia Country) 
+
+(instance UnitedArabEmirates Country) 
+
+(instance HYP-TerritorialDispute-11841239 InternationalConflict) 
+
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+
+
+( query  (findall ?WHO (implies 
+ (and 
+ (instance ?CONFLICT TerritorialDispute) 
+ (opponentsInConflict SaudiArabia UnitedArabEmirates ?CONFLICT)) 
+ (capableOfDoing ?WHO ?CONFLICT mediators))  
+))
+
+(answer UnitedNationsOrganization )
+
+(end_of_file)

@@ -1,0 +1,18 @@
+; nuance grammar for tvGoDiS telvcrlogin domain/lexicon
+
+
+.Asrg_telvcrlogin_svenska [ 	+AlphaDigit
+				hej 
+                        	(hej då) 
+				förlåt
+                        	sluta
+				ja 
+				nej
+				(börja om) ]
+
+AlphaDigit [Alpha Digit Spell]
+Alpha [ q w e r t y u i o p a s d f g h j k l z x c v b n m ]
+Digit [ noll ett två tre fyra fem sex sju åtta nio ]
+Spell [ adam bertil cesar david erik filip helge ivar 
+	johan kalle ludvig martin niklas olof petter 
+	quintus rudolf sigurd tore urban viktor wilhelm xerxes ]

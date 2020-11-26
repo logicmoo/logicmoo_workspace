@@ -1,0 +1,5 @@
+Specifies a list of extra compilation parameters to be passed to
+Nuance compilation by the NUANCE\_\-COMPILE command. A typical value is
+\begin{verbatim}
+['-auto_pron', '-dont_flatten']
+\end{verbatim}

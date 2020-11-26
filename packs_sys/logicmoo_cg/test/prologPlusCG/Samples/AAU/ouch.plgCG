@@ -1,0 +1,5 @@
+// Type hiearchy
+Entity > Outcry.
+
+// Graph fact
+gr([Outcry : "Ouch!"]).

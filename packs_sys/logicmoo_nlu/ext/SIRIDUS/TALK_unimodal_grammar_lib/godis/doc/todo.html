@@ -1,0 +1,579 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>GoDiS todo list</title>
+                                  
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+</head>
+  <body>
+         
+<h1 align="center">GoDiS todo list</h1>
+     <br>
+         
+<p>This is a list of things to do with GoDiS, both generally and for specific 
+  versions (basic, grounding, iod, aod) and applications. It is divided into
+  the following sections:<br>
+     </p>
+         
+<ul>
+       <li><a href="#TheoryDME">Theory/DME</a></li>
+       <li><a href="#Modules">Modules</a></li>
+       <li><a href="#Resources">Resources</a></li>
+       <li><a href="#Applications">Applications</a></li>
+       <li><a href="#Bugs">Bugs</a></li>
+       <li><a href="#Other">Other</a></li>
+         
+</ul>
+       
+<h3>Explanation of symbols</h3>
+       
+<table width="40%" border="0" cellspacing="2" cellpadding="2">
+     <tbody>
+       <tr>
+         <td valign="top" align="center"><b>*</b>,<b>-</b><br>
+         </td>
+         <td valign="top">todo<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" align="center"><b>x</b><br>
+         </td>
+         <td valign="top">done to some extent<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" align="center"><b>X</b><br>
+         </td>
+         <td valign="top">completely done<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" align="center"><b>?</b><br>
+         </td>
+         <td valign="top">should we do it?<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" align="center"><b>#</b><br>
+         </td>
+         <td valign="top">abandoned<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" align="center"><b>[...]</b><br>
+         </td>
+         <td valign="top">new item information (item ID), e.g. author, date 
+and item number<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" align="center"><b>{...}</b><br>
+         </td>
+         <td valign="top">done item information, e.g. author and date<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" align="center"><b>(...)</b><br>
+         </td>
+         <td valign="top">comment on item, e.g. author and date<br>
+         </td>
+       </tr>
+     <tr>
+       <td valign="top"><b>nd</b><br>
+       </td>
+       <td valign="top">no date specified<br>
+       </td>
+     </tr>
+     <tr>
+       <td valign="top"><b>na</b><br>
+       </td>
+       <td valign="top">no author specified<br>
+       </td>
+     </tr>
+           
+  </tbody>   
+</table>
+   <br>
+     
+<h3>Adding new &nbsp;items<br>
+   </h3>
+     
+<p>When adding items, choose one of the sections and write a <i>short description</i>
+  plus a <i>item ID</i> enclosed in square brackets. Mark it with a <i>*</i>
+ . The item id should consist of your initials and the date (in YYMMDD format) 
+and a digit. The digit distinguishes between items submitted by the same person
+on the same day. E.g. if your name is John Smith and it is October 3rd 2003,
+the item ID will be <b>[JS 031003-1]</b> for your first submitted item of
+the day and&nbsp;<b>[JS 031003-2]</b> for your second. This should all be
+in bold face. <br>
+ </p>
+ 
+<p>If needed, provide a more detailed non-bold face description of  the item 
+below the short description. This can be indented by enclosing it in a <code></code>
+ blockquote tag. Also, put sub-items in the detailed description (see e.g. 
+item <a href="#SL_030521-1"><b>[SL 030521-1]</b></a>).<br>
+ </p>
+ 
+<h3>Managing&nbsp; items</h3>
+ 
+<p>When commenting    on items, specify your initials and the date enclosed 
+by ordinary brackets ( see e.g. item <a href="#DH_030730-1"><b>[DH 030730-1]</b></a>
+ ). Put the comment at the end. <br>
+ <br>
+ When an item is completely done and added to the CVS tree, mark it with
+<b> X</b> and put it at the end of the respective list. Also mark it with<br>
+   your intials and the date in curly brackets together with an optional
+comment (see e.g. item <a href="#DH_030605-1"><b>[DH 030605-1]</b></a>) .<br>
+   </p>
+     When an item is abandoned, put it at the end of the respective list
+and mark it with a<b> #</b>. 
+<blockquote></blockquote>
+          
+<hr width="100%" size="2">      
+<h2><a name="TheoryDME"></a>Theory/DME</h2>
+   <b>* Use icm:acc*neg:action(A) instead of request(up) - [DH 030905-1]</b><br>
+     
+<blockquote>   Can user dialogue move 'request(up) be seen as 'icm:acc*neg:action(A)' 
+ where A is the current action? When system performs icm:acc*neg:action(A) 
+ it has the meaning "I can not perform A" (at least in VCR domain). In this 
+ case it would mean "I do not want A to be performed". Or does it not qualify 
+ as ICM? Anyway, it would be nice to be able to reject issues and actions 
+explicitly, by saing e.g. "do not add a program"/"stop adding a program" etc.
+</blockquote>
+   <b>* </b><b>Limitations for information sharing - [SL/DH 030818-1]</b><br>
+     
+<blockquote>         
+  <p> (example domain: TA)<br>
+   1. if the database returns more than one answer (e.g. "paris" and "london" 
+ as answers to X^dest-city(X), the first one (dest-city(paris)) will be taken
+  as the answer to the destination issue in the visa-plan;<br>
+   need to be able to represent disjunction + decide what "dest-city" means 
+ in this case - desired or potential destination&nbsp; <br>
+   2. using forget_all in plans will make it impossible to do information 
+sharing,  since all info is wiped out after doing the second simultaneous 
+dialogue is a solution to do forget_all only when returning to top?<br>
+     </p>
+   </blockquote>
+    <b>* </b><b>GoDiS can not handle polysemy - </b><b><a
+ name="DH_030730-1"></a>[DH 030730-1]</b><br>
+    
+<blockquote>Interpretation module always translates input to the first no 
+ of matching moves and system can not backtrack. This causes a big problem 
+ when scaling up applications and implementing large lexica. Consider e.g. 
+ TV programs where 'Nyheter' can be a title as well as a category. Two surface 
+ forms may also (possibly) map to objects of the same sort but with different 
+ semantic meaning. No idea of how to solve this</blockquote>
+     
+<blockquote>         
+  <blockquote>This should be solved by enabling clarification  alternative-questions 
+as feedback to polysemous input. This would be interrogative  feedback on 
+the semantic understanding level&nbsp; (formally, icm:sem*int:Q}.  This will 
+probably require that each polysemous input phrase corresponds to two (or 
+more, depending on the number of meanings) non-polysemous output forms to 
+be used when generating the clarification question.&nbsp;       <b>(SL 030731) 
+    </b>          <br>
+     <br>
+ Need to solve problem with interpretation  module first<b> (DH 031001)</b><br>
+       </blockquote>
+   
+  <blockquote>    </blockquote>
+   </blockquote>
+     
+<p><b>* remove ACTIONS field in AOD? &nbsp;- </b><b>[SL </b><b>030731-1</b><b>
+   ]</b><br>
+   </p>
+     
+<blockquote>ISSUES could be used for both questions and actions. This corresponds 
+ to ordinary use of "issue", e.g. "the issue of adding a program to the vcr". 
+ Perhaps define semantic class "issue" which includes both actions and questions.<br>
+   </blockquote>
+      
+<p><b>* combining user-initiative-db-search with current GoDiS dialogue plans 
+ - [SL 030702-1]</b><br>
+   </p>
+     
+<blockquote>- 1st strategy is the one used in many NL database search systems; 
+ "one-shot" dialogues with some use of context for narrowing the search; presupposes
+ that user takes intiative and adds further restrictions when needed; several
+ results can be returned (so do this in connection with ND dialogue?)<br>
+   &nbsp; - 2nd strategy relies on dialogue plans to drive dialogue when
+user  does not take intitiative<br>
+   </blockquote>
+      
+<p><b>* y/n presupposing wh - <a name="SL_030521-1"></a>[SL 030521-1]&nbsp; 
+</b><br>
+   </p>
+     
+<blockquote>- "Do you want something to drink?" is a y/n question (?Ex.drink(X)) 
+ but "presupposes" a wh-question "what do you want to drink"; both should 
+be put on QUD to enable interpretation of the answer "A soda." to the y/n-question. 
+ Answering "no" will also answer the wh-question ("nothing"). Need semantics 
+ to handle this.<br>
+   &nbsp; - "(You want to drink) A soda." as feedback adds a y/n question 
+to  QUD, but also the wh-question "What do you want to drink"; this enables 
+corrections  not preceded by "no", e.g. "juice!"<br>
+   </blockquote>
+      
+<p><b>* "bind(Q)" action - [SL 030520-1]</b><br>
+   </p>
+     
+<blockquote><b>x</b> opposite of protect; makes Q available for accommodation 
+ but will not result in asking Q <br>
+     <b>-</b> "real" questions have priority when interpreting short answers? 
+ if not, include "bind" in selection of clarification q<br>
+   </blockquote>
+      
+<p><b>* User ask moves irrelevant answers to action-question ("What can I 
+ do for you?") - [SL 030727-1]</b><br>
+   </p>
+     
+<blockquote>Perhaps this is bit odd: ask-moves are seen as irrelevant followups 
+ to action-question ("What can I do for you?"). Note: if this is changed, 
+make sure that issues actually resolve the action-question.<br>
+   </blockquote>
+      
+<p><b>* get basic, grounding, IOD and AOD running with OAA and Nuance - [SL 
+ nd-1]</b></p>
+     
+<p>* <b>implement Negotiative Dialogue as specified in Larsson (2002) thesis 
+ - [SL nd-2]</b><br>
+   <b><br>
+   * improved &amp; simplified grounding model (grounding, IOD, AOD) - [SL
+ nd-3]</b>  <br>
+   </p>
+     
+<blockquote>- one field for each action level, moves are queued through and 
+ gradually incremented with new information (move, semantics etc)<br>
+   - increased coverage of feedback <br>
+   &nbsp; * alt-q about different percieved strings<br>
+   </blockquote>
+      
+<p><b>* look at score for individual words instead of score of the whole utterance
+when doing grounding - [DH 030606-1]</b></p>
+     
+<p>*<b> system confirmation question for the whole latest user utterance instead
+of one question per user answer move - [DH 030606-2]</b><br>
+   </p>
+     
+<blockquote>Assumes grounding model as in thesis. Also need to extend semantics 
+ so that conjuntive questions can be used ("do you mean A and B and C?").<br>
+   </blockquote>
+      
+<p><b>* examine appropriate forms of feedback, e.g. "let's see" etc. - [SL 
+ nd-4]</b></p>
+     
+<p><b>* libraries of rules to be reused by grounding, IOD, AOD - [SL nd-5]</b><br>
+   </p>
+     
+<blockquote>-&nbsp;accommodation<br>
+   -&nbsp; grounding<br>
+   -&nbsp; ...<br>
+   -&nbsp; use macros to enable different infostates?<br>
+   &nbsp; load libraries non-monotonically, so that one library's definition 
+ of a rule may override that of an earler library. <br>
+     <br>
+     - load libraries non-monotonically, so that one library's  definition 
+of a rule may override that of an earler library. This requires  that there 
+are never more than one rule with the same name. <b>(SL 030731)</b><br>
+   </blockquote>
+   <b><br>
+   * asynchronous feedback - [SL nd-6]</b><br>
+       
+<blockquote>&nbsp; - continue where Alex left it<br>
+   &nbsp; - use Nuance?<br>
+   </blockquote>
+   <br>
+   <b>* semantics - [SL nd-7]</b><br>
+     
+<blockquote>&nbsp; - individuals as lambda-abstracts, apply answer to question 
+ ( <code>X^X@paris</code> )<br>
+     see also <a href="#SL_030915-1"><b>[SL 030915-1]</b></a> <b>(DH 031002)</b><br>
+   </blockquote>
+   <b>* terminology - [SL nd-8]</b><br>
+     
+<blockquote>- speaker -&gt; dp?<br>
+   - relevant -&gt; about<br>
+   - shared divided into dgb and other things?<br>
+     <b><br>
+   </b>? actions (as part of plans) and actions (as performed by  devices, 
+with a corresponding plan) can be easily confused. terminology check?    
+ <b> (DH030717)</b><br>
+   </blockquote>
+   <b>* improve move selection - [SL nd-9]</b><br>
+     
+<blockquote>- if answer can be found immediately, no need to confirm ("ok" 
+ can be skipped)<br>
+   </blockquote>
+   <br>
+   <b>* improve generation - [SL nd-10]</b><br>
+     
+<blockquote>- need different output forms for altq's depending on what it's 
+ about<br>
+   </blockquote>
+   <br>
+   <b>* limitation: can't handle several instances of same task-type simultaneously 
+  - [SL nd-11]</b><br>
+   <br>
+   <b>* If two questions or requests appear in sequence, the latter is always 
+ dealt with first - [SL 030506-1]</b><br>
+     
+<blockquote>This is due to the use of stacks for ISSUES and ACTIONS. If order 
+ is indicated, e.g. "do A1 and then do A2", things should be dealt with in 
+ the order they appear.<br>
+   </blockquote>
+     
+<p><b>* Use semantics more similar to notation in thesis. - [DH 030902-1]</b>
+    </p>
+     
+<blockquote>In particular use '?' for all questions. Prolog variables should 
+ probably be used though &nbsp;instead of e.g. x1, x2, x3. Also, '.' will 
+not work as an infix operator, so&nbsp; '^' could be used as before:<br>
+           
+  <ul>
+       <li>y/n-q: ?dest_city(paris)</li>
+       <li>wh-q: ?X^dest_city(X)&nbsp;</li>
+       <li>alt-q: ?set([?dest_city(paris),?dest_city(london)])<br>
+   </li>
+           
+  </ul>
+ </blockquote>
+   <b>* Use Blackburn&amp;Bos-ish semantic representation - [<a
+ name="SL_030915-1"></a>SL 030915-1] </b><br>
+     
+<blockquote>Use a representation more like that in Blackburn &amp; Bos book 
+ on computational semantics. Questions are represented as que(P) for y/n and
+ que(X,PX) for wh. Also, it would be nice to do proper lambda calculus, including
+ full beta-reduction and alpha-conversion, as specified in the book.<br>
+   </blockquote>
+   <b>* .... loads more of GoDiS things todo, need to check which problems
+ are still there... - [SL nd-12]</b><br>
+   <br>
+     
+<hr width="100%" size="2">     
+<h2><a name="Modules"></a>Modules</h2>
+   <b>* URGENT: Nuance modules: get them to work with GoDiS-AOD and IOD - 
+[SL  030730-2]<br>
+   </b><br>
+   <b>* Thresholds for Nuance score should be variables, e.g. "low_thres" 
+och  "high_thres" [SL 030814-2]</b><br>
+   <b><br>
+   * output_nuance ,record prompts to speed up / bypass synthesis [SL 030522-1]</b><br>
+   <br>
+   <b>* input_nuance: Fixa barge-in n&auml;r man ringer upp (via telefon
+eller  telefonsimulator), beh&ouml;ver ej vara sofistikerat men vi skulle
+kunna korta av pauserna efter positiv feedback [SL 030518-1]</b><br>
+   <br>
+   <b>* update and include ViaVoice modules [SL 030521-2]</b><br>
+   <br>
+   <b>* update and include Festival output module [SL 030521-3]</b><br>
+   <br>
+   <b>* update and include Leif's L&amp;H output module (but maybe outdated) 
+ [SL 030521-4]<br>
+   <br>
+   </b>   
+<hr width="100%" size="2">   
+<h2><a name="Resources"></a>Resources</h2>
+   <b>* clean up lexicons, domain, database and device interface resources
+ - [SL nd-13]</b><br>
+   <br>
+   <b>* general OAA UPNP device interface which routes calls through OAA
+to  the real device - [DH nd-14]</b><br>
+     
+<blockquote>Java abstract class se.gu.ling.godis.oaa.devices.OaaUpnpDevice.java<br>
+     <br>
+   </blockquote>
+   <b>* lexicon: is altlist2altstr_and/or used at all? - [SL 030513-1]</b><br>
+   <br>
+   <b>* general lexicon - [na-nd-15]</b><br>
+     
+<blockquote>use general lexicon for input/output forms common to all instances 
+ of the same godis version and language (lexicon_aod_english, lexicon_aod_svenska,..)<br>
+   </blockquote>
+   <b>* enable runtime plugin of resources - [SL 030731-2]</b><br>
+     
+<blockquote>&nbsp;e.g. a "load_resource" operation<br>
+     <br>
+     enable runtime unplugging too&nbsp;<b>(DH031001) </b></blockquote>
+     
+<hr width="100%" size="2">   
+<h2><a name="Applications"></a>Applications</h2>
+   <b>* clean up start-files and godis-files; need consistent naming convention 
+ - [SL030814-1]</b><br>
+     
+<blockquote>* start_APP_{nuance/text}.pl<br>
+   * godis_APP_{nuance/text}.pl<br>
+   </blockquote>
+   <b>* separate applications from godis - [DH/SL 030521]</b><br>
+     
+<blockquote>- need GODIS environment variable<br>
+   - applications should not be under godis library<br>
+   - application spec file should be in same directory as application<br>
+   - selected_resources should be defined in start file, not in system spec 
+ file (godis_aod.pl etc.); perhaps also other things.<br>
+   - the start file should have a more appropriate name, indicating the application 
+ domain<br>
+     <br>
+     <br>
+   ?&nbsp; macros.pl should be in godis_library<b> (DH 030718)</b><br>
+   - user_flags.pl now in general - implement way of adding possible flagValues 
+ in app spec file<b> (DH 030718)</b><br>
+   </blockquote>
+   <b>* upgrade IMDiS application to work with aod - [SL nd-16]</b><br>
+   <b><br>
+   * upgrade autoroute application to work with iod - [SL nd-17]</b><br>
+   <br>
+   <b>* GoDiS Mindstorms - [SL 030730-3]</b><br>
+     
+<blockquote>- write Nuance grammars<br>
+   * deal with fact that actions may not be performable, that robot may be
+ non-contactable, that actions may fail<br>
+   </blockquote>
+     
+<hr width="100%" size="2">   
+<h2>Misc. features</h2>
+   <b>none added so far</b><br>
+     
+<hr width="100%" size="2">   
+<h2>Bugs</h2>
+   
+<blockquote><br>
+
+* Files for running GoDiS with Nuance have disappeared from the
+  distribution. There should also  be a comprehensive instruction for how to
+  start the system with Nuance, and preferably a script that does
+  everything for you. [SL031013] 
+
+</blockquote>
+<br>
+   <b>* not really a bug per se, but in update rules icm:accommodate has
+an  argument which is not used by the lexicon and could be removed. - [SL
+030731-3]</b><br>
+   <br>
+   <b>* make sure that all accommodation rules work esp. those using "proposition". 
+ - [SL nd-18]</b><br>
+     
+<blockquote>For example, number(7) and channel(7) are classified as &nbsp;propositions, 
+ even though they are not full answers. Perhaps need "full_answer" condition?<br>
+   </blockquote>
+   <b>x issues2qud accommodation doesn't work for vcr - [SL 030724-1]</b><br>
+     
+<blockquote>- the reason is that the rules requires that the answer is not 
+ a proposition. However, number(7) and channel(7) are classified as &nbsp;propositions, 
+ even though they are not full answers. Not sure how to solve this... <b>
+   </b><br>
+     <br>
+     <b>{SL030724;NOTE! IOD not fixed or checked!</b><b>}</b><br>
+   </blockquote>
+   <b>* when reraising an closed issue, all answers to questions dominated
+ by that issue must be removed! The same goes for requests. &nbsp;(integrateUsrAsk, 
+ integrateUsrRequest) - [SL 030724-2]</b><br>
+   <br>
+   <b>* noFollowUp should integrate actions as well as issues - [DH 030717-1] 
+ </b><br>
+   <br>
+   <b>* accommodatedependetissue, accommodateDependentFunction not complete: 
+ [030520-2]</b><br>
+     
+<blockquote>- must work with raise, bind as well<br>
+   </blockquote>
+   <b><br>
+   * (aod) when changing language, sometimes a confirmation subdialogue in
+ the previous language is needed before switching; the best thing would be
+ to do the confirmation in the new language, and if the switch is not confirmed, 
+ go back to the original language. - [SL nd-19]</b><br>
+   <br>
+   <b>* (aod) exec_forget_all rensar inte agendan! kan finnas icm kvar -
+[SL  nd-20]</b><br>
+     
+<blockquote>"add a program from five oclock" 0.8; "top"<br>
+   &nbsp;- vid integrate language change: rensa bara bort icm som ang&aring;r 
+ language change, ej annat (kanske ok med all icm?)<br>
+   - this will be solved when reimplementing grounding <br>
+   </blockquote>
+   *<b> (aod) reraising comes one turn too late after revision (?) - [SL
+nd-21]</b><br>
+   <br>
+   <b>X rejectProp rule produces pos*und feedback - [SL 030822-1]</b><br>
+     
+<blockquote>- this leads to strange behaviour if the response to the pos*und 
+ feedback is other than positive or nothing. The motivation for producing 
+pos*und is the general principle to produce positive FB on level n-1 when 
+producing negative fb on level n; however in this case it does not work so 
+well and does not seem necessary, since the negative acc-feedback usually 
+contains the rejected material.&nbsp; <br>
+     <br>
+   </blockquote>
+   <b>x init_shift done once too many, so one "#" is kept in list - [SL 030724-3] 
+ <br>
+   </b>   
+<blockquote>- this should not be a problem, but there is a bug in the implementation 
+ of init_shift in trindikit. This bug has been submitted to the SF site.<br>
+   &nbsp;<br>
+     <b>{SL030724;GoDiS should perhaps still avoid doing init twice...}</b><br>
+   </blockquote>
+   <br>
+   <b>X Uncategorized bug [SL 030515-1]:</b><br>
+     
+<blockquote>U: add a program twelve thirty 0.61<br>
+   &nbsp; _<br>
+   &nbsp; no<br>
+   &nbsp; -&gt; returns to top!<br>
+   <br>
+     <b>{SL 030724;this did not replicate}</b><br>
+   </blockquote>
+   <b>x the input_simpletext module does not set score, which leads to errors 
+ when checking conditions in update rules [SL 030513-2]</b><br>
+   <br>
+   <b>X build script crashes if $TRINDIKIT/classes is not in $CLASSPATH - 
+<a name="DH_030605-1"></a>[DH  030605-1]</b><br>
+     
+<blockquote><b>{DH030511; now fixed}</b><br>
+   </blockquote>
+   <b>X (aod) Accommodation of plan to issues bug - [SL 030506-2]<br>
+   </b>   
+<blockquote>Accommodation plan2issues does not work if answer to first question 
+ in plan for A is given in the same utterance as the request for A. For example, 
+ "Add a program channel five" in the VCR domain. <br>
+  <br>
+</blockquote>
+<b>X wrong type of /SHARED/PM in infostate.pl - [DH 031003-1]</b><br>
+<blockquote> /SHARED/PM incorrectly declared as being of the type oqueue
+in the information state declaration files. Should be a set.<br>
+  <br>
+  <b>{DH 031003;fixed in iod and aod,&nbsp; declared as a set in grounding
+not relevant for basic}</b><br>
+</blockquote>
+           
+<hr width="100%" size="2">   
+<h2>Other<b><br>
+   </b></h2>
+    <b>* comment the code, esp. rules and algorithms... - [SL 030724-4]</b><br>
+   <br>
+   <b>* describe undocumented features, including... - [SL 030724-5]</b><br>
+     
+<blockquote>- "up" action<br>
+   - plan constructors:<br>
+   * if_then_else<br>
+   * bind<br>
+   * protect<br>
+   * forget<br>
+   * forget_except<br>
+   * change_domain<br>
+   * do_action<br>
+   </blockquote>
+   <b>* webpage - [SL nd-21]</b><br>
+   <b><br>
+   * web demo - [SL nd-22]<br>
+   </b><br>
+   <b>* GoDiS application writer's manual - [SL nd-23]</b><br>
+   <b><br>
+   * GoDiS tutorial  - [SL nd-24]</b><br>
+   <br>
+   <br>
+       
+<p><br>
+    </p>
+         
+</body>
+</html>

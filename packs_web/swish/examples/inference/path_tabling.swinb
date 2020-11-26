@@ -1,0 +1,134 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Computing the probability of a path between two nodes in an undirected probabilistic graph
+
+An undirected probabilistic graph is a graph where each edge has a
+probability of being present.
+
+Consider the probabilistic graph:
+</div>
+
+<div class="nb-cell query">
+graph(G).
+</div>
+
+<div class="nb-cell markdown">
+What is the probability that =a= and =e= are connected?
+</div>
+
+<div class="nb-cell query">
+prob(path(a,e),Prob).
+</div>
+
+<div class="nb-cell markdown">
+What is the probability that =a= and =e= are connected represented graphically?
+</div>
+
+<div class="nb-cell query">
+prob(path(a,e),Prob),bar(Prob,C).
+</div>
+
+<div class="nb-cell markdown">
+## Code
+
+We use tabling to avoid non termination:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(pita)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- use_rendering(graphviz).
+:- endif.
+
+:- pita.
+</div>
+
+<div class="nb-cell markdown">
+We declare path/2 as tabled
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- table path/2.
+
+:- begin_lpad.
+</div>
+
+<div class="nb-cell markdown">
+path(X,Y) is true if there is a path between nodes =X= and =Y=
+edge(a,b) indicates that there is an edge between =a= and =b=
+There is surely a path between a node and itself:
+</div>
+
+<div class="nb-cell program" data-background="true">
+path(X,X).
+</div>
+
+<div class="nb-cell markdown">
+There is surely a path between X and Y if there is another node Z such that
+there is a path between X and Z and there is an edge between Z and Y
+</div>
+
+<div class="nb-cell program" data-background="true">
+path(X,Y):-
+  path(X,Z),edge(Z,Y).
+</div>
+
+<div class="nb-cell markdown">
+Edges are undirected
+</div>
+
+<div class="nb-cell program" data-background="true">
+edge(X,Y):-arc(X,Y).
+edge(X,Y):-arc(Y,X).
+</div>
+
+<div class="nb-cell markdown">
+There is an arc between =a= and =b= with probability 0.2:
+</div>
+
+<div class="nb-cell program" data-background="true">
+arc(a,b):0.2.
+</div>
+
+<div class="nb-cell markdown">
+Other probabilistic arcs:
+</div>
+
+<div class="nb-cell program" data-background="true">
+arc(b,e):0.5.
+arc(a,c):0.3.
+arc(c,d):0.4.
+arc(d,e):0.4.
+arc(a,e):0.1.
+</div>
+
+<div class="nb-cell markdown">
+End of probabilistic part:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- end_lpad.
+</div>
+
+<div class="nb-cell markdown">
+Clause for drawing the graph using the integration with Graphviz:
+</div>
+
+<div class="nb-cell program" data-background="true">
+graph(digraph([rankdir='LR'|G])):-
+    findall(edge(A - B,[label=P,dir=none]),
+      clause(arc(A,B,_,_),(get_var_n(_,_,_,_,[P|_],_),_)),
+      G).
+</div>
+
+<div class="nb-cell markdown">
+## References
+L. De Raedt, A. Kimmig, and H. Toivonen. ProbLog: A probabilistic Prolog and
+its application in link discovery. In International Joint Conference on
+Artificial Intelligence, pages 2462-2467, 2007.
+</div>
+
+</div>

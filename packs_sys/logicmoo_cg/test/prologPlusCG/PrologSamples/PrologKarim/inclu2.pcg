@@ -1,0 +1,11 @@
+incluo(_,[]).
+
+incluo([_X|_L],[_X|_L1]):-incluo(_L,_L1).
+
+inclu([_X|_L],[_X|_L1]) :-incluo(_L,_L1).
+
+inclu([_|_L],_L1):-inclu(_L,_L1).
+
+inclu(_,[]).
+
+

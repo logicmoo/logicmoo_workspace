@@ -1,0 +1,42 @@
+  /var/lib/myfrdcsa/collaborative/git/logicmoo_workspace.wiki:
+  total used in directory 304 available 77451292
+  drwxr-xr-x  4 andrewdo andrewdo  4096 Nov 19 01:10 .
+  drwxr-xr-x 23 andrewdo andrewdo  4096 Nov 19 00:53 ..
+  drwxr-xr-x  8 andrewdo andrewdo  4096 Nov 19 00:50 .git
+  -rw-r--r--  1 andrewdo andrewdo   388 Nov 19 00:59 BinaFortyEightVersionTwo.md
+  -rwxr-xr-x  1 andrewdo andrewdo  2964 Nov 19 00:21 Brainstormed_Features.wiki
+  -rwxr-xr-x  1 andrewdo andrewdo  1691 Nov 19 00:21 Console_commands.md
+  -rw-r--r--  1 andrewdo andrewdo    61 Nov 19 00:28 CycBehaviorLanguage.md
+  -rw-r--r--  1 andrewdo andrewdo    51 Nov 19 00:28 CycLanguage.md
+C -rw-r--r--  1 andrewdo andrewdo  4228 Sep  5 18:55 CycSystem.md
+  -rwxr-xr-x  1 andrewdo andrewdo  2272 Nov 19 00:21 Database Implementation.md
+  -rw-r--r--  1 andrewdo andrewdo   144 Nov 19 01:00 DmilesAGIBot.md
+  -rw-r--r--  1 andrewdo andrewdo   181 Nov 19 01:02 DmilesDialogSystems.md
+  -rw-r--r--  1 andrewdo andrewdo    61 Nov 19 00:28 DouglasRMiles.md
+  -rwxr-xr-x  1 andrewdo andrewdo 54119 Nov 19 00:21 E2C.md
+  -rwxr-xr-x  1 andrewdo andrewdo 54117 Nov 19 00:21 E2C.wiki
+  -rw-r--r--  1 andrewdo andrewdo  2531 Nov 19 01:04 EToCProject.md
+  -rw-r--r--  1 andrewdo andrewdo    86 Nov 19 00:28 EmacsWikiMarkup.md
+  -rw-r--r--  1 andrewdo andrewdo   215 Nov 19 00:28 FEToCProject.md
+  -rwxr-xr-x  1 andrewdo andrewdo  2804 Nov 19 00:21 Home.md
+  -rwxr-xr-x  1 andrewdo andrewdo 13349 Nov 19 00:21 IRC LOG.md
+  -rw-r--r--  1 andrewdo andrewdo    87 Nov 19 00:28 LarKc.md
+  -rw-r--r--  1 andrewdo andrewdo  3037 Nov 19 01:08 LispSync.md
+  -rw-r--r--  1 andrewdo andrewdo  1204 Nov 19 00:28 ListOfSymbolicAITechniques.md
+  -rw-r--r--  1 andrewdo andrewdo   109 Nov 19 01:09 LogicMOOBase.md
+  -rw-r--r--  1 andrewdo andrewdo    24 Nov 19 01:09 LogicMOOProject.md
+  -rw-r--r--  1 andrewdo andrewdo   116 Nov 19 01:09 MathematicalKnowledgeManagement.md
+  -rw-r--r--  1 andrewdo andrewdo    71 Nov 19 00:28 PlanApplierModule.md
+  -rw-r--r--  1 andrewdo andrewdo    28 Nov 19 01:09 PlanLogicProjects.md
+  -rw-r--r--  1 andrewdo andrewdo    72 Nov 19 00:28 PopLog.md
+  -rw-r--r--  1 andrewdo andrewdo  1498 Nov 19 01:10 PrologMUDProjects.md
+  -rw-r--r--  1 andrewdo andrewdo   134 Nov 19 00:28 ScriptApplierModule.md
+  -rw-r--r--  1 andrewdo andrewdo     8 Nov 19 00:28 ShopThree.md
+  -rw-r--r--  1 andrewdo andrewdo    53 Nov 19 00:28 ShrdluSystem.md
+  -rw-r--r--  1 andrewdo andrewdo     7 Nov 19 00:28 SteelBankCommonLisp.md
+  -rw-r--r--  1 andrewdo andrewdo   182 Nov 19 00:28 SxxMachine.md
+  -rw-r--r--  1 andrewdo andrewdo    11 Nov 19 00:28 TuProlog.md
+  -rwxr-xr-x  1 andrewdo andrewdo   387 Nov 19 00:21 Web-Interface.md
+  -rwxr-xr-x  1 andrewdo andrewdo   387 Nov 19 00:21 Web_Interface.md
+  -rwxr-xr-x  1 andrewdo andrewdo   609 Nov 19 00:21 _Footer.md
+  drwxr-xr-x  2 andrewdo andrewdo  4096 Nov 19 00:21 rooms

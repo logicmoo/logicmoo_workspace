@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.cs3.roots</groupId>
+  <artifactId>jtransformer_projects</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+
+  <properties>
+	<tycho-version>0.19.0</tycho-version>
+	<tycho-groupid>org.eclipse.tycho</tycho-groupid>
+	<platform-version-name>indigo</platform-version-name>
+   	<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
+   	<eclipse-project-site>http://download.eclipse.org/eclipse/updates/3.7</eclipse-project-site>
+	<platform-version>[3.6,3.7)</platform-version>
+	<maven.compiler.source>1.7</maven.compiler.source>
+  </properties>
+
+  <!-- Add additional repository locations -->
+	<repositories>
+		<!--  For Eclipse (depending on the variable ${platform-version-name}) -->
+		<repository>
+			<id>eclipse-p2</id>
+			<layout>p2</layout>
+			<url>${eclipse-site}</url>
+		</repository>
+		
+		<!--  Eclipse Projects P2 Repository (for project dependencies) -->
+		<repository>
+			<id>eclipse-p2-projects</id>
+			<url>${eclipse-project-site}</url>
+			<layout>p2</layout>
+		</repository>
+	</repositories>
+	
+  <build>
+	<sourceDirectory>src</sourceDirectory>
+     <pluginManagement>
+      <plugins>
+        <plugin>
+			<groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-compiler-plugin</artifactId>
+            <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
+				 <showDeprecation>true</showDeprecation>
+			      <showWarnings>true</showWarnings>
+                
+            </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+		<groupId>org.eclipse.tycho</groupId>
+		<artifactId>target-platform-configuration</artifactId>
+		<version>${tycho-version}</version>
+		<configuration>
+			<resolver>p2</resolver>
+		</configuration>
+	  </plugin>    
+	  <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
+      </plugin>
+	  
+	
+		
+    </plugins>
+  </build>
+  <modules>
+    <module>pdt.analysis</module>
+    <module>pdt.builder</module>
+    <module>pdt.common</module>
+    <module>pdt.console</module>
+    <module>pdt.graphicalviews</module>
+    <module>pdt.editor</module>
+    <module>pdt.feature</module>
+    <module>pdt.navigator</module>
+    <module>pdt.updatesite</module>
+    <module>prolog.library</module>
+    <module>prolog.connector</module>
+    <module>pdt.connector</module>
+  </modules>
+</project>

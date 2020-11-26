@@ -1,0 +1,12 @@
+(let ((expd
+         (try-domain-with-name 'expressions nil)))
+   (cond (expd
+          (let ((eqb (find-domain-bdg 'equation expd)))
+            (cond ((and eqb (functor-p (pddl-bdg-val eqb)))
+                   (setf (functor-macro (pddl-bdg-val eqb))
+                         #'equation-expand))
+                  (t
+                   (error "Can't find binding of equation")))))
+         (t
+          (error "Can't find expressions domain"))))
+

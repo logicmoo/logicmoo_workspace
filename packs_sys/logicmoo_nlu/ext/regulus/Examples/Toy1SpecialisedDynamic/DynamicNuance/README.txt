@@ -1,0 +1,1 @@
+This directory is for holding dynamically generated Nuance files.

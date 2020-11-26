@@ -1,0 +1,327 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Pragmatics
+
+We can use Prolog inference directly for simple prediction.  We define
+a predicate 'say' that can be given a set of assertions that might be
+derived from an English sentence.
+
+    say(X) :- X, !.
+    say(X) :- asserta(X).
+
+It will add them to its world model if they are not already predicted.
+Assertions may contain variables, corresponding to pronouns that need
+to be resolved, in which case 'say' uses Prolog's backwards inference
+to try and infer substitutions for the pronouns.  Here is a tiny set
+of example inference rules, based on the Morton Underwell exercise:
+
+    church(church_of(Town)) :- town(Town).
+    see(people,Object) :- famous(Object), object(Object).
+    object(Spire) :- spire(Spire).
+    object(Spire) :- spire(Church).
+    spire(spire_of(Church)) :- church(Church).
+
+The predicate 'say' can be used by a person simulating the output of a
+natural language front end, providing lists of assertions in the order
+they might be generated from a text:
+
+    ?- say(town(morton_underwell)).
+    yes
+    ?- say(spire(It)).
+    It = spire_of(church_of(morton_underwell)) ?
+    yes
+    ?- say(famous(spire_of(church_of(morton_underwell)))).
+    yes
+    ?- say(see(people,It)).
+    It = spire_of(church_of(morton_underwell)) ?
+    yes
+
+In this example, the prediction program is able to predict the
+existence of the spire on the church in Morton Underwell, and is able
+to predict that it is this, rather than the church or the town, that
+people probably come to see.
+
+We can easily represent a script in Prolog, with a predicate 'script'                     
+whose first argument is a term giving the name of the script with
+variables for the key players, and whose second argument is a list of
+terms, each of which represents an event occurring in sequence.  In
+addition, we can directly associate conditions on the type of entity
+that can substitute for the variables in the script.  When humans go
+to a restaurant, they (normally) pay for the food eaten, and are thus
+customers.  When cats visit restaurants, they do not pay, and are thus
+not customers.
+
+Here are a couple of scripts represented this way:
+
+    script(restaurant(Customer,Restaurant,Food),
+        [
+        enters(Customer,Restaurant),
+        calls(Customer,Server),
+        brings(Server,Food),
+        eats(Customer,Food),
+        pays(Customer,Teller),
+        leaves(Customer,Restaurant)
+        ]) :-
+        human(Customer),
+        human(Server),
+        human(Teller),
+        restaurant(Restaurant),
+        food(Food).
+
+    script(cat_burglary(Cat,Location,Food),
+        [
+        enters(Cat,Location),
+        picks_up(Cat,Food),
+        leaves(Cat,Location),
+        eats(Cat,Food),
+        sleeps(Cat)
+        ]) :-
+        cat(Cat),
+        food(Food).
+
+And here is some of the relevant "typing" information that our scripts
+need to make use of:
+
+    cat(a_cat).
+    cat(garfield).
+    food(some_food).
+    food(lasagne).
+    human(a_person).
+    human(kim).
+    restaurant(a_restaurant).                     
+    restaurant(pizzahut).
+
+The code we need to use these scripts to "understand" stories is
+pretty trivial -- find a script, then match the story against the
+events in the script:
+
+    understand(Story,Summary,Events) :-
+        script(Summary,Events),
+        match(Story,Events).
+
+Here 'match' imply attempts to unify each event in the story with some
+event in the script, subject to the constraint that the order of
+events in the story is consistent with that in the script:
+
+    match([],Events).
+    match([Event1|Events1],[Event1|Events2]) :-
+        match(Events1,Events2).
+    match([Event1|Events1],[Event2|Events2]) :-
+        match([Event1|Events1],Events2).
+
+That essentially completes our program (in scripts.pl) which
+implements a simple script applier in Prolog.  It differs from actual
+script appliers, in that it expects to be given the set of
+propositions from a whole text, rather than having to work out
+plausible scripts at the end of each sentence.  Moreover, it
+incorporates no special mechanism for script cueing -- each script is
+assumed to be potentially applicable.
+
+Here are a couple of examples of the program in use:
+
+    1.  The story:
+          enters(kim, pizzahut)
+          eats(She, lasagne)
+       Summary:
+          restaurant(kim, pizzahut, lasagne)
+       Chronology:
+          enters(kim, pizzahut)
+          calls(kim, a_person)
+          brings(a_person, lasagne)
+          eats(kim, lasagne)
+          pays(kim, a_person)
+          leaves(kim, pizzahut)
+
+    2.  The story:
+          enters(garfield, pizzahut)
+          eats(He, lasagne)
+       Summary:
+          cat_burglary(garfield, pizzahut, lasagne)
+       Chronology:
+          enters(garfield, pizzahut)
+          picks_up(garfield, lasagne)
+          leaves(garfield, pizzahut)
+          eats(garfield, lasagne)                     
+          sleeps(garfield)
+
+In these examples, the program is given lists of propositions that
+might arise from texts like the following:
+
+    1. Kim went to Pizza Hut.  She had a lasagne.
+    2. Garfield snuck into Pizza Hut.  He ate the lasagne.
+
+In the latter case, because Garfield is a cat, and not a person, the
+program has decided that a "cat_burglary" script is applicable to the
+sequence of actions.  In doing so, it has obtained the referent of the
+pronoun, and although the text only mentions two actions, the script
+indicates that in fact five actions took place, including Garfield
+picking up the lasagne, leaving the restaurant, and sleeping.
+
+Language generation as a goal-oriented process       
+
+PLAN_GEN.PL implements a simple planner that can develop plans such as
+these two examples.  Operators are represented in Prolog with 4
+arguments, the first being the name of the operator bundled up as a
+term with its arguments, the second is a list of CAN_DO preconditions,
+the third a list of WANT preconditions, and the fourth a list of
+effects.  The use of lists for the last three arguments allows us to
+express multiple preconditions and effects.  Here is our REQUEST
+operator in this notation:
+
+    operator(request(Speaker,Addressee,Action),
+       [Addressee can_do Action,channel(Speaker,Addressee)],
+       [Speaker wants request(Speaker,Addressee,Action)],
+       [Addressee believes Speaker wants Action]).
+
+Note that we have defined 'believes', 'wants' and 'can_do' as infix
+operators.  We represent the initial state of the world for the
+planner with a predicate 'initial' which provides a list of facts
+describing the world in question.  So that we can have clauses for
+several examples in the database, we provide 'initial' with a first
+(numeric) argument to identify the example.
+
+    initial(1,[
+       channel(sue,alan),
+       at(alan,inside),
+       at(sue,inside)
+       ]).
+
+Goals as expressed by the 'goal' predicate have three arguments: the                     
+number of the example, the name of the agent whose goal it is, and the
+goal itself:
+
+    goal(1,sue,at(alan,outside)).
+
+Although the planner plays the part of a particular agent in building
+the plan and therefore reasons within the beliefs of that agent, for
+convenience we will express the world model in an impartial way, with
+all belief contexts explicitly spelled out.  Moreover, in presenting
+goals to the planner, we will omit the "AGENT believes" that should
+precede each one.  Of course, if the goals involve predicates about
+which there is universal knowledge, then there is no distinction
+anyway.
+
+Depth-first search, which is Prolog's default search strategy, is
+actually a bad search strategy for planning, because there are usually
+infinitely many ways of achieving a given goal and arbitrarily long
+plans to investigate.  For instance, if Sue wants Alan to move out of
+the room, she could simply make a request, or go out of the room and
+make the request, or go out of the room, come back into the room and
+make the request, and so on.  Depth-first search is unlikely to find
+the best plan, which is probably the shortest plan, and it is liable
+to get into infinite loops trying to generate longer and longer plans.
+Because of this problem, the PLAN_GEN.PL program uses a modified
+depth-first strategy.  It uses 'listlen' to generating uninstantiated
+lists of actions of increasing length.  The first attempt tries an
+empty list of actions, then a one action list, then a two action list,
+and so on, until a plan of the given length is found.  Although this
+approach (known as iterative deepening) involves a lot of duplicated
+work, it does ensure that the program finds a shortest plan and does
+not get into infinite loops.
+
+    planner(Id) :-
+          listlen(Actions,_),
+          initial(Id,World),
+          goal(Id,Agent,Goal),
+          plan(Agent,Goal,World,Actions,[],Done).
+
+Here is a trace of a successful search for a plan applicable to the
+goal and initial world of example 1, as given in the examples above:
+
+    ?- planner(1).
+
+    [trying, plan, length, 0]
+     [trying, plan, length, 1]
+     [trying, operator, move(alan, _1, outside)]
+      [trying, plan, length, 2]
+      [trying, operator, move(alan, _2, outside)]
+      [trying, operator, cause_to_want(_3, alan, move(alan, inside, outside))]
+      [trying, operator, move(alan, _4, _2)]
+       [trying, plan, length, 3]
+       [trying, operator, move(alan, _5, outside)]
+       [trying, operator, cause_to_want(_6, alan, move(alan, inside, outside))]                     
+       [trying, operator, request(_6, alan, move(alan, inside, outside))]
+
+    ** plan is:
+
+       [request(sue, alan, move(alan, inside, outside)),
+        cause_to_want(sue, alan, move(alan, inside, outside)),
+        move(alan, inside, outside)]
+
+The plan returned is a list representing the sequence of actions that
+should be performed (in the order given) to achieve the goal.  The
+predicate 'plan' takes the following arguments:
+
+    (i) AGENT - the agent who is doing the planning,
+    (ii) GOAL - the current goal,
+    (iii) WORLD - the world in which the goal is to be pursued (i.e.
+    the list of facts that are true in that world),
+    (iv) ACTIONS1, ACTIONS2 - a difference list encoding the plan
+    necessary to achieve the goal,
+    (v) DONE - a flag to signal termination.
+
+The first main possibility for it to investigate is whether the GOAL
+is already true.  Since we are planning from the point of view of a
+particular AGENT, we actually need to test whether the AGENT believes
+that it is true, unless the goal involves a predicate that is
+universally known.  Predicate 'db_goal' produces a new version of
+GOAL, DBG, which has an "AGENT believes" prefix if the goal does not
+involve a predicate about which there is universal knowledge:
+
+    plan(Agent,Goal,World,Actions,Actions,Done) :-
+       db_goal(Agent,Goal,DBG),
+       member(DBG,World).
+
+The other main possibility is to find an operator that could achieve
+the goal by one of its effects.  For such an operator, the program
+tries planning to achieve the preconditions (CAN_DOs and WANTs),
+calling the predicate 'allplan' to produce the various subplans:
+
+    plan(Agent,Goal,World,[Action|Actions0],Actions2,Done) :-
+       operator(Action,Can_do,Want,Effects),
+       member(Goal,Effects),
+       write([trying,operator,Action]), nl,
+       allplan(Agent,Can_do,World,Actions0,Actions1,Done),
+       allplan(Agent,Want,World,Actions1,Actions2,Done).
+
+The predicate 'allplan' basically works like 'plan', except that is
+expects a list of goals, rather than a single goal.  It attempts to
+achieve them in sequence:
+
+    allplan(Agent,[],World,Actions,Actions,Done).
+    allplan(Agent,[Goal|Goals],World,Actions0,Actions2,Done) :-
+       plan(Agent,Goal,World,Actions0,Actions1,Done),
+       allplan(Agent,Goals,World,Actions1,Actions2,Done).
+
+Although we have now convered the main parts of the program, the                     
+program also deals with various special cases.  For instance, in order
+to achieve "can_do(X,Y)", it looks up the CAN_DO preconditions for
+action "Y" and tries to achieve these.  The planner also knows
+explicitly about the predicates about which there is universal
+knowledge.
+
+The program implemented in PLAN_GEN.PL is a restricted planner in the
+following respect.  It chains backwards from the desired goal to an
+action that will achieve that goal; then it looks for an unsatisfied
+precondition of that action and finds an action that will make that
+precondition true; then it looks for an unsatisfied precondition of
+that action; and so on, until an action is reached, all of whose
+preconditions are initially true.  It then stops (the stopping is
+implemented by instantiating the "Done" variable that is passed to all
+the 'plan' and 'allplan' goals; 'allplan' actually checks whether this
+variable is instantiated and, if so, stops doing any further
+planning).  At this point, the list of actions it has chained through
+gives a rough idea of a sequence of actions to be performed, but there
+is no guarantee that any but the first of these can actually be
+performed.  It is quite possible, for instance, that a remaining
+unsatisfied precondition of one of the actions cannot be made true in
+any way.  Or that for some reason one of the effects of carrying out
+one of the actions is to make one of the other actions impossible.
+The key feature of a planning system that this program lacks is the
+ability to reason properly about the changes in the world that result
+from performing an action and how these interact with the
+preconditions and effects of other planned actions.

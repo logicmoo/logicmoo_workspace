@@ -1,0 +1,6 @@
+When doing batch speech translation, using {\tt
+TRANSLATE\_\-SPEECH\_\-CORPUS} and allied commands, it is optionally
+possible to write out N-best training data if the config file
+parameter {\tt nbest\_\-training\_\-data\_\-file} is defined. Output
+is written to the file in question. This command turns on the
+behaviour.

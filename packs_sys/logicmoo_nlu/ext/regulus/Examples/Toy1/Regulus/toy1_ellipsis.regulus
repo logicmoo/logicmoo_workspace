@@ -1,0 +1,8 @@
+
+utterance:[sem=concat([[utterance_type, phrase]], Np)] -->
+	np:[sem=Np].
+
+utterance:[sem=concat([[utterance_type, phrase]], Pp)] -->
+	location_pp:[sem=Pp].
+
+

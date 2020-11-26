@@ -1,0 +1,60 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Tests Retraction undoes Backchaining memo idea is working
+
+
+%  was_module(bc_01a,[]).
+
+:- include(test_header).
+
+
+:- dynamic(bc_q/1).
+:- dynamic(bc_p/1).
+
+:- ain((bc_q(N) <- bc_p(N))).
+
+bc_p(a).
+bc_p(b).
+
+
+
+:- mpred_test(call_u(bc_p(b))).
+
+%= nothing cached
+:- mpred_test(\+ clause(bc_q(_),true)).
+
+:- mpred_test(((bc_q(b)))).
+
+%= something cached
+:- mpred_test( clause(bc_q(_),true)).
+
+
+% Are we cleaning up backchains?
+
+
+:- ignore((mpred_info((((bc_q(N) <- bc_p(N))))))).
+
+
+:- mpred_info(((bct(bc_q(_6600462), pt(bc_p(_6600462), rhs([bc_q(_6600462)])))))).
+
+:- mpred_test(((mpred_withdraw(((bc_q(N) <- bc_p(N))))),\+ clause(bc_q(_),true))).
+
+%:- mpred_test(((mpred_undo1(((bc_q(N) <- bc_p(N))))),\+ clause(bc_q(_),true))).
+%:- mpred_test(((mpred_retract(((bc_q(N) <- bc_p(N))))),\+ clause(bc_q(_),true))).
+
+:- get_bc_clause(bc_q(_A),BackChainClause),
+   mpred_why(( BackChainClause)).
+
+:- get_bc_clause(bc_q(_A),H,B),
+   mpred_test(\+ clause(H,B)).
+
+
+
+
+
+

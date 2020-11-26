@@ -1,0 +1,20 @@
+// *******   utilities *******
+not(p) :- p, !, fail.
+not(p).
+
+or(p, q) :- p, !.
+or(p, q) :- q.
+
+eq(x, x).
+
+if(c, t, e) :-
+  c, !, t.
+if(c, t, e) :- e.
+
+dif(x, y) :- free(x), !.
+dif(x, y) :- free(y), !.
+dif(x, x) :- !, fail.
+dif(x, y).
+
+bound(x) :- free(x), !, fail.
+bound(x).

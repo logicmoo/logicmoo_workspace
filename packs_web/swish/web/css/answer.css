@@ -1,0 +1,172 @@
+
+		 /*******************************
+		 *    SWITCH REPRESENTATIONS	*
+		 *******************************/
+
+div.render-multi {
+  position: relative;
+  vertical-align: top;
+  background-image: url("../icons/page-fold-20.png");
+  background-size: 15px;
+  background-repeat: no-repeat;
+/* background-position: 0% 0%;*/
+}
+
+#render-select {
+  position: absolute;
+  background-color: #fff;
+  padding: 5px 0px 5px 20px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px #888;
+  z-index: 500;
+  white-space: nowrap;
+}
+
+.render-selecting {
+  outline: 1px solid #800;
+}
+
+.render-multi-active {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 20px; height: 20px;
+}
+
+div.render-item a {
+  float: right;
+  padding: 0px 10px 0px 10px;
+}
+
+
+		 /*******************************
+		 *	      ERRORS		*
+		 *******************************/
+
+div.render-error { display: inline-block; }
+div.render-error span.error { color: #f00; }
+
+		 /*******************************
+		 *	   CONSOLE OUTPUT	*
+		 *******************************/
+
+pre.console
+{ padding: 0px 9px;
+  border: 0px;
+  margin: 0px;
+}
+
+pre.measure
+{ padding: 0px;
+  border: 0px;
+  margin: 0px;
+  display: inline;
+}
+
+span.format
+{ white-space: pre;
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+
+a.download
+{ margin-right: 5px;
+}
+
+a.download span.glyphicon
+{ margin-left: 1ex;
+}
+
+
+		 /*******************************
+		 *	       WFS		*
+		 *******************************/
+
+div.wfs-residual-program
+{ margin-left: 10%;
+  margin-right: 10%;
+}
+
+div.wfs-title
+{ font-style: italic;
+  font-size: 80%;
+  color: #060;
+}
+
+pre.wfs-residual-program
+{ padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+		 /*******************************
+		 *	GENERAL RENDERERS	*
+		 *******************************/
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Below we provide styling support for  general purpose renderers. Special
+purpose renderers typically give their style   together with the output,
+but that is rather expensive.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+/* General TABLE renderer */
+
+.render-table {
+  border: 2px solid #333;
+}
+
+.render-table td { padding: 0px 5px; border: 1px solid #888;}
+.render-table th { padding: 0px 5px; border: 1px solid #888; text-align: center;}
+
+.render-table tr:nth-child(odd)  { background-color: #eee; }
+.render-table tr:nth-child(even) { background-color: #fff; }
+.render-table tr.hrow            { border-bottom: 2px solid #333; }
+
+.render-code-list { color: #040; font-style: italic; }
+.render-ellipsis  { colour: blue; padding: 0px 5px;}
+
+/* General SVG Tree renderer */
+
+.render-svg-tree                        { padding: 5px; display: inline-block; }
+.render-svg-tree svg text               { padding:0.5em 0.2em; }
+.render-svg-tree svg g.collapsed g text { padding:0px 0.5ex; }
+.render-svg-tree svg polyline           { fill:none; }
+.render-svg-tree g.noleaf text		{ font-weight: bold;   fill: blue;}
+.render-svg-tree g.leaf text		{ font-weight: normal; fill: black;}
+
+/* C3 renderer */
+
+.render-C3 { display: inline-block; }
+
+/* latex renderer */
+
+.render-latex { display: inline-block; }
+
+/* Graphviz */
+
+.answer svg { vertical-align: top; }
+.render-graphviz { display: inline-block; }
+
+/* R */
+div.R.svg svg
+{ overflow: visible;
+}
+
+/* Download */
+
+div.download {
+  padding: 5px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 5px 5px 5px #888;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 1000;
+}
+
+div.download button.close {
+  position: relative;
+  top: -3px;
+  font-size: 150%;
+}

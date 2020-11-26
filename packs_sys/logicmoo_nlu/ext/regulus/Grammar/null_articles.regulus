@@ -1,0 +1,17 @@
+/* 
+
+This file can be used to remove the normal sem macro for the NP -> ARTICLE NBAR rule,
+and replace it with a macro that discards the semantic contribution of the article.
+
+Compatible with all three sem macro files.
+
+*/
+
+% Ignore the usual definition of np_article_nbar_sem
+ignore_item(np_article_nbar_sem_macro).
+
+% Replacement definition
+macro(np_article_nbar_sem(Det, Nbar),
+      Nbar).
+
+

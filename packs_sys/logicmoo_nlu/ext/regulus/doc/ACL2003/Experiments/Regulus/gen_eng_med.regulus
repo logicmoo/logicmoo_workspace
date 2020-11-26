@@ -1,0 +1,206 @@
+
+% s_adjp_s_WhMovement - Med rule
+% how frequent are your headaches?
+s:[sem= @fronting_sem(Adj, S), wh=y\/rel, wh=Wh, vform=VForm, inv=Inv, whmoved=y, operator_wrapped=n, takes_adv_type=none, gapsin=null, gapsout=null] -->
+	adjp:[sem=Adj, wh=Wh, adjpos=pred, gapsin=null, gapsout=null], 
+	s:[sem=S, wh=n, vform=VForm, inv=Inv, whmoved=n, operator_wrapped=n, gapsin=adjp_gap, gapsout=null].
+
+% Similar for fronting advp - Med rule
+% how often do you have headaches?
+s:[sem= @fronting_sem(Adv, S), wh=y, vform=VForm, inv=Inv, whmoved=y, operator_wrapped=n, takes_adv_type=none, gapsin=null, gapsout=null] -->
+	advp:[sem=Adv, wh=y, advpos=wh_fronted, adv_type= AdvpType, gapsin=null, gapsout=null], 
+	s:[sem=S, wh=n, vform=VForm, inv=Inv, whmoved=n, operator_wrapped=n, takes_adv_type=AdvpType, gapsin=advp_gap, gapsout=null].
+
+% Version with passive VP - Med rule
+% my headaches are alleviated by stress removal
+s:[sem= @np_vp_sem_passive(Np, Vp), 
+   wh=Wh, vform=finite, inv=n, whmoved=n, relagr=Agr, rel_sem_n_type=SubjType, operator_wrapped=n, takes_adv_type=AdvpType, 
+   gapsin=GIn, gapsout=GOut] -->
+np:[sem=Np, nform=normal,
+    agr=Agr, wh=Wh, sem_n_type=SubjType, @subj_feats_for_np(Subj), 
+    takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=subj], 
+vp:[sem=Vp, 
+    passive_subj=y,
+    agr=Agr, inv=n, vform=finite, @subj_feats_for_vp(Subj), 
+    takes_post_mods=n, takes_adv_type=AdvpType, 
+    gapsin=GIn, gapsout=GOut].
+
+% Like vbar_v_np_InvertedSubject, but with a passive VP - Med rule
+% [are your headaches] relieved by stress removal
+vbar:[sem= @inverted_subj_sem_passive(V, Np),
+      agr=Agr, subcat=Sub, inv=y, vform=VForm, vp_vform=VPVform, vp_passivised=y,
+      @subj_feats_for_vp(Subj), 
+      %@takes_pps(PPs),
+      @takes_no_pps,
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      obj_def=ObjDef, obj_syn_type=ObjSynType, indobj_def=IndObjDef, indobj_syn_type=IndObjSynType, takes_advp=TakesAdvp, takes_adv_type=AdvpType, passivised=y, passive_subj=y] -->
+v:[sem=V,
+   agr=Agr, subcat=Sub, inv=y, vform=VForm, vp_vform=VPVform, vp_passivised=y,
+   @subj_feats_for_vp(Subj), 
+   %@takes_pps(PPs),
+   @takes_no_pps,
+   obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+   pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+   obj_def=ObjDef, obj_syn_type=ObjSynType, indobj_def=IndObjDef, indobj_syn_type=IndObjSynType, takes_advp=TakesAdvp, takes_adv_type=AdvpType, passivised=n, passive_subj=y], 
+np:[sem=Np, nform=normal,
+    agr=Agr, wh=n, @subj_feats_for_np(Subj), takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=subj].
+
+% VBAR postmodified by ADVP - Med rule
+% [do you often] have headaches
+vbar:[sem= @vbar_vbar_advp_sem(V, Advp),
+      agr=Agr, subcat=Sub, inv=y, vform=VForm, vp_vform=VPVform, vp_passivised=VPPassive,
+      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      obj_def=ObjDef, obj_syn_type=ObjSynType, indobj_def=IndObjDef, indobj_syn_type=IndObjSynType, takes_advp=n, passivised=Passive, passive_subj=PassiveSubj] -->
+vbar:[sem=V,
+      agr=Agr, subcat=Sub, inv=y, vform=VForm, vp_vform=VPVform, vp_passivised=VPPassive,
+      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      obj_def=ObjDef, obj_syn_type=ObjSynType, indobj_def=IndObjDef, indobj_syn_type=IndObjSynType, takes_advp=y, takes_adv_type=AdvpType, passivised=Passive, passive_subj=PassiveSubj],
+advp:[sem=Advp, advpos=postv, adv_type=AdvpType].
+
+% passivised transitive - Med rule
+% are your headaches [relieved] by stress removal
+vp:[sem= @vp_v_sem_passivised(Verb), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GIn] -->
+vbar:[sem=Verb, subcat=nx0vnx1_passivised, @vbar_feats_for_vp(Feats)].
+
+% vp_v_vp_passive - Med rule
+%passive vps
+% was measured
+vp:[sem=concat(Verb, VP),
+    passivised=y, passive_subj=y, takes_post_mods=n, @takes_no_pps, 
+    @subj_feats_for_vp(Subj), @v_feats_for_vp(V),
+    gapsin=GIn, gapsout=GOut] -->
+vbar:[sem=Verb, subcat=nx0vvx1_passive, @v_feats_for_vp(V), @takes_no_pps],
+vp:[sem=VP, inv=n, vform=(en\/ing\/base), passivised=y, passive_subj=y, 
+    takes_post_mods=n, 
+    @subj_feats_for_vp(Subj),
+    gapsin=GIn, gapsout=GOut].
+
+% vp_v_np_adj - Med rule
+% make you worse 
+% NOTE this subcat for this has a typo that should be fixed 
+% it should be nx0vnx1a1
+vp:[sem= @vp_v_np_adj_sem(Verb, NP, Adj),
+    @vbar_feats_for_vp(Feats), subj_sem_n_type=SubjSem, 
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut] -->
+vbar:[sem=Verb,
+      subcat=nx0vx1a1, 
+      obj_sem_n_type=ObjType, obj_def=ObjDef, obj_syn_type=ObjSynType,
+      @vbar_feats_for_vp(Feats)], 
+np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjType, def=ObjDef, syn_type=ObjSynType, 
+    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GNext, case=nonsubj],
+adjp:[sem=Adj, 
+      adjpos=pred, subj_sem_n_type=ObjType, gapsin=GNext, gapsout=GOut].
+
+% Passivised transitive - Med rule
+v:[sem=V,
+   subcat=nx0vnx1_passivised, passivised=y, passive_subj=y,
+   agr=Agr, inv=n, vform=en, vp_vform=none, vp_passivised=n,
+   subj_nform=normal, subj_sem_n_type=ObjType, subj_def=ObjDef, subj_syn_type=ObjSynType,
+   @takes_pps_except_passive_by(PPs), takes_passive_by_pp=y,
+   obj_sem_n_type=none, indobj_sem_n_type=none, 
+   pp_sem_pp_type=none, sem_p_type=none, 
+   obj_def=n, obj_syn_type=none, indobj_def=n, indobj_syn_type=none, takes_advp=TakesAdvp, takes_adv_type=AdvpType] -->
+v:[sem=V,
+   subcat=nx0vnx1, passivised=n, passive_subj=n,
+   agr=Agr, inv=n, vform=en, vp_vform=none, 
+   subj_nform=normal, 
+   @takes_pps_except_passive_by(PPs),
+   obj_sem_n_type=ObjType, 
+   pp_sem_pp_type=none, sem_p_type=none, 
+   obj_def=ObjDef, obj_syn_type=ObjSynType, takes_advp=TakesAdvp, takes_adv_type=AdvpType].
+
+% gapped adverb post modifier - Med rule
+% e.g. How often do you have headaches
+post_mods:[sem= @mods_mod_mods_sem(Advp, Mods), gap=n, post_mod_type=verbal,
+           takes_gap_mod=y, n_of_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut] -->
+advp:[sem=Advp, wh=n, gap=y, gapsin=GIn, gapsout=GNext],
+post_mods:[sem=Mods, post_mod_type=verbal,
+           takes_gap_mod=n, n_of_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GNext, gapsout=GOut]. 
+
+% of-PP postmodifier - Med rule
+% e.g. is the frequency of your headaches increasing
+post_mods:[sem= @mods_mod_mods_sem(PP, Mods), gap=n, post_mod_type=nominal,
+           n_of_mod_type=OfModType, n_of_mod_type=(\(none)),
+           takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut] -->
+of_pp:[sem=PP, wh=n, sem_n_type=OfModType],
+post_mods:[sem=Mods, post_mod_type=nominal,
+           takes_gap_mod=n, n_of_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut]. 
+
+% non-gapped adverb post mod  - Med rule
+% e.g. do you have headaches frequently
+post_mods:[sem= @mods_mod_mods_sem(Advp, Mods), gap=n, post_mod_type=verbal,
+           takes_gap_mod=Gap, n_of_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut] -->
+advp:[sem=Advp, advpos=postvp, adv_type=AdvpType, wh=n, gap=n, gapsin=null, gapsout=null],
+post_mods:[sem=Mods, post_mod_type=verbal,
+           takes_gap_mod=n, n_of_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut]. 
+
+% duration PP mod - Med rule
+% e.g. have you had headaches [for more than a week]
+@post_mods_pp_rule(duration, 
+                   [Loc, From, To, With, y, Date, Time, Attrib, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, n, Date, Time, Attrib, About, Cost, PassiveBy]).
+
+% passive by PP mod - Med rule
+% e.g. are your headaches relieved [by stress removal]
+@post_mods_pp_rule(passive_by, 
+                   [Loc, From, To, With, Duration, Date, Time, Attrib, About, Cost, y], 
+                   [Loc, From, To, With, Duration, Date, Time, Attrib, About, Cost, n]).
+
+% Special version for the case of "of", where we want the sortal information on the NP - Med rule
+% e.g. the severity of the headaches
+of_pp:[sem= @pp_p_np_sem(of, NP), wh=Wh, sem_n_type=NPType] -->
+	of,
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=NPType, 
+            takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=nonsubj].
+
+% NP with possessive - Med rule
+% e.g. your headaches
+np:[sem= @np_possessive_nbar_sem(Poss, N), agr=3, agr=Agr, wh=Wh, nform=normal, sem_n_type=(\(numeric)),
+    sem_n_type=Type, def=Def, conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=OfMod, @takes_pps(PPs), syn_type=np_with_noun] -->
+possessive:[sem=Poss],
+nbar:[sem=N, agr=Agr, sem_n_type=Type, n_of_mod_type=OfMod, @takes_pps(PPs), takes_det_type=DetType].
+
+% wh+ ADJP - Med rule
+% e.g. [how severe] are the headaches
+adjp:[sem= @adjp_how_adj_sem(Adj), wh=y, conj=n, adjpos=pred, subj_sem_n_type=SubjType, @takes_pps(PPs), 
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+how,
+adj:[sem=Adj, adjpos=Pred, subj_sem_n_type=SubjType, @takes_pps(PPs)].
+
+%----------------------------------------------------------------------
+
+% ADVP rules
+
+% ADV as ADVP - Med rule
+advp:[sem=Adv, wh=n, conj=n, advpos=AdvPos, adv_type=AdvType,
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+adv:[sem=Adv, advpos=AdvPos, adv_type=AdvType].
+
+% wh+ ADVP - Med rule
+% e.g. [how often] do you have headaches
+advp:[sem= @advp_how_adv_sem(Adv), wh=y, conj=n, advpos=wh_fronted, adv_type=AdvType, 
+      gap=n, gapsin=null, gapsout=null] -->
+how,
+adv:[sem=Adv, advpos=wh_fronted, adv_type=AdvType].
+
+% adjp_Gap - Med rule
+% e.g. how severe are the headaches []?
+adjp:[sem= @pp_gap_sem, wh=n, gap=y, adjpos=pred, subj_sem_n_type=Type, gapsin=adjp_gap, gapsout=null] --> [].
+
+% advp_Gap - Med rule
+% e.g. how often do you have headaches []?
+advp:[sem= @advp_gap_sem, wh=n, gap=y, advpos=postvp, gapsin=advp_gap, gapsout=null] --> [].

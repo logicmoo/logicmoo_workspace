@@ -1,0 +1,86 @@
+(note TQF201a)
+
+(temporallySubsumes (DateInSituationFn CalendarDay 21 Y2ScenarioConflict) 
+  (desires Azerbaijan 
+    (not 
+      (thereExists ?PIPELINE 
+        (instance ?PIPELINE 
+          (CollectionSubsetFn OilPipeline 
+            (TheSetOf ?OBJ 
+              (and 
+                (located ?OBJ Iran) 
+                (between ?OBJ Azerbaijan PersianGulf))))))))) 
+
+(temporallySubsumes (DateInSituationFn CalendarDay 21 Y2ScenarioConflict) 
+  (desires Azerbaijan 
+    (not 
+      (thereExists ?PIPELINE 
+        (instance ?PIPELINE 
+          (CollectionSubsetFn OilPipeline 
+            (TheSetOf ?OBJ 
+              (and 
+                (located ?OBJ Iran) 
+                (between ?OBJ Azerbaijan PersianGulf))))))))) 
+
+(implies 
+  (and 
+    (temporallySubsumes ?TEMP ?SUBTEMP) 
+    (mtTime ?MT ?TEMP) 
+    (ist ?MT ?PROP)) 
+  (temporallySubsumes ?SUBTEMP ?PROP)) 
+
+(temporallySubsumes 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 1 Y2ScenarioConflict) 
+    (DateInSituationFn CalendarDay 30 Y2ScenarioConflict)) 
+  (DateInSituationFn CalendarDay 21 Y2ScenarioConflict)) 
+
+(mtTime Y2Scenario-Stage1Mt 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 1 Y2ScenarioConflict) 
+  (DateInSituationFn CalendarDay 30 Y2ScenarioConflict))) 
+
+(ist Y2Scenario-Stage1Mt 
+  (desires Azerbaijan 
+    (not 
+      (thereExists ?PIPELINE 
+        (instance ?PIPELINE 
+          (CollectionSubsetFn OilPipeline 
+            (TheSetOf ?OBJ 
+              (and 
+                (located ?OBJ Iran) 
+                (between ?OBJ Azerbaijan PersianGulf))))))))) 
+
+(implies 
+  (and 
+    (instance ?CCT CalendarCoveringType) 
+    (instance ?SIT Situation-Temporal) 
+    (greaterThanOrEqualTo ?END ?DATE) 
+    (greaterThanOrEqualTo ?DATE ?START)) 
+  (temporallySubsumes 
+    (TimeIntervalInclusiveFn 
+      (DateInSituationFn ?CCT ?START ?SIT) 
+      (DateInSituationFn ?CCT ?END ?SIT)) 
+    (DateInSituationFn ?CCT ?DATE ?SIT))) 
+
+(instance CalendarDay CalendarCoveringType) 
+
+(instance Y2ScenarioConflict Situation-Temporal) 
+
+(queryn
+(temporallySubsumes (DateInSituationFn CalendarDay 21 Y2ScenarioConflict) 
+   (desires Azerbaijan 
+       (not 
+           (thereExists ?PIPELINE 
+               (instance ?PIPELINE 
+                   (CollectionSubsetFn OilPipeline 
+                       (TheSetOf ?OBJ 
+                           (and 
+                               (located ?OBJ Iran) 
+                               (between ?OBJ Azerbaijan PersianGulf))))))))))
+
+(answer Yes)
+
+(end_of_file)
+
+

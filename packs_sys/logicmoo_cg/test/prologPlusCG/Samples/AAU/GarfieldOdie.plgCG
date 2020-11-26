@@ -1,0 +1,23 @@
+// Type hierarchy
+Entity > Animal, Act.
+Animal > Cat, Dog.
+
+// Catalog of instances
+Act = Talk, Bark, Kick.
+Cat = Garfield.
+Dog = Odie.
+
+// "A cat is talking to itself."
+// Note how the same variable, "C" is used as the referent of
+// both Cat concepts. This means that they are coreferents.
+gr(graph1, [Cat: C]<-AGNT-[Act: Talk]-RCPT->[Cat: C]).
+
+// "Odie is barking at Garfield".
+gr(graph2, [Dog: Odie]<-AGNT-[Act: Bark]-RCPT->[Cat: Garfield]).
+
+// "Garfield is kicking Odie"
+gr(graph3, [Cat: Garfield]<-AGNT-[Act: Kick]-PTNT->[Dog: Odie]).
+
+// Rule: Animal A1 acts on Animal A2 with relation R
+acts_on(A1, R, A2, L) :- gr(L, G), subsume([Animal: A1]<-AGNT-[Act]-R->[Animal: A2], G).
+

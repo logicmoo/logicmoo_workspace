@@ -1,0 +1,35 @@
+(note TQD99-b)
+
+
+(budgetExpenditures Kuwait GovernmentMilitaryOrganization 
+ (YearFn 1994) 
+ (BillionDollars 4.20000)) 
+
+(budgetExpenditures Libya GovernmentMilitaryOrganization 
+ (YearFn 1994) 
+ (BillionDollars 1.40000)) 
+
+
+
+(query (findall (?GREATER ?TIME)
+(thereExists ?LESSER 
+   (thereExists ?LESSER-AMT 
+       (thereExists ?GREATER-AMT 
+           (and 
+               (budgetExpenditures ?GREATER GovernmentMilitaryOrganization ?TIME ?GREATER-AMT) 
+               (budgetExpenditures ?LESSER GovernmentMilitaryOrganization ?TIME ?LESSER-AMT) 
+               (greaterThan ?GREATER-AMT ?LESSER-AMT) 
+               (or 
+                   (and 
+                       (equals Libya ?GREATER) 
+                       (equals Kuwait ?LESSER)) 
+                   (and 
+                       (equals Kuwait ?GREATER) 
+                       (equals Libya ?LESSER)))))))
+))
+
+(answer Kuwait 1994
+)
+
+(end_of_file)
+

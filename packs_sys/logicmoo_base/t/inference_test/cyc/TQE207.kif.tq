@@ -1,0 +1,44 @@
+(note TQE207)
+(temporallySubsumes Y2ScenarioConflict 
+  (TimeIntervalInclusiveFn 
+  (DateInSituationFn CalendarDay 2 Y2ScenarioConflict) 
+Y2ScenarioConflict))
+
+(temporallySubsumes Y2ScenarioConflict 
+ (believes Azerbaijan 
+ (reasonForAction Y2Scenario-IranianPropagandaCampaign desires Iran 
+ (decreases-Generic Y2Scenario-IranianPropagandaCampaign Azerbaijan politicalStability)))) 
+
+(agent Y2Scenario-IranianPropagandaCampaign Iran) 
+
+(implies 
+  (temporallySubsumes ?TIME 
+    (believes ?AGENT-1 
+      (reasonForAction ?EVENT ?PROPOSITIONAL-ATTITUDE ?AGENT-2 ?PROP)))
+  (temporallySubsumes ?TIME 
+    (believes ?AGENT-1 
+      (?PROPOSITIONAL-ATTITUDE ?AGENT-2 ?PROP)))) 
+
+(implies 
+  (and 
+    (temporallySubsumes ?LONG-TIME ?SHORT-TIME) 
+    (temporallySubsumes ?LONG-TIME 
+      (believes ?AGENT ?PROP))) 
+  (temporallySubsumes ?SHORT-TIME 
+    (believes ?AGENT ?PROP))) 
+
+(queryyn
+(exists (?UNDERMINING) 
+  (and 
+    (agent ?UNDERMINING Iran) 
+      (temporallySubsumes 
+        (TimeIntervalInclusiveFn 
+          (DateInSituationFn CalendarDay 2 Y2ScenarioConflict) Y2ScenarioConflict) 
+        (believes Azerbaijan 
+          (desires Iran 
+            (decreases-Generic ?UNDERMINING Azerbaijan politicalStability)))))))
+
+(answer Yes)
+(end_of_file)
+
+

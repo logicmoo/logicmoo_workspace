@@ -1,0 +1,456 @@
+
+feature_value_space(subcat_value, [[trans,np,none,pred,intrans,pp,ind_obj,s,trans_min]]).
+feature_value_space(agr_value, [[1, 2, 3], [sing, dual, plur], [masc, fem]]).
+feature_value_space(vform_value, [[finite]]).
+feature_value_space(np_type_value, [[agent, body_part, symptom, part, duration, frequency, cause, food, thera, loc, none, state, artefact,drink]]).
+feature_value_space(pp_type_value, [[de, loc, duration, bi, frequency, cause, temporal, min, none]]).
+feature_value_space(yesno_value, [[yes,no]]).
+feature_value_space(gap_value, [[pp_gap,null]]).
+feature_value_space(position_value, [[preobj,postobj,debut, postpp]]).
+feature_value_space(inverted_value, [[inverted,uninverted,prodrop]]).
+feature_value_space(interj_value, [[svp]]).
+
+
+feature(subcat, subcat_value).
+feature(agr, agr_value).
+feature(vform, vform_value).
+feature(sem_np_type, np_type_value).
+feature(compl_sem_type, np_type_value).
+%lexical_feature_default(compl_sem_type, none).
+feature(compl_pp_sem_type, pp_type_value).
+%lexical_feature_default(compl_pp_sem_type, none).
+feature(subj_np_type, np_type_value).
+feature(obj_np_type, np_type_value).
+feature(sem_pp_type, pp_type_value).
+feature(composé, yesno_value).
+feature(specified, yesno_value).
+feature(gapsin, gap_value).
+feature(gapsout, gap_value).
+feature(position, position_value).
+feature(prep_type, pp_type_value).
+feature(part, yesno_value).
+feature(inv, inverted_value).
+feature(i_type, interj_value).
+
+
+% ".MAIN" is a category which allows global slot-filling 
+% and has no syntactic features
+category('.MAIN', [gsem]).
+
+category(utterance, [sem]).
+category(comparative, [sem]).
+category(yn_question, [sem]).
+category(wh_question, [sem]).
+category(decla, [sem]).
+category(s, [sem, inv, gapsin, gapsout]).
+category(vp, [sem, vform, gapsin, gapsout, agr,inv]).
+category(vbar, [sem, agr, vform, subcat, obj_np_type,inv]).
+category(v, [sem, agr, vform, subcat, subj_np_type, obj_np_type]).
+category(optional_v, [sem, agr, vform, subcat, subj_np_type, obj_np_type]).
+% compl_sem_type is apparently never used in NP and causes a huge explosion in UG -> CFG
+%category(np, [sem, agr, sem_np_type,subcat,compl_sem_type, composé, specified]).
+category(np, [sem, agr, sem_np_type, subcat, composé, specified]).
+category(nbar, [sem, agr, subcat,compl_sem_type,sem_np_type, composé]).
+category(adj, [sem, agr, sem_np_type]).
+category(noun, [sem, agr, sem_np_type,subcat,compl_sem_type,compl_pp_sem_type,part]).
+category(spec, [sem, agr]).
+category(poss, [sem, agr]).
+category(number, [sem, agr,position]).
+category(adv, [sem, position]).
+category(optional_adverb, [sem, position]).
+category(optional_pp, [sem, sem_pp_type, gapsin, gapsout]).
+category(pp, [sem, sem_pp_type]).
+category(ppcompl, [sem, sem_np_type, prep_type]).
+category(wh_pp, [sem]).
+category(prep, [sem, sem_pp_type, sem_np_type]).
+category(sc, [sem, sem_pp_type]).
+category(pron, [sem, sem_np_type]).
+category(interj, [sem, i_type]).
+category(optional_interj, [sem, i_type]).
+
+% ".MAIN" is a top-level grammar
+top_level_category('.MAIN').
+
+% ".MAIN" can be rewritten to "utterance"
+'.MAIN':[gsem=[value=S]] --> utterance:[sem=S].
+
+% utterance --> yn_question
+% [hal tahus bi al alam fi al jabha]
+utterance:[sem=@utt_interj_sem(Interj, S)] -->
+	yn_question:[sem=S], 
+        optional_interj:[sem=Interj, i_type=svp].
+
+% utterance --> wh_question
+% [ayna tahus bi al alam]
+utterance:[sem=S] -->
+	wh_question:[sem=S].
+
+% utterance --> decla
+% [tahus bi al alam]
+utterance:[sem=@decla_sem(Interj, S)] -->
+	decla:[sem=S],
+        optional_interj:[sem=Interj, i_type=svp].
+
+
+% decla --> s
+% [tahus bi al alam]
+decla:[sem= @decla_sem(Advp2, S)] -->
+        optional_adverb:[sem=Advp2,position=debut],
+	s:[sem=S, inv=prodrop].
+
+% yn_question --> hal s
+% [hal] [tahus bi al alam fi al jabha]
+yn_question:[sem= @ynq_sem(Advp2, S)] -->
+	@a('åá', hal, 'Y-N-QUESTION'),
+        optional_adverb:[sem=Advp2,position=debut],
+	s:[sem=S, inv=inverted\/prodrop].
+
+% wh_question --> ayna s
+% [hal] [tahus bi al alam fi al jabha]
+wh_question:[sem= @whq_pp_s_sem(WH, S)] -->
+	wh_pp:[sem=WH],
+	s:[sem=S, inv=inverted\/prodrop, gapsin=pp_gap, gapsout=B].
+
+% wh_question --> qu'est-ce qui s
+wh_question:[sem= @whq_fronted_np_sem(Vp)] -->
+	@a(('ãÇ','ÇáÐí'), (ma,lathi), ('WH-QUESTION',what)),
+	vp:[sem=Vp, agr=(3/\sing/\masc), gapsin=A, gapsout=null, inv=uninverted].
+
+% s --> vp
+% [tahus bi al alam fi al jabha]
+s:[sem=S, inv=INV, gapsin=A, gapsout=B] -->
+	vp:[sem=S, inv=INV, vform=finite, gapsin=A, gapsout=B].
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%VP transitif, pp. etc.
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%TRANSITIF
+% vp --> vbar:[subcat=trans] np optional_pp
+vp:[sem= @transitive_vp_sem(Advp3, Advp2, Advp, Verb, Obj, PP),
+    vform=Vform, gapsin=A, gapsout=B, agr=Agr, inv=INV] -->
+	vbar:[sem=Verb, vform=Vform, subcat=trans,
+	      obj_np_type=ObjType, agr=Agr, inv=INV],
+        optional_adverb:[sem=Advp, position=preobj],
+	np:[sem=Obj, sem_np_type=ObjType],
+        optional_adverb:[sem=Advp2,position=postobj],
+	optional_pp:[sem=PP, sem_pp_type=loc\/duration\/frequency\/temporal, gapsin=A, gapsout=B],
+        optional_adverb:[sem=Advp3,position=postpp].  
+
+%%%PP
+% vp --> vbar:[subcat=trans] np optional_pp
+% [tahus[bi al alam] fi al jabha]
+vp:[sem= @pp_compl_vp_sem(Advp3, Advp2, Advp, Verb, Obj, PP),
+    vform=Vform, gapsin=A, gapsout=B, agr=Agr, inv=INV] -->
+	vbar:[sem=Verb, vform=Vform, subcat=pp,
+	      obj_np_type=ObjType, agr=Agr, inv=INV],
+        optional_adverb:[sem=Advp, position=preobj],
+	ppcompl:[sem=Obj, prep_type=bi, sem_np_type=Objtype],
+        optional_adverb:[sem=Advp2,position=postobj],
+	optional_pp:[sem=PP, sem_pp_type=loc\/duration\/frequency\/cause\/temporal, gapsin=A, gapsout=B],
+        optional_adverb:[sem=Advp3,position=postpp].   
+
+ 
+%%%PP min
+% vp --> vbar:[subcat=trans] np optional_pp
+% [tahus[bi al alam] fi al jabha]
+vp:[sem= @trans_min_vp_sem(Advp3, Advp2, Advp, Verb, Obj, PP),
+    vform=Vform, gapsin=A, gapsout=B, agr=Agr, inv=INV] -->
+	vbar:[sem=Verb, vform=Vform, subcat=trans_min,
+	      obj_np_type=ObjType, agr=Agr, inv=INV],
+        optional_adverb:[sem=Advp, position=preobj],
+	ppcompl:[sem=Obj, prep_type=min, sem_np_type=Objtype],
+        optional_adverb:[sem=Advp2,position=postobj],
+	optional_pp:[sem=PP, sem_pp_type=loc\/duration\/frequency\/cause\/temporal, gapsin=A, gapsout=B],
+        optional_adverb:[sem=Advp3,position=postpp]. 
+
+%%%VP
+% vp --> vbar:[subcat=s] np optional_pp
+% [tahus[bi al alam] fi al jabha]
+%%vp:[sem=concat(Advp3,concat(Advp2,concat(Advp,concat(Verb, concat(S, PP))))), vform=Vform, gapsin=A, gapsout=B] -->
+vp:[sem= @s_compl_vp_sem(Advp3, S, Advp2, Advp, Verb, PP),
+    vform=Vform, gapsin=A, gapsout=B, agr=Agr, inv=INV] -->
+	vbar:[sem=Verb, vform=Vform, subcat=s,
+	      obj_np_type=ObjType, agr=Agr, inv=INV],
+        optional_adverb:[sem=Advp, position=preobj],
+        @a('Ãä',an,'OF-PREPOSITION'),
+	s:[sem=S, inv=prodrop],
+        optional_adverb:[sem=Advp2,position=postobj],
+	optional_pp:[sem=PP, sem_pp_type=loc\/duration\/frequency\/cause\/temporal, gapsin=A, gapsout=B],
+         optional_adverb:[sem=Advp3,position=postpp]. 
+    
+
+%%%INTRANS
+% vp --> vbar:[subcat=intran] optional_pp
+%yamtad al alam 
+vp:[sem= @intrans_vp_sem(Advp3, Advp, Verb, PP),
+    vform=Vform, gapsin=A, gapsout=B, agr=Agr, inv=INV] -->
+	vbar:[sem=Verb, vform=Vform, subcat=intrans, agr=Agr,inv=INV],
+        optional_adverb:[sem=Advp, position=postobj\/preobj],
+	optional_pp:[sem=PP, sem_pp_type=loc\/duration\/frequency\/cause\/temporal, gapsin=A, gapsout=B],
+       optional_adverb:[sem=Advp3,position=postpp].
+
+%%%PRED
+% vp --> vbar:[subcat=pred] optional_pp
+vp:[sem= @pred_vp_sem(Advp3, Adj, Advp, Verb, PP),
+    vform=Vform, gapsin=A, gapsout=B, agr=Agr,inv=INV] -->
+	vbar:[sem=Verb, vform=Vform, subcat=pred,agr=Agr,inv=INV],
+        adj:[sem=Adj, agr=Agr],
+        optional_adverb:[sem=Advp, position=postobj\/preobj],
+	optional_pp:[sem=PP, sem_pp_type=loc\/duration\/frequency\/cause\/temporal, gapsin=A, gapsout=B],
+        optional_adverb:[sem=Advp3,position=postpp].     
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%PRODROP
+%%%%%%%%%%%%%%%%%%%%%%
+
+% vbar --> v
+% [tahus bi] [(implicit subject) vous sentez]
+vbar:[sem= @implicit_subj_vbar_sem(Verb, @implicit_subj_value(Type)),
+      vform=Vform, subcat=Subcat, obj_np_type=ObjType, agr=Agr,inv=prodrop] -->
+      optional_v:[sem=Verb,
+	 vform=Vform, subcat=Subcat, @implicit_subj_features(Type), obj_np_type=ObjType, agr=Agr].
+
+macro(implicit_subj_value(you_masc_sing), [[pronoun, anta]]).
+macro(implicit_subj_value(i_sing), [[pronoun, ana]]).
+macro(implicit_subj_features(you_masc_sing), [agr=2/\masc/\sing, subj_np_type=agent]).
+macro(implicit_subj_features(i_sing), [agr=1/\sing, subj_np_type=agent]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% V inverse
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vbar --> v sujet inversé
+% [yamtad al alam -> irradie la douleur]
+vbar:[sem= @inverted_subj_vbar_sem(Verb, Subj),
+      vform=Vform, subcat=Subcat, obj_np_type=Obj, agr=Agr,inv=inverted] -->
+      optional_v:[sem=Verb, vform=Vform, subcat=Subcat, subj_np_type=Type,obj_np_type=Obj,agr=Agr],
+      np:[sem=Subj, sem_np_type=Type,agr=Agr].
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% V non-inverse
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vbar --> v sujet non-inversé
+% [qu'est-ce qui [cause la douleur]]
+vbar:[sem= @vbar_v_sem(Verb),
+      vform=Vform, subcat=Subcat, obj_np_type=Obj, agr=Agr, inv=uninverted] -->
+      optional_v:[sem=Verb, vform=Vform, subcat=Subcat, subj_np_type=Type,obj_np_type=Obj,agr=Agr].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%NBAR
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% np --> nbar
+% [janib al X]
+%pas d'article pour certains mots composes
+np:[sem=N, agr=Agr, sem_np_type=Type] -->
+   nbar:[sem=N, agr=Agr, sem_np_type=Type].
+
+% np --> spec nbar
+% [al alam]
+np:[sem= @np_spec_nbar_sem(S, N), agr=Agr, sem_np_type=Type] -->
+   spec:[sem=S, agr=Agr],
+   nbar:[sem=N, agr=Agr, sem_np_type=Type].
+
+% nbar --> noun
+% [alam]
+nbar:[sem=N, agr=3, agr=Agr, sem_np_type=Type] -->
+   noun:[sem=N, agr=Agr, sem_np_type=Type].
+
+%%a ce niveau-ci? Semble etre un adjectif.... adj -> np adj -> adj
+% nbar --> noun NP (la partie la gauche/droite)
+% [al janib al gauche]
+nbar:[sem= @nbar_noun_np_sem(N, NP),
+      agr=3, agr=Agr, sem_np_type=Type] -->
+   noun:[sem=N, agr=Agr, sem_np_type=Type, subcat=np, compl_sem_type=Type2],
+   np:[sem=NP, agr=Agr, sem_np_type=Type2].
+
+
+%%a ce niveau-ci? A monter plus haut
+%%A discuter
+% nbar --> noun PP (l'apres-midi prep debut)
+nbar:[sem= @nbar_noun_pp_sem(N, NP),
+      agr=3, agr=Agr, sem_np_type=Type] -->
+   noun:[sem=N, agr=Agr, sem_np_type=Type, subcat=pp, compl_pp_sem_type=Type2],
+   pp:[sem=NP, sem_pp_type=Type2].
+
+%%%%%%%%%%%%%%%%%%%
+%%%% NOMS avec particule ou nombre
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%A changer de niveau - doit s'attacher au nom 
+% np --> nbar spec
+% [qafa ka]
+%%KI pour le feminin - tres important comme en japonais...
+%pas de spec *el qafa ka
+%np:[sem=concat(S, N), agr=Agr, sem_np_type=Type] -->
+%   nbar:[sem=N, agr=Agr, sem_np_type=Type],
+%   poss:[sem=S, agr=Agr].
+
+%%%A changer de niveau - doit s'attacher au nom 
+% np --> nbar number
+%%Remplace le spec -> a ce niveau
+%np:[sem=concat(S, N), agr=Agr, sem_np_type=Type] -->
+%   nbar:[sem=N, agr=Agr, sem_np_type=Type],
+%   number:[sem=S, agr=Agr].
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% np --> nbar spec
+% [qafa ka]
+%%KI pour le feminin - tres important comme en japonais...
+%pas de spec *el qafa ka
+noun:[sem= @noun_noun_poss_sem(S, N),
+      agr=Agr, sem_np_type=Type, subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=yes] -->
+   noun:[sem=N, agr=Agr, sem_np_type=Type, subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=no],
+   poss:[sem=S, agr=Agr].
+
+%%%%%%%%%%%
+%%en tout cas ajouter un trait
+%%%Plus tard considerer que c'est un adjectif 
+% np --> n number
+%%Remplace le spec -> a ce niveau
+noun:[sem= @noun_noun_number_sem(N, S),
+      agr=Agr, sem_np_type=Type,subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=yes] -->
+    noun:[sem=N, agr=Agr, sem_np_type=Type, subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=no],
+    number:[sem=S, agr=Agr,position=postobj].
+
+
+% np --> number n
+noun:[sem= @noun_noun_number_sem(N, S),
+      agr=Agr, sem_np_type=Type,subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=yes] -->
+    number:[sem=S, agr=Agr,position=preobj],
+    noun:[sem=N, agr=Agr, sem_np_type=Type, subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=no].
+
+
+%%AGR agr=plur, dans le nombre du noun
+%%PLUS de trois
+% np --> comp number noun
+%%Remplace le spec -> a ce niveau
+noun:[sem= @noun_comparative_noun_number_sem(NO, Comparative, S),
+      agr=Agr, sem_np_type=Type,subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=yes] -->
+    comparative:[sem=Comparative],
+    number:[sem=S, agr=Agr,position=preobj],
+    noun:[sem=NO, agr=Agr, sem_np_type=Type, subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=no].
+
+%%PLUS de deux/...
+% np --> comp noun (duel) -> pas de chiffre
+noun:[sem= @noun_comparative_noun_sem(NO, Comparative),
+      agr=dual, sem_np_type=Type,subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=yes] -->
+    comparative:[sem=Comparative],
+    noun:[sem=NO, agr=dual, sem_np_type=Type, subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=no].
+
+
+%%PLUS de deux/...
+% np --> comp nbar noun
+%%Remplace le spec -> a ce niveau
+noun:[sem= @noun_comparative_noun_number_sem(NO, Comparative, S),
+      agr=Agr, sem_np_type=Type,subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=yes] -->
+    comparative:[sem=Comparative],
+    noun:[sem=NO, agr=Agr, sem_np_type=Type, subcat=SU, compl_sem_type=COMPL,compl_pp_sem_type=COMPLPP, part=no],
+    number:[sem=S, agr=dual\/sing, agr=Agr, position=postobj].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%PP complément DU VERBE : souffrir de
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% complement du verbe - different car necessaire controler prep + type_compl
+%%sem_pp_type = prep_type = bi
+%%sem_np_type du nom = sem NP type du complément
+% [bi] [al alam]
+ppcompl:[sem= @ppcompl_prep_np_sem(P, NP),
+	 sem_np_type=NPType, prep_type=BI] -->
+	prep:[sem=P, sem_pp_type=bi\/min, sem_pp_type=BI],
+	np:[sem=NP, sem_np_type=NPType].
+
+
+%%%%%%%
+%%%%VERB optionnel
+%%%%%%%%
+% verb
+optional_v:[sem=VERB, subcat=SUB, agr=AGR, vform=FIN, subj_np_type=SUBJ, obj_np_type=ObjType] -->
+	v:[sem=VERB, subcat=SUB, agr=AGR, vform=FIN, subj_np_type=SUBJ, obj_np_type=ObjType].
+
+% verb
+optional_v:[sem= @implicit_pred_verb_sem, subcat=pred] -->
+	[].
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%CLITIQUE TRANS
+%%%%%%%%%%%%%%%%%%%%%%%
+
+% vbar -> v pron
+
+v:[sem= @v_v_clitic_sem(Pron, V),
+   vform=Vform, subcat=intrans, subj_np_type=Type, agr=Agr]
+     -->
+   v:[sem=V, vform=Vform, subcat=trans, obj_np_type=ObjType, agr=Agr, subj_np_type=Type],
+   pron:[sem=Pron, sem_np_type=ObjType].
+
+%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%PP optionnel
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% optional_pp --> pp
+% [fi al jabha]
+optional_pp:[sem=PP, sem_pp_type=Type, gapsin=null, gapsout=null] -->
+	pp:[sem=PP, sem_pp_type=Type].
+
+% optional_pp --> null
+optional_pp:[sem=[], gapsin=pp_gap, gapsout=null] -->
+	[].
+
+% pp --> prep np
+% [fi] [al jabha]
+pp:[sem= @pp_prep_np_sem(P, NP),
+    sem_pp_type=PPType] -->
+	prep:[sem=P, sem_pp_type=PPType, sem_pp_type=loc\/duration\/frequency\/cause\/temporal\/de, sem_np_type=NPType],
+	np:[sem=NP, sem_np_type=NPType].
+
+%%veut-pn representer le fait que la prep est sous-entendue....
+% pp --> prep np
+pp:[sem= @pp_np_temporal_sem(NP),
+    sem_pp_type=duration\/frequency] -->
+	np:[sem=NP, sem_np_type=duration\/frequency].
+
+% quand vous avez mal
+pp:[sem= @pp_sc_s_sem(Sc, S),
+    sem_pp_type=PPType] -->
+        sc:[sem=Sc, sem_pp_type=PPType],
+        s:[sem=S, inv=prodrop].
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%adverbes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+optional_adverb:[sem=Sem, position=A] -->
+        adv:[sem=Sem, position=A].
+
+optional_adverb:[sem=[]] -->
+        [].
+
+
+%%supprimer !!!
+% pp --> prep np
+% [fi] [al jabha]
+%%pp:[sem=NP, sem_pp_type=duration] -->
+%%	np:[sem=NP, sem_np_type=duration].
+%%veut-pn representer le yfait que la prep est sous-entendue....
+% marra fi al ousbou (une fois par X)
+%%pp:[sem=concat(Np, Freq), sem_pp_type=frequency] -->
+%%        np:[sem=Np, sem_np_type=frequency],
+%%        pp:[sem=Freq, sem_pp_type=frequency].
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%interj
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%oui, non
+optional_interj:[sem=Sem] -->
+        interj:[sem=Sem].
+
+optional_interj:[sem=[]] -->
+        [].

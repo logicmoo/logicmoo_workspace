@@ -1,0 +1,12 @@
+Every customer is a human.
+Every clerk is not a customer.
+If a clerk knows a customer then the customer knows the clerk.
+If someone has a car and owns a house then he does not sleep in the car.
+If a customer makes a registration and the customer is important and the customer wants a card then John gives the card to the customer after the registration.
+Rich-Customer-Rule: If a customer is rich then the customer is important.
+Young-Customer-Rule: If a customer is young then the customer is not important.
+Rich-Customer-Rule overrides Young-Customer-Rule.
+Bill is a young and rich customer.
+Bill makes a registration and wants a card.
+John is a clerk that knows Bill.
+John has an expensive car and owns a big house.

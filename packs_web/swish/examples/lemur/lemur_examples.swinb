@@ -1,0 +1,14 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Welcome to cplint on SWISH
+
+This notebook gives an overview of example programs for learning with LEMUR:
+
+  - Machines ([mach.pl](example/lemur/mach.pl), structure learning) The task is to decide whether a machine should be fixed, sent back or is ok. From The ACE Data Mining System User's Manual http://dtai.cs.kuleuven.be/ACE/doc/ACEuser-1.2.16.pdf Downloaded from http://dtai.cs.kuleuven.be/static/ACE/doc/
+  - Registration ([registration.pl](example/lemur/registration.pl), structure learning) The dataset contains information about participants in a recent Seminar on Data Mining.  We would like to find out what type of people attend the parties at the seminar.  From L. De Raedt, H. Blockeel, L. Dehaspe, and W. Van Laer. _Three companions for data mining in first order logic_. In S. Dzeroski and N. Lavrac, editors, Relational Data Mining, pages 105-139.  Springer-Verlag, 2001. See also The ACE Data Mining System User's Manual http://dtai.cs.kuleuven.be/ACE/doc/ACEuser-1.2.16.pdf Downloaded from http://dtai.cs.kuleuven.be/static/ACE/doc/ 
+  - Bongard ([bongard.pl](example/lemur/bongard.pl), [bongardkeys.pl](example/lemur/bongardkeys.pl), structure learning) The task is to classify pictures containing geometrical objects. From L. De Raedt and W. Van Laer. _Inductive constraint logic_. In Proceedings of the Sixth International Workshop on Algorithmic Learning Theory, 1995.  =bongard.pl= contains the examples in the models format while =bongardkeys.pl= in the keys format. Structure learning takes about 2 seconds with =verbosity= = =1=.
+
+</div>
+
+</div>

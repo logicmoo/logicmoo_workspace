@@ -1,0 +1,1 @@
+10,0a01a8c0_00000a48_48cd3179_0001_0000,LOG,WARN,0,2008/09/14 17:44:57.234,eti087-PB,MFCWaveEdit,3300,AUDIO,AudioClientImpl::InitializeFromConfig,135,Audio provider does not support barge-in because it cannot perform full duplex play and record-- setting client.AllowBargeIn to false.

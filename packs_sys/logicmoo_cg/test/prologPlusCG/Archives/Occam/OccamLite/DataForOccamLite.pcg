@@ -1,0 +1,347 @@
+//Story Pizza-1: Karen asks her father, Mike, for a slice of pizza and her father gives it to her.
+event(pp1,[Goal = [Goal]-
+	     -actor->[Human :Karen = [Human: Karen]-
+						-Age->[Age:Kid],
+						-Hair->[Hair]-Color->[Color:Blond],
+						-Eyes->[Eyes]-Color->[Color:Blue]
+		     ],
+	     -goal->[Poss_By = [Poss_By]-
+				    -actor->[Human: Karen],
+				    -object->[Pizza: pizza001],
+				    -State_Value->[State_Value:Yes_State_Value]
+		    ],
+	     -plan->[Plan = [Plan]-RealizedBy->[MTrans = [MTrans]-
+							-actor->[Human: Karen],
+							-to->[Human : Mike = [Human:Mike]-
+									-Age->[Age: Grown_Up],
+									-Hair->[Hair]-Color->[Color:Brown],
+									-Eyes->[Eyes]-Color->[Color:Green]
+					     	     	     ]<-Father-[Human: Karen],
+							-object->[ATrans = [ATrans]-
+									-actor->[Human:Mike],
+									-object->[Pizza:Pizza001],
+									-to->[Human:Karen]
+
+						 	 	 ]
+					     	]
+		    ],
+	     -outcome->[Success_Goal_Outcome]
+]).
+//Story Zoo-1: Karen wants to go to the zoo. She asks Mike to take her to the zoo. Her goal succeeds.
+event(zz1,[Goal = [Goal]-
+	     -actor->[Human :Karen = [Human: Karen]-
+						-Age->[Age:Kid],
+						-Hair->[Hair]-Color->[Color:Blond],
+						-Eyes->[Eyes]-Color->[Color:Blue]
+		     ],
+	     -goal->[Location = [Location]-
+					-actor->[Human: Karen],
+					-object->[Zoo :Zoo001],
+					-State_Value->[State_Value:Yes_State_Value]
+		    ],
+	     -plan->[Plan = [Plan]-RealizedBy->[MTrans = [MTrans]-
+							-actor->[Human: Karen],
+							-to->[Human : Mike = [Human:Mike]-
+									-Age->[Age: Grown_Up],
+									-Hair->[Hair]-Color->[Color:Brown],
+									-Eyes->[Eyes]-Color->[Color:Green]
+					     	     	     ]<-Father-[Human: Karen],
+							-object->[PTrans = [PTrans]-
+									-actor->[Human:Mike],
+									-object->[Human:Karen],
+									-to->[Zoo:Zoo001]
+
+						 	 	 ]
+					     	]
+		    ],
+	     -outcome->[Success_Goal_Outcome]
+]).
+
+//Story Refrigerator-1: Karen wants to open the refrigerator. She pulls on the door, but it doesn't open.
+event(rr1,[Goal = [Goal]-
+	     -actor->[Human :Karen = [Human: Karen]-
+						-Age->[Age:Kid],
+						-Hair->[Hair]-Color->[Color:Blond],
+						-Eyes->[Eyes]-Color->[Color:Blue]
+		     ],
+	     -goal->[Open = [Open]-
+				-object->[Refrigerator: Refrigerator001 =
+						[Refrigerator: Refrigerator001]-Color->[Color:White]
+					 ],
+				-State_Value->[State_Value:Yes_State_Value]
+		    ],
+	     -plan->[Plan = [Plan]-RealizedBy->[Propel = [Propel]-
+							-actor->[Human: Karen],
+							-object->[Door]<-Door-[Refrigerator: Refrigerator001]
+					       ]
+		    ],
+	     -outcome->[failure_Goal_Outcome]
+]).
+
+//Story play-doh-1: Lynn wants some Play Doh. She asks Mike to give her some, and her goal succeeds.
+event(dd1,[Goal = [Goal]-
+	     -actor->[Human :Lynn = [Human: Lynn]-
+						-Age->[Age:Kid],
+						-Hair->[Hair]-Color->[Color:Blond],
+						-Eyes->[Eyes]-Color->[Color:Blue]
+		     ],
+	     -goal->[Poss_By = [Poss_By]-
+				    -actor->[Human: Lynn],
+				    -object->[Play_Doh: Play_Doh001],
+				    -State_Value->[State_Value:Yes_State_Value]
+		    ],
+	     -plan->[Plan = [Plan]-RealizedBy->[MTrans = [MTrans]-
+							-actor->[Human: Lynn],
+							-to->[Human : Mike = [Human:Mike]-
+									-Age->[Age: Grown_Up],
+									-Hair->[Hair]-Color->[Color:Brown],
+									-Eyes->[Eyes]-Color->[Color:Green]
+					     	     	     ]<-Father-[Human: Lynn],
+							-object->[ATrans = [ATrans]-
+									-actor->[Human:Mike],
+									-object->[Play_Doh: Play_Doh001],
+									-to->[Human:Lynn]
+						 	 	 ]
+					     	]
+		    ],
+	     -outcome->[Success_Goal_Outcome]
+]).
+
+//Story Cookie-1: Karen asks her sister, Lynn, for a cookie and her sister gives it to her.
+event(cc1,[Goal = [Goal]-
+	     -actor->[Human :Karen = [Human: Karen]-
+						-Age->[Age:Kid],
+						-Hair->[Hair]-Color->[Color:Blond],
+						-Eyes->[Eyes]-Color->[Color:Blue]
+		     ],
+	     -goal->[Poss_By = [Poss_By]-
+				    -actor->[Human: Karen],
+				    -object->[Cookie: Cookie001],
+				    -State_Value->[State_Value:Yes_State_Value]
+		    ],
+	     -plan->[Plan = [Plan]-RealizedBy->[MTrans = [MTrans]-
+							-actor->[Human: Karen],
+							-to->[Human : Lynn = [Human:Lynn]-
+									-Age->[Age: Kid],
+									-Hair->[Hair]-Color->[Color:Blond],
+									-Eyes->[Eyes]-Color->[Color:Blue]
+					     	     	     ]<-Sister-[Human: Karen],
+							-object->[ATrans = [ATrans]-
+									-actor->[Human:Lynn],
+									-object->[Cookie:Cookie001],
+									-to->[Human:Karen]
+
+						 	 	 ]
+					     	]
+		    ],
+	     -outcome->[Success_Goal_Outcome]
+]).
+
+
+//---------------------------------------------GenRules-----------------------------------------------------------
+genRule([Act = [_Act]-object->[_Object = _obj]]-after->[State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object = _obj]],
+        [_Act = [_Act]-object->[_Object]]-result->[_State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object]]).
+
+
+
+genRule([Act = [_Act]-object->[_Object = _obj]]-after->[State = 	
+                                 [State_Value: _StValue]<-State_Value-[_State]-object->[_Object = _obj]],
+        [_Act = [_Act]-object->[_Object]]-result->[_State = 	
+                                 [State_Value: _StValue]<-State_Value-[_State]-object->[_Object]],[_Object = _obj]).
+
+
+
+genRule(T,_generalisation)	:-
+	[Act  = _Act1]-after->[Act = _Act2]-after->[State = _State] = T,
+         [_]-object->[_Object] = _Act1,
+	[Act = _Act1]
+	   -result->[State = [State_Value: _StValue1]<-State_Value-[_State1]-object->[_Object]]
+	      -enables->[Act = _Act2]-result->[State = _State] = _generalisation.
+
+
+//---------------------------------------------DataTDL-----------------------------------------------------------
+
+//Lynn dropped a clear glass cup and the cup breaks
+event(glass1, [Act = [Propel]-
+                  	  -actor->[Human :Lynn = [Human :Lynn]-
+							-Age->[Age:Kid],
+							-Hair->[Hair]-Color->[Color:Blond],
+							-Eyes->[Eyes]-Color->[Color:Blue]
+		         	   ],
+                  	  -object->[Cup = [Cup]-
+						-Composition->[Composition : glass],
+						-Color->[Color : Clear],
+						-ID->[ID:Glass001]
+	                   	    ],
+                          -to->[Floor = [Floor]-Location->[Kitchen]]
+							     	
+      	    ]-after->[State = [Broken]-                 
+		 			-object->[Cup = [Cup]-
+						     -Composition->[Composition : glass],
+						     -Color->[Color : Clear],
+						     -ID->[ID:Glass001]
+				         ]
+					-State_Value->[State_Value:Yes_State_Value]
+			]).
+
+//Lynn dropped a red plastic cup and nothing happend
+event(glass2, [Act = [Propel]-
+                  	  -actor->[Human :Lynn = [Human :Lynn]-
+							-Age->[Age:Kid],
+							-Hair->[Hair]-Color->[Color:Blond],
+							-Eyes->[Eyes]-Color->[Color:Blue]
+		         	   ],
+                  	  -object->[Cup = [Cup]-
+						-Composition->[Composition : plastic],
+						-Color->[Color : red],
+						-ID->[ID:Glass002]
+	                   	    ],
+                          -to->[Floor = [Floor]-Location->[Kitchen]]
+							     	
+      	    ]-after->[State = [Broken]-                 
+		 			-object->[Cup = [Cup]-
+						     -Composition->[Composition : Plastic],
+						     -Color->[Color : red],
+						     -ID->[ID:Glass002]
+				         ]
+					-State_Value->[State_Value:No_State_Value]
+			]).
+
+//Lynn dropped a red glass cup and the cup breaks
+event(glass1, [Act = [Propel]-
+                  	  -actor->[Human :Lynn = [Human :Lynn]-
+							-Age->[Age:Kid],
+							-Hair->[Hair]-Color->[Color:Blond],
+							-Eyes->[Eyes]-Color->[Color:Blue]
+		         	   ],
+                  	  -object->[Cup = [Cup]-
+						-Composition->[Composition : glass],
+						-Color->[Color : Red],
+						-ID->[ID:Glass003]
+	                   	    ],
+                          -to->[Floor = [Floor]-Location->[Kitchen]]
+							     	
+      	    ]-after->[State = [Broken]-                 
+		 			-object->[Cup = [Cup]-
+						     -Composition->[Composition : glass],
+						     -Color->[Color : Red],
+						     -ID->[ID:Glass003]
+				         ]
+					-State_Value->[State_Value:Yes_State_Value]
+			]).
+
+//---------------------------------------------Economic rules-----------------------------------------------------
+
+//sell results in possessing
+rules([Act = [ATrans : Sell]-
+		-to->[_Actor = _act],
+		-Object->[_Object = _obj],	
+		-State_Value->[State_Value:Yes_State_Value]]
+	-Result->[state = [Possess]-
+			-Object->[_Object = _obj],	
+			-State_Value->[State_Value:Yes_State_Value],
+			-Actor->[_Actor = _act]
+		 ]
+).
+
+
+//refuse to sell results in demand increase
+rules([Act = [ATrans : Sell]-
+		-Actor->[Polity = [_Pol1]-exports->[Commodity : y = _obj]],
+		-to->[Polity : x = [_Pol2]-imports->[Commodity : y]],
+		-Object->[Commodity : y],	
+		-State_Value->[State_Value:No_State_Value]]
+	-Result->[state = [Demand_Increase]-
+			-Object->[Commodity : y],	
+			-State_Value->[State_Value:Yes_State_Value],
+			-Actor->[Polity : x]
+		 ]
+).
+
+//demand increase results in price increase   // [_pol1]-economic_health->[economic_health : Strong]
+rules([State = [Demand_Increase]-
+				-object->[_Object1 : y = _obj1],
+				-actor->[Polity : x = [_pol1]-economic_health->[economic_health : Strong]],
+				-State_Value->[State_Value:Yes_State_Value]
+	]
+	-enables-> [Act = [Atrans : sell]-
+			     -object->[_Object1 : y],
+			     -actor->[Polity = [_Pol2]-
+						      -exports->[_Object1 : y],
+						      -business_relationship->[Polity : x]
+					],
+			     -to->[Polity : x],
+			     -Price->[Price = [Money]-value->[value : sup_market]],
+			     -State_Value->[State_Value:Yes_State_Value]
+	          ]  
+).
+
+//---------------------------------------------Coercion-----------------------------------------------------
+def_schema([Act = [Coerce]-
+                  	  -actor->[Polity = _actor],
+                  	  -object->[Object = _Object],
+                  	  -target->[Polity = _target],
+                  	  -demand->[Act = _demand],
+                  	  -threat->[Act = _threat],
+			  -response->[Act = _response],
+                  	  -result->[State = _result]
+		   ],
+		[Act = _threat]-after->[Act = _response]-after->[State = _result]
+).
+
+//---------------------------------------------Economic sanction-----------------------------------------------------
+event(coerce,[Act = [Coerce]-
+	-Actor->[Polity = [Country : Australia]-
+			-Language->[Language : English],
+			-Location->[Location : Southern_hemisphere],
+			-Government->[Government : Democracy],
+			-Economic_health->[Economic_health : strong],
+			-Continent->[Continent :Australie],
+			-Exports->[Object = _obj],
+			-Imports->[Object = Oil]
+		 ],
+	-Object->[Commodity : Uranium],
+	-Target->[Polity = [Country : France]-
+			-Language->[Language : French],
+			-Location->[Location : Northern_hemisphere],
+			-Government->[Government : Democracy],
+			-Economic_health->[Economic_health : strong],
+			-Continent->[Continent : Europe],
+			-Exports->[Commodity : Wine],
+			-Imports->[Object = _obj]
+		  ],
+	-Demand->[Act = [Propel : Explode]-
+			-Actor->[Polity = _targ],
+			-Object->[Weapons : Nuclear],
+			-Location->[Location : Southern_hemisphere]
+		  ],
+	-Threat->[Act = [ATrans : Sell]-
+			-Actor->[Polity = _act],
+			-Object->[Object = _obj],
+			-to->[Polity = _targ],
+			-State_Value->[State_Value:No_State_Value]
+		  ],
+	-Response->[Act = [ATrans : Sell]-
+			-Actor->[Polity = [Country : South_africa]-
+						-Language->[Language : English],
+						-Location->[Location : Southern_hemisphere],
+						-Business_relationship->[Polity = _targ],
+						-Continent->[Continent : Africa],
+						-Exports->[Object = _obj],
+						-Imports->[Object = Oil]
+				 ],
+			-Object->[_Object = _obj],
+			-Price->[Price = [Money = 3000000]-
+						-currency->[Currency : Dollars],
+						-value->[value : sup_market]
+				 ],
+			-to->[Polity = _targ]
+		    ],
+	-Result->[State = [Possess]-
+			-Actor->[Polity = _targ],
+			-State_Value->[State_Value:Yes_State_Value],
+			-Object->[Object = _obj]
+		  ]
+]).

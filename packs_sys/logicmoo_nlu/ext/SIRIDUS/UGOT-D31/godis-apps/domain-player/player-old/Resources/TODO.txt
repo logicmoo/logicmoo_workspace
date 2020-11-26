@@ -1,0 +1,50 @@
+050124
+göra enkelt GUI som tar både input och output.
+olika beroende på om man pekar på låtar i spellistan eller nån
+annanstans.
+
+
+050119
+
+ändrat i resource_interfaces   lagt till en regel för resolves.
+
+* kolla upp assume_issue m.m.   den bara reraise, kolla kod som är
+  bortkommenterad i domain_player.
+  Den fixar att göra dev_do i if_then_else, men den gör inte report...
+
+
+
+
+
+
+
+
+   ** fixa så man kan fråga vilka har gruppen X gjort  OK
+
+
+  %%%%%%%%%%%%
+  fixa en output_form som clarify när man skriver in bara ett
+  gruppnamn .  OK
+  - men varför funkar inte med bara ett låtnamn???  OK
+==========>>  ett par skumma input_form i lexicon... men hur ändra om
+  man vill ha det kvar??  t.ex. se frågor om låtar och album
+
+
+  - funkar inte med album   OK, hyfsat...se update_rules om ändring i
+    accommodateDependentIssue
+  %%%%%%%%%%%%
+
+
+ * samla alla answers av samma slag till en snygg output_form
+    - kolla och jämför interpret_simple och generate_simple
+ * ny dev_query2 som ger en lista med svar tillbaka
+ * ny resource_relation i resource_interface -- se ovanstående
+
+ * se så att allt går att köra
+
+
+
+
+%%%%%%%%%%%%%   smått o gott   %%%%%%%%%%%%%%%%%%%%
+ * dynamisk dbase ?
+

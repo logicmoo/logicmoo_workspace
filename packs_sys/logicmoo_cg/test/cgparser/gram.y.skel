@@ -1,0 +1,168 @@
+/*
+	Grammar for the linear form of a Conceptual Graph.
+ 	See Appendix A6 plus Chapters 3 & 4 of John Sowa's
+	book : "Conceptual Structures - Information Processing
+	for Mind and Machine", Addison Wesley, 1984.
+
+	Written by Maurice Pagnucco , Oct 1990
+
+		Basser Department of Computer Science
+		Madsen Building, F09
+		University of Sydney
+		NSW, 2006
+		AUSTRALIA
+
+		email: morri@cs.su.oz.au
+*/
+
+%{
+includes and declarations
+%}
+
+%token
+%token	TYPE RELATION INDIVIDUAL PROTOTYPE SCHEMA SUBTYPE IS FOR OF
+%token	DIST RESP
+%token	'.' ';' ',' '(' ')' '-' '[' ']' '<' '>' '"' '*' '$' '#' '@' '{' '}' '|'
+
+%type
+
+%%
+file		:	element sep
+		|	element sep file sep
+		;
+
+sep		:	sep `\n`
+		|
+		;
+
+element		:	cg '.'
+		|	cg ';'
+		;
+
+cg		:	cgraph
+		|	abdef
+		|	stype
+		;
+
+abdef		:	TYPE NAME '(' NAME ')' IS '\n' cgraph
+		|	RELATION NAME '(' varlist ')' IS '\n' cgraph
+		|	INDIVIDUAL NAME '(' NAME ')' IS '\n' cgraph
+		|	PROTOTYPE FOR NAME '(' NAME ')' IS '\n' cgraph
+		|	SCHEMA FOR NAME '(' NAME ')' IS '\n' cgraph
+		;
+		 /* for each of these abstract definitions we should
+		 ensure that each VAR appears in cgraph	*/
+
+cgraph		:	concept
+		|	concept rlink
+		|	relation conlink
+		;
+
+rlink		:	arc relation
+		|	arc relation conlink
+		|	'-' rlist ','
+		;
+
+conlink		:	arc concept
+		|	arc concept rlink
+		|	'-' conlist ','
+		;
+
+rlist		:	'\n' relation
+		|	'\n' relation conlink
+		|	'\n' relation rlist
+		|	'\n' relation conlink rlist
+		;
+
+conlist		:	'\n' arc concept
+		|	'\n' arc concept rlink
+		|	'\n' arc concept conlist
+		|	'\n' arc concept rlink conlist
+		;
+
+concept		:	'[' typefield ']'
+		|	'[' typefield ':' reffield ']'
+		|	'[' typefield ':' glist ']'
+		|	'[' glist ']'
+		;
+
+relation	:	'(' typelabel ')'
+		;
+
+arc		:	'<-'
+		|	NUMBER '<-'
+		|	'->'
+		|	NUMBER '->'
+		;
+
+typefield	:	NAME
+/*
+		|	'"' NAME '"' should be associated with a relation
+					of type NAME only 			*/
+		/* I didn't implement this but you may like to consider this second rule
+		   I nearly forgot why I actually put this rule here, but Sowa does
+		   use it a few times in his book*/
+		;
+
+glist		:	cgraph
+		|	cgraph glist
+		;
+
+reffield	:	NAME
+		|	'*' gmarker
+		|	'$' gmarker
+		|	'#' nmarker
+		|	NAME '#' nmarker
+		|	'#' nmarker '@' measure
+		|	'@' measure
+		|	set
+		|	set '@' NUMBER
+		;
+			/* check that NUMBER is the true cardinality of 
+			   set; also NUMBER must be an integer */
+
+gmarker		:	NAME
+		|	/* empty rule */
+		;
+
+nmarker		:	NUMBER	/* this number should be a positive integer */
+		|	/* empty rule */
+		;
+
+measure		:	NUMBER NAME
+		;
+
+set		: 	'{' '}'
+		|	'{' internal '}'
+		|	'{' disjunctive '}'
+		|	DIST '{' '}'
+		|	DIST '{' internal '}'
+		|	RESP '<' '>'
+		|	RESP '<' internal '>'
+		;
+		 /* for each type of set we need to check that each element
+		   appears at most once.				*/
+
+internal	:	'*'
+		|	NAME
+		|	NAME ',' internal
+		;
+
+disjunctive	:	'*'
+		|	NAME
+		|	NAME '|' internal
+		;
+
+varlist		:	NAME
+		|	NAME ',' varlist
+		;
+
+typelabel	:	NAME
+		;
+
+stype		:	SUBTYPE OF NAME IS NAME
+		;
+
+%%
+
+/* end of grammar */

@@ -1,0 +1,192 @@
+<jgx-1.01>
+<model>
+	<a class="state" id="1" val="1" rect="216.0,41.0,49.0,37.0" attr="0">
+		<a class="port" id="2" val="2"/>
+	</a>
+	<a class="state" id="3" val="3" rect="54.0,203.0,49.0,37.0" attr="1">
+		<a class="port" id="4" val="2"/>
+	</a>
+	<a class="state" id="5" val="4" rect="414.0,209.0,55.0,37.0" attr="2">
+		<a class="port" id="6" val="2"/>
+	</a>
+	<a class="state" id="7" val="5" rect="402.0,317.0,49.0,37.0" attr="3">
+		<a class="port" id="8" val="2"/>
+	</a>
+	<a class="state" id="9" val="6" rect="60.0,323.0,49.0,37.0" attr="4">
+		<a class="port" id="10" val="2"/>
+	</a>
+	<a class="transState" id="11" val="7" rect="24.0,111.0,39.0,21.0" attr="5">
+		<a class="port" id="12" val="2"/>
+	</a>
+	<a class="transState" id="13" val="8" rect="150.0,131.0,49.0,19.0" attr="5">
+		<a class="port" id="14" val="2"/>
+	</a>
+	<a class="transState" id="15" val="9" rect="336.0,167.0,73.0,17.0" attr="6">
+		<a class="port" id="16" val="2"/>
+	</a>
+	<a class="transState" id="17" val="10" rect="438.0,167.0,73.0,17.0" attr="6">
+		<a class="port" id="18" val="2"/>
+	</a>
+	<a class="transitionEdge" id="19" val="2" src="2" tgt="12" pts="186.5,101.5,49.5,163.5" attr="7"/>
+	<a class="transitionEdge" id="20" val="2" src="12" tgt="4" pts="49.5,163.5,78.5,221.5" attr="7"/>
+	<a class="transitionEdge" id="21" val="2" src="4" tgt="14" pts="78.5,221.5,126.5,164.5" attr="7"/>
+	<a class="transitionEdge" id="22" val="2" src="14" tgt="2" pts="126.5,164.5,186.5,101.5" attr="7"/>
+	<a class="transitionEdge" id="23" val="2" src="2" tgt="16" pts="186.5,101.5,462.5,163.5" attr="7"/>
+	<a class="transitionEdge" id="24" val="2" src="16" tgt="6" pts="462.5,163.5,441.5,227.5" attr="7"/>
+	<a class="transitionEdge" id="25" val="2" src="6" tgt="18" pts="441.5,227.5,366.5,169.5" attr="7"/>
+	<a class="transitionEdge" id="26" val="2" src="18" tgt="2" pts="366.5,169.5,186.5,101.5" attr="7"/>
+	<a class="transState" id="27" val="11" rect="330.0,269.0,67.0,17.0" attr="6">
+		<a class="port" id="28" val="2"/>
+	</a>
+	<a class="transState" id="29" val="12" rect="438.0,269.0,73.0,17.0" attr="6">
+		<a class="port" id="30" val="2"/>
+	</a>
+	<a class="transitionEdge" id="31" val="2" src="6" tgt="28" pts="441.5,227.5,363.5,277.5" attr="7"/>
+	<a class="transitionEdge" id="32" val="2" src="28" tgt="8" pts="363.5,277.5,426.5,335.5" attr="7"/>
+	<a class="transitionEdge" id="33" val="2" src="8" tgt="30" pts="426.5,335.5,474.5,277.5" attr="7"/>
+	<a class="transitionEdge" id="34" val="2" src="30" tgt="6" pts="474.5,277.5,441.5,227.5" attr="7"/>
+	<a class="transState" id="35" val="13" rect="24.0,275.0,39.0,17.0" attr="6">
+		<a class="port" id="36" val="2"/>
+	</a>
+	<a class="transState" id="37" val="14" rect="102.0,275.0,39.0,17.0" attr="6">
+		<a class="port" id="38" val="2"/>
+	</a>
+	<a class="transitionEdge" id="39" val="2" src="4" tgt="36" pts="78.5,221.5,43.5,283.5" attr="7"/>
+	<a class="transitionEdge" id="40" val="2" src="36" tgt="10" pts="43.5,283.5,84.5,341.5" attr="7"/>
+	<a class="transitionEdge" id="41" val="2" src="10" tgt="38" pts="84.5,341.5,121.5,283.5" attr="7"/>
+	<a class="transitionEdge" id="42" val="2" src="38" tgt="4" pts="121.5,283.5,78.5,221.5" attr="7"/>
+	<a class="TwoWayMergeEdge" id="43" val="15" src="38" tgt="14" pts="10.0,10.0,20.0,20.0" attr="8"/>
+	<a class="TwoWayMergeEdge" id="44" val="16" src="36" tgt="12" pts="10.0,10.0,20.0,20.0" attr="8"/>
+	<a class="TwoWayMergeEdge" id="45" val="17" src="28" tgt="12" pts="10.0,10.0,20.0,20.0" attr="8"/>
+	<a class="TwoWayMergeEdge" id="46" val="18" src="30" tgt="14" pts="10.0,10.0,20.0,20.0" attr="8"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="file:/home/ron/workspace/gipoV2/bin/jplan/tools/lifeHist/resources/icoBlocks.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV2/bin/jplan/tools/lifeHist/resources/icoBlocks.png"/>
+	</map>
+	<map id="2" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV2/bin/jplan/tools/lifeHist/resources/icoBlocks.png"/>
+	</map>
+	<map id="3" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV2/bin/jplan/tools/lifeHist/resources/icoBlocks.png"/>
+	</map>
+	<map id="4" pid="0">
+		<a key="icon" val="file:/home/ron/workspace/gipoV2/bin/jplan/tools/lifeHist/resources/icoBlocks.png"/>
+	</map>
+	<map id="5" pid="0">
+		<a key="gradientColor" val="255,0,0"/>
+		<a key="bordercolor" val="255,0,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="6" pid="0">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="7">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="8" pid="7">
+		<a key="lineBegin" val="5"/>
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+		<a key="lineEnd" val="1"/>
+	</map>
+</attrs>
+<user>
+	<a key="13">
+		<a key="label" val="putOn"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="9">
+		<a key="label" val="putOnBase"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="16">
+		<a key="label" val="%2B+block"/>
+	</a>
+	<a key="10">
+		<a key="label" val="takeOffBase"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="15">
+		<a key="label" val="-+block"/>
+	</a>
+	<a key="11">
+		<a key="label" val="putOnBottom"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="18">
+		<a key="label" val="-+block"/>
+	</a>
+	<a key="12">
+		<a key="label" val="takeOffBottom"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="1">
+		<a key="label" val="held"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="14">
+		<a key="label" val="takeOff"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="17">
+		<a key="label" val="%2B+block"/>
+	</a>
+	<a key="7">
+		<a key="Disjunction" val="true"/>
+		<a key="label" val="putOnBottom"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="6">
+		<a key="label" val="on"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="4">
+		<a key="label" val="baseTop"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="8">
+		<a key="Disjunction" val="true"/>
+		<a key="label" val="takeOffBottom"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="3">
+		<a key="label" val="onTop"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="5">
+		<a key="label" val="base"/>
+		<a key="ObjectSort" val="block"/>
+	</a>
+	<a key="2" val=""/>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="selectNewCells" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

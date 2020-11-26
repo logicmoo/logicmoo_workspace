@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<!--
+    Changes by:    Riccardo Zese
+    E-mail:        riccardo.zese@unife.it
+    Copyright:	   2014-2016, University of Ferrara
+-->
+
+<html>
+  <head>
+  <title>SWISH: SWI-Prolog for SHaring</title>
+  </head>
+<body>
+<h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#motivation">Motivation</a></li>
+    <li><a href="#browsers">Supported browsers</a></li>
+    <li><a href="#swishapp">Adding LogicMOO on TRILL on SWISH to your application</a></li>
+    <li><a href="#technology">Technology</a></li>
+    <li><a href="#source_code">Source code</a></li>
+  </ul>
+
+<h2 id="motivation">Motivation</h2>
+<p>
+<span style="color:darkblue">TRILL</span><span style="color:maroon"> on </span><span style="color:darkblue">SWI</span><span style="color:maroon">SH</span> allows the user to write probabilistic Description Logic theories and compute the probability of queries with just a web browser. Moreover, it features all the functionalities of <span style="color:darkblue">SWI</span><span style="color:maroon">SH</span>
+</p>
+<p>
+<span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> is inspired by web-based tools such as <a
+target="_blank" href="http://jsfiddle.net/">JSFIDDLE</a> in that it
+allows you to develop a program and then share it with others on the
+Web. Besides sharing basic Prolog code fragments, we see several
+opportunities for deploying <span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span>:
+
+  <ul>
+  <li>
+<span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> can be <b>associated with a dataset</b>,
+either in pure Prolog, RDF (<a target="_blank"
+href="http://cliopatria.swi-prolog.org/">ClioPatria</a>) or a
+traditional relational database through ODBC and <a target="_blank"
+href="http://www.swi-prolog.org/pldoc/man?section=cql">CQL</a>. In this
+setting it can facilitate collaboratively management of increasingly
+complex queries against this dataset. Query results can be downloaded as
+CSV and queries can be executed through an HTTP API. See the
+<b>File/Help ...</b> for details.
+
+  <li>
+<span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> can be embedded in Prolog <b>course
+material</b>. See <a target="_blank" href="http://lpn.swi-prolog.org">Learn
+Prolog Now!</a> for a prototype. The menu <b>File/Help ...</b> explains
+how <span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> can be preloaded with source and example
+queries.
+
+  <li>
+<span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> can be used as a shared <b>management and
+development</b> interface for web services.  The <a target="_blank"
+href="http://cliopatria.swi-prolog.org/">ClioPatria</a> version allows
+for executing arbitrary management commands through the web interface,
+provided the user is logged in with <em>administrative</em> rights.
+  </ul>
+
+<h2 id="browsers">Supported browsers</h2>
+<p>
+<span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> works fine recent versions of in Safari,
+Firefox, Chrome and Internet Explorer (tested IE 11).
+
+<h2 id="swishapp">Adding TRILL on SWISH to your application</h2>
+<p>
+<span style="color:darkblue">TRILL</span><span style="color:maroon"> on </span><span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> can be added easily to any SWI-Prolog web
+application. For example, it is available as an extension pack for <a
+target="_blank" href="http://cliopatria.swi-prolog.org/">ClioPatria</a>,
+the SWI-Prolog RDF framework. It can be added to ClioPatria using the
+command below, providing an alternative for SPARQL for exploring the
+database (requires SWI-Prolog 7.1.32 or later).
+
+<pre style="font-size:80%">
+?- cpack_install(trill_on_swish).</pre>
+<h2 id="technology">Technology</h2>
+
+<p>
+<span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> is implemented as a set of <a
+target="_blank" href="http://jquery.com/">jQuery</a> plugins, using <a
+target="_blank" href="http://getbootstrap.com/">Bootstrap</a> for menus,
+modal windows and various styling aspects. <span
+style="color:darkblue">SWI</span><span style="color:maroon">SH</span>
+uses <a target="_blank" href="http://codemirror.net/">CodeMirror</a> for
+editing the Prolog source and query. Queries are executed by sending
+both the source text (left editor) and query (bottom-right editor) to
+the server, which creates a <a target="_blank"
+href="http://www.swi-prolog.org/pldoc/man?section=pengines">Pengine</a>
+(<i>Prolog Engine</i>) to execute the query.
+
+<p>
+Pengines have many other applications, such as supporting Prolog RPC
+(<i>Remote Procedure Calls</i>, which allows you to execute a query
+fully transparent, including backtracking, on a remote server. An
+interesting aspect is that they provide a generic query language on top
+of an arbitrary Prolog program that can be used from JavaScript. A <a
+target="_blank" href="http://pengines.swi-prolog.org/">demo is
+available</a>
+
+<h2 id="source_code">Source code</h2>
+<p>
+The source code for <span style="color:darkblue">TRILL</span><span style="color:maroon"> on </span><span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> is available on <a target="_blank"
+href="https://github.com/friguzzi/trill_on_swish">GitHub</a>.
+</p>
+<p>
+The source code for <span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> is available on <a target="_blank"
+href="https://github.com/SWI-Prolog/swish">GitHub</a>.
+</p>
+</body>
+</html>
+
+
+
+
+
+
+
+

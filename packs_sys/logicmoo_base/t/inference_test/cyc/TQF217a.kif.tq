@@ -1,0 +1,35 @@
+(note TQF217a)
+(abort)
+
+(mediators Iranian-TalibanConflict-1998 UnitedNationsOrganization) 
+
+(mediators Iranian-TalibanConflict-1998 SixPlusTwo-InternationalOrganization) 
+
+(query (findall (?RELATION-1 ?RELATION-2 ?RELATION-3 ?WHAT-1 ?RELATION-5 ?WHAT-3 ?RELATION-6 ?WHAT-4 ?RELATION-7 ?WHAT-5 ?RELATION-8 ?WHAT-6 ?RELATION-9 ?WHAT-7 ?RELATION-10 ?WHAT-8)
+(or 
+(trueFormula 
+(?RELATION-1 SixPlusTwo-InternationalOrganization UnitedNationsOrganization)) 
+(trueFormula 
+(?RELATION-2 UnitedNationsOrganization SixPlusTwo-InternationalOrganization)) 
+(and 
+(trueFormula 
+(?RELATION-3 ?WHAT-1 UnitedNationsOrganization)) 
+(trueFormula 
+(?RELATION-3 ?WHAT-1 SixPlusTwo-InternationalOrganization))) 
+(trueFormula 
+(?RELATION-5 UnitedNationsOrganization SixPlusTwo-InternationalOrganization ?WHAT-3)) 
+(trueFormula 
+(?RELATION-6 SixPlusTwo-InternationalOrganization UnitedNationsOrganization ?WHAT-4)) 
+(trueFormula 
+(?RELATION-7 SixPlusTwo-InternationalOrganization ?WHAT-5 UnitedNationsOrganization)) 
+(trueFormula 
+(?RELATION-8 UnitedNationsOrganization ?WHAT-6 SixPlusTwo-InternationalOrganization)) 
+(trueFormula 
+(?RELATION-9 ?WHAT-7 SixPlusTwo-InternationalOrganization UnitedNationsOrganization)) 
+(trueFormula 
+(?RELATION-10 ?WHAT-8 UnitedNationsOrganization SixPlusTwo-InternationalOrganization)))
+))	
+
+(answer ?? ?? mediators Iranian-TalibanConflict-1998 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??)
+
+(end_of_file)

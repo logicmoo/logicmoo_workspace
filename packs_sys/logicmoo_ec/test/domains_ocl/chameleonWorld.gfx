@@ -1,0 +1,323 @@
+<jgx-1.01>
+<model>
+	<a class="state" id="1" val="1" rect="265.0,209.0,73.0,36.0" attr="0">
+		<a class="port" id="2" val="2"/>
+	</a>
+	<a class="state" id="3" val="3" rect="415.0,401.0,73.0,36.0" attr="1">
+		<a class="port" id="4" val="2"/>
+	</a>
+	<a class="state" id="5" val="4" rect="361.0,521.0,74.0,36.0" attr="2">
+		<a class="port" id="6" val="2"/>
+	</a>
+	<a class="transState" id="7" val="5" rect="475.0,491.0,73.0,18.0" attr="3">
+		<a class="port" id="8" val="2"/>
+	</a>
+	<a class="transState" id="9" val="6" rect="523.0,371.0,71.0,18.0" attr="3">
+		<a class="port" id="10" val="2"/>
+	</a>
+	<a class="transState" id="11" val="7" rect="265.0,353.0,73.0,18.0" attr="3">
+		<a class="port" id="12" val="2"/>
+	</a>
+	<a class="transState" id="13" val="8" rect="187.0,479.0,73.0,18.0" attr="3">
+		<a class="port" id="14" val="2"/>
+	</a>
+	<a class="transitionEdge" id="15" val="2" src="2" tgt="12" pts="301.5,227.0,301.5,362.0" attr="4"/>
+	<a class="transitionEdge" id="16" val="2" src="12" tgt="4" pts="301.5,362.0,451.5,419.0" attr="4"/>
+	<a class="transitionEdge" id="17" val="2" src="4" tgt="10" pts="451.5,419.0,558.5,380.0" attr="4"/>
+	<a class="transitionEdge" id="18" val="2" src="10" tgt="2" pts="558.5,380.0,301.5,227.0" attr="4"/>
+	<a class="state" id="19" val="9" rect="655.0,449.0,79.0,38.0" attr="5">
+		<a class="port" id="20" val="2"/>
+	</a>
+	<a class="state" id="21" val="10" rect="841.0,443.0,79.0,38.0" attr="6">
+		<a class="port" id="22" val="2"/>
+	</a>
+	<a class="transState" id="23" val="11" rect="763.0,389.0,79.0,18.0" attr="3">
+		<a class="port" id="24" val="2"/>
+	</a>
+	<a class="transState" id="25" val="12" rect="745.0,527.0,79.0,18.0" attr="3">
+		<a class="port" id="26" val="2"/>
+	</a>
+	<a class="transitionEdge" id="27" val="2" src="24" tgt="20" pts="802.5,398.0,694.5,468.0" attr="4"/>
+	<a class="transitionEdge" id="28" val="2" src="20" tgt="26" pts="694.5,468.0,784.5,536.0" attr="4"/>
+	<a class="transitionEdge" id="29" val="2" src="26" tgt="22" pts="784.5,536.0,880.5,462.0" attr="4"/>
+	<a class="transitionEdge" id="30" val="2" src="22" tgt="24" pts="880.5,462.0,802.5,398.0" attr="4"/>
+	<a class="OneWayMergeEdge" id="31" val="13" src="20" tgt="8" pts="694.5,468.0,511.5,500.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="32" val="14" src="20" tgt="14" pts="694.5,468.0,223.5,488.0" attr="7"/>
+	<a class="state" id="33" val="15" rect="775.0,209.0,49.0,38.0" attr="8">
+		<a class="port" id="34" val="2"/>
+	</a>
+	<a class="state" id="35" val="16" rect="619.0,227.0,33.0,38.0" attr="9">
+		<a class="port" id="36" val="2"/>
+	</a>
+	<a class="transState" id="37" val="17" rect="739.0,149.0,49.0,18.0" attr="3">
+		<a class="port" id="38" val="2"/>
+	</a>
+	<a class="transState" id="39" val="18" rect="739.0,329.0,49.0,18.0" attr="3">
+		<a class="port" id="40" val="2"/>
+	</a>
+	<a class="transitionEdge" id="41" val="2" src="36" tgt="38" pts="635.5,246.0,763.5,158.0" attr="4"/>
+	<a class="transitionEdge" id="42" val="2" src="38" tgt="34" pts="763.5,158.0,799.5,228.0" attr="4"/>
+	<a class="transitionEdge" id="43" val="2" src="34" tgt="40" pts="799.5,228.0,763.5,338.0" attr="4"/>
+	<a class="transitionEdge" id="44" val="2" src="40" tgt="36" pts="763.5,338.0,635.5,246.0" attr="4"/>
+	<a class="OneWayMergeEdge" id="45" val="19" src="2" tgt="40" pts="301.5,227.0,763.5,338.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="46" val="20" src="20" tgt="40" pts="694.5,468.0,763.5,338.0" attr="7"/>
+	<a class="state" id="47" val="21" rect="184.0,89.0,99.0,38.0" attr="10">
+		<a class="port" id="48" val="2"/>
+	</a>
+	<a class="state" id="49" val="22" rect="617.0,59.0,108.0,38.0" attr="11">
+		<a class="port" id="50" val="2"/>
+	</a>
+	<a class="transState" id="51" val="23" rect="395.0,53.0,120.0,18.0" attr="3">
+		<a class="port" id="52" val="2"/>
+	</a>
+	<a class="transState" id="53" val="24" rect="371.0,179.0,136.0,18.0" attr="3">
+		<a class="port" id="54" val="2"/>
+	</a>
+	<a class="transitionEdge" id="55" val="2" src="48" tgt="54" pts="233.5,108.0,439.0,188.0" attr="4"/>
+	<a class="transitionEdge" id="56" val="2" src="54" tgt="50" pts="439.0,188.0,671.0,78.0" attr="4"/>
+	<a class="transitionEdge" id="57" val="2" src="50" tgt="52" pts="671.0,78.0,455.0,62.0" attr="4"/>
+	<a class="transitionEdge" id="58" val="2" src="52" tgt="48" pts="455.0,62.0,233.5,108.0" attr="4"/>
+	<a class="OneWayMergeEdge" id="59" val="25" src="48" tgt="14" pts="233.5,108.0,223.5,488.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="60" val="26" src="36" tgt="14" pts="635.5,246.0,223.5,488.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="61" val="27" src="34" tgt="54" pts="799.5,228.0,439.0,188.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="62" val="28" src="36" tgt="52" pts="635.5,246.0,455.0,62.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="63" val="29" src="50" tgt="40" pts="671.0,78.0,763.5,338.0" attr="7"/>
+	<a class="transitionEdge" id="64" val="2" src="4" tgt="14" pts="451.5,419.0,223.5,488.0" attr="4"/>
+	<a class="transitionEdge" id="65" val="2" src="14" tgt="6" pts="223.5,488.0,398.0,539.0" attr="4"/>
+	<a class="transitionEdge" id="66" val="2" src="6" tgt="8" pts="398.0,539.0,511.5,500.0" attr="4"/>
+	<a class="transitionEdge" id="67" val="2" src="8" tgt="4" pts="511.5,500.0,451.5,419.0" attr="4"/>
+	<a class="state" id="68" val="30" rect="124.0,219.0,73.0,38.0" attr="12">
+		<a class="port" id="69" val="2"/>
+	</a>
+	<a class="state" id="70" val="31" rect="16.0,219.0,73.0,38.0" attr="13">
+		<a class="port" id="71" val="2"/>
+	</a>
+	<a class="transState" id="72" val="32" rect="70.0,303.0,55.0,18.0" attr="3">
+		<a class="port" id="73" val="2"/>
+	</a>
+	<a class="transState" id="74" val="33" rect="70.0,165.0,55.0,18.0" attr="3">
+		<a class="port" id="75" val="2"/>
+	</a>
+	<a class="transitionEdge" id="76" val="2" src="69" tgt="75" pts="160.5,238.0,97.5,174.0" attr="4"/>
+	<a class="transitionEdge" id="77" val="2" src="75" tgt="71" pts="97.5,174.0,52.5,238.0" attr="4"/>
+	<a class="transitionEdge" id="78" val="2" src="71" tgt="73" pts="52.5,238.0,97.5,312.0" attr="4"/>
+	<a class="transitionEdge" id="79" val="2" src="73" tgt="69" pts="97.5,312.0,160.5,238.0" attr="4"/>
+	<a class="OneWayMergeEdge" id="80" val="34" src="69" tgt="12" pts="160.5,238.0,301.5,362.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="81" val="35" src="69" tgt="10" pts="160.5,238.0,558.5,380.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="82" val="36" src="20" tgt="54" pts="694.5,468.0,439.0,188.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="83" val="37" src="20" tgt="52" pts="694.5,468.0,455.0,62.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="84" val="38" src="2" tgt="52" pts="301.5,227.0,455.0,62.0" attr="7"/>
+	<a class="OneWayMergeEdge" id="85" val="39" src="2" tgt="54" pts="301.5,227.0,439.0,188.0" attr="7"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoGreen.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoGreen.png"/>
+	</map>
+	<map id="2" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoGreen.png"/>
+	</map>
+	<map id="3" pid="0">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="4">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="5" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoDoor.png"/>
+	</map>
+	<map id="6" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoDoor.png"/>
+	</map>
+	<map id="7" pid="4">
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+		<a key="lineEnd" val="1"/>
+	</map>
+	<map id="8" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoPackage.png"/>
+	</map>
+	<map id="9" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoPackage.png"/>
+	</map>
+	<map id="10" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoBath.png"/>
+	</map>
+	<map id="11" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoBath.png"/>
+	</map>
+	<map id="12" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoBarrel.png"/>
+	</map>
+	<map id="13" pid="0">
+		<a key="icon" val="c:\gipo\jplan\domains/icons/icoBarrel.png"/>
+	</map>
+</attrs>
+<user>
+	<a key="38">
+		<a key="label" val=""/>
+	</a>
+	<a key="15">
+		<a key="label" val="dirty"/>
+		<a key="ObjectSort" val="flexarium"/>
+	</a>
+	<a key="6">
+		<a key="label" val="putInBox"/>
+		<a key="ObjectSort" val="chameleon"/>
+	</a>
+	<a key="17">
+		<a key="label" val="time"/>
+		<a key="ObjectSort" val="flexarium"/>
+	</a>
+	<a key="12">
+		<a key="label" val="closeDoor"/>
+		<a key="ObjectSort" val="door"/>
+	</a>
+	<a key="33">
+		<a key="label" val="closeBox"/>
+		<a key="ObjectSort" val="box"/>
+	</a>
+	<a key="39">
+		<a key="label" val=""/>
+	</a>
+	<a key="29">
+		<a key="label" val=""/>
+	</a>
+	<a key="5">
+		<a key="label" val="takeOutFlex"/>
+		<a key="ObjectSort" val="chameleon"/>
+	</a>
+	<a key="21">
+		<a key="label" val="insideFlexarium"/>
+		<a key="ObjectSort" val="substrate"/>
+	</a>
+	<a key="27">
+		<a key="label" val=""/>
+	</a>
+	<a key="4">
+		<a key="label" val="inFlexarium"/>
+		<a key="ObjectSort" val="chameleon"/>
+	</a>
+	<a key="26">
+		<a key="label" val=""/>
+	</a>
+	<a key="36">
+		<a key="label" val=""/>
+	</a>
+	<a key="20">
+		<a key="label" val=""/>
+	</a>
+	<a key="8">
+		<a key="label" val="putInFlex"/>
+		<a key="ObjectSort" val="chameleon"/>
+	</a>
+	<a key="37">
+		<a key="label" val=""/>
+	</a>
+	<a key="25">
+		<a key="label" val=""/>
+	</a>
+	<a key="35">
+		<a key="label" val="%2B"/>
+	</a>
+	<a key="19">
+		<a key="label" val=""/>
+	</a>
+	<a key="16">
+		<a key="label" val="clean"/>
+		<a key="ObjectSort" val="flexarium"/>
+	</a>
+	<a key="23">
+		<a key="label" val="addCleanNewspaper"/>
+		<a key="ObjectSort" val="substrate"/>
+	</a>
+	<a key="22">
+		<a key="label" val="outsideFlexarium"/>
+		<a key="ObjectSort" val="substrate"/>
+	</a>
+	<a key="10">
+		<a key="label" val="doorClosed"/>
+		<a key="ObjectSort" val="door"/>
+	</a>
+	<a key="30">
+		<a key="label" val="boxOpen"/>
+		<a key="ObjectSort" val="box"/>
+	</a>
+	<a key="11">
+		<a key="label" val="openDoor"/>
+		<a key="ObjectSort" val="door"/>
+	</a>
+	<a key="1">
+		<a key="label" val="inBox"/>
+		<a key="ObjectSort" val="chameleon"/>
+	</a>
+	<a key="18">
+		<a key="label" val="wash"/>
+		<a key="ObjectSort" val="flexarium"/>
+	</a>
+	<a key="13">
+		<a key="label" val=""/>
+	</a>
+	<a key="32">
+		<a key="label" val="openBox"/>
+		<a key="ObjectSort" val="box"/>
+	</a>
+	<a key="34">
+		<a key="label" val="-"/>
+	</a>
+	<a key="3">
+		<a key="label" val="inHands"/>
+		<a key="ObjectSort" val="chameleon"/>
+	</a>
+	<a key="14">
+		<a key="label" val=""/>
+	</a>
+	<a key="7">
+		<a key="label" val="takeOutBox"/>
+		<a key="ObjectSort" val="chameleon"/>
+	</a>
+	<a key="9">
+		<a key="label" val="doorOpen"/>
+		<a key="ObjectSort" val="door"/>
+	</a>
+	<a key="24">
+		<a key="label" val="removeDirtyNewspaper"/>
+		<a key="ObjectSort" val="substrate"/>
+	</a>
+	<a key="31">
+		<a key="label" val="boxClosed"/>
+		<a key="ObjectSort" val="box"/>
+	</a>
+	<a key="28">
+		<a key="label" val=""/>
+	</a>
+	<a key="2" val=""/>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

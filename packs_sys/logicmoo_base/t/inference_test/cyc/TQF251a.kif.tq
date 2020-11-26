@@ -1,0 +1,18 @@
+(note "TQF251a")
+
+(goalCategoryForAgent Iran 
+ (regionControlled Iran AbuMusaIsland) TerritorialIntegrityGoal) 
+
+(implies 
+  (and 
+    (subAttribute ?STRATEGIC-INTEREST StrategicInterest) 
+    (goalCategoryForAgent ?AGENT ?GOAL ?STRATEGIC-INTEREST)) 
+  (goalImportance ?AGENT ?GOAL HighToVeryHigh)) 
+
+(query (findall (?IMPORTANCE)
+  (goalImportance Iran 
+    (regionControlled Iran AbuMusaIsland) ?IMPORTANCE)))
+
+(answer HighToVeryHigh)
+
+(end_of_file)

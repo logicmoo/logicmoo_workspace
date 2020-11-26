@@ -1,0 +1,596 @@
+(note TQF219a)
+(abort)
+
+(opponents SaudiArabia Iran) 
+
+(opponents SaudiArabia Iran) 
+
+(implies 
+ (and 
+ (agreeingAgents ?AGREEMENT ?AGENT) 
+ (hasOwnershipIn ?OWNER ?AGENT)) 
+ (agreeingAgents ?AGREEMENT ?OWNER)) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(products HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(implies 
+ (and 
+ (instance ?MAKAGREEMENT MakingAnAgreement) 
+ (outputs ?MAKAGREEMENT ?AGREE) 
+ (propositionalInfoAbout ?AGREE 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn ?ARTIFACT_TYPE)))) 
+ (agreeingAgents ?AGREE ?AGENT) 
+ (instance ?AGENT OilCompany) 
+ (subclass ?ARTIFACT_TYPE 
+ (IndustryInfrastructureReqFn OilIndustry))) 
+ (intendedBeneficiary ?MAKAGREEMENT ?AGENT)) 
+
+(propositionalInfoAbout #$HYP-Agreement-17853218 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn OilPipeline)))) 
+
+(instance SaudiAramco OilCompany) 
+
+(subclass OilPipeline 
+ (IndustryInfrastructureReqFn OilIndustry)) 
+
+(implies 
+ (and 
+ (instance ?MAKING MakingAnAgreement) 
+ (intendedBeneficiary ?MAKING ?INTEREST) 
+ (hasOwnershipIn ?AGENT ?INTEREST)) 
+ (intendedBeneficiary ?MAKING ?AGENT)) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiAramco) 
+
+(opponents SaudiArabia Iran) 
+
+(affiliatedWith Iran BahrainiHizballah) 
+
+(instance BahrainiHizballah TerroristGroup) 
+
+(agreeingAgents HYP-Agreement-17853218 AIOC) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiArabia) 
+
+(instance HYP-Agreement-17853218 Agreement) 
+
+(outputs HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiArabia) 
+
+(implies 
+ (and 
+ (instance ?AGREEMENT Agreement) 
+ (agreeingAgents ?AGREEMENT ?OPPAGENT) 
+ (agreeingAgents ?AGREEMENT ?OTRAGENT) 
+ (outputs ?MAKING ?AGREEMENT) 
+ (intendedBeneficiary ?MAKING ?OPPAGENT) 
+ (instance ?MAKING MakingAnAgreement) 
+ (opponents ?AGENT ?OPPAGENT) 
+ (affiliatedWith ?AGENT ?GROUP) 
+ (instance ?GROUP TerroristGroup)) 
+ (optionAvailable-ResponseToAgent ?AGENT ?OPPAGENT 
+ (CollectionSubsetFn 
+ (AttemptingFn TerroristAct) 
+ (TheSetOf ?OBJ 
+ (and 
+ (intendedMaleficiary ?OBJ ?OPPAGENT) 
+ (sponsorsAgentInAction ?AGENT ?GROUP ?OBJ)))) directingAgent)) 
+
+(opponents SaudiArabia Iran) 
+
+(opponents SaudiArabia Iran) 
+
+(implies 
+ (and 
+ (agreeingAgents ?AGREEMENT ?AGENT) 
+ (hasOwnershipIn ?OWNER ?AGENT)) 
+ (agreeingAgents ?AGREEMENT ?OWNER)) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(products HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(implies 
+ (and 
+ (instance ?MAKAGREEMENT MakingAnAgreement) 
+ (outputs ?MAKAGREEMENT ?AGREE) 
+ (propositionalInfoAbout ?AGREE 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn ?ARTIFACT_TYPE)))) 
+ (agreeingAgents ?AGREE ?AGENT) 
+ (instance ?AGENT OilCompany) 
+ (subclass ?ARTIFACT_TYPE 
+ (IndustryInfrastructureReqFn OilIndustry))) 
+ (intendedBeneficiary ?MAKAGREEMENT ?AGENT)) 
+
+(propositionalInfoAbout #$HYP-Agreement-17853218 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn OilPipeline)))) 
+
+(instance SaudiAramco OilCompany) 
+
+(subclass OilPipeline 
+ (IndustryInfrastructureReqFn OilIndustry)) 
+
+(implies 
+ (and 
+ (instance ?MAKING MakingAnAgreement) 
+ (intendedBeneficiary ?MAKING ?INTEREST) 
+ (hasOwnershipIn ?AGENT ?INTEREST)) 
+ (intendedBeneficiary ?MAKING ?AGENT)) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiAramco) 
+
+(opponents SaudiArabia Iran) 
+
+(agreeingAgents HYP-Agreement-17853218 AIOC) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiArabia) 
+
+(instance HYP-Agreement-17853218 Agreement) 
+
+(outputs HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiArabia) 
+
+(implies 
+ (and 
+ (instance ?AGREEMENT Agreement) 
+ (agreeingAgents ?AGREEMENT ?OPPAGENT) 
+ (agreeingAgents ?AGREEMENT ?OTRAGENT) 
+ (outputs ?MAKING ?AGREEMENT) 
+ (intendedBeneficiary ?MAKING ?OPPAGENT) 
+ (instance ?MAKING MakingAnAgreement) 
+ (opponents ?AGENT ?OPPAGENT)) 
+ (optionAvailable-ResponseToAgent ?AGENT ?OPPAGENT 
+ (CollectionSubsetFn 
+ (AttemptingFn EconomicEmbargo) 
+ (TheSetOf ?OBJ 
+ (intendedMaleficiary ?OBJ ?OPPAGENT))) agent)) 
+
+(opponents SaudiArabia Iran) 
+
+(opponents SaudiArabia Iran) 
+
+(implies 
+ (and 
+ (agreeingAgents ?AGREEMENT ?AGENT) 
+ (hasOwnershipIn ?OWNER ?AGENT)) 
+ (agreeingAgents ?AGREEMENT ?OWNER)) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(products HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(implies 
+ (and 
+ (instance ?MAKAGREEMENT MakingAnAgreement) 
+ (outputs ?MAKAGREEMENT ?AGREE) 
+ (propositionalInfoAbout ?AGREE 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn ?ARTIFACT_TYPE)))) 
+ (agreeingAgents ?AGREE ?AGENT) 
+ (instance ?AGENT OilCompany) 
+ (subclass ?ARTIFACT_TYPE 
+ (IndustryInfrastructureReqFn OilIndustry))) 
+ (intendedBeneficiary ?MAKAGREEMENT ?AGENT)) 
+
+(propositionalInfoAbout #$HYP-Agreement-17853218 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn OilPipeline)))) 
+
+(instance SaudiAramco OilCompany) 
+
+(subclass OilPipeline 
+ (IndustryInfrastructureReqFn OilIndustry)) 
+
+(implies 
+ (and 
+ (instance ?MAKING MakingAnAgreement) 
+ (intendedBeneficiary ?MAKING ?INTEREST) 
+ (hasOwnershipIn ?AGENT ?INTEREST)) 
+ (intendedBeneficiary ?MAKING ?AGENT)) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiAramco) 
+
+(opponents SaudiArabia Iran) 
+
+(affiliatedWith Iran PFLP-GeneralCommand) 
+
+(instance PFLP-GeneralCommand TerroristGroup) 
+
+(agreeingAgents HYP-Agreement-17853218 AIOC) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiArabia) 
+
+(instance HYP-Agreement-17853218 Agreement) 
+
+(outputs HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiArabia) 
+
+(implies 
+ (and 
+ (instance ?AGREEMENT Agreement) 
+ (agreeingAgents ?AGREEMENT ?OPPAGENT) 
+ (agreeingAgents ?AGREEMENT ?OTRAGENT) 
+ (outputs ?MAKING ?AGREEMENT) 
+ (intendedBeneficiary ?MAKING ?OPPAGENT) 
+ (instance ?MAKING MakingAnAgreement) 
+ (opponents ?AGENT ?OPPAGENT) 
+ (affiliatedWith ?AGENT ?GROUP) 
+ (instance ?GROUP TerroristGroup)) 
+ (optionAvailable-ResponseToAgent ?AGENT ?OPPAGENT 
+ (CollectionSubsetFn 
+ (AttemptingFn TerroristAct) 
+ (TheSetOf ?OBJ 
+ (and 
+ (intendedMaleficiary ?OBJ ?OPPAGENT) 
+ (sponsorsAgentInAction ?AGENT ?GROUP ?OBJ)))) directingAgent)) 
+
+(opponents SaudiArabia Iran) 
+
+(opponents SaudiArabia Iran) 
+
+(implies 
+ (and 
+ (agreeingAgents ?AGREEMENT ?AGENT) 
+ (hasOwnershipIn ?OWNER ?AGENT)) 
+ (agreeingAgents ?AGREEMENT ?OWNER)) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(products HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(implies 
+ (and 
+ (instance ?MAKAGREEMENT MakingAnAgreement) 
+ (outputs ?MAKAGREEMENT ?AGREE) 
+ (propositionalInfoAbout ?AGREE 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn ?ARTIFACT_TYPE)))) 
+ (agreeingAgents ?AGREE ?AGENT) 
+ (instance ?AGENT OilCompany) 
+ (subclass ?ARTIFACT_TYPE 
+ (IndustryInfrastructureReqFn OilIndustry))) 
+ (intendedBeneficiary ?MAKAGREEMENT ?AGENT)) 
+
+(propositionalInfoAbout #$HYP-Agreement-17853218 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn OilPipeline)))) 
+
+(instance SaudiAramco OilCompany) 
+
+(subclass OilPipeline 
+ (IndustryInfrastructureReqFn OilIndustry)) 
+
+(implies 
+ (and 
+ (instance ?MAKING MakingAnAgreement) 
+ (intendedBeneficiary ?MAKING ?INTEREST) 
+ (hasOwnershipIn ?AGENT ?INTEREST)) 
+ (intendedBeneficiary ?MAKING ?AGENT)) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiAramco) 
+
+(opponents SaudiArabia Iran) 
+
+(affiliatedWith Iran LebaneseHizballah) 
+
+(instance LebaneseHizballah TerroristGroup) 
+
+(agreeingAgents HYP-Agreement-17853218 AIOC) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiArabia) 
+
+(instance HYP-Agreement-17853218 Agreement) 
+
+(outputs HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiArabia) 
+
+(implies 
+ (and 
+ (instance ?AGREEMENT Agreement) 
+ (agreeingAgents ?AGREEMENT ?OPPAGENT) 
+ (agreeingAgents ?AGREEMENT ?OTRAGENT) 
+ (outputs ?MAKING ?AGREEMENT) 
+ (intendedBeneficiary ?MAKING ?OPPAGENT) 
+ (instance ?MAKING MakingAnAgreement) 
+ (opponents ?AGENT ?OPPAGENT) 
+ (affiliatedWith ?AGENT ?GROUP) 
+ (instance ?GROUP TerroristGroup)) 
+ (optionAvailable-ResponseToAgent ?AGENT ?OPPAGENT 
+ (CollectionSubsetFn 
+ (AttemptingFn TerroristAct) 
+ (TheSetOf ?OBJ 
+ (and 
+ (intendedMaleficiary ?OBJ ?OPPAGENT) 
+ (sponsorsAgentInAction ?AGENT ?GROUP ?OBJ)))) directingAgent)) 
+
+(opponents SaudiArabia Iran) 
+
+(opponents SaudiArabia Iran) 
+
+(implies 
+ (and 
+ (agreeingAgents ?AGREEMENT ?AGENT) 
+ (hasOwnershipIn ?OWNER ?AGENT)) 
+ (agreeingAgents ?AGREEMENT ?OWNER)) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(products HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(contains PersianGulfRegion SaudiArabia) 
+
+(inverse contains inRegion) 
+
+(implies 
+ (and 
+ (instance ?AGENT GeographicalAgent) 
+ (opponents ?AGENT ?OPPAGENT) 
+ (inRegion ?OPPAGENT ?REGION) 
+ (followingValue VeryLow ?VAL) 
+ (powerInRegion-Military ?AGENT ?REGION ?VAL)) 
+ (behaviorCapable ?AGENT 
+ (CollectionSubsetFn MilitaryAttack 
+ (TheSetOf ?OBJ 
+ (maleficiary ?OBJ ?OPPAGENT))) agent)) 
+
+(instance Iran GeographicalAgent) 
+
+(inRegion SaudiArabia PersianGulfRegion) 
+
+(followingValue VeryLow Low) 
+
+(powerInRegion-Military Iran PersianGulfRegion Low) 
+
+(implies 
+ (and 
+ (instance ?MAKAGREEMENT MakingAnAgreement) 
+ (outputs ?MAKAGREEMENT ?AGREE) 
+ (propositionalInfoAbout ?AGREE 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn ?ARTIFACT_TYPE)))) 
+ (agreeingAgents ?AGREE ?AGENT) 
+ (instance ?AGENT OilCompany) 
+ (subclass ?ARTIFACT_TYPE 
+ (IndustryInfrastructureReqFn OilIndustry))) 
+ (intendedBeneficiary ?MAKAGREEMENT ?AGENT)) 
+
+(propositionalInfoAbout #$HYP-Agreement-17853218 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn OilPipeline)))) 
+
+(instance SaudiAramco OilCompany) 
+
+(subclass OilPipeline 
+ (IndustryInfrastructureReqFn OilIndustry)) 
+
+(implies 
+ (and 
+ (instance ?MAKING MakingAnAgreement) 
+ (intendedBeneficiary ?MAKING ?INTEREST) 
+ (hasOwnershipIn ?AGENT ?INTEREST)) 
+ (intendedBeneficiary ?MAKING ?AGENT)) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiAramco) 
+
+(opponents SaudiArabia Iran) 
+
+(agreeingAgents HYP-Agreement-17853218 AIOC) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiArabia) 
+
+(instance HYP-Agreement-17853218 Agreement) 
+
+(outputs HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(behaviorCapable Iran 
+ (CollectionSubsetFn MilitaryAttack 
+ (TheSetOf ?OBJ 
+ (maleficiary ?OBJ SaudiArabia))) agent) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiArabia) 
+
+(implies 
+ (and 
+ (instance ?AGREEMENT Agreement) 
+ (agreeingAgents ?AGREEMENT ?OPPAGENT) 
+ (agreeingAgents ?AGREEMENT ?OTRAGENT) 
+ (outputs ?MAKING ?AGREEMENT) 
+ (intendedBeneficiary ?MAKING ?OPPAGENT) 
+ (instance ?MAKING MakingAnAgreement) 
+ (opponents ?AGENT ?OPPAGENT) 
+ (behaviorCapable ?AGENT 
+ (CollectionSubsetFn MilitaryAttack 
+ (TheSetOf ?OBJ 
+ (maleficiary ?OBJ ?OPPAGENT))) agent)) 
+ (optionAvailable-ResponseToAgent ?AGENT ?OPPAGENT 
+ (CollectionSubsetFn 
+ (AttemptingFn MilitaryAttack) 
+ (TheSetOf ?OBJ 
+ (intendedMaleficiary ?OBJ ?OPPAGENT))) agent)) 
+
+(opponents SaudiArabia Iran) 
+
+(opponents SaudiArabia Iran) 
+
+(implies 
+ (and 
+ (agreeingAgents ?AGREEMENT ?AGENT) 
+ (hasOwnershipIn ?OWNER ?AGENT)) 
+ (agreeingAgents ?AGREEMENT ?OWNER)) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiAramco) 
+
+(hasOwnershipIn SaudiArabia SaudiAramco) 
+
+(products HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(internationalOrg-MemberCountry UnitedNationsOrganization Iran) 
+
+(implies 
+ (hasMembers UnitedNationsOrganization ?STATE) 
+ (groupMembers InternationalCommunity ?STATE)) 
+
+(hasMembers UnitedNationsOrganization Iran) 
+
+(internationalOrg-MemberCountry UnitedNationsOrganization SaudiArabia) 
+
+(hasMembers UnitedNationsOrganization SaudiArabia) 
+
+(implies 
+ (and 
+ (groupMembers InternationalCommunity ?AGENT) 
+ (different ?AGENT ?OTRAGENT) 
+ (groupMembers InternationalCommunity ?OTRAGENT)) 
+ (behaviorCapable ?AGENT 
+ (CollectionSubsetFn DiplomaticProtest 
+ (TheSetOf ?OBJ 
+ (recipientOfInfo ?OBJ ?OTRAGENT))) senderOfInfo)) 
+
+(groupMembers InternationalCommunity Iran) 
+
+(groupMembers InternationalCommunity SaudiArabia) 
+
+(implies 
+ (and 
+ (instance ?MAKAGREEMENT MakingAnAgreement) 
+ (outputs ?MAKAGREEMENT ?AGREE) 
+ (propositionalInfoAbout ?AGREE 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn ?ARTIFACT_TYPE)))) 
+ (agreeingAgents ?AGREE ?AGENT) 
+ (instance ?AGENT OilCompany) 
+ (subclass ?ARTIFACT_TYPE 
+ (IndustryInfrastructureReqFn OilIndustry))) 
+ (intendedBeneficiary ?MAKAGREEMENT ?AGENT)) 
+
+(propositionalInfoAbout #$HYP-Agreement-17853218 
+ (thereExists ?CONSTRUCTING 
+ (instance ?CONSTRUCTING 
+ (MakingFn OilPipeline)))) 
+
+(instance SaudiAramco OilCompany) 
+
+(subclass OilPipeline 
+ (IndustryInfrastructureReqFn OilIndustry)) 
+
+(implies 
+ (and 
+ (instance ?MAKING MakingAnAgreement) 
+ (intendedBeneficiary ?MAKING ?INTEREST) 
+ (hasOwnershipIn ?AGENT ?INTEREST)) 
+ (intendedBeneficiary ?MAKING ?AGENT)) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiAramco) 
+
+(opponents SaudiArabia Iran) 
+
+(agreeingAgents HYP-Agreement-17853218 SaudiArabia) 
+
+(instance HYP-Agreement-17853218 Agreement) 
+
+(outputs HYP-MakingAnAgreement-55326439 HYP-Agreement-17853218) 
+
+(behaviorCapable Iran 
+ (CollectionSubsetFn DiplomaticProtest 
+ (TheSetOf ?OBJ 
+ (recipientOfInfo ?OBJ SaudiArabia))) senderOfInfo) 
+
+(instance HYP-MakingAnAgreement-55326439 MakingAnAgreement) 
+
+(intendedBeneficiary HYP-MakingAnAgreement-55326439 SaudiArabia) 
+
+(implies 
+ (and 
+ (instance ?AGREEMENT Agreement) 
+ (agreeingAgents ?AGREEMENT ?OTRAGENT) 
+ (agreeingAgents ?AGREEMENT ?OPPAGENT) 
+ (outputs ?MAKING ?AGREEMENT) 
+ (intendedBeneficiary ?MAKING ?OPPAGENT) 
+ (instance ?MAKING MakingAnAgreement) 
+ (opponents ?AGENT ?OPPAGENT) 
+ (behaviorCapable ?AGENT 
+ (CollectionSubsetFn DiplomaticProtest 
+ (TheSetOf ?OBJ 
+ (recipientOfInfo ?OBJ ?OTRAGENT))) senderOfInfo)) 
+ (optionAvailable-ResponseToAgent ?AGENT ?OTRAGENT 
+ (CollectionSubsetFn DiplomaticProtest 
+ (TheSetOf ?OBJ 
+ (thereExists ?INFO 
+ (and 
+ (recipientOfInfo ?OBJ ?OTRAGENT) 
+ (infoTransferred ?OBJ ?INFO) 
+ (disapprovedStatement ?INFO 
+ (agreeingAgents ?AGREEMENT ?OPPAGENT)))))) senderOfInfo))
+ 
+(query (finall (?ROLE ?WHAT)
+                      (implies 
+                         (and 
+                             (genlMtSpecification 
+                                 (TheSetOf ?OBJ 
+                                     (mtTime ?OBJ 
+                                         (TimeIntervalInclusiveFn 
+                                             (DateInSituationFn CalendarDay 1 Y2ScenarioConflict) 
+                                             (DateInSituationFn CalendarDay 30 Y2ScenarioConflict))))) 
+                             (instance ?MAKINGAGREEMENT MakingAnAgreement) 
+                             (products ?MAKINGAGREEMENT ?AGREE) 
+                             (instance ?AGREE Agreement) 
+                             (agreeingAgents ?AGREE SaudiAramco) 
+                             (agreeingAgents ?AGREE AIOC) 
+                             (propositionalInfoAbout ?AGREE 
+                                 (thereExists ?CONSTRUCTING 
+                                     (instance ?CONSTRUCTING 
+                                         (MakingFn OilPipeline))))) 
+                         (optionAvailable-ResponseToAgent Iran SaudiArabia ?WHAT ?ROLE))))

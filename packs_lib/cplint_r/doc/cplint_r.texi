@@ -1,0 +1,593 @@
+\input texinfo @c -*-texinfo-*-
+
+@settitle Cplint R Manual
+@include my-bib-macros.texi
+@mybibuselist{References}
+@paragraphindent none
+
+@c DOCUMENT LICENSE FOLLOWS.
+@copying
+Copyright @copyright{} 2016-2017 Franco Masotti @email{franco.masotti@@student.unife.it}
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+@end copying
+
+@titlepage
+@title Cplint R Documentation
+@subtitle program version 1.0.0
+@author Franco Masotti
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c Output the table of the contents at the beginning.
+@contents
+
+@ifnottex
+@node Top
+@top Cplint R
+
+This manual is for Cplint R program version 1.0.0
+
+@menu
+* Description::     A brief description of what this is all about
+* Installation::    Installation procedures on various systems
+* Examples::        Trivial examples to explain how to use the library
+* Protocol::        Formal descriprion of the protocol
+* Development::     A thorough description on how to develop this library
+* Thanks::          People and communities
+* @mybibnode{}::    References to the technologies used
+@end menu
+@end ifnottex
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Description
+@chapter About
+@section About
+The purpose of this library is to provide an interface between
+the Cplint@footnote{@mybibcite{Cplint}} suite for 
+SWI Prolog@footnote{@mybibcite{SWI Prolog}}
+and R@footnote{@mybibcite{R}}
+to handle charts made with the ggplot2@footnote{@mybibcite{ggplot2}} package.
+
+This means that most C3js@footnote{@mybibcite{C3js}}
+charting functions of Cplint are also available for R.
+
+@section Terminology
+In order to simplify the understanding of this document, a minimal set of
+terminology is necessary:
+
+@itemize @bullet
+@item
+Any code between @code{<} @code{>} represents pseudocode.
+
+@item
+The symbol @code{#} represents an unsigned integer or the @code{root} user, 
+depending on the context.
+
+@item
+Optional code or parameters are encapsuled between @code{[} @code{]}.
+
+@end itemize
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Installation
+@chapter Installation
+Cplint R is provided as part of the
+Cplint on SWISH@footnote{@mybibcite{Cplint on SWISH}}
+package. This is the recomended and simplest way to obtain a working
+installation without too much trouble.
+
+You can also install it manually with @command{pack_install('cplint_r').}
+using the @command{swipl} command on UNIX-like systems. Unfortunately, doing 
+this is not enough since you need to setup an R environment with the 
+components described in the following section. For more information, have a
+look at the
+SWISH Installer Manual@footnote{@mybibcite{SWISH Installer Manual}}
+
+@section Dependencies
+Cplint R has both Prolog and R dependencies:
+
+@subsection Prolog
+@itemize @bullet
+@item
+Cplint
+
+@item
+Rserve Client@footnote{@mybibcite{Rserve Client}}
+
+@item
+R SWISH library@footnote{@mybibcite{R SWISH}}
+
+@end itemize
+
+@subsection R
+@itemize @bullet
+@item
+ggplot2
+
+@item
+Rserve@footnote{@mybibcite{Rserve}}
+
+@item
+gridExtra@footnote{@mybibcite{gridExtra}}
+
+@end itemize
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Examples
+@chapter Examples
+@section Gaussian mean estimation
+The following is the content of @file{gauss_mean_est_R.pl}.
+
+@verbatiminclude example.pl
+
+Using @code{?- dens_lw(1000)} as query the following chart is produced:
+
+@image{example_out,5in}
+
+@section Other examples
+For other examples see all the files ending in "_R.pl" on 
+@uref{https://github.com/friguzzi/swish/tree/master/examples/inference}
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Protocol
+@chapter Protocol
+@section Interface
+The following is a list of exported predicates available
+to the library users'.
+
+Each predicate corresponds to one of the following categories
+@itemize @bullet
+@item Helper: specific of this library.
+
+@item Pita: part of Cplint.
+
+@item Mcintyre: part of Cplint.
+
+@item Auc: part of Cplint.
+@end itemize
+
+Each argument of a predicate correponds to a data type. See
+the SWI Prolog data types manual@footnote{@mybibcite{SWI Prolog data types}} 
+and the Learn Prolog Now manual@footnote{@mybibcite{LPN}}.
+Have a look at the Cplint help manual@footnote{@mybibcite{Cplint}} to learn in 
+details about the functionality of each predicate.
+
+@deffn{Helper} build_xy_list@
+(+@var{X}:list,@
++@var{Y}:list,@
+-@var{Out}:list) is det
+Given to lists @var{X} and @var{Y} build an output list @var{Out}
+in the form @code{[X1-Y1,X2-Y2,...,XN-YN]}.
+@end deffn
+
+@deffn{Helper} r_row@
+(+@var{X}:atom,@
++@var{Y}:atom,@
+-@var{Out}:atom) is det
+Given two atoms @var{X} and @var{Y}, build the term @code{r(X,Y)}
+in @var{Out}.
+@end deffn
+
+@deffn{Helper} get_set_from_xy_list@
+(+@var{L}:list,@
+-@var{R}:list) is det
+Given an input list @var{L} in the form @code{[X1-Y1,X2-Y2,...,XN-YN]},
+transform it in an output list @var{R} in the form
+@code{[r(X1,Y1),r(X2,Y2),...,r(XN,YN)]}.
+This means that @code{R} will contain an X-Y relationship
+which can be then passed to an R data frame.
+@end deffn
+
+@deffn{Pita} prob_bar_r@
+(:@var{Query}:atom) is nondet
+The predicate computes and plots the probability of @var{Query}
+as a bar chart with a bar for the probability of @var{Query} true and
+a bar for the probability of @var{Query} false.
+If @var{Query} is not ground, it returns in backtracking all ground
+instantiations of @var{Query} together with their probabilities.
+@end deffn
+
+@deffn{Pita} prob_bar_r@
+(:@var{Query}:atom,@
+:@var{Evidence}:atom) is nondet
+The predicate computes and plots the probability of @var{Query}
+given @var{Evidence}
+as a bar chart with a bar for the probability of @var{Query} true and
+a bar for the probability of @var{Query} false given @var{Evidence}.
+If @var{Query} / @var{Evidence} are not ground, it returns in backtracking all 
+ground
+instantiations of @var{Query} / @var{Evidence} together with their 
+probabilities.
+@end deffn
+
+@deffn{Mcintyre} mc_prob_bar_r@
+(:@var{Query}:atom,@
+-@var{Probability}:dict) is det
+See prob_bar_r/2.
+@end deffn
+
+@deffn{Mcintyre} mc_sample_bar_r@
+(:@var{Query}:atom,@
++@var{Samples}:int) is det
+The predicate samples @var{Query} a number of @var{Samples} times and
+plots a bar chart with a bar for the number of successes and a bar for the
+number of failures.
+If @var{Query} is not ground, it considers it as an existential query.
+@end deffn
+
+@deffn{Mcintyre} mc_sample_arg_bar_r@
+(:@var{Query}:atom,@
++@var{Samples}:int,@
+?@var{Arg}:var) is det
+The predicate samples @var{Query} @var{Samples} times. @var{Arg} should be a variable
+in @var{Query}.
+The predicate plots a bar chart
+with a bar for each possible value of L,
+the list of values of @var{Arg} for which @var{Query} succeeds in
+a world sampled at random.
+The size of the bar is the number of samples
+returning that list of values.
+@end deffn
+
+@deffn{Mcintyre} mc_sample_arg_first_bar_r@
+(:@var{Query}:atom,@
++@var{Samples}:int,@
+?@var{Arg}:var) is det
+The predicate samples @var{Query} @var{Samples} times. @var{Arg} should be a variable
+in @var{Query}.
+The predicate plots a bar chart
+with a bar for each value of @var{Arg} returned as a first answer by @var{Query} in
+a world sampled at random.
+The size of the bar is the number of samples that returned that value.
+The value is failure if the query fails.
+@end deffn
+
+@deffn{Mcintyre} mc_rejection_sample_arg_bar_r@
+(:@var{Query}:atom,@
+:@var{Evidence}:atom,@
++@var{Samples}:int,@
+?@var{Arg}:var) is det
+The predicate calls @code{mc_rejection_sample_arg/5} and builds an R graph
+of the results.
+It plots a bar chart with a bar for each possible value of L,
+the list of values of @var{Arg} for which @var{Query} succeeds
+given that @var{Evidence} is true
+The size of the bar is the number of samples
+returning that list of values.
+@end deffn
+
+@deffn{Mcintyre} mc_mh_sample_arg_bar_r@
+(:@var{Query}:atom,@
+:@var{Evidence}:atom,@
++@var{Samples}:int,@
++@var{Lag}:int,@
+?@var{Arg}:var) is det
+The predicate calls @code{mc_mh_sample_arg/6} and builds an R graph
+of the results.
+The predicate plots a bar chart
+with a bar for each possible value of L,
+the list of values of @var{Arg} for which @var{Query} succeeds in
+a world sampled at random.
+The size of the bar is the number of samples
+returning that list of values.
+@end deffn
+
+@deffn{Mcintyre} mc_mh_sample_arg_bar_r@
+(:@var{Query}:atom,@
+:@var{Evidence}:atom,@
++@var{Samples}:int,@
++@var{Mix}:int,@
++@var{Lag}:int,@
+?@var{Arg}:var) is det
+The predicate calls @code{mc_mh_sample_arg/7} and builds an R graph
+of the results.
+The predicate plots a bar chart
+with a bar for each possible value of L,
+the list of values of @var{Arg} for which @var{Query} succeeds in
+a world sampled at random.
+The size of the bar is the number of samples
+returning that list of values.
+@end deffn
+
+@deffn{Mcintyre} histogram_r@
+(+@var{List}:list,@
++@var{NBins}:int) is det
+Draws a histogram of the samples in List dividing the domain in
+@var{NBins} bins. @var{List} must be a list of couples of the form [V]-W or V-W
+where V is a sampled value and W is its weight.
+@end deffn
+
+@deffn{Mcintyre} density_r@
+(+@var{List}:list) is det
+Display a smooth density estimate of a sets of samples.
+The samples are in @var{List}
+as couples V-W where V is a value and W its weigth.
+@end deffn
+
+
+@deffn{Mcintyre} densities_r@
+(+@var{PriorList}:list,@
++@var{PostList}:list) is det
+Display a smooth density estimate of two sets of samples, usually
+prior and post observations. The samples from the prior are in @var{PriorList}
+while the samples from the posterior are in @var{PostList}
+as couples V-W where V is a value and W its weigth.
+@end deffn
+
+
+@deffn{Auc} compute_areas_diagrams_r@
+(+@var{LG}:list,@
+-@var{AUCROC}:float,@
+-@var{AUCPR}:float) is det
+The predicate takes as input
+a list @var{LG} of pairs probability-literal in asceding order on probability
+where the literal can be an Atom (incading a positive example) or \+ Atom,
+indicating a negative example while the probability is the probability of
+Atom of being true. PR and ROC diagrams are plotted.
+The predicate returns:
+@itemize
+@item
+@var{AUCROC}: the size of the area under the ROC curve
+
+@item
+@var{AUCPR}: the size of the area under the PR curve
+@end itemize
+
+See @uref{http://cplint.lamping.unife.it/example/exauc.pl} for an example.
+@end deffn
+
+@section Internals
+Important predicates in this library follow a common structure to avoid 
+confusion and promote standardization.
+
+Interface predicates are involved in the interaction between input data from a 
+program and the plot of that same data. These predicates are usable from the 
+programs.
+
+As the name suggests, plotting predicates are only involved in plotting the 
+data.
+
+Finally there are other functions which handle the lists and other types of 
+data.
+
+@subsection Interface predicates
+All interface predicates have a similar structure. Their names
+end with @code{_r} (except the Helpers) in order to distinguish them from the 
+original Cplint predicates.
+
+First and last operations are always @code{load_r_libraries} and 
+@code{finalize_r_graph} respectively.
+
+Plotting is done right before the last operation with one of the @code{geom_}
+predicates.
+
+A skeleton of the structure follows.
+@verbatim
+<cplint_graphing_predicate>_r(<input>):-
+    load_r_libraries,
+    <operations on the input>,
+    geom_<something>(<new input, possibly lists>),
+    finalize_r_graph.
+@end verbatim
+
+@subsection Plotting predicates
+Predicates directly involved in plotting all start with @code{geom_} as prefix.
+
+These predicates work with lists which are then transformed into R data frames, 
+and, as a final instruction, a corresponding plot is generated.
+
+You can visualize the structure with the following pseudocode:
+@verbatim
+geom_<something>(<Lists and/or other input>) :-
+    <handle lists>,
+    <create one or more R data frame with the lists data>,
+    <rename data frame colnames to avoid using default ones>,
+    <- ggplot <something>
+@end verbatim
+
+@subsection List handling
+List handling is useful to pass information between Prolog and
+R. This is done thanks to @command{build_xy_list/3}, @command{r_row/3} 
+and @command{get_set_from_xy_list/2} predicates, 
+described in the interface section.
+
+In case there are multiple distributions we simply have to call
+@code{get_set_from_xy_list/2} the appropriate number of times,
+like: @code{get_set_from_xy_list(<something>,R#)}.
+
+@subsection Main data frame creation
+As descibed before, a data frame is useful to pass 
+structured information between Prolog and R.
+
+In Cplint R in particular, we use @code{r_data_frame_from_rows/2} provided by
+the Rserve Client library, in the following
+manner:
+@verbatim
+r_data_frame_from_rows(df[#], R[#])
+@end verbatim
+
+For each distribution the optional number is incremented by one.
+
+In case it is the last (or only) data frame then its name
+will simply be @code{df}.
+
+@subsection Helpers
+What follows are extracts of some trivial predicates indicated as internal 
+helpers.
+
+@verbatim
+bin_width(Min,Max,NBins,Width) :-
+  D is Max-Min,
+  Width is D/NBins.
+
+load_r_libraries :-
+    <- library("ggplot2").
+
+finalize_r_graph :-
+    r_download.
+@end verbatim
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Development
+@chapter Development
+@section Changing the library
+You are welcomed to change this library. In order to test it you simply have to
+place you modified version in the correct path and restart SWISH. If you have 
+used the packages provided with SWISH Installer this can be achieved with the 
+following:
+@verbatim
+# mv <your_modified_cplint_r_library> /home/swish/lib/swipl/pack/cplint_r/prolog/cplint_r.pl
+# systemctl restart swish-cplint
+@end verbatim
+
+@section Compiling this documentation
+The source of this documentation is under the @file{doc}
+directory of the repository.
+
+To be able to compile it, you have to install several tex packages
+(for example: @code{texlive-most} and @code{texi2html} if you are using
+Arch Linux) that contain the following binaries:
+
+@verbatim
+makeinfo
+texi2dvi
+docbook2html
+docbook2pdf
+docbook2txt
+texi2html
+perl
+@end verbatim
+
+After running @command{make}, a directory named @file{manual}
+will be created and you can access all the files by opening
+@file{index.html} with a browser.
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Thanks
+@chapter Thanks
+Fabrizio Riguzzi for developement, testing and feedback.
+
+Raivo Laanemets for a blog
+article@footnote{@mybibcite{Prolog pack development experience}}
+on how to write SWI Prolog packs.
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node @mybibnode{}
+@chapter References
+
+Some quotations reported here are taken directly from the respective web sites.
+@*
+
+@itemize @bullet
+
+@mybibitem{Cplint} "A suite of programs for reasoning with probabilistic
+logic programs". See @uref{https://github.com/friguzzi/cplint} and
+@uref{https://github.com/friguzzi/cplint/blob/master/doc/help-cplint.pdf} for 
+the Cplint help manual.
+@*
+
+@mybibitem{SWI Prolog} "SWI-Prolog offers a comprehensive 
+free Prolog environment.
+Since its start in 1987, SWI-Prolog development has been driven by the needs
+of real world applications. SWI-Prolog is widely used in research and
+education as well as commercial applications". See
+@uref{http://www.swi-prolog.org/}
+@*
+
+@mybibitem{R} "R is an integrated suite of software facilities for data 
+manipulation, calculation and graphical display". 
+See @uref{https://cran.r-project.org/doc/manuals/r-release/R-intro.html}
+@*
+
+@mybibitem{ggplot2} "ggplot2 is a plotting system for R, based on the grammar 
+of graphics, which tries to take the good parts of base and lattice graphics 
+and none of the bad parts. It takes care of many of the fiddly details that 
+make plotting a hassle (like drawing legends) as well as providing a powerful 
+model of graphics that makes it easy to produce complex multi-layered 
+graphics".
+See @uref{http://ggplot2.org/}
+@*
+
+@mybibitem{gridExtra} "Miscellaneous Functions for "Grid" Graphics.
+Provides a number of user-level functions to work with "grid" graphics, 
+notably to arrange multiple grid-based plots on a page, and draw tables".
+See @uref{https://github.com/baptiste/gridextra}
+@*
+
+@mybibitem{C3js} "C3 enables deeper integration of charts into your 
+application".
+See @uref{http://c3js.org/}
+@*
+
+@mybibitem{SWI Prolog data types} See 
+@uref{http://www.swi-prolog.org/datatypes.html}.
+@*
+
+@mybibitem{LPN} "Learn Prolog Now". See 
+@uref{http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlch1}.
+@*
+
+@mybibitem{Cplint on SWISH} "A set of packages that are able to build and 
+install SWISH, Cplint on SWISH and an R environment". 
+See @uref{https://frnmst.github.io/swish-installer/}
+@*
+
+@mybibitem{Rserve Client} "SWI-Prolog/SWISH client for Rserve".
+"The container exposes Rserve using a Unix-domain socket in 
+/home/rserve/socket".
+See @uref{https://github.com/JanWielemaker/rserve_client}
+@*
+
+@mybibitem{R SWISH} A library that talks between SWISH and Rserve.
+See @uref{https://github.com/SWI-Prolog/swish/blob/master/lib/r_swish.pl}
+@*
+
+@mybibitem{Rserve} "Rserve is a TCP/IP server which allows other programs to 
+use facilities of R (see www.r-project.org) from various languages without the 
+need to initialize R or link against R library."
+See @uref{https://www.rforge.net/Rserve/}
+@*
+
+@mybibitem{SWISH Installer Manual} See 
+@uref{https://frnmst.github.io/swish-installer/}
+@*
+
+@mybibitem{Prolog pack development experience} See 
+@uref{https://rlaanemets.com/post/show/prolog-pack-development-experience}
+
+@end itemize
+
+@bye

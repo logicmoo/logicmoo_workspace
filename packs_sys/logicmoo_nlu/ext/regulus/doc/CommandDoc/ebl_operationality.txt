@@ -1,0 +1,1 @@
+Relevant to applications using grammar specialisation. Specifies the operationality criteria.

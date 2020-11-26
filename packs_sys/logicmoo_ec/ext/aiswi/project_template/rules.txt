@@ -1,0 +1,22 @@
+% Regola per avere le variabili ground nelle celle
+H(sono(X,Y,C,F),_)
+--->cell(X,Y,C,F).
+
+% Questa regola serve veramente?
+% H(sono(X,Y,C,F),T)
+% /\ H(sono(X2,Y2,C2,F2),T)
+% ---> X=X2 /\ Y=Y2 /\ C=C2 /\ F=F2.
+
+% Non puoi restare fermo nella stessa cella
+H(start,0.0)
+/\ H(sono(X,Y,C,F),T)
+--->EN(sono(X,Y,C,F), T2) /\ T2==T+1.0.
+
+% Cella iniziale (0,0,yellow,arm)
+H(start,0.0)
+--->E(sono(0,0,yellow,arm),0.0).
+
+% Cella finale (7,7,default,home) e non mi aspetto altri eventi in seguito
+H(start,0.0)
+--->E(sono(7,7,default,home),T) /\ T > 0
+/\ EN(sono(_,_,_,_),T2) /\ T2 > T.

@@ -1,0 +1,39 @@
+#!/usr/bin/env swipl
+%
+%  PFC is aaa language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+
+%  was_module(header_sane,[]).
+:- include(test_header).
+/*
+:- rtrace.
+:- set_prolog_flag(retry_undefined, none).
+:- set_prolog_flag(gc,true),garbage_collect.
+% :- make.
+:- set_prolog_flag(retry_undefined, kb_shared).
+*/
+
+
+(aa(A),bb(A,C),cc(C)) ==> dd(A,C).
+
+aa(x). bb(x,z). cc(t).
+aa(y). bb(y,x). cc(y).
+aa(y). bb(y,t). cc(z).
+bb(z,y). cc(x).
+bb(z,r). cc(r).
+
+
+:- mpred_must(dd(y,x)).
+:- mpred_must(dd(x,z)).
+:- mpred_must(dd(y,t)).
+
+aa(z). 
+
+:- mpred_must(dd(z,y)).
+:- mpred_must(dd(z,r)).
+
+
+

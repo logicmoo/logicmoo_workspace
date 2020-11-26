@@ -1,0 +1,14 @@
+(note "syllogism soundness check2")
+
+
+(not (exists ?X (and (M1 ?X) (P1 ?X))))
+
+(not (exists ?X (and (S1 ?X) (M1 ?X))))
+
+(queryyn 
+(not (exists ?X (and (S1 ?X) (P1 ?X))))
+)
+
+(answer Unproven)
+
+(end_of_file)

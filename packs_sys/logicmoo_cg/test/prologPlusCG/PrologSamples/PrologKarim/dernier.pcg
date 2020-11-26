@@ -1,0 +1,2 @@
+dernier([e], e).
+dernier([_|q], e) :- dernier(q, e).

@@ -1,0 +1,30 @@
+
+.MAIN
+[
+  ( PLURAL_NP:np ) { < value $np > }
+  ( SINGULAR_NP:np ) { < value $np > } 
+]
+
+SINGULAR_NP
+( SINGULAR_SPEC:s SINGULAR_NOUN:n )
+     {return( ( ( spec $s ) ( noun $n ) ) )} 
+
+PLURAL_NP
+( PLURAL_SPEC:s PLURAL_NOUN:n )
+     {return( ( ( spec $s ) ( noun $n ) ) )} 
+
+SINGULAR_NOUN
+[ 
+  dog {return( canis_domesticus )}
+  cat {return( felis_domesticus )} 
+]
+
+PLURAL_NOUN
+[ 
+  dogs {return( canis_domesticus )}
+  cats {return( felis_domesticus )} 
+]
+
+SINGULAR_SPEC one {return( 1 )}
+
+PLURAL_SPEC two {return( 2 )}

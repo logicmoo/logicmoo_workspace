@@ -1,0 +1,4617 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name />
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>Francais</Language>
+  </Languages>
+  <MainLanguage>Francais</MainLanguage>
+  <RelationRoot>relation</RelationRoot>
+  <Root>
+    <Key>universel</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>universel</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>universel</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>relation</Key>
+        </Child>
+        <Child>
+          <Key>attribut</Key>
+        </Child>
+        <Child>
+          <Key>objet</Key>
+        </Child>
+        <Child>
+          <Key>action</Key>
+        </Child>
+        <Child>
+          <Key>animal</Key>
+        </Child>
+        <Child>
+          <Key>diagnostic</Key>
+        </Child>
+        <Child>
+          <Key>moyens_de_prevention</Key>
+        </Child>
+        <Child>
+          <Key>traitement</Key>
+        </Child>
+        <Child>
+          <Key>pathologie_aviaire</Key>
+        </Child>
+        <Child>
+          <Key>signe</Key>
+        </Child>
+        <Child>
+          <Key>autre</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>autre</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>autre</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>desinfectant</Key>
+        </Child>
+        <Child>
+          <Key>gram</Key>
+        </Child>
+        <Child>
+          <Key>spore</Key>
+        </Child>
+        <Child>
+          <Key>poids</Key>
+        </Child>
+        <Child>
+          <Key>segment</Key>
+        </Child>
+        <Child>
+          <Key>proposition</Key>
+        </Child>
+        <Child>
+          <Key>composants_et_determinants</Key>
+        </Child>
+        <Child>
+          <Key>salmonella</Key>
+        </Child>
+        <Child>
+          <Key>transmission</Key>
+        </Child>
+        <Child>
+          <Key>large_groupe</Key>
+        </Child>
+        <Child>
+          <Key>evolution</Key>
+        </Child>
+        <Child>
+          <Key>caracteristique</Key>
+        </Child>
+        <Child>
+          <Key>milieu</Key>
+        </Child>
+        <Child>
+          <Key>exterieur</Key>
+        </Child>
+        <Child>
+          <Key>jeu</Key>
+        </Child>
+        <Child>
+          <Key>zone</Key>
+        </Child>
+        <Child>
+          <Key>groupe</Key>
+        </Child>
+        <Child>
+          <Key>systeme</Key>
+        </Child>
+        <Child>
+          <Key>leucose_lymphoide</Key>
+        </Child>
+        <Child>
+          <Key>troupeau</Key>
+        </Child>
+        <Child>
+          <Key>ponte</Key>
+        </Child>
+        <Child>
+          <Key>barbillon</Key>
+        </Child>
+        <Child>
+          <Key>rale</Key>
+        </Child>
+        <Child>
+          <Key>lymphocytaire</Key>
+        </Child>
+        <Child>
+          <Key>lymphoide</Key>
+        </Child>
+        <Child>
+          <Key>vers</Key>
+        </Child>
+        <Child>
+          <Key>plat</Key>
+        </Child>
+        <Child>
+          <Key>anneau</Key>
+        </Child>
+        <Child>
+          <Key>rapteur</Key>
+        </Child>
+        <Child>
+          <Key>symptome</Key>
+        </Child>
+        <Child>
+          <Key>longueur</Key>
+        </Child>
+        <Child>
+          <Key>conjugaison</Key>
+        </Child>
+        <Child>
+          <Key>face</Key>
+        </Child>
+        <Child>
+          <Key>transsudat</Key>
+        </Child>
+        <Child>
+          <Key>cavite</Key>
+        </Child>
+        <Child>
+          <Key>droit</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>droit</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>droit</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>cavite</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>cavite</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>transsudat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>transsudat</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>face</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>face</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>conjugaison</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>conjugaison</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>longueur</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>longueur</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>symptome</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>symptome</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>rapteur</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>rapteur</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>anneau</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>anneau</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>plat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>plat</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>vers</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>vers</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>lymphoide</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>lymphoide</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>lymphocytaire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>lymphocytaire</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>rale</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>rale</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>barbillon</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>barbillon</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ponte</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>ponte</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>troupeau</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>troupeau</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>leucose_lymphoide</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>leucose_lymphoide</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>systeme</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>systeme</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>groupe</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>groupe</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>zone</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>zone</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>jeu</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>jeu</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>exterieur</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>exterieur</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>milieu</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>milieu</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>caracteristique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>caracteristique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>evolution</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>evolution</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>large_groupe</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>large_groupe</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>transmission</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>transmission</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>salmonella</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>salmonella</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>composants_et_determinants</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>composants_et_determinants</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>proposition</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>proposition</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>segment</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>segment</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>poids</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>poids</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>spore</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>spore</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>gram</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>gram</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>desinfectant</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>desinfectant</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>autre</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>signe</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>signe</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>perte</Key>
+        </Child>
+        <Child>
+          <Key>diminution</Key>
+        </Child>
+        <Child>
+          <Key>production</Key>
+        </Child>
+        <Child>
+          <Key>infection</Key>
+        </Child>
+        <Child>
+          <Key>lesion</Key>
+        </Child>
+        <Child>
+          <Key>affection</Key>
+        </Child>
+        <Child>
+          <Key>deffaillance</Key>
+        </Child>
+        <Child>
+          <Key>rupture</Key>
+        </Child>
+        <Child>
+          <Key>accumulation</Key>
+        </Child>
+        <Child>
+          <Key>inflammation</Key>
+        </Child>
+        <Child>
+          <Key>evolution</Key>
+        </Child>
+        <Child>
+          <Key>presence</Key>
+        </Child>
+        <Child>
+          <Key>ulceration</Key>
+        </Child>
+        <Child>
+          <Key>tremblement</Key>
+        </Child>
+        <Child>
+          <Key>proliferation</Key>
+        </Child>
+        <Child>
+          <Key>trouble</Key>
+        </Child>
+        <Child>
+          <Key>tropisme</Key>
+        </Child>
+        <Child>
+          <Key>salpingite</Key>
+        </Child>
+        <Child>
+          <Key>ecoulement</Key>
+        </Child>
+        <Child>
+          <Key>signe_pathologique</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>signe_pathologique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>signe_pathologique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>diarrhee</Key>
+        </Child>
+        <Child>
+          <Key>hemorragie</Key>
+        </Child>
+        <Child>
+          <Key>cellulite</Key>
+        </Child>
+        <Child>
+          <Key>tumeur</Key>
+        </Child>
+        <Child>
+          <Key>anemie</Key>
+        </Child>
+        <Child>
+          <Key>enterite</Key>
+        </Child>
+        <Child>
+          <Key>toux</Key>
+        </Child>
+        <Child>
+          <Key>abces</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>abces</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>abces</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe_pathologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>toux</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>toux</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe_pathologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>enterite</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>enterite</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe_pathologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>anemie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>anemie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe_pathologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>tumeur</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>tumeur</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe_pathologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>cellulite</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>cellulite</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe_pathologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>hemorragie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>hemorragie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe_pathologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>diarrhee</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>diarrhee</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe_pathologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ecoulement</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>ecoulement</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>salpingite</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>salpingite</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>tropisme</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>tropisme</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>trouble</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>trouble</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>proliferation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>proliferation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>tremblement</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>tremblement</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ulceration</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>ulceration</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>presence</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>presence</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>inflammation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>inflammation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>accumulation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>accumulation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>rupture</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>rupture</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>deffaillance</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>deffaillance</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>affection</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>affection</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>lesion</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>lesion</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>infection</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>infection</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>production</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>production</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>diminution</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>diminution</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>perte</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>perte</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>signe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>pathologie_aviaire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>pathologie_aviaire</Synonym>
+            <Synonym>maladie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>pathologie_selon_etiologie</Key>
+        </Child>
+        <Child>
+          <Key>organopathie</Key>
+        </Child>
+        <Child>
+          <Key>pathologieDe_AaZ</Key>
+        </Child>
+        <Child>
+          <Key>groupe_pathologique</Key>
+        </Child>
+        <Child>
+          <Key>dominantes_pathologiques</Key>
+        </Child>
+        <Child>
+          <Key>epizootiologie</Key>
+        </Child>
+        <Child>
+          <Key>pathologie_de_groupe</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>pathologie_de_groupe</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>pathologie_de_groupe</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>pathologie_aviaire</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>epizootiologie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>epizootiologie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>pathologie_aviaire</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>dominantes_pathologiques</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>dominantes_pathologiques</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>pathologie_aviaire</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>groupe_pathologique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>groupe_pathologique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>pathologie_aviaire</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>pathologieDe_AaZ</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>pathologieDe_AaZ</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>pathologie_aviaire</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>organopathie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>organopathie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>pathologie_aviaire</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>pathologie_selon_etiologie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>pathologie_selon_etiologie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>pathologie_aviaire</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>traitement</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>traitement</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>moyens_de_prevention</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>moyens_de_prevention</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>diagnostic</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>diagnostic</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>animal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>animal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>poussin</Key>
+        </Child>
+        <Child>
+          <Key>dindonneau</Key>
+        </Child>
+        <Child>
+          <Key>poulet</Key>
+        </Child>
+        <Child>
+          <Key>dinde</Key>
+        </Child>
+        <Child>
+          <Key>oiseau</Key>
+        </Child>
+        <Child>
+          <Key>canard</Key>
+        </Child>
+        <Child>
+          <Key>palmipede</Key>
+        </Child>
+        <Child>
+          <Key>faison</Key>
+        </Child>
+        <Child>
+          <Key>paon</Key>
+        </Child>
+        <Child>
+          <Key>caille</Key>
+        </Child>
+        <Child>
+          <Key>pintade</Key>
+        </Child>
+        <Child>
+          <Key>oie</Key>
+        </Child>
+        <Child>
+          <Key>pigeon</Key>
+        </Child>
+        <Child>
+          <Key>mamifere</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>mamifere</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>mamifere</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>pigeon</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>pigeon</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>oie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>oie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>pintade</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>pintade</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>caille</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>caille</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>paon</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>paon</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>faison</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>faison</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>palmipede</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>palmipede</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>canard</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>canard</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>oiseau</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>oiseau</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>dinde</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>dinde</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>poulet</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>poulet</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>dindonneau</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>dindonneau</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>poussin</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>poussin</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>animal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>action</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>action</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>toucher</Key>
+        </Child>
+        <Child>
+          <Key>dessimer</Key>
+        </Child>
+        <Child>
+          <Key>produire</Key>
+        </Child>
+        <Child>
+          <Key>affecter</Key>
+        </Child>
+        <Child>
+          <Key>developper</Key>
+        </Child>
+        <Child>
+          <Key>reduire</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>reduire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>reduire</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>developper</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>developper</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>affecter</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>affecter</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>produire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>produire</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>dessimer</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>dessimer</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>toucher</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>toucher</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>objet</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>objet</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>oeuf</Key>
+        </Child>
+        <Child>
+          <Key>scolex</Key>
+        </Child>
+        <Child>
+          <Key>partie_du_corps</Key>
+        </Child>
+        <Child>
+          <Key>composante_micro_biologique</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>composante_micro_biologique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>composante_micro_biologique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>germe</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>objet</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>germe</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>germe</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>virus</Key>
+        </Child>
+        <Child>
+          <Key>champignon</Key>
+        </Child>
+        <Child>
+          <Key>bacterie</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>composante_micro_biologique</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bacterie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>bacterie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Mycobacterium_avium</Key>
+        </Child>
+        <Child>
+          <Key>EColi</Key>
+        </Child>
+        <Child>
+          <Key>Pasteurella_multocida</Key>
+        </Child>
+        <Child>
+          <Key>Haemopphilus_paragallinarm</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>germe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Haemopphilus_paragallinarm</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Haemopphilus_paragallinarm</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bacterie</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Pasteurella_multocida</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Pasteurella_multocida</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bacterie</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>EColi</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>EColi</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bacterie</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Mycobacterium_avium</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Mycobacterium_avium</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bacterie</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>champignon</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>champignon</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Mycoplasma_Synoviae</Key>
+        </Child>
+        <Child>
+          <Key>Mycoplasma_Meleagridis</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>germe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Mycoplasma_Meleagridis</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Mycoplasma_Meleagridis</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>champignon</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Mycoplasma_Synoviae</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Mycoplasma_Synoviae</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>champignon</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>virus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>virus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Arbovirus</Key>
+        </Child>
+        <Child>
+          <Key>Herpesvirus</Key>
+        </Child>
+        <Child>
+          <Key>Coronavirus</Key>
+        </Child>
+        <Child>
+          <Key>Birnavirus</Key>
+        </Child>
+        <Child>
+          <Key>Piconavirus</Key>
+        </Child>
+        <Child>
+          <Key>Pneumovirus</Key>
+        </Child>
+        <Child>
+          <Key>Paramyscovirus</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>germe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Paramyscovirus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Paramyscovirus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>virus</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Pneumovirus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Pneumovirus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>virus</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Piconavirus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Piconavirus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>virus</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Birnavirus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Birnavirus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>virus</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Coronavirus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Coronavirus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>virus</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Herpesvirus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Herpesvirus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>virus</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Arbovirus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Arbovirus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>virus</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>partie_du_corps</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>partie_du_corps</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>peau</Key>
+        </Child>
+        <Child>
+          <Key>tete</Key>
+        </Child>
+        <Child>
+          <Key>os</Key>
+        </Child>
+        <Child>
+          <Key>aorte</Key>
+        </Child>
+        <Child>
+          <Key>organe</Key>
+        </Child>
+        <Child>
+          <Key>cartilage</Key>
+        </Child>
+        <Child>
+          <Key>ventricule</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>objet</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ventricule</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>ventricule</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>partie_du_corps</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>cartilage</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>cartilage</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>partie_du_corps</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>organe</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>organe</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>rein</Key>
+        </Child>
+        <Child>
+          <Key>foie</Key>
+        </Child>
+        <Child>
+          <Key>coeur</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>partie_du_corps</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>coeur</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>coeur</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>foie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>foie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>rein</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>rein</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organe</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>aorte</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>aorte</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>partie_du_corps</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>os</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>os</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>partie_du_corps</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>tete</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>tete</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>partie_du_corps</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>peau</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>peau</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>partie_du_corps</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>scolex</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>scolex</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>objet</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>oeuf</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>oeuf</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>objet</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>attribut</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>attribut</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>multi_factoriel</Key>
+        </Child>
+        <Child>
+          <Key>plusieurs_moyens</Key>
+        </Child>
+        <Child>
+          <Key>aigu</Key>
+        </Child>
+        <Child>
+          <Key>vertical</Key>
+        </Child>
+        <Child>
+          <Key>chronique</Key>
+        </Child>
+        <Child>
+          <Key>infectieux</Key>
+        </Child>
+        <Child>
+          <Key>septicemique</Key>
+        </Child>
+        <Child>
+          <Key>blanchatre</Key>
+        </Child>
+        <Child>
+          <Key>contagieux</Key>
+        </Child>
+        <Child>
+          <Key>progressif</Key>
+        </Child>
+        <Child>
+          <Key>positif</Key>
+        </Child>
+        <Child>
+          <Key>resistant</Key>
+        </Child>
+        <Child>
+          <Key>bacterienne</Key>
+        </Child>
+        <Child>
+          <Key>soudaine</Key>
+        </Child>
+        <Child>
+          <Key>gangreneux</Key>
+        </Child>
+        <Child>
+          <Key>severe</Key>
+        </Child>
+        <Child>
+          <Key>maligne</Key>
+        </Child>
+        <Child>
+          <Key>transmissible</Key>
+        </Child>
+        <Child>
+          <Key>hematopoetique</Key>
+        </Child>
+        <Child>
+          <Key>viral</Key>
+        </Child>
+        <Child>
+          <Key>respiratoire</Key>
+        </Child>
+        <Child>
+          <Key>renal</Key>
+        </Child>
+        <Child>
+          <Key>nerveux</Key>
+        </Child>
+        <Child>
+          <Key>tumoral</Key>
+        </Child>
+        <Child>
+          <Key>aplasique</Key>
+        </Child>
+        <Child>
+          <Key>immunodepressif</Key>
+        </Child>
+        <Child>
+          <Key>caecale</Key>
+        </Child>
+        <Child>
+          <Key>necrotique</Key>
+        </Child>
+        <Child>
+          <Key>caseeux</Key>
+        </Child>
+        <Child>
+          <Key>non_emplume</Key>
+        </Child>
+        <Child>
+          <Key>occasionnel</Key>
+        </Child>
+        <Child>
+          <Key>microscopique</Key>
+        </Child>
+        <Child>
+          <Key>rapidement</Key>
+        </Child>
+        <Child>
+          <Key>osseux</Key>
+        </Child>
+        <Child>
+          <Key>ventral</Key>
+        </Child>
+        <Child>
+          <Key>interne</Key>
+        </Child>
+        <Child>
+          <Key>cardiovasculaire</Key>
+        </Child>
+        <Child>
+          <Key>abdominal</Key>
+        </Child>
+        <Child>
+          <Key>mortel</Key>
+        </Child>
+        <Child>
+          <Key>occulo_nasal</Key>
+        </Child>
+        <Child>
+          <Key>digestif</Key>
+        </Child>
+        <Child>
+          <Key>buccal</Key>
+        </Child>
+        <Child>
+          <Key>anaerobie</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>anaerobie</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>anaerobie</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>buccal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>buccal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>digestif</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>digestif</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>occulo_nasal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>occulo_nasal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>mortel</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>mortel</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>abdominal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>abdominal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>cardiovasculaire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>cardiovasculaire</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>interne</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>interne</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ventral</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>ventral</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>osseux</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>osseux</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>rapidement</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>rapidement</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>microscopique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>microscopique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>occasionnel</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>occasionnel</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>non_emplume</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>non_emplume</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>caseeux</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>caseeux</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>necrotique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>necrotique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>caecale</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>caecale</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>immunodepressif</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>immunodepressif</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>aplasique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>aplasique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>tumoral</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>tumoral</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>nerveux</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>nerveux</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>renal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>renal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>respiratoire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>respiratoire</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>viral</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>viral</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>hematopoetique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>hematopoetique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>transmissible</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>transmissible</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>maligne</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>maligne</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>severe</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>severe</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>gangreneux</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>gangreneux</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>soudaine</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>soudaine</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bacterienne</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>bacterienne</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>resistant</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>resistant</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>positif</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>positif</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>progressif</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>progressif</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>contagieux</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>contagieux</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>blanchatre</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>blanchatre</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>septicemique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>septicemique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>infectieux</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>infectieux</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>chronique</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>chronique</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>vertical</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>vertical</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>aigu</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>aigu</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>plusieurs_moyens</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>plusieurs_moyens</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>multi_factoriel</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>multi_factoriel</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attribut</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>agnt</Key>
+        </Child>
+        <Child>
+          <Key>chrc</Key>
+        </Child>
+        <Child>
+          <Key>caus</Key>
+        </Child>
+        <Child>
+          <Key>chro</Key>
+        </Child>
+        <Child>
+          <Key>infe</Key>
+        </Child>
+        <Child>
+          <Key>cant</Key>
+        </Child>
+        <Child>
+          <Key>evol</Key>
+        </Child>
+        <Child>
+          <Key>dimi</Key>
+        </Child>
+        <Child>
+          <Key>mort</Key>
+        </Child>
+        <Child>
+          <Key>niv</Key>
+        </Child>
+        <Child>
+          <Key>and</Key>
+        </Child>
+        <Child>
+          <Key>attr</Key>
+        </Child>
+        <Child>
+          <Key>obj</Key>
+        </Child>
+        <Child>
+          <Key>segm</Key>
+        </Child>
+        <Child>
+          <Key>ulcr</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>ulcr</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>ulcr</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>segm</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>segm</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>obj</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>obj</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>attr</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>attr</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>and</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>and</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>niv</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>niv</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>mort</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>mort</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>dimi</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>dimi</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>evol</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>evol</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>cant</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>cant</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>infe</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>infe</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>chro</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>chro</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>caus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>caus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>chrc</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>chrc</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>agnt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>agnt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

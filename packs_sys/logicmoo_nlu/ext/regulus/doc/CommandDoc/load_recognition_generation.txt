@@ -1,0 +1,10 @@
+Relevant to applications which use multiple parallel grammars, and
+need to convert recognition results either to the {\em original
+script} or to the {\em gloss script}. The parallel original script and
+gloss script grammars first need to be compiled into generation
+grammar form.  They must then be declared using one or both of the
+parameters {\tt original\_\-script\_\-recognition\_\-generation\_\-rules} and
+{\tt gloss\_\-recognition\_\-generation\_\-rules}. The command
+{\tt LOAD\_\-RECOGNITION\_\-GENERATION} loads any parallel
+generation grammars that may be declared.
+

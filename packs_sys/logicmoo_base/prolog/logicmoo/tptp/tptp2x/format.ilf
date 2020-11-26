@@ -1,0 +1,130 @@
+%====================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the ILF system.
+%----
+%----Written by Geoff Sutcliffe,July,1992.
+%----Modified by Andreas Haida, November,1996.
+%====================================================================
+%--------------------------------------------------------------------
+%----Code copied from format.leantap (leantab_variable/2)
+extract_ilf_variable(Variable,Variable):-
+    atom(Variable),
+    !,
+    name(Variable,[FirstASCII|_]),
+    FirstASCII >= 65,
+    FirstASCII =< 90.
+
+extract_ilf_variable('$VAR'(Index),'$VAR'(Index)):-
+    !.
+
+extract_ilf_variable([FirstTerm|RestOfTerms],Variable):-
+    !,
+    tptp2X_member(Term,[FirstTerm|RestOfTerms]),
+    extract_ilf_variable(Term,Variable).
+
+extract_ilf_variable(Function,Variable):-
+    Function =.. [_|Arguments],
+    extract_ilf_variable(Arguments,Variable).
+%--------------------------------------------------------------------
+%----Invert the sign of all elements of list of literals
+invert_ilf_clause([],[]).
+
+invert_ilf_clause([Literal|Literals],[InvLiteral|InvLiterals]):-
+    tptp2X_invert_literal(Literal,InvLiteral),
+    invert_ilf_clause(Literals,InvLiterals).
+%-------------------------------------------------------------------
+%----Output existential quantifier and quantified variables
+output_ilf_variables([SingleVar]):-
+    !,
+    write(SingleVar).
+
+output_ilf_variables([Var1,Var2|Vars]):-
+    write(Var1),
+    write(','),
+    output_ilf_variables([Var2|Vars]).
+%-------------------------------------------------------------------
+output_ilf_exists_header([]).
+
+output_ilf_exists_header([Nonempty|Rest]):-
+    write('exists(['),
+    output_ilf_variables([Nonempty|Rest]),
+    write('],(').
+%-------------------------------------------------------------------
+output_ilf_exists_trailer([]):-
+    write('.').
+
+output_ilf_exists_trailer([_Nonempty|_]):-
+    write(')).').
+%-------------------------------------------------------------------
+%----Output positive and negative literals resp.
+output_ilf_literal(++Atom):-
+    write(Atom).
+
+output_ilf_literal(--Atom):-
+    write('not '),
+    write(Atom).
+%-------------------------------------------------------------------
+%----Output signed literals
+output_ilf_literals([Literal],_,Terminator):-
+    !,
+    output_ilf_literal(Literal),
+    write(Terminator).
+
+output_ilf_literals([Literal1,Literal2|Literals],Separator,Terminator):-
+    output_ilf_literal(Literal1),
+    write(Separator),
+    output_ilf_literals([Literal2|Literals],Separator,Terminator).
+%-------------------------------------------------------------------
+%----Output a clause,preceded by it's name
+output_ilf_clause(Name,Type,Literals):-
+    tptp2X_member(Type,[axiom,hypothesis,lemma,definition]),
+    write(Name),
+    write(': '),
+    output_ilf_literals(Literals,';','.').
+
+output_ilf_clause(Name,negated_conjecture,Literals):-
+    write('domain(problem).'),
+    nl,
+    write(Name),
+    write(': '),
+    tptp2X_setof1(Variable,extract_ilf_variable(Literals,Variable),Variables),
+    output_ilf_exists_header(Variables),
+    invert_ilf_clause(Literals,InvertedLiterals),
+    output_ilf_literals(InvertedLiterals,',',''),
+    output_ilf_exists_trailer(Variables),
+    nl,
+    write('?- change_status(problem,passive).').
+%-------------------------------------------------------------------
+%----Output each clause,preceded by a comment with it's type.
+output_ilf_clauses([]):-
+    !.
+
+%----Output in sequent format
+output_ilf_clauses([input_clause(Name,Type,Literals)|RestOfClauses]):-
+    write('% '),
+    write(Type),
+    write('.'),
+    nl,
+    output_ilf_clause(Name,Type,Literals),
+    nl,
+    nl,
+    output_ilf_clauses(RestOfClauses).
+%-------------------------------------------------------------------
+%----Output the clauses,preceded by the type as a comment.
+ilf(ilf,Clauses,_):-
+    tptp_clauses(Clauses),
+    output_ilf_clauses(Clauses).
+
+%----Do nothing for FOF - just leave a comment
+ilf(ilf,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in ILF'),
+    nl.
+%-------------------------------------------------------------------
+%----Provide information about the ILF format
+ilf_format_information('%','.t').
+%-------------------------------------------------------------------
+%----Provide information about the ILF file
+ilf_file_information(format,ilf,'ILF format').
+%-------------------------------------------------------------------

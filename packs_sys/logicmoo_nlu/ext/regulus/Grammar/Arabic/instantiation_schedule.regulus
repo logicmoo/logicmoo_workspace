@@ -1,0 +1,19 @@
+
+feature_instantiation_schedule(
+	[[inv],
+	 [subcat],
+	 [composé],
+	 [specified],
+	 [gapsin, gapsout],
+	 [position],
+	 [vform],
+	 [agr],
+	 [prep_type],
+	 [part],
+	 [sem_np_type],
+	 [compl_sem_type],
+	 [compl_pp_sem_type],
+	 [subj_np_type],
+	 [obj_np_type],
+	 [sem_pp_type]
+	]).

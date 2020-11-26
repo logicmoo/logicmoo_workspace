@@ -1,0 +1,720 @@
+
+include('$REGULUS/Grammar/Scandinavian/gen_lex.regulus').
+include('$REGULUS/Grammar/Scandinavian/gen_content_word_macros.regulus').
+include('$REGULUS/Grammar/Scandinavian/English/eng_content_word_macros.regulus').
+
+macro(thing_type, (\(agent\/numeric\/date\/time\/unit\/timeunit\/frequency\/none))).
+
+% Interjections
+
+interjection:[@yes_features] --> yes.
+interjection:[@yes_features] --> yeah.
+interjection:[@yes_features] --> affirmative.
+interjection:[@yes_features] --> sure.
+interjection:[@yes_features] --> correct.
+interjection:[@yes_features] --> right.
+interjection:[@yes_features] --> fine.
+interjection:[@no_features] --> no.
+interjection:[@no_features] --> no, no.
+interjection:[@no_features] --> negative.
+%interjection:[@no_features] --> cancel.
+interjection:[@no_features] --> wrong.
+interjection:[@yes_features] --> that,'\'s',right.
+interjection:[@yes_features] --> that,'\'s',fine.
+
+interjection:[@okay_features] --> okay.
+
+interjection:[@correction_features] --> ?no, i, said.
+interjection:[@correction_features] --> ?no, i, meant.
+
+interjection:[sem= @interjection_sem(whatever), interjection_type=whatever] --> whatever.
+
+% Politeness
+
+politeness:[sem= @politeness_sem(please), politeness_pos=post, stype=dcl\/imp\/ynq\/whq\/ellipsis] --> please.
+politeness:[sem= @politeness_sem(please), politeness_pos=pre, stype=imp\/ynq\/whq\/none] --> please.
+
+politeness:[@thank_you_post_features] --> thank, you.
+politeness:[@thank_you_post_features] --> thanks.
+
+politeness:[@thank_you_pre_features] --> thank, you, very, much.
+politeness:[@thank_you_pre_features] --> thank, you, so, much.
+politeness:[@thank_you_pre_features] --> thank, you.
+politeness:[@thank_you_pre_features] --> thanks.
+politeness:[@thank_you_pre_features] --> thanks, a, lot.
+
+politeness:[@sorry_pre_features] --> sorry.
+politeness:[@sorry_post_features] --> sorry.
+politeness:[@sorry_pre_features] --> (excuse, me).
+politeness:[@sorry_post_features] --> (excuse, me).
+
+politeness:[@salutation_features(hello)] --> hello.
+politeness:[@salutation_features(good_morning)] --> (good, morning).
+politeness:[@salutation_features(good_afternoon)] --> (good, afternoon).
+politeness:[@salutation_features(good_evening)] --> (good, evening).
+politeness:[@salutation_features(goodbye)] --> ( goodbye ; bye ; (bye, bye)).
+
+politeness:[@salutation_features(congratulations)] --> congratulations.
+politeness:[@salutation_features(good_job)] --> (good, job).
+politeness:[@salutation_features(good_going)] --> (good, going).
+politeness:[@salutation_features(great_job)] --> (great, job).
+politeness:[@salutation_features(great)] --> great.
+politeness:[@salutation_features(greetings)] --> greetings.
+politeness:[@salutation_features(ha_ha)] --> (ha, ha).
+politeness:[@salutation_features(happy_birthday)] --> (happy, birthday).
+politeness:[@salutation_features(hey)] --> hey.
+politeness:[@salutation_features(hi)] --> hi.
+politeness:[@salutation_features(howdy)] --> howdy.
+politeness:[@salutation_features(konichiwa)] --> konichiwa.
+politeness:[@salutation_features(sucks)] --> sucks.
+politeness:[@salutation_features(welcome)] --> welcome.
+politeness:[@salutation_features(whats_up)] --> what, '\'s', up.
+politeness:[@salutation_features(what_the_fuck)] --> what, the, fuck.
+%politeness:[@salutation_features()] --> .
+
+politeness:[@how_about_features] --> how, about.
+politeness:[@how_about_features] --> what, about.
+
+politeness:[@conj_intro_features] --> and.
+
+% (Could you please...)
+adv:[sem= @adv_sem(politeness, please), advpos=postv, adv_type=politeness] --> please.
+
+% NP intro and after
+
+np_after:[] --> as,well.
+np_after:[] --> too.
+
+% "You idiot"
+
+you_intro:[] --> you.
+
+% "You guys"
+
+you_np_intro:[sem=you, case=_Any] --> you.
+
+% Comp
+
+comp:[@embedded_dcl_comp_features] --> that.
+comp:[@embedded_q_features] --> if.
+comp:[@embedded_q_features] --> whether.
+
+% Verbs
+
+@modal_verb(( will ; '\'ll' ), [[tense, future]]).
+@modal_verb(( would ; '\'d' ), @modal_sem(would)).
+@modal_verb(can, @modal_sem(can)).
+@modal_verb(could, @modal_sem(could)).
+@modal_verb(should, @modal_sem(should)).
+@modal_verb(must, @modal_sem(must)).
+@modal_verb(may, @modal_sem(may)).
+
+@modal_verb(( (will, not) ; 'won''t' ), [[polarity, negative], [tense, future]]).
+@modal_verb(( (would, not) ; 'wouldn''t' ), @negated_modal_sem(would)).
+@modal_verb(( cannot ; 'can''t' ), @negated_modal_sem(can)).
+@modal_verb(( (could, not) ; 'couldn''t' ), @negated_modal_sem(could)).
+@modal_verb(( (should, not) ; 'shouldn''t' ), @negated_modal_sem(should)).
+@modal_verb(( (must, not) ; 'mustn''t' ), @negated_modal_sem(must)).
+@modal_verb(( (may, not) ; 'mayn''t' ), @negated_modal_sem(may)).
+
+@aux_have_verb(( have ; '\'ve' ), base, _AnyAgr, [[aspect, perfect]]).
+@aux_have_verb(( has ; '\'s' ), finite, 3/\sing, [[tense, present], [aspect, perfect]]).
+@aux_have_verb(( have ; '\'ve' ), finite, (\(3/\sing)), [[tense, present], [aspect, perfect]]).
+@aux_have_verb(( had ; '\'d' ), finite, _AnyAgr, [[tense, past], [aspect, perfect]]).
+
+@aux_have_verb(( have, not ), base, _AnyAgr, [[polarity, negative], [aspect, perfect]]).
+@aux_have_verb(( ( has, not ) ; 'hasn\'t' ), finite, 3/\sing, [[polarity, negative], [tense, present], [aspect, perfect]]).
+@aux_have_verb(( ( have, not ) ; 'haven\'t' ) , finite, (\(3/\sing)), [[polarity, negative], [tense, present], [aspect, perfect]]).
+@aux_have_verb(( ( had, not ) ; 'hadn\'t' ), finite, _AnyAgr, [[polarity, negative], [tense, past], [aspect, perfect]]).
+
+v:[sem=[[tense, future]],
+   subcat=nx0vvx1_modal, vform=ing, vp_vform=base, passive=_,
+   @takes_no_pps, takes_advp=n, subj_nform=_, can_be_gerund=n] --> ( (going, to) ; gonna ).
+
+@verb([do, does, did, done, doing],
+      [],
+      [subcat=nx0vvx1_modal, inv=y, vp_vform=base, takes_advp=y, takes_adv_type=_]).
+@verb([('don\'t' ; (do, not)), ('doesn\'t' ; (does, not)), ('didn\'t' ; (did, not)), xxxxx, xxxxx],
+      [[polarity, negative]],
+      [subcat=nx0vvx1_modal, inv=_, vp_vform=base, takes_advp=y, takes_adv_type=_]).
+
+@be_verb([], [subcat=nx0vvx1_modal, vp_vform=ing, passive=_, subj_nform=_, @takes_no_pps]).
+
+@be_verb([], [subcat=nx0vvx1_passive, passive=y, @takes_no_pps]).
+
+@be_verb([@verb_sem(existential, there_is)],
+	 [subcat=nx0vnx1_there_is, subj_nform=there, obj_sem_n_type= agent\/(@thing_type), takes_advp=y,
+	  takes_loc_pp=y, takes_time_pp=y, takes_date_pp=y]).
+
+macro(verb_like_want_to(Forms, Sem), 
+      @verb(Forms, Sem, [subcat=nx0vvx1_to,inv=n,vp_vform=base, @takes_no_pps])).
+
+@verb_like_want_to([want, wants, wanted, wanted, wanting], [ @verb_sem(action, want_to)]).
+@verb_like_want_to([like, likes, liked, liked, liking], [ @verb_sem(action, like_to)]).
+@verb_like_want_to([need, needs, needed, needed, needing], [ @verb_sem(action, need_to)]).
+@verb_like_want_to([have, has, had, had, having], [ @verb_sem(action, have_to)]).
+
+% Prepositions
+
+%p:[sem= @prep_sem(subj), sem_pp_type=passive_by, obj_sem_n_type=_] --> by.
+
+@preposition(on, on_date, [date, date], []).
+@preposition(during, during, [date, date\/timeunit], []).
+@preposition(around, around_date, [date, date], []).
+@preposition(around, around_time, [time, time], []).
+@preposition(before, before_date, [date, date], []).
+@preposition(before, before_time, [time, time], []).
+@preposition(after, after_date, [date, date], []).
+@preposition(after, after_time, [time, time], []).
+
+% "Between" is unusual in requiring a plural NP
+p_with_agr:[sem= @prep_sem(between_dates), agr=plur, sem_pp_type=date, obj_sem_n_type=date] --> between.
+p_with_agr:[sem= @prep_sem(between_times), agr=plur, sem_pp_type=time, obj_sem_n_type=time] --> between.
+
+% Subordinating conjunctions
+
+@sc(if, if, [time], (s\/vp), []).
+@sc(when, when, [time], (s\/vp), []).
+@sc(while, while, [time], (s\/vp), []).
+@sc(before, before, [time], (s\/vp), []).
+@sc(after, after, [time], (s\/vp), []).
+@sc(since, since, [time], (s\/vp), []).
+
+% PPs
+
+@lexical_pp(here, [loc, here], [loc], []).
+@lexical_pp(there, [loc, there], [loc], []).
+
+@wh_pp(where, [loc, where], [loc], []).
+@wh_pp(when, [time, when], [time], []).
+@wh_pp(how, [manner, how], [attribution], []).
+@wh_pp(why, [reason, why], [attribution], []).
+@wh_pp((?for, how, long), [duration, how_long], [duration], []).
+
+% Nouns
+
+@noun([one, ones], [sem= @noun_sem(noun, one), sem_n_type= agent\/(@thing_type), takes_det_type=def\/indef\/quant\/ordinal\/null]).
+
+macro(day_of_week_noun(Words, Sem),
+      @noun(Words, [day, Sem], [date], [@takes_no_pps, takes_det_type=(def\/indef\/quant\/ordinal\/null)])).
+
+@day_of_week_noun([monday, mondays], monday).
+@day_of_week_noun([tuesday, tuesdays], tuesday).
+@day_of_week_noun([wednesday, wednesdays], wednesday).
+@day_of_week_noun([thursday, thursdays], thursday).
+@day_of_week_noun([friday, fridays], friday).
+@day_of_week_noun([saturday, saturdays], saturday).
+@day_of_week_noun([sunday, sundays], sunday).
+
+% As in "three times a week"
+@uninflected_noun(times, [frequency, time], [timeunit], plur, [takes_frequency_pp=y, takes_det_type=(numeric\/quant)]).
+
+@frequency_np(once, once).
+@frequency_np(at_least_once, (at, least, once)).
+@frequency_np(more_than_once, (more, than, once)).
+@frequency_np(twice, twice).
+@frequency_np(at_least_twice, (at, least, twice)).
+@frequency_np(more_than_twice, (more, than, twice)).
+
+% Pronouns
+
+@personal_pronoun(you, you, 2/\sing\/ (2/\plur), _SubjOrNonsubj).
+@personal_pronoun('I', i, 1/\sing, subj).
+@personal_pronoun(me, i, 1/\sing, nonsubj).
+@personal_pronoun(we, we, 1/\plur, subj).
+@personal_pronoun(us, we, 1/\plur, nonsubj).
+@personal_pronoun(he, he, 3/\sing, subj).
+@personal_pronoun(him, he, 3/\sing, nonsubj).
+@personal_pronoun(she, she, 3/\sing, subj).
+@personal_pronoun(her, she, 3/\sing, nonsubj).
+
+labelled_item(it,(
+@non_personal_pronoun(it, it, 3/\sing, _SubjOrNonsubj)
+)).
+labelled_item(they,(
+@personal_or_non_personal_pronoun(they, they, 3/\plur, subj)
+)).
+labelled_item(them,(
+@personal_or_non_personal_pronoun(them, they, 3/\plur, nonsubj)
+)).
+
+@personal_or_non_personal_pronoun((them, all), they, 3/\plur, subj).
+@personal_or_non_personal_pronoun((them, both), they, 3/\plur, subj).
+
+@wh_personal_pronoun(who, who, 3, (subj\/nonsubj)).
+@wh_personal_pronoun(whom, who, 3, nonsubj).
+% Where are you from
+@wh_non_personal_pronoun(where, where, 3/\sing, subj\/nonsubj).
+
+@relative_pronoun(that, Any, (subj\/nonsubj)).
+@relative_pronoun(which, Any, (subj\/nonsubj)).
+@relative_pronoun(who, agent, (subj\/nonsubj)).
+@relative_pronoun(whom, agent, nonsubj).
+
+@reflexive_pronoun(myself, i, 1/\sing, agent).
+@reflexive_pronoun(yourself, you, 2, agent).
+@reflexive_pronoun(himself, he, 3/\sing, agent).
+@reflexive_pronoun(herself, she, 3/\sing, agent).
+@reflexive_pronoun((each, other), each_other, 3/\sing, agent).
+@reflexive_pronoun(itself, it, 3/\sing, @thing_type).
+@reflexive_pronoun(ourselves, we, 1/\plur, agent).
+@reflexive_pronoun(themselves, they, 3/\plur, _Any).
+
+% NPs
+
+% Impersonal "there" subject
+@impersonal_there_subject(there).
+
+@not_personal_quantified_pronoun(anything, 3/\sing, anything).
+@not_personal_quantified_pronoun(something, 3/\sing, something).
+@not_personal_quantified_pronoun(everything, 3/\sing, everything).
+@not_personal_quantified_pronoun(nothing, 3/\sing, nothing).
+
+@personal_quantified_pronoun(( anyone ; anybody), 3/\sing, anyone).
+@personal_quantified_pronoun(( someone ; somebody), 3/\sing, someone).
+@personal_quantified_pronoun(( everyone ; everybody), 3/\sing, everyone).
+@personal_quantified_pronoun(( (no, one) ; nobody ), 3/\sing, noone).
+
+% Dets
+
+d:[sem=the_sing, agr=sing, article=y, wh=n, det_type=def, prenumber=n] --> the.
+d:[sem=the_plur, agr=plur, article=y, wh=n, det_type=def, prenumber=y] --> the.
+d:[sem=a, agr=sing, article=y, wh=n, det_type=indef, prenumber=n] --> ( a ; an ).
+
+d:[sem=such_a, agr=sing, article=n, wh=n, det_type=indef, prenumber=n] --> ( (such, a) ; (such, an) ).
+
+d:[sem=this, agr=sing, wh=n, det_type=def, prenumber=n, can_be_np=y] --> this.
+d:[sem=that, agr=sing, wh=n, det_type=def, prenumber=n, can_be_np=y] --> that.
+d:[sem=these, agr=plur, wh=n, det_type=def, prenumber=n, can_be_np=y] --> these.
+d:[sem=those, agr=plur, wh=n, det_type=def, prenumber=n, can_be_np=y] --> those.
+
+d:[sem=the_same, agr=sing, wh=n, det_type=def, prenumber=n, can_be_np=y] --> the, same.
+d:[sem=the_same, agr=plur, wh=n, det_type=def, prenumber=y, can_be_np=n] --> the, same.
+
+d:[sem=next, agr=sing, wh=n, det_type=ordinal, prenumber=y] --> next.
+d:[sem=the_next, agr=(sing\/plur), wh=n, det_type=ordinal, prenumber=y] --> the, next.
+d:[sem=last, agr=sing, wh=n, det_type=ordinal, prenumber=y] --> last.
+d:[sem=the_last, agr=(sing\/plur), wh=n, det_type=ordinal, prenumber=y] --> the, last.
+d:[sem=previous, agr=sing, wh=n, det_type=ordinal, prenumber=y] --> previous.
+d:[sem=the_previous, agr=(sing\/plur), wh=n, det_type=ordinal, prenumber=y] --> the, previous.
+
+labelled_item(numeric_a, (
+d:[sem=@det_number_sem(1), agr=sing, article=n, wh=n, det_type=numeric, can_be_np=n, prenumber=n] --> ( a ; an )
+)).
+
+d:[sem=any, agr=(sing\/plur), wh=n, det_type=quant, prenumber=n, can_be_np=y] --> any.
+d:[sem=some, agr=(sing\/plur), wh=n, det_type=quant, prenumber=n, can_be_np=y] --> some.
+d:[sem=some_more, agr=(sing\/plur), wh=n, det_type=quant, prenumber=n, can_be_np=y] --> some, more.
+d:[sem=the_other, agr=sing, wh=n, det_type=quant, prenumber=n, can_be_np=y] --> the, other.
+d:[sem=the_other, agr=plur, wh=n, det_type=quant, prenumber=y, can_be_np=n] --> the, other.
+d:[sem=any_other, agr=(sing\/plur), wh=n, det_type=quant, prenumber=n, can_be_np=y] --> any, other.
+d:[sem=other, agr=sing, wh=n, det_type=indef, prenumber=n, can_be_np=y] --> another.
+d:[sem=other, agr=plur, wh=n, det_type=indef, prenumber=y, can_be_np=n] --> another.
+d:[sem=other, agr=plur, wh=n, det_type=quant, prenumber=n, can_be_np=n] --> other.
+d:[sem=no, agr=(sing\/plur), wh=n, det_type=quant, prenumber=n, can_be_np=n] --> no.
+
+d:[sem=both, agr=plur, wh=n, det_type=quant, prenumber=n, can_be_np=y] --> both.
+d:[sem=all, agr=plur, wh=n, det_type=quant, prenumber=y, can_be_np=y] --> all.	
+d:[sem=every, agr=sing, wh=n, det_type=quant, prenumber=y, can_be_np=n] --> every.
+d:[sem=all_the, agr=plur, wh=n, det_type=quant, prenumber=y, can_be_np=n] --> all, the.
+d:[sem=all_the, agr=plur, wh=n, det_type=quant, prenumber=y, can_be_np=n] --> all, of, the.
+d:[sem=a_few, agr=plur, wh=n, det_type=quant, prenumber=n, can_be_np=y] --> a, few.
+d:[sem=several, agr=plur, wh=n, det_type=quant, prenumber=n, can_be_np=y] --> several.
+
+d:[sem=more, agr=(sing\/plur), wh=n, det_type=quant, prenumber=n, can_be_np=y] --> more.
+
+% "what" must be singular when it's an NP
+% It can also be WH- in e.g. "it's not what you think"
+d:[sem=what, agr=sing, wh=(y\/n), det_type=quant, prenumber=n, can_be_np=y] --> what.		
+d:[sem=what, agr=plur, wh=y, det_type=quant, prenumber=n, can_be_np=n] --> what.
+d:[sem=which, agr=(sing\/plur), wh=y, det_type=quant, prenumber=n, can_be_np=y] --> which.
+d:[sem=how_many, agr=plur, wh=y, det_type=quant, prenumber=n, can_be_np=y] --> how, many.
+d:[sem=how_much, agr=sing, wh=y, det_type=quant, prenumber=n, can_be_np=y] --> how, much.
+
+% Possessives
+
+@possessive(my, i, agent).
+@possessive(your, you, agent).
+@possessive(his, he, agent).
+@possessive(her, she, agent).
+@possessive(its, it, @thing_type).
+@possessive(our, we, agent).
+@possessive(their, they, @thing_type).
+
+@possessive_pronoun(mine, i).
+@possessive_pronoun(yours, you).
+@possessive_pronoun(his, he).
+@possessive_pronoun(hers, she).
+@possessive_pronoun(its, it).
+@possessive_pronoun(ours, we).
+@possessive_pronoun(theirs, they).
+
+% Numcompares (stupid name, but I can't think of a better one)
+
+numcompare:[sem=the_next] --> the, next.
+numcompare:[sem=the_last] --> the, last.
+numcompare:[sem=over] --> over.
+numcompare:[sem=under] --> under.
+numcompare:[sem=at_least] --> at, least.
+numcompare:[sem=at_most] --> at, most.
+numcompare:[sem=more_than] --> ( more ; higher ; greater ), than.
+numcompare:[sem=less_than] --> ( less ; lower), than.
+numcompare:[sem=not_more_than] --> not, more, than.
+numcompare:[sem=not_less_than] --> not, less, than.
+numcompare:[sem=another] --> another.
+
+% Conj
+
+conj:[] --> and.
+conj:[] --> and,then.
+conj:[] --> or.
+
+% Numbers
+
+number:[sem=0, num_type=zero,time_type=none,agr=plur] --> oh.
+number:[sem=0, num_type=zero,time_type=none,agr=plur] --> zero.
+labelled_item(a_as_number,(
+number:[sem=1, num_type=a,time_type=none,agr=sing] --> a
+)).
+labelled_item(an_as_number,(
+number:[sem=1, num_type=a,time_type=none,agr=sing] --> an
+)).
+number:[sem=1, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=sing] --> one.
+
+number:[sem=2, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> two.
+number:[sem=3, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> three.
+number:[sem=4, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> four.
+number:[sem=5, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> five.
+number:[sem=6, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> six.
+number:[sem=7, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> seven.
+number:[sem=8, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> eight.
+number:[sem=9, num_type=digit,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/second,agr=plur] --> nine.
+
+number:[sem=10, num_type=ten,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/minute\/second,agr=plur] --> ten.
+number:[sem=11, num_type=teen,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/minute\/second,agr=plur] --> eleven.
+number:[sem=12, num_type=teen,time_type=none\/dayofmonth\/hour\/hour_up_to_twelve\/minute\/second,agr=plur] --> twelve.
+
+number:[sem=12, num_type=teen,time_type=none,agr=plur] --> (a, dozen).
+
+number:[sem=13, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> thirteen.
+number:[sem=14, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> fourteen.
+number:[sem=15, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> fifteen.
+number:[sem=16, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> sixteen.
+number:[sem=17, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> seventeen.
+number:[sem=18, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> eighteen.
+number:[sem=19, num_type=teen,time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> nineteen.
+
+number:[sem=20, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> twenty.
+number:[sem=30, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> thirty.
+number:[sem=40, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty.
+number:[sem=50, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty.
+number:[sem=60, num_type='20_to_99',time_type=none\/none,agr=plur] --> sixty.
+number:[sem=70, num_type='20_to_99',time_type=none\/none,agr=plur] --> seventy.
+number:[sem=80, num_type='20_to_99',time_type=none\/none,agr=plur] --> eighty.
+number:[sem=90, num_type='20_to_99',time_type=none\/none,agr=plur] --> ninety.
+
+number:[sem=0, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,oh.
+number:[sem=0, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,zero.
+number:[sem=1, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,one.
+number:[sem=2, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,two.
+number:[sem=3, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,three.
+number:[sem=4, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,four.
+number:[sem=5, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,five.
+number:[sem=6, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,six.
+number:[sem=7, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,seven.
+number:[sem=8, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,eight.
+number:[sem=9, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> oh,nine.
+number:[sem=1, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,one.
+number:[sem=2, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,two.
+number:[sem=3, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,three.
+number:[sem=4, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,four.
+number:[sem=5, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,five.
+number:[sem=6, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,six.
+number:[sem=7, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,seven.
+number:[sem=8, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,eight.
+number:[sem=9, num_type=oh_digit,time_type=none\/hour\/minute,agr=plur] --> zero,nine.
+
+number:[sem=13, num_type=teen,time_type=none\/hour\/minute\/second,agr=plur] --> thirteen,one,three.
+number:[sem=14, num_type=teen,time_type=none\/hour\/minute\/second,agr=plur] --> fourteen,one,four.
+number:[sem=15, num_type=teen,time_type=none\/hour\/minute\/second,agr=plur] --> fifteen,one,five.
+number:[sem=16, num_type=teen,time_type=none\/hour\/minute\/second,agr=plur] --> sixteen,one,six.
+number:[sem=17, num_type=teen,time_type=none\/hour\/minute\/second,agr=plur] --> seventeen,one,seven.
+number:[sem=18, num_type=teen,time_type=none\/hour\/minute\/second,agr=plur] --> eighteen,one,eight.
+number:[sem=19, num_type=teen,time_type=none\/hour\/minute\/second,agr=plur] --> nineteen,one,nine.
+
+number:[sem=21, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> twenty,one.
+number:[sem=22, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> twenty,two.
+number:[sem=23, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> twenty,three.
+number:[sem=24, num_type='20_to_99',time_type=none\/dayofmonth\/hour\/minute\/second,agr=plur] --> twenty,four.
+
+number:[sem=24, num_type='20_to_99',time_type=none,agr=plur] --> (two, dozen).
+
+number:[sem=25, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> twenty,five.
+number:[sem=26, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> twenty,six.
+number:[sem=27, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> twenty,seven.
+number:[sem=28, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> twenty,eight.
+number:[sem=29, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> twenty,nine.
+
+number:[sem=30, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,three,zero.
+number:[sem=40, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,four,zero.
+number:[sem=50, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,five,zero.
+number:[sem=60, num_type='20_to_99',time_type=none,agr=plur] --> sixty,six,zero.
+number:[sem=70, num_type='20_to_99',time_type=none,agr=plur] --> seventy,seven,zero.
+number:[sem=80, num_type='20_to_99',time_type=none,agr=plur] --> eighty,eight,zero.
+number:[sem=90, num_type='20_to_99',time_type=none,agr=plur] --> ninety,nine,zero.
+
+
+number:[sem=31, num_type='20_to_99',time_type=none\/dayofmonth\/minute\/second,agr=plur] --> thirty,one.
+
+number:[sem=32, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,two.
+number:[sem=33, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,three.
+number:[sem=34, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,four.
+number:[sem=35, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,five.
+number:[sem=36, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,six.
+number:[sem=37, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,seven.
+number:[sem=38, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,eight.
+number:[sem=39, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> thirty,nine.
+number:[sem=41, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,one.
+number:[sem=42, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,two.
+number:[sem=43, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,three.
+number:[sem=44, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,four.
+number:[sem=45, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,five.
+number:[sem=46, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,six.
+number:[sem=47, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,seven.
+number:[sem=48, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,eight.
+number:[sem=49, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> forty,nine.
+number:[sem=51, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,one.
+number:[sem=52, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,two.
+number:[sem=53, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,three.
+number:[sem=54, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,four.
+number:[sem=55, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,five.
+number:[sem=56, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,six.
+number:[sem=57, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,seven.
+number:[sem=58, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,eight.
+number:[sem=59, num_type='20_to_99',time_type=none\/minute\/second,agr=plur] --> fifty,nine.
+
+number:[sem=61, num_type='20_to_99',time_type=none,agr=plur] --> sixty,one.
+number:[sem=62, num_type='20_to_99',time_type=none,agr=plur] --> sixty,two.
+number:[sem=63, num_type='20_to_99',time_type=none,agr=plur] --> sixty,three.
+number:[sem=64, num_type='20_to_99',time_type=none,agr=plur] --> sixty,four.
+number:[sem=65, num_type='20_to_99',time_type=none,agr=plur] --> sixty,five.
+number:[sem=66, num_type='20_to_99',time_type=none,agr=plur] --> sixty,six.
+number:[sem=67, num_type='20_to_99',time_type=none,agr=plur] --> sixty,seven.
+number:[sem=68, num_type='20_to_99',time_type=none,agr=plur] --> sixty,eight.
+number:[sem=69, num_type='20_to_99',time_type=none,agr=plur] --> sixty,nine.
+
+
+number:[sem=71, num_type='20_to_99',time_type=none,agr=plur] --> seventy,one.
+number:[sem=72, num_type='20_to_99',time_type=none,agr=plur] --> seventy,two.
+number:[sem=73, num_type='20_to_99',time_type=none,agr=plur] --> seventy,three.
+number:[sem=74, num_type='20_to_99',time_type=none,agr=plur] --> seventy,four.
+number:[sem=75, num_type='20_to_99',time_type=none,agr=plur] --> seventy,five.
+number:[sem=76, num_type='20_to_99',time_type=none,agr=plur] --> seventy,six.
+number:[sem=77, num_type='20_to_99',time_type=none,agr=plur] --> seventy,seven.
+number:[sem=78, num_type='20_to_99',time_type=none,agr=plur] --> seventy,eight.
+number:[sem=79, num_type='20_to_99',time_type=none,agr=plur] --> seventy,nine.
+
+number:[sem=81, num_type='20_to_99',time_type=none,agr=plur] --> eighty,one.
+number:[sem=82, num_type='20_to_99',time_type=none,agr=plur] --> eighty,two.
+number:[sem=83, num_type='20_to_99',time_type=none,agr=plur] --> eighty,three.
+number:[sem=84, num_type='20_to_99',time_type=none,agr=plur] --> eighty,four.
+number:[sem=85, num_type='20_to_99',time_type=none,agr=plur] --> eighty,five.
+number:[sem=86, num_type='20_to_99',time_type=none,agr=plur] --> eighty,six.
+number:[sem=87, num_type='20_to_99',time_type=none,agr=plur] --> eighty,seven.
+number:[sem=88, num_type='20_to_99',time_type=none,agr=plur] --> eighty,eight.
+number:[sem=89, num_type='20_to_99',time_type=none,agr=plur] --> eighty,nine.
+
+number:[sem=91, num_type='20_to_99',time_type=none,agr=plur] --> ninety,one.
+number:[sem=92, num_type='20_to_99',time_type=none,agr=plur] --> ninety,two.
+number:[sem=93, num_type='20_to_99',time_type=none,agr=plur] --> ninety,three.
+number:[sem=94, num_type='20_to_99',time_type=none,agr=plur] --> ninety,four.
+number:[sem=95, num_type='20_to_99',time_type=none,agr=plur] --> ninety,five.
+number:[sem=96, num_type='20_to_99',time_type=none,agr=plur] --> ninety,six.
+number:[sem=97, num_type='20_to_99',time_type=none,agr=plur] --> ninety,seven.
+number:[sem=98, num_type='20_to_99',time_type=none,agr=plur] --> ninety,eight.
+number:[sem=99, num_type='20_to_99',time_type=none,agr=plur] --> ninety,nine.
+
+macro(year(Year, Surface),
+      (number:[sem=Year, num_type=four_plus_figure, time_type=year, agr=plur] --> Surface)).
+
+% Just list a few years around the present, since they are easy to confuse
+@year(1997, (nineteen, ninety, seven)).
+@year(1998, (nineteen, ninety, eight)).
+@year(1999, (nineteen, ninety, nine)).
+@year(2000, (two, thousand)).
+@year(2001, (two, thousand, ?and, one)).
+@year(2002, (two, thousand, ?and, two)).
+@year(2003, (two, thousand, ?and, three)).
+@year(2004, (two, thousand, ?and, four)).
+@year(2005, (two, thousand, ?and, five)).
+@year(2006, (two, thousand, ?and, six)).
+@year(2007, (two, thousand, ?and, seven)).
+@year(2008, (two, thousand, ?and, eight)).
+@year(2009, (two, thousand, ?and, nine)).
+@year(2010, (two, thousand, ?and, ten)).
+
+% Times
+
+time:[sem= @time_number_hundred_sem(12)] --> noon.
+
+% Ordinals
+
+ordinal:[sem=1, num_type=digit,time_type=none\/dayofmonth] --> first.
+ordinal:[sem=2, num_type=digit,time_type=none\/dayofmonth] --> second.
+ordinal:[sem=3, num_type=digit,time_type=none\/dayofmonth] --> third.
+ordinal:[sem=4, num_type=digit,time_type=none\/dayofmonth] --> fourth.
+ordinal:[sem=5, num_type=digit,time_type=none\/dayofmonth] --> fifth.
+ordinal:[sem=6, num_type=digit,time_type=none\/dayofmonth] --> sixth.
+ordinal:[sem=7, num_type=digit,time_type=none\/dayofmonth] --> seventh.
+ordinal:[sem=8, num_type=digit,time_type=none\/dayofmonth] --> eighth.
+ordinal:[sem=9, num_type=digit,time_type=none\/dayofmonth] --> ninth.
+
+ordinal:[sem=10, num_type=ten,time_type=none\/dayofmonth] --> tenth.
+
+ordinal:[sem=11, num_type=teen,time_type=none\/dayofmonth] --> eleventh.
+ordinal:[sem=12, num_type=teen,time_type=none\/dayofmonth] --> twelfth.
+ordinal:[sem=13, num_type=teen,time_type=none\/dayofmonth] --> thirteenth.
+ordinal:[sem=14, num_type=teen,time_type=none\/dayofmonth] --> fourteenth.
+ordinal:[sem=15, num_type=teen,time_type=none\/dayofmonth] --> fifteenth.
+ordinal:[sem=16, num_type=teen,time_type=none\/dayofmonth] --> sixteenth.
+ordinal:[sem=17, num_type=teen,time_type=none\/dayofmonth] --> seventeenth.
+ordinal:[sem=18, num_type=teen,time_type=none\/dayofmonth] --> eighteenth.
+ordinal:[sem=19, num_type=teen,time_type=none\/dayofmonth] --> nineteenth.
+
+ordinal:[sem=20, num_type='20_to_99',time_type=none\/dayofmonth] --> twentieth.
+ordinal:[sem=21, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,first.
+ordinal:[sem=22, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,second.
+ordinal:[sem=23, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,third.
+ordinal:[sem=24, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,fourth.
+ordinal:[sem=25, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,fifth.
+ordinal:[sem=26, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,sixth.
+ordinal:[sem=27, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,seventh.
+ordinal:[sem=28, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,eighth.
+ordinal:[sem=29, num_type='20_to_99',time_type=none\/dayofmonth] --> twenty,ninth.
+ordinal:[sem=30, num_type='20_to_99',time_type=none\/dayofmonth] --> thirtieth.
+ordinal:[sem=31, num_type='20_to_99',time_type=none\/dayofmonth] --> thirty,first.
+
+ordinal:[sem=40, num_type='20_to_99',time_type=none] --> fortieth.
+ordinal:[sem=50, num_type='20_to_99',time_type=none] --> fiftieth.
+ordinal:[sem=60, num_type='20_to_99',time_type=none] --> sixtieth.
+ordinal:[sem=70, num_type='20_to_99',time_type=none] --> seventieth.
+ordinal:[sem=80, num_type='20_to_99',time_type=none] --> eightieth.
+ordinal:[sem=90, num_type='20_to_99',time_type=none] --> ninetieth.
+ordinal:[sem=32, num_type='20_to_99',time_type=none] --> thirty,second.
+ordinal:[sem=33, num_type='20_to_99',time_type=none] --> thirty,third.
+ordinal:[sem=34, num_type='20_to_99',time_type=none] --> thirty,fourth.
+ordinal:[sem=35, num_type='20_to_99',time_type=none] --> thirty,fifth.
+ordinal:[sem=36, num_type='20_to_99',time_type=none] --> thirty,sixth.
+ordinal:[sem=37, num_type='20_to_99',time_type=none] --> thirty,seventh.
+ordinal:[sem=38, num_type='20_to_99',time_type=none] --> thirty,eighth.
+ordinal:[sem=39, num_type='20_to_99',time_type=none] --> thirty,ninth.
+ordinal:[sem=41, num_type='20_to_99',time_type=none] --> forty,first.
+ordinal:[sem=42, num_type='20_to_99',time_type=none] --> forty,second.
+ordinal:[sem=43, num_type='20_to_99',time_type=none] --> forty,third.
+ordinal:[sem=44, num_type='20_to_99',time_type=none] --> forty,fourth.
+ordinal:[sem=45, num_type='20_to_99',time_type=none] --> forty,fifth.
+ordinal:[sem=46, num_type='20_to_99',time_type=none] --> forty,sixth.
+ordinal:[sem=47, num_type='20_to_99',time_type=none] --> forty,seventh.
+ordinal:[sem=48, num_type='20_to_99',time_type=none] --> forty,eighth.
+ordinal:[sem=49, num_type='20_to_99',time_type=none] --> forty,ninth.
+ordinal:[sem=51, num_type='20_to_99',time_type=none] --> fifty,first.
+ordinal:[sem=52, num_type='20_to_99',time_type=none] --> fifty,second.
+ordinal:[sem=53, num_type='20_to_99',time_type=none] --> fifty,third.
+ordinal:[sem=54, num_type='20_to_99',time_type=none] --> fifty,fourth.
+ordinal:[sem=55, num_type='20_to_99',time_type=none] --> fifty,fifth.
+ordinal:[sem=56, num_type='20_to_99',time_type=none] --> fifty,sixth.
+ordinal:[sem=57, num_type='20_to_99',time_type=none] --> fifty,seventh.
+ordinal:[sem=58, num_type='20_to_99',time_type=none] --> fifty,eighth.
+ordinal:[sem=59, num_type='20_to_99',time_type=none] --> fifty,ninth.
+ordinal:[sem=60, num_type='20_to_99',time_type=none] --> sixty,six,zero.
+ordinal:[sem=61, num_type='20_to_99',time_type=none] --> sixty,first.
+ordinal:[sem=62, num_type='20_to_99',time_type=none] --> sixty,second.
+ordinal:[sem=63, num_type='20_to_99',time_type=none] --> sixty,third.
+ordinal:[sem=64, num_type='20_to_99',time_type=none] --> sixty,fourth.
+ordinal:[sem=65, num_type='20_to_99',time_type=none] --> sixty,fifth.
+ordinal:[sem=66, num_type='20_to_99',time_type=none] --> sixty,sixth.
+ordinal:[sem=67, num_type='20_to_99',time_type=none] --> sixty,seventh.
+ordinal:[sem=68, num_type='20_to_99',time_type=none] --> sixty,eighth.
+ordinal:[sem=69, num_type='20_to_99',time_type=none] --> sixty,ninth.
+ordinal:[sem=71, num_type='20_to_99',time_type=none] --> seventy,first.
+ordinal:[sem=72, num_type='20_to_99',time_type=none] --> seventy,second.
+ordinal:[sem=73, num_type='20_to_99',time_type=none] --> seventy,third.
+ordinal:[sem=74, num_type='20_to_99',time_type=none] --> seventy,fourth.
+ordinal:[sem=75, num_type='20_to_99',time_type=none] --> seventy,fifth.
+ordinal:[sem=76, num_type='20_to_99',time_type=none] --> seventy,sixth.
+ordinal:[sem=77, num_type='20_to_99',time_type=none] --> seventy,seventh.
+ordinal:[sem=78, num_type='20_to_99',time_type=none] --> seventy,eighth.
+ordinal:[sem=79, num_type='20_to_99',time_type=none] --> seventy,ninth.
+ordinal:[sem=81, num_type='20_to_99',time_type=none] --> eighty,first.
+ordinal:[sem=82, num_type='20_to_99',time_type=none] --> eighty,second.
+ordinal:[sem=83, num_type='20_to_99',time_type=none] --> eighty,third.
+ordinal:[sem=84, num_type='20_to_99',time_type=none] --> eighty,fourth.
+ordinal:[sem=85, num_type='20_to_99',time_type=none] --> eighty,fifth.
+ordinal:[sem=86, num_type='20_to_99',time_type=none] --> eighty,sixth.
+ordinal:[sem=87, num_type='20_to_99',time_type=none] --> eighty,seventh.
+ordinal:[sem=88, num_type='20_to_99',time_type=none] --> eighty,eighth.
+ordinal:[sem=89, num_type='20_to_99',time_type=none] --> eighty,ninth.
+ordinal:[sem=91, num_type='20_to_99',time_type=none] --> ninety,first.
+ordinal:[sem=92, num_type='20_to_99',time_type=none] --> ninety,second.
+ordinal:[sem=93, num_type='20_to_99',time_type=none] --> ninety,third.
+ordinal:[sem=94, num_type='20_to_99',time_type=none] --> ninety,fourth.
+ordinal:[sem=95, num_type='20_to_99',time_type=none] --> ninety,fifth.
+ordinal:[sem=96, num_type='20_to_99',time_type=none] --> ninety,sixth.
+ordinal:[sem=97, num_type='20_to_99',time_type=none] --> ninety,seventh.
+ordinal:[sem=98, num_type='20_to_99',time_type=none] --> ninety,eighth.
+ordinal:[sem=99, num_type='20_to_99',time_type=none] --> ninety,ninth.
+
+% Months
+
+month:[sem=1] --> january.
+month:[sem=2] --> february.
+month:[sem=3] --> march.
+month:[sem=4] --> april.
+month:[sem=5] --> may.
+month:[sem=6] --> june.
+month:[sem=7] --> july.
+month:[sem=8] --> august.
+month:[sem=9] --> september.
+month:[sem=10] --> october.
+month:[sem=11] --> november.
+month:[sem=12] --> december.
+
+% Times
+
+timesuffix:[sem=morning, allows_minutes=y] --> (a, m).
+timesuffix:[sem=afternoon, allows_minutes=y] --> (p, m).
+timesuffix:[sem=any, allows_minutes=n] --> 'o\'clock'.
+
+timesuffix:[sem=morning, allows_minutes=y] --> (in, the, morning).
+timesuffix:[sem=afternoon, allows_minutes=y] --> (in, the, afternoon).
+
+minute:[sem=1, minute_type=to_or_past] --> one, minute.
+minute:[sem=2, minute_type=to_or_past] --> two, minutes.
+minute:[sem=3, minute_type=to_or_past] --> three, minutes.
+minute:[sem=4, minute_type=to_or_past] --> four, minutes.
+minute:[sem=5, minute_type=to_or_past] --> five, ?minutes.
+minute:[sem=6, minute_type=to_or_past] --> six, minutes.
+minute:[sem=7, minute_type=to_or_past] --> seven, minutes.
+minute:[sem=8, minute_type=to_or_past] --> eight, minutes.
+minute:[sem=9, minute_type=to_or_past] --> nine, minutes.
+minute:[sem=10, minute_type=to_or_past] --> ten, ?minutes.
+minute:[sem=11, minute_type=to_or_past] --> eleven, minutes.
+minute:[sem=12, minute_type=to_or_past] --> twelve, minutes.
+minute:[sem=13, minute_type=to_or_past] --> thirteen, minutes.
+minute:[sem=14, minute_type=to_or_past] --> fourteen, minutes.
+minute:[sem=15, minute_type=to_or_past] --> fifteen, minutes.
+minute:[sem=15, minute_type=to_or_past] --> ?a, quarter.
+minute:[sem=16, minute_type=to_or_past] --> sixteen, minutes.
+minute:[sem=17, minute_type=to_or_past] --> seventeen, minutes.
+minute:[sem=18, minute_type=to_or_past] --> eighteen, minutes.
+minute:[sem=19, minute_type=to_or_past] --> nineteen, minutes.
+minute:[sem=20, minute_type=to_or_past] --> twenty, ?minutes.
+minute:[sem=21, minute_type=to_or_past] --> twenty, one, minutes.
+minute:[sem=22, minute_type=to_or_past] --> twenty, two, minutes.
+minute:[sem=23, minute_type=to_or_past] --> twenty, three, minutes.
+minute:[sem=24, minute_type=to_or_past] --> twenty, four, minutes.
+minute:[sem=25, minute_type=to_or_past] --> twenty, five, ?minutes.
+minute:[sem=26, minute_type=to_or_past] --> twenty, six, minutes.
+minute:[sem=27, minute_type=to_or_past] --> twenty, seven, minutes.
+minute:[sem=28, minute_type=to_or_past] --> twenty, eight, minutes.
+minute:[sem=29, minute_type=to_or_past] --> twenty, nine, minutes.

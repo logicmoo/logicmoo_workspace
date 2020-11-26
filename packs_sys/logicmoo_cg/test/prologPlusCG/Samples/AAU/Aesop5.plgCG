@@ -1,0 +1,8 @@
+Entity > Proposition, Animal, Act.
+
+Animal = Wolf, Lamb.
+Act = Persuade.
+
+prop([Proposition =
+        [Animal : Wolf]<-AGNT-[Act : Persuade]-RCPT->[Animal : Lamb]
+     ]).

@@ -1,0 +1,24 @@
+(note TQF239b)
+
+(subclass BiologicalAttack MilitaryAttack) 
+(behaviorCapability Iran BiologicalAttack agent MediumToVeryHigh) 
+(subclass MissileAttack MilitaryAttack) 
+(behaviorCapability Iran MissileAttack agent HighToVeryHigh) 
+(subclass ChemicalAttack MilitaryAttack) 
+(behaviorCapability Iran ChemicalAttack agent HighToVeryHigh) 
+
+(query (findall (?ATTACK)
+  (exists 
+    (?COUNTRY) 
+    (and 
+      (subclass ?ATTACK MilitaryAttack) 
+      (or 
+        (behaviorCapability ?COUNTRY ?ATTACK agent HighToVeryHigh) 
+        (behaviorCapability ?COUNTRY ?ATTACK agent MediumToVeryHigh))))))
+
+(answer MissileAttack)
+(answer ChemicalAttack)
+(answer BiologicalAttack)
+
+(end_of_file)
+

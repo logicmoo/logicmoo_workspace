@@ -1,0 +1,226 @@
+
+
+May 29 2007, Geneva
+
+- Database
+  - Define format of internal meeting database
+  - Convert IM2 database to internal format
+
+- Tool for entering calendar info
+  - GUI
+  - Tool to extract vocabulary from calendar
+    - Regulus lexicon
+    - Pronounciation
+
+- Corpus
+  - Initial development corpus (Eng)
+  - Initial development corpus (Fre)
+
+- Grammar
+  - English 
+    - lexicon
+    - grammar extensions
+      - "my next meeting", "my next three meetings"
+  - French
+
+- Dialogue move format
+  - Define representation
+  - Define mapping LF -> dialogue move
+
+- Dialogue manager
+
+- Response grammar
+
+- Integration of first version
+
+- Help system (also for MedSLT)
+  - Word confidence scores from Regserver 
+    - Talk with Nikos C to get code for NASA SR3 module
+    - First version of Regserver with word confidence scores by mid-July
+  - Annotated corpus
+    - Maria to enhance MedSLT GUI to add "annotation mode"
+      - Fill in transcription: initialise with rec result
+      - Ask user if recognition acceptable/unacceptable
+      - If unacceptable, mark each help result as very helpful/helpful/not helpful (radio buttons?)
+    - Collect initial round of data from U Geneva people 
+    - Real data collection round in September
+  - Maria to implement SVM-based methods
+    - Help system packaged as separate server
+
+=========================================================================
+
+Example 1
+
+Input: "when is my next meeting"
+
+LF: [[whq, 
+     [[tense,present], [verb,be], [subj, [[spec,the_next], [possessive, [[pronoun, i]]], [event,meeting]]], 
+     [[time,when]]]]]
+
+Role-marked LF: 
+
+[[sentence_type, whq]-unmarked, 
+ [verb,be]-unmarked,
+ [pronoun, i]-next
+ [event,meeting]-next
+ [time, when]-unmarked
+]
+
+-------------------------------------------------
+
+(Translation step)
+
+Interlingua (language-independent)
+
+Unresolved form: 
+
+[[sentence_type, whq]-unmarked,
+ [event, meeting]-next
+ [attendee, pronoun(i)]-next,
+ [time, wh]-unmarked
+]
+
+-------------------------------------------------
+
+(Resolve names and personal pronouns)
+
+Resolved form 1:
+
+[[sentence_type, whq]-unmarked,
+ [event, meeting]-next
+ [attendee, manny_rayner]-next,
+ [time, wh]-unmarked
+]
+
+(Resolve 'next' etc)
+
+Resolved form 2:
+
+Resolved form: 
+
+[[sentence_type, whq],
+ [meeting, meeting_1],
+ [time, wh]
+]
+
+Query form:
+
+Time^(meeting(meeting_1, Day, Month, Year, StartTime, EndTime, Place), 
+      describe_time_interval([Day, Month, Year, StartTime, EndTime], Time))
+
+Answer (uses output grammar):
+
+"May 29 2007, from 0930 to 1200"
+
+=========================================================================
+
+Example 2
+
+Input: "when does it end"
+
+[[whq, 
+  [[tense,present], 
+   [subj,[[spec,pro],[head,[[pronoun,it]]]]], 
+   [event,end], 
+   [[time,when]]]]]
+
+Role-marked LF:
+
+[[sentence_type, whq]-unmarked, 
+ [event,end]-unmarked,
+ [pronoun, it]-unmarked
+ [time, when]-unmarked
+]
+
+-------------------------------------------------
+
+(Translation step)
+
+Interlingua (language-independent)
+
+Unresolved form: 
+
+[[sentence_type, whq]-unmarked,
+ [meeting, [[pronoun, it]]]-unmarked,
+ [end_time, wh]-unmarked
+]
+
+-------------------------------------------------
+
+(Resolve names and personal pronouns)
+
+Resolved form 1:
+
+[[sentence_type, whq]-unmarked,
+ [meeting, meeting_1]-unmarked,
+ [end_time, wh]-unmarked
+]
+
+(Resolve 'next' etc)
+
+Resolved form 2:
+
+Resolved form: 
+
+[[sentence_type, whq]-unmarked,
+ [meeting, meeting_1]-unmarked,
+ [end_time, wh]-unmarked
+]
+
+Query form:
+
+Time^(meeting(meeting_1, Day, Month, Year, StartTime, EndTime, Place), 
+      describe_time([Day, Month, Year, EndTime], Time))
+
+Answer (uses output grammar):
+
+"May 29 2007, 1200"
+
+-------------------------------------------------------------------------
+
+July 9 2007, Cambridge
+
+Next goals:
+
+1. Package up Prolog functionality as socket-based server (Manny)  DONE
+  1a Use PrologBeans if possible to interface to Java/.NET 
+     Talk with Nikos
+  1b Think about how to allow multi-modal dialogue management
+
+2. Start integrating with mobile platform (Nikos - requires 1)
+
+3. Extend input-manager patterns to allow multiple components, e.g. "when does ... start" -> start_time (Manny) DONE
+
+4. Cover aggregates/ordinals (Manny)
+  4a. Extend general grammar to allow e.g. "next three", "my next"
+  4b. Extend input manager to capture scope of ordinal constructions (requires 4a)
+  4c. Extend dialogue manager to handle ordinal constructions (requires 4b)
+
+5. Extend development/training corpus
+  5a. First version (Pierrette)
+  5b. Clean up (Manny - requires 5a)
+
+6. Extend lexicon 
+  6a Cover new vocabulary in training corpus (Pierrette - requires 5)
+  6b future with "going to" (Manny)
+
+7. Extend database
+  7a. Add more future data
+  7b. Reformat IM2 past data 
+
+8. Think about how to make resolution non-deterministic, to allow introduction of Machine Learning methods
+
+9. Think about help system
+
+May 28 2008
+
+- Compile list of N-best problems
+
+- Features
+  - Def/indef and similar
+    - Disprefer indefinite in general
+    - Collocations of def/indef with verb
+    - Collocations of sing/plur with verb
+  - Disprefering repetition
+    - Keep more context
+    - Avoid repetition of e.g. "where"

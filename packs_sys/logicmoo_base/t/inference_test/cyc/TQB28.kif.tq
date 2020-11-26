@@ -1,0 +1,53 @@
+(note TQB28)
+
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Kuwait StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 1.94441) ) 
+
+(implies 
+ (exportThroughAmountDuring ?REGION ?PRODUCT-TYPE ?PT ?TIME ?AMOUNT) 
+ (supplyFromThroughAmountDuring PlanetEarth ?PRODUCT-TYPE ?REGION ?PT ?TIME ?AMOUNT)) 
+
+(exportThroughAmountDuring Kuwait PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 1.94441) ) 
+
+(instance 
+ (MillionBarrelsPerDay 69.8600) FlowRate) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 69.8600)) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 14)) 
+
+(implies 
+ (productionAmountDuring PlanetEarth ?PRODUCT-TYPE ?TIME ?AMOUNT) 
+ (supplyAmountDuring PlanetEarth ?PRODUCT-TYPE ?TIME ?AMOUNT)) 
+
+
+
+
+(query (findall ?TOTAL-PRODUCT-AMOUNT  (findall  ?TIME
+
+ (thereExists ?IA1-TR-PRODUCT-AMOUNT 
+ (thereExists ?TR-PRODUCT-AMOUNT 
+ (thereExists ?TOTAL-PRODUCT-AMOUNT 
+ (and 
+ (instance ?TOTAL-PRODUCT-AMOUNT FlowRate) 
+ (supplyAmountDuring PlanetEarth PetroleumProduct ?TIME ?TOTAL-PRODUCT-AMOUNT) 
+ (supplyThroughAmountDuring PlanetEarth PetroleumProduct StraitOfHormuz ?TIME ?TR-PRODUCT-AMOUNT) 
+ (supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Kuwait StraitOfHormuz ?TIME ?IA1-TR-PRODUCT-AMOUNT) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn 
+ (DifferenceFn ?TR-PRODUCT-AMOUNT ?IA1-TR-PRODUCT-AMOUNT) ?TOTAL-PRODUCT-AMOUNT))))))))))
+
+(answer 17.2568 1995)
+
+(end_of_file)
+
+

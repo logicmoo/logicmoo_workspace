@@ -1,0 +1,11 @@
+(note "Kalish & Montague, Theorem 241")
+
+(forall ?X (implies (F ?X) (or(G ?X) (H ?X)) ) )
+
+
+(queryyn (or (forall ?X (implies (F ?X) (G ?X) ) ) 
+(exists ?X (and (F ?X) (H ?X)) ) ) ) 
+
+(answer Yes)	  
+
+(end_of_file) 

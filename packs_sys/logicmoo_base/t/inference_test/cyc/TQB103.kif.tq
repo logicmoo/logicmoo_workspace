@@ -1,0 +1,80 @@
+(note TQB103)
+ 
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 18 HPKBScenarioConflict) Stage1-IranRefusesToProvideApology) 
+
+(existant Stage1-IranRefusesToProvideApology 
+ (DateInSituationFn CalendarDay 18 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict) Stage1-SADemandsApology) 
+
+(existant Stage1-SADemandsApology 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict)) 
+
+(agent Stage1-IranRefusesToProvideApology Iran) 
+(inReactionTo Stage1-IranRefusesToProvideApology Stage1-SADemandsApology) 
+(agent Stage1-SADemandsApology SaudiArabia) 
+(subProcess HPKBScenarioConflict Stage1-SADemandsApology) 
+(instance Stage1-SADemandsApology Communicating) 
+
+(topicOfInfoTransfer Stage1-SADemandsApology 
+  (thereExists ?ACT1 
+    (and 
+      (subProcess HPKBScenarioConflict ?ACT1) 
+      (instance ?ACT1 Action) 
+      (maleficiary ?ACT1 SaudiArabia)))) 
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 18 HPKBScenarioConflict) Stage1-IranRefusesToProvideSecurity) 
+
+(existant Stage1-IranRefusesToProvideSecurity 
+ (DateInSituationFn CalendarDay 18 HPKBScenarioConflict)) 
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict) Stage1-SARequestsSecurityGuarantee) 
+
+(existant Stage1-SARequestsSecurityGuarantee 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict)) 
+
+(agent Stage1-IranRefusesToProvideSecurity Iran) 
+(inReactionTo Stage1-IranRefusesToProvideSecurity Stage1-SARequestsSecurityGuarantee) 
+(agent Stage1-SARequestsSecurityGuarantee SaudiArabia) 
+(subProcess HPKBScenarioConflict Stage1-SARequestsSecurityGuarantee) 
+(instance Stage1-SARequestsSecurityGuarantee Communicating) 
+
+(topicOfInfoTransfer Stage1-SARequestsSecurityGuarantee 
+  (thereExists ?ACT1 
+    (and 
+      (subProcess HPKBScenarioConflict ?ACT1) 
+      (instance ?ACT1 Action) 
+      (maleficiary ?ACT1 SaudiArabia)))) 
+
+(query (findall ?RESP
+  (thereExists ?ACT 
+    (and 
+      (subProcess HPKBScenarioConflict ?ACT) 
+      (instance ?ACT Communicating) 
+      (topicOfInfoTransfer ?ACT 
+        (thereExists ?ACT1 
+          (and 
+            (subProcess HPKBScenarioConflict ?ACT1) 
+            (instance ?ACT1 Action) 
+            (maleficiary ?ACT1 SaudiArabia))))
+      (inReactionTo ?RESP ?ACT) 
+      (agent ?ACT SaudiArabia) 
+      (agent ?RESP Iran) 
+      (temporallySubsumes 
+        (DateInSituationFn CalendarDay 18 HPKBScenarioConflict) ?RESP) 
+      (temporallySubsumes 
+        (DateInSituationFn CalendarDay 17 HPKBScenarioConflict) ?ACT)))))
+
+(answer Stage1-IranRefusesToProvideApology)
+(answer Stage1-IranRefusesToProvideSecurity)
+
+(end_of_file)
+
+
+

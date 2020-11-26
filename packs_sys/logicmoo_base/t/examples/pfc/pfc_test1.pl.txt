@@ -1,0 +1,1940 @@
+/* Part of LogicMOO Base mpred_mpred_testing
+% Tests a prolog database replacent that uses PFC
+%  
+%
+% Logicmoo Project PrologMUD: A MUD server written in Prolog
+% Maintainer: Douglas Miles
+% Dec 13, 2035
+%
+*/
+
+:- include('mpred_header.pi').
+
+
+% user:term_expansion(A,B):- \+ t_l:disable_px, current_predicate(pfcExpansion_loaded/0),loop_check(mpred_file_expansion(A,B)),A\=@=B.
+
+
+:- mpred_trace.
+%:- pfcWatch.
+:- mpred_warn.
+
+next_test :- sleep(1),pfcReset.
+
+
+% :-dynamic((species/2)).
+
+:- mpred_setting_change(add,default,ain).
+
+
+species(fred,human).
+species(rover,dog).
+species(felix,cat).
+species(house1, house).
+species(house2, house).
+species(house3, house).
+species(house4, house).
+species(car1, car).
+species(car2, car).
+species(car3, car).
+
+male(fred).
+male(joe).
+male(jed).
+male(sam).
+male(george).
+male(jack).
+male(rover).
+male(felix).
+male(rover).
+male(felix).
+male(tramp).
+male(snoopy).
+%male(tim).
+male(harry).
+male(jason).
+female(mary).
+female(sally).
+female(jane).
+female(jill).
+female(mavis).
+female(lady).
+female(lassie).
+female(freida).
+female(jane).
+%female(terry).
+
+hasChild(fred, jed).
+hasChild(fred, sally).
+hasChild(joe, jane).
+hasChild(mary, jed).
+hasChild(mary, sally).
+hasChild(mary, jane).
+hasChild(jane, george).
+hasChild(jane, jack).
+hasChild(sam, george).
+hasChild(sam, jack).
+hasChild(jill, mavis).
+hasChild(george, mavis).
+hasChild(lady, rover).
+hasChild(lady, lassie).
+hasChild(tramp, lassie).
+hasChild(rover, snoopy).
+hasChild(lassie, snoopy).
+hasChild(tim, jason).
+hasChild(freida, jason).
+hasChild(jane, terry).
+hasChild(harry, terry).
+hasChild(jason, jill).
+hasChild(terry, jill).
+
+owns(sam, rover).
+owns(jane, rover).
+owns(jack, felix).
+owns(joe, snoopy).
+owns(tim, car2).
+owns(jane, house2).
+owns(harry, house2).
+owns(joe, car3).
+owns(terry, house4).
+owns(terry, car1).
+owns(jason, house4).
+owns(jason, car1).
+owns(jill, house1).
+owns(mavis, house3).
+owns(jane, lady).
+
+:- mpred_setting_change(neck,default,(<-)).
+
+parentOf(X,Y) :- hasChild(X,Y).
+
+
+motherOf(X,Y) :- parentOf(X,Y), female(X).
+motherOf(X,Y) :- parentOf(B,Y), parentOf(X,Y), X \= B, male(B).
+
+fatherOf(X,Y) :- parentOf(X,Y), male(X).
+fatherOf(X,Y) :- parentOf(B,Y), parentOf(X,Y), X \= B, female(B).
+
+grandparentOf(X,Y) :- parentOf(X,Z), parentOf(Z,Y).
+
+grandmotherOf(X,Y) :- grandparentOf(X,Y), female(X).
+grandmotherOf(X,Y) :- grandparentOf(X,Y), isFemale(X).
+
+grandfatherOf(X,Y) :- grandparentOf(X,Y), male(X).
+grandfatherOf(X,Y) :- grandparentOf(X,Y), isMale(X).
+
+greatgrandparentOf(X,Y) :- parentOf(X,Z), parentOf(Z,A), parentOf(A,Y).
+
+greatgrandmotherOf(X,Y) :- greatgrandparentOf(X,Y), female(X).
+greatgrandmotherOf(X,Y) :- greatgrandparentOf(X,Y), isFemale(X).
+
+greatgrandfatherOf(X,Y) :- greatgrandparentOf(X,Y), male(X).
+greatgrandfatherOf(X,Y) :- greatgrandparentOf(X,Y), isMale(X).
+
+childOf(X,Y) :- parentOf(Y,X).
+
+daughterOf(X,Y) :- parentOf(Y,X), isFemale(X).
+
+sonOf(X,Y) :- parentOf(Y,X), isMale(X).
+
+grandchildOf(X,Y) :- parentOf(Y,Z), parentOf(Z,X).
+
+granddaughterOf(X,Y) :- female(X), grandparentOf(Y,X).
+granddaughterOf(X,Y) :- isFemale(X), grandparentOf(Y,X).
+
+grandsonOf(X,Y) :- male(X), grandparentOf(Y,X).
+grandsonOf(X,Y) :- isMale(X), grandparentOf(Y,X).
+
+greatgrandchildOf(X,Y) :- greatgrandparentOf(Y,X).
+
+greatgranddaughterOf(X,Y) :- female(X), greatgrandparentOf(Y,X).
+greatgranddaughterOf(X,Y) :- isFemale(X), greatgrandparentOf(Y,X).
+
+greatgrandsonOf(X,Y) :- male(X), greatgrandparentOf(Y,X).
+greatgrandsonOf(X,Y) :- isMale(X), greatgrandparentOf(Y,X).
+
+ancestorOf(X,Y) :- parentOf(X, Y).
+ancestorOf(X,Y) :- parentOf(X, Z), ancestorOf(Z,Y).
+
+ancestorOf(X,Y,0) :- X =Y,true.
+ancestorOf(X,Y,1) :- parentOf(X,Y).
+ancestorOf(X,Y,N) :- number(N),!,N>1, N1 is N -1, ancestorOf(X,Y,N1).
+
+parent(X) :- hasChild(X,Y).
+
+%helper function
+descendantOf(X,Y) :- childOf(X,Y).
+descendantOf(X,Y) :- childOf(X,Z), childOf(Z,Y).
+related(X,X).
+related(X,Y) :- ancestorOf(X,Y).
+related(X,Y) :- ancestorOf(Y,X).
+related(X,Y) :- descendantOf(X,Y).
+related(X,Y) :- descendantOf(Y,X).
+
+sibling(X,Y) :- motherOf(Z,X), motherOf(Z,Y), fatherOf(W,X), fatherOf(W,Y), \+pet(X), \+pet(Y), X \= Y.
+
+sisterOf(X,Y) :- sibling(X,Y), female(X).
+sisterOf(X,Y) :- sibling(X,Y), isFemale(X).
+
+brotherOf(X,Y) :- sibling(X,Y), male(X).
+brotherOf(X,Y) :- sibling(X,Y), isMale(X).
+
+%helping function 
+atLeastOneParent(X,Y) :- (motherOf(Z,X), motherOf(Z,Y) ; fatherOf(W,X), fatherOf(W,Y) ).
+atLeastTwoParents(X,Y) :- (motherOf(Z,X), motherOf(Z,Y) , fatherOf(W,X), fatherOf(W,Y) ).
+stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+pet(X), \+pet(Y), X \= Y.
+
+getSpecies(X,Y) :- species(X,Y).
+
+:- mpred_setting_change(neck,default,(==>)).
+
+isMale(A) :- male(A).
+isMale(A) :- parentOf(B, Y), parentOf(A, Y), A \= B, female(B).
+
+isFemale(A) :- female(A).
+isFemale(A) :- parentOf(B, Y), parentOf(A, Y), A \= B, male(B).
+
+pet(X) :- owns(Y,X), ( isMale(X) ; isFemale(X) ).
+
+
+(species(I,C) <==> (isa(I,C),isa(C,tCol))).
+
+t(Pred,A1,A2):- atom(Pred),Call=..[Pred,A1,A2],call(Call).
+% t(Pred,A1,A2,A3):- atom(Pred),Call=..[Pred,A1,A2,A3],(Call).
+
+((argIsa(Pred,1,Col),t(Pred,Arg,_)) ==> isa(Arg,Col)).
+
+((argIsa(Pred,2,Col),t(Pred,_,Arg)) ==> isa(Arg,Col)).
+
+argIsa(owns,1,human).
+argIsa(owns,2,notHuman).
+
+% :-mpred_set_forward(parent/1).
+
+end_of_file.
+
+:- dynamic((disjointWith/2,genls/2,isa/2)).
+
+%(disjointWith(P1,P2) , genls(C1,P1)) ==>    disjointWith(C1,P2).
+disjointWith(Sub, Super) ==> disjointWith( Super, Sub).
+disjointWith(tObj,tRegion).
+disjointWith(ttSpatialType,ttAbstractType).
+
+
+tCol(Col) <==> isa(Col,tCol).
+
+% (isa(I,Sub), genls(Sub, Super)) ==> isa(I,Super).
+
+
+
+(isa(I,Sub), disjointWith(Sub, Super)) ==> neg(isa(I,Super)).
+
+genls(tPartofObj,tItem).
+
+% dividesBetween(tItem,tPathways).
+dividesBetween(tItem,tMassfull,tMassless).
+dividesBetween(tObj,tItem,tAgent).
+dividesBetween(tObj,tMassfull,tMassless).
+dividesBetween(tSpatialThing,tObj,tRegion).
+dividesBetween(tAgent,tHumanControlled,tNpcPlayer).
+
+dividesBetween(S,C1,C2) ==> (disjointWith(C1,C2) , genls(C1,S) ,genls(C2,S)).
+
+disjointWith(P1,P2) ==> (neg(isa(C,P1)) <==> isa(C,P2)).
+
+isa(Col1, ttObjectType) ==> ~isa(Col1, ttExpressionType).
+
+==> tCol(tCol).
+==> tCol(tPred).
+==> tCol(tFunction).
+==> tCol(tRelation).
+==> tCol(ttSpatialType).
+==> tCol(ttExpressionType).
+==> tCol(functorDeclares).
+% tCol(ArgsIsa):-ttPredType(ArgsIsa).
+% TODO decide if OK
+%tCol(F):-t(functorDeclares,F).
+==> tCol(ttExpressionType).
+==> tSpec(vtActionTemplate).
+==> tCol(tRegion).
+==> tCol(tContainer).
+
+isa(tRegion,ttSpatialType).
+isa(tRelation,ttAbstractType).
+
+
+
+:- dynamic(mpred_default/1).
+% -*-Prolog-*-
+% here is an example which defines mpred_default facts and rules.  Will it work?
+
+(((mpred_default(P)/mpred_literal(P))  ==>  (~neg(P) ==> P))).
+
+((mpred_default((P ==> Q))/mpred_literal(Q) ==> (P, ~neg(Q) ==> Q))).
+
+
+:- dynamic(conflict/1).
+% a conflict triggers a Prolog action to resolve it.
+((conflict(C) ==> {resolveConflict(C)})).
+
+:- dynamic(resolveConflict/1).
+% this isnt written yet.
+resolveConflict(C) :-
+  format("~NHalting with conflict ~w", [C]),
+   pfcJustification_L(C),
+   mpred_negate(C,N),
+   pfcJustification_L(N),   
+  mpred_halt.
+
+% meta rules to schedule inferencing.
+
+% resolve conflicts asap
+mpred_select(conflict(X),S) :- mpred_queue(conflict(X),S).
+  
+% a pretty basic conflict.
+{mpred_literal(P)}, neg(P), P ==> conflict(P).
+
+/*
+% reflexive equality
+equal(A,B) ==> equal(B,A).
+equal(A,B),{ \\+ (A=B}),equal(B,C),{ \\+ (A=C)} ==> equal(A,C).
+
+notequal(A,B) <- notequal(B,A).
+notequal(C,B) <- equal(A,C),notequal(A,B).
+*/
+
+% is this how to define constraints?
+% either(P,Q) ==> (neg(P) ==> Q), (neg(Q) ==> P).
+% (P,Q ==> false) ==> (P ==> neg(Q)), (Q ==> neg(P)).
+
+:- dynamic((fly/1,bird/1,penguin/1)).
+
+
+% birds fly by mpred_default.
+(mpred_default((bird(X) ==> fly(X)))).
+
+% heres one way to do an subclass hierarchy.
+
+(((genls_test(C1,C2) ==>
+  {P1 =.. [C1,X],
+    P2 =.. [C2,X]},
+  (P1 ==> P2)))).
+
+(genls_test(canary,bird)).
+(genls_test(penguin,bird)).
+
+% penguins do neg fly.
+(penguin(X) ==> neg(fly(X))).
+
+% chilly is a penguin.
+(penguin(chilly)).
+
+% tweety is a canary.
+(canary(tweety)).
+
+:- prolog.
+
+end_of_file.
+
+
+% asserting mpred_sv(p) cuases p/2 to be treated as a mpred_sv, i.e.
+% if p(foo,1)) is a fact and we ain_db p(foo,2), then the forrmer assertion
+% is retracted.
+
+mpred_sv(Pred,Arity)
+  ==>
+  {
+   dynamic(Pred/Arity),
+   length(AfterList,Arity),
+   append(Left,[A],AfterList),
+   append(Left,[B],BeforeList),
+  After =.. [Pred|AfterList],
+  Before =.. [Pred|BeforeList]},
+  (After,{Before, \==(A , B)} ==> {rem2(Before)}).
+
+
+% rem assertions about satisfied goals.
+action(Goal), Goal, {format("~n Doing ~q.~n",[Goal])} ==>  {rem2(action(Goal))}.
+
+% if someone picks up an object, then it is no longer "on" anything.
+grasping(_Actor,Object) ==> {rem2(on(Object,_))}.
+
+% objects that arent being held or on something end up on the floor.
+
+object(Object), 
+~on(Object,X)/( \==(X , floor)),
+~grasping(_,Object)
+ ==>
+{on(Object,floor);format("~n~w falls to the floor.",[Object])},
+on(Object,floor).
+
+
+% This accomplishes moving an actor from XY1 to XY2, taking a help
+% object along.
+
+action(moveto(Actor,From,To))
+  ==>
+  {rem2(at(Actor,From)),
+   ain(at(Actor,To)),
+   (grasping(Actor,Object) -> ain(at(Object,To)) ; true),
+   rem2(action(moveto(Actor,From,To)))}.
+   
+
+% if X is reported to be on some new object Obj2, rem the assertion
+% that it was on Obj1.
+
+==> mpred_sv(at,2).
+
+at(X,Y) ==> {format("~n~w now at ~w",[X,Y])}.
+
+==> mpred_sv(grasping,2).
+
+==> mpred_sv(on,2).
+
+on(X,Y) ==> {format("~n~w now on ~w",[X,Y])}.
+
+
+
+% monkey and bananas problem in Pfc
+
+% jump to the floor.
+action(on(Actor,floor)) ==>
+  { format("~n~w jumps onto the floor",[Actor]),
+  ain(on(Actor,floor)) }.
+
+action(on(Actor,X)),
+at(Actor,Loc),
+at(X,Loc),
+~grasping(Actor,_)
+  ==> {
+  format("~n~w climbs onto ~w.",[Actor,X]),
+  ain(on(Actor,X)) }.
+
+action(grasping(Actor,Object)),
+weight(Object,light),
+at(Object,XY)
+==>
+
+ (~at(Actor,XY)  ==>  {ain(action(at(Actor,XY)))}),
+
+ (~on(Object,ceiling),at(Actor,XY)
+  ==>
+  {format("~n~w picks up ~w.",[Actor,Object])},
+  {ain(grasping(Actor,Object))}),
+
+ (on(Object,ceiling), at(ladder,XY)
+  ==>
+     (~on(Actor, ladder)
+      ==>
+      {format("~n~w wants to climb ladder to get to ~w.",[Actor,Object]),
+       ain(action(on(Actor,ladder)))}),
+
+     (on(Actor,ladder)
+      ==>
+      {format("~n~w climbs ladder and grabs ~w.",[Actor,Object]),
+       grasping(Actor,Object)})),
+      
+ (on(Object,ceiling), ~at(ladder,XY)
+  ==>
+  {format("~n~w wants to move ladder to ~w.",[Actor,XY]),
+  ain(action(move(Actor,ladder,XY)))}).
+
+
+action(at(Actor,XY)),
+   at(Actor,XY2)/( \==(XY , XY2))
+    ==>
+   {format("~n~w wants to move from ~w to ~w",[Actor,XY2,XY]),
+    ain(action(moveto(Actor,XY2,XY)))}.
+
+(action(on(Actor,Object)) ; action(grasping(Actor,Object))),
+at(Object,XY),
+at(Actor,XY),
+grasping(Actor,Object2)/( \==(Object2 , Object))
+  ==>
+{format("~n~w releases ~w.",[Actor,Object2]),
+ rem2(grasping(Actor,Object2))}.
+
+
+
+action(move(Actor,Object,Destination)),
+ grasping(Actor,Object),
+ at(Actor,XY)/( \==(XY , Destination))
+  ==> action(moveto(Actor,XY,Destination)).
+
+action(move(Actor,Object,Destination)),
+ ~grasping(Actor,Object)
+  ==>  action(grasping(Actor,Object)).
+
+
+% predicates to describe whats going on.
+% action(...
+
+
+% here''s how to do it:
+start :-
+
+  ain(object(bananas)),
+  ain(weight(bananas,light)),
+  ain(at(bananas,xy(9,9))),
+  ain(on(bananas,ceiling)),
+
+  ain(object(couch)),
+  ain(wieght(couch,heavy)),
+  ain(at(couch,xy(7,7))),
+  ain(on(couch,floor)),
+
+  ain(object(ladder)),
+  ain(weight(ladder,light)),
+  ain(at(ladder,xy(4,3))),
+  ain(on(ladder,floor)),
+
+  ain(object(blanket)),
+  ain(weight(blanket,light)),
+  ain(at(blanket,xy(7,7))),
+
+  ain(object(monkey)),
+  ain(on(monkey,couch)),
+  ain(at(monkey,xy(7,7))),
+  ain(grasping(monkey,blanket)).
+
+:- dynamic(go/0).
+% go. to get started.
+go :- ain(action(grasping(monkey,bananas))).
+
+db :- listing([object,at,on,grasping,weight,action]).
+
+
+
+
+% -*-Prolog-*-
+  
+==> factoral(0,1).
+==> factoral(1,1).
+==> factoral(2,2).
+factoral(N,M) <- {N>0,N1 is N-1}, factoral(N1,M1), {M is N*M1}.
+
+ 
+==> fibonacci(1,1).
+==> fibonacci(2,1).
+fibonacci(N,M) <- 
+  {N>2,N1 is N-1,N2 is N-2},
+  fibonacci(N1,M1),
+  fibonacci(N2,M2),
+  {M is M1+M2}.
+
+
+end_of_file.
+
+% -*-Prolog-*-
+
+
+:- dynamic ('-->>')/2.
+:- dynamic ('--*>>')/2.
+
+% a simple pfc dcg grammar.  requires dcg_mpred.pl
+
+% backward grammar rules.
+s(s(Np,Vp)) -->> np(Np), vp(Vp).
+
+vp(vp(V,Np)) -->> verb(V), np(Np).
+vp(vp(V)) -->> verb(V).
+vp(vp(VP,X)) -->> vp(VP), pp(X).
+
+np(np(N,D)) -->> det(D), noun(N).
+np(np(N)) -->> noun(N).
+np(np(Np,pp(Pp))) -->> np(Np), pp(Pp).
+
+pp(pp(P,Np)) -->> prep(P), np(Np).
+
+% forward grammar rules.
+P --*>>  [W],{cat(W,Cat),P =.. [Cat,W]}.
+
+% simple facts.
+cat(the,det).
+cat(a,det).
+cat(man,noun).
+cat(fish,noun).
+cat(eats,verb).
+cat(catches,verb).
+cat(in,prep).
+cat(on,prep).
+cat(house,noun).
+cat(table,noun).
+
+:- compile_mpredg.
+
+
+
+
+% -*-Prolog-*-
+
+
+
+or(P,Q) ==> 
+  (neg(P) ==> Q),
+  (neg(Q) ==> P).
+		
+prove_by_contradiction(P) :- P.
+prove_by_contradiction(P) :-
+  \+ (neg(P) ; P),
+  ain(neg(P)),
+  P -> rem1(neg(P))
+    ; (rem1(neg(P)),fail).
+
+/*
+==> or(p,q).
+==> (p ===> x).
+==> (q ===> x).
+*/
+
+% try :- prove_by_contradiction(x).
+
+  
+
+or(P1,P2,P3) ==>
+  (neg(P1), neg(P2) ==> P3),
+  (neg(P1), neg(P3) ==> P2),
+  (neg(P2), neg(P3) ==> P1).
+
+
+
+
+
+%% some simple tests to see if Pfc is working properly
+
+:- mpred_trace.
+
+time(Call,Time) :-
+  statistics(runtime,_),
+  call_pl(Call),
+  statistics(runtime,[_,Time]).
+
+
+test0 :- 
+  ain([(p(X) ==> q),
+       p(1),
+       (p(X), ~r(X) ==> s(X)),
+       (t(X), {X>0} ==> r(X)),
+       (t(X), {X<0} ==> minusr(X)),
+       t(-2),
+       t(1)]).
+
+test1 :-
+  consult('kinship.pfc'),
+  consult('finin.pfc').
+
+% test2 
+:- 
+  ain([(a(X),~b(Y)/(Y>X) ==> biggest(a)),
+       (b(X),~a(Y)/(Y>X) ==> biggest(b)),
+        a(5)]).
+
+
+%test3 :-
+%  ain([(a(X),\+(b(Y))/(Y>X) ==> biggest(a)),
+%       (b(X),\+a((Y))/(Y>X) ==> biggest(b)),
+%        a(5)]).
+
+% test4 
+:- 
+    ain([(foo(X), bar(Y)/{X=:=Y} ==> foobar(X)),
+         (foobar(X), go ==> found(X)),
+	 (found(X), {X>=100} ==> big(X)),
+	 (found(X), {X>=10,X<100} ==> medium(X)),
+	 (found(X), {X<10} ==> little(X)),
+	 foo(1),
+	 bar(2),
+	 bar(1),
+	 foo(100),
+	 goAhead,
+	 bar(100)
+	]).
+
+
+% test5 
+:- 
+    ain([(faz(X), ~baz(Y)/{X=:=Y} ==> fazbaz(X)),
+         (fazbaz(X), go ==> found(X)),
+	 (found(X), {X>=100} ==> big(X)),
+	 (found(X), {X>=10,X<100} ==> medium(X)),
+	 (found(X), {X<10} ==> little(X)),
+	 faz(1),
+	 goAhead,
+	 baz(2),
+	 baz(1)
+	]).
+
+
+% test6 
+:- 
+    ain([(d(X), ~f(Y)/{X=:=Y} ==> justD(X)),
+         (justD(X), go ==> dGo(X)),
+	 d(1),
+	 go,
+	 f(1)
+	]).
+
+
+% test7 
+:- 
+    ain([(g(X), h(Y)/{X=:=Y} ==> justG(X)),
+         (justG(X), go ==> gGo(X)),
+	 g(1),
+	 go,
+	 h(1)
+	]).
+
+
+% test8 
+:- 
+    ain([(j(X), k(Y) ==> bothJK(X,Y)),
+         (bothJK(X,Y), go ==> jkGo(X,Y)),
+	 j(1),
+	 go,
+	 k(2)
+	]).
+
+
+% test9 
+:- 
+    ain([(j(X), k(Y) ==> bothJK(X,Y)),
+         (bothJK(X,Y) ==> jkGo(X,Y)),
+	 j(1),
+	 k(2)
+	]).
+
+% test10 
+:- 
+  ain([
+	(j(X), k(Y) ==> bothJK(X,Y)),
+	(bothJK(X,Y), go ==> jkGo(X,Y)),
+	j(1),
+	go,
+	k(2)
+       ]).
+
+
+
+% -*-Prolog-*-
+
+%% meta rules
+
+/*
+
+:- op(1050,xfx, ('===>') ).
+
+:- dynamic ( ('===>') /2).
+
+% ops5-like production:
+
+(Lsh ===> Rhs) ==>  (Lsh ==> {Rhs}).
+
+:- op(1050,xfx,('===>')).
+
+(P ===> Q) ==> 
+  (P ==> Q),
+  (neg(Q) ==> neg(P)).
+
+*/
+
+
+
+
+  % -*-Prolog-*-
+% here is an example which defines mpred_default facts and rules.  Will it work?
+
+(mpred_default(P)/mpred_literal(P))  ==>  (~neg(P) ==> P).
+
+mpred_default((P ==> Q))/mpred_literal(Q) ==> (P, ~neg(Q) ==> Q).
+
+% birds fly by mpred_default.
+==> mpred_default((bird(X) ==> fly(X))).
+
+% here's one way to do an isa hierarchy.
+% isa = genls.
+
+isa(C1,C2) ==>
+  {P1 =.. [C1,X],
+    P2 =.. [C2,X]},
+  (P1 ==> P2).
+
+==> isa(canary,bird).
+==> isa(penguin,bird).
+
+% penguins do neg fly.
+penguin(X) ==> neg(fly(X)).
+
+% chilly is a penguin.
+:- (ain(==> penguin(chilly))).
+
+% rtrace(Goal):- Goal. % (quietly((visible(+all),visible(+unify),visible(+exception),leash(-all),leash(+exception))),(trace,Goal),leash(+all)).
+
+% :- gutracer.
+
+
+:- prolog.
+end_of_file.
+
+:- next_test.
+:- debug.
+
+
+end_of_file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% dcg_mpred: translation of dcg-like grammar rules into pfc rules.
+
+:- op(1200,xfx,'-->>').
+:- op(1200,xfx,'--*>>').
+% :- op(1200,xfx,'<<--').
+:- op(400,yfx,'\').
+
+% :- use_module(library(strings)), use_module(library(lists)).
+
+term_expansion((P -->> Q),(:- fcAdd(Rule))) :-
+  mpred_translate_rule((P -->> Q), Rule).
+term_expansion((P --*>> Q),(:- fcAdd(Rule))) :-
+  mpred_translate_rule((P --*>> Q), Rule).
+
+mpred_translate_rule((LP-->>[]),H) :- !, mpred_t_lp(LP,Id,S,S,H).
+mpred_translate_rule((LP-->>RP),(H <- B)):-
+   mpred_t_lp(LP,Id,S,SR,H),
+   mpred_t_rp(RP,Id,S,SR,B1),
+   mpred_tidy(B1,B).
+
+
+mpred_translate_rule((LP--*>>[]),H) :- !, mpred_t_lp(LP,Id,S,S,H).
+mpred_translate_rule((LP--*>>RP),(B ==> H)):-
+   mpred_t_lp(LP,Id,S,SR,H),
+   mpred_t_rp(RP,Id,S,SR,B1),
+   mpred_tidy(B1,B).
+
+mpred_t_lp(X,Id,S,SR,ss(X,Id,(S\SR))) :- var(X),!.
+
+mpred_t_lp((LP,List),Id,S,SR,ss(LP,Id,(S\List2))):- 
+   !,
+   pfcAppend(List,SR,List2).
+
+mpred_t_lp(LP,Id,S,SR,ss(LP,Id,(S\SR))).
+
+mpred_t_rp(!,Id,S,S,!) :- !.
+mpred_t_rp([],Id,S,S1,S=S1) :- !.
+mpred_t_rp([X],Id,S,SR,ss(word(X),Id,(S\SR))) :- !.
+mpred_t_rp([X|R],Id,S,SR,(ss(word(X),Id,(S\SR1)),RB)) :- 
+  !, 
+  mpred_t_rp(R,Id,SR1,SR,RB).
+mpred_t_rp({T},Id,S,S,{T}) :- !.
+mpred_t_rp((T,R),Id,S,SR,(Tt,Rt)) :- !,
+   mpred_t_rp(T,Id,S,SR1,Tt),
+   mpred_t_rp(R,Id,SR1,SR,Rt).
+mpred_t_rp((T;R),Id,S,SR,(Tt;Rt)) :- !,
+   mpred_t_or(T,Id,S,SR,Tt),
+   mpred_t_or(R,Id,S,SR,Rt).
+mpred_t_rp(T,Id,S,SR,ss(T,Id,(S\SR))).
+
+mpred_t_or(X,Id,S0,S,P) :-
+   mpred_t_rp(X,Id,S0a,S,Pa),
+ ( var(S0a), S0a \== S, !, S0=S0a, P=Pa;
+   P=(S0=S0a,Pa) ).
+
+mpred_tidy((P1;P2),(Q1;Q2)) :-
+   !,
+   mpred_tidy(P1,Q1),
+   mpred_tidy(P2,Q2).
+mpred_tidy(((P1,P2),P3),Q) :- 
+   mpred_tidy((P1,(P2,P3)),Q).
+mpred_tidy((P1,P2),(Q1,Q2)) :- 
+   !,
+   mpred_tidy(P1,Q1),
+   mpred_tidy(P2,Q2).
+mpred_tidy(A,A) :- !.
+
+compile_mpredg :-
+  ((retract((L -->> R)), mpred_translate_rule((L -->> R), PfcRule));
+    (retract((L --*>> R)), mpred_translate_rule((L --*>> R), PfcRule))),
+  fcAdd(PfcRule),
+  fail.
+compile_mpredg.
+
+parse(Words) :- 
+  parse(Words,Id),
+  format("~Nsentence id = ~w",Id),
+  show(Id,sentence(X)).
+
+parse(Words,Id) :- 
+  gen_s_tag(Id),
+  parse1(Words,Id),
+  fcAdd(sentence(Id,Words)).
+
+parse1([],_) :- !.
+parse1([H|T],Id) :-
+ do(fcAdd(ss(word(H),Id,([H|T]\T)))),
+ parse1(T,Id).
+
+
+showSentences(Id) :- showSentences(Id,_).
+
+showSentences(Id,Words) :-
+  sentence(Id,Words),
+  pfc(ss(s(S),Id,(Words\[]))),
+  nl,write(S),
+  fail.
+showSentences(_,_).
+
+do(X) :- call(X) -> true;true.
+
+show(Id,C) :-
+  pfc(ss(C,Id,A\B)),
+  append(Words,B,A),
+  format("~n ~w    :   ~w",[C,Words]),
+  fail.
+
+gen_s_tag(s(N2)) :-
+  var(V),
+  (retract(s_tag(N)); N=0),
+  N2 is N+1,
+  assert(s_tag(N2)).
+
+make_term(ss(Constituent,Id,String),Term) :-
+   Constituent =.. [Name|Args],
+   name(Name,Name_string),
+   name(Name2,[36|Name_string]),
+   append([Name2|Args],[Id,String],Term_string),
+   Term =.. Term_string.
+append([],X,X).
+append([H|T],L2,[H|L3]) :- append(T,L2,L3).
+
+
+
+% -*-Prolog-*-
+
+:- dynamic ('-->>')/2.
+:- dynamic ('--*>>')/2.
+
+% a simple pfc dcg grammar.  requires dcg_mpred.pl
+
+% backward grammar rules.
+s(s(Np,Vp)) -->> np(Np), vp(Vp).
+
+vp(vp(V,Np)) -->> verb(V), np(Np).
+vp(vp(V)) -->> verb(V).
+vp(vp(VP,X)) -->> vp(VP), pp(X).
+
+np(np(N,D)) -->> det(D), noun(N).
+np(np(N)) -->> noun(N).
+np(np(Np,pp(Pp))) -->> np(Np), pp(Pp).
+
+pp(pp(P,Np)) -->> prep(P), np(Np).
+
+% forward grammar rules.
+P --*>>  [W],{cat(W,Cat),P =.. [Cat,W]}.
+
+% simple facts.
+cat(the,det).
+cat(a,det).
+cat(man,noun).
+cat(fish,noun).
+cat(eats,verb).
+cat(catches,verb).
+cat(in,prep).
+cat(on,prep).
+cat(house,noun).
+cat(table,noun).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% tweety is a canary.
+==> canary(tweety).
+
+%% some simple tests to see if Pfc is working properly
+
+time(Call,Time) :-
+  statistics(runtime,_),
+  db_call(Call),
+  statistics(runtime,[_,Time]).
+
+
+%test0 
+:- 
+  ain([(p(X) ==> q),
+       p(1),
+       (p(X), ~r(X) ==> s(X)),
+       (t(X), {X>0} ==> r(X)),
+       (t(X), {X<0} ==> minusr(X)),
+       t(-2),
+       t(1)]).
+
+%test1 
+:- 
+  consult('pfc/kinship.pfc'),
+  consult('pfc/finin.pfc').
+
+:- dynamic((a/2,b/2,found/1)).
+
+%test2 
+:- 
+  ain([(a(X),~b(Y)/(Y>X) ==> biggest(a)),
+       (b(X),~a(Y)/(Y>X) ==> biggest(b)),
+        a(5)]).
+
+
+test3 :-
+  ain([(a(X),\+(b(Y))/(Y>X) ==> biggest(a)),
+       (b(X),\+a((Y))/(Y>X) ==> biggest(b)),
+        a(5)]).
+
+
+%test4 
+:- 
+    ain([(foo(X), bar(Y)/{X=:=Y} ==> foobar(X)),
+         (foobar(X), go ==> found(X)),
+	 (found(X), {X>=100} ==> big(X)),
+	 (found(X), {X>=10,X<100} ==> medium(X)),
+	 (found(X), {X<10} ==> little(X)),
+	 foo(1),
+	 bar(2),
+	 bar(1),
+	 foo(100),
+	 goAhead,
+	 bar(100)
+	]).
+
+
+%test5 
+:- 
+    ain([(faz(X), ~baz(Y)/{X=:=Y} ==> fazbaz(X)),
+         (fazbaz(X), go ==> found(X)),
+	 (found(X), {X>=100} ==> big(X)),
+	 (found(X), {X>=10,X<100} ==> medium(X)),
+	 (found(X), {X<10} ==> little(X)),
+	 faz(1),
+	 goAhead,
+	 baz(2),
+	 baz(1)
+	]).
+
+
+%test6 
+:- 
+    ain([(d(X), ~f(Y)/{X=:=Y} ==> justD(X)),
+         (justD(X), go ==> dGo(X)),
+	 d(1),
+	 go,
+	 f(1)
+	]).
+
+
+%test7 
+:- 
+    ain([(g(X), h(Y)/{X=:=Y} ==> justG(X)),
+         (justG(X), go ==> gGo(X)),
+	 g(1),
+	 go,
+	 h(1)
+	]).
+
+
+test8 :-
+    ain([(j(X), k(Y) ==> bothJK(X,Y)),
+         (bothJK(X,Y), go ==> jkGo(X,Y)),
+	 j(1),
+	 go,
+	 k(2)
+	]).
+
+
+test9 :-
+    ain([(j(X), k(Y) ==> bothJK(X,Y)),
+         (bothJK(X,Y) ==> jkGo(X,Y)),
+	 j(1),
+	 k(2)
+	]).
+
+test10 :-
+  ain([
+	(j(X), k(Y) ==> bothJK(X,Y)),
+	(bothJK(X,Y), go ==> jkGo(X,Y)),
+	j(1),
+	go,
+	k(2)
+       ]).
+
+
+:- next_test. % ==
+
+
+% if we learn that someone has a full name, then we know they are a  'lmcode'.
+full_name(U,_) ==>  'lmcode'(U).
+
+
+% if we learn that someone has a host name, then we know they are a  'lmcode'.
+host_name(U,_) ==>  'lmcode'(U).
+
+
+% when we know a  'lmcode''s full name and host name, make a  'lmcode'/3 assertion.
+ 'lmcode'(User),
+full_name(User,Name),
+host_name(User,Host) 
+  ==>
+   'lmcode'(User,Name,Host).
+
+
+% the mpred_default full_name for a  'lmcode' is 'unknown'.
+ 'lmcode'(User),
+~full_name(User,X)/(X\==unknown)
+  ==>
+full_name(User,unknown).
+  
+
+
+% the mpred_default host_name for a  'lmcode' is 'unknown'.
+ 'lmcode'(User),
+~host_name(User,X)/(X\==unknown)
+  ==>
+host_name(User,unknown).
+
+
+
+
+==> full_name(finin,'Tim Finin').
+
+==> host_name(finin,antares).
+
+==> full_name(robin,'Robin,McEntire').
+
+==> host_name(fritzson,hamlet).
+
+
+
+
+:- next_test. % ==
+
+skCheck(eq(_,_),[]) :- !.
+
+skCheck(P,Rules) :-
+  sk(P,L),
+  bagof(Rule,
+        S^(member(S,L),
+           skNoticer(P,S,Rule)),
+        Rules).
+         
+% L is a list of the skolem constants found in the term P.
+sk(P,L) :- sk1(P,[],L).
+
+sk1(P,L,[P|L]) :- 
+  skolemConstant(P),
+  !,
+  \+member(P,L),
+  !.
+
+sk1(P,L,L) :- 
+  skolemConstant(P),
+  !.
+
+sk1(P,L,L) :- atomic(P),!.
+
+sk1([Head|Tail], Lin, Lout) :-
+  !,
+  sk1(Head,Lin,Ltemp),
+  sk1(Tail,Ltemp,Lout).
+
+sk1(P,Lin,Lout) :-
+  P =.. Plist,
+  sk1(Plist,Lin,Lout).
+
+% a skolem constant is any term sk/1.
+skolemConstant(sk(_)).
+
+
+% make a Pfc rule to add new facts based on equality info about skolem terms.
+skNoticer(P,Sk,(eq(Sk,X)==>P2)) :- termSubst(Sk,X,P,P2).
+  
+
+% list Lisp's subst, but for terms.
+
+termSubst(Old,New,Old,New) :- !.
+
+termSubst(_,_,Term,Term) :- atomic(Term),!.
+
+termSubst(Old,New,[Head|Tail],[Head2|Tail2]) :- 
+  !,
+  termSubst(Old,New,Head,Head2),
+  termSubst(Old,New,Tail,Tail2).
+
+termSubst(Old,New,Term,Term2) :-
+  Term =.. TermList,
+  termSubst(Old,New,TermList,TermList2),
+  Term2 =.. TermList2.
+
+%:- ain((P/( \+P=eq(_,_)) ==> {skCheck(P,Rules)}, Rules)).
+:- ain((P ==> {skCheck(P,Rules)}, Rules)).
+
+:- ain((eq(X,Y) <==> eq(Y,X))).
+
+
+
+
+:- next_test. % ==
+%% a simple Knowledge Representation Language:
+%%   class(Class)
+%%   isa(Individual,Class)
+%%   genls(SuperClass,SubClass)
+%%   role(Class,Role)
+%%   type(Class,Role,Type)
+%%   range(Class,Role,Range)
+
+
+% roles are inherited.
+role(Super,R), genls(Super,Sub) ==> role(Sub,R).
+
+% types are inherited.
+type(Super,Role,Type), genls(Super,Sub) ==> type(Sub,Role,Type).
+
+% classification rule
+genls(Super,Sub),
+      genls(Super,SubSub),
+      {Sub \== SubSub},
+      \+ neg(subsumes(Sub,SubSub)),
+      \+ neg(primitive(SubSub))
+      ==>
+      genls(Sub,SubSub).
+
+disjoint(C1,C2) ==> disjoint(C2,C1).
+
+neg(subsume(C1,C2)) <- genls(C2,C1).
+
+neg(subsumes(C1,C2)) <- disjoint(C1,C2).
+
+neg(subsumes(C1,C2)) <-
+  % we can't infer that C1 subsumes C2 if C1 has a role that C2 doen't.
+  role(C1,R),
+  \+ role(C2,R).
+
+neg(subsumes(C1,C2)) <-
+  % we can't infer that C1 subsumes C2 if C1 has a role a type that...
+  type(C1,R,T1),
+  type(C2,R,T2),
+  neg(subsume(T1,T2)).
+
+:- export otherGender/2.
+:- next_test. % ==
+
+% kinship domain example.
+
+spouse(P1,P2) <==> spouse(P2,P1).
+
+spouse(P1,P2), gender(P1,G1), {otherGender(G1,G2)} ==> gender(P2,G2).
+
+==>otherGender(male,female).
+==>otherGender(female,male).
+
+gender(P,male) <==> male(P).
+
+gender(P,female) <==> female(P).
+
+parent(X,Y), female(X) <==> mother(X,Y).
+
+parent(P1,P2), parent(P2,P3) ==> grandParent(P1,P3).
+
+grandParent(P1,P2), male(P1) <==> grandFather(P1,P2).
+
+grandParent(P1,P2), female(P1) <==> grandMother(P1,P2).
+
+mother(Ma,Kid), parent(Kid,GrandKid) ==> grandMother(Ma,GrandKid).
+
+parent(X,Y), male(X) <==> father(X,Y).
+
+parent(Ma,P1), parent(Ma,P2), {P1\==P2} ==>  sibling(P1,P2).
+
+spouse(P1,P2), spouse(P1,P3), {P2\==P3} ==> 
+   bigamist(P1), 
+   {format("~N~w is a bigamist, married to both ~w and ~w~n",[P1,P2,P3])}.
+
+% here is an example of a mpred_default rule
+
+parent(P1,X), 
+  parent(P2,X)/(P1\==P2),
+  \+ spouse(P1,P3)/(P3\==P2),
+  \+ spouse(P2,P4)/(P4\==P1)
+  ==>
+  spouse(P1,P2).
+
+uncle(U,P1), parent(U,P2) ==> cousin(P1,P2).
+
+aunt(U,P1), parent(U,P2) ==> cousin(P1,P2).
+
+parent(P,K), sibling(P,P2)
+
+   ==>
+
+   (female(P2) 
+     ==> 
+     aunt(P2,K),
+     (spouse(P2,P3) ==> uncle(P3,K))),
+
+   (male(P2) 
+     ==> 
+     uncle(P2,K),
+     (spouse(P2,P3) ==> aunt(P3,K))).
+
+
+:- next_test. % ==
+
+%% equality axiomm
+
+equal(A,B) ==> equal(B,A).
+
+equal(A,B),{\+A=B},equal(B,C),{\+A=C} ==> equal(A,C).
+
+notequal(A,B) ==> notequal(B,A).
+
+notequal(A,B),equal(A,C) ==> notequal(C,B).
+
+
+show_mpred_fact(P) :- send_editor(['(show-assertion "',P,'")']).
+
+hide_mpred_fact(P) :- send_editor(['(hide-assertion "',P,'")']).
+
+demons(P, WhenAdded, WhenRemoved) ==>
+  (P ==> {WhenAdded}),
+  fcUndoMethod(WhenAdded,WhenRemoved).
+
+show(P) ==> demons(P,show_mpred_fact(P),hide_mpred_fact(P)).
+
+
+:- next_test. % ==
+
+:- op(1050,xfx,('===>')).
+
+(P ===> Q) ==> 
+  (P ==> Q),
+  (neg(Q) ==> neg(P)).
+
+
+or(P,Q) ==> 
+  (neg(P) ==> Q),
+  (neg(Q) ==> P).
+		
+prove_by_contradiction(P) :- P.
+prove_by_contradiction(P) :-
+  \+ (neg(P) ; P),
+  ain(neg(P)),
+  P -> pfcRem(neg(P))
+    ; (pfcRem(neg(P)),fail).
+
+==> or(p,q).
+==> (p ===> x).
+==> (q ===> x).
+
+
+% try :- prove_by_contradiction(x).
+
+:- prolog.
+
+:- next_test. % ==
+% here is an example which defines mpred_default facts and rules.  Will it work?
+
+(mpred_default(P)/mpred_literal(P))  ==>  (~neg(P) ==> P).
+
+mpred_default((P ==> Q))/mpred_literal(Q) ==> (P, ~neg(Q) ==> Q).
+
+% birds fly by mpred_default.
+==> mpred_default((bird(X) ==> fly(X))).
+
+% here's one way to do an scl hierarchy.
+% scl = genls.
+
+scl(C1,C2) ==>
+  {P1 =.. [C1,X],
+    P2 =.. [C2,X]},
+  (P1 ==> P2).
+
+==> scl(canary,bird).
+==> scl(penguin,bird).
+
+% penguins do neg fly.
+penguin(X) ==> neg(fly(X)).
+
+% chilly is a penguin.
+==> penguin(chilly).
+
+% tweety is a canary.
+==> canary(tweety).
+
+
+
+% is this how to define constraints?
+
+either(P,Q) ==> (neg(P) ==> Q), (neg(Q) ==> P).
+
+(P,Q ==> false) ==> (P ==> neg(Q)), (Q ==> neg(P)).
+
+
+:- next_test. % ==
+% here is an interesting rule!
+
+neg(P), P ==> contradiction(P).
+
+contradiction(P) ==> 
+  {format('~n% contradiction - both ~w and neg(~w) added.~n',[P,P])}.
+
+% this means that both P and Q can't be true.
+disjoint(P,Q)
+  ==>
+  (P ==> neg(Q)),
+  (Q ==> neg(P)).
+
+==> disjoint(male(P), female(P)).
+
+==> male(shirley).
+
+==> mother(shirley,mary).
+
+mother(X,_Y) ==> female(X).
+
+
+
+
+
+
+bel(A1,desire(A2,know(A2,bel(A1,P)))), self(A1), bel(A1,P) ==> tell(A1,A2,P).
+
+
+bel(A1,desire(A2,knowif(A2,P))),
+self(A1),
+bel(A1,neg(P))
+==>
+tell(A1,A2,neg(P)).
+
+
+==> fact(0,1).
+==> fact(1,1).
+==> fact(2,2).
+fact(N,M) <- {N>0,N1 is N-1}, fact(N1,M1), {M is N*M1}.
+
+ 
+==> fib(1,1).
+==> fib(2,1).
+fib(N,M) <- 
+  {N>2,N1 is N-1,N2 is N-2},
+  fib(N1,M1),
+  fib(N2,M2),
+  {M is M1+M2}.
+
+
+
+:- next_test. % ==
+
+mudAtLoc(Obj,NewLoc), 
+{(mudAtLoc(Obj,OldLoc), OldLoc\==NewLoc)}
+  ==>
+  ~mudAtLoc(Obj,OldLoc).
+
+localityOfObject(Obj,NewLoc), 
+{(localityOfObject(Obj,OldLoc), OldLoc\==NewLoc)}
+  ==>
+  ~localityOfObject(Obj,OldLoc).
+
+function(P) ==>
+  {P1 =.. [P,X,Y],
+   P2 =.. [P,X,Z]},
+  (P1,{(P2,Y\==Z)} ==> ~P2).
+  
+==> function(age).
+
+function(Name,Arity) ==>
+  {functor(P1,Name,Arity),
+   functor(P2,Name,Arity),
+   arg(Arity,P1,PV1),
+   arg(Arity,P2,PV2),
+   N is Arity-1,
+   merge(P1,P2,N)},
+  (P1,{(P2,PV1\==PV2)} ==> ~P2).
+
+
+merge(_,_,N) :- N<1.
+merge(T1,T2,N) :-
+  N>0,
+  arg(N,T1,X),
+  arg(N,T2,X),
+  N1 is N-1,
+  merge(T1,T2,N1).
+
+
+
+neg(P),P ==> contrradiction.
+
+bird(X), ~neg(fly(X)) ==> fly(X).
+
+penguin(X) ==> bird(X).
+
+penguin(X) ==> neg(fly(X)).
+
+bird(X), injured(X) ==> neg(fly(X)).
+
+bird(X), dead(X) ==> neg(fly(X)).
+
+:- pfcPrintDB.
+
+:- next_test.
+
+
+% dcg_mpred: translation of dcg-like grammar rules into pfc rules.
+
+:- op(1200,xfx,'-->>').
+:- op(1200,xfx,'--*>>').
+% :- op(1200,xfx,'<<--').
+:- op(400,yfx,'^^').
+
+% :- use_module(library(strings)), use_module(library(lists)).
+
+term_expansion((P -->> Q),(:- ain(Rule))) :-
+  mpred_translate_rule((P -->> Q), Rule).
+term_expansion((P --*>> Q),(:- ain(Rule))) :-
+  mpred_translate_rule((P --*>> Q), Rule).
+
+mpred_translate_rule((LP-->>[]),H) :- !, mpred_t_lp(LP,Id,S,S,H).
+mpred_translate_rule((LP-->>RP),(H <- B)):-
+   mpred_t_lp(LP,Id,S,SR,H),
+   mpred_t_rp(RP,Id,S,SR,B1),
+   mpred_tidy(B1,B).
+
+
+mpred_translate_rule((LP--*>>[]),H) :- !, mpred_t_lp(LP,Id,S,S,H).
+mpred_translate_rule((LP--*>>RP),(B ==> H)):-
+   mpred_t_lp(LP,Id,S,SR,H),
+   mpred_t_rp(RP,Id,S,SR,B1),
+   mpred_tidy(B1,B).
+
+mpred_t_lp(X,Id,S,SR,ss(X,Id,(S ^^ SR))) :- var(X),!.
+
+mpred_t_lp((LP,List),Id,S,SR,ss(LP,Id,(S ^^ List2))):- 
+   !,
+   pfcAppend(List,SR,List2).
+
+mpred_t_lp(LP,Id,S,SR,ss(LP,Id,(S ^^ SR))).
+
+mpred_t_rp(!,Id,S,S,!) :- !.
+mpred_t_rp([],Id,S,S1,S=S1) :- !.
+mpred_t_rp([X],Id,S,SR,ss(word(X),Id,(S ^^ SR))) :- !.
+mpred_t_rp([X|R],Id,S,SR,(ss(word(X),Id,(S ^^ SR1)),RB)) :- 
+  !, 
+  mpred_t_rp(R,Id,SR1,SR,RB).
+mpred_t_rp({T},Id,S,S,{T}) :- !.
+mpred_t_rp((T,R),Id,S,SR,(Tt,Rt)) :- !,
+   mpred_t_rp(T,Id,S,SR1,Tt),
+   mpred_t_rp(R,Id,SR1,SR,Rt).
+mpred_t_rp((T;R),Id,S,SR,(Tt;Rt)) :- !,
+   mpred_t_or(T,Id,S,SR,Tt),
+   mpred_t_or(R,Id,S,SR,Rt).
+mpred_t_rp(T,Id,S,SR,ss(T,Id,(S ^^ SR))).
+
+mpred_t_or(X,Id,S0,S,P) :-
+   mpred_t_rp(X,Id,S0a,S,Pa),
+ ( var(S0a), S0a \== S, !, S0=S0a, P=Pa;
+   P=(S0=S0a,Pa) ).
+
+mpred_tidy((P1;P2),(Q1;Q2)) :-
+   !,
+   mpred_tidy(P1,Q1),
+   mpred_tidy(P2,Q2).
+mpred_tidy(((P1,P2),P3),Q) :- 
+   mpred_tidy((P1,(P2,P3)),Q).
+mpred_tidy((P1,P2),(Q1,Q2)) :- 
+   !,
+   mpred_tidy(P1,Q1),
+   mpred_tidy(P2,Q2).
+mpred_tidy(A,A) :- !.
+
+compile_mpredg :-
+  ((retract((L -->> R)), mpred_translate_rule((L -->> R), PfcRule));
+    (retract((L --*>> R)), mpred_translate_rule((L --*>> R), PfcRule))),
+  ain(PfcRule),
+  fail.
+compile_mpredg.
+
+parse(Words) :- 
+  parse(Words,Id),
+  format("~Nsentence id = ~w",Id),
+  show(Id,sentence(X)).
+
+
+parse(Words,Id) :- 
+  gen_s_tag(Id),
+  parse1(Words,Id),
+  ain(sentence(Id,Words)).
+
+parse1([],_) :- !.
+parse1([H|T],Id) :-
+ do_or_ignore(ain(ss(word(H),Id,([H|T] ^^ T)))),
+ parse1(T,Id).
+
+
+showSentences(Id) :- showSentences(Id,_).
+
+showSentences(Id,Words) :-
+  sentence(Id,Words),
+  pfc(ss(s(S),Id,(Words ^^ []))),
+  nl,write(S),
+  fail.
+showSentences(_,_).
+
+do_or_ignore(X) :- db_call(X) -> true;true.
+
+show(Id,C) :-
+  pfc(ss(C,Id,A ^^ B)),
+  append(Words,B,A),
+  format("~n ~w    :   ~w",[C,Words]),
+  fail.
+
+gen_s_tag(s(N2)) :-
+  var(V),
+  (retract(s_tag(N)); N=0),
+  N2 is N+1,
+  assert(s_tag(N2)).
+
+make_term(ss(Constituent,Id,String),Term) :-
+   Constituent =.. [Name|Args],
+   name(Name,Name_string),
+   name(Name2,[36|Name_string]),
+   append([Name2|Args],[Id,String],Term_string),
+   Term =.. Term_string.
+%append([],X,X).
+%append([H|T],L2,[H|L3]) :- append(T,L2,L3).
+
+
+
+:- next_test. % ==
+
+:- dynamic ('-->>')/2.
+:- dynamic ('--*>>')/2.
+
+% a simple pfc dcg grammar.  requires dcg_mpred.pl
+
+% backward grammar rules.
+s(s(Np,Vp)) -->> np(Np), vp(Vp).
+
+vp(vp(V,Np)) -->> verb(V), np(Np).
+vp(vp(V)) -->> verb(V).
+vp(vp(VP,X)) -->> vp(VP), pp(X).
+
+np(np(N,D)) -->> det(D), noun(N).
+np(np(N)) -->> noun(N).
+np(np(Np,pp(Pp))) -->> np(Np), pp(Pp).
+
+pp(pp(P,Np)) -->> prep(P), np(Np).
+
+% forward grammar rules.
+P --*>>  [W],{cat(W,Cat),P =.. [Cat,W]}.
+
+% simple facts.
+cat(the,det).
+cat(a,det).
+cat(man,noun).
+cat(fish,noun).
+cat(eats,verb).
+cat(catches,verb).
+cat(in,prep).
+cat(on,prep).
+cat(house,noun).
+cat(table,noun).
+
+
+
+
+
+
+end_of_file.
+
+
+:- next_test. % ==
+
+%% a simple Pfc example - the three bulb problem (see DeKleer and
+%% Williams, IJCAI89)
+%%
+%% Tim Finin, finin@prc.unisys.com, 8/89
+
+% Devices behave as intended unless they are faulty.
+isa(X,Class), ~faulty(X) ==> behave(X,Class).
+
+% connecting two terminals means their voltages are equal.
+connect(T1,T2) ==> (voltage(T1,V) <==> voltage(T2,V)).
+
+equal(voltage(T1),voltage(T2)) <- connect(T1,T2).
+  
+% a wire behaves by connecting its two terminals.
+behave(X,wire) ==> connect(t1(X),t2(X)).
+
+% a battery's behaviour
+behave(X,battery), rating(X,V)
+  ==>
+ voltage(t1(X),V),
+ voltage(t2(X),0).
+
+% a bulb's behaviour.
+behave(X,bulb) ==>
+ (voltage(t1(X),V1),voltage(t2(X),V2), {V1\==V2} ==> lit(X)),
+ (notequal(voltage(t1(X)),voltage(t2(X))) ==> lit(X)).
+
+lit(X) ==> notequal(voltage(t1(X)),voltage(t2(X))).
+
+
+
+% a pretty basic conflict.
+neg(P), P ==> conflict(P).
+
+% this doesn't work anyomore. twf.
+% voltage(T,V) ==> (neg(voltage(T,V2)) <- {\+V=:=V2}).
+
+% It is a conflict if a terminal has two different voltages.
+voltage(T,V1), voltage(T,V2)/( \+V1=:=V2) ==> conflict(two_voltages(T,V1,V2)).
+
+% assume an observation is true.
+observed(P), ~false_observation(P) ==> P.
+
+% a conflict triggers a Prolog action to resolve it.
+conflict(C) ==> {resolveConflict(C)}.
+
+% this isn't written yet.
+resolveConflict(C) :-
+  format("~NHalting with conflict ~w", [C]),
+  mpred_halt.
+
+% meta rules to schedule inferencing.
+
+% resolve conflicts asap
+mpred_select(conflict(X),S) :- mpred_queue(conflict(X),S).
+  
+
+%% ***** here is a particular test case. *****
+
+
+% here is a particular circuit - a gizmo.
+
+isa(X,gizmo) ==>
+  isa(battery(X),battery),
+  rating(battery(X),6),
+
+  isa(b1(X),bulb),
+  isa(b2(X),bulb),
+  isa(b3(X),bulb),
+
+  isa(w1(X),wire),
+  isa(w2(X),wire),
+  isa(w3(X),wire),
+  isa(w4(X),wire),
+  isa(w5(X),wire),
+  isa(w6(X),wire),
+ 
+  connect(t1(battery(X)),t1(w1(X))),
+  connect(t2(w1(X)),t1(b1(X))),
+  connect(t2(w1(X)),t1(w2(X))),
+  connect(t2(w2(X)),t1(b2(X))),
+  connect(t2(w2(X)),t1(w3(X))),
+  connect(t2(w3(X)),t1(b3(X))),
+
+  connect(t2(battery(X)),t1(w4(X))),
+  connect(t2(w4(X)),t2(b2(X))),
+  connect(t2(w4(X)),t1(w5(X))),
+  connect(t2(w5(X)),t2(b2(X))),
+  connect(t2(w5(X)),t1(w6(X))),
+  connect(t2(w6(X)),t2(b3(X))).
+
+
+%% here is a diagnostic problem for a gizmo.
+
+test_bs(X) :- 
+  ain([isa(X,gizmo),
+       observed(neg(lit(b1(X)))),
+       observed(neg(lit(b2(X)))),
+       observed(lit(b3(X)))]).
+
+
+:- next_test. % ==
+
+%% a simple Pfc example - the one bulb problem (see DeKleer and
+%% Williams, IJCAI89)
+%%
+%% Tim Finin, finin@prc.unisys.com, 8/89
+
+
+
+% Devices behave as intended unless they are faulty.
+isa(X,Class), ~faulty(X) ==> behave(X,Class).
+
+% assume an observation is true.
+observed(P), ~false_observation(P) ==> P.
+
+% connecting two terminals means their voltages are equal.
+con(T1,T2) ==> (volt(T1,V) <==> volt(T2,V)).
+
+% a wire behaves by connecting its two terminals.
+behave(X,wire) ==> con(t1(X),t2(X)).
+
+% a battery's behaviour
+behave(X,battery)
+  ==>
+ volt(t1(X),1.5),
+ volt(t2(X),0).
+
+% a bulb's behaviour.
+behave(X,bulb), 
+ volt(t1(X),V1),
+ volt(t2(X),V2), 
+ {V1\==V2} 
+==> lit(X).
+
+% It is a conflict if a terminal has two different voltages.
+% volt(T,V1), volt(T,V2)/( \+V1=:=V2) ==> conflict(two_voltages(T,V1,V2)).
+
+%% ***** here is a particular test case. *****
+
+
+% here is a particular circuit - a gizmo.
+
+isa(X,gizmo) ==>
+  isa(battery(X),battery),
+  isa(bulb(X),bulb),
+
+  isa(w1(X),wire),
+  isa(w2(X),wire),
+ 
+  con(t1(battery(X)),t1(w1(X))),
+  con(t2(battery(X)),t1(w2(X))),
+  con(t2(w1(X)),t1(bulb(X))),
+  con(t2(bulb(X)),t2(w2(X))).
+
+%% here is a diagnostic problem for a gizmo.
+
+test_b1(X) :- 
+  ain([isa(X,gizmo),
+       observed(neg(lit(bulb(X))))]).
+
+
+
+:- next_test. % ==
+
+%% a simple Pfc example - the standard circuit diagnosis problem.
+%%
+%% Tim Finin, finin@prc.unisys.com, 9/29/88
+
+% Devices behave as intended unless they are faulty.
+isa(X,Class), ~faulty(X) ==> behave(X,Class).
+
+% a wire equates the values mudAtLoc each end.
+wire(T1,T2) ==> (value(T1,V) <==> value(T2,V)).
+
+% It is a conflict if a terminal has two different values.
+value(T,V1), value(T,V2)/( \+V1=:=V2) ==> conflict(two_values(T,V1,V2)).
+
+% assume an observation is true.
+observed(P), ~false_observation(P) ==> P.
+
+% a conflict triggers a Prolog action to resolve it.
+conflict(C) ==> {resolveConflict(C)}.
+
+% this isn't written yet.
+resolveConflict(C) :-
+  format("~NHalting with conflict ~w", [C]),
+  mpred_halt.
+
+% an adder's behaviour
+behave(X,adder) ==>
+ (value(in(1,X),I1), value(in(2,X),I2) ==> {O is I1+I2}, value(out(X),O)),
+ (value(in(2,X),I2) <- value(in(1,X),I1), value(out(X),O), {I2 is O-I1}),
+ ( value(in(1,X),I1) <- value(in(2,X),I2), value(out(X),O), {I1 is O-I2}).
+
+% a multiplier's behaviour.
+behave(X,multiplier) ==>
+ (value(in(1,X),I1), value(in(2,X),I2) ==> {O is I1*I2}, value(out(X),O)),
+ (value(in(2,X),I2) <- value(in(1,X),I1), value(out(X),O), {I2 is O/I1}),
+ ( value(in(1,X),I1) <- value(in(2,X),I2), value(out(X),O), {I1 is O/I2}).
+
+
+% meta rules to schedule inferencing.
+
+% resolve conflicts asap
+mpred_select(conflict(X),S) :- mpred_queue(conflict(X),S).
+
+
+
+%% ***** here is a particular test case. *****
+
+
+% here is a particular circuit - a gizmo.
+
+isa(X,gizmo) ==>
+  isa(m1(X),multiplier),
+  isa(m2(X),multiplier),
+  isa(m3(X),multiplier),
+  isa(a1(X),adder),
+  isa(a2(X),adder),
+  wire(out(m1(X)),in(1,a1(X))),
+  wire(out(m2(X)),in(2,a1(X))),
+  wire(out(m2(X)),in(1,a2(X))),
+  wire(out(m3(X)),in(2,a2(X))).
+
+
+%% here is a diagnostic problem for a gizmo.
+
+test(X) :- 
+  ain(isa(X,gizmo)),
+  ain(value(in(1,m1(X)),3.0)),
+  ain(value(in(2,m1(X)),2.0)),
+  ain(value(in(1,m2(X)),3.0)),
+  ain(value(in(2,m2(X)),2.0)),
+  ain(value(in(1,m3(X)),2.0)),
+  ain(value(in(2,m3(X)),3.0)),
+  ain(observed(value(out(a1(X)),10.0))),
+  ain(observed(value(out(a2(X)),12.0))).
+
+
+

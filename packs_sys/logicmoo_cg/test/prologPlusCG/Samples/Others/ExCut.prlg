@@ -1,0 +1,26 @@
+but(x,y,z,w) :- but1(x), but2(y), /, but3(z), but4(w). 
+but(x,y,z,w) :- but5(x).
+
+but1(id11).
+but1(id12).
+
+but2(id21).
+but2(id22).
+
+but3(id31).
+but3(x) :- but6(x), /, but7(x).
+but3(id33).
+
+but4(id41).
+but4(id42).
+
+but5(id51).
+but5(id52).
+
+but6(id61).
+but6(id67).
+but6(id63).
+
+but7(id71).
+but7(id67).
+but7(id73).

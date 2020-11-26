@@ -1,0 +1,98 @@
+<div class="notebook">
+
+<div class="nb-cell html">
+<h2>Viral Marketing</h2>
+<p>
+A firm is interested in marketing a new product to its 
+customers. These are connected in a social network that is known to the firm: the network represents
+the trust relationships between customers.
+The firm has decided to adopt a marketing strategy that involves giving the product for free to a
+number of its customers, in the hope that these influence the other customers and entice them to
+buy the product. The firm wants to choose the customers to which marketing is applied so that 
+its return is maximized. This involves computing the probability that the non-marketed customers
+will acquire the product given the action to the marketed customers. 
+</p>
+<p>
+This viral marketing scenario is inspired by [1].
+</p>
+<p>
+We can model this domain with an LPAD where the predicate <code>trust/2</code> encodes the links
+between customers in the social network and predicate <code>has/1</code> is true of customers that possess
+the product, either received as a gift or bought. Predicate <code>trust/2</code> is defined by a 
+number of certain facts, while predicate <code>has/1</code> is defined by two rules, one expressing the
+prior probability of a customer to buy the product and one expressing the fact that if a trusted customer has the product, then there is a certain probability that the trusting customer buys the
+product. 
+</p>
+<p>
+In the example code below the social network is:
+</p>
+</div>
+
+<div class="nb-cell query">
+graph(G).
+</div>
+
+<div class="nb-cell html">
+<p>We want to compute the probability that customer 2 buys the product if
+we perform the action of giving the product to customer 3. We need to 
+use causal reasoning so we use the action <code>do(has(3))</code> as evidence:
+</p>
+</div>
+
+<div class="nb-cell query">
+prob(has(2),do(has(3)),P).
+</div>
+
+<div class="nb-cell html">
+<p>If instead we compute the effect of the action using regular probabilistic
+inference, we get:
+</p>
+</div>
+
+<div class="nb-cell query">
+prob(has(2),has(3),P).
+</div>
+
+<div class="nb-cell html">
+<p>So not distinguishing seeing from doing leads to an overly optimistic estimate.
+</p>
+<h3>Code</h3>
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(pita)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(graphviz).
+:- endif.
+graph(digraph([rankdir="LR"|G])):-
+    findall(edge(A -&gt; B,[]),
+      clause(trusts(A,B,_,_),_),
+      G).
+
+:- pita.
+
+:- begin_lpad.
+
+:- action has/1.
+
+has(_):0.1.
+
+has(P) :0.4 :- trusts(P, Q), has(Q).
+
+trusts(2,1).
+trusts(3,1).
+trusts(3,2).
+trusts(4,1).
+trusts(4,3).
+:-end_lpad.
+</div>
+
+<div class="nb-cell html">
+<h3>References</h3>
+[1] 
+G. V. den Broeck, I. Thon, M. van Otterlo, L. D. Raedt, Dtproblog: A decision-theoretic probabilistic prolog, in: M. Fox, D. Poole (Eds.), 24th AAAI Conference on Artificial Intelligence, AAAI’10, Atlanta, Georgia, USA, July 11-15, 2010, AAAI Press, 2010, pp. 1217–1222.
+</div>
+
+</div>
+

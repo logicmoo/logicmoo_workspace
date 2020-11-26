@@ -1,0 +1,2 @@
+macro(a(Arabic, Roman), Arabic).
+macro(a(Arabic, Roman, Gloss), Arabic).

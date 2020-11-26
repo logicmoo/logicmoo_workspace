@@ -1,0 +1,38 @@
+(note TQD24-a)
+
+(instance 
+ (YearFn 1996) TimeInterval) 
+
+(nthLargestElement Japan 1 IndependentCountry 
+ (FunctionToArg 2 
+ (Kappa 
+ (?IMP ?AMT) 
+ (and 
+ (instance ?AMT FlowRate) 
+ (importFromAmountDuring ?IMP Petroleum-CrudeOil Qatar 
+ (YearFn 1996) ?AMT))))) 
+
+(importFromAmountDuring Japan Petroleum-CrudeOil Qatar 
+ (YearFn 1996) 
+ (BarrelsPerDay 332500)) 
+
+
+
+(query (findall (?HIGHEST-AMOUNT  ?COUNTRY  ?TIME) 
+
+ (and 
+   (instance ?TIME TimeInterval) 
+   (nthLargestElement ?COUNTRY 1 IndependentCountry 
+       (FunctionToArg 2 
+           (Kappa 
+               (?IMP ?AMT) 
+               (and 
+                   (importFromAmountDuring ?IMP Petroleum-CrudeOil Qatar ?TIME ?AMT) 
+                   (instance ?AMT FlowRate))))) 
+   (importFromAmountDuring ?COUNTRY Petroleum-CrudeOil Qatar ?TIME ?HIGHEST-AMOUNT)) 
+))
+
+(answer 332500 Japan 1996
+)
+
+(end_of_file)

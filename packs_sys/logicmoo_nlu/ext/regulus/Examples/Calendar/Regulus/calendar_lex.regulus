@@ -1,0 +1,198 @@
+
+feature_value_space(n_type,[[meeting, property]]).
+
+%=====================================================================================
+
+% Verbs
+
+% when/where is my next meeting
+@be_pp([verb, be], [meeting, loc\/time\/date], []).
+
+% who will be at the meeting
+@be_pp([verb, be], [agent, loc], []).
+
+% how long is the meeting
+@be_adj([verb, be], [meeting], []).
+
+% what is my next meeting
+@be_np([verb, be], [meeting, meeting], []).
+@be_np([verb, be], [property, property], []).
+@be_np([verb, be], [agent, agent], []).
+
+% when does the meeting start/end
+
+macro(verb_like_start(Forms, Sem),
+      @v_intransitive(Forms, [event, Sem], [meeting],
+		      [takes_time_pp=y, takes_duration_pp=y, takes_loc_pp=y, 
+		       can_be_gerund=n])).
+
+@verb_like_start([start, starts, started, started, starting], start).
+@verb_like_start([end, ends, ended, ended, ending], end).
+@verb_like_start([(come, up), (comes, up), (came, up), (come, up), (coming, up)], come_up).
+@verb_like_start([(take, place), (takes, place), (took, place), (taken, place), (taking, place)], take_place).
+
+% who will attend the meeting
+
+macro(verb_like_attend_trans(Forms, Sem),
+      @v_transitive(Forms, [event, Sem], [agent, meeting],
+		    [can_be_gerund=n])).
+
+@verb_like_attend_trans([attend, attends, attended, attended, attending], attend).
+@verb_like_attend_intrans([participate, participates, participated, participated, participating], participate).
+
+% who will attend
+
+macro(verb_like_attend_intrans(Forms, Sem),
+      @v_intransitive(Forms, [event, Sem], [agent],
+		    [can_be_gerund=n, takes_loc_pp=y])).
+
+@verb_like_attend_intrans([attend, attends, attended, attended, attending], attend).
+@verb_like_attend_intrans([participate, participates, participated, participated, participating], participate).
+
+macro(verb_like_come(Forms, Sem),
+      @v_intransitive(Forms, [event, Sem], [agent],
+		    [takes_to_pp=y, takes_loc_pp=y, can_be_gerund=n])).
+
+@verb_like_come([come, comes, came, came, coming], come).
+@verb_like_come([go, goes, went, gone, going], go).
+
+% what meetings do i have
+
+macro(verb_like_have_meeting(Forms, Sem),
+      @v_transitive_no_passive(Forms, [state, Sem], [agent, meeting],
+			       [takes_time_pp=y, takes_date_pp=y, takes_loc_pp=y])).
+
+@verb_like_have_meeting([have, has, had, had, having], have_meeting).
+
+macro(verb_like_plan_meeting(Forms, Sem),
+      @v_transitive(Forms, [state, Sem], [agent, meeting],
+		    [takes_time_pp=y, takes_date_pp=y, takes_loc_pp=y])).
+
+@verb_like_plan_meeting([plan, plans, planned, planned, planning], plan_meeting).
+@verb_like_plan_meeting([schedule, schedules, scheduled, scheduled, scheduling], schedule_meeting).
+@verb_like_plan_meeting([hold, holds, held, held, holding], hold_meeting).
+@verb_like_plan_meeting([miss, misses, missed, missed, missing], miss_meeting).
+
+% give me all the meetings on monday
+
+macro(verb_like_give(Forms, Sem), 
+      @v_ditransitive(Forms, [action, Sem], [agent, meeting\/property, agent],
+		      [can_be_postmod=n, can_be_gerund=n])).
+
+@verb_like_give([give, gives, gave, given, giving], give).
+@verb_like_give([show, shows, showed, showed, showing], show).
+@verb_like_give([find, finds, found, found, finding], find).
+
+% list all the meetings on monday
+
+macro(verb_like_list(Forms, Sem),
+      @v_transitive(Forms, [event, Sem], [agent, meeting],
+		    [can_be_gerund=n])).
+
+@verb_like_list([list, lists, listed, listed, listing], list).
+@verb_like_list([find, finds, found, found, finding], find).
+
+% which meetings do i plan to attend
+
+@v_to_vp([plan, plans, planned, planned, planning], [state, plan_to], [agent], []).
+
+% Nouns
+
+macro(meeting_noun(Words, Sem),
+      @noun(Words, [event, Sem], [meeting],
+	    [takes_det_type=indef\/def\/quant\/ordinal\/null,
+	     takes_time_pp=y, takes_date_pp=y, takes_loc_pp=y, takes_with_pp=y])).
+
+@meeting_noun([meeting, meetings], meeting).
+
+macro(loc_noun(Word, Sem),
+      @noun(Word, [loc, Sem], [loc], [takes_det_type=def\/quant])).
+
+@loc_noun([room, rooms], room).
+
+macro(sing_or_plur_agent_noun(Words, Sem),
+      @noun(Words, [agent, Sem], [agent],
+	    [takes_det_type=quant\/indef\/def\/null, n_of_mod_type=meeting,
+	     takes_loc_pp=y])).
+
+@sing_or_plur_agent_noun([person, people], person).
+
+@sing_or_plur_agent_noun([participant, participants], participant).
+
+macro(property_noun(Words, Sem, OfModType),
+      @noun(Words, [property, Sem], [property],
+	    [takes_det_type=indef\/def\/quant, n_of_mod_type=OfModType])).
+
+@property_noun([(phone, number), (phone, numbers)], phone_number, agent).
+@property_noun([number, numbers], phone_number, agent).
+@property_noun([phone, phones], phone_number, agent).
+@property_noun([address, addresses], address, agent\/meeting).
+@property_noun([email, emails], email_address, agent).
+@property_noun([(email, address), (email, addresses)], email_address, agent).
+@property_noun([location, locations], address, meeting).
+
+% Do I have a meeting [this week]?
+macro(sing_or_plur_period_noun(Words, Sem),
+      @noun(Words, [time_period, Sem], [time], [takes_det_type=def\/ordinal\/numeric\/quant])).
+
+@sing_or_plur_period_noun([day, days], day).
+@sing_or_plur_period_noun([week, weeks], week).
+@sing_or_plur_period_noun([month, months], month).
+@sing_or_plur_period_noun([year, years], year).
+
+@uninflected_noun(yesterday, [time, yesterday], [date], sing, [takes_det_type=null]).
+@uninflected_noun(today, [time, today], [date], sing, [takes_det_type=null]).
+@uninflected_noun(tomorrow, [time, tomorrow], [date], sing, [takes_det_type=null]).
+
+macro(time_of_day_noun(Word, Sem),
+      @uninflected_noun(Word, [time, Sem], [time], sing,
+			[takes_det_type=def\/null, n_pre_mod_type=date])).
+
+@time_of_day_noun(morning, morning).
+@time_of_day_noun(afternoon, afternoon).
+@time_of_day_noun(evening, evening).
+
+macro(abstract_time_noun(Words, Sem),
+      @noun(Words, [time_period, Sem], [time], [takes_det_type=def\/quant, n_of_mod_type=meeting])).
+
+@abstract_time_noun([time, times], time).
+@abstract_time_noun([date, dates], date).
+
+% Names
+
+macro(place_name(Words, Sem),
+      @name(Words, [Sem], [loc], sing, [])).
+
+macro(person_name(Words, Sem),
+      @name(Words, [Sem], [agent], sing, [])).
+
+% Prepositions
+
+% people from lausanne
+@preposition(from, from_loc, [loc, loc], []).
+
+% be at the meeting
+@preposition(at, at_meeting, [loc, meeting], []).
+@preposition(at, at_loc, [loc, loc], []).
+@preposition(in, at_loc, [loc, loc], []).
+
+% come to the meeting
+@preposition(to, to_meeting, [to, meeting], []).
+
+% meeting with person
+@preposition(with, with_person, [with, agent], []).
+
+% meeting in june
+@preposition(on, on_date, [date, time\/date], []).
+@preposition(in, in_time, [time, time\/date], []).
+@preposition(around, around_time, [time, timeunit], []).
+@preposition(at, at_time, [time, time\/timeunit], []).
+@preposition(for, for_time, [time, date\/time\/timeunit], []).
+@preposition(during, during_time, [time, time], []).
+
+% meeting five days ago
+@preposition(ago, ago, [time, time], [postposition=y]).
+
+% PPs
+
+@lexical_pp(there, [loc, there], [loc], []).

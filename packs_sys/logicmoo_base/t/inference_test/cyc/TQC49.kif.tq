@@ -1,0 +1,55 @@
+(note TQC49)
+
+(inverse contains inRegion) 
+(contains LevantRegion Lebanon) 
+(contains LevantRegion Palestine-Modern) 
+(instance (HighAmountFn EconomicSupport) EconomicSupport) 
+(instance (HighAmountFn MilitarySupport) MilitarySupport) 
+(instance HAMAS TerroristGroup) 
+(instance LebaneseHizballah TerroristGroup) 
+(instance PalestineIslamicJihad TerroristGroup) 
+(instance PopularFrontForLiberationOfPalestine TerroristGroup) 
+(residenceOfOrganization HAMAS Palestine-Modern) 
+(residenceOfOrganization LebaneseHizballah Lebanon) 
+(residenceOfOrganization PalestineIslamicJihad Palestine-Modern) 
+(residenceOfOrganization PopularFrontForLiberationOfPalestine Lebanon) 
+
+(followingValue (MediumAmountFn EconomicSupport) (HighAmountFn EconomicSupport)) 
+
+(givesSupportToAgent Iran PalestineIslamicJihad 
+ (HighAmountFn MilitarySupport)) 
+(givesSupportToAgent Iran LebaneseHizballah 
+ (HighAmountFn MilitarySupport)) 
+(givesSupportToAgent Iran PopularFrontForLiberationOfPalestine 
+ (HighAmountFn EconomicSupport)) 
+(givesSupportToAgent Iran HAMAS 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+  (instance ?X PrimitiveAttributeType) 
+  (followingValue 
+    (MediumAmountFn ?X) 
+    (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+(instance EconomicSupport PrimitiveAttributeType) 
+
+(query (findall (?AGENT ?AREA)
+  (and 
+    (residenceOfOrganization ?AGENT ?AREA) 
+    (inRegion ?AREA LevantRegion) 
+    (instance ?AGENT TerroristGroup) 
+    (or 
+      (thereExists ?SUPPORT 
+        (thereExists ?SUPP-TYPE 
+          (and 
+            (instance ?SUPPORT ?SUPP-TYPE) 
+            (givesSupportToAgent Iran ?AGENT ?SUPPORT) 
+            (followingValue 
+              (MediumAmountFn ?SUPP-TYPE) ?SUPPORT))))
+      (positiveVestedInterest ?AGENT Iran)))))
+
+(answer PopularFrontForLiberationOfPalestine Lebanon)
+(answer PalestineIslamicJihad Palestine-Modern)
+(answer LebaneseHizballah Lebanon)
+(answer HAMAS Palestine-Modern)    

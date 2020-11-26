@@ -1,0 +1,2 @@
+#!/bin/bash
+perl "$(dirname $0)/flashpolicyd_v0.6/Standalone/flashpolicyd.pl" "--file=$(dirname $0)/flashpolicyd_v0.6/flashpolicy.xml" --port=4010 >/dev/null 2>&1 &

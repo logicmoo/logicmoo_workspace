@@ -1,0 +1,103 @@
+resoudre_Profondeur(_Etat, _Historique, []) :-
+	etat_Final(_Etat).
+
+resoudre_Profondeur(_Etat, _Historique, [_Mvt | _Mvts]) :-
+	appliquer_Operateur(_Etat,_Mvt),
+	mettre_a_jour(_Etat, _Mvt, _Etat1),
+	etat_legal(_Etat1),
+	not(membre_de(_Etat1,_Historique)),
+	resoudre_Profondeur(_Etat1, [_Etat1|_Historique], _Mvts).
+
+test_Profondeur(_Probleme, _Mvts) :-
+	etat_Initial(_Probleme, _Etat),
+	resoudre_Profondeur(_Etat, [_Etat], _Mvts).
+
+etat_Initial(bidons, bidons(0,0)).
+
+etat_Final(bidons(2,0)).
+
+appliquer_Operateur(bidons(_V4,_V3), remplir(bidon4)) :- inf(_V4, 4, true). //_V4 < 4.
+
+appliquer_Operateur(bidons(_V4,_V3), remplir(bidon3)) :- inf(_V3,3, true). //_V3 < 3.
+
+appliquer_Operateur(bidons(_V4,_V3), vider(bidon4)) :- sup(_V4,0,true). //_V4 > 0.
+
+appliquer_Operateur(bidons(_V4,_V3), vider(bidon3)) :- sup(_V3,0,true). //_V3 > 0.
+
+appliquer_Operateur(bidons(_V4,_V3), transvider(bidon3,bidon4)) :- 
+	sup(_V3, 0, true), //_V3 > 0,
+	_V5 is _V4 + _V3,
+	supequal(_V5, 4, true). //_V4 + _V3 >= 4.
+
+appliquer_Operateur(bidons(_V4,_V3), transvider(bidon4,bidon3)) :-
+	sup(_V4, 0, true), //_V4 > 0,
+	_V5 is _V4 + _V3,
+	supequal(_V5, 3, true). //_V4 + _V3 >= 3.
+
+appliquer_Operateur(bidons(_V4,_V3), transvider_tout(bidon3,bidon4)) :-
+	sup(_V3, 0, true), //_V3 > 0,
+	_V5 is _V4 + _V3,
+	infequal(_V5, 4, true). //_V4 + _V3 <= 4.	
+
+appliquer_Operateur(bidons(_V4,_V3), transvider_tout(bidon4,bidon3)) :-
+	sup(_V4, 0, true), //_V4 > 0,
+	_V5 is _V4 + _V3,
+	infequal(_V5, 3, true). //_V4 + _V3 <= 3.
+
+mettre_a_jour(bidons(_V4,_V3), vider(bidon4), bidons(0,_V3)).
+
+mettre_a_jour(bidons(_V4,_V3), vider(bidon3), bidons(_V4,0)).
+
+mettre_a_jour(bidons(_V4,_V3), remplir(bidon4), bidons(_C4,_V3)) :-
+	capacite(bidon4,_C4).
+
+mettre_a_jour(bidons(_V4,_V3), remplir(bidon3), bidons(_V4,_C3)) :-
+	capacite(bidon3,_C3).
+
+mettre_a_jour(bidons(_V4,_V3), transvider_tout(bidon3,bidon4), bidons(_W4,_W3)) :-
+	capacite(bidon4,_C4),
+	_Quantite_Liquide is _V4 + _V3,
+	_Liquide_en_trop is _Quantite_Liquide - _C4,
+	ajuster(_Quantite_Liquide, _Liquide_en_trop, _W4, _W3).
+
+mettre_a_jour(bidons(_V4,_V3), transvider(bidon3,bidon4), bidons(_W4,_W3)) :-
+	capacite(bidon4,_C4),
+	_Quantite_Liquide is _V4 + _V3,
+	_Liquide_en_trop is _Quantite_Liquide - _C4,
+	ajuster(_Quantite_Liquide, _Liquide_en_trop, _W4, _W3).
+
+mettre_a_jour(bidons(_V4,_V3), transvider(bidon4,bidon3), bidons(_W4,_W3)) :-
+	capacite(bidon3,_C3),
+	Quantite_Liquide is _V4 + _V3,
+	_Liquide_en_trop is _Quantite_Liquide - _C3,
+	ajuster(_Quantite_Liquide, _Liquide_en_trop, _W3, _W4).
+
+ajuster(_Quantite_Liquide, _Liquide_en_trop, _Quantite_Liquide, 0) :-
+	infequal(_Liquide_en_trop, 0, true). //_Liquide_en_trop =< 0.
+
+ajuster(_Quantite_Liquide, _Liquide_en_trop, _V, _Liquide_en_trop) :-
+	sup(_Liquide_en_trop, 0, true), //_Liquide_en_trop > 0,
+	_V is _Quantite_Liquide - _Liquide_en_trop.
+
+etat_legal(bidons(_V4,_V3)).
+
+capacite(bidon4, 4).
+capacite(bidon3, 3).
+
+membre_de(_X,[_X|_Ys]).
+
+membre_de(_X,[_Y|_Ys]) :- membre_de(_X,_Ys).
+
+eq(X, X).
+sup(X, Y, Z) :- Z is X > Y.
+inf(X, Y, Z) :- Z is X < Y.
+supequal(X, Y, Z) :- sup(X, Y, Z).
+supequal(X, Y, Z) :- eq(X, Y).
+infequal(X, Y, Z) :- inf(X, Y, Z).
+infequal(X, Y, Z) :- eq(X, Y).
+
+not(X) :- 
+	X,
+	!,
+	fail.
+not(X).

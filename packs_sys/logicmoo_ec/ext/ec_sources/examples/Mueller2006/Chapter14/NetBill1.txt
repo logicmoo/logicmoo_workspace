@@ -1,0 +1,1455 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter14/NetBill1.e
+loading foundations/Root.e
+loading foundations/EC.e
+1920 variables and 4510 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Happens(SendQuote(MusicStore, Jen, BritneyCD, 1), 0).
+1
++CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD).
++QuoteSent(MusicStore, Jen, BritneyCD, 1).
+Happens(RequestPurchase(Jen, MusicStore, BritneyCD, 1), 1).
+2
++CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1).
++PurchaseRequested(Jen, MusicStore, BritneyCD, 1).
+Happens(CreateC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 2).
+Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+3
+-CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD).
++C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD).
+Happens(Deliver(MusicStore, Jen, BritneyCD), 3).
+4
++Delivered(MusicStore, Jen, BritneyCD).
+Happens(CreateC(Jen, MusicStore, EPOSentJenMusicStore1), 4).
+Happens(DischargeC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 4).
+Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+5
+-C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD).
+-CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1).
++C(Jen, MusicStore, EPOSentJenMusicStore1).
+Happens(SendEPO(Jen, MusicStore, 1), 5).
+6
++EPOSent(Jen, MusicStore, 1).
+Happens(DischargeC(Jen, MusicStore, EPOSentJenMusicStore1), 6).
+7
+-C(Jen, MusicStore, EPOSentJenMusicStore1).
+P
+!Happens(CreateC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateC(Jen, Jen, EPOSentJenMusicStore1), 0).
+!Happens(CreateC(Jen, Jen, EPOSentJenMusicStore1), 1).
+!Happens(CreateC(Jen, Jen, EPOSentJenMusicStore1), 2).
+!Happens(CreateC(Jen, Jen, EPOSentJenMusicStore1), 3).
+!Happens(CreateC(Jen, Jen, EPOSentJenMusicStore1), 4).
+!Happens(CreateC(Jen, Jen, EPOSentJenMusicStore1), 5).
+!Happens(CreateC(Jen, Jen, EPOSentJenMusicStore1), 6).
+!Happens(CreateC(Jen, Jen, EPOSentJenMusicStore1), 7).
+!Happens(CreateC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateC(Jen, MusicStore, EPOSentJenMusicStore1), 0).
+!Happens(CreateC(Jen, MusicStore, EPOSentJenMusicStore1), 1).
+!Happens(CreateC(Jen, MusicStore, EPOSentJenMusicStore1), 2).
+!Happens(CreateC(Jen, MusicStore, EPOSentJenMusicStore1), 3).
+!Happens(CreateC(Jen, MusicStore, EPOSentJenMusicStore1), 5).
+!Happens(CreateC(Jen, MusicStore, EPOSentJenMusicStore1), 6).
+!Happens(CreateC(Jen, MusicStore, EPOSentJenMusicStore1), 7).
+!Happens(CreateC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateC(MusicStore, Jen, EPOSentJenMusicStore1), 0).
+!Happens(CreateC(MusicStore, Jen, EPOSentJenMusicStore1), 1).
+!Happens(CreateC(MusicStore, Jen, EPOSentJenMusicStore1), 2).
+!Happens(CreateC(MusicStore, Jen, EPOSentJenMusicStore1), 3).
+!Happens(CreateC(MusicStore, Jen, EPOSentJenMusicStore1), 4).
+!Happens(CreateC(MusicStore, Jen, EPOSentJenMusicStore1), 5).
+!Happens(CreateC(MusicStore, Jen, EPOSentJenMusicStore1), 6).
+!Happens(CreateC(MusicStore, Jen, EPOSentJenMusicStore1), 7).
+!Happens(CreateC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateC(MusicStore, MusicStore, EPOSentJenMusicStore1), 0).
+!Happens(CreateC(MusicStore, MusicStore, EPOSentJenMusicStore1), 1).
+!Happens(CreateC(MusicStore, MusicStore, EPOSentJenMusicStore1), 2).
+!Happens(CreateC(MusicStore, MusicStore, EPOSentJenMusicStore1), 3).
+!Happens(CreateC(MusicStore, MusicStore, EPOSentJenMusicStore1), 4).
+!Happens(CreateC(MusicStore, MusicStore, EPOSentJenMusicStore1), 5).
+!Happens(CreateC(MusicStore, MusicStore, EPOSentJenMusicStore1), 6).
+!Happens(CreateC(MusicStore, MusicStore, EPOSentJenMusicStore1), 7).
+!Happens(CreateC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(CreateCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(Deliver(Jen, Jen, BritneyCD), 0).
+!Happens(Deliver(Jen, Jen, BritneyCD), 1).
+!Happens(Deliver(Jen, Jen, BritneyCD), 2).
+!Happens(Deliver(Jen, Jen, BritneyCD), 3).
+!Happens(Deliver(Jen, Jen, BritneyCD), 4).
+!Happens(Deliver(Jen, Jen, BritneyCD), 5).
+!Happens(Deliver(Jen, Jen, BritneyCD), 6).
+!Happens(Deliver(Jen, Jen, BritneyCD), 7).
+!Happens(Deliver(Jen, MusicStore, BritneyCD), 0).
+!Happens(Deliver(Jen, MusicStore, BritneyCD), 1).
+!Happens(Deliver(Jen, MusicStore, BritneyCD), 2).
+!Happens(Deliver(Jen, MusicStore, BritneyCD), 3).
+!Happens(Deliver(Jen, MusicStore, BritneyCD), 4).
+!Happens(Deliver(Jen, MusicStore, BritneyCD), 5).
+!Happens(Deliver(Jen, MusicStore, BritneyCD), 6).
+!Happens(Deliver(Jen, MusicStore, BritneyCD), 7).
+!Happens(Deliver(MusicStore, Jen, BritneyCD), 0).
+!Happens(Deliver(MusicStore, Jen, BritneyCD), 1).
+!Happens(Deliver(MusicStore, Jen, BritneyCD), 2).
+!Happens(Deliver(MusicStore, Jen, BritneyCD), 4).
+!Happens(Deliver(MusicStore, Jen, BritneyCD), 5).
+!Happens(Deliver(MusicStore, Jen, BritneyCD), 6).
+!Happens(Deliver(MusicStore, Jen, BritneyCD), 7).
+!Happens(Deliver(MusicStore, MusicStore, BritneyCD), 0).
+!Happens(Deliver(MusicStore, MusicStore, BritneyCD), 1).
+!Happens(Deliver(MusicStore, MusicStore, BritneyCD), 2).
+!Happens(Deliver(MusicStore, MusicStore, BritneyCD), 3).
+!Happens(Deliver(MusicStore, MusicStore, BritneyCD), 4).
+!Happens(Deliver(MusicStore, MusicStore, BritneyCD), 5).
+!Happens(Deliver(MusicStore, MusicStore, BritneyCD), 6).
+!Happens(Deliver(MusicStore, MusicStore, BritneyCD), 7).
+!Happens(DischargeC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeC(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeC(Jen, Jen, EPOSentJenMusicStore1), 0).
+!Happens(DischargeC(Jen, Jen, EPOSentJenMusicStore1), 1).
+!Happens(DischargeC(Jen, Jen, EPOSentJenMusicStore1), 2).
+!Happens(DischargeC(Jen, Jen, EPOSentJenMusicStore1), 3).
+!Happens(DischargeC(Jen, Jen, EPOSentJenMusicStore1), 4).
+!Happens(DischargeC(Jen, Jen, EPOSentJenMusicStore1), 5).
+!Happens(DischargeC(Jen, Jen, EPOSentJenMusicStore1), 6).
+!Happens(DischargeC(Jen, Jen, EPOSentJenMusicStore1), 7).
+!Happens(DischargeC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeC(Jen, MusicStore, EPOSentJenMusicStore1), 0).
+!Happens(DischargeC(Jen, MusicStore, EPOSentJenMusicStore1), 1).
+!Happens(DischargeC(Jen, MusicStore, EPOSentJenMusicStore1), 2).
+!Happens(DischargeC(Jen, MusicStore, EPOSentJenMusicStore1), 3).
+!Happens(DischargeC(Jen, MusicStore, EPOSentJenMusicStore1), 4).
+!Happens(DischargeC(Jen, MusicStore, EPOSentJenMusicStore1), 5).
+!Happens(DischargeC(Jen, MusicStore, EPOSentJenMusicStore1), 7).
+!Happens(DischargeC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeC(MusicStore, Jen, EPOSentJenMusicStore1), 0).
+!Happens(DischargeC(MusicStore, Jen, EPOSentJenMusicStore1), 1).
+!Happens(DischargeC(MusicStore, Jen, EPOSentJenMusicStore1), 2).
+!Happens(DischargeC(MusicStore, Jen, EPOSentJenMusicStore1), 3).
+!Happens(DischargeC(MusicStore, Jen, EPOSentJenMusicStore1), 4).
+!Happens(DischargeC(MusicStore, Jen, EPOSentJenMusicStore1), 5).
+!Happens(DischargeC(MusicStore, Jen, EPOSentJenMusicStore1), 6).
+!Happens(DischargeC(MusicStore, Jen, EPOSentJenMusicStore1), 7).
+!Happens(DischargeC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeC(MusicStore, MusicStore, EPOSentJenMusicStore1), 0).
+!Happens(DischargeC(MusicStore, MusicStore, EPOSentJenMusicStore1), 1).
+!Happens(DischargeC(MusicStore, MusicStore, EPOSentJenMusicStore1), 2).
+!Happens(DischargeC(MusicStore, MusicStore, EPOSentJenMusicStore1), 3).
+!Happens(DischargeC(MusicStore, MusicStore, EPOSentJenMusicStore1), 4).
+!Happens(DischargeC(MusicStore, MusicStore, EPOSentJenMusicStore1), 5).
+!Happens(DischargeC(MusicStore, MusicStore, EPOSentJenMusicStore1), 6).
+!Happens(DischargeC(MusicStore, MusicStore, EPOSentJenMusicStore1), 7).
+!Happens(DischargeC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!Happens(DischargeCC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!Happens(RequestPurchase(Jen, Jen, BritneyCD, 1), 0).
+!Happens(RequestPurchase(Jen, Jen, BritneyCD, 1), 1).
+!Happens(RequestPurchase(Jen, Jen, BritneyCD, 1), 2).
+!Happens(RequestPurchase(Jen, Jen, BritneyCD, 1), 3).
+!Happens(RequestPurchase(Jen, Jen, BritneyCD, 1), 4).
+!Happens(RequestPurchase(Jen, Jen, BritneyCD, 1), 5).
+!Happens(RequestPurchase(Jen, Jen, BritneyCD, 1), 6).
+!Happens(RequestPurchase(Jen, Jen, BritneyCD, 1), 7).
+!Happens(RequestPurchase(Jen, MusicStore, BritneyCD, 1), 0).
+!Happens(RequestPurchase(Jen, MusicStore, BritneyCD, 1), 2).
+!Happens(RequestPurchase(Jen, MusicStore, BritneyCD, 1), 3).
+!Happens(RequestPurchase(Jen, MusicStore, BritneyCD, 1), 4).
+!Happens(RequestPurchase(Jen, MusicStore, BritneyCD, 1), 5).
+!Happens(RequestPurchase(Jen, MusicStore, BritneyCD, 1), 6).
+!Happens(RequestPurchase(Jen, MusicStore, BritneyCD, 1), 7).
+!Happens(RequestPurchase(MusicStore, Jen, BritneyCD, 1), 0).
+!Happens(RequestPurchase(MusicStore, Jen, BritneyCD, 1), 1).
+!Happens(RequestPurchase(MusicStore, Jen, BritneyCD, 1), 2).
+!Happens(RequestPurchase(MusicStore, Jen, BritneyCD, 1), 3).
+!Happens(RequestPurchase(MusicStore, Jen, BritneyCD, 1), 4).
+!Happens(RequestPurchase(MusicStore, Jen, BritneyCD, 1), 5).
+!Happens(RequestPurchase(MusicStore, Jen, BritneyCD, 1), 6).
+!Happens(RequestPurchase(MusicStore, Jen, BritneyCD, 1), 7).
+!Happens(RequestPurchase(MusicStore, MusicStore, BritneyCD, 1), 0).
+!Happens(RequestPurchase(MusicStore, MusicStore, BritneyCD, 1), 1).
+!Happens(RequestPurchase(MusicStore, MusicStore, BritneyCD, 1), 2).
+!Happens(RequestPurchase(MusicStore, MusicStore, BritneyCD, 1), 3).
+!Happens(RequestPurchase(MusicStore, MusicStore, BritneyCD, 1), 4).
+!Happens(RequestPurchase(MusicStore, MusicStore, BritneyCD, 1), 5).
+!Happens(RequestPurchase(MusicStore, MusicStore, BritneyCD, 1), 6).
+!Happens(RequestPurchase(MusicStore, MusicStore, BritneyCD, 1), 7).
+!Happens(SendEPO(Jen, Jen, 1), 0).
+!Happens(SendEPO(Jen, Jen, 1), 1).
+!Happens(SendEPO(Jen, Jen, 1), 2).
+!Happens(SendEPO(Jen, Jen, 1), 3).
+!Happens(SendEPO(Jen, Jen, 1), 4).
+!Happens(SendEPO(Jen, Jen, 1), 5).
+!Happens(SendEPO(Jen, Jen, 1), 6).
+!Happens(SendEPO(Jen, Jen, 1), 7).
+!Happens(SendEPO(Jen, MusicStore, 1), 0).
+!Happens(SendEPO(Jen, MusicStore, 1), 1).
+!Happens(SendEPO(Jen, MusicStore, 1), 2).
+!Happens(SendEPO(Jen, MusicStore, 1), 3).
+!Happens(SendEPO(Jen, MusicStore, 1), 4).
+!Happens(SendEPO(Jen, MusicStore, 1), 6).
+!Happens(SendEPO(Jen, MusicStore, 1), 7).
+!Happens(SendEPO(MusicStore, Jen, 1), 0).
+!Happens(SendEPO(MusicStore, Jen, 1), 1).
+!Happens(SendEPO(MusicStore, Jen, 1), 2).
+!Happens(SendEPO(MusicStore, Jen, 1), 3).
+!Happens(SendEPO(MusicStore, Jen, 1), 4).
+!Happens(SendEPO(MusicStore, Jen, 1), 5).
+!Happens(SendEPO(MusicStore, Jen, 1), 6).
+!Happens(SendEPO(MusicStore, Jen, 1), 7).
+!Happens(SendEPO(MusicStore, MusicStore, 1), 0).
+!Happens(SendEPO(MusicStore, MusicStore, 1), 1).
+!Happens(SendEPO(MusicStore, MusicStore, 1), 2).
+!Happens(SendEPO(MusicStore, MusicStore, 1), 3).
+!Happens(SendEPO(MusicStore, MusicStore, 1), 4).
+!Happens(SendEPO(MusicStore, MusicStore, 1), 5).
+!Happens(SendEPO(MusicStore, MusicStore, 1), 6).
+!Happens(SendEPO(MusicStore, MusicStore, 1), 7).
+!Happens(SendQuote(Jen, Jen, BritneyCD, 1), 0).
+!Happens(SendQuote(Jen, Jen, BritneyCD, 1), 1).
+!Happens(SendQuote(Jen, Jen, BritneyCD, 1), 2).
+!Happens(SendQuote(Jen, Jen, BritneyCD, 1), 3).
+!Happens(SendQuote(Jen, Jen, BritneyCD, 1), 4).
+!Happens(SendQuote(Jen, Jen, BritneyCD, 1), 5).
+!Happens(SendQuote(Jen, Jen, BritneyCD, 1), 6).
+!Happens(SendQuote(Jen, Jen, BritneyCD, 1), 7).
+!Happens(SendQuote(Jen, MusicStore, BritneyCD, 1), 0).
+!Happens(SendQuote(Jen, MusicStore, BritneyCD, 1), 1).
+!Happens(SendQuote(Jen, MusicStore, BritneyCD, 1), 2).
+!Happens(SendQuote(Jen, MusicStore, BritneyCD, 1), 3).
+!Happens(SendQuote(Jen, MusicStore, BritneyCD, 1), 4).
+!Happens(SendQuote(Jen, MusicStore, BritneyCD, 1), 5).
+!Happens(SendQuote(Jen, MusicStore, BritneyCD, 1), 6).
+!Happens(SendQuote(Jen, MusicStore, BritneyCD, 1), 7).
+!Happens(SendQuote(MusicStore, Jen, BritneyCD, 1), 1).
+!Happens(SendQuote(MusicStore, Jen, BritneyCD, 1), 2).
+!Happens(SendQuote(MusicStore, Jen, BritneyCD, 1), 3).
+!Happens(SendQuote(MusicStore, Jen, BritneyCD, 1), 4).
+!Happens(SendQuote(MusicStore, Jen, BritneyCD, 1), 5).
+!Happens(SendQuote(MusicStore, Jen, BritneyCD, 1), 6).
+!Happens(SendQuote(MusicStore, Jen, BritneyCD, 1), 7).
+!Happens(SendQuote(MusicStore, MusicStore, BritneyCD, 1), 0).
+!Happens(SendQuote(MusicStore, MusicStore, BritneyCD, 1), 1).
+!Happens(SendQuote(MusicStore, MusicStore, BritneyCD, 1), 2).
+!Happens(SendQuote(MusicStore, MusicStore, BritneyCD, 1), 3).
+!Happens(SendQuote(MusicStore, MusicStore, BritneyCD, 1), 4).
+!Happens(SendQuote(MusicStore, MusicStore, BritneyCD, 1), 5).
+!Happens(SendQuote(MusicStore, MusicStore, BritneyCD, 1), 6).
+!Happens(SendQuote(MusicStore, MusicStore, BritneyCD, 1), 7).
+!ReleasedAt(C(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(C(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(C(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(C(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(C(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(C(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(C(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(C(Jen, Jen, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(C(Jen, Jen, EPOSentJenMusicStore1), 0).
+!ReleasedAt(C(Jen, Jen, EPOSentJenMusicStore1), 1).
+!ReleasedAt(C(Jen, Jen, EPOSentJenMusicStore1), 2).
+!ReleasedAt(C(Jen, Jen, EPOSentJenMusicStore1), 3).
+!ReleasedAt(C(Jen, Jen, EPOSentJenMusicStore1), 4).
+!ReleasedAt(C(Jen, Jen, EPOSentJenMusicStore1), 5).
+!ReleasedAt(C(Jen, Jen, EPOSentJenMusicStore1), 6).
+!ReleasedAt(C(Jen, Jen, EPOSentJenMusicStore1), 7).
+!ReleasedAt(C(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(C(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(C(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(C(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(C(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(C(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(C(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(C(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(C(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(C(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(C(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(C(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(C(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(C(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(C(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(C(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(C(Jen, MusicStore, EPOSentJenMusicStore1), 0).
+!ReleasedAt(C(Jen, MusicStore, EPOSentJenMusicStore1), 1).
+!ReleasedAt(C(Jen, MusicStore, EPOSentJenMusicStore1), 2).
+!ReleasedAt(C(Jen, MusicStore, EPOSentJenMusicStore1), 3).
+!ReleasedAt(C(Jen, MusicStore, EPOSentJenMusicStore1), 4).
+!ReleasedAt(C(Jen, MusicStore, EPOSentJenMusicStore1), 5).
+!ReleasedAt(C(Jen, MusicStore, EPOSentJenMusicStore1), 6).
+!ReleasedAt(C(Jen, MusicStore, EPOSentJenMusicStore1), 7).
+!ReleasedAt(C(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(C(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(C(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(C(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(C(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(C(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(C(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(C(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(C(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(C(MusicStore, Jen, EPOSentJenMusicStore1), 0).
+!ReleasedAt(C(MusicStore, Jen, EPOSentJenMusicStore1), 1).
+!ReleasedAt(C(MusicStore, Jen, EPOSentJenMusicStore1), 2).
+!ReleasedAt(C(MusicStore, Jen, EPOSentJenMusicStore1), 3).
+!ReleasedAt(C(MusicStore, Jen, EPOSentJenMusicStore1), 4).
+!ReleasedAt(C(MusicStore, Jen, EPOSentJenMusicStore1), 5).
+!ReleasedAt(C(MusicStore, Jen, EPOSentJenMusicStore1), 6).
+!ReleasedAt(C(MusicStore, Jen, EPOSentJenMusicStore1), 7).
+!ReleasedAt(C(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(C(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(C(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(C(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(C(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(C(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(C(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(C(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(C(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(C(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(C(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(C(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(C(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(C(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(C(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(C(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(C(MusicStore, MusicStore, EPOSentJenMusicStore1), 0).
+!ReleasedAt(C(MusicStore, MusicStore, EPOSentJenMusicStore1), 1).
+!ReleasedAt(C(MusicStore, MusicStore, EPOSentJenMusicStore1), 2).
+!ReleasedAt(C(MusicStore, MusicStore, EPOSentJenMusicStore1), 3).
+!ReleasedAt(C(MusicStore, MusicStore, EPOSentJenMusicStore1), 4).
+!ReleasedAt(C(MusicStore, MusicStore, EPOSentJenMusicStore1), 5).
+!ReleasedAt(C(MusicStore, MusicStore, EPOSentJenMusicStore1), 6).
+!ReleasedAt(C(MusicStore, MusicStore, EPOSentJenMusicStore1), 7).
+!ReleasedAt(C(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(C(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(C(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(C(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(C(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(C(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(C(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(C(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(Jen, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(Jen, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(Jen, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(Jen, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(Jen, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(Jen, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(MusicStore, Jen, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(MusicStore, Jen, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(MusicStore, Jen, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, DeliveredMusicStoreJenBritneyCD, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, EPOSentJenMusicStore1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, DeliveredMusicStoreJenBritneyCD), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, EPOSentJenMusicStore1), 7).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 0).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 1).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 2).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 3).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 4).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 5).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 6).
+!ReleasedAt(CC(MusicStore, MusicStore, PurchaseRequestedJenMusicStoreBritneyCD1, PurchaseRequestedJenMusicStoreBritneyCD1), 7).
+!ReleasedAt(Delivered(Jen, Jen, BritneyCD), 0).
+!ReleasedAt(Delivered(Jen, Jen, BritneyCD), 1).
+!ReleasedAt(Delivered(Jen, Jen, BritneyCD), 2).
+!ReleasedAt(Delivered(Jen, Jen, BritneyCD), 3).
+!ReleasedAt(Delivered(Jen, Jen, BritneyCD), 4).
+!ReleasedAt(Delivered(Jen, Jen, BritneyCD), 5).
+!ReleasedAt(Delivered(Jen, Jen, BritneyCD), 6).
+!ReleasedAt(Delivered(Jen, Jen, BritneyCD), 7).
+!ReleasedAt(Delivered(Jen, MusicStore, BritneyCD), 0).
+!ReleasedAt(Delivered(Jen, MusicStore, BritneyCD), 1).
+!ReleasedAt(Delivered(Jen, MusicStore, BritneyCD), 2).
+!ReleasedAt(Delivered(Jen, MusicStore, BritneyCD), 3).
+!ReleasedAt(Delivered(Jen, MusicStore, BritneyCD), 4).
+!ReleasedAt(Delivered(Jen, MusicStore, BritneyCD), 5).
+!ReleasedAt(Delivered(Jen, MusicStore, BritneyCD), 6).
+!ReleasedAt(Delivered(Jen, MusicStore, BritneyCD), 7).
+!ReleasedAt(Delivered(MusicStore, Jen, BritneyCD), 0).
+!ReleasedAt(Delivered(MusicStore, Jen, BritneyCD), 1).
+!ReleasedAt(Delivered(MusicStore, Jen, BritneyCD), 2).
+!ReleasedAt(Delivered(MusicStore, Jen, BritneyCD), 3).
+!ReleasedAt(Delivered(MusicStore, Jen, BritneyCD), 4).
+!ReleasedAt(Delivered(MusicStore, Jen, BritneyCD), 5).
+!ReleasedAt(Delivered(MusicStore, Jen, BritneyCD), 6).
+!ReleasedAt(Delivered(MusicStore, Jen, BritneyCD), 7).
+!ReleasedAt(Delivered(MusicStore, MusicStore, BritneyCD), 0).
+!ReleasedAt(Delivered(MusicStore, MusicStore, BritneyCD), 1).
+!ReleasedAt(Delivered(MusicStore, MusicStore, BritneyCD), 2).
+!ReleasedAt(Delivered(MusicStore, MusicStore, BritneyCD), 3).
+!ReleasedAt(Delivered(MusicStore, MusicStore, BritneyCD), 4).
+!ReleasedAt(Delivered(MusicStore, MusicStore, BritneyCD), 5).
+!ReleasedAt(Delivered(MusicStore, MusicStore, BritneyCD), 6).
+!ReleasedAt(Delivered(MusicStore, MusicStore, BritneyCD), 7).
+!ReleasedAt(EPOSent(Jen, Jen, 1), 0).
+!ReleasedAt(EPOSent(Jen, Jen, 1), 1).
+!ReleasedAt(EPOSent(Jen, Jen, 1), 2).
+!ReleasedAt(EPOSent(Jen, Jen, 1), 3).
+!ReleasedAt(EPOSent(Jen, Jen, 1), 4).
+!ReleasedAt(EPOSent(Jen, Jen, 1), 5).
+!ReleasedAt(EPOSent(Jen, Jen, 1), 6).
+!ReleasedAt(EPOSent(Jen, Jen, 1), 7).
+!ReleasedAt(EPOSent(Jen, MusicStore, 1), 0).
+!ReleasedAt(EPOSent(Jen, MusicStore, 1), 1).
+!ReleasedAt(EPOSent(Jen, MusicStore, 1), 2).
+!ReleasedAt(EPOSent(Jen, MusicStore, 1), 3).
+!ReleasedAt(EPOSent(Jen, MusicStore, 1), 4).
+!ReleasedAt(EPOSent(Jen, MusicStore, 1), 5).
+!ReleasedAt(EPOSent(Jen, MusicStore, 1), 6).
+!ReleasedAt(EPOSent(Jen, MusicStore, 1), 7).
+!ReleasedAt(EPOSent(MusicStore, Jen, 1), 0).
+!ReleasedAt(EPOSent(MusicStore, Jen, 1), 1).
+!ReleasedAt(EPOSent(MusicStore, Jen, 1), 2).
+!ReleasedAt(EPOSent(MusicStore, Jen, 1), 3).
+!ReleasedAt(EPOSent(MusicStore, Jen, 1), 4).
+!ReleasedAt(EPOSent(MusicStore, Jen, 1), 5).
+!ReleasedAt(EPOSent(MusicStore, Jen, 1), 6).
+!ReleasedAt(EPOSent(MusicStore, Jen, 1), 7).
+!ReleasedAt(EPOSent(MusicStore, MusicStore, 1), 0).
+!ReleasedAt(EPOSent(MusicStore, MusicStore, 1), 1).
+!ReleasedAt(EPOSent(MusicStore, MusicStore, 1), 2).
+!ReleasedAt(EPOSent(MusicStore, MusicStore, 1), 3).
+!ReleasedAt(EPOSent(MusicStore, MusicStore, 1), 4).
+!ReleasedAt(EPOSent(MusicStore, MusicStore, 1), 5).
+!ReleasedAt(EPOSent(MusicStore, MusicStore, 1), 6).
+!ReleasedAt(EPOSent(MusicStore, MusicStore, 1), 7).
+!ReleasedAt(PurchaseRequested(Jen, Jen, BritneyCD, 1), 0).
+!ReleasedAt(PurchaseRequested(Jen, Jen, BritneyCD, 1), 1).
+!ReleasedAt(PurchaseRequested(Jen, Jen, BritneyCD, 1), 2).
+!ReleasedAt(PurchaseRequested(Jen, Jen, BritneyCD, 1), 3).
+!ReleasedAt(PurchaseRequested(Jen, Jen, BritneyCD, 1), 4).
+!ReleasedAt(PurchaseRequested(Jen, Jen, BritneyCD, 1), 5).
+!ReleasedAt(PurchaseRequested(Jen, Jen, BritneyCD, 1), 6).
+!ReleasedAt(PurchaseRequested(Jen, Jen, BritneyCD, 1), 7).
+!ReleasedAt(PurchaseRequested(Jen, MusicStore, BritneyCD, 1), 0).
+!ReleasedAt(PurchaseRequested(Jen, MusicStore, BritneyCD, 1), 1).
+!ReleasedAt(PurchaseRequested(Jen, MusicStore, BritneyCD, 1), 2).
+!ReleasedAt(PurchaseRequested(Jen, MusicStore, BritneyCD, 1), 3).
+!ReleasedAt(PurchaseRequested(Jen, MusicStore, BritneyCD, 1), 4).
+!ReleasedAt(PurchaseRequested(Jen, MusicStore, BritneyCD, 1), 5).
+!ReleasedAt(PurchaseRequested(Jen, MusicStore, BritneyCD, 1), 6).
+!ReleasedAt(PurchaseRequested(Jen, MusicStore, BritneyCD, 1), 7).
+!ReleasedAt(PurchaseRequested(MusicStore, Jen, BritneyCD, 1), 0).
+!ReleasedAt(PurchaseRequested(MusicStore, Jen, BritneyCD, 1), 1).
+!ReleasedAt(PurchaseRequested(MusicStore, Jen, BritneyCD, 1), 2).
+!ReleasedAt(PurchaseRequested(MusicStore, Jen, BritneyCD, 1), 3).
+!ReleasedAt(PurchaseRequested(MusicStore, Jen, BritneyCD, 1), 4).
+!ReleasedAt(PurchaseRequested(MusicStore, Jen, BritneyCD, 1), 5).
+!ReleasedAt(PurchaseRequested(MusicStore, Jen, BritneyCD, 1), 6).
+!ReleasedAt(PurchaseRequested(MusicStore, Jen, BritneyCD, 1), 7).
+!ReleasedAt(PurchaseRequested(MusicStore, MusicStore, BritneyCD, 1), 0).
+!ReleasedAt(PurchaseRequested(MusicStore, MusicStore, BritneyCD, 1), 1).
+!ReleasedAt(PurchaseRequested(MusicStore, MusicStore, BritneyCD, 1), 2).
+!ReleasedAt(PurchaseRequested(MusicStore, MusicStore, BritneyCD, 1), 3).
+!ReleasedAt(PurchaseRequested(MusicStore, MusicStore, BritneyCD, 1), 4).
+!ReleasedAt(PurchaseRequested(MusicStore, MusicStore, BritneyCD, 1), 5).
+!ReleasedAt(PurchaseRequested(MusicStore, MusicStore, BritneyCD, 1), 6).
+!ReleasedAt(PurchaseRequested(MusicStore, MusicStore, BritneyCD, 1), 7).
+!ReleasedAt(QuoteSent(Jen, Jen, BritneyCD, 1), 0).
+!ReleasedAt(QuoteSent(Jen, Jen, BritneyCD, 1), 1).
+!ReleasedAt(QuoteSent(Jen, Jen, BritneyCD, 1), 2).
+!ReleasedAt(QuoteSent(Jen, Jen, BritneyCD, 1), 3).
+!ReleasedAt(QuoteSent(Jen, Jen, BritneyCD, 1), 4).
+!ReleasedAt(QuoteSent(Jen, Jen, BritneyCD, 1), 5).
+!ReleasedAt(QuoteSent(Jen, Jen, BritneyCD, 1), 6).
+!ReleasedAt(QuoteSent(Jen, Jen, BritneyCD, 1), 7).
+!ReleasedAt(QuoteSent(Jen, MusicStore, BritneyCD, 1), 0).
+!ReleasedAt(QuoteSent(Jen, MusicStore, BritneyCD, 1), 1).
+!ReleasedAt(QuoteSent(Jen, MusicStore, BritneyCD, 1), 2).
+!ReleasedAt(QuoteSent(Jen, MusicStore, BritneyCD, 1), 3).
+!ReleasedAt(QuoteSent(Jen, MusicStore, BritneyCD, 1), 4).
+!ReleasedAt(QuoteSent(Jen, MusicStore, BritneyCD, 1), 5).
+!ReleasedAt(QuoteSent(Jen, MusicStore, BritneyCD, 1), 6).
+!ReleasedAt(QuoteSent(Jen, MusicStore, BritneyCD, 1), 7).
+!ReleasedAt(QuoteSent(MusicStore, Jen, BritneyCD, 1), 0).
+!ReleasedAt(QuoteSent(MusicStore, Jen, BritneyCD, 1), 1).
+!ReleasedAt(QuoteSent(MusicStore, Jen, BritneyCD, 1), 2).
+!ReleasedAt(QuoteSent(MusicStore, Jen, BritneyCD, 1), 3).
+!ReleasedAt(QuoteSent(MusicStore, Jen, BritneyCD, 1), 4).
+!ReleasedAt(QuoteSent(MusicStore, Jen, BritneyCD, 1), 5).
+!ReleasedAt(QuoteSent(MusicStore, Jen, BritneyCD, 1), 6).
+!ReleasedAt(QuoteSent(MusicStore, Jen, BritneyCD, 1), 7).
+!ReleasedAt(QuoteSent(MusicStore, MusicStore, BritneyCD, 1), 0).
+!ReleasedAt(QuoteSent(MusicStore, MusicStore, BritneyCD, 1), 1).
+!ReleasedAt(QuoteSent(MusicStore, MusicStore, BritneyCD, 1), 2).
+!ReleasedAt(QuoteSent(MusicStore, MusicStore, BritneyCD, 1), 3).
+!ReleasedAt(QuoteSent(MusicStore, MusicStore, BritneyCD, 1), 4).
+!ReleasedAt(QuoteSent(MusicStore, MusicStore, BritneyCD, 1), 5).
+!ReleasedAt(QuoteSent(MusicStore, MusicStore, BritneyCD, 1), 6).
+!ReleasedAt(QuoteSent(MusicStore, MusicStore, BritneyCD, 1), 7).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+NetBill1: 0 predicates, 0 functions, 6 fluents, 8 events, 26 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 1.6s
+solution 0.1s
+total 3.0s
+Discrete Event Calculus Reasoner 1.0
