@@ -97,9 +97,6 @@
 [submodule "packs_web/logicmoo_webui"]
 	path = packs_web/logicmoo_webui
 	url = https://github.com/TeamSPoon/logicmoo_webui.git
-[submodule "packs_xtra/logicmoo_pldata"]
-	path = packs_xtra/logicmoo_pldata
-	url = https://logicmoo.org/gitlab/dmiles/logicmoo_pldata
 [submodule "packs_sys/body_reordering"]
 	path = packs_sys/body_reordering
 	url = https://github.com/TeamSPoon/body_reordering.git
@@ -115,3 +112,6 @@
 [submodule "packs_lib/sldnfdraw"]
 	path = packs_lib/sldnfdraw
 	url = https://github.com/gavanelli/sldnfdraw.git
+[submodule "packs_xtra/logicmoo_pldata"]
+	path = packs_xtra/logicmoo_pldata
+	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_pldata.git
