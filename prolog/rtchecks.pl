@@ -192,7 +192,8 @@ with_rtchecks(Goal) :-
         Goal,
         ( rtchecks_disable,
           maplist(unrtcheck2, GLLL),
-          unwrap_ppcheck
+          unwrap_ppcheck,
+          rtchecks_enable
         )).
 
 rtcheck2(M-GLL) :-
